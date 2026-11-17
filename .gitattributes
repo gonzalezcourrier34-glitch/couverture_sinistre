@@ -1,0 +1,6 @@
+# Fins de ligne LF partout dans le dépôt (le projet tourne aussi sous Linux : CI, Docker).
+* text=auto eol=lf
+# Fichiers binaires : jamais convertis.
+*.pdf binary
+*.png binary
+*.sqlite binary
