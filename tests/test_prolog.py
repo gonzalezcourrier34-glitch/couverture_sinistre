@@ -20,6 +20,7 @@ CONTRAT = "foyer-appart123-2025"
 REGLES = RACINE / "regles" / f"{CONTRAT}.pl"
 CAS = RACINE / "regles" / "cas" / f"{CONTRAT}.jsonl"
 ANNOTATIONS = RACINE / "data" / "annotations" / f"{CONTRAT}.jsonl"
+CAS_VALIDATION = RACINE / "regles" / "cas" / "validation" / f"{CONTRAT}.jsonl"
 
 
 def lire(chemin):
@@ -35,6 +36,15 @@ def contrat():
 def cas():
     attendus = {a["sinistre_id"]: a for a in lire(ANNOTATIONS)}
     return [(c["sinistre_id"], c["faits"], attendus[c["sinistre_id"]]) for c in lire(CAS)]
+
+
+@pytest.fixture(scope="module")
+def cas_validation():
+    from couverture.evaluation import fichiers_jeu
+
+    _, annotations = fichiers_jeu(RACINE / "data", CONTRAT, "validation")
+    attendus = {a["sinistre_id"]: a for a in lire(annotations)}
+    return [(c["sinistre_id"], c["faits"], attendus[c["sinistre_id"]]) for c in lire(CAS_VALIDATION)]
 
 
 # --- Les règles, par l'oracle Python ----------------------------------------------------------------
@@ -70,6 +80,43 @@ def test_exclusion_partielle(contrat):
     assert seul["decision"] == "NON_COUVERT", "si seul le bien exclu est touché, l'exclusion est totale"
 
 
+def test_evenement_non_traduit_jamais_refuse(contrat):
+    """Un événement dont la garantie n'est pas en règles (la tempête) : au plus INCERTAIN, même si une
+    garantie traduite refuse. « autre » ne compte pas ; un COUVERT reste couvert."""
+    tempete = {"evenement": ["tempete", "degat_eaux"], "bien": ["element_batiment"], "lieu": ["logement"],
+               "cause_eau": "infiltration_exterieure"}
+    d = Moteur(contrat, tempete).decider()
+    assert d["decision"] == "INCERTAIN" and d["non_traduits"] == ["tempete"]
+    assert Moteur(contrat, {**tempete, "evenement": ["degat_eaux"]}).decider()["decision"] == "NON_COUVERT"
+    brulure = {"evenement": ["autre"], "bien": ["objet_divers"], "lieu": ["logement"], "flammes": "non", "embrasement": "non"}
+    assert Moteur(contrat, brulure).decider()["decision"] == "NON_COUVERT"
+    feu = {"evenement": ["incendie", "tempete"], "bien": ["mobilier"], "lieu": ["logement"], "flammes": "oui", "embrasement": "oui"}
+    assert Moteur(contrat, feu).decider()["decision"] == "COUVERT"
+
+
+def test_garanties_hors_sujet_ne_posent_pas_de_question(contrat):
+    """Pas de question sur les flammes pour une tempête ; pas de « vol commis sur vous ? » pour un garage."""
+    eau = Moteur(contrat, {"evenement": ["degat_eaux"], "bien": ["element_batiment"], "lieu": ["logement"]}).decider()
+    assert next(g for g in eau["garanties"] if g["id"] == "incendie")["rattachement"] == "hors"
+    scooter = Moteur(contrat, {"evenement": "vol", "bien": ["vehicule_moteur"], "lieu": ["garage"],
+                               "effraction": "oui"}).decider()
+    assert scooter["decision"] == "NON_COUVERT" and not scooter["possibles"]
+    rue = Moteur(contrat, {"evenement": "vol", "bien": ["electronique"], "lieu": ["voie_publique"]}).decider()
+    assert rue["decision"] == "INCERTAIN" and "vol_sur_personne" in rue["retenues"][0]["questions"]
+
+
+def test_obligations_fenetres_et_gel(contrat):
+    fenetre = {"evenement": "vol", "bien": ["electronique"], "lieu": ["logement"], "absence": "oui",
+               "portes_fermees": "oui", "fenetres_fermees": "non", "effraction": "non"}
+    d = Moteur(contrat, fenetre).decider()
+    assert d["decision"] == "INCERTAIN" and d["retenues"][0]["questions"] == ["lien_causal"]
+    assert Moteur(contrat, {**fenetre, "effraction": "oui"}).decider()["decision"] == "COUVERT", "l'effraction excuse"
+    gel = {"evenement": "degat_eaux", "bien": ["element_batiment"], "lieu": ["logement"], "cause_eau": "gel"}
+    assert Moteur(contrat, {**gel, "prevention_gel": "non"}).decider()["decision"] == "NON_COUVERT"
+    d = Moteur(contrat, gel).decider()
+    assert d["decision"] == "COUVERT" and "prevention_gel" in d["retenues"][0]["reserves"]
+
+
 def test_regles_dans_le_vocabulaire(contrat):
     voc = prolog.vocabulaire()
 
@@ -94,6 +141,20 @@ def test_faits_des_cas_dans_le_vocabulaire(cas):
         assert prolog.verifier_faits(faits) == [], i
 
 
+def test_jeu_de_validation_coherent(cas, cas_validation):
+    """Le jeu de validation est complet et distinct de la mise au point. Son score n'est PAS un test :
+    c'est une mesure (docs/DEMARCHE.md), et corriger les règles pour la faire monter la viderait de son sens."""
+    from couverture.evaluation import charger_cas, fichiers_jeu
+
+    sinistres = charger_cas(*fichiers_jeu(RACINE / "data", CONTRAT, "validation"))
+    assert len(sinistres) >= 15 and {s["id"] for s in sinistres} == {i for i, _, _ in cas_validation}
+    assert not {i for i, _, _ in cas} & {i for i, _, _ in cas_validation}
+    for i, faits, _ in cas_validation:
+        assert prolog.verifier_faits(faits) == [], i
+    with pytest.raises(ValueError):
+        fichiers_jeu(RACINE / "data", CONTRAT, "autre")
+
+
 # --- Le pont Python ------------------------------------------------------------------------------------
 
 def test_but_prolog_sans_injection():
@@ -102,7 +163,8 @@ def test_but_prolog_sans_injection():
     with pytest.raises(prolog.ErreurRegles):
         prolog.but({"lieu": "cave)), halt, (true"})
     assert prolog.verifier_faits({"lieu": "lune"}) == ["lieu = lune : valeur non permise"]
-    assert prolog.verifier_faits({"evenement": ["vol", "incendie"]})[0].startswith("evenement n'admet qu'une valeur")
+    assert prolog.verifier_faits({"effraction": ["oui", "non"]})[0].startswith("effraction n'admet qu'une valeur")
+    assert prolog.verifier_faits({"evenement": ["tempete", "degat_eaux"]}) == [], "la cause et le dommage"
 
 
 class FauxLLM:
@@ -121,7 +183,7 @@ def test_lecture_des_faits_filtre_le_hors_vocabulaire():
         "Vélo volé dans le local commun.",
         FauxLLM({"evenement": "vol", "bien": "velo", "lieu": ["parties_communes", "lune"], "couleur": "rouge",
                  "effraction": None}))
-    assert faits == {"evenement": "vol", "bien": ["velo"], "lieu": ["parties_communes"]}
+    assert faits == {"evenement": ["vol"], "bien": ["velo"], "lieu": ["parties_communes"]}
     assert len(ecarts) == 2
 
 
@@ -149,14 +211,25 @@ def test_verdict_mis_en_forme():
     assert "2.10-a" not in v.justification or "exclusion" in v.justification
 
 
+def test_verdict_evenement_non_traduit():
+    reponse = {"decision": "INCERTAIN", "non_traduits": ["tempete"], "aucune": False, "possibles": [], "retenues": [{
+        "id": "degats_eaux", "garantie": "Dégâts causés par l’eau", "article": "2.7", "rattachement": "rattachée",
+        "decision": "NON_COUVERT", "motif": "une exclusion s'applique", "preuves": [], "questions": [],
+        "reserves": [], "partielles": []}]}
+    p = prolog.PipelineRegles(CONTRAT, [], FauxLLM({"evenement": ["tempete", "degat_eaux"]}), decideur=lambda f: reponse)
+    v = p.analyser("La tempête a fait entrer la pluie.").verdict
+    assert v.decision == Decision.INCERTAIN and v.confiance <= 0.3
+    assert "tempete" in v.justification and "pas encore traduite" in v.justification
+
+
 # --- Avec SWI-Prolog : les deux moteurs doivent concorder ------------------------------------------------
 
 avec_swipl = pytest.mark.skipif(prolog.swipl() is None, reason="SWI-Prolog absent")
 
 
 @avec_swipl
-def test_prolog_et_oracle_concordent(contrat, cas):
-    for i, faits, _ in cas:
+def test_prolog_et_oracle_concordent(contrat, cas, cas_validation):
+    for i, faits, _ in cas + cas_validation:
         p = prolog.decider(CONTRAT, faits)
         o = Moteur(contrat, faits).decider()
         assert p["decision"] == o["decision"], i
@@ -175,3 +248,29 @@ def test_commande_regles_sans_swipl(monkeypatch, capsys, tmp_path):
     monkeypatch.setattr(prolog, "swipl", lambda: None)
     assert cli.main(["--donnees", str(tmp_path), "regles", "--contrat", CONTRAT]) == 1
     assert "winget install SWI-Prolog" in capsys.readouterr().out
+
+
+def clauses_dispersees(chemin: Path) -> list[str]:
+    """Les prédicats dont les clauses ne se suivent pas (SWI-Prolog le signale par un avertissement, que
+    `prolog.executer` traite comme une erreur), hors ceux déclarés `discontiguous`. Ce test le voit sans SWI-Prolog."""
+    import re
+
+    texte = chemin.read_text(encoding="utf-8")
+    declares = set(re.findall(r"(\w+)/\d+", " ".join(re.findall(r":- discontiguous ([^.]*)\.", texte, re.S))))
+    vus, precedent, disperses = set(), None, []
+    for ligne in texte.splitlines():
+        m = re.match(r"^([a-z]\w*)\s*(\(|:-|\.)", ligne)
+        if not m:
+            continue
+        nom = m.group(1)
+        if nom != precedent and nom in vus and nom not in declares:
+            disperses.append(nom)
+        vus.add(nom)
+        precedent = nom
+    return disperses
+
+
+def test_clauses_groupees_sans_swipl():
+    """La faute du 17 nov. : `ancetre` et `vague` insérés au milieu des clauses de `eval`."""
+    assert clauses_dispersees(prolog.MOTEUR) == []
+    assert clauses_dispersees(REGLES) == []

@@ -20,8 +20,8 @@
     "source": "couverture.fiches.SYSTEME_FAITS"
   },
   "couverture-faits-regles": {
-    "version": "v1",
-    "empreinte": "bde75af03434352e",
+    "version": "v2",
+    "empreinte": "0991232acb5fbf03",
     "source": "couverture.prolog.SYSTEME_FAITS_REGLES"
   },
   "couverture-fiches": {
@@ -38,6 +38,11 @@
     "version": "v1",
     "empreinte": "7caefafb96ab5d2d",
     "source": "couverture.qualite.SYSTEME_QUALITE"
+  },
+  "couverture-redaction-regles": {
+    "version": "v2",
+    "empreinte": "37c9e33892c5f25f",
+    "source": "couverture.redaction.SYSTEME_REDACTION"
   },
   "couverture-relecture": {
     "version": "v2",

@@ -1,0 +1,398 @@
+{
+  "meta": {
+    "article": "2.9",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-17",
+    "consigne": "redaction-regles v2"
+  },
+  "proposition": {
+    "evenements": [
+      "bris"
+    ],
+    "definitions": [
+      {
+        "concept": "vitrage_assure",
+        "condition": {
+          "ou": [
+            {
+              "f": [
+                "bien",
+                "vitre"
+              ]
+            },
+            {
+              "f": [
+                "bien",
+                "miroir"
+              ]
+            },
+            {
+              "f": [
+                "bien",
+                "coupole"
+              ]
+            },
+            {
+              "f": [
+                "bien",
+                "panneau_verre_plastique"
+              ]
+            },
+            {
+              "f": [
+                "bien",
+                "table_cuisson_vitroceramique"
+              ]
+            },
+            {
+              "f": [
+                "bien",
+                "panneau_solaire"
+              ]
+            },
+            {
+              "f": [
+                "bien",
+                "mur_rideau"
+              ]
+            },
+            {
+              "f": [
+                "bien",
+                "sanitaire"
+              ]
+            },
+            {
+              "f": [
+                "bien",
+                "verre_meuble"
+              ]
+            }
+          ]
+        },
+        "article": "2.9",
+        "texte": "Nous assurons le bris et la fêlure de vitres, y compris le bris des biens suivants (assimilés aux vitres) : les miroirs, les coupoles, panneaux ou enseignes en verre ou en plastique, les tables de cuisson en vitrocéramique, les panneaux solaires fixés au bâtiment, les murs rideaux, les sanitaires et le verre intégré dans des meubles"
+      },
+      {
+        "concept": "sanitaire",
+        "condition": {
+          "f": [
+            "bien",
+            "sanitaire"
+          ]
+        },
+        "article": "12/sanitaires",
+        "texte": "Les éviers, lavabos, baignoires, pédiluves, douches, toilettes et bidets, saunas, hammams et bains à bulles intérieurs"
+      }
+    ],
+    "garanties": [
+      {
+        "id": "bris_vitrages",
+        "nom": "Bris et fêlure de vitrages",
+        "article": "2.9",
+        "texte": "Nous assurons le bris et la fêlure de vitres, y compris le bris des biens suivants (assimilés aux vitres)",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "bris"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "concept": "vitrage_assure"
+              },
+              {
+                "f": [
+                  "bien",
+                  "cadre"
+                ]
+              },
+              {
+                "f": [
+                  "bien",
+                  "chassis"
+                ]
+              },
+              {
+                "f": [
+                  "bien",
+                  "soubassement"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "travaux_batiment",
+                "autres_que_entretien_reparation"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.9-a",
+            "texte": "les dommages causés par les travaux au bâtiment autres que d’entretien et de réparation"
+          },
+          {
+            "condition": {
+              "f": [
+                "travaux_vitres",
+                "autres_que_nettoyage"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.9-a",
+            "texte": "les dommages causés par les travaux (nettoyage excepté) aux vitres, châssis et biens assimilés"
+          },
+          {
+            "condition": {
+              "f": [
+                "bien",
+                "appareil_audiovisuel"
+              ]
+            },
+            "portee": {
+              "bien": "appareil_audiovisuel"
+            },
+            "a_demander": true,
+            "article": "2.9-a",
+            "texte": "les parties vitrées des appareils audiovisuels y compris les écrans de télévision"
+          },
+          {
+            "condition": {
+              "f": [
+                "bien",
+                "serre"
+              ]
+            },
+            "portee": {
+              "bien": "serre"
+            },
+            "a_demander": true,
+            "article": "2.9-a",
+            "texte": "les parties vitrées des serres et des couvertures de piscine"
+          },
+          {
+            "condition": {
+              "f": [
+                "vitre_placee",
+                "non"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.9-a",
+            "texte": "les dommages aux vitres et biens assimilés non placés"
+          },
+          {
+            "condition": {
+              "f": [
+                "type_dommage",
+                "rayure_ou_ecaillement"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.9-a",
+            "texte": "les rayures et écaillements des vitres et biens assimilés"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "bien",
+                    "sanitaire"
+                  ]
+                },
+                {
+                  "f": [
+                    "cause_dommage",
+                    "gel"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.9-a",
+            "texte": "les dommages causés aux sanitaires par le gel"
+          },
+          {
+            "condition": {
+              "f": [
+                "bien",
+                "objet_verre_non_vitre"
+              ]
+            },
+            "portee": {
+              "bien": "objet_verre_non_vitre"
+            },
+            "a_demander": true,
+            "article": "2.9-a",
+            "texte": "les dommages causés aux objets en verre autres que des vitres et biens assimilés"
+          },
+          {
+            "condition": {
+              "f": [
+                "type_dommage",
+                "opacification_ou_perte_etancheite"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.9-a",
+            "texte": "l’opacification ou perte détanchéité des vitrages isolants"
+          },
+          {
+            "condition": {
+              "f": [
+                "bien",
+                "couverture_piscine"
+              ]
+            },
+            "portee": {
+              "bien": "couverture_piscine"
+            },
+            "a_demander": true,
+            "article": "2.9-a",
+            "texte": "les parties vitrées des serres et des couvertures de piscine"
+          }
+        ],
+        "limites": [
+          {
+            "article": "2.9",
+            "texte": "Dommages causés aux vitrages d’art, frais de reconstitution des inscriptions, peintures, 5.000 EUR décorations",
+            "montant": "5000 EUR"
+          }
+        ]
+      }
+    ],
+    "vocabulaire_manquant": [
+      {
+        "variable": "bien",
+        "valeurs": [
+          "vitre",
+          "miroir",
+          "coupole",
+          "panneau_verre_plastique",
+          "table_cuisson_vitroceramique",
+          "panneau_solaire",
+          "mur_rideau",
+          "sanitaire",
+          "verre_meuble",
+          "cadre",
+          "chassis",
+          "soubassement",
+          "appareil_audiovisuel",
+          "serre",
+          "couverture_piscine",
+          "objet_verre_non_vitre"
+        ],
+        "question": "De quel type de bien s'agit-il ?",
+        "pourquoi": "Identifier les vitrages et biens couverts ou exclus"
+      },
+      {
+        "variable": "travaux_batiment",
+        "valeurs": [
+          "entretien_reparation",
+          "autres_que_entretien_reparation",
+          "aucun"
+        ],
+        "question": "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ?",
+        "pourquoi": "Exclusion des dommages causés par travaux"
+      },
+      {
+        "variable": "travaux_vitres",
+        "valeurs": [
+          "nettoyage",
+          "autres_que_nettoyage",
+          "aucun"
+        ],
+        "question": "Des travaux (autres que nettoyage) sont-ils effectués sur les vitres ?",
+        "pourquoi": "Exclusion des dommages causés par travaux sur vitres"
+      },
+      {
+        "variable": "vitre_placee",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La vitre était-elle placée ?",
+        "pourquoi": "Exclusion des vitres non placées"
+      },
+      {
+        "variable": "type_dommage",
+        "valeurs": [
+          "bris",
+          "felure",
+          "rayure_ou_ecaillement",
+          "opacification_ou_perte_etancheite"
+        ],
+        "question": "Quel est le type de dommage ?",
+        "pourquoi": "Distinguer bris/fêlure des rayures et opacifications exclues"
+      },
+      {
+        "variable": "cause_dommage",
+        "valeurs": [
+          "gel",
+          "autre"
+        ],
+        "question": "La cause du dommage est-elle le gel ?",
+        "pourquoi": "Exclusion des dommages aux sanitaires par le gel"
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "red-b01 : INCERTAIN → COUVERT avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "red-b02 : INCERTAIN → COUVERT avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "red-b03 : INCERTAIN → NON_COUVERT avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "red-b04 : INCERTAIN → NON_COUVERT avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "red-b05 : INCERTAIN → NON_COUVERT avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "red-b06 : INCERTAIN → NON_COUVERT avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "g-h06 : INCERTAIN → COUVERT avec les nouvelles règles"
+    }
+  ],
+  "relecture": [
+    {
+      "par": "Claude, à la demande de l'auteur",
+      "date": "2026-11-17",
+      "changements": "portée réduite au bien visé pour les appareils audiovisuels, les objets en verre, les serres et les couvertures de piscine (exclusion scindée en deux)"
+    }
+  ]
+}

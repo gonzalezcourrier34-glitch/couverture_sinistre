@@ -22,6 +22,24 @@ def lire_jsonl(chemin: str | Path) -> list[dict]:
         return [json.loads(l) for l in f if l.strip()]
 
 
+JEUX = ("mise_au_point", "validation", "redaction", "golden")
+
+
+def fichiers_jeu(donnees: str | Path, contrat_id: str, jeu: str = "mise_au_point") -> tuple[Path, Path]:
+    """Sinistres et annotations d'un jeu de cas.
+    - mise_au_point : data/sinistres.jsonl, data/annotations/<contrat>.jsonl, les cas qui ont servi à écrire
+      les consignes et les règles ;
+    - validation : data/validation/…, des cas écrits après coup, à ne pas utiliser pour corriger
+      (sinon ils deviennent des cas de mise au point et il en faut de nouveaux) ;
+    - redaction : data/redaction/…, des cas des garanties dont les règles sont rédigées par le modèle,
+      écrits d'après le texte du contrat avant la rédaction ;
+    - golden : data/golden/…, le banc d'essai figé (tous les cas, étiquetés), voir `couverture banc`."""
+    if jeu not in JEUX:
+        raise ValueError(f"jeu inconnu : {jeu}")
+    racine = Path(donnees) / ("" if jeu == "mise_au_point" else jeu)
+    return racine / "sinistres.jsonl", racine / "annotations" / f"{contrat_id}.jsonl"
+
+
 def charger_cas(sinistres: str | Path, annotations: str | Path) -> list[dict]:
     par_id = {s["id"]: s for s in lire_jsonl(sinistres)}
     cas = []
@@ -93,6 +111,10 @@ def evaluer(pipeline, cas: list[dict], paralleles: int = 1) -> dict:
             "contestations": sum(c.relecture == "contestee" for c in v.conditions),
             "confiance": v.confiance,
             "erreur": v.mode == "erreur",
+            # Pour le banc : ce que le modèle a lu, et les questions posées.
+            "faits_lus": r.faits.model_dump() if r.faits else {},
+            "questions": list(v.informations_manquantes),
+            "duree_ms": getattr(r, "duree_ms", None),
         })
     n = len(lignes)
     rappels = [l["rappel_clauses"] for l in lignes if l["rappel_clauses"] is not None]

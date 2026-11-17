@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "date": "2026-11-17",
+  "empreintes": {
+    "foyer-appart123-2025": "c4ba1d6cdf5a889f"
+  },
+  "historique": [
+    "v1 (2026-11-17) : 68 cas : 39 existants étiquetés, 29 nouveaux",
+    "v2 (2026-11-17) : faits idéaux du bris réécrits dans le vocabulaire de l'art. 2.9 (vitre, miroir, table de cuisson, appareil audiovisuel, objet en verre)"
+  ]
+}

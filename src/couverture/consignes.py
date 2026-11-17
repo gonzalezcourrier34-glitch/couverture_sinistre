@@ -40,7 +40,8 @@ CONSIGNES: dict[str, tuple[str, str, str]] = {
     "couverture-fiches": ("couverture.fiches", "SYSTEME_FICHES", "v3"),
     "couverture-routage": ("couverture.fiches", "SYSTEME_ROUTAGE", "v1"),
     "couverture-faits": ("couverture.fiches", "SYSTEME_FAITS", "v1"),
-    "couverture-faits-regles": ("couverture.prolog", "SYSTEME_FAITS_REGLES", "v1"),
+    "couverture-faits-regles": ("couverture.prolog", "SYSTEME_FAITS_REGLES", "v2"),
+    "couverture-redaction-regles": ("couverture.redaction", "SYSTEME_REDACTION", "v2"),
 }
 
 RACINE = Path(__file__).resolve().parents[2]
@@ -81,7 +82,8 @@ def archiver(dossier: Path = ARCHIVE) -> list[str]:
         if not f.exists():
             f.parent.mkdir(parents=True, exist_ok=True)
             f.write_text(texte(nom), encoding="utf-8")
-            ecrites.append(str(f.relative_to(dossier.parent.parent)) if dossier == ARCHIVE else str(f))
+            # Chemins écrits avec « / » sur tous les systèmes (Windows compris).
+            ecrites.append((f.relative_to(dossier.parent.parent) if dossier == ARCHIVE else f).as_posix())
     return ecrites
 
 

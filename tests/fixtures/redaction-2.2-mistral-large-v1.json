@@ -1,0 +1,306 @@
+{
+  "meta": {
+    "article": "2.2",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-17",
+    "consigne": "redaction-regles v1"
+  },
+  "proposition": {
+    "evenements": [
+      "tempete",
+      "grele",
+      "pression_neige_glace"
+    ],
+    "definitions": [
+      {
+        "id": "abri_de_jardin",
+        "nom": "Abri de jardin",
+        "article": "12/abri-de-jardin",
+        "texte": "Ensembe des constructions destinées à l'usage ou la décoration du jardin dont la superficie est inférieure à 60m²."
+      }
+    ],
+    "garanties": [
+      {
+        "id": "tempete_grele_pression_neige",
+        "nom": "Tempête, la grêle, la pression de la neige ou de la glace",
+        "article": "2.2",
+        "texte": "Nous couvrons les dommages matériels directement causés par les aléas précisés.",
+        "perimetre": [
+          {
+            "ou": [
+              {
+                "f": [
+                  "evenement",
+                  "tempete"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "grele"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "pression_neige_glace"
+                ]
+              }
+            ]
+          },
+          {
+            "ou": [
+              {
+                "concept": "batiment"
+              },
+              {
+                "concept": "contenu"
+              },
+              {
+                "concept": "abri_de_jardin"
+              },
+              {
+                "f": [
+                  "lieu",
+                  "abri_jardin"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "et": [
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "construction_delabree",
+                        "oui"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "construction_en_cours_demolition",
+                        "oui"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "non": {
+                    "f": [
+                      "logement_principal",
+                      "oui"
+                    ]
+                  }
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.2-a",
+            "texte": "aux constructions délabrées ou en cours de démolition et à leur contenu éventuel, sauf si ces constructions constituent votre logement principal"
+          },
+          {
+            "condition": {
+              "f": [
+                "construction_entierement_close_couverte",
+                "non"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.2-a",
+            "texte": "aux constructions non entièrement closes ou couvertes"
+          },
+          {
+            "condition": {
+              "f": [
+                "a_exterieur",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.2-a",
+            "texte": "à tout objet situé à l'extérieur même ceux fixés à demeure"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "lieu",
+                    "annexe"
+                  ]
+                },
+                {
+                  "f": [
+                    "construction_entierement_close_couverte",
+                    "non"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.2-a",
+            "texte": "à tout objet situé dans une annexe non entièrement close ou couverte"
+          },
+          {
+            "condition": {
+              "f": [
+                "materiaux_pied_oeuvre",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.2-a",
+            "texte": "aux matériaux à pied d’œuvre"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "lieu",
+                    "annexe"
+                  ]
+                },
+                {
+                  "f": [
+                    "annexe_fixee_ancrage_beton",
+                    "non"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.2-a",
+            "texte": "aux annexes contiguës ou isolées faisant partie du bâtiment qui ne sont pas fixées au sol par un ancrage en béton, ansi qu’à leur contenu"
+          },
+          {
+            "condition": {
+              "f": [
+                "construction_entierement_close_couverte",
+                "non"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.2-a",
+            "texte": "aux constructions non entièrement closes ou couvertes, à ce qui y est incorporé ainsi qu’à leur contenu"
+          }
+        ],
+        "limites": [
+          {
+            "condition": {
+              "ou": [
+                {
+                  "concept": "abri_de_jardin"
+                },
+                {
+                  "f": [
+                    "lieu",
+                    "abri_jardin"
+                  ]
+                }
+              ]
+            },
+            "plafond": 1000,
+            "article": "2.2",
+            "texte": "Nous couvrons dans les limites suivantes les dégâts causés aux biens suivants : Abri de jardin et son éventuel contenu 1.000 EUR"
+          }
+        ]
+      }
+    ],
+    "vocabulaire_manquant": [
+      {
+        "variable": "evenement",
+        "valeurs": [
+          "grele",
+          "pression_neige_glace"
+        ],
+        "question": "L'événement est-il une grêle ou une pression de la neige ou de la glace ?",
+        "pourquoi": "La garantie 2.2 couvre la grêle et la pression de la neige ou de la glace en plus de la tempête"
+      },
+      {
+        "variable": "construction_delabree",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La construction est-elle délabrée ?",
+        "pourquoi": "Exclusion des constructions délabrées (2.2-a)"
+      },
+      {
+        "variable": "construction_en_cours_demolition",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La construction est-elle en cours de démolition ?",
+        "pourquoi": "Exclusion des constructions en cours de démolition (2.2-a)"
+      },
+      {
+        "variable": "logement_principal",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Cette construction constitue-t-elle votre logement principal ?",
+        "pourquoi": "Exception à l'exclusion des constructions délabrées ou en démolition (2.2-a)"
+      },
+      {
+        "variable": "construction_entierement_close_couverte",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La construction est-elle entièrement close et couverte ?",
+        "pourquoi": "Exclusion des constructions non entièrement closes ou couvertes (2.2-a)"
+      },
+      {
+        "variable": "a_exterieur",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "L'objet est-il situé à l'extérieur ?",
+        "pourquoi": "Exclusion des objets situés à l'extérieur (2.2-a)"
+      },
+      {
+        "variable": "materiaux_pied_oeuvre",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "S'agit-il de matériaux à pied d'œuvre ?",
+        "pourquoi": "Exclusion des matériaux à pied d'œuvre (2.2-a)"
+      },
+      {
+        "variable": "annexe_fixee_ancrage_beton",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "L'annexe est-elle fixée au sol par un ancrage en béton ?",
+        "pourquoi": "Exclusion des annexes non fixées au sol par un ancrage en béton (2.2-a)"
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "structure",
+      "message": "'concept'"
+    }
+  ]
+}

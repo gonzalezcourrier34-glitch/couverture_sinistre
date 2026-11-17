@@ -71,11 +71,14 @@ Anthropic (`ANTHROPIC_API_KEY`) et tout modèle compatible OpenAI (`COUVERTURE_L
 uv run couverture modele                                   # modèles configurés, test de connexion
 uv run couverture ingerer                                  # lit data/contrats/
 uv run couverture regles   --contrat foyer-appart123-2025  # vérifie les règles Prolog (sans modèle)
+uv run couverture rediger  --contrat foyer-appart123-2025 --article 2.2 --article 2.9  # Mistral Large rédige des règles, le code les contrôle
+uv run couverture banc     --contrat foyer-appart123-2025  # banc d'essai : golden set (68 cas), règles, lecture, chaîne, portes
 uv run couverture analyser --contrat foyer-appart123-2025 --methode regles "…"
 uv run couverture compiler --contrat foyer-appart123-2025  # fiches : une fois par contrat (Mistral Large, ~15 min)
 uv run couverture fiches   --contrat foyer-appart123-2025  # relire les fiches (--exporter / --importer)
 uv run couverture analyser --contrat foyer-appart123-2025 --methode fiches "Mon vélo a été volé dans le local commun…"
 uv run couverture evaluer  --contrat foyer-appart123-2025 --methode fiches   # tableau ; --detail pour le JSON
+uv run couverture evaluer  --contrat foyer-appart123-2025 --methode regles --jeu validation --repetitions 3
 uv run couverture serveur                                  # interface sur http://127.0.0.1:8000
 ```
 
@@ -105,7 +108,7 @@ Les sinistres sont indépendants des contrats. Des variations changent **un seul
 
 ## Résultats à ce stade
 
-- **Tests** : 111 passent (plus 2 tests Prolog là où SWI-Prolog est installé), sans clé ni réseau ; la CI les relance à chaque envoi.
+- **Tests** : 152 passent (plus 2 tests Prolog là où SWI-Prolog est installé), sans clé ni réseau ; la CI les relance à chaque envoi.
 - **Foyer appart 123** (48 pages) : 147 clauses, dont 63 définitions ; compilé en 36 fiches et 350 questions.
 - **Évaluation Foyer, 14 cas, trois exécutions** :
 
@@ -114,11 +117,15 @@ Les sinistres sont indépendants des contrats. Des variations changent **un seul
   | `fiches` | 74 % | 60 % | 2 | 0 | ~1 min |
   | **`regles`** (Prolog) | **100 %** | **90 %** | **0** | **0** | **3 à 4 s** |
 
-  Réserve : les règles ont été écrites en connaissant ces 14 cas, et trois garanties seulement sont en règles. Prochaine preuve : des cas nouveaux, et des règles écrites par le modèle. Détail : [docs/DEMARCHE.md](docs/DEMARCHE.md).
+  Réserve : les règles ont été écrites en connaissant ces 14 cas, et trois garanties seulement sont en règles.
+- **Jeu de validation, 15 cas nouveaux** (`--jeu validation`), règles seules sur les faits idéaux : 87 % justes ou acceptables, mais **2 couverts à tort**. Les deux viennent d'obligations de prévention que le vocabulaire n'exprime pas (fenêtres laissées ouvertes, mesures contre le gel). Mesure enregistrée avant toute correction. Chaîne complète (le modèle lit les faits) : 67 %, 2 couverts et 1 refus à tort : la lecture des faits coûte 20 points sur des cas nouveaux. Corrigé ensuite (cause et dommage, événements non traduits, fenêtres, gel, texte des règles) : 100 % sur les faits idéaux, mais ces 15 cas sont désormais de la mise au point ; un nouveau jeu reste à écrire (DEMARCHE 7.18). Chaîne complète après correction : 87 %, aucun refus à tort, mais 4 cas sur 15 instables d'une exécution à l'autre (la lecture des faits).
+- **Règles rédigées par Mistral Large** (tempête, bris de vitrages) : exclusions toutes traduites, citations exactes, faits manquants déclarés ; un écart au schéma et une définition restrictive oubliée, désormais contrôlés (DEMARCHE 7.20). Détail : [docs/DEMARCHE.md](docs/DEMARCHE.md), 7.17.
+
+- **Banc d'essai** (`data/golden/`, 68 cas, trois couches, portes), premier passage complet : règles seules 85 % (2 couverts et 7 refus à tort), chaîne complète 83 % avec **5 couverts à tort** (2 viennent des règles, 3 de la lecture des faits) et 8 cas instables. Le bris de vitrages, rédigé par Mistral Large, est en service. Détail : DEMARCHE 7.21 à 7.23.
 
 ## Limites connues
 
 - Les conditions particulières du client (options, capitaux) ne sont pas lues ; beaucoup d'INCERTAIN deviendraient des réponses fermes.
 - La responsabilité civile de Foyer est typée « autre » par le découpage : pas encore compilée.
 - Les tableaux de plafonds sont lus comme du texte.
-- Prochaine étape envisagée : des règles explicites sur un vocabulaire de faits commun à tous les contrats (voir DEMARCHE, partie 8).
+- Le moteur n'est pas plus juste que le vocabulaire de faits : une obligation que le vocabulaire ne sait pas demander est ignorée.

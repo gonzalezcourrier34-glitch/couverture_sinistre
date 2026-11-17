@@ -1,0 +1,68 @@
+{"id": "velo-01", "famille": "2.10", "source": "recruteur", "sinistre": "Je me fais voler mon vélo dans le local commun de l'immeuble, qui n'était pas fermé à clé."}
+{"id": "velo-02", "famille": "2.10", "source": "mise_au_point", "sinistre": "Mon vélo a été volé dans le local à vélos commun de l'immeuble. Le local était fermé à clé et la serrure a été forcée."}
+{"id": "velo-03", "famille": "2.10", "source": "mise_au_point", "sinistre": "Mon vélo a été volé dans ma cave privative, fermée à clé. Le cadenas de la porte a été forcé."}
+{"id": "velo-04", "famille": "2.10", "source": "mise_au_point", "sinistre": "Mon vélo a été volé dans ma cave privative. J'avais oublié de la fermer à clé et il n'y a aucune trace d'effraction."}
+{"id": "velo-05", "famille": "2.10", "source": "mise_au_point", "sinistre": "Des cambrioleurs ont fracturé la porte de mon appartement et ont volé mon vélo, rangé dans l'entrée."}
+{"id": "velo-06", "famille": "2.10", "source": "mise_au_point", "sinistre": "Mon vélo était attaché à un arceau dans la rue avec un antivol. L'antivol a été coupé et le vélo volé."}
+{"id": "velo-07", "famille": "2.10", "source": "mise_au_point", "sinistre": "Mon vélo électrique acheté 3 500 € a été volé dans mon garage privatif fermé à clé. La porte du garage a été forcée."}
+{"id": "bougie-01", "famille": "2.1", "source": "recruteur", "sinistre": "J'ai laissé une bougie sur la table de mon jardin pendant mes vacances. Avec la chaleur, la bougie a fondu et a abîmé la table."}
+{"id": "bougie-02", "famille": "2.1", "source": "mise_au_point", "sinistre": "Une bougie allumée est tombée dans le salon, la nappe a pris feu et les flammes ont brûlé la table."}
+{"id": "bougie-03", "famille": "2.1", "source": "mise_au_point", "sinistre": "Une bougie posée sur la table du salon a coulé et laissé une marque de brûlure superficielle, sans flammes."}
+{"id": "bougie-04", "famille": "2.1", "source": "mise_au_point", "sinistre": "Pendant mes vacances, une bougie laissée sur la table du jardin s'est enflammée et a brûlé la table et le salon de jardin."}
+{"id": "bougie-05", "famille": "2.1", "source": "mise_au_point", "sinistre": "J'ai oublié une bougie allumée sur la terrasse avant de partir trois semaines. Le feu s'est propagé à la façade et au séjour."}
+{"id": "autre-01", "famille": "2.10", "source": "mise_au_point", "sinistre": "Mon téléphone m'a été arraché des mains dans la rue."}
+{"id": "autre-02", "famille": "2.7", "source": "mise_au_point", "sinistre": "Le tuyau du lave-linge a cédé et l'eau a abîmé le parquet et le canapé."}
+{"id": "val-01", "famille": "2.10", "source": "validation_ex", "sinistre": "Pendant que j'étais au travail, quelqu'un est entré par la fenêtre de ma chambre, au rez-de-chaussée, que j'avais laissée grande ouverte, et a volé mon ordinateur portable. La porte était fermée à clé, aucune trace d'effraction."}
+{"id": "val-02", "famille": "2.10", "source": "validation_ex", "sinistre": "Ma femme de ménage, qui a les clés de l'appartement, m'a volé une bague en or estimée à 2 000 €."}
+{"id": "val-03", "famille": "2.10", "source": "validation_ex", "sinistre": "Des amis que j'hébergeais pour le week-end se sont fait voler leur ordinateur lors d'un cambriolage de mon appartement : la porte d'entrée a été fracturée."}
+{"id": "val-04", "famille": "2.10", "source": "validation_ex", "sinistre": "Pendant la nuit, on m'a volé la table et les chaises de jardin posées sur ma terrasse."}
+{"id": "val-05", "famille": "2.10", "source": "validation_ex", "sinistre": "Au retour de vacances, je ne retrouve plus ma montre de valeur. Aucune trace de passage ni d'effraction dans l'appartement."}
+{"id": "val-06", "famille": "2.10", "source": "validation_ex", "sinistre": "J'ai déposé mon ordinateur chez un réparateur il y a deux semaines ; la boutique a été cambriolée et mon ordinateur volé."}
+{"id": "val-07", "famille": "2.10", "source": "validation_ex", "sinistre": "Dans le métro, deux individus m'ont menacé avec un couteau et ont pris mon portefeuille et mon téléphone."}
+{"id": "val-08", "famille": "2.1", "source": "validation_ex", "sinistre": "Un court-circuit dans le grille-pain a mis le feu à la cuisine : les flammes ont détruit les placards et le réfrigérateur."}
+{"id": "val-09", "famille": "2.1", "source": "validation_ex", "sinistre": "Mon fer à repasser, laissé à plat sur la planche, a brûlé la housse et laissé une marque sur le tissu, sans flammes."}
+{"id": "val-10", "famille": "2.7", "source": "validation_ex", "sinistre": "En janvier, je suis parti deux semaines en coupant le chauffage. Une canalisation a gelé puis éclaté ; l'eau a abîmé mon parquet."}
+{"id": "val-11", "famille": "2.7", "source": "validation_ex", "sinistre": "Pendant un orage, la pluie s'est infiltrée par la fenêtre mal jointée de ma chambre et a abîmé le mur et la moquette."}
+{"id": "val-12", "famille": "2.7", "source": "validation_ex", "sinistre": "Ma baignoire a débordé pendant que j'étais au téléphone ; l'eau a abîmé mon parquet."}
+{"id": "val-13", "famille": "2.2", "source": "validation_ex", "sinistre": "La tempête a arraché des tuiles de l'immeuble et la pluie est entrée dans mon salon, abîmant le plafond et le canapé."}
+{"id": "val-14", "famille": "2.10", "source": "validation_ex", "sinistre": "Lors d'un cambriolage avec la porte fracturée, on m'a volé mon chat de race."}
+{"id": "val-15", "famille": "2.10", "source": "validation_ex", "sinistre": "Mon scooter de 125 cm³ a été volé dans mon garage fermé à clé ; la porte a été forcée."}
+{"id": "red-t01", "famille": "2.2", "source": "redaction", "sinistre": "Lors de la tempête de la nuit dernière, des rafales mesurées à 110 km/h ont arraché une partie de la toiture de l'immeuble ; la pluie a abîmé le plafond et le canapé de mon salon."}
+{"id": "red-t02", "famille": "2.2", "source": "redaction", "sinistre": "Pendant la tempête, le vent a emporté la table et les chaises de ma terrasse, qui se sont brisées en tombant."}
+{"id": "red-t03", "famille": "2.2", "source": "redaction", "sinistre": "Le poids de la neige a fait s'effondrer mon carport en bois, simplement posé sur des plots, sans ancrage en béton."}
+{"id": "red-t04", "famille": "2.2", "source": "redaction", "sinistre": "Un vent violent a soufflé dans la région, et plusieurs maisons voisines ont eu leurs toitures abîmées. Chez moi, la fenêtre de la chambre a été arrachée et la moquette trempée."}
+{"id": "red-b01", "famille": "2.9", "source": "redaction", "sinistre": "Mon fils a cassé la vitre de la porte-fenêtre du salon avec un ballon."}
+{"id": "red-b02", "famille": "2.9", "source": "redaction", "sinistre": "J'ai fait tomber une casserole sur ma table de cuisson vitrocéramique, qui s'est fendue."}
+{"id": "red-b03", "famille": "2.9", "source": "redaction", "sinistre": "Ma télévision est tombée du meuble et l'écran s'est fissuré."}
+{"id": "red-b04", "famille": "2.9", "source": "redaction", "sinistre": "Un vase en cristal est tombé de l'étagère et s'est brisé."}
+{"id": "red-b05", "famille": "2.9", "source": "redaction", "sinistre": "Le grand miroir que je venais d'acheter, encore dans son carton et pas encore accroché, s'est brisé quand je l'ai fait tomber."}
+{"id": "red-b06", "famille": "2.9", "source": "redaction", "sinistre": "La vitre de la fenêtre de la cuisine est rayée sur toute sa largeur."}
+{"id": "g-l01", "famille": "2.10", "source": "golden", "sinistre": "on m'a piqué mon vélo dans le local à vélos de la résidence, la porte était même pas fermée"}
+{"id": "g-l02", "famille": "2.10", "source": "golden", "sinistre": "Bonjour, je vous écris parce que je suis vraiment embêté. Samedi soir nous étions chez ma belle-sœur pour son anniversaire (on est rentrés vers minuit) et en rentrant on a vu que la porte de l'appartement avait été forcée, la serrure arrachée. Ils ont pris la télé, l'ordinateur de mon fils et deux vélos qu'on gardait dans l'entrée. On a porté plainte dimanche matin."}
+{"id": "g-l03", "famille": "2.1", "source": "golden", "sinistre": "jai laisser une bougie alumé sur la table du jardin pendan les vacance, avec le soleil elle a fondu et a taché la table, pas de feu"}
+{"id": "g-l04", "famille": "2.1", "source": "golden", "sinistre": "La friteuse a pris feu ; les flammes sont montées jusqu'à la hotte et ont brûlé les placards de la cuisine."}
+{"id": "g-l05", "famille": "2.7", "source": "golden", "sinistre": "Fuite d'eau sous l'évier : le meuble de cuisine a gonflé et le parquet est abîmé."}
+{"id": "g-l06", "famille": "2.10", "source": "golden", "sinistre": "Deux types m'ont bousculé à la sortie du bus et m'ont arraché mon sac avec mon portefeuille dedans."}
+{"id": "g-l07", "famille": "aucune", "source": "golden", "sinistre": "Ce n'est pas un vol : mon fils a pris mon vélo sans me le dire et il l'a cassé en tombant."}
+{"id": "g-q01", "famille": "2.10", "source": "golden", "sinistre": "On m'a volé mon vélo dans ma cave."}
+{"id": "g-q02", "famille": "2.10", "source": "golden", "sinistre": "Mon ordinateur portable a disparu de mon appartement."}
+{"id": "g-q03", "famille": "2.10", "source": "golden", "sinistre": "Mon vélo a été volé pendant que je faisais mes courses."}
+{"id": "g-q04", "famille": "2.7", "source": "golden", "sinistre": "De l'eau coule du plafond de ma salle de bain et a abîmé le mur."}
+{"id": "g-p01", "famille": "2.10", "source": "golden", "sinistre": "Mon vélo a été volé dans le local poubelles commun de la résidence, fermé à clé ; la porte a été forcée."}
+{"id": "g-p02", "famille": "2.10", "source": "golden", "sinistre": "Lors d'un cambriolage avec la porte fracturée, on m'a volé des bijoux d'une valeur de 8 000 €."}
+{"id": "g-p03", "famille": "2.10", "source": "golden", "sinistre": "Pendant mes vacances, des cambrioleurs sont entrés avec la clé que j'avais laissée sous le paillasson ; aucune trace d'effraction."}
+{"id": "g-p04", "famille": "2.7", "source": "golden", "sinistre": "Le chauffe-eau a fui ; le parquet est abîmé et le chauffe-eau lui-même est hors d'usage."}
+{"id": "g-p05", "famille": "2.7", "source": "golden", "sinistre": "L'aquarium du salon s'est brisé et l'eau a abîmé le parquet."}
+{"id": "g-p06", "famille": "2.7", "source": "golden", "sinistre": "J'ai renversé le seau d'eau du ménage et l'eau a abîmé le parquet."}
+{"id": "g-p07", "famille": "2.1", "source": "golden", "sinistre": "Une casserole oubliée sur le feu a dégagé une épaisse fumée qui a noirci les murs et le plafond de la cuisine ; les flammes sont restées dans la casserole."}
+{"id": "g-p08", "famille": "aucune", "source": "golden", "sinistre": "Pendant la tempête, un arbre est tombé sur ma voiture garée dans la rue."}
+{"id": "g-p09", "famille": "2.10", "source": "golden", "sinistre": "Mon vélo a été volé dans mon casier du club de sport."}
+{"id": "g-h01", "famille": "2.6", "source": "golden", "sinistre": "Un orage a provoqué une surtension : le réfrigérateur et la box internet ne fonctionnent plus."}
+{"id": "g-h02", "famille": "2.6", "source": "golden", "sinistre": "Une panne de courant de dix heures a fait décongeler tout le contenu de mon congélateur."}
+{"id": "g-h03", "famille": "2.8", "source": "golden", "sinistre": "La cuve de fioul de l'immeuble a fui et le fioul a imprégné le sol de ma cave."}
+{"id": "g-h04", "famille": "2.3", "source": "golden", "sinistre": "Après des pluies exceptionnelles, la rivière a débordé et l'eau a envahi mon appartement au rez-de-chaussée."}
+{"id": "g-h05", "famille": "2.3", "source": "golden", "sinistre": "Les égouts publics ont refoulé pendant un gros orage et l'eau sale a envahi la salle de bain."}
+{"id": "g-h06", "famille": "2.4", "source": "golden", "sinistre": "Pendant une manifestation qui a dégénéré, des émeutiers ont brisé les fenêtres de mon appartement au rez-de-chaussée."}
+{"id": "g-h07", "famille": "2.6", "source": "golden", "sinistre": "Mon chat s'est électrocuté en mordant un câble électrique."}
+{"id": "g-m01", "famille": "2.10", "source": "golden", "sinistre": "Des cambrioleurs ont forcé la porte, volé mon ordinateur et cassé la vitre de la porte-fenêtre en partant."}
+{"id": "g-m02", "famille": "2.1", "source": "golden", "sinistre": "Un incendie chez le voisin s'est propagé à mon appartement ; les pompiers ont inondé le salon en l'éteignant."}

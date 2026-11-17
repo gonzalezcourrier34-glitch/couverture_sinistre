@@ -672,10 +672,467 @@ INCERTAIN, avec la bonne question : la serrure est-elle de sûreté ?
 La preuve suivante : de **nouveaux cas écrits sans regarder les règles**, puis des règles **écrites
 par Mistral Large** pour les autres garanties, contrôlées de la même façon.
 
+### 7.17 Le jeu de validation : quinze cas nouveaux, et deux couverts à tort
+
+**Ce qui a été fait.** Quinze sinistres nouveaux (`data/validation/`), chacun annoté d'après
+**l'article des CG qui le tranche**, cité dans la note : fenêtre laissée ouverte pendant l'absence,
+vol par la femme de ménage, biens d'un hôte, mobilier de terrasse, simple disparition d'une montre,
+dépôt chez un réparateur, vol avec menaces dans le métro, court-circuit et flammes, brûlure de fer
+à repasser, canalisation gelée chauffage coupé, infiltration par une fenêtre, baignoire qui
+déborde, tempête, chat volé, scooter de 125 cm³. Les cas visent des clauses que les 14 premiers
+ne touchaient pas, et quelques pièges du texte (la définition du contenu inclut les biens des hôtes,
+la garantie vol les exclut ; une baignoire est reliée à l'installation, l'exclusion du récipient ne
+joue pas).
+
+**Honnêteté sur la méthode.** Les cas ont été écrits par Claude, qui a aussi écrit les règles : ce
+n'est pas un jeu « aveugle ». Ce qui limite le biais : les réponses attendues viennent du texte des
+CG, relu pour l'occasion, pas des règles ; et la mesure a été **enregistrée avant toute correction**.
+Un jeu écrit par l'auteur, ou par un gestionnaire, vaudrait mieux.
+
+**La règle du jeu.** Le jeu de validation ne sert qu'à mesurer. Si l'on corrige les règles après
+l'avoir vu, ses cas deviennent des cas de mise au point, et il en faut de nouveaux. D'où deux jeux
+séparés, choisis par `--jeu mise_au_point|validation`, et un test qui vérifie la cohérence du jeu
+mais **pas son score**.
+
+**Première mesure, règles seules sur les faits idéaux** (oracle Python, à confirmer par
+`couverture regles --jeu validation` sur le poste) :
+
+| | Justes ou acceptables | Exactes | Couverts à tort | Refus à tort |
+|---|---|---|---|---|
+| Mise au point (14 cas) | 100 % | 93 % | 0 | 0 |
+| **Validation (15 cas)** | **87 % (13/15)** | **80 % (12/15)** | **2** | **0** |
+
+La tempête (val-13), garantie non écrite en règles, donne INCERTAIN : le système avoue sa limite au
+lieu de refuser, comme voulu.
+
+**Les deux erreurs ont la même cause : des obligations de prévention que ni le vocabulaire ni les
+règles n'expriment.**
+- val-01, fenêtre ouverte pendant l'absence : l'obligation du 2.10 vise les portes **et** les
+  fenêtres ; le vocabulaire ne connaît que `portes_fermees`. Les portes étaient fermées, la règle
+  couvre.
+- val-10, gel chauffage coupé : le 2.7 exclut le gel sauf si les mesures de prévention ont été
+  respectées ; ni cette exclusion ni l'obligation (chauffer, vidanger ou isoler) ne sont en règles.
+
+C'est la limite annoncée par l'architecture elle-même : **le moteur ne peut pas être plus juste que
+le vocabulaire**. Un fait que personne n'a prévu de demander est un fait que le système ignore,
+et l'ignorer ici veut dire couvrir. Deux pistes, à trancher avant de corriger :
+1. compléter le vocabulaire et les règles (fenêtres, mesures contre le gel) : simple, mais c'est
+   de la mise au point, et il faudra un nouveau jeu de validation ;
+2. plus général : pour chaque obligation du contrat, faire de l'absence du fait un **inconnu qui
+   empêche de conclure COUVERT** quand l'obligation est pertinente (absence, période de gel) :
+   le système poserait la question au lieu de couvrir.
+
+Confirmé sur le poste par SWI-Prolog (`couverture regles --jeu validation`) : mêmes 15 réponses.
+
+**Chaîne complète sur le jeu de validation** (Mistral Small lit les faits, Prolog décide), trois exécutions :
+
+| Jeu | Justes ou acceptables | Exactes | Couverts à tort | Refus à tort | Incertains | Instables |
+|---|---|---|---|---|---|---|
+| Mise au point (14 cas) | 100 % | 90 % | 0 | 0 | | 1 |
+| **Validation (15 cas)** | **67 %** | **60 %** | **2** | **1** | **20 %** | **0** |
+
+Les réponses sont parfaitement stables d'une exécution à l'autre : les écarts ne sont pas du bruit,
+ce sont des erreurs reproductibles.
+
+**Les faits réellement lus** (`couverture analyser --methode regles` sur les quatre cas qui
+diffèrent). Deux hypothèses sur quatre étaient fausses, et l'erreur était de mon côté :
+
+| Cas | Faits lus par Mistral Small | Décision | Ce qui s'est passé |
+|---|---|---|---|
+| val-04 terrasse | vol ; mobilier_jardin ; terrasse ; absence=oui | INCERTAIN | **Lecture juste.** `vol_sur_personne` n'est pas dit ; la garantie « vol commis sur l'assuré » reste possible et l'emporte sur l'exclusion du mobilier extérieur |
+| val-15 scooter | vol ; vehicule_moteur ; garage ; clé ; effraction | INCERTAIN | **Lecture juste.** Même mécanisme, avec la même question absurde : « le vol a-t-il été commis sur vous ? » |
+| val-06 réparateur | vol ; electronique ; chez_reparateur ; effraction | INCERTAIN (acceptable) | « il y a deux semaines » n'est pas traduit en `depot_moins_30j=oui` ; la question posée est la bonne |
+| val-13 tempête | **degat_eaux** ; infiltration_exterieure | **NON_COUVERT** | La tempête disparaît : la pluie entrée devient une infiltration, exclue par le 2.7 |
+
+**Quatre constats, plus utiles que le score.**
+1. **Mes faits « idéaux » étaient trop généreux.** J'avais écrit `vol_sur_personne: non` parce que
+   le récit le laisse entendre ; une lecture fidèle ne l'invente pas. Les 87 % « règles seules »
+   étaient donc optimistes, par le choix des faits et non par les règles.
+2. **Le moteur ne suit pas la charge de la preuve pour les garanties « possibles ».** Une garantie
+   dont l'assuré n'allègue aucun fait (des violences jamais mentionnées) l'emporte sur une exclusion
+   établie, et produit INCERTAIN. La méthode par fiches avait tranché autrement (7.12) : NON_COUVERT
+   pour la garantie concernée, avec les questions des garanties possibles « à vérifier ».
+3. **Un seul événement ne suffit pas.** Une tempête qui fait entrer la pluie a une **cause** (la
+   tempête) et un **dommage** (l'eau) ; le vocabulaire n'a qu'une variable `evenement`, la lecture a
+   gardé le dommage et perdu la cause. Et un événement pour lequel aucune règle n'est écrite devrait
+   rendre la décision au plus INCERTAIN, quoi que disent les autres garanties : c'est le seul moyen
+   que « je ne sais pas » reste vrai quand le contrat n'est pas entièrement traduit.
+4. **Des questions sans rapport** : pour la tempête, le système demande s'il y a eu des flammes. La
+   garantie incendie est jugée « possible » parce que son périmètre est défini par les flammes, sans
+   lien avec l'événement déclaré. Une question doit venir d'une garantie plausible.
+
+**Ce que cela dit.** Le maillon faible n'est pas seulement la lecture : c'est **le contrat entre la
+lecture et les règles**, ce qu'on attend de la lecture (cause et dommage, faits non allégués) et ce
+que le moteur fait de ses silences. La lecture se trompe franchement une fois sur quatre (val-13),
+et c'est la plus coûteuse : un refus ferme. Le cadre à trois valeurs protège contre un fait
+**absent**, pas contre un fait **mal lu**.
+
+**Corrections envisagées**, à faire en sachant qu'elles transforment ces 15 cas en mise au point (il
+faudra un nouveau jeu de validation, idéalement écrit par l'auteur) :
+1. vocabulaire : `cause` séparée de `dommage` (ou `evenement` à plusieurs valeurs) ; fenêtres ;
+   mesures contre le gel ;
+2. moteur : un événement sans règles → au plus INCERTAIN ; une garantie possible sans fait allégué
+   ne masque plus une exclusion établie (NON_COUVERT, questions « à vérifier ») ; questions limitées
+   aux garanties plausibles ;
+3. seconde lecture des faits comparée par le code : un désaccord sur un fait décisif rend ce fait
+   inconnu, donc la décision au plus INCERTAIN, jamais un refus.
+
+### 7.17 bis Une dépendance hors de Python, et un test qui ne passait que sous Linux
+
+**SWI-Prolog n'est pas dans `uv.lock`, et c'est normal.** Le verrou de uv ne connaît que des
+paquets Python ; SWI-Prolog est un programme, appelé en sous-processus (`swipl`), comme git. Le
+pont Python officiel (`janus-swi`) exigerait de toute façon le programme installé. La dépendance
+est donc :
+- décrite dans le README (winget sous Windows, apt sous Linux) ;
+- vérifiée à l'exécution (`couverture regles` dit « SWI-Prolog introuvable » et donne la commande) ;
+- installée dans l'image Docker (`swi-prolog-nox`). En le vérifiant, un second oubli est apparu :
+  l'image ne copiait pas le dossier `regles/`. Reste à vérifier par `docker compose build` que
+  le paquet installé (non éditable) retrouve bien `regles/` et `config/` ;
+- à ajouter à la CI (`.github/workflows/ci.yml`, modifié par l'auteur) : sans elle, les tests
+  Prolog y sont sautés.
+
+**Un test qui échouait sous Windows** (`test_archive_des_consignes`) : l'archivage renvoyait des
+chemins avec « \ », le test cherchait des « / ». Ce n'était pas un défaut de logique, mais un
+défaut de portabilité que la CI sous Linux ne pouvait pas voir. Correction : chemins écrits avec
+« / » sur tous les systèmes (`as_posix`). Leçon : faire tourner les tests aussi sur le système de
+l'auteur.
+
+### 7.18 Corrections après la validation : le contrat entre la lecture et les règles
+
+Décision prise avec l'auteur : corriger maintenant, en sachant que **les 15 cas de validation
+deviennent des cas de mise au point**. Un nouveau jeu, écrit par l'auteur sans Claude, mesurera
+ces corrections.
+
+**Ce qui a changé, et pourquoi chaque changement vient du contrat ou d'un principe, pas d'un cas :**
+
+| Changement | Où | Justification |
+|---|---|---|
+| `evenement` prend plusieurs valeurs : la cause **et** le dommage | vocabulaire, consigne faits-regles v2 | Une tempête qui fait entrer la pluie a deux natures ; la lecture gardait le dommage et perdait la cause (val-13) |
+| `evenement_traduit(...)` dans chaque contrat ; un événement déclaré non traduit plafonne la décision à INCERTAIN | moteur (règle 8), règles Foyer | Un refus ne vaut que si toutes les garanties en jeu ont été examinées. Sans déclaration, tout événement est « non traduit » : le défaut est prudent |
+| « vol commis sur l'assuré » : périmètre `non(concept(batiment))` | règles Foyer | Le texte dit « en dehors des biens assurés » ; la règle l'avait omis, d'où la question absurde pour un scooter volé au garage (val-04, val-15) |
+| incendie : périmètre lié aux événements incendie, explosion, foudre | règles Foyer | Une garantie ne pose de questions que sur ce qu'elle couvre (pas de « flammes ? » pour une tempête) |
+| obligation de fermer les fenêtres en cas d'absence | vocabulaire `fenetres_fermees`, règles Foyer | Citée mot pour mot au 2.10 ; seules les portes étaient traduites (val-01) |
+| exclusion du gel sauf mesures de prévention | vocabulaire `prevention_gel`, règles Foyer | Citée mot pour mot au 2.7 ; absente des règles (val-10). Mesures inconnues : réserve, pas refus (l'assureur prouve l'exclusion) |
+| durées traduites (« il y a deux semaines » → moins de 30 jours) | consigne faits-regles v2 | La lecture ne faisait pas la conversion (val-06) |
+
+Ce qui n'a **pas** été changé, et pourquoi : la règle de combinaison. Elle donnait déjà la priorité
+à une garantie rattachée sur une garantie seulement possible ; les deux INCERTAIN de val-04 et
+val-15 venaient d'une garantie que le texte du contrat aurait dû écarter, pas du moteur.
+
+**Mesure, règles seules (oracle Python), avec des faits idéaux réalistes** (pour val-04 et
+val-15, `vol_sur_personne` n'est plus renseigné : c'est ce que donne la vraie lecture) :
+
+| Jeu | Justes ou acceptables | Exactes | Couverts à tort | Refus à tort |
+|---|---|---|---|---|
+| Mise au point d'origine (14 cas) | 100 % | 93 % | 0 | 0 |
+| Ex-validation (15 cas, désormais mise au point) | 100 % | 87 % | 0 | 0 |
+
+val-01 (fenêtre ouverte) donne INCERTAIN avec la question du lien causal : le contrat ne refuse
+que s'il y a un lien causal direct, et c'est au gestionnaire de le constater. val-13 (tempête)
+donne INCERTAIN avec « l'événement tempete relève d'une garantie pas encore traduite ».
+
+**Ce que ces chiffres valent** : ce sont des chiffres de mise au point, optimistes par construction.
+La preuve viendra d'un **nouveau jeu écrit par l'auteur**, puis de la chaîne complète (Mistral lit
+les faits) sur ce jeu, trois exécutions.
+
+### 7.19 Les règles écrites par le modèle : une rédaction contrôlée
+
+**La question de l'auteur** : « les contrats ne seront pas structurés ». C'est vrai : des centaines
+de contrats ne se traduisent pas à la main. La structure doit être **tirée du contrat par la
+machine, une fois par version des conditions générales, puis contrôlée**. Le découpage en clauses
+l'est déjà (147 clauses typées, sans intervention) ; restait la traduction en règles.
+
+**Ce que dit la littérature** (arXiv 2502.17638, déjà cité en 7.15) : un modèle qui traduit un texte
+juridique en Prolog **sans cadre** fait moins bien qu'un modèle qui répond directement ; avec un cadre
+(schéma, vocabulaire, vérifications), il fait mieux. Tout le travail porte donc sur le cadre.
+
+**La conception** (`src/couverture/redaction.py`, commande `couverture rediger`) :
+- **Le modèle n'écrit pas de Prolog** : il remplit un schéma JSON (périmètre, circonstances,
+  obligations, exclusions, limites), et le code écrit les règles. Un JSON se contrôle champ par
+  champ ; une syntaxe inventée ne se contrôle qu'en la chargeant.
+- **Il reçoit** le texte de l'article et de ses sous-sections, les définitions du contrat dont le
+  terme y apparaît, le vocabulaire commun, et les concepts déjà traduits (bâtiment, contenu…).
+- **Il ne doit rien approximer** : un fait absent du vocabulaire est **déclaré**
+  (`vocabulaire_manquant`, avec la question à poser à l'assuré) ; une phrase qu'il ne sait pas
+  traduire est **déclarée** (`non_traduit`). L'humain décide.
+- **Six contrôles automatiques** : structure ; vocabulaire ; citations mot pour mot (réparées si
+  les mots sont dans l'ordre) ; **couverture** (chaque élément des listes d'exclusions du contrat
+  est traduit ou déclaré : une exclusion oubliée, c'est un couvert à tort) ; concepts et
+  identifiants ; avec SWI-Prolog, chargement sans avertissement et **non-régression** sur les 29 cas
+  déjà annotés (les décisions qui changent sont listées).
+- **Rien n'entre dans le contrat sans un humain** : `--accepter-vocabulaire` pour les faits nouveaux,
+  correction possible du JSON puis `--controler` (sans rappeler le modèle), et `--accepter`
+  seulement si aucun contrôle ne bloque.
+
+**Et la recherche (BM25 + embeddings, fusion RRF) ?** Elle sert la méthode `conditions` : trouver
+le bon passage d'un document qu'on ne connaît pas. La méthode `regles` n'en fait pas : le moteur
+examine **toutes** les garanties traduites, une exclusion ne peut pas être manquée parce qu'elle
+était mal classée, et les citations sont écrites dans les règles puis vérifiées, pas retrouvées par
+similarité. La recherche garde deux rôles dans ce schéma : à la rédaction, retrouver pour une
+garantie les définitions et exclusions éloignées (aujourd'hui fait par les titres et les termes
+définis, voir `definitions_utiles`) ; au moment du sinistre, montrer au gestionnaire les passages
+à lire quand l'événement relève d'une garantie pas encore traduite.
+
+**L'expérience** : tempête (2.2) et bris de vitrages (2.9), deux garanties que personne n'a
+traduites. Les 10 cas de test (`data/redaction/`, jeu `redaction`) ont été écrits d'après le texte
+des CG **avant** la rédaction : pour une fois, les cas ne connaissent pas les règles. Ce qu'on
+mesurera :
+1. combien de contrôles passent sans retouche, et lesquels échouent ;
+2. ce que le modèle déclare de lui-même (vocabulaire, non traduit) plutôt que d'inventer ;
+3. après relecture et acceptation, la chaîne complète sur les 10 cas, trois exécutions.
+
+Le contrôle de couverture a été vérifié sur le vrai texte : une proposition simulée qui oubliait
+trois des sept exclusions de l'art. 2.2 a été arrêtée, avec les trois phrases.
+
+### 7.20 Deux mesures : la chaîne complète après corrections, et la première rédaction par Mistral Large
+
+**1. Chaîne complète sur les 15 ex-cas de validation** (devenus mise au point en 7.18), Mistral Small
+lit les faits avec la consigne faits-regles v2, trois exécutions. Les règles seules, avec SWI-Prolog,
+confirment l'oracle : 100 % sur les deux jeux, « Tout est en ordre », 119 tests réussis sous Windows.
+
+| | Justes ou acceptables | Exactes | Couverts à tort | Refus à tort | Instables |
+|---|---|---|---|---|---|
+| Avant les corrections (7.17) | 67 % | 60 % | 2 | 1 | 0 sur 15 |
+| **Après (7.18)** | **87 % (73 – 93 %)** | **82 %** | **0,7 en moyenne (0 – 2)** | **0** | **4 sur 15** |
+
+- Le refus à tort de la tempête a disparu, et les quatre lectures « justes mais mal exploitées »
+  (val-04, val-06, val-10, val-15) sont désormais exactes.
+- val-13 (tempête) donne COUVERT trois fois, mais par la garantie dégâts des eaux : la lecture n'a plus
+  vu d'infiltration. Bonne réponse, raison discutable : la garantie tempête n'était pas encore traduite.
+- **Le prix : la lecture est devenue instable.** Quatre cas changent d'une exécution à l'autre, et
+  deux de ces écarts sont des couverts à tort : une fois la fenêtre ouverte n'est pas lue (val-01),
+  une fois les biens de l'hôte non plus (val-03). La consigne v2 demande plus de choses ; à
+  température 0, Mistral Small n'est pas pour autant déterministe.
+- Conséquence : **la seconde lecture des faits comparée par le code** (8) devient la priorité. Un fait
+  décisif sur lequel deux lectures divergent devient inconnu, ce qui empêche un couvert à tort.
+
+**2. Première rédaction réelle : tempête (2.2) et bris de vitrages (2.9)**, consigne redaction-regles v1,
+Mistral Large, environ 4 min 30 par article.
+
+Ce que le modèle a bien fait, et c'est l'essentiel :
+- 2.2 : **les 7 exclusions de la liste traduites**, **toutes les citations exactes**, et **9 faits
+  nouveaux déclarés** (grêle, pression de la neige, construction délabrée, close et couverte, objet à
+  l'extérieur, matériaux à pied d'œuvre, ancrage en béton…), aucun inventé en silence. Il a même
+  recopié la coquille du contrat (« Ensembe des constructions ») : il cite, il ne réécrit pas ;
+- 2.9 : **les 9 exclusions traduites**, avec un vocabulaire nouveau pour les vitres et biens assimilés.
+
+Ce qui a échoué :
+- 2.2 : **un écart au schéma** (une définition écrite avec « id, nom » au lieu de « concept,
+  condition ») ; et **l'oubli de la définition de la tempête** : le contrat ne parle de tempête qu'avec
+  un vent d'au moins 80 km/h, ou des dégâts aux biens voisins. Sans elle, la règle couvrirait tout
+  coup de vent. Aucun contrôle ne l'aurait vu : la liste d'exclusions était complète ;
+- 2.9 : un concept employé sans être défini (`sanitaires`), et un événement inventé (`felure`) ;
+- **et un défaut de mon côté** : le concept inconnu a fait échouer SWI-Prolog pendant la
+  non-régression, l'exception n'était pas attrapée, et **la réponse du modèle pour 2.9 a été perdue**
+  (seules les règles générées sont restées).
+
+Corrections (consigne redaction-regles v2, code) :
+- la réponse du modèle est **enregistrée dès qu'elle arrive**, avant tout contrôle ;
+- le schéma est contrôlé explicitement, avec des messages en clair, et **une seule reprise** renvoie
+  au modèle ses écarts (« un élément de definitions n'a pas concept, condition ») ;
+- un nouveau contrôle exige que **la définition de l'événement couvert** (« tempête ») soit employée
+  ou déclarée non traduite ;
+- Prolog n'est pas lancé tant qu'un concept est inconnu, et une erreur par cas devient un contrôle
+  bloquant au lieu d'un plantage ;
+- la consigne donne un exemple de définition et de limite, et la règle 6 sur l'événement défini.
+
+La vraie réponse pour 2.2 est gardée comme jeu de test (`tests/fixtures/`) : les contrôles v2
+l'arrêtent sur le schéma, puis, une fois l'écart corrigé, sur la définition de la tempête.
+
+**Bilan provisoire de la rédaction** : sur le fond (exclusions, citations, faits déclarés), Mistral
+Large fait le travail. Sur la forme et sur les conditions implicites (une définition qui restreint la
+garantie), il faut le cadre. C'est ce que disait la littérature, mesuré ici sur le vrai contrat.
+
+**Autre signal** : GitHub signale 43 vulnérabilités dans les dépendances verrouillées (5 critiques).
+À traiter par une mise à jour du verrou (`uv lock --upgrade`) et une relecture des paquets
+optionnels (MLflow en tire beaucoup).
+
+### 7.21 Le golden set et le banc d'essai : tout vérifier d'un coup
+
+**La demande de l'auteur** : « un golden set béton, en banc, pour qu'on vérifie tout ». Jusqu'ici,
+chaque étape avait son jeu de cas (mise au point, validation, rédaction), mesuré à part, avec ses
+propres commandes. Il manquait **une référence unique, figée, qu'on rejoue à chaque changement**.
+
+**Le golden set** (`data/golden/`, version 1, 68 cas, voir son LISEZMOI) :
+- les 39 cas existants, **étiquetés**, et 29 cas nouveaux qui comblent ce qu'aucun jeu ne testait :
+  la **langue** (langage familier, fautes de frappe, déclaration longue et bavarde, négation),
+  les **informations manquantes** (le système doit poser *la bonne* question), de nouveaux **pièges**
+  du texte (clé sous le paillasson, seau renversé, aquarium, fumée sans incendie, casier du club),
+  les **garanties non traduites** (électricité, mazout, catastrophes naturelles, attentat : jamais
+  un refus), et les **sinistres multiples** (cambriolage et vitre cassée, incendie et eau d'extinction) ;
+- chaque cas : réponse attendue et tolérée, clauses et questions attendues, garantie, thèmes,
+  origine, auteur, une note qui cite le contrat, et ses faits idéaux ;
+- **figé par une empreinte** : toute modification passe par `couverture banc --figer "raison"`, sinon
+  un test échoue ;
+- **à valider par l'auteur** : `--fiche` écrit une fiche de relecture par garantie (`A_VALIDER.md`),
+  et le rapport compte les cas validés.
+
+**Le banc** (`src/couverture/banc.py`, `couverture banc`) rejoue le golden set en **trois couches**,
+pour savoir *où* naît une erreur, ce que les mesures précédentes ne disaient pas :
+1. **règles** : faits idéaux → moteur, sans modèle ;
+2. **lecture** : faits lus par le modèle comparés aux faits idéaux, fait par fait (rappel,
+   **contradictions**, faits en trop) ;
+3. **chaîne** : la méthode complète, trois exécutions, cas instables listés.
+Il mesure aussi le rappel des clauses et des **questions**, et le nombre de questions posées par
+réponse « incertain » (six questions pour un vélo volé, personne ne les lit). Des **portes**
+(`seuils.json`) décident si le système est présentable, et la commande sort en erreur si l'une échoue :
+on peut la brancher sur la CI. Chaque passage est gardé (`data/bancs/`) et comparé au précédent.
+
+**Premier passage, couche règles (oracle Python ; à confirmer par SWI-Prolog sur le poste)** :
+
+| Justes ou acceptables | Exactes | Couverts à tort | Refus à tort | Incertains |
+|---|---|---|---|---|
+| 84 % | 66 % | **2** | **7** | 25 % |
+
+Les portes échouent, et c'est le but : le banc voit ce que les jeux précédents ne voyaient pas.
+- **2 couverts à tort**, deux phrases du contrat absentes des règles : l'obligation de ne pas laisser
+  les clés à proximité (g-p03), l'exclusion du récipient non relié à l'installation (g-p06).
+- **7 refus à tort**, deux causes :
+  - les **garanties non traduites** déclarées avec l'événement « autre » (électricité, mazout) ou
+    « dégât des eaux » (inondation, égouts) : le plafond « au plus INCERTAIN » de 7.18 ne joue que
+    pour un événement nommé et non traduit. Le vocabulaire n'a pas de valeur pour ces périls, donc
+    la lecture ne peut pas les nommer : **le vocabulaire doit connaître tous les périls du contrat**,
+    même ceux dont les règles ne sont pas écrites ;
+  - la **fumée sans incendie** (g-p07) : 2.1 couvre aussi « le dégagement de suie et de fumée »,
+    absent des règles.
+- Par thème : 100 % sur la langue, les informations manquantes, les variantes et les sinistres
+  multiples ; 63 % sur les garanties non traduites. Par garantie : 2.3, 2.6 et 2.8 à 0 %.
+
+**Ce que le banc ne vérifie pas encore** : les montants (limites d'indemnisation), et des cas écrits
+sans Claude. Les 68 réponses attendues sont toutes de Claude : le golden set n'est « béton » qu'une
+fois validé par l'auteur.
+
+### 7.22 Deuxième rédaction (consigne v2) : 2.9 propre, 2.2 trop lente, et un vocabulaire qui doit devenir une hiérarchie
+
+**Ce qui s'est passé** (Mistral Large, consigne redaction-regles v2, 18 min au total) :
+- **2.2 (tempête)** : pas de réponse en 300 s, deux fois. La consigne v2 est plus longue et la
+  garantie touche trois périls ; le délai est porté à 600 s pour la rédaction. La proposition v1
+  reste en place, rien n'est perdu (la sauvegarde immédiate de 7.20 a joué son rôle).
+- **2.9 (bris de vitrages)** : réponse conforme au schéma du premier coup (pas de reprise), les
+  9 exclusions traduites, la définition des sanitaires ajoutée (l'oubli de la v1 est corrigé),
+  aucun élément non traduit. Il ne reste que des **décisions humaines** :
+  - 22 faits nouveaux déclarés (16 sortes de biens, travaux, vitre placée, type de dommage) ;
+  - 3 exclusions qui ne visent qu'un bien mais excluraient tout le sinistre (signalées par un
+    nouveau contrôle « portée », à relire) ;
+  - une citation exacte mais rattachée à « 12 » au lieu de « 12/sanitaires » : désormais
+    rattachée automatiquement à la seule clause qui contient le texte.
+
+**Le problème de conception que 2.9 révèle : le vocabulaire est plat.** Le modèle propose `vitre`,
+`miroir`, `chassis`… Mais une vitre est aussi un élément du bâtiment : si la lecture écrit
+« vitre », les garanties incendie et dégâts des eaux, qui demandent `element_batiment`, ne la
+reconnaissent plus. Ajouter des valeurs fines casse les règles écrites avec des valeurs larges.
+Réponse : une **hiérarchie** dans le vocabulaire (`"parents": {"vitre": ["element_batiment"]}`) ;
+avant la décision, le code ajoute les parents aux faits lus (`prolog.etendre_faits`, transitif,
+idempotent). Une règle large reconnaît une valeur fine sans que la lecture ait à tout énumérer,
+et une règle fine reste précise. Le banc et les contrôles de non-régression passent par la même
+extension.
+
+**Ce qui reste à décider par l'auteur** pour 2.9 : accepter le vocabulaire (en fusionnant au
+besoin), donner ses parents à chaque valeur nouvelle, corriger les trois portées, puis
+`--controler` et `--accepter`. Les faits idéaux des cas de bris du golden set devront être
+réécrits dans le nouveau vocabulaire : c'est une nouvelle version du golden set, notée comme telle.
+
+### 7.22 bis La hiérarchie, refaite à trois valeurs ; 2.9 relue ; golden set v2
+
+**L'auteur a accepté le vocabulaire de 2.9** (`--accepter-vocabulaire 2.9`, 21 ajouts). La
+non-régression a aussitôt signalé 7 cas de bris passés d'INCERTAIN à NON_COUVERT : leurs faits
+idéaux disaient « élément du bâtiment » pour une vitre, et la nouvelle règle demande « vitre ».
+
+**Ma première hiérarchie était fausse.** Elle ajoutait les parents aux faits avant la décision (une
+vitre devient aussi « élément du bâtiment »). Deux défauts : un fait vague (« élément du bâtiment »)
+restait un refus pour une règle précise, et une télévision devenait aussi « électronique », si bien
+que l'exclusion qui ne vise que les appareils audiovisuels devenait partielle à tort.
+
+**La version retenue est dans le moteur, à trois valeurs** (`moteur.pl`, et l'oracle) :
+- un fait précis vaut pour sa catégorie : « vitre » répond **oui** à une règle sur « élément du bâtiment » ;
+- un fait vague ne tranche pas : « élément du bâtiment » répond **inconnu** à une règle sur « vitre »,
+  et le moteur demande « Quels biens sont endommagés ? » au lieu de refuser ;
+- un fait sans rapport reste **non** ; une catégorie et sa sous-catégorie ne comptent pas comme
+  deux biens pour une exclusion partielle.
+La hiérarchie vient du vocabulaire (`"parents"`), et Python la pose en faits pour le moteur. C'est la
+même idée que la logique à trois valeurs de 7.16 : ne jamais confondre « je ne sais pas » avec « non ».
+
+**Relecture de 2.9** (à la demande de l'auteur, notée dans la proposition) : les trois exclusions qui
+ne visent qu'un bien n'excluent plus que ce bien (appareils audiovisuels, objets en verre ; serres et
+couvertures de piscine, scindées en deux).
+
+**Golden set v2** : les faits idéaux des 8 cas de bris sont réécrits dans le nouveau vocabulaire
+(vitre, table de cuisson, appareil audiovisuel, objet en verre, miroir non placé, rayure). Mesure,
+règles seules (oracle), avant et après l'ajout des règles de 2.9 rédigées par Mistral Large et relues :
+
+| | Justes ou acceptables | Exactes | Couverts à tort | Refus à tort | Incertains |
+|---|---|---|---|---|---|
+| Sans 2.9 | 84 % | 66 % | 2 | 7 | 25 % |
+| **Avec 2.9** | **85 %** | **77 %** | **2** | **7** | **15 %** |
+
+Les 8 cas de bris sont exacts, aucun couvert à tort n'apparaît, et les erreurs restantes sont
+celles de 7.21 (clés, récipient, fumée, périls non nommés). **Première garantie rédigée par le modèle,
+contrôlée, relue et mesurée** : il a fallu une relecture de trois portées et une décision de
+vocabulaire, pas une réécriture.
+
+**Deux fautes de ma part au premier passage sur le poste** : `banc.py` n'avait pas été déposé (il
+appelait encore l'extension abandonnée), et les nouvelles règles `ancetre`/`vague` étaient insérées au
+milieu des clauses de `eval`, ce que SWI-Prolog signale par un avertissement (traité comme une
+erreur, à raison). L'oracle Python ne pouvait pas le voir. Un test vérifie désormais, sans
+SWI-Prolog, que les clauses de chaque prédicat se suivent (moteur et règles du contrat), et la liste
+des fichiers déposés est relue avant chaque dépôt.
+
+### 7.23 Premier banc complet sur le poste : 2.9 acceptée, et ce que le banc dit vraiment
+
+**2.9 est entrée dans le contrat** : `--controler` sans contrôle bloquant ; la non-régression
+liste les 7 cas de bris qui passent d'INCERTAIN à leur réponse attendue ; `--accepter 2.9` ;
+`couverture regles` : « Tout est en ordre », 52 citations vérifiées, 99 couples du vocabulaire.
+150 tests réussis sous Windows, dont les tests SWI-Prolog. **Première garantie rédigée par le
+modèle et en service.**
+
+**Premier passage complet du banc** (golden v2, 68 cas, chaîne en trois exécutions, 40 s chacune) :
+
+| Couche | Justes ou acceptables | Exactes | Couverts à tort | Refus à tort | Instables |
+|---|---|---|---|---|---|
+| Règles seules (SWI-Prolog) | 85 % | 76 % | 2 | 7 | — |
+| Chaîne complète | 83 % (81 – 85 %) | 66 % | **5 (5 – 5)** | 4 (3 – 5) | 8 sur 68 |
+
+Toutes les portes échouent. Les **5 couverts à tort de la chaîne** sont les mêmes à chaque exécution :
+- 2 viennent des **règles** (déjà vus en 7.21) : la clé sous le paillasson, le seau renversé ;
+- 3 viennent de la **lecture** :
+  - g-l01 : « le local à vélos de la résidence » lu comme une annexe privée, au lieu des parties communes ;
+  - red-b05 : « pas encore accroché » non lu comme une vitre non placée ;
+  - g-q03 : « pendant mes courses » : un lieu dans le bâtiment est inventé, au lieu de rester inconnu.
+Plus val-01 (la fenêtre ouverte), lue une fois sur trois.
+
+**Le banc lui-même était mal calibré sur la lecture.** Il annonçait 82 % de faits retrouvés et
+22 cas « contredits », mais :
+- il comptait comme manquants les faits négatifs que la déclaration ne dit pas (« pas de
+  violence ») : la consigne interdit justement de les inventer ;
+- il comptait comme contradiction un mot plus vague ou plus précis (« électronique » pour une
+  télévision), que la hiérarchie de 7.22 bis traite correctement.
+**Correction de l'instrument** : la mesure qui compte est **« la lecture change-t-elle la
+décision ? »**. Le banc passe désormais les faits lus dans les mêmes règles que les faits
+idéaux, et compare les décisions : c'est la part d'erreur qui vient de la lecture et d'elle
+seule. Les contradictions tiennent compte de la hiérarchie (un fait vague est signalé à part).
+Les portes de la lecture changent en conséquence (décisions changées ≤ 2, vers un couvert à
+tort : 0, contradictions ≤ 5), au lieu du rappel brut ≤ 90 % qui mesurait mal : c'est un
+changement d'instrument, pas un relâchement.
+
+**La suite, dans l'ordre** :
+1. relancer le banc avec l'instrument corrigé : la mesure de référence propre ;
+2. la lecture : donner au modèle le **sens** de chaque variable et de chaque valeur proche
+   (parties communes ou annexe, débordement d'un récipient ou fuite, électronique ou audiovisuel),
+   et la règle de ne jamais inventer un lieu ;
+3. les règles : clés, récipient, fumée, casier, et les périls non traduits nommés dans le vocabulaire ;
+4. la seconde lecture comparée par le code, contre les 8 cas instables.
+Chaque étape repassée au banc, une à la fois, pour savoir ce qu'elle apporte.
+
 ## 8. Ce qui reste à faire
 
-- Écrire de nouveaux cas **sans regarder les règles** (jeu de validation), et les valider avec l'auteur.
-- Faire écrire les règles des autres garanties par Mistral Large, avec la même vérification (vocabulaire, citations, cas).
+- Un **nouveau jeu de validation écrit par l'auteur**, sans Claude (les 15 cas de 7.17 sont devenus de la mise au point, 7.18) ; le placer dans `data/validation/` à la place des actuels, qui rejoignent la mise au point.
+- Mesurer la chaîne complète sur ce nouveau jeu (`--jeu validation --repetitions 3`).
+- **Valider le golden set** (`couverture banc --fiche`, puis `--figer "validation"`), et y ajouter des cas écrits par l'auteur.
+- Passer le banc complet sur le poste (`couverture banc --contrat foyer-appart123-2025`) : règles (SWI-Prolog), lecture et chaîne.
+- Corriger ce que le banc montre : les périls non traduits dans le vocabulaire, les clés et le récipient (règles vol et eau), la fumée (2.1).
+- Relancer la rédaction (consigne v2) sur 2.2 et 2.9, relire, accepter le vocabulaire, mesurer le jeu `redaction` (7.20).
+- Une seconde lecture des faits comparée par le code : la lecture est devenue la source d'instabilité (7.20).
+- Mettre à jour les dépendances signalées par GitHub (43 vulnérabilités).
 - Contrôler la lecture des faits (une seconde lecture comparée par le code, comme la relecture v2).
 - Valider les 14 réponses attendues sur Foyer (proposées, pas encore validées).
 - Construire le **vocabulaire de faits commun** à partir des conditions de Foyer, puis traduire les
@@ -705,3 +1162,24 @@ par Mistral Large** pour les autres garanties, contrôlées de la même façon.
 18. Ne pas demander à un modèle de juger le travail d'un autre quand on peut lui faire refaire le travail et comparer.
 19. Un score obtenu en connaissant les cas est optimiste : il faut un jeu de cas écrit sans regarder les règles.
 20. Quand on ne peut pas exécuter un langage, une seconde implémentation et un test différentiel valent mieux qu'un pari.
+21. Le moteur ne peut pas être plus juste que le vocabulaire : un fait jamais demandé est un fait ignoré, et l'ignorer peut vouloir dire couvrir.
+22. Un jeu de validation se mesure une fois, avant correction ; corrigé, il devient de la mise au point.
+23. Trois valeurs protègent contre un fait absent, pas contre un fait mal lu : une lecture fausse peut produire un refus ferme.
+24. Lire les faits obtenus avant de corriger : deux hypothèses sur quatre étaient fausses.
+25. Des faits « idéaux » écrits par celui qui connaît la réponse sont trop généreux ; la vraie mesure passe par la vraie lecture.
+26. Un refus ne vaut que si toutes les garanties en jeu ont été examinées : un contrat partiellement traduit doit le savoir de lui-même.
+27. Avant de toucher au moteur, relire le texte : deux erreurs « du moteur » étaient une phrase du contrat oubliée dans une règle.
+28. Le modèle remplit un schéma, le code écrit les règles : ce qui se contrôle champ par champ ne s'invente pas.
+29. Pour traduire un contrat, le contrôle le plus utile est celui de la couverture : ce que le modèle a omis, pas ce qu'il a écrit.
+30. Une dépendance hors de Python (un programme) se déclare, se vérifie à l'exécution et s'installe dans l'image : le verrou de uv ne la voit pas.
+31. Faire tourner les tests sur le système de l'auteur : la CI sous Linux ne voit pas les « \ » de Windows.
+32. Enregistrer la réponse d'un modèle avant de la contrôler : une rédaction coûte des minutes, un contrôle qui plante ne doit pas la perdre.
+33. Un contrôle de couverture sur les listes ne voit pas les conditions implicites : la définition d'un terme peut restreindre une garantie autant qu'une exclusion.
+34. Une consigne qui demande plus rend la lecture moins stable : mesurer la variance à chaque version.
+35. Un banc qui ne mesure qu'une réponse finale dit qu'il y a une erreur ; un banc en couches dit où elle naît.
+36. Le vocabulaire doit nommer tous les périls du contrat, même non traduits : on ne peut pas dire « je ne sais pas » de ce qu'on ne sait pas nommer.
+37. Un vocabulaire commun à plusieurs contrats doit être une hiérarchie : une valeur fine ne doit pas casser les règles écrites avec des valeurs larges.
+38. Une hiérarchie de valeurs se raisonne à trois valeurs aussi : un fait vague ne vaut ni oui ni non pour une valeur précise.
+39. Un oracle vérifie la logique, pas la forme : ce que l'outil réel refuse (un avertissement de chargement) mérite son propre test.
+40. Mesurer la lecture par son effet sur la décision : un fait manqué qui ne change rien n'est pas une erreur, un fait inventé qui fait couvrir en est une grave.
+41. Corriger l'instrument avant de corriger le système : un banc mal calibré fait chercher au mauvais endroit.

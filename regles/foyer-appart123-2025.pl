@@ -1,6 +1,7 @@
 :- encoding(utf8).
 /*  Règles du contrat Foyer « appart 123 » (2025) : vol (art. 2.10), incendie (art. 2.1),
     dégâts des eaux (art. 2.7), et les définitions de l'art. 12 qu'elles emploient.
+    Les autres garanties (tempête, bris de vitrages…) ne sont pas encore traduites : voir evenement_traduit.
 
     Écrites à la main, pour servir de modèle avant de les faire écrire par un modèle de langage.
     Chaque règle garde, mot pour mot, la phrase du contrat qu'elle traduit : `couverture regles`
@@ -14,7 +15,17 @@
 */
 
 :- discontiguous definition/4, precision/3, garantie/4, perimetre/2, circonstance/4,
-                 obligation/6, exclusion/6, limite/4.
+                 obligation/6, exclusion/6, limite/4, evenement_traduit/1.
+
+%  Les événements dont les garanties sont traduites ici. Un autre événement déclaré (tempête, bris de
+%  vitrage…) relève d'une garantie qui n'est pas encore en règles : le moteur ne conclut alors pas
+%  à un refus (au plus INCERTAIN). C'est ce qui garde vrai le « je ne sais pas » d'un contrat
+%  partiellement traduit (docs/DEMARCHE.md, 7.17).
+evenement_traduit(vol).
+evenement_traduit(incendie).
+evenement_traduit(explosion).
+evenement_traduit(foudre).
+evenement_traduit(degat_eaux).
 
 % --- Définitions (art. 12) -----------------------------------------------------------------------
 
@@ -64,6 +75,8 @@ circonstance(vol_batiment, si(ou([f(lieu, garage), f(lieu, annexe)]), concept(se
     "si ces locaux sont fermés par une serrure de sûreté").
 obligation(vol_batiment, si(f(absence, oui), f(portes_fermees, oui)), f(effraction, oui), oui, '2.10',
     "en cas d’absence, fermer à clé ou au moyen d'un dispositif électronique toutes les portes extérieures du bâtiment").
+obligation(vol_batiment, si(f(absence, oui), f(fenetres_fermees, oui)), f(effraction, oui), oui, '2.10',
+    "Vous devez de même fermer correctement les fenêtres, oscillo-battants, soupiraux et autres ouvertures du bâtiment facilement accessibles").
 exclusion(vol_batiment, f(simple_disparition, oui), tout, non, '2.10',
     "le vol du contenu situé dans le bâtiment sauf la simple disparition").
 limite(vol_batiment, '2.10',
@@ -74,6 +87,8 @@ garantie(vol_personne, "Vol commis sur l’assuré avec violences", '2.10',
     "le vol commis sur l’assuré, en dehors des biens assurés, suite à violences physiques et/ou menaces").
 perimetre(vol_personne, concept(vol)).
 perimetre(vol_personne, f(vol_sur_personne, oui)).
+%  « en dehors des biens assurés » : un vol au bâtiment (garage, terrasse…) n'est pas un vol sur la personne.
+perimetre(vol_personne, non(concept(batiment))).
 circonstance(vol_personne, f(violence, oui), '2.10', "suite à violences physiques et/ou menaces").
 limite(vol_personne, '2.10',
     "Le vol commis sur l’assuré, avec violence et/ou menaces, en dehors des biens assurés", "2 500 EUR").
@@ -105,6 +120,8 @@ exclusion([vol_batiment, vol_personne, vol_reparateur], f(bien, mobilier_jardin)
 garantie(incendie, "Incendie et risques connexes", '2.1',
     "Nous couvrons les dommages matériels directement causés par").
 perimetre(incendie, ou([concept(incendie), f(evenement, explosion), f(evenement, foudre)])).
+%  La garantie ne se rattache qu'aux événements qu'elle couvre : pas de question sur les flammes pour une tempête.
+perimetre(incendie, ou([f(evenement, incendie), f(evenement, explosion), f(evenement, foudre)])).
 perimetre(incendie, ou([concept(contenu), f(bien, element_batiment)])).
 perimetre(incendie, concept(batiment)).
 exclusion(incendie, f(chaleur_sans_feu, oui), tout, non, '2.1',
@@ -124,3 +141,38 @@ exclusion(degats_eaux, f(cause_eau, infiltration_exterieure), tout, oui, '2.7-b'
 exclusion(degats_eaux, f(cause_eau, inondation), tout, oui, '2.7-b',
     "par une inondation ou un débordement ou refoulement d'égouts publics").
 exclusion(degats_eaux, f(cause_eau, condensation), tout, non, '2.7-b', "par la condensation").
+%  Le gel est exclu sauf si les mesures de prévention ont été respectées ; inconnues, c'est une réserve.
+exclusion(degats_eaux, et([f(cause_eau, gel), f(prevention_gel, non)]), tout, oui, '2.7-b',
+    "par le gel, néanmoins, les dégâts qui résultent de l'écoulement d'eau consécutif au gel sont couverts lorsque les mesures de prévention reprises ci-dessous ont été respectées").
+
+% --- Art. 2.9 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-17 ---
+evenement_traduit(bris).
+definition(vitrage_assure, ou([f(bien, vitre), f(bien, miroir), f(bien, coupole), f(bien, panneau_verre_plastique), f(bien, table_cuisson_vitroceramique), f(bien, panneau_solaire), f(bien, mur_rideau), f(bien, sanitaire), f(bien, verre_meuble)]), '2.9',
+    "Nous assurons le bris et la fêlure de vitres, y compris le bris des biens suivants (assimilés aux vitres) : les miroirs, les coupoles, panneaux ou enseignes en verre ou en plastique, les tables de cuisson en vitrocéramique, les panneaux solaires fixés au bâtiment, les murs rideaux, les sanitaires et le verre intégré dans des meubles").
+definition(sanitaire, f(bien, sanitaire), '12/sanitaires',
+    "Les éviers, lavabos, baignoires, pédiluves, douches, toilettes et bidets, saunas, hammams et bains à bulles intérieurs").
+garantie(bris_vitrages, "Bris et fêlure de vitrages", '2.9',
+    "Nous assurons le bris et la fêlure de vitres, y compris le bris des biens suivants (assimilés aux vitres)").
+perimetre(bris_vitrages, f(evenement, bris)).
+perimetre(bris_vitrages, ou([concept(vitrage_assure), f(bien, cadre), f(bien, chassis), f(bien, soubassement)])).
+exclusion(bris_vitrages, f(travaux_batiment, autres_que_entretien_reparation), tout, oui, '2.9-a',
+    "les dommages causés par les travaux au bâtiment autres que d’entretien et de réparation").
+exclusion(bris_vitrages, f(travaux_vitres, autres_que_nettoyage), tout, oui, '2.9-a',
+    "les dommages causés par les travaux (nettoyage excepté) aux vitres, châssis et biens assimilés").
+exclusion(bris_vitrages, f(bien, appareil_audiovisuel), bien(appareil_audiovisuel), oui, '2.9-a',
+    "les parties vitrées des appareils audiovisuels y compris les écrans de télévision").
+exclusion(bris_vitrages, f(bien, serre), bien(serre), oui, '2.9-a',
+    "les parties vitrées des serres et des couvertures de piscine").
+exclusion(bris_vitrages, f(vitre_placee, non), tout, oui, '2.9-a',
+    "les dommages aux vitres et biens assimilés non placés").
+exclusion(bris_vitrages, f(type_dommage, rayure_ou_ecaillement), tout, oui, '2.9-a',
+    "les rayures et écaillements des vitres et biens assimilés").
+exclusion(bris_vitrages, et([f(bien, sanitaire), f(cause_dommage, gel)]), tout, oui, '2.9-a',
+    "les dommages causés aux sanitaires par le gel").
+exclusion(bris_vitrages, f(bien, objet_verre_non_vitre), bien(objet_verre_non_vitre), oui, '2.9-a',
+    "les dommages causés aux objets en verre autres que des vitres et biens assimilés").
+exclusion(bris_vitrages, f(type_dommage, opacification_ou_perte_etancheite), tout, oui, '2.9-a',
+    "l’opacification ou perte détanchéité des vitrages isolants").
+exclusion(bris_vitrages, f(bien, couverture_piscine), bien(couverture_piscine), oui, '2.9-a',
+    "les parties vitrées des serres et des couvertures de piscine").
+limite(bris_vitrages, '2.9', "Dommages causés aux vitrages d’art, frais de reconstitution des inscriptions, peintures, 5.000 EUR décorations", "5000 EUR").

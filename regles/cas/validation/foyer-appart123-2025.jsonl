@@ -1,0 +1,15 @@
+{"sinistre_id": "val-01", "faits": {"evenement": "vol", "bien": ["electronique"], "lieu": ["logement"], "absence": "oui", "portes_fermees": "oui", "effraction": "non", "vol_sur_personne": "non", "fenetres_fermees": "non"}}
+{"sinistre_id": "val-02", "faits": {"evenement": "vol", "bien": ["bijoux"], "lieu": ["logement"], "auteur": "personnel_prive", "effraction": "non", "vol_sur_personne": "non"}}
+{"sinistre_id": "val-03", "faits": {"evenement": "vol", "bien": ["electronique"], "lieu": ["logement"], "proprietaire": "hote", "effraction": "oui", "vol_sur_personne": "non"}}
+{"sinistre_id": "val-04", "faits": {"evenement": "vol", "bien": ["mobilier_jardin"], "lieu": ["terrasse"]}}
+{"sinistre_id": "val-05", "faits": {"evenement": "vol", "bien": ["bijoux"], "lieu": ["logement"], "simple_disparition": "oui", "effraction": "non", "absence": "oui", "vol_sur_personne": "non"}}
+{"sinistre_id": "val-06", "faits": {"evenement": "vol", "bien": ["electronique"], "lieu": ["chez_reparateur"], "depot_moins_30j": "oui", "effraction": "oui", "vol_sur_personne": "non"}}
+{"sinistre_id": "val-07", "faits": {"evenement": "vol", "bien": ["valeurs", "electronique"], "lieu": ["voie_publique"], "vol_sur_personne": "oui", "violence": "oui"}}
+{"sinistre_id": "val-08", "faits": {"evenement": "incendie", "bien": ["element_batiment", "electronique"], "lieu": ["logement"], "flammes": "oui", "embrasement": "oui"}}
+{"sinistre_id": "val-09", "faits": {"evenement": "autre", "bien": ["objet_divers"], "lieu": ["logement"], "flammes": "non", "embrasement": "non"}}
+{"sinistre_id": "val-10", "faits": {"evenement": "degat_eaux", "bien": ["canalisation", "element_batiment"], "lieu": ["logement"], "cause_eau": "gel", "absence": "oui", "prevention_gel": "non"}}
+{"sinistre_id": "val-11", "faits": {"evenement": "degat_eaux", "bien": ["element_batiment"], "lieu": ["logement"], "cause_eau": "infiltration_exterieure"}}
+{"sinistre_id": "val-12", "faits": {"evenement": "degat_eaux", "bien": ["element_batiment"], "lieu": ["logement"], "cause_eau": "fuite_installation"}}
+{"sinistre_id": "val-13", "faits": {"evenement": ["tempete", "degat_eaux"], "bien": ["element_batiment", "mobilier"], "lieu": ["logement"], "cause_eau": "infiltration_exterieure"}}
+{"sinistre_id": "val-14", "faits": {"evenement": "vol", "bien": ["animal"], "lieu": ["logement"], "effraction": "oui", "vol_sur_personne": "non"}}
+{"sinistre_id": "val-15", "faits": {"evenement": "vol", "bien": ["vehicule_moteur"], "lieu": ["garage"], "fermeture": "cle", "effraction": "oui"}}

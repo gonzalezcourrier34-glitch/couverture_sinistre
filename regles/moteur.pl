@@ -10,6 +10,7 @@
       obligation(Id, Condition, Exception, LienCausal, Article, Texte).
       exclusion(Cible, Condition, Portee, ADemander, Article, Texte).
       limite(Id, Article, Texte, Montant).
+      evenement_traduit(Evenement).                          % événements dont les garanties sont en règles
 
     Une condition est un terme :
       f(Variable, Valeur)   un fait de la déclaration (variables de regles/vocabulaire.json)
@@ -29,6 +30,8 @@
       7. sinon couvert ; une exclusion « à demander » inconnue est une réserve (charge de la
          preuve : l'assureur prouve l'exclusion) ; une exclusion qui ne vise qu'un bien
          (Portee = bien(B)) n'exclut que ce bien.
+      8. un événement déclaré qui n'est pas traduit en règles (ni « autre ») : la décision est au
+         plus INCERTAIN. Un refus ne vaut que si toutes les garanties en jeu ont été examinées.
 */
 
 :- use_module(library(lists)).
@@ -36,6 +39,7 @@
 :- use_module(library(http/json)).
 
 :- dynamic fait/2.
+:- dynamic parent_valeur/3.       % parent_valeur(Variable, Valeur, Parent) : la hiérarchie du vocabulaire
 
 %!  regle(+But) : appelle un prédicat du contrat, sans erreur s'il n'en a aucune clause.
 regle(But) :-
@@ -49,9 +53,12 @@ eval(vrai, oui) :- !.
 eval(faux, non) :- !.
 eval(f(V, X), E) :- !,
     (   fait(V, X) -> E = oui
+    ;   fait(V, C), ancetre(V, C, X) -> E = oui         % fait précis, règle large : une vitre est un élément du bâtiment
+    ;   vague(V, X) -> E = inconnu                       % fait vague, règle précise : « élément du bâtiment » ne dit pas « vitre »
     ;   fait(V, _) -> E = non
     ;   E = inconnu
     ).
+
 eval(non(C), E) :- !, eval(C, E0), inverse(E0, E).
 eval(et(L), E) :- !, maplist(eval, L, Es), et3(Es, E).
 eval(ou(L), E) :- !, maplist(eval, L, Es), ou3(Es, E).
@@ -62,6 +69,15 @@ eval(concept(N), E) :- !,
     ;   throw(error(existence_error(concept, N), _))
     ).
 eval(T, _) :- throw(error(type_error(condition, T), _)).
+
+%  ancetre(V, X, A) : A est une catégorie plus large que X (vocabulaire, « parents »).
+ancetre(V, X, A) :- parent_valeur(V, X, A).
+ancetre(V, X, A) :- parent_valeur(V, X, M), ancetre(V, M, A).
+
+%  Un fait déclaré P, plus large que X, et dont aucun fait déclaré ne précise la nature : P ne dit ni oui ni non à X.
+vague(V, X) :-
+    fait(V, P), ancetre(V, X, P),
+    \+ ( fait(V, C), C \== P, ancetre(V, C, P) ).
 
 inverse(oui, non).
 inverse(non, oui).
@@ -86,12 +102,21 @@ variables(concept(N), Vs) :- !,
     (   regle(definition(N, C, _, _)) -> variables(C, Vs) ; Vs = [] ).
 variables(_, []).
 
-%!  inconnues(+Condition, -Variables) : les variables sans fait dont dépend la condition.
+%!  inconnues(+Condition, -Variables) : les variables dont un fait élémentaire de la condition est
+%   inconnu (pas de fait, ou un fait trop vague) : ce qu'il faut demander.
 inconnues(C, Vs) :-
-    variables(C, V0),
-    exclude(connue, V0, V1),
-    sort(V1, Vs).
-connue(V) :- fait(V, _).
+    feuilles(C, Fs),
+    findall(V, ( member(f(V, X), Fs), eval(f(V, X), inconnu) ), V0),
+    sort(V0, Vs).
+
+feuilles(f(V, X), [f(V, X)]) :- !.
+feuilles(non(C), Fs) :- !, feuilles(C, Fs).
+feuilles(et(L), Fs) :- !, maplist(feuilles, L, Fss), append(Fss, Fs).
+feuilles(ou(L), Fs) :- !, maplist(feuilles, L, Fss), append(Fss, Fs).
+feuilles(si(A, B), Fs) :- !, feuilles(A, Fa), feuilles(B, Fb), append(Fa, Fb, Fs).
+feuilles(concept(N), Fs) :- !,
+    (   regle(definition(N, C, _, _)) -> feuilles(C, Fs) ; Fs = [] ).
+feuilles(_, []).
 
 concepts(concept(N), [N|Ns]) :- !,
     (   regle(definition(N, C, _, _)) -> concepts(C, Ns) ; Ns = [] ).
@@ -137,7 +162,7 @@ vise(Liste, G) :- is_list(Liste), memberchk(G, Liste).
 
 classer_exclusion(oui, tout, _, _, A, T, x(totale, A, T, [])) :- !.
 classer_exclusion(oui, bien(B), _, _, A, T, X) :- !,
-    (   fait(bien, Autre), Autre \== B
+    (   fait(bien, Autre), Autre \== B, \+ ancetre(bien, B, Autre), \+ ancetre(bien, Autre, B)
     ->  X = x(partielle, A, T, B)          % d'autres biens sont touchés : seul B est exclu
     ;   X = x(totale, A, T, [])
     ).
@@ -245,7 +270,18 @@ decision_est(V, R) :- get_dict(decision, R, V).
 decider(D) :-
     findall(R, ( regle(garantie(G, _, _, _)), evaluer_garantie(G, R) ), Rs),
     combiner(Rs, D0),
-    put_dict(garanties, D0, Rs, D).
+    non_traduits(NT),
+    plafonner(NT, D0, D1),
+    put_dict(garanties, D1, Rs, D).
+
+%  Les événements déclarés dont aucune garantie n'est traduite en règles.
+non_traduits(NT) :-
+    findall(E, ( fait(evenement, E), E \== autre, \+ regle(evenement_traduit(E)) ), NT0),
+    sort(NT0, NT).
+
+plafonner([], D, D) :- !.
+plafonner(_, D, D) :- get_dict(decision, D, "COUVERT"), !.
+plafonner(NT, D0, D) :- put_dict(_{decision:"INCERTAIN", non_traduits:NT, aucune:false}, D0, D).
 
 % --- Points d'entrée (appelés par src/couverture/prolog.py) --------------------------------------------
 
@@ -274,6 +310,7 @@ condition_du_contrat(C) :- regle(obligation(_, C, _, _, _, _)).
 condition_du_contrat(C) :- regle(obligation(_, _, C, _, _, _)).
 condition_du_contrat(C) :- regle(exclusion(_, C, _, _, _, _)).
 condition_du_contrat(f(bien, B)) :- regle(exclusion(_, _, bien(B), _, _, _)).
+condition_du_contrat(f(evenement, E)) :- regle(evenement_traduit(E)).
 
 feuille(f(V, X), f(V, X)).
 feuille(non(C), F) :- feuille(C, F).

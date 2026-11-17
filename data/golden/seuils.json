@@ -1,0 +1,22 @@
+{
+  "_description": "Les portes du banc : « _max » ne pas dépasser, « _min » atteindre. Couverts à tort : zéro, c'est une promesse faite au client. Les seuils se resserrent, ils ne se relâchent pas sans le noter dans docs/DEMARCHE.md.",
+  "regles": {
+    "faux_couverts_max": 0,
+    "faux_refus_max": 0,
+    "exactitude_min": 0.95,
+    "rappel_questions_min": 0.9,
+    "questions_par_incertain_max": 3
+  },
+  "lecture": {
+    "decisions_changees_max": 2,
+    "decisions_changees_vers_couvert_max": 0,
+    "cas_avec_contradiction_max": 5
+  },
+  "chaine": {
+    "faux_couverts_max": 0,
+    "faux_refus_max": 1,
+    "exactitude_min": 0.85,
+    "instables_max": 3,
+    "rappel_questions_min": 0.8
+  }
+}

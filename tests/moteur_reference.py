@@ -9,6 +9,7 @@ règles d'un contrat quand même. Ce n'est pas le moteur du produit : c'est un o
 from __future__ import annotations
 
 import re
+import json
 from pathlib import Path
 
 # --- Lecture des faits Prolog --------------------------------------------------------------------
@@ -116,10 +117,32 @@ class Contrat:
         return next((d for d in self.regles("definition", 4) if d.args[0] == n), None)
 
 
+def hierarchie_du_vocabulaire() -> list[tuple]:
+    voc = json.loads((Path(__file__).resolve().parents[1] / "regles" / "vocabulaire.json").read_text(encoding="utf-8"))
+    return [(v, x, p) for v, d in voc["variables"].items() for x, ps in d.get("parents", {}).items() for p in ps]
+
+
 class Moteur:
-    def __init__(self, contrat: Contrat, faits: dict):
+    def __init__(self, contrat: Contrat, faits: dict, hierarchie: list[tuple] | None = None):
         self.c = contrat
         self.faits = {v: set(x if isinstance(x, list) else [x]) for v, x in faits.items()}
+        self.parents: dict = {}
+        for v, x, p in (hierarchie_du_vocabulaire() if hierarchie is None else hierarchie):
+            self.parents.setdefault((v, x), []).append(p)
+
+    def ancetres(self, v, x) -> set:
+        vus, pile = set(), list(self.parents.get((v, x), []))
+        while pile:
+            a = pile.pop()
+            if a not in vus:
+                vus.add(a)
+                pile += self.parents.get((v, a), [])
+        return vus
+
+    def vague(self, v, x) -> bool:
+        faits = self.faits.get(v, set())
+        return any(p in self.ancetres(v, x) and not any(c != p and p in self.ancetres(v, c) for c in faits)
+                   for p in faits)
 
     # Logique à trois valeurs
     def eval(self, t) -> str:
@@ -132,7 +155,9 @@ class Moteur:
             v, x = t.args
             if v not in self.faits:
                 return INCONNU
-            return OUI if x in self.faits[v] else NON
+            if x in self.faits[v] or any(x in self.ancetres(v, c) for c in self.faits[v]):
+                return OUI
+            return INCONNU if self.vague(v, x) else NON
         if nom == "non":
             return {OUI: NON, NON: OUI, INCONNU: INCONNU}[self.eval(t.args[0])]
         if nom == "et":
@@ -164,8 +189,24 @@ class Moteur:
             return self.variables(d.args[1]) if d else []
         return []
 
+    def feuilles(self, t) -> list:
+        if not isinstance(t, Terme):
+            return []
+        if t.nom == "f":
+            return [t]
+        if t.nom == "non":
+            return self.feuilles(t.args[0])
+        if t.nom in ("et", "ou"):
+            return [f for c in t.args[0] for f in self.feuilles(c)]
+        if t.nom == "si":
+            return self.feuilles(t.args[0]) + self.feuilles(t.args[1])
+        if t.nom == "concept":
+            d = self.c.definition(t.args[0])
+            return self.feuilles(d.args[1]) if d else []
+        return []
+
     def inconnues(self, t) -> list:
-        return sorted({v for v in self.variables(t) if v not in self.faits})
+        return sorted({f.args[0] for f in self.feuilles(t) if self.eval(f) == INCONNU})
 
     # Une garantie
     def garantie(self, g) -> dict:
@@ -184,7 +225,8 @@ class Moteur:
                 xs.append(("totale", a, t, []))
             elif e == OUI:
                 b = portee.args[0]
-                autres = self.faits.get("bien", set()) - {b}
+                autres = {x for x in self.faits.get("bien", set()) - {b}
+                          if x not in self.ancetres("bien", b) and b not in self.ancetres("bien", x)}
                 xs.append(("partielle", a, t, b) if autres else ("totale", a, t, []))
             elif e == INCONNU and dem == "oui":
                 xs.append(("inconnue", a, t, self.inconnues(cond)))
@@ -221,6 +263,14 @@ class Moteur:
                 "partielles": [x[3] for x in xs if x[0] == "partielle"]}
 
     def decider(self) -> dict:
+        d = self.combiner()
+        traduits = {e.args[0] for e in self.c.regles("evenement_traduit", 1)}
+        nt = sorted(e for e in self.faits.get("evenement", set()) if e != "autre" and e not in traduits)
+        if nt and d["decision"] != "COUVERT":
+            d.update(decision="INCERTAIN", non_traduits=nt, aucune=False)
+        return d
+
+    def combiner(self) -> dict:
         rs = []
         for g in self.c.regles("garantie", 4):
             r = self.garantie(g.args[0])

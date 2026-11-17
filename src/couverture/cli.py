@@ -27,7 +27,7 @@ from pathlib import Path
 
 from .base import Base
 from .config import charger_env
-from .evaluation import charger_cas, evaluer
+from .evaluation import charger_cas, evaluer, fichiers_jeu
 from .ingestion import ingerer_dossier
 from .juges import JugeHeuristique
 from .models import Resultat
@@ -273,7 +273,92 @@ def fiches_cli(base: Base, contrat_id: str, exporter: str | None, importer: str 
     return 0
 
 
-def regles_cli(base: Base, donnees: Path, contrat_id: str, faits_json: str | None) -> int:
+def rediger_cli(base: Base, contrat_id: str, articles: list[str], controler: bool, a_accepter: str | None,
+                vocabulaire: str | None) -> int:
+    """Rédaction des règles d'une garantie par le modèle (Mistral Large), contrôles, acceptation."""
+    from . import prolog, redaction
+    from .evaluation import lire_jsonl
+
+    clauses = base.clauses(contrat_id)
+    cas = []
+    for f in sorted((prolog.DOSSIER / "cas").rglob(f"{contrat_id}.jsonl")):
+        cas += [(d["sinistre_id"], d["faits"]) for d in lire_jsonl(f)]
+
+    if vocabulaire:
+        js, _ = redaction.chemins(contrat_id, vocabulaire)
+        ajouts = redaction.accepter_vocabulaire(json.loads(js.read_text(encoding="utf-8"))["proposition"])
+        print("Vocabulaire commun complété :" if ajouts else "Rien à ajouter au vocabulaire.")
+        for x in ajouts:
+            print(f"  + {x}")
+        if ajouts:
+            print(redaction.resumer(redaction.recontroler(contrat_id, vocabulaire, clauses, cas=cas)))
+        return 0
+    if a_accepter:
+        try:
+            cible = redaction.accepter(contrat_id, a_accepter)
+        except redaction.ErreurProposition as e:
+            print(f"Refusé : {e}")
+            return 1
+        print(f"Règles de l'art. {a_accepter} ajoutées à {cible}. Vérifier : `couverture regles --contrat {contrat_id}`.")
+        return 0
+    if controler:
+        articles = articles or redaction.articles_proposes(contrat_id)
+        if not articles:
+            print("Aucune proposition enregistrée : `couverture rediger --contrat … --article 2.2`.")
+            return 1
+        for art in articles:
+            print(redaction.resumer(redaction.recontroler(contrat_id, art, clauses, cas=cas)))
+        return 0
+    if not articles:
+        print("Préciser au moins un article : --article 2.2")
+        return 1
+
+    llm = llm_configure("contrat")
+    if llm is None:
+        sys.exit("La rédaction a besoin d'un modèle : définir MISTRAL_API_KEY dans .env.")
+    from .progression import Barre
+
+    barre = Barre(len(articles), "Rédaction")
+    docs = []
+    for art in articles:
+        barre.ecrire(f"art. {art} : rédaction par {llm.nom}…")
+        try:
+            docs.append(redaction.rediger(contrat_id, art, clauses, llm, cas=cas))
+        except (LookupError, ValueError, prolog.ErreurRegles) as e:
+            barre.ecrire(f"art. {art} : échec ({e}) ; la réponse du modèle, si elle est arrivée, est gardée : "
+                         f"`couverture rediger --contrat {contrat_id} --controler --article {art}`")
+        barre.avancer(art)
+    barre.terminer()
+    for d in docs:
+        print(redaction.resumer(d))
+    print(f"Propositions dans regles/propositions/{contrat_id}/ (JSON : la source, corrigible à la main ; .pl : les règles).")
+    return 0
+
+
+def banc_cli(base: Base, donnees: Path, contrat_id: str, methode: str, couches: str, repetitions: int,
+             paralleles: int, a_figer: str | None, fiche: bool = False) -> int:
+    """Le golden set rejoué couche par couche ; sort en erreur si une porte échoue (pour la CI)."""
+    from . import banc
+
+    if fiche:
+        f = Path(donnees) / "golden" / "A_VALIDER.md"
+        f.write_text(banc.fiche_validation(donnees, contrat_id), encoding="utf-8")
+        print(f"Fiche de validation : {f}")
+        return 0
+
+    if a_figer is not None:
+        v = banc.figer(donnees, contrat_id, a_figer)
+        print(f"Golden set figé : version {v['version']} (empreinte {v['empreintes'][contrat_id]}).")
+        return 0
+    voulues = [c.strip() for c in couches.split(",") if c.strip()]
+    fabrique = (lambda: construire(base, contrat_id, methode, False)) if "chaine" in voulues else None
+    r = banc.passer(donnees, contrat_id, methode, voulues, repetitions, paralleles, pipeline_fabrique=fabrique)
+    _, md = banc.enregistrer(donnees, r)
+    print(banc.resume_console(r, md))
+    return 0 if r["passe"] else 1
+
+
+def regles_cli(base: Base, donnees: Path, contrat_id: str, faits_json: str | None, jeu: str = "mise_au_point") -> int:
     """Vérifie les règles Prolog d'un contrat, sans appel au modèle :
     1. SWI-Prolog est là et les règles se chargent sans avertissement ;
     2. chaque variable et chaque valeur employées sont dans le vocabulaire commun ;
@@ -283,7 +368,7 @@ def regles_cli(base: Base, donnees: Path, contrat_id: str, faits_json: str | Non
     import subprocess
 
     from . import prolog
-    from .evaluation import charger_cas, lire_jsonl
+    from .evaluation import charger_cas, fichiers_jeu, lire_jsonl
     from .validation import extrait_present
 
     exe = prolog.swipl()
@@ -326,12 +411,12 @@ def regles_cli(base: Base, donnees: Path, contrat_id: str, faits_json: str | Non
     else:
         print(f"Citations : {len(citations)} (contrat absent de la base : `couverture ingerer` pour les vérifier).")
 
-    chemin_cas = prolog.DOSSIER / "cas" / f"{contrat_id}.jsonl"
-    annotations = donnees / "annotations" / f"{contrat_id}.jsonl"
+    chemin_cas = prolog.DOSSIER / "cas" / ("" if jeu == "mise_au_point" else jeu) / f"{contrat_id}.jsonl"
+    sinistres, annotations = fichiers_jeu(donnees, contrat_id, jeu)
     if chemin_cas.exists() and annotations.exists():
         faits_par_cas = {d["sinistre_id"]: d["faits"] for d in lire_jsonl(chemin_cas)}
         lignes = []
-        for c in charger_cas(donnees / "sinistres.jsonl", annotations):
+        for c in charger_cas(sinistres, annotations):
             if c["id"] not in faits_par_cas:
                 continue
             problemes += [f"{c['id']} : {p_}" for p_ in prolog.verifier_faits(faits_par_cas[c["id"]])]
@@ -345,7 +430,7 @@ def regles_cli(base: Base, donnees: Path, contrat_id: str, faits_json: str | Non
                    "faux_couverts": sum(l["obtenu"] == "COUVERT" and l["attendu"] != "COUVERT" for l in lignes),
                    "faux_refus": sum(l["obtenu"] == "NON_COUVERT" and l["attendu"] == "COUVERT" for l in lignes),
                    "taux_incertain": round(sum(l["obtenu"] == "INCERTAIN" for l in lignes) / n, 3)}
-        print("\nRègles seules, sur les faits idéaux des cas (sans modèle) :")
+        print(f"\nRègles seules, sur les faits idéaux des cas (jeu {jeu}, sans modèle) :")
         print(tableau(rapport))
         if rapport["faux_couverts"]:
             problemes.append(f"{rapport['faux_couverts']} couvert(s) à tort sur les faits idéaux")
@@ -445,8 +530,9 @@ def tester_modele() -> int:
 
 
 def evaluer_suivi(base: Base, donnees: Path, contrat_id: str, methode: str, hors_ligne: bool, cas: list,
-                  paralleles: int = 4) -> dict:
+                  paralleles: int = 4, jeu: str = "mise_au_point") -> dict:
     """Une évaluation, enregistrée comme une exécution MLflow (si le suivi est disponible)."""
+    from .evaluation import fichiers_jeu
     from .suivi import EXPERIENCE_EVALUATION, empreinte_fichiers, execution, metriques_evaluation, parametres_communs
 
     pipeline = construire(base, contrat_id, methode, hors_ligne)
@@ -460,7 +546,8 @@ def evaluer_suivi(base: Base, donnees: Path, contrat_id: str, methode: str, hors
         suivi.parametres(parametres_communs(llm, relecteur, vectoriseur) | {
             "contrat": contrat_id,
             "methode": getattr(pipeline, "methode", methode),
-            "jeu_de_test": empreinte_fichiers(donnees / "sinistres.jsonl", donnees / "annotations" / f"{contrat_id}.jsonl"),
+            "jeu": jeu,
+            "jeu_de_test": empreinte_fichiers(*fichiers_jeu(donnees, contrat_id, jeu)),
             "contrat_empreinte": base.empreinte(contrat_id) or "",
         })
         suivi.metriques(metriques_evaluation(rapport))
@@ -533,6 +620,27 @@ def main(argv: list[str] | None = None) -> int:
     pg = sous.add_parser("regles", help="Vérifier les règles Prolog d'un contrat (chargement, vocabulaire, citations, cas)")
     pg.add_argument("--contrat", required=True)
     pg.add_argument("--faits", help="Décider un cas : JSON des faits, ex. '{\"evenement\": \"vol\", \"lieu\": [\"cave\"]}'")
+    pg.add_argument("--jeu", choices=["mise_au_point", "validation", "redaction", "golden"], default="mise_au_point",
+                    help="Cas de mise au point (défaut), de validation (data/validation) ou des garanties rédigées par le modèle (data/redaction)")
+
+    pb_ = sous.add_parser("banc", help="Banc d'essai : le golden set rejoué (règles, lecture, chaîne), avec des portes")
+    pb_.add_argument("--contrat", required=True)
+    pb_.add_argument("--methode", choices=METHODES, default="regles")
+    pb_.add_argument("--couches", default="regles,chaine",
+                     help="regles (sans modèle, SWI-Prolog), chaine (avec le modèle ; donne aussi la lecture pour « regles »)")
+    pb_.add_argument("--repetitions", type=int, default=3)
+    pb_.add_argument("--paralleles", type=int, default=4)
+    pb_.add_argument("--figer", nargs="?", const="", metavar="NOTE",
+                     help="Enregistrer la version du golden set (après l'avoir modifié ou validé)")
+    pb_.add_argument("--fiche", action="store_true", help="Écrire data/golden/A_VALIDER.md, la fiche de relecture des cas")
+
+    pw = sous.add_parser("rediger", help="Faire rédiger par le modèle les règles Prolog d'une garantie, puis les contrôler")
+    pw.add_argument("--contrat", required=True)
+    pw.add_argument("--article", action="append", help="Article à traduire (répétable), ex. --article 2.2 --article 2.9")
+    pw.add_argument("--controler", action="store_true", help="Refaire les contrôles des propositions enregistrées, sans modèle")
+    pw.add_argument("--accepter", metavar="ARTICLE", help="Ajouter la proposition aux règles du contrat (si rien ne bloque)")
+    pw.add_argument("--accepter-vocabulaire", metavar="ARTICLE",
+                    help="Ajouter au vocabulaire commun les faits nouveaux déclarés par le modèle pour cet article")
 
     pf = sous.add_parser("fiches", help="Afficher, exporter ou réimporter (après relecture) les fiches d'un contrat")
     pf.add_argument("--contrat", required=True)
@@ -558,6 +666,8 @@ def main(argv: list[str] | None = None) -> int:
     pe.add_argument("--hors-ligne", action="store_true")
     pe.add_argument("--detail", "--json", dest="detail", action="store_true", help="Rapport complet en JSON")
     pe.add_argument("--paralleles", type=int, default=4, help="Cas traités en même temps (défaut : 4)")
+    pe.add_argument("--jeu", choices=["mise_au_point", "validation", "redaction", "golden"], default="mise_au_point",
+                    help="Cas de mise au point (défaut), de validation (data/validation) ou des garanties rédigées par le modèle (data/redaction)")
     pe.add_argument("--repetitions", type=int, default=1,
                     help="Rejouer N fois et signaler les cas instables (une seule exécution de 14 cas est bruitée)")
 
@@ -609,7 +719,13 @@ def main(argv: list[str] | None = None) -> int:
         return fiches_cli(base, a.contrat, a.exporter, a.importer, a.relu_par)
 
     if a.commande == "regles":
-        return regles_cli(base, donnees, a.contrat, a.faits)
+        return regles_cli(base, donnees, a.contrat, a.faits, a.jeu)
+
+    if a.commande == "banc":
+        return banc_cli(base, donnees, a.contrat, a.methode, a.couches, a.repetitions, a.paralleles, a.figer, a.fiche)
+
+    if a.commande == "rediger":
+        return rediger_cli(base, a.contrat, a.article or [], a.controler, a.accepter, a.accepter_vocabulaire)
 
     if a.commande == "propositions":
         return propositions(donnees, base, a.accepter, a.refuser)
@@ -699,15 +815,16 @@ def main(argv: list[str] | None = None) -> int:
         print(r.model_dump_json(indent=2) if a.json else afficher(r) if a.detail else afficher_court(r))
         return 0
 
-    cas = charger_cas(donnees / "sinistres.jsonl", donnees / "annotations" / f"{a.contrat}.jsonl")
+    jeu = getattr(a, "jeu", "mise_au_point")
+    cas = charger_cas(*fichiers_jeu(donnees, a.contrat, jeu))
 
     if a.commande == "evaluer":
         if a.repetitions > 1:
-            rapports = [evaluer_suivi(base, donnees, a.contrat, a.methode, a.hors_ligne, cas, a.paralleles)
+            rapports = [evaluer_suivi(base, donnees, a.contrat, a.methode, a.hors_ligne, cas, a.paralleles, jeu)
                         for _ in range(a.repetitions)]
             print(tableau_repete(rapports))
             return 0
-        rapport = evaluer_suivi(base, donnees, a.contrat, a.methode, a.hors_ligne, cas, a.paralleles)
+        rapport = evaluer_suivi(base, donnees, a.contrat, a.methode, a.hors_ligne, cas, a.paralleles, jeu)
         if a.detail:
             json.dump(rapport, sys.stdout, ensure_ascii=False, indent=2)
             print()

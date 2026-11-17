@@ -53,6 +53,14 @@ def vocabulaire() -> dict:
     return json.loads((DOSSIER / "vocabulaire.json").read_text(encoding="utf-8"))["variables"]
 
 
+def hierarchie(voc: dict | None = None) -> list[tuple[str, str, str]]:
+    """(variable, valeur, parent) : la hiérarchie du vocabulaire (« parents »), posée en faits pour le moteur.
+    Une vitre est un élément du bâtiment : une règle large reconnaît le fait précis, et un fait vague ne
+    tranche pas pour une règle précise (le moteur répond « inconnu » et pose la question)."""
+    voc = voc or vocabulaire()
+    return [(v, x, p) for v, d in voc.items() for x, ps in d.get("parents", {}).items() for p in ps]
+
+
 def verifier_faits(faits: dict) -> list[str]:
     """Les écarts au vocabulaire : variable inconnue, valeur non permise, plusieurs valeurs interdites."""
     voc, problemes = vocabulaire(), []
@@ -85,11 +93,16 @@ def but(faits: dict, point: str = "decider_json", fichiers: tuple = ()) -> str:
             if not (ATOME.match(str(v)) and ATOME.match(str(val))):
                 raise ErreurRegles(f"fait mal formé : {v} = {val}")
             poses.append(f"assertz(fait({v}, {val}))")
-    corps = ", ".join(["set_stream(user_output, encoding(utf8))", *charges, "retractall(fait(_, _))", *poses, point])
+    for v, x, p in hierarchie():
+        if not all(ATOME.match(str(t)) for t in (v, x, p)):
+            raise ErreurRegles(f"hiérarchie mal formée : {v} {x} {p}")
+        poses.append(f"assertz(parent_valeur({v}, {x}, {p}))")
+    corps = ", ".join(["set_stream(user_output, encoding(utf8))", *charges, "retractall(fait(_, _))",
+                       "retractall(parent_valeur(_, _, _))", *poses, point])
     return f"catch(({corps}), E, (print_message(error, E), halt(2)))"
 
 
-def executer(contrat_id: str, point: str, faits: dict | None = None, delai: int = 30):
+def executer(contrat_id: str, point: str, faits: dict | None = None, delai: int = 30, regles: Path | None = None):
     """Lance SWI-Prolog sur le moteur et les règles du contrat ; renvoie le JSON écrit par `point`.
     Un avertissement au chargement (erreur de syntaxe, variable isolée…) est une erreur : des règles
     qui se chargent mal ne décident pas."""
@@ -97,7 +110,7 @@ def executer(contrat_id: str, point: str, faits: dict | None = None, delai: int 
     if exe is None:
         raise ErreurRegles("SWI-Prolog introuvable. Windows : `winget install SWI-Prolog.SWI-Prolog`, "
                            "ou indiquer son chemin dans COUVERTURE_SWIPL.")
-    regles = fichier_regles(contrat_id)
+    regles = regles or fichier_regles(contrat_id)   # `regles` : un autre fichier (règles proposées, fusionnées)
     if not regles.exists():
         raise ErreurRegles(f"Pas de règles pour {contrat_id} : {regles} est absent.")
     commande = [exe, "-q", "-g", but(faits or {}, point, (MOTEUR, regles)), "-t", "halt"]
@@ -123,14 +136,17 @@ SYSTEME_FAITS_REGLES = """Tu lis la déclaration d'un sinistre et tu la traduis 
 Règles :
 - N'utilise que les variables et les valeurs de la liste. Une variable marquée « plusieurs » prend une liste ; les autres, une seule valeur.
 - Ne renseigne une variable que si la déclaration le dit ou l'implique clairement. Sinon, ne la mets pas : elle restera inconnue. N'invente rien.
+- evenement : la cause, et aussi le dommage s'il est d'une autre nature. Une tempête qui arrache des tuiles et fait entrer la pluie : ["tempete", "degat_eaux"]. Ne perds jamais la cause.
 - « fermé à clé » sans autre précision : fermeture = cle, et ne renseigne pas serrure_surete.
 - Une pièce ou une partie du logement (salon, cuisine, entrée, « chez moi ») : lieu = logement.
 - « Avec la chaleur » sans flamme décrite : flammes = non.
 - Des flammes qui brûlent ou se propagent à d'autres objets : flammes = oui et embrasement = oui.
 - Façade, murs, parquet, toiture : bien = element_batiment. Tuyau, canalisation : bien = canalisation.
 - vol_sur_personne = oui seulement si le bien a été pris sur la personne (arraché, dérobé sur soi).
+- Une durée dite se traduit : déposé « il y a deux semaines » donne depot_moins_30j = oui.
+- Les précautions décrites se traduisent aussi : une fenêtre laissée ouverte donne fenetres_fermees = non ; un chauffage coupé pendant le gel, sans vidange ni isolation, donne prevention_gel = non.
 
-Réponds uniquement par un objet JSON : {"faits": {"evenement": "vol", "bien": ["velo"], "lieu": ["cave"]}}"""
+Réponds uniquement par un objet JSON : {"faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}}"""
 
 
 def extraire_faits_regles(sinistre: str, llm: LLM) -> tuple[dict, list[str]]:
@@ -200,16 +216,23 @@ class PipelineRegles:
         decision = Decision(d["decision"])
         retenues, possibles = d.get("retenues", []), d.get("possibles", [])
         motifs = [f"« {r['garantie']} » ({r['article']}) : {r['motif']}" for r in retenues]
+        non_traduits = d.get("non_traduits") or []
         if d.get("aucune"):
             motif = "Non couvert : aucune garantie ne s'applique."
         else:
             motif = {"COUVERT": "Couvert. ", "NON_COUVERT": "Non couvert. ", "INCERTAIN": "À préciser. "}[decision.value] \
                 + " ; ".join(motifs[:3]) + "."
+        if non_traduits:
+            evts = ", ".join(non_traduits)
+            motif = (f"À examiner par un gestionnaire : l'événement « {evts} » relève d'une garantie qui n'est pas "
+                     f"encore traduite en règles. Ce que disent les garanties traduites : " + (" ; ".join(motifs[:3]) or "rien") + ".")
         vars_ = list(dict.fromkeys(v for r in retenues for v in r.get("questions", []) + r.get("reserves", [])))
         if decision == Decision.NON_COUVERT:
             vars_ += [v for r in possibles for v in r.get("questions", [])]
         demander = list(dict.fromkeys(question(v) for v in vars_))
         confiance = {"COUVERT": 0.85, "NON_COUVERT": 0.85, "INCERTAIN": 0.4}[decision.value]
+        if non_traduits:
+            confiance = 0.3
         if decision == Decision.COUVERT and any(r.get("reserves") for r in retenues):
             confiance = 0.7
         if decision == Decision.NON_COUVERT and demander:
