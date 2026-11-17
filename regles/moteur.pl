@@ -23,7 +23,8 @@
     Règles de gestionnaire (les mêmes que la méthode « fiches », voir fiches.py) :
       1. périmètre « non »            -> garantie hors sujet ;
       2. circonstance « non »         -> la garantie ne joue pas ;
-      3. périmètre « inconnu »        -> garantie possible, on demande ce qui manque ;
+      3. périmètre « inconnu »        -> garantie possible, on demande ce qui manque ; sauf si une
+         exclusion totale est certaine : la garantie est écartée sans question ;
       4. exclusion « oui » (tout)     -> refus ; une exclusion ne vise qu'une garantie rattachée ;
       5. circonstance « inconnu »     -> incertain (c'est à l'assuré d'établir la garantie) ;
       6. obligation non respectée     -> incertain si le refus exige un lien causal, refus sinon ;
@@ -192,6 +193,13 @@ issue(_, _, _, _, Cs, _, _, _, _, I) :-
     member(c(_, A, T, non), Cs), !,
     preuve(A, T, "condition", P),
     I = _{rattachement:"rattachée", decision:"NON_COUVERT", motif:"une condition n'est pas remplie",
+          preuves:[P], questions:[], reserves:[], partielles:[]}.
+%  Une exclusion certaine écarte la garantie même si l'on ne sait pas encore si elle s'appliquerait :
+%  un vol dans le casier du club est exclu, inutile de demander s'il a été commis sur la personne.
+issue(_, inconnu, _, _, _, Xs, _, _, _, I) :-
+    member(x(totale, A, T, _), Xs), !,
+    preuve(A, T, "exclusion", P),
+    I = _{rattachement:"rattachée", decision:"NON_COUVERT", motif:"une exclusion s'applique",
           preuves:[P], questions:[], reserves:[], partielles:[]}.
 issue(_, inconnu, Ps, _, Cs, _, _, Art, Texte, I) :- !,
     inconnues(et(Ps), Q1),

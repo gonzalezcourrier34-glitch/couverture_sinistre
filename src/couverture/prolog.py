@@ -61,6 +61,27 @@ def hierarchie(voc: dict | None = None) -> list[tuple[str, str, str]]:
     return [(v, x, p) for v, d in voc.items() for x, ps in d.get("parents", {}).items() for p in ps]
 
 
+def filtrer_faits(faits: dict, voc: dict | None = None) -> tuple[dict, list[str]]:
+    """Retire les faits hors sujet : une variable qui déclare les événements auxquels elle s'applique
+    (« pour ») n'est gardée que si l'un d'eux est lu. Une cause d'eau pour une bougie, des travaux pour
+    un vol : le modèle les invente, le code les retire, quelle que soit la consigne. Sans événement
+    lu, on ne peut pas juger : tout est gardé."""
+    voc = voc or vocabulaire()
+    ev = faits.get("evenement")
+    evenements = set(ev if isinstance(ev, list) else [ev]) if ev else set()
+    if not evenements:
+        return dict(faits), []
+    gardes, retires = {}, []
+    for v, x in faits.items():
+        pour = voc.get(v, {}).get("pour")
+        if pour and not evenements & set(pour):
+            retires.append(f"{v} = {x if not isinstance(x, list) else '/'.join(x)} : hors sujet pour "
+                           f"{'/'.join(sorted(evenements))}, retiré")
+        else:
+            gardes[v] = x
+    return gardes, retires
+
+
 def verifier_faits(faits: dict) -> list[str]:
     """Les écarts au vocabulaire : variable inconnue, valeur non permise, plusieurs valeurs interdites."""
     voc, problemes = vocabulaire(), []
@@ -133,18 +154,22 @@ def decider(contrat_id: str, faits: dict) -> dict:
 
 SYSTEME_FAITS_REGLES = """Tu lis la déclaration d'un sinistre et tu la traduis en faits, avec un vocabulaire imposé. Tu ne décides pas si le sinistre est couvert.
 
+Le vocabulaire donne, pour chaque variable, la question à laquelle elle répond, ses valeurs, et le sens des valeurs proches. Choisis la valeur dont le sens correspond à ce qui est écrit.
+
 Règles :
 - N'utilise que les variables et les valeurs de la liste. Une variable marquée « plusieurs » prend une liste ; les autres, une seule valeur.
-- Ne renseigne une variable que si la déclaration le dit ou l'implique clairement. Sinon, ne la mets pas : elle restera inconnue. N'invente rien.
-- evenement : la cause, et aussi le dommage s'il est d'une autre nature. Une tempête qui arrache des tuiles et fait entrer la pluie : ["tempete", "degat_eaux"]. Ne perds jamais la cause.
+- Ne renseigne une variable que si la déclaration la dit ou l'implique clairement. Sinon, ne la mets pas : elle restera inconnue, et le gestionnaire posera la question. Un fait inventé est plus grave qu'un fait manquant.
+- Un lieu se déduit de ce qui est écrit : une pièce ou une partie du logement (salon, cuisine, salle de bain, entrée, parquet, plafond, « chez moi », « mon appartement ») donne lieu = logement. Mais ce qui ne dit rien de l'endroit ne donne pas de lieu : « pendant que je faisais mes courses » ne dit pas où était le vélo.
+- N'ajoute jamais une absence, des portes ou des fenêtres fermées, un auteur ou une cause qui ne sont pas écrits.
+- « Disparu », « je ne retrouve plus » ne disent pas qu'il y a eu vol : ne mets evenement = vol que si un vol est décrit (volé, pris, cambriolé, arraché).
+- Ne renseigne pas une variable sans rapport avec ce qui s'est passé (une cause d'eau pour un vol, des travaux pour un incendie).
+- evenement : la cause, et aussi le dommage s'il est d'une autre nature. Une tempête qui arrache des tuiles et fait entrer la pluie : ["tempete", "degat_eaux"]. Ne perds jamais la cause, même si aucune valeur ne la nomme exactement : prends la plus proche par son sens, ou « autre ».
 - « fermé à clé » sans autre précision : fermeture = cle, et ne renseigne pas serrure_surete.
-- Une pièce ou une partie du logement (salon, cuisine, entrée, « chez moi ») : lieu = logement.
-- « Avec la chaleur » sans flamme décrite : flammes = non.
-- Des flammes qui brûlent ou se propagent à d'autres objets : flammes = oui et embrasement = oui.
-- Façade, murs, parquet, toiture : bien = element_batiment. Tuyau, canalisation : bien = canalisation.
+- Des flammes qui brûlent ou se propagent à d'autres objets : flammes = oui et embrasement = oui. « Avec la chaleur » sans flamme décrite : flammes = non.
+- Façade, murs, parquet, plafond, toiture : bien = element_batiment. Tuyau, canalisation : bien = canalisation.
 - vol_sur_personne = oui seulement si le bien a été pris sur la personne (arraché, dérobé sur soi).
 - Une durée dite se traduit : déposé « il y a deux semaines » donne depot_moins_30j = oui.
-- Les précautions décrites se traduisent aussi : une fenêtre laissée ouverte donne fenetres_fermees = non ; un chauffage coupé pendant le gel, sans vidange ni isolation, donne prevention_gel = non.
+- Les précautions décrites se traduisent : une fenêtre laissée ouverte donne fenetres_fermees = non ; un chauffage coupé pendant le gel, sans vidange ni isolation, donne prevention_gel = non.
 
 Réponds uniquement par un objet JSON : {"faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}}"""
 
@@ -152,8 +177,7 @@ Réponds uniquement par un objet JSON : {"faits": {"evenement": ["vol"], "bien":
 def extraire_faits_regles(sinistre: str, llm: LLM) -> tuple[dict, list[str]]:
     """Les faits lus par le modèle, et les écarts au vocabulaire (retirés)."""
     voc = vocabulaire()
-    liste = "\n".join(f"- {v}{' (plusieurs)' if d.get('plusieurs') else ''} : {', '.join(d['valeurs'])}"
-                      for v, d in voc.items())
+    liste = "\n".join(description_variable(v, d) for v, d in voc.items())
     message = f"## Vocabulaire\n{liste}\n\n## Déclaration\n{sinistre}"
     donnees = extraire_json(llm.completer(SYSTEME_FAITS_REGLES, message))
     faits, ecarts = {}, []
@@ -168,7 +192,15 @@ def extraire_faits_regles(sinistre: str, llm: LLM) -> tuple[dict, list[str]]:
         ecarts += [f"{v} = {e} : valeur hors vocabulaire, ignorée" for e in valeurs if e not in bonnes]
         if bonnes:
             faits[v] = bonnes if voc[v].get("plusieurs") else bonnes[0]
-    return faits, ecarts
+    faits, retires = filtrer_faits(faits, voc)
+    return faits, ecarts + retires
+
+
+def description_variable(v: str, d: dict) -> str:
+    """Une ligne de vocabulaire pour le modèle : la question, les valeurs, le sens des valeurs proches."""
+    aide = d.get("aide", {})
+    valeurs = ", ".join(f"{x} ({aide[x]})" if x in aide else x for x in d["valeurs"])
+    return f"- {v}{' (plusieurs)' if d.get('plusieurs') else ''} — {d.get('question', '')} : {valeurs}"
 
 
 # --- La méthode ------------------------------------------------------------------------------------------

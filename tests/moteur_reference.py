@@ -242,6 +242,8 @@ class Moteur:
             return {"rattachement": "hors", "decision": "NON_COUVERT", "questions": []}
         if any(e == NON for *_, e in cs):
             return {"rattachement": "rattachée", "decision": "NON_COUVERT", "questions": []}
+        if ep == INCONNU and any(x[0] == "totale" for x in xs):
+            return {"rattachement": "rattachée", "decision": "NON_COUVERT", "questions": []}
         if ep == INCONNU:
             q = set(self.inconnues(Terme(("et", ps))))
             for c, _, _, e in cs:

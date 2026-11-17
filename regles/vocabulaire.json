@@ -1,5 +1,5 @@
 {
-  "_description": "Vocabulaire de faits commun à tous les contrats. Les règles d'un contrat ne parlent que de ces variables et de ces valeurs ; l'extraction des faits d'une déclaration aussi. Une variable « plusieurs » peut avoir plusieurs valeurs (plusieurs biens, plusieurs lieux). Une variable absente des faits est inconnue. « parents » : la hiérarchie des valeurs (une vitre est un élément du bâtiment) ; un fait précis vaut pour sa catégorie, un fait vague ne tranche pas pour une valeur précise (inconnu).",
+  "_description": "Vocabulaire de faits commun à tous les contrats. Les règles d'un contrat ne parlent que de ces variables et de ces valeurs ; l'extraction des faits d'une déclaration aussi. Une variable « plusieurs » peut avoir plusieurs valeurs (plusieurs biens, plusieurs lieux). Une variable absente des faits est inconnue. « parents » : la hiérarchie des valeurs (une vitre est un élément du bâtiment) ; un fait précis vaut pour sa catégorie, un fait vague ne tranche pas pour une valeur précise (inconnu). « pour » : les événements auxquels une variable s'applique (un fait hors sujet lu par le modèle est retiré) ; « aide » : le sens des valeurs proches, donné au modèle qui lit.",
   "variables": {
     "evenement": {
       "plusieurs": true,
@@ -11,9 +11,25 @@
         "degat_eaux",
         "tempete",
         "bris",
-        "autre"
+        "autre",
+        "electricite",
+        "mazout",
+        "catastrophe_naturelle",
+        "attentat",
+        "fumee"
       ],
-      "question": "Que s'est-il passé (la cause, et le dommage s'il est d'une autre nature) ?"
+      "question": "Que s'est-il passé (la cause, et le dommage s'il est d'une autre nature) ?",
+      "aide": {
+        "degat_eaux": "eau qui abîme des biens (fuite, débordement, infiltration)",
+        "tempete": "vent violent, grêle, poids de la neige ou de la glace",
+        "bris": "bris ou fêlure d'une vitre, d'un miroir, d'une table de cuisson vitrocéramique, d'un sanitaire, d'un objet en verre",
+        "electricite": "surtension, court-circuit, panne de courant, électrocution",
+        "mazout": "fuite de fioul ou de combustible de chauffage",
+        "catastrophe_naturelle": "débordement d'une rivière, refoulement des égouts publics, tremblement de terre, glissement de terrain",
+        "attentat": "émeute, manifestation qui dégénère, attentat, conflit social",
+        "fumee": "suie ou fumée qui salit ou noircit, sans incendie",
+        "autre": "rien de ce qui précède"
+      }
     },
     "bien": {
       "plusieurs": true,
@@ -90,6 +106,14 @@
         "objet_verre_non_vitre": [
           "objet_divers"
         ]
+      },
+      "aide": {
+        "electronique": "téléphone, ordinateur, tablette, électroménager, box",
+        "appareil_audiovisuel": "télévision, écran, chaîne hi-fi",
+        "objet_verre_non_vitre": "vase, verre, bibelot en verre",
+        "mobilier_jardin": "table, chaises, salon de jardin, même posés sur une terrasse",
+        "element_batiment": "murs, sols, plafonds, portes, placards fixés",
+        "objet_divers": "tout autre objet"
       }
     },
     "lieu": {
@@ -106,9 +130,21 @@
         "parties_communes",
         "voie_publique",
         "chez_reparateur",
-        "autre_batiment"
+        "autre_batiment",
+        "casier"
       ],
-      "question": "Où se trouvaient les biens ?"
+      "question": "Où se trouvaient les biens ?",
+      "aide": {
+        "logement": "l'intérieur de votre logement (pièces, entrée)",
+        "parties_communes": "locaux partagés de l'immeuble : local à vélos ou à poubelles commun, cave ou couloir communs, hall, escalier",
+        "annexe": "dépendance privée, sans communication avec le logement (remise, cabanon)",
+        "garage": "garage ou box privatif",
+        "cave": "cave privative",
+        "terrasse": "terrasse ou balcon attenant au logement",
+        "voie_publique": "rue, transports, magasin, tout lieu public",
+        "autre_batiment": "un autre bâtiment (club, bureau, chez quelqu'un)",
+        "casier": "casier d'un club de sport ou d'une association"
+      }
     },
     "fermeture": {
       "valeurs": [
@@ -117,35 +153,52 @@
         "cadenas",
         "aucune"
       ],
-      "question": "Comment le local était-il fermé ?"
+      "question": "Comment le local était-il fermé ?",
+      "pour": [
+        "vol"
+      ]
     },
     "serrure_surete": {
       "valeurs": [
         "oui",
         "non"
       ],
-      "question": "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ?"
+      "question": "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ?",
+      "pour": [
+        "vol"
+      ]
     },
     "effraction": {
       "valeurs": [
         "oui",
         "non"
       ],
-      "question": "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ?"
+      "question": "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ?",
+      "pour": [
+        "vol",
+        "bris",
+        "attentat"
+      ]
     },
     "violence": {
       "valeurs": [
         "oui",
         "non"
       ],
-      "question": "Y a-t-il eu violences physiques ou menaces ?"
+      "question": "Y a-t-il eu violences physiques ou menaces ?",
+      "pour": [
+        "vol"
+      ]
     },
     "vol_sur_personne": {
       "valeurs": [
         "oui",
         "non"
       ],
-      "question": "Le vol a-t-il été commis sur vous (sur votre personne) ?"
+      "question": "Le vol a-t-il été commis sur vous (sur votre personne) ?",
+      "pour": [
+        "vol"
+      ]
     },
     "auteur": {
       "valeurs": [
@@ -161,21 +214,30 @@
         "assure",
         "hote"
       ],
-      "question": "À qui appartiennent les biens ?"
+      "question": "À qui appartiennent les biens ?",
+      "pour": [
+        "vol"
+      ]
     },
     "simple_disparition": {
       "valeurs": [
         "oui",
         "non"
       ],
-      "question": "S'agit-il d'une simple disparition, sans trace de vol ?"
+      "question": "S'agit-il d'une simple disparition, sans trace de vol ?",
+      "pour": [
+        "vol"
+      ]
     },
     "depot_moins_30j": {
       "valeurs": [
         "oui",
         "non"
       ],
-      "question": "Le bien était-il déposé chez le réparateur depuis 30 jours au plus ?"
+      "question": "Le bien était-il déposé chez le réparateur depuis 30 jours au plus ?",
+      "pour": [
+        "vol"
+      ]
     },
     "absence": {
       "valeurs": [
@@ -189,42 +251,82 @@
         "oui",
         "non"
       ],
-      "question": "Les portes extérieures étaient-elles fermées à clé ?"
+      "question": "Les portes extérieures étaient-elles fermées à clé ?",
+      "pour": [
+        "vol"
+      ]
     },
     "fenetres_fermees": {
       "valeurs": [
         "oui",
         "non"
       ],
-      "question": "Les fenêtres et autres ouvertures facilement accessibles étaient-elles fermées ?"
+      "question": "Les fenêtres et autres ouvertures facilement accessibles étaient-elles fermées ?",
+      "pour": [
+        "vol"
+      ]
+    },
+    "cles_a_proximite": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?",
+      "pour": [
+        "vol"
+      ]
     },
     "flammes": {
       "valeurs": [
         "oui",
         "non"
       ],
-      "question": "Y a-t-il eu des flammes ?"
+      "question": "Y a-t-il eu des flammes ?",
+      "pour": [
+        "incendie",
+        "explosion",
+        "foudre",
+        "fumee",
+        "autre"
+      ]
     },
     "embrasement": {
       "valeurs": [
         "oui",
         "non"
       ],
-      "question": "Le feu s'est-il propagé (embrasement) ?"
+      "question": "Le feu s'est-il propagé (embrasement) ?",
+      "pour": [
+        "incendie",
+        "explosion",
+        "foudre",
+        "fumee",
+        "autre"
+      ]
     },
     "chaleur_sans_feu": {
       "valeurs": [
         "oui",
         "non"
       ],
-      "question": "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ?"
+      "question": "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ?",
+      "pour": [
+        "incendie",
+        "explosion",
+        "foudre",
+        "fumee",
+        "autre"
+      ]
     },
     "prevention_gel": {
       "valeurs": [
         "oui",
         "non"
       ],
-      "question": "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ?"
+      "question": "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ?",
+      "pour": [
+        "degat_eaux"
+      ]
     },
     "cause_eau": {
       "valeurs": [
@@ -233,9 +335,23 @@
         "inondation",
         "gel",
         "condensation",
-        "debordement_recipient"
+        "debordement_recipient",
+        "debordement_aquarium"
       ],
-      "question": "D'où venait l'eau ?"
+      "question": "D'où venait l'eau ?",
+      "aide": {
+        "fuite_installation": "fuite ou rupture d'un appareil relié à l'eau : tuyau, chauffe-eau, machine à laver, évier, baignoire qui déborde",
+        "debordement_recipient": "récipient non relié à l'eau qui se renverse ou se brise : seau, vase, bassine (pas un aquarium)",
+        "infiltration_exterieure": "pluie entrée par le toit, une façade, une fenêtre, une terrasse",
+        "inondation": "débordement d'un cours d'eau, refoulement des égouts publics",
+        "gel": "canalisation qui gèle et éclate",
+        "condensation": "humidité de condensation",
+        "debordement_aquarium": "aquarium ou matelas d'eau qui fuit ou se brise"
+      },
+      "pour": [
+        "degat_eaux",
+        "catastrophe_naturelle"
+      ]
     },
     "travaux_batiment": {
       "valeurs": [
@@ -243,7 +359,10 @@
         "autres_que_entretien_reparation",
         "aucun"
       ],
-      "question": "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ?"
+      "question": "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ?",
+      "pour": [
+        "bris"
+      ]
     },
     "travaux_vitres": {
       "valeurs": [
@@ -251,14 +370,23 @@
         "autres_que_nettoyage",
         "aucun"
       ],
-      "question": "Des travaux (autres que nettoyage) sont-ils effectués sur les vitres ?"
+      "question": "Des travaux (autres que nettoyage) sont-ils effectués sur les vitres ?",
+      "pour": [
+        "bris"
+      ]
     },
     "vitre_placee": {
       "valeurs": [
         "oui",
         "non"
       ],
-      "question": "La vitre était-elle placée ?"
+      "question": "La vitre était-elle placée ?",
+      "aide": {
+        "non": "vitre ou miroir pas encore posé, accroché ou installé"
+      },
+      "pour": [
+        "bris"
+      ]
     },
     "type_dommage": {
       "valeurs": [
@@ -267,14 +395,20 @@
         "rayure_ou_ecaillement",
         "opacification_ou_perte_etancheite"
       ],
-      "question": "Quel est le type de dommage ?"
+      "question": "Quel est le type de dommage ?",
+      "pour": [
+        "bris"
+      ]
     },
     "cause_dommage": {
       "valeurs": [
         "gel",
         "autre"
       ],
-      "question": "La cause du dommage est-elle le gel ?"
+      "question": "La cause du dommage est-elle le gel ?",
+      "pour": [
+        "bris"
+      ]
     }
   }
 }

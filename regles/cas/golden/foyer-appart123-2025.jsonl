@@ -50,19 +50,19 @@
 {"sinistre_id": "g-q04", "faits": {"evenement": ["degat_eaux"], "bien": ["element_batiment"], "lieu": ["logement"]}}
 {"sinistre_id": "g-p01", "faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["parties_communes"], "fermeture": "cle", "effraction": "oui"}}
 {"sinistre_id": "g-p02", "faits": {"evenement": ["vol"], "bien": ["bijoux"], "lieu": ["logement"], "effraction": "oui"}}
-{"sinistre_id": "g-p03", "faits": {"evenement": ["vol"], "bien": ["objet_divers"], "lieu": ["logement"], "absence": "oui", "portes_fermees": "oui", "effraction": "non"}}
+{"sinistre_id": "g-p03", "faits": {"evenement": ["vol"], "bien": ["objet_divers"], "lieu": ["logement"], "absence": "oui", "portes_fermees": "oui", "effraction": "non", "cles_a_proximite": "oui"}}
 {"sinistre_id": "g-p04", "faits": {"evenement": ["degat_eaux"], "bien": ["element_batiment", "canalisation"], "lieu": ["logement"], "cause_eau": "fuite_installation"}}
-{"sinistre_id": "g-p05", "faits": {"evenement": ["degat_eaux"], "bien": ["element_batiment"], "lieu": ["logement"], "cause_eau": "debordement_recipient"}}
+{"sinistre_id": "g-p05", "faits": {"evenement": ["degat_eaux"], "bien": ["element_batiment"], "lieu": ["logement"], "cause_eau": "debordement_aquarium"}}
 {"sinistre_id": "g-p06", "faits": {"evenement": ["degat_eaux"], "bien": ["element_batiment"], "lieu": ["logement"], "cause_eau": "debordement_recipient"}}
-{"sinistre_id": "g-p07", "faits": {"evenement": ["incendie"], "bien": ["element_batiment"], "lieu": ["logement"], "flammes": "oui", "embrasement": "non"}}
+{"sinistre_id": "g-p07", "faits": {"evenement": ["fumee"], "bien": ["element_batiment"], "lieu": ["logement"], "flammes": "oui", "embrasement": "non"}}
 {"sinistre_id": "g-p08", "faits": {"evenement": ["tempete"], "bien": ["vehicule_moteur"], "lieu": ["voie_publique"]}}
-{"sinistre_id": "g-p09", "faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["autre_batiment"]}}
-{"sinistre_id": "g-h01", "faits": {"evenement": ["autre"], "bien": ["electronique"], "lieu": ["logement"]}}
-{"sinistre_id": "g-h02", "faits": {"evenement": ["autre"], "bien": ["objet_divers"], "lieu": ["logement"]}}
-{"sinistre_id": "g-h03", "faits": {"evenement": ["autre"], "bien": ["element_batiment"], "lieu": ["cave"]}}
-{"sinistre_id": "g-h04", "faits": {"evenement": ["degat_eaux"], "bien": ["element_batiment", "mobilier"], "lieu": ["logement"], "cause_eau": "inondation"}}
-{"sinistre_id": "g-h05", "faits": {"evenement": ["degat_eaux"], "bien": ["element_batiment"], "lieu": ["logement"], "cause_eau": "inondation"}}
-{"sinistre_id": "g-h06", "faits": {"evenement": ["bris"], "bien": ["vitre"], "lieu": ["logement"]}}
-{"sinistre_id": "g-h07", "faits": {"evenement": ["autre"], "bien": ["animal"], "lieu": ["logement"]}}
+{"sinistre_id": "g-p09", "faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["casier"]}}
+{"sinistre_id": "g-h01", "faits": {"evenement": ["electricite"], "bien": ["electronique"], "lieu": ["logement"]}}
+{"sinistre_id": "g-h02", "faits": {"evenement": ["electricite"], "bien": ["objet_divers"], "lieu": ["logement"]}}
+{"sinistre_id": "g-h03", "faits": {"evenement": ["mazout"], "bien": ["element_batiment"], "lieu": ["cave"]}}
+{"sinistre_id": "g-h04", "faits": {"evenement": ["catastrophe_naturelle", "degat_eaux"], "bien": ["element_batiment", "mobilier"], "lieu": ["logement"], "cause_eau": "inondation"}}
+{"sinistre_id": "g-h05", "faits": {"evenement": ["catastrophe_naturelle", "degat_eaux"], "bien": ["element_batiment"], "lieu": ["logement"], "cause_eau": "inondation"}}
+{"sinistre_id": "g-h06", "faits": {"evenement": ["attentat", "bris"], "bien": ["vitre"], "lieu": ["logement"]}}
+{"sinistre_id": "g-h07", "faits": {"evenement": ["electricite"], "bien": ["animal"], "lieu": ["logement"]}}
 {"sinistre_id": "g-m01", "faits": {"evenement": ["vol", "bris"], "bien": ["electronique", "vitre"], "lieu": ["logement"], "effraction": "oui"}}
 {"sinistre_id": "g-m02", "faits": {"evenement": ["incendie", "degat_eaux"], "bien": ["mobilier", "element_batiment"], "lieu": ["logement"], "flammes": "oui", "embrasement": "oui"}}

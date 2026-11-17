@@ -274,3 +274,65 @@ def test_clauses_groupees_sans_swipl():
     """La faute du 17 nov. : `ancetre` et `vague` insérés au milieu des clauses de `eval`."""
     assert clauses_dispersees(prolog.MOTEUR) == []
     assert clauses_dispersees(REGLES) == []
+
+
+# --- Lecture v3 : le sens des valeurs, et les faits hors sujet retirés (7.24) ---------------------------------
+
+def test_faits_hors_sujet_retires():
+    lus = {"evenement": ["incendie"], "bien": ["mobilier"], "cause_eau": "fuite_installation",
+           "type_dommage": "bris", "flammes": "oui", "absence": "oui"}
+    gardes, retires = prolog.filtrer_faits(lus)
+    assert gardes == {"evenement": ["incendie"], "bien": ["mobilier"], "flammes": "oui", "absence": "oui"}
+    assert len(retires) == 2 and all("hors sujet" in r for r in retires)
+    assert prolog.filtrer_faits({"bien": ["velo"], "cause_eau": "gel"})[1] == [], "sans événement lu, on ne juge pas"
+    assert prolog.filtrer_faits({"evenement": ["vol", "bris"], "effraction": "oui", "vitre_placee": "oui"})[1] == []
+
+
+def test_lecture_recoit_le_sens_des_valeurs():
+    class Espion:
+        nom = "espion"
+        message = ""
+
+        def completer(self, systeme, message):
+            Espion.message = message
+            return json.dumps({"faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["parties_communes"],
+                                         "cause_eau": "gel"}})
+
+    faits, ecarts = prolog.extraire_faits_regles("Vélo volé dans le local à vélos de la résidence.", Espion())
+    assert "parties_communes (locaux partagés de l'immeuble : local à vélos" in Espion.message
+    assert "Où se trouvaient les biens ?" in Espion.message
+    assert "cause_eau" not in faits and any("hors sujet" in e for e in ecarts)
+    assert "ne donne pas de lieu" in prolog.SYSTEME_FAITS_REGLES
+
+
+def test_consigne_de_lecture_garde_ses_regles():
+    """La v3 avait perdu « une pièce du logement → lieu = logement » en en ajoutant une autre : dix cas
+    couverts sont devenus incertains (DEMARCHE 7.24 bis). Les règles qui ont fait leurs preuves restent."""
+    c = prolog.SYSTEME_FAITS_REGLES
+    for regle in ("lieu = logement", "fermeture = cle", "flammes = oui et embrasement = oui", "vol_sur_personne = oui",
+                  "depot_moins_30j = oui", "prevention_gel = non", "bien = element_batiment", "bien = canalisation", "[\"tempete\", \"degat_eaux\"]"):
+        assert regle in c, regle
+
+
+def test_golden_conforme_au_filtre():
+    for l in (RACINE / "regles" / "cas" / "golden" / f"{CONTRAT}.jsonl").read_text(encoding="utf-8").splitlines():
+        d = json.loads(l)
+        assert prolog.filtrer_faits(d["faits"])[1] == [], d["sinistre_id"]
+
+
+# --- Les quatre phrases du contrat qui manquaient (7.25) ------------------------------------------------------
+
+def test_cle_recipient_fumee_casier(contrat):
+    vol = {"evenement": ["vol"], "bien": ["objet_divers"], "lieu": ["logement"], "absence": "oui", "portes_fermees": "oui"}
+    d = Moteur(contrat, {**vol, "effraction": "non", "cles_a_proximite": "oui"}).decider()
+    assert d["decision"] == "INCERTAIN" and "lien_causal" in d["retenues"][0]["questions"], "clé sous le paillasson"
+    assert Moteur(contrat, {**vol, "effraction": "oui", "cles_a_proximite": "oui"}).decider()["decision"] == "COUVERT", \
+        "l'effraction excuse"
+    eau = {"evenement": ["degat_eaux"], "bien": ["element_batiment"], "lieu": ["logement"]}
+    assert Moteur(contrat, {**eau, "cause_eau": "debordement_recipient"}).decider()["decision"] == "NON_COUVERT"
+    assert Moteur(contrat, {**eau, "cause_eau": "debordement_aquarium"}).decider()["decision"] == "COUVERT"
+    fumee = {"evenement": ["fumee"], "bien": ["element_batiment"], "lieu": ["logement"], "flammes": "oui", "embrasement": "non"}
+    assert Moteur(contrat, fumee).decider()["decision"] == "COUVERT", "2.1 : suie et fumée, sans incendie"
+    casier = Moteur(contrat, {"evenement": ["vol"], "bien": ["velo"], "lieu": ["casier"]}).decider()
+    assert casier["decision"] == "NON_COUVERT" and not casier["possibles"], \
+        "exclusion certaine : pas de question « commis sur vous ? »"

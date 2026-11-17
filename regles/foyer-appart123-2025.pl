@@ -26,6 +26,7 @@ evenement_traduit(incendie).
 evenement_traduit(explosion).
 evenement_traduit(foudre).
 evenement_traduit(degat_eaux).
+evenement_traduit(fumee).
 
 % --- Définitions (art. 12) -----------------------------------------------------------------------
 
@@ -57,6 +58,9 @@ definition(serrure_de_surete,
     '12/serrure-de-surete',
     "une serrure à double tour comportant un mécanisme à cylindre ou à pompe, sauf cadenas").
 
+%  2.1 couvre aussi la suie et la fumée, sans incendie (la casserole qui noircit la cuisine).
+definition(fumee, f(evenement, fumee), '2.1', "Le dégagement de suie et de fumée").
+
 definition(incendie, et([f(flammes, oui), f(embrasement, oui)]), '12/incendie',
     "La destruction de biens par des flammes évoluant hors de leur domaine normal et créant de la sorte un embrasement susceptible de se propager à d’autres biens").
 precision(incendie, '12/incendie', "sans qu’il y ait embrasement").
@@ -77,6 +81,8 @@ obligation(vol_batiment, si(f(absence, oui), f(portes_fermees, oui)), f(effracti
     "en cas d’absence, fermer à clé ou au moyen d'un dispositif électronique toutes les portes extérieures du bâtiment").
 obligation(vol_batiment, si(f(absence, oui), f(fenetres_fermees, oui)), f(effraction, oui), oui, '2.10',
     "Vous devez de même fermer correctement les fenêtres, oscillo-battants, soupiraux et autres ouvertures du bâtiment facilement accessibles").
+obligation(vol_batiment, non(f(cles_a_proximite, oui)), f(effraction, oui), oui, '2.10',
+    "ne pas laisser les clés d'accès aux locaux à proximité de ceux-ci").
 exclusion(vol_batiment, f(simple_disparition, oui), tout, non, '2.10',
     "le vol du contenu situé dans le bâtiment sauf la simple disparition").
 limite(vol_batiment, '2.10',
@@ -114,14 +120,16 @@ exclusion([vol_batiment, vol_personne, vol_reparateur], f(bien, animal), bien(an
     "le vol des animaux").
 exclusion([vol_batiment, vol_personne, vol_reparateur], f(bien, mobilier_jardin), bien(mobilier_jardin), oui, '2.10-a',
     "le vol du mobilier extérieur").
+exclusion([vol_batiment, vol_personne, vol_reparateur], f(lieu, casier), tout, non, '2.10-a',
+    "le vol du contenu entreposé dans un casier d’une association sportive ou d’agrément").
 
 % --- Art. 2.1 Incendie et risques connexes -------------------------------------------------------------
 
 garantie(incendie, "Incendie et risques connexes", '2.1',
     "Nous couvrons les dommages matériels directement causés par").
-perimetre(incendie, ou([concept(incendie), f(evenement, explosion), f(evenement, foudre)])).
+perimetre(incendie, ou([concept(incendie), f(evenement, explosion), f(evenement, foudre), concept(fumee)])).
 %  La garantie ne se rattache qu'aux événements qu'elle couvre : pas de question sur les flammes pour une tempête.
-perimetre(incendie, ou([f(evenement, incendie), f(evenement, explosion), f(evenement, foudre)])).
+perimetre(incendie, ou([f(evenement, incendie), f(evenement, explosion), f(evenement, foudre), f(evenement, fumee)])).
 perimetre(incendie, ou([concept(contenu), f(bien, element_batiment)])).
 perimetre(incendie, concept(batiment)).
 exclusion(incendie, f(chaleur_sans_feu, oui), tout, non, '2.1',
@@ -141,6 +149,9 @@ exclusion(degats_eaux, f(cause_eau, infiltration_exterieure), tout, oui, '2.7-b'
 exclusion(degats_eaux, f(cause_eau, inondation), tout, oui, '2.7-b',
     "par une inondation ou un débordement ou refoulement d'égouts publics").
 exclusion(degats_eaux, f(cause_eau, condensation), tout, non, '2.7-b', "par la condensation").
+%  L'aquarium et le matelas d'eau sont exceptés : une autre valeur du vocabulaire (debordement_aquarium).
+exclusion(degats_eaux, f(cause_eau, debordement_recipient), tout, oui, '2.7-b',
+    "par le débordement ou le renversement d'un récipient non relié à l'installation hydraulique du bâtiment, autre qu’un aquarium ou un matelas d’eau").
 %  Le gel est exclu sauf si les mesures de prévention ont été respectées ; inconnues, c'est une réserve.
 exclusion(degats_eaux, et([f(cause_eau, gel), f(prevention_gel, non)]), tout, oui, '2.7-b',
     "par le gel, néanmoins, les dégâts qui résultent de l'écoulement d'eau consécutif au gel sont couverts lorsque les mesures de prévention reprises ci-dessous ont été respectées").

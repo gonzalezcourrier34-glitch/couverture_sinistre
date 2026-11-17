@@ -20,8 +20,8 @@
     "source": "couverture.fiches.SYSTEME_FAITS"
   },
   "couverture-faits-regles": {
-    "version": "v2",
-    "empreinte": "0991232acb5fbf03",
+    "version": "v4",
+    "empreinte": "b05ed349b373d04f",
     "source": "couverture.prolog.SYSTEME_FAITS_REGLES"
   },
   "couverture-fiches": {

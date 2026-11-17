@@ -24,6 +24,8 @@ version garde ici son **texte intégral**, dans `<consigne>/<version>.txt`.
 | `relecture` | v2 | 17 nov. 2026 | Le relecteur répond lui-même sans voir la première réponse ; le code compare (la v1 donnait des « contestations » d'accord) |
 | `faits-regles` | v1 | 17 nov. 2026 | Lire une déclaration dans le vocabulaire commun des règles Prolog ; ce qu'elle ne dit pas reste inconnu |
 | `faits-regles` | v2 | 17 nov. 2026 | Événement à plusieurs valeurs (la cause et le dommage), durées traduites, fenêtres et mesures contre le gel (après le jeu de validation, 7.17) |
+| `faits-regles` | v3 | 17 nov. 2026 | Le sens de chaque variable et des valeurs proches est donné ; interdiction d'inventer un lieu, une absence, une cause ; faits hors sujet retirés par le code (7.24) |
+| `faits-regles` | v4 | 17 nov. 2026 | Rétablit la déduction « pièce du logement → lieu = logement », supprimée par erreur en v3 ; « disparu » n'est pas « volé » (7.24 bis) |
 | `redaction-regles` | v1 | 17 nov. 2026 | Mistral Large traduit une garantie en règles : schéma JSON, vocabulaire imposé, faits manquants et phrases non traduites déclarés |
 | `redaction-regles` | v2 | 17 nov. 2026 | Après la première rédaction réelle : exemples de définition et de limite, définition de l'événement couvert comme condition (7.20) |
 | `faits` | v1 | 17 nov. 2026 | Événement, bien et lieu extraits par le modèle, pour choisir les fiches |

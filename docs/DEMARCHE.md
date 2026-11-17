@@ -1123,6 +1123,138 @@ changement d'instrument, pas un relâchement.
 4. la seconde lecture comparée par le code, contre les 8 cas instables.
 Chaque étape repassée au banc, une à la fois, pour savoir ce qu'elle apporte.
 
+### 7.24 La lecture : nommer tous les périls, donner le sens des mots, retirer ce qui est hors sujet
+
+**Référence** (commit `0833fe0`, banc du 17 nov. 16 h 40, golden v2) : règles seules 85 %, 2 couverts
+et 7 refus à tort ; chaîne 84 %, **4,7 couverts à tort** par exécution ; la lecture change **13,3
+décisions** par exécution, dont 5 vers un couvert à tort.
+
+**Ce que le rapport du banc montrait** : le modèle **invente** des faits dans 53 cas sur 68.
+- « Vélo volé pendant mes courses » devient « dans le logement, absent, portes et fenêtres
+  fermées » : couvert à tort.
+- Le fioul et la panne de courant deviennent des « dégâts des eaux » avec une cause inventée
+  (« fuite », « gel ») : le vocabulaire n'avait aucun mot pour ces périls, la lecture prenait le
+  plus proche.
+- Du bruit partout : une cause d'eau pour une bougie, « travaux : aucun » pour une tempête. Le
+  vocabulaire de 2.9 a multiplié les occasions.
+- Deux confusions de sens : « local à vélos de la résidence » lu « annexe » ; « pas encore
+  accroché » non lu comme « non placé ».
+
+**Trois changements, du plus robuste au plus fragile** :
+1. **Le code retire les faits hors sujet** (`prolog.filtrer_faits`) : chaque variable déclare les
+   événements auxquels elle s'applique (« pour » dans le vocabulaire : une cause d'eau pour un
+   dégât des eaux, des travaux pour un bris…). Un fait lu hors sujet est retiré, quelle que soit la
+   consigne ; c'est noté dans les avertissements. Sans événement lu, rien n'est retiré.
+2. **Le vocabulaire nomme tous les périls du contrat** : électricité, mazout, catastrophe
+   naturelle, attentat, fumée. Non traduits en règles, ils plafonnent la décision à INCERTAIN
+   (7.18) : « à examiner », jamais un refus. C'est la leçon 36 appliquée.
+3. **La consigne de lecture v3** donne au modèle, pour chaque variable, sa question et **le sens des
+   valeurs proches** (« parties communes : local à vélos ou à poubelles commun… » ; « annexe :
+   dépendance privée… » ; « récipient : seau, vase, aquarium » ; « fuite : appareil relié à
+   l'eau, baignoire qui déborde »…), et une règle ferme : jamais un lieu, une absence, des portes
+   fermées, un auteur ou une cause qui ne sont pas écrits. « Un fait inventé est plus grave qu'un
+   fait manquant. »
+
+**Golden v3** : les faits idéaux de 8 cas sont réécrits avec les nouveaux périls (électricité ×3,
+mazout, catastrophe naturelle ×2, attentat, fumée). Tous les faits idéaux respectent le filtre
+(un test le vérifie).
+
+**Mesure, règles seules (oracle ; à confirmer sur le poste)** :
+
+| | Justes ou acceptables | Exactes | Couverts à tort | Refus à tort |
+|---|---|---|---|---|
+| Golden v2 | 85 % | 76 % | 2 | 7 |
+| **Golden v3** | **96 %** | 76 % | 2 | **0** |
+
+Les 7 refus à tort ont disparu : toutes les garanties non traduites répondent « à examiner ».
+Restent les deux phrases du contrat absentes des règles (clé, récipient) et le casier. La porte
+« exactitude des règles ≥ 95 % » passe pour la première fois. **L'effet sur la chaîne (lecture
+v3 et filtre) reste à mesurer** : c'est le but de cette étape.
+
+### 7.24 bis Le banc arrête une régression avant le commit
+
+**Mesure sur le poste** (golden v3, lecture v3 et filtre) :
+
+| | Règles seules | Chaîne : justes | Exactes | Couverts à tort | Refus à tort | Instables | Décisions changées par la lecture |
+|---|---|---|---|---|---|---|---|
+| Référence (v2) | 85 % | 84 % | 67 % | 4,7 | 4 | 5 | 13,3 |
+| **Lecture v3** | **96 %** | **80 %** | **57 %** | 4,7 | **1,3** | 9 | **19** |
+
+Les règles confirment le gain annoncé (96 %, aucun refus à tort, sur SWI-Prolog), mais **la chaîne
+recule**. Le rapport du banc dit pourquoi, cas par cas :
+- **en écrivant la v3, j'ai supprimé deux règles de la v2** : « une pièce du logement → lieu =
+  logement » et « façade, murs, parquet → élément du bâtiment ». La nouvelle règle « n'ajoute
+  jamais un lieu » a été obéie à la lettre : le modèle ne déduit plus le logement de « ma cuisine »
+  ou « mon parquet », le bâtiment devient inconnu, et une dizaine de cas couverts passent à
+  « incertain » (friteuse, fuite sous l'évier, chauffe-eau, aquarium…) ;
+- deux inventions résistent : « pendant mes courses » lu « dans le logement », « disparu » lu
+  « volé » ;
+- l'aide du bris ne parlait que du verre : la table de cuisson fendue est lue « autre » (refus à tort).
+Ce qui a marché : plus aucun fait hors sujet ne passe, les refus à tort tombent de 4 à 1,3.
+
+**Consigne de lecture v4** : les deux règles rétablies ; « ce qui ne dit rien de l'endroit ne donne
+pas de lieu » remplace l'interdiction trop large ; « disparu n'est pas volé » ; l'aide du bris
+couvre la vitrocéramique et les sanitaires. **Avant de la livrer, la v4 a été comparée ligne à ligne
+à la v2** (les archives `docs/consignes/` servent à cela) : c'est cette comparaison qui a trouvé la
+deuxième règle perdue. Un test vérifie désormais que les règles qui ont fait leurs preuves restent
+dans la consigne.
+
+**Pas de commit sur une régression** : la v3 n'a pas été committée ; le banc l'a arrêtée.
+
+### 7.25 Lecture v4 mesurée, et les quatre phrases du contrat qui manquaient
+
+**Lecture v4 sur le poste** (golden v3) :
+
+| | Chaîne : justes | Exactes | Couverts à tort | Refus à tort | Instables | Décisions changées par la lecture |
+|---|---|---|---|---|---|---|
+| Référence (v2) | 84 % | 67 % | 4,7 | 4 | 5 | 13,3 |
+| Lecture v3 | 80 % | 57 % | 4,7 | 1,3 | 9 | 19 |
+| **Lecture v4** | **86 %** | 62 % | **6** | **0** | 7 | 14,3 |
+
+Gagné : aucun refus à tort ; le local à vélos est lu « parties communes » (g-l01 réglé) ; le
+miroir non posé n'est plus couvert qu'une fois sur trois. Perdu :
+- « disparu n'est pas volé » s'est **retourné** : le modèle garde « vol » et n'écrit plus
+  « simple disparition », si bien que le vol est couvert trois fois sur trois (g-q02) ;
+- les biens de l'hôte ne sont plus lus (val-03), trois fois sur trois ;
+- « pendant mes courses » est toujours lu « dans le logement » (g-q03), malgré l'exemple mot pour
+  mot dans la consigne.
+**Leçon** : retoucher la formulation ne mène plus nulle part. Chaque règle ajoutée en déplace une
+autre, et Mistral Small ignore même un exemple explicite. La suite doit être **structurelle** :
+chaque fait décisif cite les mots de la déclaration qui le fondent, et le code vérifie qu'ils y sont
+(comme les citations du contrat) ; puis une seconde lecture comparée par le code.
+
+**Les quatre phrases du contrat qui manquaient aux règles** (vues par le banc dès 7.21) :
+- la clé laissée à proximité (2.10) : obligation de prévention, excusée par l'effraction ; non
+  respectée, le refus exige un lien causal, donc « incertain » avec la question ;
+- le récipient non relié à l'installation (2.7) : exclusion ; l'aquarium et le matelas d'eau
+  exceptés ont leur propre valeur dans le vocabulaire (`debordement_aquarium`) ;
+- la suie et la fumée sans incendie (2.1) : dans le périmètre de la garantie incendie ;
+- le casier d'une association sportive (2.10) : exclusion, avec un nouveau lieu `casier`.
+
+**Et une règle du moteur** : une exclusion **certaine** écarte une garantie même si l'on ignore
+encore si elle s'appliquerait. Sans elle, le vélo volé au casier restait « incertain » : il fallait
+savoir s'il avait été volé « sur la personne », question absurde puisque l'exclusion règle tout.
+
+**Mesure, règles seules (oracle ; golden v4)** : **100 % justes ou acceptables, 81 % exactes, aucun
+couvert à tort, aucun refus à tort. Les portes des règles passent toutes, pour la première fois.**
+Il ne reste d'erreurs que dans la lecture.
+
+**Confirmé sur le poste** (SWI-Prolog, golden v4, 157 tests réussis) : règles seules 100 %, aucun
+couvert ni refus à tort, porte des règles franchie. Chaîne complète :
+
+| Chaîne | Justes ou acceptables | Exactes | Couverts à tort | Refus à tort | Instables |
+|---|---|---|---|---|---|
+| Référence (7.24) | 84 % | 67 % | 4,7 | 4 | 5 |
+| **Lecture v4 + quatre règles** | **85 %** | 65 % | **3,7** | **3,7** | 8 |
+
+Chaque indicateur coûteux fait au moins aussi bien que la référence : l'état est committé. Les
+erreurs restantes sont toutes des erreurs de **lecture**. Couverts à tort : fenêtre ouverte non
+lue (val-01), chauffage coupé non lu (val-10), « disparu » lu « volé » (g-q02). Refus à tort :
+l'aquarium lu « récipient », si bien que la nouvelle exclusion s'applique (g-p05) ; la table de
+cuisson non lue comme un bris ; l'inondation et les égouts non lus comme une catastrophe
+naturelle. **Une règle plus juste rend plus coûteuse une lecture fausse** : c'est l'argument pour
+le garde-fou structurel de la lecture (chaque fait décisif cite les mots de la déclaration).
+
 ## 8. Ce qui reste à faire
 
 - Un **nouveau jeu de validation écrit par l'auteur**, sans Claude (les 15 cas de 7.17 sont devenus de la mise au point, 7.18) ; le placer dans `data/validation/` à la place des actuels, qui rejoignent la mise au point.
@@ -1183,3 +1315,10 @@ Chaque étape repassée au banc, une à la fois, pour savoir ce qu'elle apporte.
 39. Un oracle vérifie la logique, pas la forme : ce que l'outil réel refuse (un avertissement de chargement) mérite son propre test.
 40. Mesurer la lecture par son effet sur la décision : un fait manqué qui ne change rien n'est pas une erreur, un fait inventé qui fait couvrir en est une grave.
 41. Corriger l'instrument avant de corriger le système : un banc mal calibré fait chercher au mauvais endroit.
+42. Contre un modèle qui invente, une consigne aide, un filtre dans le code protège.
+43. Donner au modèle le sens des mots, pas seulement les mots : « parties communes » ne dit pas « local à vélos ».
+44. Une consigne se réécrit en comparant à la précédente, ligne à ligne : ajouter une règle peut en effacer une autre.
+45. Une interdiction large est obéie à la lettre : « n'ajoute pas de lieu » a fait oublier « une cuisine est dans le logement ».
+46. Le banc sert d'abord à refuser un commit : une amélioration annoncée se mesure avant d'être gardée.
+47. Quand chaque retouche de consigne en défait une autre, il faut un garde-fou dans le code, pas une phrase de plus.
+48. Une exclusion certaine dispense de toute question : le « je ne sais pas » ne doit pas porter sur ce qui ne changera rien.
