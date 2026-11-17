@@ -38,6 +38,7 @@ Les règles de décision reprennent le raisonnement d'un gestionnaire, et le con
 
 | Méthode | Principe |
 |---|---|
+| `regles` | Le contrat en **règles Prolog** ; le modèle ne fait que lire les faits de la déclaration, un moteur logique décide |
 | `fiches` | Contrat compilé ; le modèle répond à des questions déjà écrites |
 | `conditions` | Le modèle remplit une grille à chaque sinistre, le code décide (méthode par défaut) |
 | `brut` | Le contrat entier dans le prompt : la référence « chatbot » à battre |
@@ -60,6 +61,8 @@ COUVERTURE_MODELE=mistral-small-latest            # analyses : rapide, sans réf
 COUVERTURE_MODELE_CONTRAT=mistral-large-latest    # compilation, qualité, réparation : une fois par contrat
 ```
 
+La méthode `regles` demande **SWI-Prolog** (gratuit) : `winget install SWI-Prolog.SWI-Prolog` sous Windows, `apt install swi-prolog-nox` sous Linux.
+
 Anthropic (`ANTHROPIC_API_KEY`) et tout modèle compatible OpenAI (`COUVERTURE_LLM_URL`) sont aussi pris en charge. Sans modèle, un juge prudent sans modèle répond (`--hors-ligne`).
 
 ## Utilisation
@@ -67,7 +70,9 @@ Anthropic (`ANTHROPIC_API_KEY`) et tout modèle compatible OpenAI (`COUVERTURE_L
 ```bash
 uv run couverture modele                                   # modèles configurés, test de connexion
 uv run couverture ingerer                                  # lit data/contrats/
-uv run couverture compiler --contrat foyer-appart123-2025  # une fois par contrat (Mistral Large, ~15 min)
+uv run couverture regles   --contrat foyer-appart123-2025  # vérifie les règles Prolog (sans modèle)
+uv run couverture analyser --contrat foyer-appart123-2025 --methode regles "…"
+uv run couverture compiler --contrat foyer-appart123-2025  # fiches : une fois par contrat (Mistral Large, ~15 min)
 uv run couverture fiches   --contrat foyer-appart123-2025  # relire les fiches (--exporter / --importer)
 uv run couverture analyser --contrat foyer-appart123-2025 --methode fiches "Mon vélo a été volé dans le local commun…"
 uv run couverture evaluer  --contrat foyer-appart123-2025 --methode fiches   # tableau ; --detail pour le JSON
@@ -82,6 +87,7 @@ Avec docker : `docker compose up -d --build` lance l'application (8020), MLflow 
 
 ```
 src/couverture/      le code (un module par étape, voir docs/EXPLICATIONS.md)
+regles/              vocabulaire commun, moteur Prolog, règles par contrat, faits des cas de test
 data/contrats/       conditions générales, catalogue.json, SOURCES.md (liens des CG réelles)
 data/sinistres.jsonl 14 sinistres de test, dont les deux de l'énoncé
 data/annotations/    réponse attendue et clauses à citer, contrat par contrat
@@ -99,9 +105,16 @@ Les sinistres sont indépendants des contrats. Des variations changent **un seul
 
 ## Résultats à ce stade
 
-- **Tests** : 102 passent, sans clé ni réseau ; la CI les relance à chaque envoi.
+- **Tests** : 111 passent (plus 2 tests Prolog là où SWI-Prolog est installé), sans clé ni réseau ; la CI les relance à chaque envoi.
 - **Foyer appart 123** (48 pages) : 147 clauses, dont 63 définitions ; compilé en 36 fiches et 350 questions.
-- **Évaluation Foyer, 14 cas, méthode `fiches`, trois exécutions** : 74 % de réponses justes ou acceptables (64 – 79 %), **0 refus à tort**, 2 couverts à tort systématiques et expliqués (une condition cachée dans un tableau de limites, une exclusion cachée dans une définition), 12 cas sur 14 stables. Historique des mesures : [docs/DEMARCHE.md](docs/DEMARCHE.md).
+- **Évaluation Foyer, 14 cas, trois exécutions** :
+
+  | Méthode | Justes ou acceptables | Exactes | Couverts à tort | Refus à tort | Durée |
+  |---|---|---|---|---|---|
+  | `fiches` | 74 % | 60 % | 2 | 0 | ~1 min |
+  | **`regles`** (Prolog) | **100 %** | **90 %** | **0** | **0** | **3 à 4 s** |
+
+  Réserve : les règles ont été écrites en connaissant ces 14 cas, et trois garanties seulement sont en règles. Prochaine preuve : des cas nouveaux, et des règles écrites par le modèle. Détail : [docs/DEMARCHE.md](docs/DEMARCHE.md).
 
 ## Limites connues
 

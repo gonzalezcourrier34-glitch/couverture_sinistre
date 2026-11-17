@@ -40,6 +40,7 @@ CONSIGNES: dict[str, tuple[str, str, str]] = {
     "couverture-fiches": ("couverture.fiches", "SYSTEME_FICHES", "v3"),
     "couverture-routage": ("couverture.fiches", "SYSTEME_ROUTAGE", "v1"),
     "couverture-faits": ("couverture.fiches", "SYSTEME_FAITS", "v1"),
+    "couverture-faits-regles": ("couverture.prolog", "SYSTEME_FAITS_REGLES", "v1"),
 }
 
 RACINE = Path(__file__).resolve().parents[2]

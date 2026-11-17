@@ -19,6 +19,11 @@
     "empreinte": "abfd7fdb00abe919",
     "source": "couverture.fiches.SYSTEME_FAITS"
   },
+  "couverture-faits-regles": {
+    "version": "v1",
+    "empreinte": "bde75af03434352e",
+    "source": "couverture.prolog.SYSTEME_FAITS_REGLES"
+  },
   "couverture-fiches": {
     "version": "v3",
     "empreinte": "516083e66b9f9534",

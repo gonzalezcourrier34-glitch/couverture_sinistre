@@ -22,6 +22,7 @@ version garde ici son **texte intégral**, dans `<consigne>/<version>.txt`.
 | `fiches` | v2 | 17 nov. 2026 | Le rôle de chaque question est donné : un périmètre décrit et contraire vaut « non », une circonstance passée sous silence vaut « inconnu » |
 | `fiches` | v3 | 17 nov. 2026 | Énumérations (« … ou … »), pièces du logement = bâtiment assuré, exclusions partielles |
 | `relecture` | v2 | 17 nov. 2026 | Le relecteur répond lui-même sans voir la première réponse ; le code compare (la v1 donnait des « contestations » d'accord) |
+| `faits-regles` | v1 | 17 nov. 2026 | Lire une déclaration dans le vocabulaire commun des règles Prolog ; ce qu'elle ne dit pas reste inconnu |
 | `faits` | v1 | 17 nov. 2026 | Événement, bien et lieu extraits par le modèle, pour choisir les fiches |
 | `routage` | v1 | 17 nov. 2026 | Choisir les fiches quand l'événement n'est pas reconnu dans la déclaration |
 | `relecture`, `verdict-direct`, `document-brut`, `juge-qualite`, `reparation` | v1 | nov. 2026 | Versions d'origine |

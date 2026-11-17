@@ -1,0 +1,33 @@
+{
+  "_description": "Vocabulaire de faits commun à tous les contrats. Les règles d'un contrat ne parlent que de ces variables et de ces valeurs ; l'extraction des faits d'une déclaration aussi. Une variable « plusieurs » peut avoir plusieurs valeurs (plusieurs biens, plusieurs lieux). Une variable absente des faits est inconnue.",
+  "variables": {
+    "evenement": {"valeurs": ["vol", "incendie", "explosion", "foudre", "degat_eaux", "tempete", "bris", "autre"],
+                  "question": "Que s'est-il passé ?"},
+    "bien": {"plusieurs": true,
+             "valeurs": ["velo", "mobilier", "electronique", "bijoux", "valeurs", "animal", "objet_divers",
+                         "mobilier_jardin", "vehicule_moteur", "element_batiment", "canalisation"],
+             "question": "Quels biens sont endommagés ou volés ?"},
+    "lieu": {"plusieurs": true,
+             "valeurs": ["logement", "cave", "grenier", "garage", "annexe", "terrasse", "jardin", "abri_jardin",
+                         "parties_communes", "voie_publique", "chez_reparateur", "autre_batiment"],
+             "question": "Où se trouvaient les biens ?"},
+    "fermeture": {"valeurs": ["serrure", "cle", "cadenas", "aucune"],
+                  "question": "Comment le local était-il fermé ?"},
+    "serrure_surete": {"valeurs": ["oui", "non"],
+                       "question": "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ?"},
+    "effraction": {"valeurs": ["oui", "non"], "question": "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ?"},
+    "violence": {"valeurs": ["oui", "non"], "question": "Y a-t-il eu violences physiques ou menaces ?"},
+    "vol_sur_personne": {"valeurs": ["oui", "non"], "question": "Le vol a-t-il été commis sur vous (sur votre personne) ?"},
+    "auteur": {"valeurs": ["tiers", "assure", "famille", "personnel_prive"], "question": "Qui est l'auteur ?"},
+    "proprietaire": {"valeurs": ["assure", "hote"], "question": "À qui appartiennent les biens ?"},
+    "simple_disparition": {"valeurs": ["oui", "non"], "question": "S'agit-il d'une simple disparition, sans trace de vol ?"},
+    "depot_moins_30j": {"valeurs": ["oui", "non"], "question": "Le bien était-il déposé chez le réparateur depuis 30 jours au plus ?"},
+    "absence": {"valeurs": ["oui", "non"], "question": "Étiez-vous absent au moment des faits ?"},
+    "portes_fermees": {"valeurs": ["oui", "non"], "question": "Les portes extérieures étaient-elles fermées à clé ?"},
+    "flammes": {"valeurs": ["oui", "non"], "question": "Y a-t-il eu des flammes ?"},
+    "embrasement": {"valeurs": ["oui", "non"], "question": "Le feu s'est-il propagé (embrasement) ?"},
+    "chaleur_sans_feu": {"valeurs": ["oui", "non"], "question": "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ?"},
+    "cause_eau": {"valeurs": ["fuite_installation", "infiltration_exterieure", "inondation", "gel", "condensation", "debordement_recipient"],
+                  "question": "D'où venait l'eau ?"}
+  }
+}

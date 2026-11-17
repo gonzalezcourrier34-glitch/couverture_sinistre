@@ -1,0 +1,14 @@
+{"sinistre_id": "velo-01", "faits": {"evenement": "vol", "bien": ["velo"], "lieu": ["parties_communes"], "fermeture": "aucune", "effraction": "non", "vol_sur_personne": "non"}}
+{"sinistre_id": "velo-02", "faits": {"evenement": "vol", "bien": ["velo"], "lieu": ["parties_communes"], "fermeture": "cle", "effraction": "oui", "vol_sur_personne": "non"}}
+{"sinistre_id": "velo-03", "faits": {"evenement": "vol", "bien": ["velo"], "lieu": ["cave"], "fermeture": "cadenas", "effraction": "oui", "vol_sur_personne": "non"}}
+{"sinistre_id": "velo-04", "faits": {"evenement": "vol", "bien": ["velo"], "lieu": ["cave"], "fermeture": "aucune", "effraction": "non", "vol_sur_personne": "non"}}
+{"sinistre_id": "velo-05", "faits": {"evenement": "vol", "bien": ["velo"], "lieu": ["logement"], "effraction": "oui", "vol_sur_personne": "non"}}
+{"sinistre_id": "velo-06", "faits": {"evenement": "vol", "bien": ["velo"], "lieu": ["voie_publique"], "fermeture": "cadenas", "vol_sur_personne": "non", "violence": "non"}}
+{"sinistre_id": "velo-07", "faits": {"evenement": "vol", "bien": ["velo"], "lieu": ["garage"], "fermeture": "cle", "effraction": "oui", "vol_sur_personne": "non"}}
+{"sinistre_id": "bougie-01", "faits": {"evenement": "autre", "bien": ["mobilier_jardin"], "lieu": ["jardin"], "flammes": "non", "embrasement": "non", "absence": "oui"}}
+{"sinistre_id": "bougie-02", "faits": {"evenement": "incendie", "bien": ["mobilier"], "lieu": ["logement"], "flammes": "oui", "embrasement": "oui"}}
+{"sinistre_id": "bougie-03", "faits": {"evenement": "autre", "bien": ["mobilier"], "lieu": ["logement"], "flammes": "non", "embrasement": "non"}}
+{"sinistre_id": "bougie-04", "faits": {"evenement": "incendie", "bien": ["mobilier_jardin"], "lieu": ["jardin"], "flammes": "oui", "embrasement": "oui", "absence": "oui"}}
+{"sinistre_id": "bougie-05", "faits": {"evenement": "incendie", "bien": ["element_batiment", "mobilier"], "lieu": ["terrasse", "logement"], "flammes": "oui", "embrasement": "oui", "absence": "oui"}}
+{"sinistre_id": "autre-01", "faits": {"evenement": "vol", "bien": ["electronique"], "lieu": ["voie_publique"], "vol_sur_personne": "oui", "violence": "oui"}}
+{"sinistre_id": "autre-02", "faits": {"evenement": "degat_eaux", "bien": ["element_batiment", "mobilier", "canalisation"], "lieu": ["logement"], "cause_eau": "fuite_installation"}}

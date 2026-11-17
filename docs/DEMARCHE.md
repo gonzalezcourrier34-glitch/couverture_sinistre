@@ -599,9 +599,84 @@ Sur la question « quel taux de réussite ? » : aucun chiffre fiable tant que l
 mesurée. Objectif raisonnable : 85 à 95 % de décisions justes sur les cas nets, un INCERTAIN
 argumenté sur les cas ambigus, et **zéro couvert à tort**.
 
+### 7.16 Prolog : le contrat en règles, un moteur qui décide
+
+Mise en œuvre de l'orientation 7.15, sur le vol (2.10), l'incendie (2.1) et les dégâts des eaux
+(2.7) de Foyer :
+
+```
+regles/vocabulaire.json        les variables communes à tous les contrats, et leurs valeurs
+regles/moteur.pl               le moteur unique : logique à trois valeurs, règles de gestionnaire
+regles/foyer-appart123-2025.pl les règles du contrat, chacune avec sa phrase du contrat
+regles/cas/<contrat>.jsonl     les faits « idéaux » des 14 sinistres, pour tester les règles seules
+```
+
+Le contrat est **une suite de données** (définitions, garanties, périmètre, circonstances,
+obligations, exclusions, limites) ; les conditions sont des termes `f(variable, valeur)`, `et`,
+`ou`, `non`, `si`, `concept`. Le moteur évalue en **trois valeurs** (oui, non, inconnu), ce qui
+règle le piège du monde clos de Prolog. Les formes que les fiches rataient s'écrivent directement :
+
+```prolog
+definition(contenu, et([ ..., non(f(bien, mobilier_jardin)), non(f(lieu, jardin)) ]), '12/contenu', "…").
+circonstance(vol_batiment, si(ou([f(lieu, cave), f(lieu, grenier)]), concept(serrure_de_surete)), '2.10',
+    "si ces locaux sont fermés avec une serrure de sûreté").
+definition(serrure_de_surete, et([f(serrure_surete, oui), non(f(fermeture, cadenas)), …]), '12/serrure-de-surete', "…").
+exclusion(degats_eaux, f(bien, canalisation), bien(canalisation), oui, '2.7-b', "…").   % partielle
+obligation(vol_batiment, si(f(absence, oui), f(portes_fermees, oui)), f(effraction, oui), oui, '2.10', "…").
+```
+
+**Résultat des règles seules**, sur les faits idéaux des 14 cas : **13 exactes, 1 acceptable**
+(le garage : le moteur demande si la serrure est de sûreté), **0 couvert à tort, 0 refus à tort**.
+Les deux couverts à tort systématiques des fiches (cave au cadenas, mobilier de jardin) sont
+corrigés. Les **36 citations** du fichier figurent mot pour mot dans leurs clauses.
+
+**Vérification sans Prolog de mon côté.** L'environnement de développement n'avait ni SWI-Prolog
+ni le droit de l'installer. D'où une **seconde implémentation du moteur en Python**, réservée aux
+tests (`tests/moteur_reference.py`), qui lit le même fichier de règles : elle a permis de faire
+tourner les cas, et, là où SWI-Prolog est installé, un **test différentiel** vérifie que les deux
+moteurs donnent les mêmes réponses. `couverture regles` vérifie sur le poste : chargement sans
+avertissement, vocabulaire, citations, cas.
+
+**La méthode complète** (`--methode regles`) : Mistral Small lit la déclaration et la traduit dans
+le vocabulaire (ce qu'elle ne dit pas reste inconnu), puis Prolog décide. Le modèle ne décide plus
+rien et ne cite plus rien. Reste à mesurer cette lecture des faits : c'est maintenant elle, et
+non plus le raisonnement, qui porte le risque.
+
+Limite connue : une variable à plusieurs valeurs est évaluée globalement (« un des lieux est le
+jardin »), pas bien par bien ; l'exclusion partielle couvre le cas utile (un bien exclu parmi
+d'autres).
+
+### 7.16 bis Première mesure des règles Prolog, sur le poste
+
+Sur le poste de l'auteur (SWI-Prolog 10.0.2, Windows) :
+- `couverture regles` : « Tout est en ordre » (chargement sans avertissement, vocabulaire, citations, cas) ;
+- `tests/test_prolog.py` : 11 réussis, dont le **test différentiel** : SWI-Prolog et l'oracle Python
+  donnent les mêmes réponses sur tous les cas ;
+- chaîne complète (Mistral Small lit les faits, Prolog décide), **trois exécutions** :
+
+| Méthode | Justes ou acceptables | Exactes | Couverts à tort | Refus à tort | Durée (14 cas) |
+|---|---|---|---|---|---|
+| Fiches (référence) | 74 % (64 – 79 %) | 60 % | 2 | 0 | ~1 min |
+| **Règles Prolog** | **100 % (100 – 100 %)** | **90 % (86 – 93 %)** | **0** | **0** | **3 à 4 s** |
+
+Un cas instable : velo-03 (cave au cadenas), une fois INCERTAIN au lieu de NON_COUVERT, réponse
+acceptable ; l'écart vient de la lecture des faits, pas des règles. velo-07 (garage) reste
+INCERTAIN, avec la bonne question : la serrure est-elle de sûreté ?
+
+**Ce que ce résultat ne prouve pas encore**, à dire avant qu'on le découvre :
+- les règles ont été écrites **en connaissant les 14 cas** : le score est optimiste. Ce qui le rend
+  crédible : chaque règle cite mot pour mot une phrase du contrat, aucune n'est écrite pour un cas ;
+- trois garanties seulement sont en règles (vol, incendie, dégâts des eaux) ;
+- les réponses attendues ont été proposées par Claude et restent à valider.
+
+La preuve suivante : de **nouveaux cas écrits sans regarder les règles**, puis des règles **écrites
+par Mistral Large** pour les autres garanties, contrôlées de la même façon.
+
 ## 8. Ce qui reste à faire
 
-- Prolog, étape 1 : le vocabulaire de faits de Foyer (vol, incendie), avec velo-03 et bougie-04 comme tests prioritaires.
+- Écrire de nouveaux cas **sans regarder les règles** (jeu de validation), et les valider avec l'auteur.
+- Faire écrire les règles des autres garanties par Mistral Large, avec la même vérification (vocabulaire, citations, cas).
+- Contrôler la lecture des faits (une seconde lecture comparée par le code, comme la relecture v2).
 - Valider les 14 réponses attendues sur Foyer (proposées, pas encore validées).
 - Construire le **vocabulaire de faits commun** à partir des conditions de Foyer, puis traduire les
   garanties en **règles Prolog** à trois issues (couvert, non couvert, incertain), en commençant par
@@ -628,3 +703,5 @@ argumenté sur les cas ambigus, et **zéro couvert à tort**.
 16. Un principe doit être garanti par le code, pas espéré de la combinaison des règles.
 17. Une mesure sans sa variance ne prouve rien : rejouer plusieurs fois avant de conclure.
 18. Ne pas demander à un modèle de juger le travail d'un autre quand on peut lui faire refaire le travail et comparer.
+19. Un score obtenu en connaissant les cas est optimiste : il faut un jeu de cas écrit sans regarder les règles.
+20. Quand on ne peut pas exécuter un langage, une seconde implémentation et un test différentiel valent mieux qu'un pari.

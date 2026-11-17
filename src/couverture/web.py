@@ -37,6 +37,16 @@ def creer_app(base: Base) -> Starlette:
                 if llm is None:
                     raise ValueError("La méthode « document brut » demande un modèle configuré.")
                 cache[cle] = PipelineDocumentBrut.depuis_base(base, contrat_id, llm)
+            elif methode == "regles":
+                from .prolog import PipelineRegles
+
+                llm = llm_configure()
+                if llm is None:
+                    raise ValueError("La méthode « regles » demande un modèle configuré.")
+                try:
+                    cache[cle] = PipelineRegles.depuis_base(base, contrat_id, llm)
+                except LookupError as e:
+                    raise ValueError(str(e)) from e
             elif methode == "fiches":
                 from .fiches import PipelineFiches
                 from .llm import configurer_relecteur
@@ -81,7 +91,7 @@ def creer_app(base: Base) -> Starlette:
             return JSONResponse({"erreur": "Description trop longue (2 000 caractères au plus)."}, status_code=400)
         try:
             methode = corps.get("methode", "conditions")
-            if methode not in ("conditions", "fiches", "brut"):
+            if methode not in ("conditions", "fiches", "regles", "brut"):
                 return JSONResponse({"erreur": f"Méthode inconnue : {methode}"}, status_code=400)
             p = pipeline(corps.get("contrat_id", ""), methode)
         except (KeyError, ValueError) as e:

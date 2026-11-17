@@ -42,6 +42,11 @@ def afficher_court(r: Resultat) -> str:
     faut demander. Tout le reste (chaque fiche, chaque exclusion) : --detail."""
     v = r.verdict
     lignes = [f"Décision : {v.decision.value}  (confiance {v.confiance:.2f})", f"Motif : {v.justification}"]
+    if r.methode == "regles":
+        f = r.faits
+        lus = [f"événement {'/'.join(f.evenements)}" if f.evenements else "", f"biens {'/'.join(f.biens)}" if f.biens else "",
+               f"lieu {'/'.join(f.lieux)}" if f.lieux else "", ", ".join(f.circonstances)]
+        lignes.append("Faits lus : " + ("; ".join(x for x in lus if x) or "aucun"))
     if v.decision_avant_relecture:
         lignes.append(f"  (la relecture a corrigé une première réponse {v.decision_avant_relecture.value})")
     preuves = [c for c in v.conditions if c.decisive and c.valide]
@@ -118,7 +123,7 @@ def afficher(r: Resultat) -> str:
     return "\n".join(lignes)
 
 
-METHODES = ["conditions", "fiches", "brut"]
+METHODES = ["conditions", "fiches", "regles", "brut"]
 
 
 def construire(base: Base, contrat_id: str, methode: str, hors_ligne: bool):
@@ -127,8 +132,15 @@ def construire(base: Base, contrat_id: str, methode: str, hors_ligne: bool):
     brut : contrat entier dans le prompt, sans recherche (référence « chatbot »)."""
     if hors_ligne:
         return Pipeline.depuis_base(base, contrat_id, juge=JugeHeuristique())
-    if methode in ("brut", "fiches") and llm_configure() is None:
+    if methode in ("brut", "fiches", "regles") and llm_configure() is None:
         sys.exit(f"La méthode « {methode} » a besoin d'un modèle : définir MISTRAL_API_KEY dans .env.")
+    if methode == "regles":
+        from .prolog import PipelineRegles
+
+        try:
+            return PipelineRegles.depuis_base(base, contrat_id, llm_configure())
+        except LookupError as e:
+            sys.exit(str(e))
     if methode == "fiches":
         from .fiches import PipelineFiches
         from .llm import configurer_relecteur
@@ -259,6 +271,88 @@ def fiches_cli(base: Base, contrat_id: str, exporter: str | None, importer: str 
         print("! Le contrat a changé depuis cette compilation : la refaire avec `couverture compiler`.\n")
     print(resumer(compilation))
     return 0
+
+
+def regles_cli(base: Base, donnees: Path, contrat_id: str, faits_json: str | None) -> int:
+    """Vérifie les règles Prolog d'un contrat, sans appel au modèle :
+    1. SWI-Prolog est là et les règles se chargent sans avertissement ;
+    2. chaque variable et chaque valeur employées sont dans le vocabulaire commun ;
+    3. chaque citation figure mot pour mot dans la clause citée (si le contrat est en base) ;
+    4. les cas de regles/cas/<contrat>.jsonl (faits « idéaux ») donnent la réponse attendue.
+    Avec --faits '{"evenement": "vol", …}' : décide un seul cas."""
+    import subprocess
+
+    from . import prolog
+    from .evaluation import charger_cas, lire_jsonl
+    from .validation import extrait_present
+
+    exe = prolog.swipl()
+    if exe is None:
+        print("SWI-Prolog introuvable. Windows : `winget install SWI-Prolog.SWI-Prolog`, puis rouvrir PowerShell.")
+        return 1
+    version = subprocess.run([exe, "--version"], capture_output=True).stdout.decode("utf-8", "replace").strip()
+    print(f"{version} ({exe})")
+    try:
+        if faits_json:
+            faits = json.loads(faits_json)
+            for p_ in prolog.verifier_faits(faits):
+                print(f"! {p_}")
+            d = prolog.decider(contrat_id, faits)
+            print(f"Décision : {d['decision']}")
+            for r in d["retenues"]:
+                print(f"  « {r['garantie']} » ({r['article']}) : {r['motif']}")
+            return 0
+        employes = prolog.executer(contrat_id, "vocabulaire_json")
+        citations = prolog.executer(contrat_id, "citations_json")
+    except prolog.ErreurRegles as e:
+        print(f"Les règles ne se chargent pas : {e}")
+        return 1
+    print(f"Règles chargées : regles/{contrat_id}.pl")
+
+    voc, problemes = prolog.vocabulaire(), []
+    for e in employes:
+        if e["variable"] not in voc or e["valeur"] not in voc[e["variable"]]["valeurs"]:
+            problemes.append(f"hors vocabulaire : {e['variable']} = {e['valeur']}")
+    print(f"Vocabulaire : {len(employes)} couples (variable, valeur) employés, {len(problemes)} hors vocabulaire.")
+
+    try:
+        clauses = {c.id: c.texte for c in base.clauses(contrat_id)}
+    except KeyError:
+        clauses = {}
+    if clauses:
+        absentes = [c for c in citations if not (c["article"] in clauses and extrait_present(c["texte"], clauses[c["article"]]))]
+        problemes += [f"citation absente de l'art. {c['article']} : « {c['texte']} »" for c in absentes]
+        print(f"Citations : {len(citations)} phrases du contrat, {len(absentes)} introuvable(s).")
+    else:
+        print(f"Citations : {len(citations)} (contrat absent de la base : `couverture ingerer` pour les vérifier).")
+
+    chemin_cas = prolog.DOSSIER / "cas" / f"{contrat_id}.jsonl"
+    annotations = donnees / "annotations" / f"{contrat_id}.jsonl"
+    if chemin_cas.exists() and annotations.exists():
+        faits_par_cas = {d["sinistre_id"]: d["faits"] for d in lire_jsonl(chemin_cas)}
+        lignes = []
+        for c in charger_cas(donnees / "sinistres.jsonl", annotations):
+            if c["id"] not in faits_par_cas:
+                continue
+            problemes += [f"{c['id']} : {p_}" for p_ in prolog.verifier_faits(faits_par_cas[c["id"]])]
+            obtenu = prolog.decider(contrat_id, faits_par_cas[c["id"]])["decision"]
+            lignes.append({"id": c["id"], "attendu": c["attendu"], "obtenu": obtenu, "confiance": 1.0,
+                           "acceptable": obtenu != c["attendu"] and obtenu in c.get("acceptables", [])})
+        n = len(lignes) or 1
+        rapport = {"cas": lignes,
+                   "exactitude": round(sum(l["obtenu"] == l["attendu"] or l["acceptable"] for l in lignes) / n, 3),
+                   "exactitude_stricte": round(sum(l["obtenu"] == l["attendu"] for l in lignes) / n, 3),
+                   "faux_couverts": sum(l["obtenu"] == "COUVERT" and l["attendu"] != "COUVERT" for l in lignes),
+                   "faux_refus": sum(l["obtenu"] == "NON_COUVERT" and l["attendu"] == "COUVERT" for l in lignes),
+                   "taux_incertain": round(sum(l["obtenu"] == "INCERTAIN" for l in lignes) / n, 3)}
+        print("\nRègles seules, sur les faits idéaux des cas (sans modèle) :")
+        print(tableau(rapport))
+        if rapport["faux_couverts"]:
+            problemes.append(f"{rapport['faux_couverts']} couvert(s) à tort sur les faits idéaux")
+    for p_ in problemes:
+        print(f"! {p_}")
+    print("Tout est en ordre." if not problemes else f"{len(problemes)} problème(s).")
+    return 1 if problemes else 0
 
 
 def reparer(donnees: Path, base: Base, contrat_id: str | None) -> int:
@@ -436,6 +530,10 @@ def main(argv: list[str] | None = None) -> int:
     pco.add_argument("--contrat", help="Un contrat précis (par défaut : tous)")
     pco.add_argument("--forcer", action="store_true", help="Recompiler même un contrat inchangé")
 
+    pg = sous.add_parser("regles", help="Vérifier les règles Prolog d'un contrat (chargement, vocabulaire, citations, cas)")
+    pg.add_argument("--contrat", required=True)
+    pg.add_argument("--faits", help="Décider un cas : JSON des faits, ex. '{\"evenement\": \"vol\", \"lieu\": [\"cave\"]}'")
+
     pf = sous.add_parser("fiches", help="Afficher, exporter ou réimporter (après relecture) les fiches d'un contrat")
     pf.add_argument("--contrat", required=True)
     pf_mode = pf.add_mutually_exclusive_group()
@@ -509,6 +607,9 @@ def main(argv: list[str] | None = None) -> int:
 
     if a.commande == "fiches":
         return fiches_cli(base, a.contrat, a.exporter, a.importer, a.relu_par)
+
+    if a.commande == "regles":
+        return regles_cli(base, donnees, a.contrat, a.faits)
 
     if a.commande == "propositions":
         return propositions(donnees, base, a.accepter, a.refuser)
