@@ -1,0 +1,57 @@
+# Application, suivi MLflow et tableaux Grafana, sur le modèle de SortirIA.
+#   docker compose up -d --build
+#   interface : http://localhost:8020
+#   MLflow    : http://localhost:5010   (expériences couverture-ingestion et couverture-evaluation, consignes)
+#   Grafana   : http://localhost:3011   (admin / GRAFANA_ADMIN_PASSWORD)
+# Ports choisis pour ne pas gêner SortirIA (5000, 3001, 8010) s'il tourne en même temps.
+# Les clés (MISTRAL_API_KEY…) et GRAFANA_ADMIN_PASSWORD viennent du fichier .env.
+
+services:
+  app:
+    build:
+      context: .
+      args:
+        EXTRAS: suivi            # installe mlflow dans l'image
+    container_name: couverture_app
+    env_file: .env
+    environment:
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+    # Lit les contrats déposés dans data/contrats (embeddings et juge de qualité si une clé est présente),
+    # puis sert l'interface. La base data/base.sqlite est partagée avec Grafana.
+    command: sh -c "couverture ingerer && couverture serveur --hote 0.0.0.0 --port 8000"
+    ports:
+      - "8020:8000"
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - mlflow
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v3.1.0
+    container_name: couverture_mlflow
+    command: >
+      mlflow server --host 0.0.0.0 --port 5000
+      --backend-store-uri sqlite:////mlflow/mlflow.db
+      --artifacts-destination /mlflow/artifacts --serve-artifacts
+    ports:
+      - "5010:5000"
+    volumes:
+      - mlflowdata:/mlflow
+
+  grafana:
+    image: grafana/grafana:11.3.0
+    container_name: couverture_grafana
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_INSTALL_PLUGINS: frser-sqlite-datasource
+    ports:
+      - "3011:3000"
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./data:/donnees:ro       # la base SQLite, en lecture seule
+      - grafanadata:/var/lib/grafana
+
+volumes:
+  mlflowdata:
+  grafanadata:

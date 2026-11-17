@@ -1,0 +1,32 @@
+{
+  "couverture-document-brut": {
+    "version": "v1",
+    "empreinte": "2253a1899124ac31",
+    "source": "couverture.juges.SYSTEME_BRUT"
+  },
+  "couverture-grille-conditions": {
+    "version": "v1",
+    "empreinte": "d6f96f24f61916f5",
+    "source": "couverture.conditions.SYSTEME_CONDITIONS"
+  },
+  "couverture-juge-qualite": {
+    "version": "v1",
+    "empreinte": "7caefafb96ab5d2d",
+    "source": "couverture.qualite.SYSTEME_QUALITE"
+  },
+  "couverture-relecture": {
+    "version": "v1",
+    "empreinte": "7883749c46437693",
+    "source": "couverture.relecture.SYSTEME_RELECTURE"
+  },
+  "couverture-reparation": {
+    "version": "v1",
+    "empreinte": "72c65cfe666f2ec9",
+    "source": "couverture.reparation.SYSTEME_REPARATION"
+  },
+  "couverture-verdict-direct": {
+    "version": "v1",
+    "empreinte": "23338fae528975c7",
+    "source": "couverture.juges.SYSTEME"
+  }
+}

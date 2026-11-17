@@ -1,0 +1,11 @@
+# Chargement automatique des tableaux de bord (générés par monitoring/grafana/construire_tableaux.py).
+apiVersion: 1
+providers:
+  - name: Couverture sinistre
+    orgId: 1
+    folder: Couverture sinistre
+    type: file
+    disableDeletion: false
+    editable: true
+    options:
+      path: /etc/grafana/provisioning/dashboards

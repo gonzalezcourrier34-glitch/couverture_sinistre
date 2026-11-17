@@ -1,0 +1,14 @@
+# Source de Grafana : la base SQLite du projet (contrats, clauses, journal des analyses).
+# Plugin « frser-sqlite-datasource », installé au démarrage (docker-compose.yml, GF_INSTALL_PLUGINS).
+# Le dossier data/ est monté en lecture seule dans le conteneur, sur /donnees.
+apiVersion: 1
+
+datasources:
+  - name: Couverture SQLite
+    uid: couverture-sqlite
+    type: frser-sqlite-datasource
+    access: proxy
+    isDefault: true
+    editable: false
+    jsonData:
+      path: /donnees/base.sqlite

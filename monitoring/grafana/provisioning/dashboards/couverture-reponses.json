@@ -1,0 +1,580 @@
+{
+  "uid": "couverture-reponses",
+  "title": "Couverture sinistre — Réponses",
+  "description": "Ce que le système répond, ce que ses contrôles rattrapent, et ce qui lui manque. Source : table `analyses`.",
+  "tags": [
+    "couverture-sinistre"
+  ],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "editable": true,
+  "refresh": "5m",
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "type": "row",
+      "title": "Usage",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 1
+      },
+      "id": 1
+    },
+    {
+      "title": "Analyses",
+      "type": "stat",
+      "description": "",
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "couverture-sqlite"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "couverture-sqlite"
+          },
+          "queryText": "SELECT COUNT(*) AS analyses FROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()",
+          "rawQueryText": "SELECT COUNT(*) AS analyses FROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()",
+          "queryType": "table",
+          "timeColumns": []
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 1,
+        "w": 6,
+        "h": 4
+      },
+      "id": 2
+    },
+    {
+      "title": "Part d'INCERTAIN",
+      "type": "stat",
+      "description": "Trop haut : le système ne tranche presque jamais. Trop bas sur des cas ambigus : il tranche au hasard.",
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "couverture-sqlite"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "couverture-sqlite"
+          },
+          "queryText": "SELECT AVG(decision = 'INCERTAIN') AS incertain FROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()",
+          "rawQueryText": "SELECT AVG(decision = 'INCERTAIN') AS incertain FROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()",
+          "queryType": "table",
+          "timeColumns": []
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value"
+      },
+      "gridPos": {
+        "x": 6,
+        "y": 1,
+        "w": 6,
+        "h": 4
+      },
+      "id": 3
+    },
+    {
+      "title": "Décisions changées par la relecture",
+      "type": "stat",
+      "description": "Réponses que le juge de la grille a rendues plus prudentes.",
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "couverture-sqlite"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "couverture-sqlite"
+          },
+          "queryText": "SELECT COUNT(*) AS changees FROM analyses WHERE erreur IS NULL AND decision_avant_relecture IS NOT NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()",
+          "rawQueryText": "SELECT COUNT(*) AS changees FROM analyses WHERE erreur IS NULL AND decision_avant_relecture IS NOT NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()",
+          "queryType": "table",
+          "timeColumns": []
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 1,
+        "w": 6,
+        "h": 4
+      },
+      "id": 4
+    },
+    {
+      "title": "Erreurs du modèle",
+      "type": "stat",
+      "description": "",
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "couverture-sqlite"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "couverture-sqlite"
+          },
+          "queryText": "SELECT COUNT(*) AS erreurs FROM analyses WHERE erreur IS NOT NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()",
+          "rawQueryText": "SELECT COUNT(*) AS erreurs FROM analyses WHERE erreur IS NOT NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()",
+          "queryType": "table",
+          "timeColumns": []
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value"
+      },
+      "gridPos": {
+        "x": 18,
+        "y": 1,
+        "w": 6,
+        "h": 4
+      },
+      "id": 5
+    },
+    {
+      "title": "Décisions par jour",
+      "type": "timeseries",
+      "description": "",
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "couverture-sqlite"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "couverture-sqlite"
+          },
+          "queryText": "SELECT unixepoch(date(date)) AS time,\n       SUM(decision = 'COUVERT') AS couvert,\n       SUM(decision = 'NON_COUVERT') AS non_couvert,\n       SUM(decision = 'INCERTAIN') AS incertain\nFROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()\nGROUP BY date(date) ORDER BY time",
+          "rawQueryText": "SELECT unixepoch(date(date)) AS time,\n       SUM(decision = 'COUVERT') AS couvert,\n       SUM(decision = 'NON_COUVERT') AS non_couvert,\n       SUM(decision = 'INCERTAIN') AS incertain\nFROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()\nGROUP BY date(date) ORDER BY time",
+          "queryType": "time series",
+          "timeColumns": [
+            "time"
+          ]
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 60,
+            "stacking": {
+              "mode": "normal"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {},
+      "gridPos": {
+        "x": 0,
+        "y": 5,
+        "w": 12,
+        "h": 8
+      },
+      "id": 6
+    },
+    {
+      "title": "Part d'INCERTAIN par jour",
+      "type": "timeseries",
+      "description": "",
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "couverture-sqlite"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "couverture-sqlite"
+          },
+          "queryText": "SELECT unixepoch(date(date)) AS time, AVG(decision = 'INCERTAIN') AS incertain FROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo() GROUP BY date(date) ORDER BY time",
+          "rawQueryText": "SELECT unixepoch(date(date)) AS time, AVG(decision = 'INCERTAIN') AS incertain FROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo() GROUP BY date(date) ORDER BY time",
+          "queryType": "time series",
+          "timeColumns": [
+            "time"
+          ]
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "stacking": {
+              "mode": "none"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {},
+      "gridPos": {
+        "x": 12,
+        "y": 5,
+        "w": 12,
+        "h": 8
+      },
+      "id": 7
+    },
+    {
+      "type": "row",
+      "title": "Fiabilité : ce que les contrôles rattrapent",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 13,
+        "w": 24,
+        "h": 1
+      },
+      "id": 8
+    },
+    {
+      "title": "Rattrapages par jour",
+      "type": "timeseries",
+      "description": "Contestations du juge de la grille, décisions qu'il a changées, réponses corrigées par le contrôle des citations, citations ou conditions écartées faute de preuve.",
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "couverture-sqlite"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "couverture-sqlite"
+          },
+          "queryText": "SELECT unixepoch(date(date)) AS time,\n       SUM(contestations > 0) AS analyses_contestees,\n       SUM(decision_avant_relecture IS NOT NULL) AS changees_par_relecture,\n       SUM(decision_initiale != decision) AS corrigees_par_controle,\n       SUM(citations_rejetees + conditions_ecartees) AS preuves_ecartees\nFROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()\nGROUP BY date(date) ORDER BY time",
+          "rawQueryText": "SELECT unixepoch(date(date)) AS time,\n       SUM(contestations > 0) AS analyses_contestees,\n       SUM(decision_avant_relecture IS NOT NULL) AS changees_par_relecture,\n       SUM(decision_initiale != decision) AS corrigees_par_controle,\n       SUM(citations_rejetees + conditions_ecartees) AS preuves_ecartees\nFROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()\nGROUP BY date(date) ORDER BY time",
+          "queryType": "time series",
+          "timeColumns": [
+            "time"
+          ]
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "stacking": {
+              "mode": "none"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {},
+      "gridPos": {
+        "x": 0,
+        "y": 14,
+        "w": 12,
+        "h": 8
+      },
+      "id": 9
+    },
+    {
+      "title": "Temps de réponse par jour",
+      "type": "timeseries",
+      "description": "",
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "couverture-sqlite"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "couverture-sqlite"
+          },
+          "queryText": "SELECT unixepoch(date(date)) AS time, AVG(duree_ms) AS moyen, MAX(duree_ms) AS maximum FROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo() GROUP BY date(date) ORDER BY time",
+          "rawQueryText": "SELECT unixepoch(date(date)) AS time, AVG(duree_ms) AS moyen, MAX(duree_ms) AS maximum FROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo() GROUP BY date(date) ORDER BY time",
+          "queryType": "time series",
+          "timeColumns": [
+            "time"
+          ]
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "stacking": {
+              "mode": "none"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {},
+      "gridPos": {
+        "x": 12,
+        "y": 14,
+        "w": 12,
+        "h": 8
+      },
+      "id": 10
+    },
+    {
+      "title": "INCERTAIN par contrat",
+      "type": "table",
+      "description": "Un contrat dont la part d'INCERTAIN est anormale est souvent un contrat mal lu.",
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "couverture-sqlite"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "couverture-sqlite"
+          },
+          "queryText": "SELECT contrat_id AS contrat, COUNT(*) AS analyses,\n       ROUND(AVG(decision = 'INCERTAIN'), 2) AS part_incertain,\n       ROUND(AVG(confiance), 2) AS confiance_moyenne,\n       SUM(contestations > 0) AS contestees\nFROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()\nGROUP BY contrat_id ORDER BY part_incertain DESC",
+          "rawQueryText": "SELECT contrat_id AS contrat, COUNT(*) AS analyses,\n       ROUND(AVG(decision = 'INCERTAIN'), 2) AS part_incertain,\n       ROUND(AVG(confiance), 2) AS confiance_moyenne,\n       SUM(contestations > 0) AS contestees\nFROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()\nGROUP BY contrat_id ORDER BY part_incertain DESC",
+          "queryType": "table",
+          "timeColumns": []
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {},
+      "gridPos": {
+        "x": 0,
+        "y": 22,
+        "w": 12,
+        "h": 8
+      },
+      "id": 11
+    },
+    {
+      "title": "Sinistres déclarés",
+      "type": "table",
+      "description": "",
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "couverture-sqlite"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "couverture-sqlite"
+          },
+          "queryText": "SELECT evenement, bien, lieu, COUNT(*) AS analyses FROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo() GROUP BY evenement, bien, lieu ORDER BY analyses DESC LIMIT 20",
+          "rawQueryText": "SELECT evenement, bien, lieu, COUNT(*) AS analyses FROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo() GROUP BY evenement, bien, lieu ORDER BY analyses DESC LIMIT 20",
+          "queryType": "table",
+          "timeColumns": []
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {},
+      "gridPos": {
+        "x": 12,
+        "y": 22,
+        "w": 12,
+        "h": 8
+      },
+      "id": 12
+    },
+    {
+      "type": "row",
+      "title": "Ce qui manque, versions, erreurs",
+      "collapsed": false,
+      "panels": [],
+      "gridPos": {
+        "x": 0,
+        "y": 30,
+        "w": 24,
+        "h": 1
+      },
+      "id": 13
+    },
+    {
+      "title": "Questions à poser à l'assuré les plus fréquentes",
+      "type": "table",
+      "description": "Les informations à aller chercher ailleurs : souvent les conditions particulières.",
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "couverture-sqlite"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "couverture-sqlite"
+          },
+          "queryText": "SELECT q.value AS question, COUNT(*) AS fois\nFROM analyses, json_each(analyses.questions) AS q\nWHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()\nGROUP BY q.value ORDER BY fois DESC LIMIT 15",
+          "rawQueryText": "SELECT q.value AS question, COUNT(*) AS fois\nFROM analyses, json_each(analyses.questions) AS q\nWHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()\nGROUP BY q.value ORDER BY fois DESC LIMIT 15",
+          "queryType": "table",
+          "timeColumns": []
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {},
+      "gridPos": {
+        "x": 0,
+        "y": 31,
+        "w": 12,
+        "h": 9
+      },
+      "id": 14
+    },
+    {
+      "title": "Versions des consignes en service",
+      "type": "table",
+      "description": "Chaque réponse porte les versions des consignes et le modèle qui l'ont produite (voir `couverture versions`).",
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "couverture-sqlite"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "couverture-sqlite"
+          },
+          "queryText": "SELECT consignes, juge, MIN(date) AS depuis, COUNT(*) AS analyses,\n       ROUND(AVG(decision = 'INCERTAIN'), 2) AS part_incertain,\n       SUM(contestations > 0) AS contestees, CAST(AVG(duree_ms) AS INTEGER) AS duree_moyenne_ms\nFROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()\nGROUP BY consignes, juge ORDER BY depuis DESC",
+          "rawQueryText": "SELECT consignes, juge, MIN(date) AS depuis, COUNT(*) AS analyses,\n       ROUND(AVG(decision = 'INCERTAIN'), 2) AS part_incertain,\n       SUM(contestations > 0) AS contestees, CAST(AVG(duree_ms) AS INTEGER) AS duree_moyenne_ms\nFROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()\nGROUP BY consignes, juge ORDER BY depuis DESC",
+          "queryType": "table",
+          "timeColumns": []
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {},
+      "gridPos": {
+        "x": 12,
+        "y": 31,
+        "w": 12,
+        "h": 9
+      },
+      "id": 15
+    },
+    {
+      "title": "Dernières erreurs",
+      "type": "table",
+      "description": "",
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "couverture-sqlite"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "couverture-sqlite"
+          },
+          "queryText": "SELECT date, contrat_id AS contrat, methode, erreur FROM analyses WHERE erreur IS NOT NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo() ORDER BY date DESC LIMIT 20",
+          "rawQueryText": "SELECT date, contrat_id AS contrat, methode, erreur FROM analyses WHERE erreur IS NOT NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo() ORDER BY date DESC LIMIT 20",
+          "queryType": "table",
+          "timeColumns": []
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {},
+      "gridPos": {
+        "x": 0,
+        "y": 40,
+        "w": 24,
+        "h": 7
+      },
+      "id": 16
+    }
+  ]
+}

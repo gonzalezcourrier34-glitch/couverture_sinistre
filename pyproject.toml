@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "couverture-sinistre"
+version = "0.4.0"
+description = "Dire si un sinistre est couvert par des conditions générales d'assurance, en citant les clauses"
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic>=2",
+    "pdfplumber>=0.10",
+    "starlette>=0.37",
+    "uvicorn>=0.29",
+]
+
+[project.optional-dependencies]
+word = ["python-docx>=1"]
+suivi = ["mlflow>=3.1"]
+dev = ["pytest>=8", "reportlab>=4"]
+
+[project.scripts]
+couverture = "couverture.cli:principal"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+couverture = ["static/*.html"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "."]
+testpaths = ["tests"]

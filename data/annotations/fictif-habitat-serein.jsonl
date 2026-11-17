@@ -1,0 +1,14 @@
+{"sinistre_id": "velo-01", "attendu": "NON_COUVERT", "clauses_attendues": ["4.4", "1.6"], "note": "Local à vélos collectif = parties communes, exclues ; pas d'effraction."}
+{"sinistre_id": "velo-02", "attendu": "NON_COUVERT", "clauses_attendues": ["4.4", "1.6"], "note": "L'effraction ne change rien : les parties communes restent exclues."}
+{"sinistre_id": "velo-03", "attendu": "COUVERT", "clauses_attendues": ["4.2", "4.3", "1.3"], "note": "Cave privative fermée à clé = dépendance ; effraction. Plafond de 10 % du capital mobilier."}
+{"sinistre_id": "velo-04", "attendu": "NON_COUVERT", "clauses_attendues": ["4.2", "4.4"], "note": "Dépendance non fermée à clé et pas d'effraction."}
+{"sinistre_id": "velo-05", "attendu": "COUVERT", "clauses_attendues": ["4.1", "4.3"], "note": "Vol avec effraction dans l'habitation."}
+{"sinistre_id": "velo-06", "attendu": "INCERTAIN", "clauses_attendues": ["4.3"], "note": "Hors des locaux : couvert seulement si l'option Mobilité est souscrite et l'antivol homologué."}
+{"sinistre_id": "velo-07", "attendu": "COUVERT", "clauses_attendues": ["4.2", "4.3", "1.7"], "note": "Couvert, mais vélo > 3 000 € = objet de valeur, plafond 9.3 ; plafond dépendances 4.2."}
+{"sinistre_id": "bougie-01", "attendu": "INCERTAIN", "clauses_attendues": ["2.1", "6.1", "6.2"], "note": "Pas d'incendie. Seule piste : l'option Dommages accidentels, si souscrite et si la fonte est jugée soudaine, et si le dommage n'est pas seulement esthétique."}
+{"sinistre_id": "bougie-02", "attendu": "COUVERT", "clauses_attendues": ["2.1", "1.5"], "note": "Combustion avec flammes = incendie."}
+{"sinistre_id": "bougie-03", "attendu": "NON_COUVERT", "clauses_attendues": ["2.2"], "note": "Brûlure par une flamme sans incendie, exclue ; brûlure superficielle exclue aussi en option (6.2)."}
+{"sinistre_id": "bougie-04", "attendu": "COUVERT", "clauses_attendues": ["2.1", "1.5"], "note": "Flammes = incendie ; ce contrat n'exclut pas le mobilier de jardin."}
+{"sinistre_id": "bougie-05", "attendu": "COUVERT", "clauses_attendues": ["2.1"], "note": "Incendie. L'inoccupation de plus de 90 jours ne vise que le vol, et 3 semaines < 90 jours."}
+{"sinistre_id": "autre-01", "attendu": "NON_COUVERT", "clauses_attendues": ["4.1", "4.4"], "note": "Vol avec violence, mais hors des locaux."}
+{"sinistre_id": "autre-02", "attendu": "COUVERT", "clauses_attendues": ["3.1"], "note": "Dégât des eaux couvert ; la réparation du tuyau ne l'est pas (3.2)."}
