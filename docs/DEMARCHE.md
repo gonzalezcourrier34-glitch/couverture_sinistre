@@ -453,6 +453,77 @@ précédente : une régression à expliquer sur le détail. Les autres INCERTAIN
 attendus (cadenas, serrure du garage inconnue, option jardin, arrachage). Cette version sert de
 **référence chiffrée** pour la suite en Prolog.
 
+### 7.14 sexies La régression de velo-02 : une relecture qui « contestait » en étant d'accord
+
+Le détail de velo-02 (local commun fermé, serrure forcée) : la première analyse concluait
+**NON_COUVERT** par l'exclusion des parties communes, ce qui était juste. La relecture (Mistral
+Small) a « contesté » trois lignes, mais ses propres raisons les **confirmaient** (« le local à vélos
+est situé dans le bâtiment assuré », « le vélo n'est pas un contenu déplacé »). Sa consigne disant
+« dans le doute, conteste », ces lignes sont redevenues inconnues, et la réponse INCERTAIN.
+
+Le défaut était de conception : on faisait confiance à une **étiquette** au lieu de comparer des
+**réponses**. Consigne `relecture` v2 : le relecteur ne voit plus ni la réponse ni la justification
+de la première analyse ; il répond lui-même oui / non / inconnu, et **le code compare**. Il y a
+contestation seulement si les deux réponses diffèrent. La relecture devient réellement
+indépendante, et l'incohérence observée devient impossible. Valable pour les deux méthodes.
+
+Leçon : ne jamais demander à un modèle un verdict sur le travail d'un autre quand on peut lui
+demander le même travail et comparer.
+
+### 7.14 septies Quatrième mesure : un recul, et deux leçons
+
+Avec la relecture v2 : **64 %**, avec **un couvert à tort** (velo-03, cave fermée au cadenas) et
+**un refus à tort** (lave-linge), et velo-01, le cas de la consigne, en INCERTAIN.
+
+Deux causes :
+1. **Deux règles qui se contredisent.** La relecture devait ne pouvoir que rendre la réponse plus
+   prudente. Mais quand elle conteste une exclusion, celle-ci redevient inconnue, et la **charge de
+   la preuve** transforme une exclusion inconnue en « couvert, sous réserve ». La relecture pouvait
+   donc faire passer un refus à COUVERT. Chaque règle était juste isolément ; c'est leur combinaison
+   qui violait le principe.
+2. **Un relecteur indépendant doute davantage**, et chaque « inconnu » comptait comme contestation.
+
+Et un constat de méthode : velo-02, bougie-02 et autre-02 changent d'une exécution à l'autre, à
+réglages presque identiques. **Une seule exécution de 14 cas est bruitée** : on ne peut pas juger
+une correction sur elle.
+
+Corrections :
+- **une règle garantie par le code** (`relecture.borner`) : après relecture, une décision ne peut
+  devenir qu'INCERTAIN ; deux lectures qui mènent à deux décisions fermes différentes donnent
+  INCERTAIN, « les deux lectures divergent » ;
+- **seul un désaccord net conteste** (oui contre non) ; un « inconnu » du relecteur est un doute,
+  noté, sans effet sur la réponse ;
+- **`evaluer --repetitions N`** : rejoue l'évaluation N fois, montre la réponse de chaque cas à
+  chaque fois, les cas instables, et chaque indicateur en moyenne (min – max).
+
+Leçons : un principe (« la relecture ne fait que rendre prudent ») doit être **garanti par le
+code**, pas espéré de la combinaison des règles ; et une mesure sans sa variance ne prouve rien.
+
+### 7.14 octies Mesure sur trois exécutions : la référence des fiches
+
+`evaluer --repetitions 3`, méthode `fiches`, Mistral Small, relecture v2 bornée :
+
+| Indicateur | Moyenne (min – max) |
+|---|---|
+| Justes ou acceptables | 74 % (64 – 79 %) |
+| Exactes | 60 % (50 – 64 %) |
+| Couverts à tort | **2 (2 – 2)** |
+| Refus à tort | 0 |
+| Cas instables | 2 sur 14 (bougie-02, autre-02) |
+
+Les deux couverts à tort sont **systématiques**, et ce sont exactement les deux pièges repérés en
+analysant la clause vol (7.15) :
+- **velo-03** (cave fermée au cadenas) → COUVERT : la condition « si fermée avec une serrure de
+  sûreté » est cachée dans le **tableau des limites**, que les fiches affichent sans en tenir compte ;
+  et la définition de la serrure de sûreté exclut le cadenas ;
+- **bougie-04** (incendie du mobilier de jardin) → COUVERT : « le contenu… **ne comprend pas** le
+  contenu du jardin » est une exclusion **cachée dans une définition**, et le modèle ne voit que la
+  première phrase de la définition.
+
+Décision : ne plus corriger les fiches. Ces deux formes (condition déguisée en limite, exclusion
+dans une définition) sont ce qu'une représentation en règles exprime naturellement. Les fiches
+restent la **référence chiffrée** ; Prolog devra faire au moins aussi bien et corriger ces deux cas.
+
 ### 7.15 Repartir de la clause : comment structurer des conditions générales
 
 Après ces corrections successives, retour à la question de fond : comment se présente une clause,
@@ -530,7 +601,7 @@ argumenté sur les cas ambigus, et **zéro couvert à tort**.
 
 ## 8. Ce qui reste à faire
 
-- Expliquer la régression de velo-02, puis comparer avec `conditions`.
+- Prolog, étape 1 : le vocabulaire de faits de Foyer (vol, incendie), avec velo-03 et bougie-04 comme tests prioritaires.
 - Valider les 14 réponses attendues sur Foyer (proposées, pas encore validées).
 - Construire le **vocabulaire de faits commun** à partir des conditions de Foyer, puis traduire les
   garanties en **règles Prolog** à trois issues (couvert, non couvert, incertain), en commençant par
@@ -554,3 +625,6 @@ argumenté sur les cas ambigus, et **zéro couvert à tort**.
 13. Un modèle par usage : celui qui réfléchit pour le contrat (une fois), un rapide pour les sinistres (souvent).
 14. Un écran d'abord : la décision, la preuve, la question à poser. Le détail est sur demande.
 15. La structure se tire du contrat, pas des sinistres : les sinistres servent à tester.
+16. Un principe doit être garanti par le code, pas espéré de la combinaison des règles.
+17. Une mesure sans sa variance ne prouve rien : rejouer plusieurs fois avant de conclure.
+18. Ne pas demander à un modèle de juger le travail d'un autre quand on peut lui faire refaire le travail et comparer.

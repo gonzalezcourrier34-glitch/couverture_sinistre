@@ -35,8 +35,8 @@
     "source": "couverture.qualite.SYSTEME_QUALITE"
   },
   "couverture-relecture": {
-    "version": "v1",
-    "empreinte": "7883749c46437693",
+    "version": "v2",
+    "empreinte": "1524d865fa778a47",
     "source": "couverture.relecture.SYSTEME_RELECTURE"
   },
   "couverture-reparation": {

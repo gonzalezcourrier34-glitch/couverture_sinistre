@@ -365,6 +365,11 @@ class JugeFiches:
             if any(c.relecture == "contestee" for c in toutes):
                 avant = decision
                 decision, motif, demander, confiance = decider_fiches(chemins)
+                from .relecture import borner
+
+                decision, divergence = borner(avant, decision)
+                if divergence:
+                    motif, confiance = divergence, min(confiance, 0.4)
                 if decision != avant:
                     motif += f" (La relecture a contesté la première analyse, qui concluait {avant.value}.)"
                     resume = ""

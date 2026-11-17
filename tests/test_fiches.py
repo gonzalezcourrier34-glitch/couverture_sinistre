@@ -620,3 +620,65 @@ def test_limite_de_debit_attendue_puis_reussie(monkeypatch):
 
     monkeypatch.setattr(module_llm.urllib.request, "urlopen", urlopen)
     assert module_llm._poster("http://x", {}, {}, 10) == {"ok": True} and len(appels) == 5
+
+
+def test_relecture_independante_comparee_par_le_code(clauses):
+    """La relecture répond elle-même ; le code compare. Accord : confirmée. « Inconnu » : un doute,
+    noté, sans effet. Oui contre non : contestée (la ligne redevient inconnue)."""
+    from couverture.models import ClauseRetenue
+    from couverture.relecture import relire
+
+    index = {c.id: c for c in clauses}
+
+    def ligne(enonce, etat):
+        return Condition(nature="exclusion", groupe="G", clause_id="4.4", extrait="x", enonce=enonce,
+                         etat=EtatCondition(etat))
+
+    accord, doute, desaccord = ligne("A ?", "REMPLIE"), ligne("B ?", "NON_REMPLIE"), ligne("C ?", "NON_REMPLIE")
+
+    class Relecteur:
+        nom = "r"
+
+        def completer(self, systeme, message):
+            assert "etat_propose" not in message and "justification" not in message, "il ne voit pas la réponse"
+            return json.dumps({"relectures": [{"id": 1, "etat": "REMPLIE", "raison": "…"},
+                                              {"id": 2, "etat": "INCONNUE", "raison": "…"},
+                                              {"id": 3, "etat": "REMPLIE", "raison": "…"}]})
+
+    notes = relire("Vélo volé.", [accord, doute, desaccord],
+                   [ClauseRetenue(clause=index["4.4"], score=0, raison="")], Relecteur())
+    assert accord.relecture == "confirmee" and accord.etat == EtatCondition.REMPLIE
+    assert doute.relecture == "doute" and doute.etat == EtatCondition.NON_REMPLIE, "un doute ne change rien"
+    assert desaccord.relecture == "contestee" and desaccord.etat == EtatCondition.INCONNUE
+    assert len(notes) == 2
+
+
+def test_la_relecture_ne_peut_que_rendre_prudent():
+    """Une exclusion contestée redevient inconnue ; avec la charge de la preuve, cela donnerait
+    « couvert ». La borne l'empêche : deux lectures divergentes donnent INCERTAIN."""
+    from couverture.relecture import borner
+
+    assert borner(Decision.NON_COUVERT, Decision.COUVERT)[0] == Decision.INCERTAIN
+    assert "divergent" in borner(Decision.NON_COUVERT, Decision.COUVERT)[1]
+    assert borner(Decision.COUVERT, Decision.INCERTAIN) == (Decision.INCERTAIN, "")
+    assert borner(Decision.NON_COUVERT, Decision.NON_COUVERT) == (Decision.NON_COUVERT, "")
+
+
+def test_velo_local_commun_relecture_qui_conteste_l_exclusion(clauses, compile_):
+    conteste = ScriptLLM(LOCAL_COMMUN, relectures=lambda l: "contestee" if l["question"] == Q_COMMUNES else "confirmee")
+    r = PipelineFiches(compile_, clauses, conteste, relecteur=conteste).analyser("Vélo volé dans le local commun.")
+    assert r.verdict.decision == Decision.INCERTAIN, "jamais COUVERT après avoir conclu à un refus"
+    assert r.verdict.decision_avant_relecture == Decision.NON_COUVERT
+
+
+def test_tableau_de_plusieurs_executions():
+    from couverture.cli import tableau_repete
+
+    def rapport(obtenu_b, exactitude):
+        return {"cas": [{"id": "a", "attendu": "COUVERT", "obtenu": "COUVERT"},
+                        {"id": "b", "attendu": "NON_COUVERT", "obtenu": obtenu_b}],
+                "exactitude": exactitude, "exactitude_stricte": exactitude, "faux_couverts": 0,
+                "faux_refus": 0, "taux_incertain": 0.5 if obtenu_b == "INCERTAIN" else 0.0}
+
+    t = tableau_repete([rapport("NON_COUVERT", 1.0), rapport("INCERTAIN", 0.5), rapport("NON_COUVERT", 1.0)])
+    assert "NC ? NC" in t and "Cas instables : 1 sur 2" in t and "83% (50% – 100%)" in t

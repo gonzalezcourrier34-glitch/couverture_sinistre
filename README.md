@@ -99,9 +99,9 @@ Les sinistres sont indépendants des contrats. Des variations changent **un seul
 
 ## Résultats à ce stade
 
-- **Tests** : 98 passent, sans clé ni réseau ; la CI les relance à chaque envoi.
+- **Tests** : 102 passent, sans clé ni réseau ; la CI les relance à chaque envoi.
 - **Foyer appart 123** (48 pages) : 147 clauses, dont 63 définitions ; compilé en 36 fiches et 350 questions.
-- **Évaluation Foyer, 14 cas, méthode `fiches`** : **93 %** de réponses justes ou acceptables (57 % exactes), **0 couvert à tort, 0 refus à tort**, en une minute. Les INCERTAIN restants sont surtout des cas qu'on ne peut trancher sans les conditions particulières. Historique des mesures : [docs/DEMARCHE.md](docs/DEMARCHE.md).
+- **Évaluation Foyer, 14 cas, méthode `fiches`, trois exécutions** : 74 % de réponses justes ou acceptables (64 – 79 %), **0 refus à tort**, 2 couverts à tort systématiques et expliqués (une condition cachée dans un tableau de limites, une exclusion cachée dans une définition), 12 cas sur 14 stables. Historique des mesures : [docs/DEMARCHE.md](docs/DEMARCHE.md).
 
 ## Limites connues
 

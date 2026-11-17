@@ -389,6 +389,34 @@ def tableau(rapport: dict) -> str:
     return "\n".join(lignes)
 
 
+ABREGE = {"COUVERT": "C", "NON_COUVERT": "NC", "INCERTAIN": "?"}
+
+
+def tableau_repete(rapports: list[dict]) -> str:
+    """Plusieurs exécutions : la réponse de chaque cas à chaque fois, les cas instables, et
+    chaque indicateur en moyenne (minimum – maximum)."""
+    n = len(rapports)
+    lignes = [f"{'cas':<11}{'attendu':<14}{'réponses (' + str(n) + ' exécutions)':<26}stable"]
+    instables = 0
+    for i, c in enumerate(rapports[0]["cas"]):
+        obtenus = [r["cas"][i]["obtenu"] for r in rapports]
+        stable = len(set(obtenus)) == 1
+        instables += not stable
+        lignes.append(f"{c['id']:<11}{ABREGE[c['attendu']]:<14}{' '.join(ABREGE[o] for o in obtenus):<26}"
+                      f"{'oui' if stable else 'NON'}")
+
+    def stat(cle, pourcent=False):
+        v = [r[cle] for r in rapports]
+        f = (lambda x: f"{x:.0%}") if pourcent else (lambda x: f"{x:g}")
+        return f"{f(sum(v) / n)} ({f(min(v))} – {f(max(v))})"
+
+    lignes += ["", f"Exactitude {stat('exactitude', True)}  ·  stricte {stat('exactitude_stricte', True)}",
+               f"Couverts à tort {stat('faux_couverts')}  ·  refus à tort {stat('faux_refus')}  ·  "
+               f"incertains {stat('taux_incertain', True)}",
+               f"Cas instables : {instables} sur {len(rapports[0]['cas'])}"]
+    return "\n".join(lignes)
+
+
 def resume(rapport: dict) -> dict:
     return {k: v for k, v in rapport.items() if k != "cas"}
 
@@ -432,6 +460,8 @@ def main(argv: list[str] | None = None) -> int:
     pe.add_argument("--hors-ligne", action="store_true")
     pe.add_argument("--detail", "--json", dest="detail", action="store_true", help="Rapport complet en JSON")
     pe.add_argument("--paralleles", type=int, default=4, help="Cas traités en même temps (défaut : 4)")
+    pe.add_argument("--repetitions", type=int, default=1,
+                    help="Rejouer N fois et signaler les cas instables (une seule exécution de 14 cas est bruitée)")
 
     pk = sous.add_parser("comparer", help="Document brut, conditions et fiches (si compilé), sur les mêmes cas")
     pk.add_argument("--contrat", required=True)
@@ -571,6 +601,11 @@ def main(argv: list[str] | None = None) -> int:
     cas = charger_cas(donnees / "sinistres.jsonl", donnees / "annotations" / f"{a.contrat}.jsonl")
 
     if a.commande == "evaluer":
+        if a.repetitions > 1:
+            rapports = [evaluer_suivi(base, donnees, a.contrat, a.methode, a.hors_ligne, cas, a.paralleles)
+                        for _ in range(a.repetitions)]
+            print(tableau_repete(rapports))
+            return 0
         rapport = evaluer_suivi(base, donnees, a.contrat, a.methode, a.hors_ligne, cas, a.paralleles)
         if a.detail:
             json.dump(rapport, sys.stdout, ensure_ascii=False, indent=2)

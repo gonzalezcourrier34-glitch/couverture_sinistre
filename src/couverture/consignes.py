@@ -31,7 +31,7 @@ from pathlib import Path
 # nom MLflow → (module, variable, version)
 CONSIGNES: dict[str, tuple[str, str, str]] = {
     "couverture-grille-conditions": ("couverture.conditions", "SYSTEME_CONDITIONS", "v3"),
-    "couverture-relecture": ("couverture.relecture", "SYSTEME_RELECTURE", "v1"),
+    "couverture-relecture": ("couverture.relecture", "SYSTEME_RELECTURE", "v2"),
     "couverture-document-brut": ("couverture.juges", "SYSTEME_BRUT", "v1"),
     "couverture-juge-qualite": ("couverture.qualite", "SYSTEME_QUALITE", "v1"),
     "couverture-reparation": ("couverture.reparation", "SYSTEME_REPARATION", "v1"),

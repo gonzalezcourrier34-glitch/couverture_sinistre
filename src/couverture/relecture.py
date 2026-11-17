@@ -5,8 +5,11 @@ contrat. Il ne vérifie pas qu'il **justifie** l'état donné à la condition : 
 peut citer la bonne exclusion et se tromper sur son application aux faits.
 
 Le relecteur reçoit, pour chaque condition qui pèse sur la décision, le sinistre, le
-texte complet de la clause, la question, l'état proposé et sa justification. Il ne voit
-pas la décision finale. Pour chacune, il confirme ou conteste.
+texte complet de la clause et la question. Il ne voit ni la décision, ni la réponse de la
+première analyse, ni sa justification : il répond lui-même (consigne v2), et **c'est le code
+qui compare**. Une condition est contestée si les deux réponses diffèrent. En v1, le relecteur
+voyait la réponse et donnait un avis « confirmée » ou « contestée » ; Mistral Small posait
+parfois « contestée » sur un raisonnement d'accord, ce qui rendait la réponse incertaine à tort.
 
 Ce qu'on relit, selon la décision :
   - NON_COUVERT par exclusion : les exclusions jugées applicables ;
@@ -30,16 +33,29 @@ import json
 from .llm import LLM, ErreurLLM
 from .models import ClauseRetenue, Condition, Decision, EtatCondition
 
-SYSTEME_RELECTURE = """Tu es relecteur dans un service sinistres. Un collègue a préparé une grille de vérification : pour chaque condition, il a dit si les faits du sinistre la remplissent. Tu dois contrôler son travail, ligne par ligne, avec rigueur et sans complaisance.
+SYSTEME_RELECTURE = """Tu es relecteur dans un service sinistres. On te donne la déclaration d'un sinistre et des questions numérotées, chacune avec le texte complet de la clause du contrat qui la fonde. Réponds toi-même à chaque question, avec rigueur, en lisant la clause et la déclaration.
 
-Pour chaque ligne, lis le texte complet de la clause et la description du sinistre, puis réponds :
-- "confirmee" si le passage cité et les faits décrits établissent bien l'état proposé ;
-- "contestee" si l'état n'est pas établi : le passage ne dit pas cela, il ne vise pas cette situation, une autre phrase de la clause change le sens, ou les faits décrits ne permettent pas de le savoir. Dans le doute, conteste.
-
-Ne te fie pas à la justification du collègue : vérifie-la. N'invente aucun fait.
+- "etat" : "REMPLIE" si la déclaration et la clause établissent que la réponse est OUI, "NON_REMPLIE" si elles établissent que c'est NON, "INCONNUE" si la déclaration ne permet pas de le savoir. N'invente aucun fait.
+- Pour une exclusion, "REMPLIE" signifie que l'exclusion s'applique.
+- "raison" : une phrase.
+- "question" : si INCONNUE, la question à poser à l'assuré.
 
 Réponds uniquement par un objet JSON :
-{"relectures": [{"id": 1, "avis": "confirmee" | "contestee", "raison": "une phrase", "question": "si contestée, la question à poser à l'assuré"}]}"""
+{"relectures": [{"id": 1, "etat": "REMPLIE", "raison": "…", "question": ""}]}"""
+
+
+def borner(avant: Decision, apres: Decision) -> tuple[Decision, str]:
+    """Garantie, par le code, que la relecture ne peut que rendre la réponse plus prudente.
+
+    Recalculée après relecture, la décision peut changer de sens : une exclusion contestée
+    redevient inconnue, et la charge de la preuve transforme une exclusion inconnue en
+    « couvert, sous réserve ». Sans borne, la relecture ferait alors passer un refus à COUVERT
+    (observé sur Foyer). Règle : après relecture, une décision ne peut devenir qu'INCERTAIN.
+    Deux lectures qui mènent à deux décisions fermes différentes donnent INCERTAIN."""
+    if apres == avant or apres == Decision.INCERTAIN:
+        return apres, ""
+    return Decision.INCERTAIN, (f"Les deux lectures divergent : la première analyse concluait {avant.value}, "
+                                f"la relecture mène à {apres.value}. À examiner par un gestionnaire.")
 
 
 def a_relire(decision: Decision, conditions: list[Condition]) -> list[Condition]:
@@ -61,12 +77,13 @@ def relire(sinistre: str, conditions: list[Condition], retenues: list[ClauseRete
     textes = {r.clause.id: r.clause.texte for r in retenues}
     lignes = []
     for n, c in enumerate(conditions, start=1):
+        # Le relecteur ne voit ni la réponse ni la justification de la première analyse : il répond
+        # lui-même, et c'est le code qui compare. Une étiquette « contestée » posée sur un
+        # raisonnement d'accord (observé avec Mistral Small) n'est donc plus possible.
         lignes.append({
             "id": n,
             "nature": c.nature,
             "question": c.enonce,
-            "etat_propose": c.etat.value,
-            "justification_du_collegue": c.justification,
             "passage_cite": c.extrait,
             "clause": f"art. {c.clause_id} : {textes.get(c.clause_id, '')[:3000]}",
         })
@@ -85,7 +102,22 @@ def relire(sinistre: str, conditions: list[Condition], retenues: list[ClauseRete
         a = avis.get(n)
         if a is None:
             c.relecture, c.relecture_raison = "contestee", "Le relecteur ne s'est pas prononcé."
-        else:
+        elif "etat" in a:
+            # Seul un désaccord net compte : oui contre non. Un « inconnu » du relecteur, qui ne
+            # voit pas la première réponse, est un doute : noté, il ne change pas la réponse.
+            etat = str(a.get("etat", "")).upper().replace(" ", "_")
+            fermes = {EtatCondition.REMPLIE.value, EtatCondition.NON_REMPLIE.value}
+            if etat == c.etat.value:
+                c.relecture = "confirmee"
+            elif etat in fermes and c.etat.value in fermes:
+                c.relecture = "contestee"
+            else:
+                c.relecture = "doute"
+            c.relecture_raison = str(a.get("raison", "")) + (
+                "" if c.relecture == "confirmee" else f" (relecture : {etat or 'sans réponse'} ; première analyse : {c.etat.value})")
+            if c.relecture == "doute":
+                avertissements.append(f"Relecture : doute sur « {c.enonce} » (art. {c.clause_id}). {c.relecture_raison}")
+        else:  # ancien format : un avis sur la réponse du collègue
             c.relecture = "confirmee" if a.get("avis") == "confirmee" else "contestee"
             c.relecture_raison = str(a.get("raison", ""))
         if c.relecture == "contestee":

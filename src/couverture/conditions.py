@@ -226,6 +226,11 @@ class JugeConditions:
                     c.decisive = False
                 avant_relecture = decision
                 decision, motif, a_demander, confiance = decider(conditions)
+                from .relecture import borner
+
+                decision, divergence = borner(avant_relecture, decision)
+                if divergence:
+                    motif, confiance = divergence, min(confiance, 0.4)
                 if decision != avant_relecture:
                     motif += f" (La relecture a contesté la première analyse, qui concluait {avant_relecture.value}.)"
                     resume = ""  # le résumé du modèle portait sur la première analyse

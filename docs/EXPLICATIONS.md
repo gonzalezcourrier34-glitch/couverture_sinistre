@@ -429,6 +429,8 @@ COUVERTURE_MODELE=mistral-large-latest
 
 ### `src/couverture/relecture.py` — le juge de la grille
 
+
+**Depuis la consigne v2** : le relecteur répond lui-même aux questions décisives, sans voir la réponse de la première analyse ; le code compare et ne conteste que si les deux réponses diffèrent (voir `docs/DEMARCHE.md`, 7.14 sexies).
 **Le problème qu'il règle** : le contrôle des citations vérifie qu'un passage **existe** dans le contrat. Il ne vérifie pas qu'il **justifie** l'état donné. Le modèle peut citer la bonne exclusion et se tromper sur son application aux faits.
 
 **Rôle** : après le calcul de la décision, un second appel au modèle reçoit, pour chaque condition qui pèse sur la décision, le sinistre, le texte complet de la clause (pas seulement l'extrait), la question, l'état proposé et la justification du premier appel. Il **ne voit pas la décision**. Consigne : vérifier la justification au lieu de s'y fier, et contester dans le doute.
