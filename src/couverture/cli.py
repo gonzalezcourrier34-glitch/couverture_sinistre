@@ -34,6 +34,43 @@ from .models import Resultat
 from .pipeline import Pipeline, PipelineDocumentBrut, llm_configure
 
 
+ROLES = {"evenement": "‹événement›", "bien": "‹bien›", "lieu": "‹lieu›", "circonstance": "‹circonstance›"}
+
+
+def afficher_court(r: Resultat) -> str:
+    """Ce qu'un gestionnaire lit d'abord : la décision, son motif, les preuves décisives, ce qu'il
+    faut demander. Tout le reste (chaque fiche, chaque exclusion) : --detail."""
+    v = r.verdict
+    lignes = [f"Décision : {v.decision.value}  (confiance {v.confiance:.2f})", f"Motif : {v.justification}"]
+    if v.decision_avant_relecture:
+        lignes.append(f"  (la relecture a corrigé une première réponse {v.decision_avant_relecture.value})")
+    preuves = [c for c in v.conditions if c.decisive and c.valide]
+    if preuves:
+        lignes.append("Preuves :")
+        for c in preuves:
+            page = f", p. {', '.join(map(str, c.pages))}" if c.pages else ""
+            etat = {"REMPLIE": "oui", "NON_REMPLIE": "non", "INCONNUE": "?"}[c.etat.value]
+            lignes.append(f"  [{etat}] {c.enonce}")
+            lignes.append(f"        art. {c.clause_id}{page} : « {c.extrait} »")
+    elif v.citations:
+        lignes.append("Preuves :")
+        for c in v.citations:
+            if c.valide:
+                page = f", p. {', '.join(map(str, c.pages))}" if c.pages else ""
+                lignes.append(f"  art. {c.clause_id}{page} : « {c.extrait} »")
+    if v.informations_manquantes:
+        lignes.append("À demander à l'assuré :")
+        lignes += [f"  - {q}" for q in v.informations_manquantes]
+    if v.decision.value == "COUVERT":
+        limites = [c for c in v.conditions if c.nature == "limite" and c.valide]
+        if limites:
+            lignes.append("Limites :")
+            lignes += [f"  - {c.enonce} (art. {c.clause_id})" for c in limites]
+    if v.avertissements:
+        lignes.append(f"{len(v.avertissements)} avertissement(s) : --detail.")
+    return "\n".join(lignes)
+
+
 def afficher(r: Resultat) -> str:
     v = r.verdict
     lignes = [
@@ -57,7 +94,8 @@ def afficher(r: Resultat) -> str:
             etat = "" if c.nature == "limite" else f"[{symbole[c.etat.value]}] "
             preuve = f"art. {c.clause_id}" + (f", p. {', '.join(map(str, c.pages))}" if c.pages else "")
             marque = "  ← décisif" if c.decisive else ("  [ÉCARTÉE : citation introuvable]" if not c.valide else "")
-            lignes.append(f"  {etat}{c.enonce} ({preuve}){marque}")
+            role = f"{ROLES.get(c.role, '')} " if c.role else ""
+            lignes.append(f"  {etat}{role}{c.enonce} ({preuve}){marque}")
             if c.valide and c.nature != "limite":
                 lignes.append(f"        « {c.extrait} »")
         if presumees:
@@ -80,17 +118,16 @@ def afficher(r: Resultat) -> str:
     return "\n".join(lignes)
 
 
-METHODES = ["conditions", "fiches", "direct", "brut"]
+METHODES = ["conditions", "fiches", "brut"]
 
 
 def construire(base: Base, contrat_id: str, methode: str, hors_ligne: bool):
     """fiches : contrat compilé, le modèle répond à des questions déjà écrites (voir fiches.py) ;
     conditions : grille condition par condition, décision calculée ;
-    direct : verdict du modèle en un coup sur les clauses retenues ;
     brut : contrat entier dans le prompt, sans recherche (référence « chatbot »)."""
     if hors_ligne:
         return Pipeline.depuis_base(base, contrat_id, juge=JugeHeuristique())
-    if methode in ("brut", "direct", "fiches") and llm_configure() is None:
+    if methode in ("brut", "fiches") and llm_configure() is None:
         sys.exit(f"La méthode « {methode} » a besoin d'un modèle : définir MISTRAL_API_KEY dans .env.")
     if methode == "fiches":
         from .fiches import PipelineFiches
@@ -112,12 +149,17 @@ def ingerer(donnees: Path, base: Base, forcer: bool = False) -> int:
     vectoriseur = configurer_embeddings()
     if vectoriseur is None:
         print("Sans clé Mistral : pas d'embeddings, la recherche se fera par les mots seuls.")
-    juge_qualite = llm_configure()
+    juge_qualite = llm_configure("contrat")
     from .suivi import EXPERIENCE_INGESTION, execution, metriques_ingestion, parametres_communs
 
     with execution(EXPERIENCE_INGESTION, "ingestion") as suivi:
+        from .ingestion import fichiers_contrats
+        from .progression import Barre
+
+        barre = Barre(len(fichiers_contrats(donnees / "contrats")), "Ingestion")
         contrats = ingerer_dossier(donnees / "contrats", base, forcer=forcer, vectoriseur=vectoriseur,
-                                   juge_qualite=juge_qualite)
+                                   juge_qualite=juge_qualite, barre=barre)
+        barre.terminer()
         suivi.parametres(parametres_communs(juge_qualite, None, vectoriseur) | {"forcer": forcer})
         suivi.metriques(metriques_ingestion(contrats))
         suivi.artefact_json("rapports.json", {c.id: c.rapport for c in contrats})
@@ -144,7 +186,7 @@ def compiler_contrats(base: Base, contrat_id: str | None, forcer: bool) -> int:
     from .compilation import a_refaire, compiler, reparer_compilation, unites
     from .consignes import CONSIGNES
 
-    llm = llm_configure()
+    llm = llm_configure("contrat")
     if llm is None:
         sys.exit("La compilation a besoin d'un modèle : définir MISTRAL_API_KEY dans .env.")
     version = CONSIGNES["couverture-compilation"][2]
@@ -165,7 +207,17 @@ def compiler_contrats(base: Base, contrat_id: str | None, forcer: bool) -> int:
             continue
         print(f"{c.id} : {len(manquantes)} garantie(s) à compiler"
               + (" (les autres sont gardées)" if existante else "") + ". Plusieurs minutes, une fois pour toutes.")
-        resultat = compiler(c.id, c.empreinte, clauses, llm, existante=existante, progression=print)
+        from .progression import Barre
+
+        generales = existante is None or not existante.exclusions_generales
+        barre = Barre(len(manquantes) + (1 if generales else 0), "Compilation")
+
+        def etape(texte, barre=barre):
+            barre.ecrire(texte)
+            barre.avancer(texte.split()[0])
+
+        resultat = compiler(c.id, c.empreinte, clauses, llm, existante=existante, progression=etape)
+        barre.terminer()
         base.enregistrer_compilation(resultat)
         points = resultat.points()
         ecartes = sum(not p.valide for p in points)
@@ -173,8 +225,8 @@ def compiler_contrats(base: Base, contrat_id: str | None, forcer: bool) -> int:
               f"(extrait introuvable), {len(resultat.exclusions_generales)} exclusions générales")
         if resultat.echecs:
             print(f"{'':<28} ! À refaire (relancer `couverture compiler`) : {', '.join(resultat.echecs)}")
-        for a_ in resultat.avertissements:
-            print(f"{'':<28} ! {a_}")
+        if resultat.avertissements:
+            print(f"{'':<28} {len(resultat.avertissements)} avertissement(s) : `couverture fiches --contrat {c.id}`.")
     print("\nRelire : `couverture fiches --contrat <id>` ; corriger : --exporter puis --importer.")
     return 0
 
@@ -216,7 +268,7 @@ def reparer(donnees: Path, base: Base, contrat_id: str | None) -> int:
     from .reparation import Propositions, decrire, proposer_reparation
     from .texte import normaliser
 
-    llm = llm_configure()
+    llm = llm_configure("contrat")
     if llm is None:
         print("La réparation a besoin d'un modèle : renseigner MISTRAL_API_KEY dans le fichier .env.")
         return 1
@@ -271,7 +323,10 @@ def tester_modele() -> int:
         print("Aucun modèle configuré : le juge heuristique (sans modèle) sera utilisé.")
         print("Créer un fichier .env à la racine du projet avec la ligne : MISTRAL_API_KEY=votre-clé")
         return 1
-    print(f"Modèle configuré : {llm.nom}")
+    contrat = llm_configure("contrat")
+    print(f"Modèle des analyses : {llm.nom}")
+    if contrat is not None and contrat.nom != llm.nom:
+        print(f"Modèle des contrats (compilation, qualité, réparation) : {contrat.nom}")
     try:
         reponse = llm.completer('Réponds uniquement par un objet JSON.', 'Renvoie {"ok": true}.')
     except ErreurLLM as e:
@@ -295,7 +350,8 @@ def tester_modele() -> int:
     return 0
 
 
-def evaluer_suivi(base: Base, donnees: Path, contrat_id: str, methode: str, hors_ligne: bool, cas: list) -> dict:
+def evaluer_suivi(base: Base, donnees: Path, contrat_id: str, methode: str, hors_ligne: bool, cas: list,
+                  paralleles: int = 4) -> dict:
     """Une évaluation, enregistrée comme une exécution MLflow (si le suivi est disponible)."""
     from .suivi import EXPERIENCE_EVALUATION, empreinte_fichiers, execution, metriques_evaluation, parametres_communs
 
@@ -306,7 +362,7 @@ def evaluer_suivi(base: Base, donnees: Path, contrat_id: str, methode: str, hors
     vectoriseur = getattr(getattr(pipeline, "recherche", None), "vectoriseur", None)
     nom = f"{contrat_id} · {getattr(pipeline, 'methode', methode)}"
     with execution(EXPERIENCE_EVALUATION, nom) as suivi:
-        rapport = evaluer(pipeline, cas)
+        rapport = evaluer(pipeline, cas, paralleles=paralleles)
         suivi.parametres(parametres_communs(llm, relecteur, vectoriseur) | {
             "contrat": contrat_id,
             "methode": getattr(pipeline, "methode", methode),
@@ -316,6 +372,21 @@ def evaluer_suivi(base: Base, donnees: Path, contrat_id: str, methode: str, hors
         suivi.metriques(metriques_evaluation(rapport))
         suivi.artefact_json("rapport.json", rapport)
     return rapport
+
+
+def tableau(rapport: dict) -> str:
+    """Une ligne par cas, puis les indicateurs qui comptent."""
+    lignes = [f"{'cas':<11}{'attendu':<14}{'obtenu':<14}{'':<4}confiance"]
+    for c in rapport["cas"]:
+        marque = "err" if c.get("erreur") else "ok" if c["obtenu"] == c["attendu"] else ("~" if c.get("acceptable") else "X")
+        lignes.append(f"{c['id']:<11}{c['attendu']:<14}{c['obtenu']:<14}{marque:<4}{c['confiance']:.2f}")
+    lignes.append("")
+    lignes.append(f"Exactitude {rapport['exactitude']:.0%} (stricte {rapport['exactitude_stricte']:.0%})  ·  "
+                  f"couverts à tort {rapport['faux_couverts']}  ·  refus à tort {rapport['faux_refus']}  ·  "
+                  f"incertains {rapport['taux_incertain']:.0%}"
+                  + (f"  ·  erreurs du fournisseur {rapport['erreurs_fournisseur']} (relancer)" if rapport.get("erreurs_fournisseur") else ""))
+    lignes.append("ok : exact   ~ : réponse acceptable (cas ambigu)   X : erreur   err : pas de réponse du fournisseur   ·   détail : --detail")
+    return "\n".join(lignes)
 
 
 def resume(rapport: dict) -> dict:
@@ -352,15 +423,17 @@ def main(argv: list[str] | None = None) -> int:
     pa.add_argument("sinistre")
     pa.add_argument("--methode", choices=METHODES, default="conditions")
     pa.add_argument("--json", action="store_true", help="Sortie JSON complète (traçabilité)")
+    pa.add_argument("--detail", action="store_true", help="Toutes les fiches et toutes les questions")
     pa.add_argument("--hors-ligne", action="store_true", help="Juge heuristique, sans modèle")
 
     pe = sous.add_parser("evaluer", help="Évaluer sur les sinistres annotés d'un contrat")
     pe.add_argument("--contrat", required=True)
     pe.add_argument("--methode", choices=METHODES, default="conditions")
     pe.add_argument("--hors-ligne", action="store_true")
-    pe.add_argument("--detail", action="store_true", help="Afficher chaque cas")
+    pe.add_argument("--detail", "--json", dest="detail", action="store_true", help="Rapport complet en JSON")
+    pe.add_argument("--paralleles", type=int, default=4, help="Cas traités en même temps (défaut : 4)")
 
-    pk = sous.add_parser("comparer", help="Document brut, verdict direct, conditions et fiches (si compilé), sur les mêmes cas")
+    pk = sous.add_parser("comparer", help="Document brut, conditions et fiches (si compilé), sur les mêmes cas")
     pk.add_argument("--contrat", required=True)
 
     sous.add_parser("modele", help="Afficher le modèle configuré et tester la connexion")
@@ -492,19 +565,22 @@ def main(argv: list[str] | None = None) -> int:
         debut = time.perf_counter()
         r = construire(base, a.contrat, a.methode, a.hors_ligne).analyser(a.sinistre)
         Journal(base.chemin).noter(r, duree_ms=int((time.perf_counter() - debut) * 1000))
-        print(r.model_dump_json(indent=2) if a.json else afficher(r))
+        print(r.model_dump_json(indent=2) if a.json else afficher(r) if a.detail else afficher_court(r))
         return 0
 
     cas = charger_cas(donnees / "sinistres.jsonl", donnees / "annotations" / f"{a.contrat}.jsonl")
 
     if a.commande == "evaluer":
-        rapport = evaluer_suivi(base, donnees, a.contrat, a.methode, a.hors_ligne, cas)
-        json.dump(rapport if a.detail else resume(rapport), sys.stdout, ensure_ascii=False, indent=2)
-        print()
+        rapport = evaluer_suivi(base, donnees, a.contrat, a.methode, a.hors_ligne, cas, a.paralleles)
+        if a.detail:
+            json.dump(rapport, sys.stdout, ensure_ascii=False, indent=2)
+            print()
+        else:
+            print(tableau(rapport))
         return 0
 
     # comparer
-    ordre = ["brut", "direct", "conditions"] + (["fiches"] if base.compilation(a.contrat) else [])
+    ordre = ["brut", "conditions"] + (["fiches"] if base.compilation(a.contrat) else [])
     resultats = {m: resume(evaluer_suivi(base, donnees, a.contrat, m, False, cas)) for m in ordre}
     cles = ["exactitude", "exactitude_avant_controle", "faux_couverts", "faux_couverts_avant_controle",
             "taux_incertain", "rappel_clauses_moyen", "citations_rejetees",

@@ -1,0 +1,5 @@
+Lis la déclaration d'un sinistre et dis ce qu'elle décrit, sans rien ajouter.
+- "evenements" : parmi vol, vandalisme, incendie, degat_des_eaux, bris, tempete, catastrophe_naturelle, electricite, dommage_accidentel, responsabilite, autre (un ou deux au plus ; "autre" si aucun ne convient).
+- "bien" : le ou les biens endommagés ou volés, tels que décrits.
+- "lieu" : où se trouvait le bien, tel que décrit, ou "" si la déclaration ne le dit pas.
+Réponds uniquement par un objet JSON : {"evenements": ["vol"], "bien": "vélo", "lieu": "local commun de l'immeuble"}

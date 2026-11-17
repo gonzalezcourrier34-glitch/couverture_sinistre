@@ -32,14 +32,14 @@ from pathlib import Path
 CONSIGNES: dict[str, tuple[str, str, str]] = {
     "couverture-grille-conditions": ("couverture.conditions", "SYSTEME_CONDITIONS", "v3"),
     "couverture-relecture": ("couverture.relecture", "SYSTEME_RELECTURE", "v1"),
-    "couverture-verdict-direct": ("couverture.juges", "SYSTEME", "v1"),
     "couverture-document-brut": ("couverture.juges", "SYSTEME_BRUT", "v1"),
     "couverture-juge-qualite": ("couverture.qualite", "SYSTEME_QUALITE", "v1"),
     "couverture-reparation": ("couverture.reparation", "SYSTEME_REPARATION", "v1"),
-    "couverture-compilation": ("couverture.compilation", "SYSTEME_COMPILATION", "v1"),
+    "couverture-compilation": ("couverture.compilation", "SYSTEME_COMPILATION", "v2"),
     "couverture-exclusions-generales": ("couverture.compilation", "SYSTEME_EXCLUSIONS_GENERALES", "v1"),
-    "couverture-fiches": ("couverture.fiches", "SYSTEME_FICHES", "v1"),
+    "couverture-fiches": ("couverture.fiches", "SYSTEME_FICHES", "v3"),
     "couverture-routage": ("couverture.fiches", "SYSTEME_ROUTAGE", "v1"),
+    "couverture-faits": ("couverture.fiches", "SYSTEME_FAITS", "v1"),
 }
 
 RACINE = Path(__file__).resolve().parents[2]

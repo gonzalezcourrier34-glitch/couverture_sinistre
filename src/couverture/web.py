@@ -81,7 +81,7 @@ def creer_app(base: Base) -> Starlette:
             return JSONResponse({"erreur": "Description trop longue (2 000 caractères au plus)."}, status_code=400)
         try:
             methode = corps.get("methode", "conditions")
-            if methode not in ("conditions", "fiches", "direct", "brut"):
+            if methode not in ("conditions", "fiches", "brut"):
                 return JSONResponse({"erreur": f"Méthode inconnue : {methode}"}, status_code=400)
             p = pipeline(corps.get("contrat_id", ""), methode)
         except (KeyError, ValueError) as e:

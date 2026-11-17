@@ -254,19 +254,288 @@ Ce que ça enseigne : la méthode par fiches déplace la difficulté. Le modèle
 les questions, mais il faut encoder correctement **comment un gestionnaire combine les réponses**.
 Ces règles sont du code, testées une par une, et non une consigne qu'on espère suivie.
 
+Relance : la bougie donne NON_COUVERT pour la bonne raison (aucune garantie ne s'applique : pas
+d'incendie). Le vélo reste INCERTAIN, cette fois à cause de la fiche « Vol sur la personne avec
+violence » : sa première condition, « est-ce un vol ? », vaut oui pour **toutes** les fiches vol,
+et suffisait à la rattacher alors que rien de propre à elle n'était établi. Quatrième règle :
+**l'événement seul ne rattache pas une fiche** qui a d'autres conditions ; il faut qu'une de ses
+conditions propres soit établie. Si aucune fiche ne l'est, la réponse reste INCERTAIN, en nommant
+les garanties possibles et les questions qui trancheraient.
+
+Ce qu'on n'a pas fait : changer la consigne pour que le modèle réponde « non » plus volontiers.
+« Mon vélo a été volé dans ma cave » ne dit rien de l'effraction ; un « non » refuserait la
+couverture au lieu de poser la question. La prudence du modèle est voulue, c'est la combinaison
+des réponses qu'il fallait corriger.
+
 Reste à améliorer à la compilation : chaque fiche devrait avoir une condition sur **l'objet**
 (« le dommage porte-t-il sur le bâtiment ? » pour la 2.11), pour qu'une fiche hors sujet soit
 écartée par une réponse « non » plutôt que par l'absence de réponse.
 
-## 8. Ce qui reste à prouver
+### 7.11 Deuxième remise en question : on ajustait sur deux exemples
 
-- Compiler Foyer, relire ses fiches, corriger ce qui doit l'être.
-- Annoter les 14 sinistres sur Foyer, puis `couverture comparer` : exactitude, faux
-  « couvert », taux d'incertain, durée.
-- Choisir le modèle et le niveau de réflexion **sur ces mesures** (large/low, medium, small),
-  pas sur une intuition.
-- Limite connue : la responsabilité civile de Foyer (section 5) est typée « autre » par le
-  découpage, donc pas encore compilée en fiche.
+En une matinée, quatre règles de décision avaient été ajoutées pour que le vélo et la bougie
+sortent juste. Chacune était défendable ; aucune n'était mesurée ailleurs. Pire, toutes poussaient
+vers NON_COUVERT, et la dernière pouvait produire un **refus à tort** (une garantie qui aurait
+couvert, écartée faute de réponse). C'est la définition du surapprentissage, sur deux cas.
+
+Deux décisions :
+
+**1. Mesurer avant de corriger.** Un jeu d'évaluation sur Foyer
+(`data/annotations/foyer-appart123-2025.jsonl`) : 14 sinistres, dont 6 qui doivent sortir
+COUVERT (vol avec effraction dans l'appartement, vrai incendie, dégât des eaux, vol à l'arraché),
+pour voir les refus à tort. Chaque réponse attendue cite les clauses qui la fondent. Certains cas
+sont réellement ambigus sans les conditions particulières (cave fermée par un cadenas, alors que
+la « serrure de sûreté » exclut le cadenas ; mobilier de jardin, exclu du contenu sauf option) :
+le champ `acceptables` admet alors un INCERTAIN honnête, jamais un COUVERT à tort. Deux nouveaux
+indicateurs : `faux_refus` et `exactitude_stricte`. Les réponses sont proposées par Claude et
+**à valider** par une personne : le statut le dit dans chaque ligne.
+
+**2. Refaire la structure des fiches avec les rôles du droit des assurances.** Les quatre
+règles étaient des approximations d'une distinction que le contrat fait lui-même. L'art. 2.10
+de Foyer a une section « Obligation de prévention » séparée, avec « nous refuserons notre
+intervention s'il existe un **lien causal direct** » et « en cas d'effraction, le non-respect
+de ces obligations est **sans incidence** ». Une liste plate de « conditions » ne peut pas
+exprimer ça.
+
+| Rôle | Exemple (Foyer, vol) | Effet sur la décision |
+|---|---|---|
+| Périmètre : événement, bien, lieu | vol ; contenu ; dans le bâtiment | « non » : la garantie est hors sujet ; tout « oui » : elle est rattachée au sinistre |
+| Circonstance | avec violences ; avec effraction | « non » : elle ne joue pas ; « inconnu » : on pose la question |
+| Obligation de prévention | portes fermées à clé en cas d'absence | « non » : déchéance possible, **si lien causal** : à apprécier par un gestionnaire |
+| Exclusion | vol dans les parties communes | « oui » : refus, **seulement pour une garantie rattachée** |
+| Limite | 1 000 EUR pour les caves | signalée |
+
+Le modèle reçoit le rôle de chaque question, avec une consigne simple : **le périmètre est presque
+toujours décrit** par une déclaration (quoi, où), donc un fait décrit et contraire vaut « non » (un
+vol dans un local commun n'est pas un vol « sur la personne ») ; **les circonstances et obligations
+ne le sont souvent pas**, donc leur silence vaut « inconnu ». C'est ce qui manquait : la fiche
+« vol sur la personne » est maintenant écartée parce que son lieu est contraire, pas parce qu'on
+n'a pas de réponse.
+
+Combinaison : COUVERT si une fiche rattachée l'est ; sinon INCERTAIN si une fiche rattachée l'est ;
+sinon NON_COUVERT si une fiche rattachée refuse. Une garantie seulement « possible » (périmètre
+inconnu) n'empêche pas ce refus, mais **sa question est posée et la confiance baisse** : c'est la
+protection contre le refus à tort. Sinon INCERTAIN si une fiche est possible ; sinon « aucune
+garantie ne s'applique ».
+
+Les faits (événement, bien, lieu) sont désormais extraits par un petit appel au modèle ; le
+lexique écrit à la main ne sert qu'en secours. Il rattachait la bougie aux « dommages
+accidentels » parce que la table était « abîmée ».
+
+Consignes : `compilation` v2, `fiches` v2 (les v1 restent archivées). Une compilation faite avec
+la v1 est refusée par l'analyse, avec le message qui dit de recompiler.
+
+### 7.12 Première mesure : 93 % d'incertains, et pourquoi
+
+Compilation v2 de Foyer : 36 fiches, 350 questions, 9 écartées. Évaluation `fiches` sur les
+14 cas : **0 couvert à tort, 0 refus à tort**, mais 13 INCERTAIN sur 14 (exactitude 0,43 en
+comptant les incertains acceptables, 0,07 en stricte). Prudent, donc, mais inutile.
+
+La confiance a donné le diagnostic. **Sept cas à 0,0** : ce n'est pas une mauvaise réponse,
+c'est une absence de réponse. Ce sont tous des vols : cinq fiches vol, les dégradations et les
+exclusions générales, environ 80 questions dans un seul appel, coupé ou hors délai. Les autres :
+- les deux vrais incendies restent INCERTAIN à cause d'exclusions « inconnues » (« vice de
+  construction connu de vous ») ;
+- la bougie au jardin ne trouve aucune garantie : le modèle a classé l'événement en « dommage
+  accidentel », catégorie sans fiche chez Foyer, alors que le lexique aurait reconnu « bougie ».
+
+Trois corrections :
+1. **Un appel par fiche, en parallèle**, plus un pour les exclusions générales. Chaque appel est
+   petit, et un appel qui échoue ne rend inconnues que les questions de sa fiche.
+2. **La charge de la preuve.** C'est à l'assuré d'établir les conditions de la garantie, et à
+   l'assureur de prouver qu'une exclusion s'applique. Une exclusion dont rien n'indique qu'elle
+   joue ne rend donc plus la réponse incertaine : elle devient une **réserve** (« couvert, sous
+   réserve de vérifier… »), avec sa question et une confiance plafonnée à 0,7. Seuls un périmètre
+   ou une circonstance inconnus (à la charge de l'assuré) laissent la réponse ouverte.
+3. **Routage : modèle et lexique ensemble.** Une fiche de trop est écartée par son périmètre ;
+   une fiche manquante, rien ne la rattrape.
+
+Ce que la mesure a apporté : sans elle, on aurait continué à régler des règles sur le vélo et la
+bougie, sans voir que la moitié des cas n'obtenaient tout simplement pas de réponse.
+
+### 7.13 Un modèle par usage
+
+L'évaluation `fiches` sur 14 cas prenait 30 à 60 minutes : 5 à 10 appels par cas, de 30 s à
+2 min chacun, Mistral Large réfléchissant même au niveau « low ». Or les deux usages n'ont pas
+les mêmes besoins :
+- **le travail sur un contrat** (compilation, juge de qualité, réparation) se fait une fois et
+  gagne à un modèle qui réfléchit : Mistral Large (`COUVERTURE_MODELE_CONTRAT`) ;
+- **l'analyse d'un sinistre** se répète, et ne consiste plus qu'à répondre oui / non à des
+  questions courtes : un modèle rapide sans réflexion suffit, Mistral Small (`COUVERTURE_MODELE`,
+  réflexion `none`).
+Et l'évaluation traite quatre cas à la fois. Ce choix sera vérifié sur les 14 cas : s'il coûte
+des décisions justes, on le saura.
+
+### 7.14 Nettoyage
+
+- **Sorties courtes** : `analyser` donne la décision, le motif, les preuves décisives et les
+  questions à poser, en une dizaine de lignes au lieu de 150 ; `--detail` garde tout.
+  `evaluer` donne un tableau d'une ligne par cas ; `--detail` garde le JSON.
+- **Méthode « direct » retirée** : elle ne servait qu'à comparer, et la référence « brut » suffit.
+  Ses tests portaient en fait sur le contrôle des citations : ils sont gardés, avec un juge
+  qui rend un verdict fixé d'avance. Sa consigne reste archivée.
+- **Données produites supprimées** (base, diagnostics) : elles se reconstruisent avec
+  `ingerer` et `compiler`. On garde le code et les données d'entrée.
+- **README** ramené à l'essentiel ; le détail est dans `EXPLICATIONS.md` et ici.
+- La méthode `conditions` est gardée jusqu'à la comparaison avec `fiches`.
+
+### 7.14 bis Deuxième mesure : 79 %, zéro couvert à tort, en 27 secondes
+
+Recompilation de Foyer (Mistral Large) : 38 fiches, 315 questions, **4 écartées seulement**
+(contre 9 : la réparation des citations fait son effet), en 11 min 22 s. Évaluation `fiches`
+avec Mistral Small sans réflexion, quatre cas à la fois :
+
+| Indicateur | Première mesure (Large) | Deuxième mesure (Small) |
+|---|---|---|
+| Justes ou acceptables | 43 % | **79 %** |
+| Exactes | 7 % | **50 %** |
+| INCERTAIN | 93 % | 43 % |
+| Couverts à tort | 0 | **0** |
+| Refus à tort | 0 | **1** |
+| Durée | ~1 h (interrompue) | **27 s** |
+
+Le vélo de la consigne et la bougie au jardin sortent NON_COUVERT ; le vol avec effraction dans
+l'appartement sort COUVERT. Trois erreurs, toutes sur des sinistres qui devraient être couverts :
+un **refus à tort** (incendie qui atteint la façade et le séjour) et deux INCERTAIN (la nappe qui
+prend feu au salon, le tuyau du lave-linge). Les deux incendies ratés désignent probablement la
+fiche incendie elle-même ; à vérifier sur le détail avant toute correction.
+
+Le modèle rapide n'a pas coûté de justesse, au contraire : sans réflexion, il ne se perd plus dans
+80 questions, et chaque appel par fiche est court.
+
+### 7.14 ter Les trois erreurs : deux formes du contrat que la structure ignorait
+
+Le détail des trois cas ratés (deux incendies, un dégât des eaux) montre deux causes, et aucune
+ne vient du modèle :
+1. **Des alternatives lues comme des conditions cumulées.** La fiche incendie demande « le bien
+   est-il un bâtiment ? » puis « un contenu ? » ; le contrat couvre l'un **ou** l'autre. La façade
+   étant du bâtiment, « contenu ? » restait inconnu et la réponse devenait INCERTAIN.
+2. **Des exclusions partielles traitées comme totales.** « Le dommage concerne-t-il la canalisation
+   à l'origine du sinistre ? » est vrai pour le lave-linge, mais l'exclusion ne retire que le tuyau,
+   pas le parquet ni le canapé. Corrigée la cause 1, elle aurait produit un refus à tort.
+Et un détail de lecture : « dans le salon » ne suffisait pas au modèle pour dire « à l'adresse
+assurée ».
+
+Corrections, sans recompilation : les questions de rôle « bien » sont des alternatives (une seule
+établie suffit) ; consigne `fiches` v3 : une énumération (« … ou … ») vaut oui si l'une est vraie,
+une pièce du logement désigne le bâtiment assuré, et une exclusion qui ne vise qu'une partie des
+dommages est « PARTIELLE » (la garantie joue pour le reste, la partie exclue est signalée).
+
+Leçon pour la suite (Prolog) : un contrat combine des **ET** et des **OU**, et ses exclusions
+portent soit sur tout le sinistre, soit sur **un bien** seulement. La représentation en règles devra
+exprimer les trois explicitement.
+
+### 7.14 quater La limite de débit
+
+Troisième mesure interrompue au 13e cas, mais avec un premier signe : l'incendie de la façade
+(bougie-05), refusé à tort avant le correctif, sort maintenant **COUVERT**. L'arrêt venait de
+Mistral : « Rate limit exceeded » (429). Avec quatre cas en parallèle et un appel par fiche,
+jusqu'à seize appels partaient ensemble ; quatre nouvelles tentatives en quinze secondes ne
+suffisaient pas, et l'erreur arrêtait toute l'évaluation.
+
+Corrections : au plus quatre appels simultanés pour tout le programme
+(`COUVERTURE_APPELS_SIMULTANES`) ; jusqu'à six nouvelles tentatives, espacées jusqu'à une minute
+avec un peu d'aléa ; un cas en erreur est compté « err » dans le tableau au lieu d'arrêter
+l'évaluation. Seule une clé refusée arrête tout. Leçon : le parallélisme se règle avec les
+limites du fournisseur, pas seulement avec celles de la machine.
+
+### 7.14 quinquies Troisième mesure : 93 %, zéro erreur coûteuse
+
+| Mesure | Justes ou acceptables | Exactes | Couverts à tort | Refus à tort | Durée |
+|---|---|---|---|---|---|
+| 1re (Large) | 43 % | 7 % | 0 | 0 | ~1 h |
+| 2e (Small) | 79 % | 50 % | 0 | 1 | 27 s |
+| **3e (alternatives, exclusions partielles, débit)** | **93 %** | **57 %** | **0** | **0** | **59 s** |
+
+Les deux incendies et le dégât des eaux sortent COUVERT. Une seule erreur : velo-02 (local commun
+fermé, serrure forcée) sort INCERTAIN au lieu de NON_COUVERT, alors qu'il était juste à la mesure
+précédente : une régression à expliquer sur le détail. Les autres INCERTAIN sont les cas ambigus
+attendus (cadenas, serrure du garage inconnue, option jardin, arrachage). Cette version sert de
+**référence chiffrée** pour la suite en Prolog.
+
+### 7.15 Repartir de la clause : comment structurer des conditions générales
+
+Après ces corrections successives, retour à la question de fond : comment se présente une clause,
+et comment la traiter ? Une remarque de l'auteur a recadré la discussion : **la structure doit se
+tirer du contrat lui-même, pas des sinistres**. Les sinistres ne servent qu'à tester.
+
+**Anatomie d'une clause réelle** (Foyer, art. 2.10 « Garantie vol » et 2.10-a, p. 11-12) :
+- une seule clause numérotée contient **cinq garanties** (dans le bâtiment, chez le réparateur,
+  sur la personne avec violence, contenu déplacé, vandalisme lors d'un vol) ;
+- des **obligations de prévention**, leur **sanction** (« refus s'il existe un lien causal
+  direct ») et une **exception à la sanction** (« en cas d'effraction, sans incidence ») ;
+- un tableau de « **limites** » qui cache une **condition** (caves : 1 000 € « si fermées avec
+  une serrure de sûreté », et la définition exclut le cadenas) ;
+- des **exclusions** en sous-section, et des **définitions** à l'autre bout du document.
+
+Trois constats : une clause porte plusieurs rôles ; un rôle est éclaté sur plusieurs clauses ;
+les exceptions s'emboîtent (exception à une exclusion, exception à une sanction). D'où **deux
+niveaux** : la **clause**, unité de citation (ce qu'on montre, avec sa page), et la
+**proposition**, unité de raisonnement (une phrase, un rôle, ses exceptions).
+
+**Ce que fait l'état de l'art.** Les travaux récents ne demandent plus au modèle de comprendre
+le contrat à chaque question : ils lui font **traduire le contrat en règles logiques**, qu'un
+moteur applique. Sur des polices santé, cette traduction n'améliore les résultats que si elle est
+**guidée par un vocabulaire de faits fixé à l'avance** ; sans guide, elle fait moins bien que le
+modèle seul (arXiv 2502.17638, sur peu de cas : 9 et 20). Pour les exceptions, la référence est la
+logique « règle générale, puis exceptions par priorité », celle de Catala (Inria, Microsoft
+Research). Partout, un expert relit les règles.
+
+**Ce que ça révèle du projet.** Les fiches ont le bon squelette, mais pas de **vocabulaire de
+faits commun** : chaque fiche pose ses propres questions en texte libre (350 pour Foyer).
+
+**Choix pour plusieurs contrats** : les contrats deviennent des **données**, pas du code.
+- un **vocabulaire commun** de variables (événement, bien, lieu, effraction, violence, absence,
+  fermé à clé, serrure de sûreté…), auquel chaque contrat rattache ses définitions ;
+- **un fichier de règles par contrat et par version**, en JSON relisible : garanties, exceptions
+  par priorité, obligations, limites, chacune avec sa clause et sa page ;
+- **un seul moteur** en Python, à trois valeurs (oui, non, inconnu) ;
+- une chaîne de production contrôlée : traduction par le modèle, vérification des citations par
+  le code, relecture humaine, tests.
+
+Pourquoi JSON et pas Prolog : relisible par un juriste, « je ne sais pas » natif, s'intègre à
+l'existant, et reste convertible plus tard. Prolog (ou Catala) se justifie quand les règles
+deviennent très nombreuses et s'enchaînent sur plusieurs niveaux.
+
+Exemple de règle :
+```json
+{"garantie": "R1 Vol du contenu dans le bâtiment",
+ "si": {"evenement": "vol", "bien": "contenu", "lieu": "batiment"},
+ "sauf": [{"lieu": "parties_communes", "source": "2.10-a"},
+          {"auteur": "famille", "source": "2.10-a"}]}
+```
+
+**Orientation retenue par l'auteur : Prolog.** Le point à régler est le « je ne sais pas ». En
+Prolog, `\+` signifie « pas prouvé », pas « faux » (monde clos). Pour une **exclusion**, c'est
+exactement la charge de la preuve : une exclusion non établie ne joue pas. Pour une **condition
+de garantie**, c'est un refus à tort : un lieu inconnu ferait répondre « non couvert » au lieu
+d'INCERTAIN. D'où trois issues explicites, `couvert/2`, `non_couvert/2`, `incertain/2`, des faits
+`fait(S, variable, valeur)` et `inconnu(S, variable)`, et l'article cité dans chaque conclusion :
+
+```prolog
+couvert(S, '2.10')   :- vol(S), fait(S, bien, contenu), fait(S, lieu, batiment), \+ exclu(S, _).
+non_couvert(S, Art)  :- exclu(S, Art).
+incertain(S, lieu)   :- vol(S), inconnu(S, lieu).
+exclu(S, '2.10-a')   :- fait(S, lieu, parties_communes).
+```
+
+À prévoir : SWI-Prolog (et `janus-swi` depuis Python) ; un vocabulaire de faits fixé à l'avance
+(sans guide, la traduction en Prolog par un modèle fait moins bien que le modèle seul) ; chaque
+fichier de règles chargé et testé automatiquement ; à côté de chaque règle, la phrase du contrat
+qu'elle traduit, pour la relecture par un juriste.
+
+Sur la question « quel taux de réussite ? » : aucun chiffre fiable tant que la méthode n'est pas
+mesurée. Objectif raisonnable : 85 à 95 % de décisions justes sur les cas nets, un INCERTAIN
+argumenté sur les cas ambigus, et **zéro couvert à tort**.
+
+## 8. Ce qui reste à faire
+
+- Expliquer la régression de velo-02, puis comparer avec `conditions`.
+- Valider les 14 réponses attendues sur Foyer (proposées, pas encore validées).
+- Construire le **vocabulaire de faits commun** à partir des conditions de Foyer, puis traduire les
+  garanties en **règles Prolog** à trois issues (couvert, non couvert, incertain), en commençant par
+  la garantie vol.
+- Limite connue : la responsabilité civile de Foyer (section 5) est typée « autre » par le découpage.
 
 ## 9. Les leçons, en une ligne chacune
 
@@ -274,7 +543,14 @@ Reste à améliorer à la compilation : chaque fiche devrait avoir une condition
 2. Ce qui appartient au contrat se calcule une fois, se contrôle une fois.
 3. La longueur d'une sortie se règle par la consigne, pas par le plafond.
 4. Lire la documentation du fournisseur avant de soupçonner son propre code (réflexion « high » par défaut).
-7. Garder un fichier de diagnostic : c'est lui qui a montré la réflexion de 30 000 caractères.
-8. Une exclusion retire une garantie qui s'applique ; elle ne sert pas à refuser une garantie qui ne s'applique pas.
-5. Un garde-fou qui bloque une modification non versionnée vaut mieux qu'une bonne intention.
-6. On choisit un réglage sur des mesures, et on garde l'ancienne méthode pour comparer.
+5. Garder un fichier de diagnostic : c'est lui qui a montré la réflexion de 30 000 caractères.
+6. Une exclusion retire une garantie qui s'applique ; elle ne sert pas à refuser une garantie qui ne s'applique pas.
+7. Quand on corrige des règles pour faire passer deux exemples, il est temps de construire le jeu d'évaluation.
+8. Les bonnes catégories sont souvent déjà dans le métier (et dans le contrat) : périmètre, conditions, obligations, exclusions, limites.
+9. Une confiance à 0,0 n'est pas une erreur de jugement mais une absence de réponse : lire les indicateurs avant de corriger le raisonnement.
+10. La charge de la preuve est une règle de décision : l'assuré prouve la garantie, l'assureur l'exclusion.
+11. Un garde-fou qui bloque une modification non versionnée vaut mieux qu'une bonne intention.
+12. On choisit un réglage sur des mesures, et on garde l'ancienne méthode pour comparer.
+13. Un modèle par usage : celui qui réfléchit pour le contrat (une fois), un rapide pour les sinistres (souvent).
+14. Un écran d'abord : la décision, la preuve, la question à poser. Le détail est sur demande.
+15. La structure se tire du contrat, pas des sinistres : les sinistres servent à tester.

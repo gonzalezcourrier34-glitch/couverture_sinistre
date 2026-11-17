@@ -35,21 +35,28 @@ from .validation import extrait_present, passage_exact
 EVENEMENTS = ("vol", "vandalisme", "incendie", "degat_des_eaux", "bris", "tempete", "catastrophe_naturelle",
               "electricite", "dommage_accidentel", "responsabilite", "autre")
 
-SYSTEME_COMPILATION = """Tu es juriste en assurance. On te donne une garantie de conditions générales et les clauses qui l'encadrent (exclusions, conditions, limites, définitions), chacune précédée de son identifiant entre crochets. Traduis-la en fiche de vérification : des questions fermées, réutilisables pour n'importe quel sinistre, auxquelles un gestionnaire répondra plus tard en lisant la déclaration.
+SYSTEME_COMPILATION = """Tu es juriste en assurance. On te donne une garantie de conditions générales et les clauses qui l'encadrent (exclusions, conditions, obligations, limites, définitions), chacune précédée de son identifiant entre crochets. Traduis-la en fiche de vérification : des questions fermées, réutilisables pour n'importe quel sinistre, auxquelles un gestionnaire répondra plus tard en lisant la déclaration.
+
+Une clause peut contenir plusieurs garanties distinctes (vol dans le bâtiment, vol sur la personne, vol chez le réparateur…) : fais une fiche par garantie.
+
+Chaque fiche range ses questions par rôle, comme un gestionnaire :
+- "perimetre" : ce qui définit la garantie. Exactement une question de rôle "evenement" (« L'événement est-il un … au sens du contrat ? », en citant la définition quand le terme est défini), au moins une de rôle "bien" (quel bien est couvert : contenu, bâtiment, mobilier…), et une de rôle "lieu" si la garantie est limitée à un lieu (dans le bâtiment, sur la personne, chez un réparateur…). OUI = favorable à l'assuré.
+- "circonstances" : les autres conditions pour que la garantie joue (effraction, violences, délai…). OUI = favorable.
+- "obligations" : les obligations de prévention (fermer à clé, antivol…). OUI = obligation respectée. "lien_causal" : true si le contrat ne refuse qu'en cas de lien causal entre le non-respect et le sinistre ; false sinon.
+- "exclusions" : ce qui retire la garantie. OUI = l'exclusion s'applique. "a_demander" : true si c'est un fait qu'on demanderait à l'assuré (lieu, inoccupation, nature du bien) ; false si elle est présumée absente tant que la déclaration ne l'évoque pas (faute intentionnelle, complicité, guerre…).
+- "limites" : franchises, plafonds, sous-limites.
 
 Règles :
-- Une clause peut contenir plusieurs garanties distinctes (« extensions », « garanties complémentaires ») : fais alors une fiche par garantie.
 - "evenements" : parmi {evenements}. Ce que la garantie indemnise, pas ce qu'elle exclut.
-- "conditions" : ce qui doit être vrai pour que la garantie joue. Une condition = un seul fait vérifiable. Formule-la pour que OUI soit favorable à l'assuré (« Le bien volé se trouvait-il dans les locaux d'habitation ? »). La première condition est toujours « L'événement est-il un … au sens du contrat ? » ; quand le terme est défini, cite la définition.
-- "exclusions" : ce qui retire la garantie, formulé pour que OUI veuille dire que l'exclusion s'applique. "a_demander" : true si c'est un fait qu'on demanderait à l'assuré (lieu, fermeture à clé, inoccupation, entretien, nature du bien) ; false si l'exclusion est présumée absente tant que la déclaration ne l'évoque pas (faute intentionnelle, guerre, nucléaire, complicité…).
-- "limites" : franchises, plafonds, vétusté, sous-limites.
-- "extrait" : passage copié mot pour mot de la clause citée, 30 mots au plus, qui contient les mots qui fondent la question.
-- Une question ne porte que sur l'objet ou le lieu exact que vise sa clause.
-- Au plus 8 conditions, 10 exclusions et 5 limites par fiche. N'invente rien qui ne soit pas dans les clauses.
+- Une question = un seul fait. Une question ne porte que sur l'objet ou le lieu exact que vise sa clause.
+- "extrait" : passage copié mot pour mot de la clause citée, 30 mots au plus, sans rien sauter, qui contient les mots qui fondent la question.
+- Au plus 4 questions de périmètre, 4 circonstances, 6 obligations, 10 exclusions et 5 limites par fiche. N'invente rien.
 
 Réponds uniquement par un objet JSON :
-{{"fiches": [{{"nom": "Vol", "clause_id": "2.10", "evenements": ["vol"], "objet": "une phrase : ce que couvre la garantie",
-  "conditions": [{{"enonce": "…", "clause_id": "…", "extrait": "…"}}],
+{{"fiches": [{{"nom": "Vol du contenu dans le bâtiment", "clause_id": "2.10", "evenements": ["vol"], "objet": "une phrase : ce que couvre la garantie",
+  "perimetre": [{{"role": "evenement", "enonce": "…", "clause_id": "…", "extrait": "…"}}, {{"role": "bien", "enonce": "…", "clause_id": "…", "extrait": "…"}}, {{"role": "lieu", "enonce": "…", "clause_id": "…", "extrait": "…"}}],
+  "circonstances": [{{"enonce": "…", "clause_id": "…", "extrait": "…"}}],
+  "obligations": [{{"enonce": "…", "clause_id": "…", "extrait": "…", "lien_causal": true}}],
   "exclusions": [{{"enonce": "…", "clause_id": "…", "extrait": "…", "a_demander": true}}],
   "limites": [{{"enonce": "…", "clause_id": "…", "extrait": "…"}}]}}]}}""".format(evenements=", ".join(EVENEMENTS))
 
@@ -157,7 +164,7 @@ def reparer_compilation(compilation: ContratCompile, clauses: list[Clause]) -> i
     reparees = 0
     for f in compilation.fiches:
         fournies = par_unite.get(f.id.split("#")[0], {})
-        for p in f.conditions + f.exclusions + f.limites:
+        for p in f.conditions + f.obligations + f.exclusions + f.limites:
             if not p.valide:
                 clause = reparer_citation(p, fournies.get(p.clause_id), fournies)
                 if clause is not None and extrait_present(p.extrait, clause.texte):
@@ -171,20 +178,23 @@ def reparer_compilation(compilation: ContratCompile, clauses: list[Clause]) -> i
         valides = {p.enonce for p in compilation.points() if p.valide}
         compilation.avertissements = [a for a in compilation.avertissements
                                       if not any(f"« {e} »" in a for e in valides)]
-        utilisables = {f.id for f in compilation.fiches if any(p.valide for p in f.conditions)}
+        utilisables = {f.id for f in compilation.fiches if any(p.valide and p.role == "evenement" for p in f.conditions)}
         compilation.avertissements = [a for a in compilation.avertissements
                                       if not (a.endswith("fiche inutilisable.") and a.split(" ")[0] in utilisables)]
     return reparees
 
 
+ROLES_PERIMETRE = ("evenement", "bien", "lieu")
+
+
 def _points(donnees: list, nature: str, prefixe: str, clauses: dict[str, Clause],
-            avertissements: list[str]) -> list[Point]:
+            avertissements: list[str], prefixe_id: str | None = None) -> list[Point]:
     """Lit les questions du modèle et vérifie chaque extrait dans la clause citée."""
     points = []
-    for n, d in enumerate(donnees or [], start=1):
-        p = Point(id=f"{prefixe}.{nature[0]}{n}", nature=nature, enonce=str(d.get("enonce", "")).strip(),
+    for n, d in enumerate([d for d in donnees or [] if isinstance(d, dict) and str(d.get("enonce", "")).strip()], start=1):
+        p = Point(id=f"{prefixe}.{prefixe_id or nature[0]}{n}", nature=nature, enonce=str(d.get("enonce", "")).strip(),
                   clause_id=str(d.get("clause_id", "")), extrait=str(d.get("extrait", "")).strip(),
-                  a_demander=bool(d.get("a_demander", True)))
+                  a_demander=bool(d.get("a_demander", True)), lien_causal=bool(d.get("lien_causal", True)))
         clause = clauses.get(p.clause_id)
         if not p.enonce:
             continue
@@ -215,15 +225,22 @@ def compiler_garantie(gid: str, clauses: list[Clause], llm: LLM) -> tuple[list[F
     for n, f in enumerate(brutes, start=1):
         fid = gid if len(brutes) == 1 else f"{gid}#{n}"
         evts = [e for e in f.get("evenements", []) if e in EVENEMENTS] or ["autre"]
+        perimetre = _points(f.get("perimetre"), "condition", fid, fournies, avertissements, prefixe_id="p")
+        for p, d in zip(perimetre, [d for d in f.get("perimetre") or [] if str(d.get("enonce", "")).strip()]):
+            p.role = d.get("role") if d.get("role") in ROLES_PERIMETRE else "bien"
+        circonstances = _points(f.get("circonstances"), "condition", fid, fournies, avertissements, prefixe_id="c")
+        for p in circonstances:
+            p.role = "circonstance"
         fiche = Fiche(
             id=fid, nom=str(f.get("nom") or f"Garantie {gid}"), clause_id=str(f.get("clause_id") or gid),
             evenements=evts, objet=str(f.get("objet", "")),
-            conditions=_points(f.get("conditions"), "condition", fid, fournies, avertissements),
+            conditions=perimetre + circonstances,
+            obligations=_points(f.get("obligations"), "obligation", fid, fournies, avertissements),
             exclusions=_points(f.get("exclusions"), "exclusion", fid, fournies, avertissements),
             limites=_points(f.get("limites"), "limite", fid, fournies, avertissements),
         )
-        if not any(p.valide for p in fiche.conditions):
-            avertissements.append(f"{fid} « {fiche.nom} » : aucune condition vérifiée, fiche inutilisable.")
+        if not any(p.valide and p.role == "evenement" for p in fiche.conditions):
+            avertissements.append(f"{fid} « {fiche.nom} » : pas de question d'événement vérifiée, fiche inutilisable.")
         fiches.append(fiche)
     if not fiches:
         avertissements.append(f"Garantie {gid} : le modèle n'a produit aucune fiche.")
@@ -336,6 +353,9 @@ def verifier_import(compile_: ContratCompile, clauses: list[Clause]) -> list[str
     return problemes
 
 
+ROLES_AFFICHES = {"evenement": "événement", "bien": "bien", "lieu": "lieu", "circonstance": "circonst."}
+
+
 def resumer(c: ContratCompile) -> str:
     """Affichage d'un contrat compilé, pour la relecture."""
     lignes = [f"Contrat {c.contrat_id} : {len(c.fiches)} fiches, {len(c.exclusions_generales)} exclusions générales "
@@ -347,7 +367,9 @@ def resumer(c: ContratCompile) -> str:
         if f.objet:
             lignes.append(f"    {f.objet}")
         for p in f.conditions:
-            lignes.append(f"    condition  {p.enonce} (art. {p.clause_id}){marque(p)}")
+            lignes.append(f"    {ROLES_AFFICHES.get(p.role, p.role):<11}{p.enonce} (art. {p.clause_id}){marque(p)}")
+        for p in f.obligations:
+            lignes.append(f"    obligation {p.enonce} (art. {p.clause_id}){'' if p.lien_causal else ' — sans lien causal'}{marque(p)}")
         for p in f.exclusions:
             lignes.append(f"    exclusion  {p.enonce} (art. {p.clause_id}){'' if p.a_demander else ' — présumée absente'}{marque(p)}")
         for p in f.limites:

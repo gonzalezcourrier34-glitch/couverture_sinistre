@@ -9,7 +9,7 @@ from couverture.controles import controler
 from couverture.evaluation import charger_cas, evaluer
 from couverture.faits import enrichir_requete, extraire_faits
 from couverture.ingestion import ingerer_dossier, ingerer_fichier
-from couverture.juges import JugeHeuristique, JugeLLM, extraire_json
+from couverture.juges import JugeHeuristique, extraire_json
 from couverture.models import Decision, TypeClause
 from couverture.pipeline import Pipeline, PipelineDocumentBrut
 from couverture.recherche import Recherche
@@ -140,10 +140,24 @@ def test_extrait_tolere_accents_ponctuation_et_coupures():
     assert not extrait_present("les vols commis dans la rue", texte)
 
 
+class JugeFixe:
+    """Rend un verdict fixé d'avance, pour tester le contrôle des citations seul."""
+
+    def __init__(self, faux):
+        self.faux = faux
+
+    def juger(self, sinistre, faits, retenues):
+        from couverture.juges import formater_clauses
+        from couverture.models import Verdict
+
+        self.faux.completer("", formater_clauses(retenues))  # garde le message, comme un vrai juge
+        return Verdict.model_validate({**json.loads(self.faux.reponse), "mode": "fixe"})
+
+
 def test_citation_inventee_retrograde_la_decision(clauses):
     faux = FauxLLM({"decision": "COUVERT", "justification": "…", "confiance": 0.9,
                     "citations": [{"clause_id": "4.3", "extrait": "tous les vélos sont toujours garantis"}]})
-    r = Pipeline(clauses, juge=JugeLLM(faux)).analyser("On m'a volé mon vélo dans la rue.")
+    r = Pipeline(clauses, juge=JugeFixe(faux)).analyser("On m'a volé mon vélo dans la rue.")
     assert r.verdict.decision == Decision.INCERTAIN
     assert r.verdict.decision_initiale == Decision.COUVERT
     assert not r.verdict.citations[0].valide and r.verdict.confiance <= 0.5
@@ -152,7 +166,7 @@ def test_citation_inventee_retrograde_la_decision(clauses):
 def test_clause_non_fournie_est_rejetee(clauses):
     faux = FauxLLM({"decision": "NON_COUVERT", "justification": "…", "confiance": 0.8,
                     "citations": [{"clause_id": "99.9", "extrait": "n'importe quoi"}]})
-    r = Pipeline(clauses, juge=JugeLLM(faux)).analyser("Ma table est abîmée.")
+    r = Pipeline(clauses, juge=JugeFixe(faux)).analyser("Ma table est abîmée.")
     assert r.verdict.decision == Decision.INCERTAIN
     assert any("non fournie" in a for a in r.verdict.avertissements)
 
@@ -160,16 +174,11 @@ def test_clause_non_fournie_est_rejetee(clauses):
 def test_verdict_valide_passe_avec_pages(clauses):
     faux = FauxLLM({"decision": "NON_COUVERT", "justification": "Local collectif exclu.", "confiance": 0.85,
                     "citations": [{"clause_id": "4.4", "extrait": "les vols commis dans les parties communes de l'immeuble, y compris dans un local à vélos collectif", "role": "garantie"}]})
-    r = Pipeline(clauses, juge=JugeLLM(faux)).analyser("Mon vélo a été volé dans le local à vélos commun.")
+    r = Pipeline(clauses, juge=JugeFixe(faux)).analyser("Mon vélo a été volé dans le local à vélos commun.")
     c = r.verdict.citations[0]
     assert r.verdict.decision == Decision.NON_COUVERT
     assert c.valide and c.role == "exclusion" and c.pages == [1]  # le rôle vient du contrat
     assert "[4.4]" in faux.dernier_message
-
-
-def test_json_mal_forme_donne_incertain(clauses):
-    r = Pipeline(clauses, juge=JugeLLM(FauxLLM("je pense que oui"))).analyser("vol de vélo")
-    assert r.verdict.decision == Decision.INCERTAIN and r.verdict.confiance == 0.0
 
 
 def test_extraire_json_bloc_markdown():
@@ -804,7 +813,8 @@ def test_cli_evaluer_de_bout_en_bout(tmp_path, monkeypatch, capsys):
     monkeypatch.chdir(tmp_path)
     assert cli.main(["--donnees", str(tmp_path), "ingerer"]) == 0
     assert cli.main(["--donnees", str(tmp_path), "evaluer", "--contrat", "fictif-habitat-serein", "--hors-ligne"]) == 0
-    assert '"faux_couverts": 0' in capsys.readouterr().out
+    sortie = capsys.readouterr().out
+    assert "couverts à tort 0" in sortie and "velo-01" in sortie, "tableau d'une ligne par cas"
     assert cli.main(["--donnees", str(tmp_path), "bilan"]) == 0
     assert cli.main(["--donnees", str(tmp_path), "versions"]) == 0
 
@@ -882,8 +892,7 @@ class LLMQuiCoupe:
 
 
 def test_juges_prudents_si_reponse_coupee(clauses):
-    from couverture.juges import JugeLLM
-    for juge in (JugeLLM(LLMQuiCoupe()), JugeConditions(LLMQuiCoupe())):
+    for juge in (JugeConditions(LLMQuiCoupe()),):
         v = Pipeline(clauses, juge=juge).analyser("Vélo volé dans le local commun.").verdict
         assert v.decision == Decision.INCERTAIN and v.confiance == 0.0
     q = juger_qualite(clauses, LLMQuiCoupe(), "g")

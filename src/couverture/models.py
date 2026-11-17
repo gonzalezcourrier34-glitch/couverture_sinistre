@@ -75,7 +75,9 @@ class EtatCondition(str, Enum):
 class Condition(BaseModel):
     """Une vérification élémentaire : un fait du sinistre confronté à un passage du contrat."""
 
-    nature: str  # "garantie" (doit être remplie pour être couvert), "exclusion" (si remplie, pas couvert), "limite"
+    nature: str  # "garantie" (doit être remplie pour être couvert), "exclusion" (si remplie, pas couvert), "limite", "obligation"
+    role: str = ""  # méthode « fiches » : "evenement", "bien", "lieu", "circonstance"
+    lien_causal: bool = True  # obligation de prévention : refus seulement s'il y a un lien causal
     groupe: str = ""  # nom de la garantie examinée, pour les conditions de garantie
     clause_id: str
     extrait: str
@@ -118,11 +120,15 @@ class Point(BaseModel):
     rendrait chaque réponse incertaine."""
 
     id: str
-    nature: str  # "condition", "exclusion" ou "limite"
+    nature: str  # "condition", "obligation", "exclusion" ou "limite"
+    # Pour une condition : "evenement", "bien", "lieu" (le périmètre de la garantie) ou "circonstance".
+    role: str = ""
     enonce: str
     clause_id: str
     extrait: str
     a_demander: bool = True
+    # Obligation de prévention : son non-respect ne fait refuser que s'il a un lien causal avec le sinistre.
+    lien_causal: bool = True
     valide: bool = True
     pages: list[int] = Field(default_factory=list)
 
@@ -135,7 +141,8 @@ class Fiche(BaseModel):
     clause_id: str
     evenements: list[str] = Field(default_factory=list)
     objet: str = ""
-    conditions: list[Point] = Field(default_factory=list)
+    conditions: list[Point] = Field(default_factory=list)  # périmètre puis circonstances
+    obligations: list[Point] = Field(default_factory=list)
     exclusions: list[Point] = Field(default_factory=list)
     limites: list[Point] = Field(default_factory=list)
 
@@ -156,7 +163,7 @@ class ContratCompile(BaseModel):
     echecs: list[str] = Field(default_factory=list)
 
     def points(self) -> list[Point]:
-        return [p for f in self.fiches for p in f.conditions + f.exclusions + f.limites] + self.exclusions_generales
+        return [p for f in self.fiches for p in f.conditions + f.obligations + f.exclusions + f.limites] + self.exclusions_generales
 
 
 class Resultat(BaseModel):

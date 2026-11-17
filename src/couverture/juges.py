@@ -1,9 +1,11 @@
 """Étape 4 — Décision : le sinistre est-il couvert ?
 
-Deux juges interchangeables :
-- `JugeLLM` : le juge principal, qui raisonne sur les clauses retenues ;
-- `JugeHeuristique` : un juge de secours sans modèle, volontairement prudent,
-  qui ne tranche que les cas nets et répond INCERTAIN sinon.
+- `JugeHeuristique` : un juge sans modèle, volontairement prudent, qui ne tranche que les cas
+  nets et répond INCERTAIN sinon (mode hors ligne, tests, CI) ;
+- `JugeDocumentBrut` : la référence « chatbot », le contrat entier dans le prompt.
+Les juges principaux sont dans `fiches.py` (contrat compilé) et `conditions.py` (grille).
+Le « verdict direct » (le modèle conclut en un coup sur les clauses retenues) a été retiré : voir
+`docs/DEMARCHE.md` ; sa consigne reste archivée dans `docs/consignes/verdict-direct/`.
 """
 
 from __future__ import annotations
@@ -17,26 +19,6 @@ from .llm import LLM, ErreurLLM
 from .models import Citation, ClauseRetenue, Decision, Faits, TypeClause, Verdict
 from .texte import jetons
 
-SYSTEME = """Tu es gestionnaire sinistres dans une compagnie d'assurance. On te donne la description d'un sinistre et des extraits numérotés des conditions générales du contrat. Tu dois dire si le sinistre est couvert.
-
-Règles :
-1. Appuie-toi uniquement sur les clauses fournies, jamais sur ce que disent habituellement les contrats.
-2. Raisonne dans cet ordre : (a) quelle garantie vise cet événement et ce bien ? (b) les conditions de cette garantie sont-elles établies par les faits décrits ? (c) une exclusion s'applique-t-elle ? (d) quelles limites (franchise, plafond, vétusté) faut-il signaler ?
-3. COUVERT : une garantie s'applique, ses conditions sont établies par les faits, et aucune exclusion ne s'applique.
-4. NON_COUVERT : aucune garantie ne vise l'événement, ou une exclusion s'applique clairement.
-5. INCERTAIN : la décision dépend d'un fait que la description ne donne pas (option souscrite, lieu exact, effraction, gravité du dommage…) ou une clause peut se lire de deux façons. Dis alors exactement ce qu'il faut vérifier et ce que serait la décision dans chaque cas.
-6. Une citation reprend mot pour mot un passage d'une clause fournie (30 mots au plus), avec l'identifiant de la clause.
-7. N'invente aucun fait.
-
-Réponds uniquement par un objet JSON, sans texte autour :
-{
-  "decision": "COUVERT" | "NON_COUVERT" | "INCERTAIN",
-  "justification": "3 à 6 phrases en langage clair pour un client",
-  "citations": [{"clause_id": "4.3", "extrait": "passage exact", "role": "garantie|exclusion|condition|limite|definition"}],
-  "ambiguites": ["point du contrat ou des faits qui peut se lire de deux façons"],
-  "informations_manquantes": ["question précise à poser au client"],
-  "confiance": 0.0 à 1.0
-}"""
 
 
 def formater_clauses(retenues: list[ClauseRetenue]) -> str:
@@ -59,39 +41,8 @@ class Juge(Protocol):
     def juger(self, sinistre: str, faits: Faits, retenues: list[ClauseRetenue]) -> Verdict: ...
 
 
-class JugeLLM:
-    def __init__(self, llm: LLM, tentatives: int = 2):
-        self.llm = llm
-        self.tentatives = tentatives
-
-    def juger(self, sinistre: str, faits: Faits, retenues: list[ClauseRetenue]) -> Verdict:
-        message = (
-            f"## Sinistre déclaré\n{sinistre}\n\n"
-            f"## Faits repérés automatiquement (indicatifs)\n{faits.model_dump_json()}\n\n"
-            f"## Clauses du contrat\n{formater_clauses(retenues)}"
-        )
-        erreur: Exception | None = None
-        for _ in range(self.tentatives):
-            try:
-                donnees = extraire_json(self.llm.completer(SYSTEME, message))
-                donnees["mode"] = self.llm.nom
-                return Verdict.model_validate(donnees)
-            except ErreurLLM:
-                raise  # clé refusée, fournisseur injoignable : pas une réponse illisible
-            except Exception as e:  # réponse mal formée : on redemande une fois
-                erreur = e
-                message += "\n\nTa réponse précédente n'était pas un JSON valide. Réponds uniquement par l'objet JSON."
-        return Verdict(
-            decision=Decision.INCERTAIN,
-            justification="Le modèle n'a pas produit de réponse exploitable.",
-            confiance=0.0,
-            mode=self.llm.nom,
-            avertissements=[f"Réponse du modèle illisible : {erreur}"],
-        )
-
-
 class JugeHeuristique:
-    """Juge sans modèle. Ne remplace pas le JugeLLM : il sert à faire tourner la chaîne
+    """Juge sans modèle. Ne remplace pas un modèle : il sert à faire tourner la chaîne
     hors ligne et de garde-fou. Il ne répond COUVERT que si aucune exclusion ne recoupe
     le sinistre, et préfère INCERTAIN dès qu'il y a un doute."""
 

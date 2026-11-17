@@ -3,6 +3,9 @@
 - `data/sinistres.jsonl` : les sinistres, indépendants de tout contrat ;
 - `data/annotations/<contrat_id>.jsonl` : pour ce contrat, la décision attendue et les
   clauses qui doivent être citées ({"sinistre_id", "attendu", "clauses_attendues", "note"}).
+  "acceptables" (facultatif) : d'autres décisions défendables quand le contrat seul ne permet pas
+  de trancher (une option des conditions particulières, une serrure dont on ne sait pas le type).
+  Un INCERTAIN honnête n'y est alors pas compté comme une erreur ; un COUVERT à tort l'est toujours.
 
 Ce découpage tient à l'échelle : un nouveau contrat = un fichier d'annotations de plus.
 """
@@ -33,10 +36,41 @@ def _cite(attendue: str, citees: set[str]) -> bool:
     return any(c == attendue or c.startswith(attendue + "~") or c.startswith(attendue + "/") for c in citees)
 
 
-def evaluer(pipeline, cas: list[dict]) -> dict:
+def evaluer(pipeline, cas: list[dict], paralleles: int = 1) -> dict:
+    """Rejoue les cas ; `paralleles` cas à la fois (les analyses sont indépendantes, et chacune
+    attend surtout le modèle). L'ordre des résultats reste celui des cas."""
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    from .progression import Barre
+
+    from .llm import CleRefusee, ErreurLLM
+    from .models import Decision, Faits, Resultat, Verdict
+
+    def analyser(c: dict):
+        """Une panne du fournisseur sur un cas (limite de débit persistante, réseau) ne fait pas
+        perdre les autres : le cas est compté en erreur. Une clé refusée arrête tout."""
+        try:
+            return pipeline.analyser(c["sinistre"])
+        except CleRefusee:
+            raise
+        except ErreurLLM as e:
+            v = Verdict(decision=Decision.INCERTAIN, justification="Erreur du fournisseur.", confiance=0.0,
+                        mode="erreur", avertissements=[f"Erreur du modèle : {e}"])
+            return Resultat(sinistre=c["sinistre"], faits=Faits(), clauses_consultees=[], verdict=v)
+
+    barre = Barre(len(cas), "Évaluation")
+    resultats: list = [None] * len(cas)
+    with ThreadPoolExecutor(max_workers=max(1, paralleles)) as pool:
+        futurs = {pool.submit(analyser, c): i for i, c in enumerate(cas)}
+        for f in as_completed(futurs):
+            i = futurs[f]
+            resultats[i] = f.result()
+            barre.avancer(f"{cas[i]['id']} → {resultats[i].verdict.decision.value}")
+    barre.terminer()
+    if resultats and all(r.verdict.mode == "erreur" for r in resultats):
+        raise ErreurLLM(resultats[0].verdict.avertissements[0].removeprefix("Erreur du modèle : "))
     lignes, confusion = [], Counter()
-    for c in cas:
-        r = pipeline.analyser(c["sinistre"])
+    for c, r in zip(cas, resultats):
         v = r.verdict
         obtenu = v.decision.value
         initiale = (v.decision_initiale or v.decision).value
@@ -49,7 +83,8 @@ def evaluer(pipeline, cas: list[dict]) -> dict:
             "attendu": c["attendu"],
             "obtenu": obtenu,
             "avant_controle": initiale,
-            "ok": obtenu == c["attendu"],
+            "ok": obtenu == c["attendu"] or obtenu in c.get("acceptables", []),
+            "acceptable": obtenu != c["attendu"] and obtenu in c.get("acceptables", []),
             "clauses_attendues": attendues,
             "clauses_citees": sorted(citees),
             "rappel_clauses": round(len(trouvees) / len(attendues), 2) if attendues else None,
@@ -57,6 +92,7 @@ def evaluer(pipeline, cas: list[dict]) -> dict:
             "avant_relecture": v.decision_avant_relecture.value if v.decision_avant_relecture else None,
             "contestations": sum(c.relecture == "contestee" for c in v.conditions),
             "confiance": v.confiance,
+            "erreur": v.mode == "erreur",
         })
     n = len(lignes)
     rappels = [l["rappel_clauses"] for l in lignes if l["rappel_clauses"] is not None]
@@ -64,11 +100,15 @@ def evaluer(pipeline, cas: list[dict]) -> dict:
     return {
         "n": n,
         "exactitude": taux(sum(l["ok"] for l in lignes)),
+        "exactitude_stricte": taux(sum(l["obtenu"] == l["attendu"] for l in lignes)),
+        # L'autre erreur coûteuse : refuser à tort un sinistre couvert.
+        "faux_refus": sum(l["obtenu"] == "NON_COUVERT" and l["attendu"] == "COUVERT" for l in lignes),
         "exactitude_avant_controle": taux(sum(l["avant_controle"] == l["attendu"] for l in lignes)),
         # L'erreur la plus coûteuse : dire « couvert » à tort, c'est une promesse au client.
         "faux_couverts": sum(l["obtenu"] == "COUVERT" and l["attendu"] != "COUVERT" for l in lignes),
         "faux_couverts_avant_controle": sum(l["avant_controle"] == "COUVERT" and l["attendu"] != "COUVERT" for l in lignes),
         "taux_incertain": taux(sum(l["obtenu"] == "INCERTAIN" for l in lignes)),
+        "erreurs_fournisseur": sum(l["erreur"] for l in lignes),
         "rappel_clauses_moyen": round(sum(rappels) / len(rappels), 3) if rappels else None,
         "citations_rejetees": sum(l["citations_rejetees"] for l in lignes),
         "conditions_contestees": sum(l["contestations"] for l in lignes),

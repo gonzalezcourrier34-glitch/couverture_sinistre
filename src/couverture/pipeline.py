@@ -7,28 +7,27 @@ from pathlib import Path
 from .base import Base
 from .chargement import charger_lignes
 from .faits import enrichir_requete, extraire_faits
-from .juges import Juge, JugeDocumentBrut, JugeHeuristique, JugeLLM
+from .juges import Juge, JugeDocumentBrut, JugeHeuristique
 from .models import Clause, ClauseRetenue, Resultat
 from .recherche import Recherche
 from .segmentation import segmenter_lignes
 from .validation import valider
 
 
-def llm_configure():
-    """Le modèle configuré (Mistral, Anthropic ou API compatible OpenAI), ou None. Voir `llm.configurer`."""
+def llm_configure(usage: str = "analyse"):
+    """Le modèle configuré (Mistral, Anthropic ou API compatible OpenAI), ou None. Voir `llm.configurer` :
+    usage « analyse » (chaque sinistre, modèle rapide) ou « contrat » (compilation, qualité, réparation)."""
     from .llm import configurer
 
-    return configurer()
+    return configurer(usage)
 
 
 def juge_par_defaut(methode: str = "conditions") -> Juge:
-    """Avec un modèle : le juge par conditions (ou « direct », verdict en un coup, pour comparer).
+    """Avec un modèle : le juge par conditions.
     Sans modèle : le juge heuristique."""
     llm = llm_configure()
     if llm is None:
         return JugeHeuristique()
-    if methode == "direct":
-        return JugeLLM(llm)
     from .conditions import JugeConditions
     from .llm import configurer_relecteur
 

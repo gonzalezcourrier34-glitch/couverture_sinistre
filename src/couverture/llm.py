@@ -12,6 +12,8 @@ from __future__ import annotations
 
 import json
 import os
+import random
+import threading
 import time
 import urllib.error
 import urllib.request
@@ -27,6 +29,15 @@ class LLM(Protocol):
 
 class ErreurLLM(RuntimeError):
     """Le fournisseur n'a pas pu répondre (clé, quota, réseau) : inutile de réessayer la même question."""
+
+
+class CleRefusee(ErreurLLM):
+    """Clé absente ou refusée : rien ne marchera, on arrête tout (même une évaluation en cours)."""
+
+
+# Appels simultanés vers le fournisseur, pour tout le programme (les cas d'une évaluation et les
+# fiches d'un cas tournent en parallèle) : au-delà, Mistral répond 429, « Rate limit exceeded ».
+APPELS_SIMULTANES = threading.BoundedSemaphore(max(1, int(os.environ.get("COUVERTURE_APPELS_SIMULTANES", "4") or 4)))
 
 
 class ReponseTronquee(ValueError):
@@ -51,27 +62,29 @@ class ReponseLente(ReponseTronquee):
     """Pas de réponse dans le délai : presque toujours un modèle qui réfléchit ou écrit trop longtemps."""
 
 
-def _poster(url: str, corps: dict, entetes: dict, timeout: int, tentatives: int = 4) -> dict:
-    """POST JSON avec nouvelles tentatives sur les erreurs passagères :
-    429 (limite de débit) et 5xx, en attendant de plus en plus longtemps."""
+def _poster(url: str, corps: dict, entetes: dict, timeout: int, tentatives: int = 7) -> dict:
+    """POST JSON avec nouvelles tentatives sur les erreurs passagères : 429 (limite de débit) et
+    5xx, en attendant de plus en plus longtemps (2, 4, 8… jusqu'à 60 s, un peu d'aléa pour que les
+    appels parallèles ne repartent pas ensemble). Au plus `APPELS_SIMULTANES` appels à la fois ;
+    l'attente entre deux tentatives ne bloque pas les autres appels."""
     donnees = json.dumps(corps).encode("utf-8")
     attente = 2.0
     for essai in range(1, tentatives + 1):
         requete = urllib.request.Request(url, data=donnees, headers={"content-type": "application/json", **entetes})
         try:
-            with urllib.request.urlopen(requete, timeout=timeout) as reponse:
+            with APPELS_SIMULTANES, urllib.request.urlopen(requete, timeout=timeout) as reponse:
                 return json.loads(reponse.read())
         except TimeoutError as e:
             raise ReponseLente(f"pas de réponse après {timeout} s") from e
         except urllib.error.HTTPError as e:
             detail = e.read().decode("utf-8", "replace")[:300]
             if e.code in (429, 500, 502, 503, 504) and essai < tentatives:
-                delai = float(e.headers.get("retry-after") or attente)
-                time.sleep(min(delai, 30))
-                attente *= 2
+                delai = float((e.headers.get("retry-after") if e.headers else None) or attente)
+                time.sleep(min(delai, 60) + random.random())
+                attente = min(attente * 2, 60)
                 continue
             if e.code in (401, 403):
-                raise ErreurLLM(f"Clé API refusée ({e.code}). Vérifier la clé dans le fichier .env.") from e
+                raise CleRefusee(f"Clé API refusée ({e.code}). Vérifier la clé dans le fichier .env.") from e
             raise ErreurLLM(f"Erreur {e.code} du fournisseur : {detail}") from e
         except urllib.error.URLError as e:
             if isinstance(e.reason, TimeoutError):
@@ -193,38 +206,50 @@ class MistralLLM(OpenAICompatibleLLM):
     URL = "https://api.mistral.ai/v1"
     MODELE_DEFAUT = "mistral-large-latest"
 
-    def __init__(self, modele: str | None = None, cle_api: str | None = None, **kwargs):
+    def __init__(self, modele: str | None = None, cle_api: str | None = None, reflexion: str | None = None, **kwargs):
+        modele = modele or os.environ.get("COUVERTURE_MODELE") or self.MODELE_DEFAUT
         super().__init__(
-            modele=modele or os.environ.get("COUVERTURE_MODELE") or self.MODELE_DEFAUT,
+            modele=modele,
             url=os.environ.get("MISTRAL_URL", self.URL),
             cle_api=cle_api or os.environ["MISTRAL_API_KEY"],
             json_mode=True,
             fournisseur="mistral",
             # Mistral refuse temperature=0 (décodage glouton) si top_p n'est pas exactement 1.
-            extra={"top_p": 1, **_reflexion_mistral()},
+            extra={"top_p": 1, **_reflexion_mistral(modele, reflexion)},
             **kwargs,
         )
 
 
-def _reflexion_mistral() -> dict:
-    """Mistral Large 4 réfléchit au niveau « high » si on ne dit rien : des milliers de tokens
-    et plusieurs minutes avant la grille. Remplir une grille n'en demande pas tant.
-    COUVERTURE_REFLEXION : low (défaut), medium, high, ou « defaut » pour ne rien envoyer."""
-    niveau = os.environ.get("COUVERTURE_REFLEXION", "low").strip().lower()
-    return {} if niveau in {"", "defaut", "défaut"} else {"reasoning_effort": niveau}
+def _reflexion_mistral(modele: str = "", reflexion: str | None = None) -> dict:
+    """Niveau de réflexion demandé à Mistral (`reasoning_effort`).
+    Mistral Large 4 réfléchit au niveau « high » si on ne dit rien (des minutes par réponse) et
+    n'accepte pas « none » : on demande « low ». Mistral Small accepte « none » : pour répondre
+    oui / non à des questions courtes, c'est le plus rapide. COUVERTURE_REFLEXION impose un niveau
+    (low, medium, high, none), « defaut » n'envoie rien. Un modèle qui refuse le paramètre est
+    rappelé sans lui (voir `completer`)."""
+    niveau = (reflexion if reflexion is not None else os.environ.get("COUVERTURE_REFLEXION", "")).strip().lower()
+    if not niveau:
+        niveau = "none" if "small" in modele else "low"
+    return {} if niveau in {"defaut", "défaut"} else {"reasoning_effort": niveau}
 
 
 FOURNISSEURS = ("mistral", "anthropic", "openai-compatible")
 
 
-def configurer() -> LLM | None:
+def configurer(usage: str = "analyse") -> LLM | None:
     """Le modèle à utiliser, d'après l'environnement (ou le fichier .env) :
 
     COUVERTURE_FOURNISSEUR=mistral|anthropic|openai-compatible   force le choix (facultatif)
     MISTRAL_API_KEY=...                                         → Mistral
     ANTHROPIC_API_KEY=...                                       → Anthropic
     COUVERTURE_LLM_URL=... (+ COUVERTURE_LLM_CLE)               → API compatible OpenAI
-    COUVERTURE_MODELE=...                                       nom du modèle (facultatif)
+    COUVERTURE_MODELE=...                                       modèle des analyses (facultatif)
+    COUVERTURE_MODELE_CONTRAT=...                               modèle du travail sur les contrats :
+                                                                compilation, juge de qualité, réparation
+                                                                (facultatif ; par défaut COUVERTURE_MODELE)
+
+    Deux usages, deux besoins : le travail sur un contrat se fait une fois et gagne à un modèle qui
+    réfléchit (Mistral Large) ; l'analyse d'un sinistre se répète et gagne à un modèle rapide.
 
     Sans fournisseur forcé, l'ordre est : Mistral, Anthropic, compatible OpenAI. Sinon None :
     la pipeline tourne alors avec le juge heuristique, sans modèle."""
@@ -236,13 +261,16 @@ def configurer() -> LLM | None:
         valeur = os.environ.get(variable, "").strip()
         return bool(valeur) and not valeur.startswith("colle")  # valeur d'exemple du .env laissée telle quelle
 
+    modele_contrat = os.environ.get("COUVERTURE_MODELE_CONTRAT", "").strip() if usage == "contrat" else ""
     if choix in ("", "mistral") and present("MISTRAL_API_KEY"):
+        if modele_contrat:
+            return MistralLLM(modele=modele_contrat, reflexion=os.environ.get("COUVERTURE_REFLEXION_CONTRAT", "low"))
         return MistralLLM()
     if choix in ("", "anthropic") and present("ANTHROPIC_API_KEY"):
-        return AnthropicLLM()
+        return AnthropicLLM(modele=modele_contrat or None)
     if choix in ("", "openai-compatible") and present("COUVERTURE_LLM_URL"):
         return OpenAICompatibleLLM(
-            modele=os.environ.get("COUVERTURE_MODELE", "default"),
+            modele=modele_contrat or os.environ.get("COUVERTURE_MODELE", "default"),
             url=os.environ["COUVERTURE_LLM_URL"],
             cle_api=os.environ.get("COUVERTURE_LLM_CLE", ""),
         )

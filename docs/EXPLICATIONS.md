@@ -360,15 +360,15 @@ COUVERTURE_MODELE=mistral-large-latest
 
 `mistral-small-latest` coûte moins cher. Pour un autre fournisseur : `ANTHROPIC_API_KEY=…`, ou `COUVERTURE_LLM_URL=http://localhost:11434/v1` pour Ollama, et `COUVERTURE_FOURNISSEUR=…` pour forcer le choix si plusieurs sont renseignés. En déploiement, les mêmes variables sont passées au conteneur (`docker run --env-file .env`).
 
-### `src/couverture/juges.py` — trois juges
+### `src/couverture/juges.py` — le juge sans modèle et la référence « brut »
 
 **Rôle** : produire un verdict à partir du sinistre et des clauses. Tous respectent le protocole `Juge` (une méthode `juger`).
-- **`JugeLLM`**, la méthode « direct » : le modèle reçoit les clauses retenues, raisonne dans l'ordre garantie → conditions → exclusions → limites, et donne un verdict en JSON. En cas de réponse illisible, il redemande une fois, puis répond INCERTAIN avec confiance 0.
+- La méthode « direct » (le modèle conclut en un coup sur les clauses retenues) a été **retirée** le 17 novembre : elle ne servait que de point de comparaison, et la référence « brut » suffit. Sa consigne reste archivée dans `docs/consignes/verdict-direct/`.
 - **`JugeHeuristique`**, sans modèle : compte les mots communs entre le sinistre et les clauses. Il ne dit « couvert » que si aucune exclusion ne recoupe le sinistre ; il dit « non couvert » si aucune garantie ne correspond, ou si une exclusion recoupe nettement plus qu'une garantie ; sinon INCERTAIN. Il cite le passage le plus pertinent de chaque clause, en donnant plus de poids aux mots du lieu (« parties communes »), qui décident souvent.
 - **`JugeDocumentBrut`**, la référence « chatbot » : le contrat entier dans le prompt, sans recherche ni structure.
 - Outils partagés : `formater_clauses` (présente les clauses au modèle avec leur identifiant, leur type et leur chemin), `extraire_json` (récupère le JSON même entouré de texte ou de balises Markdown).
 
-**Pourquoi trois** : `direct` et `brut` servent de points de comparaison pour prouver l'intérêt de la méthode par conditions. L'heuristique fait tourner le système sans clé et sert de filet de sécurité : volontairement prudente, elle n'a jamais dit « couvert » à tort sur les cas de test.
+**Pourquoi** : `brut` sert de point de comparaison pour prouver l'intérêt des méthodes structurées. L'heuristique fait tourner le système sans clé et sert de filet de sécurité : volontairement prudente, elle n'a jamais dit « couvert » à tort sur les cas de test.
 
 ### `src/couverture/conditions.py` — le juge par conditions (méthode par défaut)
 
@@ -418,7 +418,7 @@ COUVERTURE_MODELE=mistral-large-latest
 
 ### `src/couverture/fiches.py` — analyser avec le contrat compilé (méthode `fiches`)
 
-**Rôle** : à chaque sinistre, le modèle n'a plus qu'un métier : répondre oui / non / inconnu à des questions déjà écrites.
+**Rôle** : à chaque sinistre, le modèle n'a plus qu'un métier : répondre oui / non / inconnu à des questions déjà écrites. Chaque question a un **rôle** (consigne de compilation v2) : périmètre (événement, bien, lieu), circonstance, obligation de prévention, exclusion, limite. Le modèle voit ce rôle : un périmètre décrit et contraire vaut « non », une circonstance passée sous silence vaut « inconnu ». `decider_fiche` applique, dans l'ordre : périmètre contraire → hors sujet ; circonstance non remplie → ne joue pas ; périmètre incomplet → « possible » ; exclusion qui s'applique → refus ; circonstance inconnue → incertain ; obligation non respectée → incertain (déchéance seulement s'il y a un lien causal) ; sinon couvert, **sous réserve** des exclusions et obligations inconnues (charge de la preuve : l'assuré établit la garantie, l'assureur l'exclusion). Les questions sont posées par fiche, un appel par fiche en parallèle. Les faits (événement, bien, lieu) sont extraits par un petit appel (`extraire_faits_modele`), le lexique de `faits.py` servant de secours. Les points ci-dessous décrivent la première version et restent vrais dans leur principe.
 1. `router` : les fiches dont l'événement correspond aux faits de `faits.py`. Si aucun événement n'est reconnu, `router_par_le_modele` choisit dans la liste des fiches ;
 2. `JugeFiches.juger` : un appel pour toutes les questions des fiches retenues et des exclusions générales. Une exclusion « présumée absente » restée inconnue devient « ne s'applique pas » ;
 3. `decider_fiche`, pour chaque fiche, lit comme un gestionnaire : une condition de garantie non remplie écarte la fiche **sans consulter ses exclusions** ; une fiche dont aucune condition n'est établie n'est **pas rattachée** au sinistre ; sinon, les règles de `conditions.decider`. Puis `decider_fiches` : COUVERT si une fiche l'est, sinon INCERTAIN si une fiche l'est, sinon NON_COUVERT si une fiche rattachée refuse, sinon INCERTAIN (aucune garantie rattachée). Une exclusion du vol ne fait pas tomber la garantie incendie ;
@@ -495,7 +495,7 @@ En dessous de 30 analyses dans chaque période, la dérive n'est pas calculée :
 
 ### `src/couverture/consignes.py` — le versionnage des consignes
 
-**Rôle** : `CONSIGNES` liste les dix consignes (grille de conditions, relecture, verdict direct, document brut, juge de qualité, réparation, compilation, exclusions générales, fiches, routage), le texte qui porte chacune dans le code, et sa version.
+**Rôle** : `CONSIGNES` liste les dix consignes en service (grille de conditions, relecture, document brut, juge de qualité, réparation, compilation, exclusions générales, fiches, routage, faits), le texte qui porte chacune dans le code, et sa version.
 - **archive** : `ecrire_manifeste` écrit aussi le texte intégral de chaque nouvelle version dans `docs/consignes/<consigne>/<version>.txt`, sans jamais réécrire une version archivée. `verifier` échoue si le texte d'une version en service ne correspond plus à son archive. L'histoire des consignes (grille v1, v2, v3) reste ainsi lisible, avec le pourquoi de chaque changement dans `docs/DEMARCHE.md` ;
 - `etat_actuel` calcule la version et l'empreinte de chaque texte ; `ecrire_manifeste` les écrit dans `config/versions_consignes.json` ;
 - `verifier` compare le code au manifeste et signale un texte modifié **sans nouvelle version**, ou un manifeste pas à jour. Un test l'appelle : la CI échoue ;
@@ -550,7 +550,7 @@ Le détail est dans `monitoring/README.md`.
 
 **Rôle** :
 - `llm_configure` : choisit le modèle selon les variables d'environnement, ou aucun.
-- `juge_par_defaut` : conditions (défaut) ou direct avec un modèle ; heuristique sans modèle.
+- `juge_par_defaut` : conditions avec un modèle ; heuristique sans modèle. La méthode `fiches` a son propre assemblage (`fiches.PipelineFiches`).
 - `Pipeline.analyser` : faits → requête enrichie → recherche → juge → validation → `Resultat`. Construit depuis la base (`depuis_base`) ou depuis un fichier (`depuis_fichier`).
 - `PipelineDocumentBrut` : la référence, avec le même contrôle des citations pour que la comparaison soit juste.
 
@@ -569,7 +569,7 @@ Le détail est dans `monitoring/README.md`.
 | `couverture ingerer [--forcer]` | Lit `data/contrats`, remplit la base ; avec une clé Mistral, calcule les embeddings et fait juger le typage ; affiche statuts, scores et alertes. |
 | `couverture contrats` | Liste les contrats, leur statut, leur version. |
 | `couverture clauses --contrat ID` | Affiche le découpage : identifiant, type, pages, titre. |
-| `couverture analyser --contrat ID "…" [--methode conditions\|direct\|brut] [--json] [--hors-ligne]` | Analyse un sinistre. `--json` donne la sortie complète, pour la traçabilité. |
+| `couverture analyser --contrat ID "…" [--methode conditions\|fiches\|brut] [--detail] [--json] [--hors-ligne]` | Analyse un sinistre : décision, motif, preuves décisives, questions à poser. `--detail` montre toutes les fiches ; `--json` la sortie complète, pour la traçabilité. |
 | `couverture evaluer --contrat ID [--methode …] [--detail]` | Indicateurs sur les cas annotés de ce contrat. |
 | `couverture comparer --contrat ID` | Les trois méthodes côte à côte (modèle requis). |
 | `couverture serveur [--port 8000]` | Lance l'interface web. |
@@ -775,7 +775,7 @@ Pour écrire le code et l'interface plus vite, comme le recruteur l'encourage. L
 - Le relecteur est, par défaut, le même modèle que le juge principal.
 
 **Suites, dans l'ordre**
-1. Coller la clé Mistral dans `.env`, vérifier avec `couverture modele`, puis lancer `couverture comparer` : le tableau brut / direct / conditions.
+1. Coller la clé Mistral dans `.env`, vérifier avec `couverture modele`, puis lancer `couverture comparer` : le tableau brut / conditions / fiches.
 2. Écrire les annotations du contrat Foyer, puis d'un ou deux autres contrats.
 3. Lire les conditions particulières pour remplir les conditions « option souscrite ».
 4. Ajouter un contrat que les règles générales lisent mal (AXA Luxembourg, par exemple) et faire tourner l'agent de réparation dessus : c'est la démonstration la plus parlante pour « des centaines de contrats ».

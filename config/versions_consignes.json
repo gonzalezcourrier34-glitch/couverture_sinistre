@@ -1,7 +1,7 @@
 {
   "couverture-compilation": {
-    "version": "v1",
-    "empreinte": "ae2180f9f91ddaa4",
+    "version": "v2",
+    "empreinte": "adfd9dd33a64f794",
     "source": "couverture.compilation.SYSTEME_COMPILATION"
   },
   "couverture-document-brut": {
@@ -14,9 +14,14 @@
     "empreinte": "08877f6e294b8c00",
     "source": "couverture.compilation.SYSTEME_EXCLUSIONS_GENERALES"
   },
-  "couverture-fiches": {
+  "couverture-faits": {
     "version": "v1",
-    "empreinte": "358f12cdde791df9",
+    "empreinte": "abfd7fdb00abe919",
+    "source": "couverture.fiches.SYSTEME_FAITS"
+  },
+  "couverture-fiches": {
+    "version": "v3",
+    "empreinte": "516083e66b9f9534",
     "source": "couverture.fiches.SYSTEME_FICHES"
   },
   "couverture-grille-conditions": {
@@ -43,10 +48,5 @@
     "version": "v1",
     "empreinte": "61fc935d3da5db58",
     "source": "couverture.fiches.SYSTEME_ROUTAGE"
-  },
-  "couverture-verdict-direct": {
-    "version": "v1",
-    "empreinte": "23338fae528975c7",
-    "source": "couverture.juges.SYSTEME"
   }
 }

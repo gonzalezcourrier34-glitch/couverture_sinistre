@@ -106,7 +106,7 @@ def fichiers_contrats(dossier: Path) -> list[Path]:
 
 
 def ingerer_dossier(dossier: str | Path, base: Base, forcer: bool = False, vectoriseur=None,
-                    juge_qualite=None) -> list[Contrat]:
+                    juge_qualite=None, barre=None) -> list[Contrat]:
     """Tous les contrats du dossier, avec les métadonnées de `catalogue.json` et, si le catalogue
     en désigne un, le profil d'assureur (`<donnees>/profils/<nom>.json`). Les contrats dont le
     fichier n'est plus dans le dossier sont retirés de la base : elle reflète le dossier."""
@@ -120,6 +120,8 @@ def ingerer_dossier(dossier: str | Path, base: Base, forcer: bool = False, vecto
         profil = charger_profil(dossier.parent / "profils", meta.get("profil")) if meta.get("profil") else None
         contrats.append(ingerer_fichier(f, base, meta, forcer=forcer, vectoriseur=vectoriseur, profil=profil,
                                         juge_qualite=juge_qualite))
+        if barre is not None:
+            barre.avancer(f.name)
     gardes = {c.id for c in contrats}
     for ancien in base.contrats():
         if ancien.id not in gardes:
