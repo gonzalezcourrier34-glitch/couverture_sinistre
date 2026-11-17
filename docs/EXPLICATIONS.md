@@ -421,7 +421,8 @@ COUVERTURE_MODELE=mistral-large-latest
 **Rôle** : à chaque sinistre, le modèle n'a plus qu'un métier : répondre oui / non / inconnu à des questions déjà écrites.
 1. `router` : les fiches dont l'événement correspond aux faits de `faits.py`. Si aucun événement n'est reconnu, `router_par_le_modele` choisit dans la liste des fiches ;
 2. `JugeFiches.juger` : un appel pour toutes les questions des fiches retenues et des exclusions générales. Une exclusion « présumée absente » restée inconnue devient « ne s'applique pas » ;
-3. `decider_fiches` : les règles de `conditions.decider`, **fiche par fiche**, chaque fiche avec ses exclusions et les générales. COUVERT si une fiche l'est, sinon INCERTAIN si une fiche l'est, sinon NON_COUVERT avec la raison de chaque fiche. Une exclusion du vol ne fait donc pas tomber la garantie incendie ;
+3. `decider_fiche`, pour chaque fiche, lit comme un gestionnaire : une condition de garantie non remplie écarte la fiche **sans consulter ses exclusions** ; une fiche dont aucune condition n'est établie n'est **pas rattachée** au sinistre ; sinon, les règles de `conditions.decider`. Puis `decider_fiches` : COUVERT si une fiche l'est, sinon INCERTAIN si une fiche l'est, sinon NON_COUVERT si une fiche rattachée refuse, sinon INCERTAIN (aucune garantie rattachée). Une exclusion du vol ne fait pas tomber la garantie incendie ;
+   les exclusions générales d'une partie qui a ses propres garanties (art. 5.10, responsabilité civile) ne valent que pour cette partie ;
 4. relecture des lignes décisives (`relecture.py`), limitée aux exclusions de la fiche retenue et **sans les présumées absentes** : la consigne du relecteur dit « dans le doute, conteste », ce qui les rendrait inconnues et annulerait la présomption.
 
 **Pourquoi** : plus d'exclusion décisive oubliée par la recherche, des citations toujours valides, un appel plus petit. La méthode `conditions` reste pour comparer (`couverture comparer`).

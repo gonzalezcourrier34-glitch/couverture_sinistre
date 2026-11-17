@@ -228,6 +228,36 @@ Rien n'est inventé, la citation devient exacte. Appliquée à la compilation ex
 modèle : 6 questions récupérées sur 9. Les 3 restantes sont de vraies reformulations (dont un titre
 d'article cité comme s'il était dans le texte) : elles restent écartées, pour la relecture humaine.
 
+### 7.10 Premières analyses par fiches : trois règles de décision à revoir
+
+| Sinistre | Résultat | Ce qui s'est passé |
+|---|---|---|
+| Vélo, local commun | INCERTAIN (attendu : NON_COUVERT) | La fiche « Vol du contenu » concluait bien NON_COUVERT par l'exclusion des parties communes. Mais la fiche « Dégradations immobilières » (2.11), retenue parce qu'elle parle de vol, couvre les dégâts **au bâtiment**. Sa condition d'entrée avait été écartée à la compilation : toutes ses questions restaient inconnues, et une seule fiche ouverte rendait tout incertain. |
+| Bougie, jardin | NON_COUVERT, pour de mauvaises raisons | « Pas d'incendie » était établi, mais la décision citait deux exclusions : « dommage causé au contenu par vous » (qui vise les heurts) et « biens dont vous avez la garde » (art. 5.10, exclusions de la **responsabilité civile**, appliquées à tort à tout le contrat). |
+
+La compilation n'était pas en cause : c'était la façon de décider. Trois règles corrigées
+(`fiches.decider_fiche`, `JugeFiches._questions`) :
+1. **Une exclusion ne compte que si la garantie s'applique.** Une condition de garantie non
+   remplie écarte la fiche, sans consulter ses exclusions. Une exclusion retire une garantie
+   qui s'applique ; elle ne sert pas à refuser une garantie qui ne s'applique pas.
+2. **Une fiche dont aucune condition n'est établie n'est pas rattachée au sinistre.** Elle ne
+   rend pas la réponse incertaine à elle seule. Si aucune fiche n'est rattachée, la réponse
+   reste INCERTAIN (« aucune garantie rattachée »).
+3. **Une exclusion « générale » ne vaut que pour sa partie du contrat** quand cette partie a ses
+   propres garanties (art. 5.10 : responsabilité civile). Celles d'une partie sans garantie
+   (art. 1.4, dispositions communes) valent pour tout.
+
+Avec ces règles, les mêmes réponses du modèle donnent : vélo NON_COUVERT par l'exclusion 2.10-a ;
+bougie NON_COUVERT parce qu'aucune garantie ne s'applique (pas d'incendie).
+
+Ce que ça enseigne : la méthode par fiches déplace la difficulté. Le modèle ne se trompe plus sur
+les questions, mais il faut encoder correctement **comment un gestionnaire combine les réponses**.
+Ces règles sont du code, testées une par une, et non une consigne qu'on espère suivie.
+
+Reste à améliorer à la compilation : chaque fiche devrait avoir une condition sur **l'objet**
+(« le dommage porte-t-il sur le bâtiment ? » pour la 2.11), pour qu'une fiche hors sujet soit
+écartée par une réponse « non » plutôt que par l'absence de réponse.
+
 ## 8. Ce qui reste à prouver
 
 - Compiler Foyer, relire ses fiches, corriger ce qui doit l'être.
@@ -245,5 +275,6 @@ d'article cité comme s'il était dans le texte) : elles restent écartées, pou
 3. La longueur d'une sortie se règle par la consigne, pas par le plafond.
 4. Lire la documentation du fournisseur avant de soupçonner son propre code (réflexion « high » par défaut).
 7. Garder un fichier de diagnostic : c'est lui qui a montré la réflexion de 30 000 caractères.
+8. Une exclusion retire une garantie qui s'applique ; elle ne sert pas à refuser une garantie qui ne s'applique pas.
 5. Un garde-fou qui bloque une modification non versionnée vaut mieux qu'une bonne intention.
 6. On choisit un réglage sur des mesures, et on garde l'ancienne méthode pour comparer.

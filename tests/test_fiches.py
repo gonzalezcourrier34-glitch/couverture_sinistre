@@ -250,7 +250,8 @@ def test_velo_local_commun_non_couvert(clauses, compile_):
     v = r.verdict
     assert v.decision == Decision.NON_COUVERT
     decisives = [c for c in v.conditions if c.decisive]
-    assert any("parties communes" in c.enonce for c in decisives)
+    assert [c.enonce for c in decisives] == ["Le vélo se trouvait-il dans les locaux d'habitation ou une dépendance ?"], \
+        "la garantie ne s'applique pas : ses exclusions ne sont pas le motif"
     assert all(c.valide for c in v.citations) and v.citations, "les citations viennent des fiches"
     famille = next(c for c in v.conditions if "famille" in c.enonce)
     assert famille.etat == EtatCondition.NON_REMPLIE and famille.justification.startswith("Présumée absente")
@@ -272,6 +273,41 @@ def test_une_exclusion_ne_fait_pas_tomber_une_autre_garantie():
         (incendie, [_cond("garantie", "REMPLIE", "Incendie"), _cond("exclusion", "NON_REMPLIE")]),
     ])
     assert decision == Decision.COUVERT and "Incendie" in motif
+
+
+def test_exclusion_seulement_si_la_garantie_s_applique():
+    f = Fiche(id="a", nom="Incendie", clause_id="a")
+    incendie = _cond("garantie", "NON_REMPLIE", "Incendie")
+    exclusion = _cond("exclusion", "REMPLIE")
+    decision, motif, _, _ = decider_fiches([(f, [incendie, exclusion])])
+    assert decision == Decision.NON_COUVERT and "ne s'applique pas" in motif
+    assert incendie.decisive and not exclusion.decisive
+
+
+def test_fiche_non_rattachee_ne_rend_pas_incertain():
+    vol = Fiche(id="2.10", nom="Vol du contenu", clause_id="2.10")
+    degradations = Fiche(id="2.11", nom="Dégradations immobilières", clause_id="2.11")
+    decision, motif, demander, _ = decider_fiches([
+        (vol, [_cond("garantie", "REMPLIE", "Vol"), _cond("exclusion", "REMPLIE")]),
+        (degradations, [_cond("garantie", "INCONNUE", "Dégradations"), _cond("garantie", "INCONNUE", "Dégradations")]),
+    ])
+    assert decision == Decision.NON_COUVERT and "Dégradations" not in motif and not demander
+    # Seule, une fiche non rattachée laisse la question ouverte.
+    decision, _, _, _ = decider_fiches([(degradations, [_cond("garantie", "INCONNUE", "Dégradations")])])
+    assert decision == Decision.INCERTAIN
+
+
+def test_exclusion_generale_limitee_a_sa_partie(clauses, compile_):
+    from couverture.models import Point
+    c = compile_.model_copy(deep=True)
+    c.exclusions_generales.append(Point(id="g.rc", nature="exclusion", enonce="Biens dont vous avez la garde ?",
+                                        clause_id="2.2", extrait="x", a_demander=True))
+    juge = JugeFiches(ScriptLLM(), c, clauses)
+    velo = next(f for f in c.fiches if f.id == "4.3")
+    _, chemins = juge._questions([velo])
+    enonces = {x.enonce for x in chemins[0][1]}
+    assert "Biens dont vous avez la garde ?" not in enonces, "exclusion rangée dans la partie incendie : pas pour le vol"
+    assert "Le dommage est-il intentionnel ?" in enonces, "partie 8 sans garantie : vaut pour tout le contrat"
 
 
 def test_toutes_les_fiches_refusent():

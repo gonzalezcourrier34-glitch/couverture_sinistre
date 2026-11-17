@@ -16,6 +16,7 @@ citations viennent des fiches, donc elles existent toujours.
 from __future__ import annotations
 
 import json
+import re
 
 from .conditions import decider
 from .faits import extraire_faits
@@ -69,24 +70,54 @@ def _condition(p: Point, groupe: str, nature: str) -> Condition:
                      pages=p.pages, valide=p.valide)
 
 
+def section(identifiant: str) -> str:
+    """« 2.10#1 » → « 2 », « 5.10 » → « 5 », « 4~2 » → « 4 » : la partie du contrat."""
+    return re.split(r"[.#~/]", identifiant)[0]
+
+
+def decider_fiche(conditions: list[Condition]) -> tuple[Decision, str, list[str], float] | None:
+    """Une fiche, comme un gestionnaire la lit :
+    1. une condition de garantie non remplie → la garantie ne s'applique pas ; ses exclusions
+       ne sont pas consultées (une exclusion retire une garantie qui s'applique, elle ne sert
+       pas à en refuser une qui ne s'applique pas) ;
+    2. aucune condition de garantie établie → la fiche n'est pas rattachée au sinistre (None) ;
+    3. sinon, les règles de `conditions.decider`, exclusions comprises."""
+    garanties = [c for c in conditions if c.nature == "garantie" and c.valide]
+    manquees = [c for c in garanties if c.etat == EtatCondition.NON_REMPLIE]
+    if manquees:
+        for c in manquees:
+            c.decisive = True
+        refs = ", ".join(dict.fromkeys(f"art. {c.clause_id}" for c in manquees))
+        return Decision.NON_COUVERT, f"ne s'applique pas, une condition n'est pas remplie ({refs})", [], 0.75
+    if not any(c.etat == EtatCondition.REMPLIE for c in garanties):
+        return None
+    return decider(conditions)
+
+
 def decider_fiches(chemins: list[tuple[Fiche, list[Condition]]]) -> tuple[Decision, str, list[str], float]:
-    """Les règles de `decider`, fiche par fiche (chaque fiche avec ses exclusions et les générales).
-    COUVERT si une fiche l'est ; sinon INCERTAIN si une fiche l'est ; sinon NON_COUVERT.
-    Les marques « décisif » sont celles de la fiche (ou des fiches) qui expliquent la décision."""
+    """`decider_fiche` pour chaque fiche, puis : COUVERT si une fiche l'est ; sinon INCERTAIN si une
+    fiche l'est ; sinon NON_COUVERT si au moins une fiche rattachée refuse ; sinon INCERTAIN (aucune
+    garantie rattachée). Une fiche non rattachée ne rend donc pas la réponse incertaine à elle seule.
+    Les marques « décisif » sont celles des fiches qui expliquent la décision."""
     issues = []
     for fiche, conditions in chemins:
         for c in conditions:
             c.decisive = False
-        issues.append((fiche, conditions, decider(conditions)))
+        issue = decider_fiche(conditions)
+        if issue is not None:
+            issues.append((fiche, conditions, issue))
+
+    def remarquer(retenues):
+        for _, cs in chemins:
+            for c in cs:
+                c.decisive = False
+        for _, cs, _ in retenues:
+            decider_fiche(cs)
 
     for d in (Decision.COUVERT, Decision.INCERTAIN):
         retenues = [(f, cs, r) for f, cs, r in issues if r[0] == d]
         if retenues:
-            for _, cs, _ in issues:
-                for c in cs:
-                    c.decisive = False
-            for _, cs, _ in retenues:
-                decider(cs)  # remet les marques des fiches qui expliquent la décision
+            remarquer(retenues)
             decision, motif, demander, confiance = retenues[0][2]
             if d == Decision.INCERTAIN and len(retenues) > 1:
                 noms = ", ".join(f"« {f.nom} »" for f, _, _ in retenues)
@@ -95,18 +126,20 @@ def decider_fiches(chemins: list[tuple[Fiche, list[Condition]]]) -> tuple[Decisi
             return decision, motif, demander, confiance
 
     if not issues:
-        return (Decision.INCERTAIN, "Aucune garantie du contrat ne vise ce type d'événement.",
+        return (Decision.INCERTAIN, "Aucune garantie du contrat n'a pu être rattachée à ce sinistre.",
                 ["Faire examiner le dossier par un gestionnaire."], 0.2)
-    for _, cs, _ in issues:
-        decider(cs)  # chaque fiche garde ses marques : toutes expliquent le refus
-    raisons = "; ".join(f"« {f.nom} » : {r[1].removeprefix('Non couvert : ')}" for f, _, r in issues)
-    confiance = min(r[3] for _, _, r in issues)
-    return Decision.NON_COUVERT, f"Non couvert. {raisons}", [], confiance
+    remarquer(issues)
+    raisons = " ; ".join(f"« {f.nom} » : {r[1].removeprefix('Non couvert : ')}" for f, _, r in issues)
+    return Decision.NON_COUVERT, f"Non couvert. {raisons}.", [], min(r[3] for _, _, r in issues)
 
 
 class JugeFiches:
     def __init__(self, llm: LLM, compilation: ContratCompile, clauses: list[Clause], tentatives: int = 2,
                  relecteur: LLM | None = None):
+        if relecteur is not None:  # la relecture de plusieurs fiches est longue : on lui laisse le temps
+            from .compilation import pour_compiler
+
+            relecteur = pour_compiler(relecteur, max_tokens=8000, timeout=240)
         self.llm, self.compilation, self.tentatives, self.relecteur = llm, compilation, tentatives, relecteur
         self.index = {c.id: c for c in clauses}
 
@@ -115,6 +148,10 @@ class JugeFiches:
         questions: list[tuple[str, Point, Condition]] = []
         generales = [(p, _condition(p, "Exclusions générales", "exclusion"))
                      for p in self.compilation.exclusions_generales if p.valide]
+        # Une exclusion « générale » rangée dans une partie qui a ses propres garanties (art. 5.10,
+        # responsabilité civile) ne vaut que pour cette partie ; celles d'une partie sans garantie
+        # (art. 1.4, dispositions communes) valent pour tout le contrat.
+        avec_garanties = {section(f.id) for f in self.compilation.fiches}
         chemins = []
         for f in fiches:
             propres = [(p, _condition(p, f.nom, "garantie")) for p in f.conditions if p.valide]
@@ -123,7 +160,12 @@ class JugeFiches:
             chemins.append((f, [c for _, c in propres]))
         questions += [(f"q{len(questions) + n}", p, c) for n, (p, c) in enumerate(generales, start=1)]
         for i, (f, cs) in enumerate(chemins):
-            chemins[i] = (f, cs + [c for _, c in generales])
+            applicables = [c for p, c in generales
+                           if section(p.clause_id) not in avec_garanties or section(p.clause_id) == section(f.id)]
+            chemins[i] = (f, cs + applicables)
+        poses = {id(c) for _, cs in chemins for c in cs}
+        questions = [q for q in questions if id(q[2]) in poses]  # pas de question pour rien
+        questions = [(f"q{n}", p, c) for n, (_, p, c) in enumerate(questions, start=1)]
         return questions, chemins
 
     def juger(self, sinistre: str, fiches: list[Fiche]) -> Verdict:
