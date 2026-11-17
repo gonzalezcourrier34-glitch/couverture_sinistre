@@ -4,7 +4,7 @@ Un système qui dit si un sinistre est couvert par un contrat d'assurance habita
 
 > Une réponse assurée sans justification vaut moins qu'un « je ne sais pas » étayé.
 
-Explication détaillée de chaque fichier, lexique et choix : [docs/EXPLICATIONS.md](docs/EXPLICATIONS.md). Suivi en production : [monitoring/README.md](monitoring/README.md).
+Explication détaillée de chaque fichier, lexique et choix : [docs/EXPLICATIONS.md](docs/EXPLICATIONS.md). Le raisonnement dans l'ordre où il s'est construit, échecs compris : [docs/DEMARCHE.md](docs/DEMARCHE.md). Chaque version des consignes envoyées au modèle : [docs/consignes/](docs/consignes/README.md). Suivi en production : [monitoring/README.md](monitoring/README.md).
 
 ## Pourquoi pas « le PDF dans un chatbot »
 
@@ -69,10 +69,29 @@ Un gestionnaire ne se demande pas « est-ce couvert ? » d'un bloc. Il vérifie 
 
 « Je ne sais pas » n'est donc pas une hésitation du modèle : c'est une condition dont l'état est inconnu, et on sait laquelle. Chaque étape est petite et vérifiable ; un modèle se trompe bien moins sur « ce fait remplit-il cette condition ? » que sur « ce sinistre est-il couvert par ce contrat de 48 pages ? ».
 
-Trois méthodes sont comparables sur les mêmes cas (`couverture comparer`) :
+Quatre méthodes sont comparables sur les mêmes cas (`couverture comparer`) :
 - `brut` : le contrat entier collé dans le prompt (le chatbot) ;
 - `direct` : les clauses retenues, puis un verdict du modèle en un coup ;
-- `conditions` : la grille, la décision calculée et la relecture (méthode par défaut).
+- `conditions` : la grille remplie par le modèle à chaque sinistre, la décision calculée et la relecture (méthode par défaut) ;
+- `fiches` : le contrat **compilé** (voir ci-dessous) ; le modèle ne fait plus que répondre à des questions déjà écrites.
+
+## Le contrat compilé (méthode `fiches`)
+
+Les garanties, leurs conditions et leurs exclusions appartiennent au **contrat**, pas au sinistre. Dans la méthode `conditions`, le modèle les reformule à chaque question, un peu différemment à chaque fois ; sur Foyer, c'est la source de ses erreurs (condition posée à l'envers, fait appliqué à la mauvaise porte, définition non citée). D'où la compilation :
+
+```
+une fois par contrat                                     à chaque sinistre
+────────────────────                                     ─────────────────
+garantie + exclusions + définitions                      faits ─► fiches de l'événement (toutes)
+   ─► Mistral : fiche de questions fermées                   ─► Mistral : oui / non / inconnu
+   ─► code : chaque extrait existe dans sa clause            ─► code : décision fiche par fiche
+   ─► humain : relit, corrige (--exporter / --importer)     ─► relecture des lignes décisives
+```
+
+- Une exclusion décisive ne peut plus être oubliée par la recherche : la fiche de l'événement les contient toutes.
+- Les citations sont vérifiées une fois, à la compilation : elles sont toujours valides à l'analyse.
+- Les exclusions générales sont « à demander » (lieu, entretien) ou « présumées absentes » (faute intentionnelle, guerre) : sans cette distinction, toute réponse serait INCERTAIN.
+- Une fiche fausse se tromperait pour tous les sinistres : c'est pourquoi elle est relue, et pourquoi la méthode `conditions` reste là pour comparer.
 
 ## Les agents et les juges
 
@@ -132,11 +151,15 @@ Mistral est un fournisseur européen : les données restent dans l'UE. Anthropic
 uv run couverture modele                  # modèle configuré, test de connexion (génération et embeddings)
 uv run couverture ingerer                 # lit data/contrats/, remplit data/base.sqlite
 uv run couverture contrats                # contrats et statut de lecture
+uv run couverture compiler                # chaque garantie → fiche de questions (une fois par contrat)
+uv run couverture fiches   --contrat foyer-appart123-2025                         # relire les fiches
+uv run couverture fiches   --contrat foyer-appart123-2025 --exporter fiches.json  # corriger, puis :
+uv run couverture fiches   --contrat foyer-appart123-2025 --importer fiches.json --relu-par "S. Gonzalez"
 uv run couverture clauses  --contrat foyer-appart123-2025
 uv run couverture analyser --contrat foyer-appart123-2025 "Je me fais voler mon vélo dans le local commun de l'immeuble, qui n'était pas fermé à clé."
-uv run couverture analyser --contrat foyer-appart123-2025 --methode direct "..."   # conditions (défaut), direct ou brut
+uv run couverture analyser --contrat foyer-appart123-2025 --methode fiches "..."   # conditions (défaut), fiches, direct ou brut
 uv run couverture evaluer  --contrat fictif-habitat-serein
-uv run couverture comparer --contrat fictif-habitat-serein   # brut, direct et conditions sur les mêmes cas
+uv run couverture comparer --contrat fictif-habitat-serein   # brut, direct, conditions et fiches (si compilé)
 uv run couverture reparer                 # propose un profil pour les contrats à vérifier
 uv run couverture propositions [--accepter N | --refuser N]
 uv run couverture versions [--manifeste | --enregistrer]     # consignes versionnées
@@ -159,6 +182,8 @@ data/
 config/                manifeste des versions des consignes
 monitoring/            Grafana (tableaux générés et testés) et guide du suivi
 docs/EXPLICATIONS.md   chaque fichier, chaque choix, lexique, questions d'entretien
+docs/DEMARCHE.md       la démarche dans l'ordre, échecs et remises en question compris
+docs/consignes/        le texte intégral de chaque version de chaque consigne
 tests/                 tests (pytest) et un PDF de contrat fictif mis en page comme un vrai
 ```
 
@@ -170,7 +195,7 @@ tests/                 tests (pytest) et un PDF de contrat fictif mis en page co
 
 ## Résultats à ce stade
 
-**Tests** : 62 tests passent, sous Linux et sous Windows. La CI les relance à chaque envoi, avec deux garde-fous : une consigne modifiée sans nouvelle version, ou un tableau Grafana non régénéré, la font échouer.
+**Tests** : 80 tests passent, sous Linux et sous Windows. La CI les relance à chaque envoi, avec deux garde-fous : une consigne modifiée sans nouvelle version, ou un tableau Grafana non régénéré, la font échouer.
 
 **Lecture d'un contrat réel** : Foyer appart 123 (48 pages) est découpé en 147 clauses, avec le statut `OK`. Le lexique est éclaté en 63 définitions, et les exclusions sont rattachées à leur garantie (`2.10 Garantie vol` → `2.10-a Exclusions`). Pour le vélo dans le local commun, la recherche ramène la garantie vol et l'exclusion « le vol ou le vandalisme dans les parties communes du bâtiment » (art. 2.10-a, p. 12).
 
@@ -178,7 +203,9 @@ tests/                 tests (pytest) et un PDF de contrat fictif mis en page co
 
 **Juges, recherche hybride, réparation, suivi** : testés avec de faux modèles. Une relecture qui conteste une exclusion écartée évite un « couvert » à tort ; une question sans aucun mot commun avec le contrat retrouve la garantie par le sens ; une proposition de réparation qui invente un intertitre ou effacerait une garantie est corrigée par la vérification ; un contrat mal typé passe « à vérifier » ; une dérive forte est signalée.
 
-**Pas encore mesuré** : les trois méthodes avec Mistral (`couverture comparer`), les vrais embeddings, les deux juges et l'agent de réparation sur de vrais contrats, et les annotations du contrat Foyer.
+**Premiers essais avec Mistral sur Foyer** (grille v2) : vélo → NON_COUVERT par l'exclusion 2.10-a (p. 12), relecture d'accord ; bougie → NON_COUVERT (pas de flammes, donc pas d'incendie), confiance 0,50 car une citation inventée a été écartée par le code. Détail et défauts relevés : [docs/DEMARCHE.md](docs/DEMARCHE.md#74-premiers-résultats-sur-le-vrai-contrat-grille-v2-réflexion-courte).
+
+**Pas encore mesuré** : la compilation de Foyer et ses fiches, les quatre méthodes avec Mistral (`couverture comparer`), les vrais embeddings, les deux juges et l'agent de réparation sur de vrais contrats, et les annotations du contrat Foyer.
 
 ## Limites connues
 
@@ -186,5 +213,7 @@ tests/                 tests (pytest) et un PDF de contrat fictif mis en page co
 - Le lexique client → contrat de `faits.py` est écrit à la main pour l'habitation ; la recherche par le sens le complète, mais l'extraction des faits reste à confier au modèle.
 - Le découpage repose sur des règles et des profils d'assureur ; un format sans aucun titre reconnaissable dépassera ce qu'un profil peut décrire.
 - Les tableaux de garanties et de plafonds dans les PDF sont lus comme du texte, sans leur structure.
+- La responsabilité civile de Foyer (section 5) est typée « autre » par le découpage : elle n'est pas encore compilée en fiche.
+- Mistral Large 4 réfléchit longuement par défaut : le projet demande une réflexion courte (`COUVERTURE_REFLEXION=low`), à confirmer par les mesures.
 - Le relecteur est, par défaut, le même modèle que le juge principal (un autre modèle se configure avec `COUVERTURE_MODELE_RELECTURE`).
 - La dérive n'a de sens qu'après plusieurs semaines d'utilisation réelle.

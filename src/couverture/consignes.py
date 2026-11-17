@@ -15,6 +15,10 @@ donc savoir laquelle était en service quand une réponse a été donnée.
 
 Pour modifier une consigne : changer le texte, augmenter sa version ici, puis
 `couverture versions --manifeste`.
+
+Archive : chaque version garde son texte intégral dans `docs/consignes/<nom>/<version>.txt`,
+écrit par `couverture versions --manifeste`. Une version archivée n'est jamais réécrite :
+c'est l'histoire des consignes, à lire avec `docs/DEMARCHE.md` qui dit pourquoi chacune a changé.
 """
 
 from __future__ import annotations
@@ -26,16 +30,21 @@ from pathlib import Path
 
 # nom MLflow → (module, variable, version)
 CONSIGNES: dict[str, tuple[str, str, str]] = {
-    "couverture-grille-conditions": ("couverture.conditions", "SYSTEME_CONDITIONS", "v1"),
+    "couverture-grille-conditions": ("couverture.conditions", "SYSTEME_CONDITIONS", "v3"),
     "couverture-relecture": ("couverture.relecture", "SYSTEME_RELECTURE", "v1"),
     "couverture-verdict-direct": ("couverture.juges", "SYSTEME", "v1"),
     "couverture-document-brut": ("couverture.juges", "SYSTEME_BRUT", "v1"),
     "couverture-juge-qualite": ("couverture.qualite", "SYSTEME_QUALITE", "v1"),
     "couverture-reparation": ("couverture.reparation", "SYSTEME_REPARATION", "v1"),
+    "couverture-compilation": ("couverture.compilation", "SYSTEME_COMPILATION", "v1"),
+    "couverture-exclusions-generales": ("couverture.compilation", "SYSTEME_EXCLUSIONS_GENERALES", "v1"),
+    "couverture-fiches": ("couverture.fiches", "SYSTEME_FICHES", "v1"),
+    "couverture-routage": ("couverture.fiches", "SYSTEME_ROUTAGE", "v1"),
 }
 
 RACINE = Path(__file__).resolve().parents[2]
 MANIFESTE = RACINE / "config" / "versions_consignes.json"
+ARCHIVE = RACINE / "docs" / "consignes"
 PRODUCTION = "production"
 
 
@@ -59,7 +68,24 @@ def lire_manifeste(chemin: Path = MANIFESTE) -> dict:
     return json.loads(chemin.read_text(encoding="utf-8")) if chemin.exists() else {}
 
 
+def archive(nom: str, version: str, dossier: Path = ARCHIVE) -> Path:
+    return dossier / nom.removeprefix("couverture-") / f"{version}.txt"
+
+
+def archiver(dossier: Path = ARCHIVE) -> list[str]:
+    """Écrit le texte de chaque version en service qui n'est pas encore archivée."""
+    ecrites = []
+    for nom, (_, _, version) in CONSIGNES.items():
+        f = archive(nom, version, dossier)
+        if not f.exists():
+            f.parent.mkdir(parents=True, exist_ok=True)
+            f.write_text(texte(nom), encoding="utf-8")
+            ecrites.append(str(f.relative_to(dossier.parent.parent)) if dossier == ARCHIVE else str(f))
+    return ecrites
+
+
 def ecrire_manifeste(chemin: Path = MANIFESTE) -> dict:
+    archiver()
     etat = etat_actuel()
     chemin.parent.mkdir(parents=True, exist_ok=True)
     chemin.write_text(json.dumps(etat, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -79,6 +105,13 @@ def verifier(manifeste: dict | None = None) -> list[str]:
                              f"Augmenter la version dans consignes.py.")
         elif actuel != connu:
             problemes.append(f"{nom} : manifeste pas à jour (lancer `couverture versions --manifeste`).")
+    for nom, (_, _, version) in CONSIGNES.items():
+        f = archive(nom, version)
+        if not f.exists():
+            problemes.append(f"{nom} : {version} pas archivée (lancer `couverture versions --manifeste`).")
+        elif f.read_text(encoding="utf-8") != texte(nom):
+            problemes.append(f"{nom} : le texte archivé de {version} ne correspond plus au code. "
+                             f"Une version archivée ne change pas : augmenter la version.")
     for nom in set(manifeste) - set(CONSIGNES):
         problemes.append(f"{nom} : dans le manifeste, mais plus dans le code.")
     return problemes

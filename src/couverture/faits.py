@@ -19,6 +19,10 @@ EVENEMENTS: dict[str, tuple[tuple[str, ...], tuple[str, ...]]] = {
     "bris": (("bris", "casse", "fissur", "eclat", "vitre", "miroir"), ("bris", "vitre", "verre")),
     "dommage_accidentel": (("renvers", "tomb", "tache", "raye", "abime", "endommag"), ("dommages accidentels", "mobilier", "tache", "rayure")),
     "responsabilite": (("voisin", "tiers", "blesse", "chez un ami"), ("responsabilite civile", "tiers")),
+    "vandalisme": (("vandal", "tague", "graffiti", "saccag"), ("vandalisme", "malveillance")),
+    "tempete": (("tempete", "grele", "neige", "coup de vent", "rafale"), ("tempete", "grele")),
+    "catastrophe_naturelle": (("seisme", "glissement de terrain", "crue", "catastrophe naturelle"), ("catastrophes naturelles",)),
+    "electricite": (("court-circuit", "court circuit", "surtension", "foudre", "electri"), ("action de l'electricite",)),
 }
 
 BIENS: dict[str, tuple[str, ...]] = {

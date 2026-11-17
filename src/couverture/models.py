@@ -108,6 +108,57 @@ class Verdict(BaseModel):
     avertissements: list[str] = Field(default_factory=list)
 
 
+class Point(BaseModel):
+    """Une question d'une fiche compilée, écrite une fois pour toutes à partir du contrat.
+
+    Condition de garantie : OUI est favorable à l'assuré. Exclusion : OUI veut dire qu'elle s'applique.
+    `a_demander` (exclusions) : vrai si c'est un fait qu'un gestionnaire demanderait (lieu, fermeture,
+    entretien) ; faux si l'exclusion est présumée absente tant que la déclaration ne l'évoque pas
+    (faute intentionnelle, guerre…). Sans cette distinction, toute exclusion « inconnue »
+    rendrait chaque réponse incertaine."""
+
+    id: str
+    nature: str  # "condition", "exclusion" ou "limite"
+    enonce: str
+    clause_id: str
+    extrait: str
+    a_demander: bool = True
+    valide: bool = True
+    pages: list[int] = Field(default_factory=list)
+
+
+class Fiche(BaseModel):
+    """Une garantie traduite en questions fermées, vérifiées contre le texte du contrat."""
+
+    id: str
+    nom: str
+    clause_id: str
+    evenements: list[str] = Field(default_factory=list)
+    objet: str = ""
+    conditions: list[Point] = Field(default_factory=list)
+    exclusions: list[Point] = Field(default_factory=list)
+    limites: list[Point] = Field(default_factory=list)
+
+
+class ContratCompile(BaseModel):
+    """Le contrat compilé : ses fiches et ses exclusions générales, avec leur provenance."""
+
+    contrat_id: str
+    empreinte: str  # empreinte du contrat + version de la consigne de compilation
+    modele: str = ""
+    consigne: str = ""
+    compile_le: str = ""
+    relu_par: str = ""  # renseigné quand un humain a relu et réimporté les fiches
+    fiches: list[Fiche] = Field(default_factory=list)
+    exclusions_generales: list[Point] = Field(default_factory=list)
+    avertissements: list[str] = Field(default_factory=list)
+    # Garanties dont la compilation a échoué (délai, réponse coupée) : refaites au prochain `compiler`.
+    echecs: list[str] = Field(default_factory=list)
+
+    def points(self) -> list[Point]:
+        return [p for f in self.fiches for p in f.conditions + f.exclusions + f.limites] + self.exclusions_generales
+
+
 class Resultat(BaseModel):
     """Sortie complète de la pipeline, traçable de bout en bout."""
 

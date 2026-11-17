@@ -403,6 +403,29 @@ COUVERTURE_MODELE=mistral-large-latest
 - **C'est ainsi que travaille un gestionnaire**, et le raisonnement est lisible ligne par ligne.
 - **Les conditions particulières s'y brancheront naturellement** : « l'option est-elle souscrite ? » est une condition comme une autre.
 
+### `src/couverture/compilation.py` — compiler le contrat en fiches
+
+**Rôle** : une fois par contrat (`couverture compiler`), traduire chaque garantie en **fiche** de questions fermées, réutilisables pour tous les sinistres.
+- `unites` : pour chaque garantie (ses morceaux « 2.14~1 », « 2.14~2 » réunis), les clauses à montrer au modèle. Ses sous-sections (« 2.10-a Exclusions ») si le contrat en a ; sinon les exclusions et conditions rangées en fin de section (contrat fictif : 4.4 et 4.5 pour 4.1, 4.2, 4.3). Plus les renvois et les définitions des termes employés. Les exclusions générales sont à part ;
+- `compiler_garantie` : un appel par garantie (quatre en parallèle). Le modèle rend une ou plusieurs fiches : événements visés, conditions (OUI favorable à l'assuré), exclusions (OUI = elle s'applique, avec `a_demander`), limites ;
+- `_points` : **chaque extrait est vérifié dans la clause citée** ; une question à la citation introuvable est écartée et signalée ;
+- `compiler_exclusions_generales` : un appel pour les exclusions communes, chacune « à demander » ou « présumée absente » ;
+- `verifier_import` : après relecture humaine (`couverture fiches --exporter` puis `--importer`), revérifie tout. Un humain peut reformuler une question, pas inventer une citation.
+
+**Pourquoi** : les conditions sont des propriétés du contrat. Les faire reformuler par le modèle à chaque sinistre (méthode `conditions`) produit des grilles un peu différentes à chaque fois et répète les mêmes erreurs. Compilées une fois, elles se contrôlent une fois. Le raisonnement complet est dans `docs/DEMARCHE.md`.
+
+**Stockage** : table `compilations` de `base.py`. Une ré-ingestion ne l'efface pas (elle a coûté des appels et a pu être relue) ; son empreinte dit à quelle version du contrat elle correspond, et une compilation périmée est ignorée à l'analyse.
+
+### `src/couverture/fiches.py` — analyser avec le contrat compilé (méthode `fiches`)
+
+**Rôle** : à chaque sinistre, le modèle n'a plus qu'un métier : répondre oui / non / inconnu à des questions déjà écrites.
+1. `router` : les fiches dont l'événement correspond aux faits de `faits.py`. Si aucun événement n'est reconnu, `router_par_le_modele` choisit dans la liste des fiches ;
+2. `JugeFiches.juger` : un appel pour toutes les questions des fiches retenues et des exclusions générales. Une exclusion « présumée absente » restée inconnue devient « ne s'applique pas » ;
+3. `decider_fiches` : les règles de `conditions.decider`, **fiche par fiche**, chaque fiche avec ses exclusions et les générales. COUVERT si une fiche l'est, sinon INCERTAIN si une fiche l'est, sinon NON_COUVERT avec la raison de chaque fiche. Une exclusion du vol ne fait donc pas tomber la garantie incendie ;
+4. relecture des lignes décisives (`relecture.py`), limitée aux exclusions de la fiche retenue et **sans les présumées absentes** : la consigne du relecteur dit « dans le doute, conteste », ce qui les rendrait inconnues et annulerait la présomption.
+
+**Pourquoi** : plus d'exclusion décisive oubliée par la recherche, des citations toujours valides, un appel plus petit. La méthode `conditions` reste pour comparer (`couverture comparer`).
+
 ### `src/couverture/relecture.py` — le juge de la grille
 
 **Le problème qu'il règle** : le contrôle des citations vérifie qu'un passage **existe** dans le contrat. Il ne vérifie pas qu'il **justifie** l'état donné. Le modèle peut citer la bonne exclusion et se tromper sur son application aux faits.
@@ -471,7 +494,8 @@ En dessous de 30 analyses dans chaque période, la dérive n'est pas calculée :
 
 ### `src/couverture/consignes.py` — le versionnage des consignes
 
-**Rôle** : `CONSIGNES` liste les six consignes (grille de conditions, relecture, verdict direct, document brut, juge de qualité, réparation), le texte qui porte chacune dans le code, et sa version.
+**Rôle** : `CONSIGNES` liste les dix consignes (grille de conditions, relecture, verdict direct, document brut, juge de qualité, réparation, compilation, exclusions générales, fiches, routage), le texte qui porte chacune dans le code, et sa version.
+- **archive** : `ecrire_manifeste` écrit aussi le texte intégral de chaque nouvelle version dans `docs/consignes/<consigne>/<version>.txt`, sans jamais réécrire une version archivée. `verifier` échoue si le texte d'une version en service ne correspond plus à son archive. L'histoire des consignes (grille v1, v2, v3) reste ainsi lisible, avec le pourquoi de chaque changement dans `docs/DEMARCHE.md` ;
 - `etat_actuel` calcule la version et l'empreinte de chaque texte ; `ecrire_manifeste` les écrit dans `config/versions_consignes.json` ;
 - `verifier` compare le code au manifeste et signale un texte modifié **sans nouvelle version**, ou un manifeste pas à jour. Un test l'appelle : la CI échoue ;
 - `versions_courtes` (« grille-conditions:v1,relecture:v1… ») est notée dans le journal à chaque analyse et dans chaque exécution MLflow ;
@@ -665,6 +689,11 @@ Les tests du juge utilisent un **faux modèle** qui renvoie une réponse prépar
 | Embeddings calculés une fois, à l'ingestion | Coût payé une fois par contrat ; panne non bloquante | Vectoriser à chaque question |
 | Profils d'assureur en JSON | Un assureur différent = un fichier, pas du code | Ajouter des cas particuliers dans `segmentation.py` |
 | Juge de la grille, indépendant, qui ne voit pas la décision | Une citation qui existe ne prouve pas l'état ; la relecture ne peut que rendre plus prudent | Faire confiance au premier appel, ou demander au même appel de « vérifier son travail » |
+| Compiler chaque garantie en fiche, une fois | Les conditions appartiennent au contrat ; contrôlées une fois par le code et par un humain ; aucune exclusion oubliée par la recherche | Les faire reformuler par le modèle à chaque sinistre (gardé : méthode `conditions`, pour comparer) |
+| Exclusions « présumées absentes » | Un gestionnaire présume la bonne foi ; sinon toute réponse serait INCERTAIN | Traiter toutes les exclusions inconnues comme bloquantes |
+| Décision fiche par fiche | Une exclusion du vol ne doit pas faire tomber la garantie incendie | Une seule grille où toute exclusion vaut pour tout |
+| Réflexion du modèle courte (`low`) | Mistral Large 4 réfléchit au maximum par défaut : minutes et milliers de tokens avant de répondre | Repousser la limite de tokens (essayé, voir `DEMARCHE.md`) |
+| Archiver le texte de chaque version de consigne | Comprendre une réponse passée, raconter la démarche | Garder seulement l'empreinte |
 | Juge de qualité sur un échantillon | Les contrôles comptent les exclusions, pas leur justesse ; un échantillon suffit et coûte peu | Juger toutes les clauses, ou ne rien juger |
 | Journal sans le texte du sinistre | Mesurer en production sans stocker de données personnelles | Garder les déclarations |
 | Dérive par PSI, bilan « à faire d'abord » | Méthode simple et éprouvée (SortirIA) ; un humain ne lit que ce qui le concerne | Tableaux de bord exhaustifs |

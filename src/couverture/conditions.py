@@ -18,7 +18,7 @@ dont l'état est inconnu, et on sait laquelle.
 from __future__ import annotations
 
 from .juges import extraire_json, formater_clauses
-from .llm import LLM, ErreurLLM
+from .llm import LLM, ErreurLLM, ReponseTronquee
 from .models import (
     Citation,
     ClauseRetenue,
@@ -36,12 +36,27 @@ SYSTEME_CONDITIONS = """Tu es gestionnaire sinistres. On te donne la description
 2. "exclusions" : chaque exclusion des clauses fournies qui pourrait concerner ce sinistre, même si tu penses qu'elle ne s'applique pas.
 3. "limites" : franchises, plafonds, vétusté à signaler.
 
+Règles de lecture :
+- Lis le sinistre tel qu'il est écrit, sans y ajouter de cause. « Avec la chaleur » sans autre précision désigne la chaleur ambiante (été, soleil), pas celle d'un objet.
+- Un fait ne s'applique qu'à l'objet ou au lieu exact que vise la clause. Exemple : une clause sur les portes du logement ne dit rien d'un local commun.
+- Formule chaque condition de garantie pour que REMPLIE soit favorable à l'assuré (« Le vélo est-il un bien couvert ? » et non « Le vélo est-il un bien exclu ? »). Ce qui retire la garantie va dans "exclusions".
+- Quand une condition repose sur un terme défini au lexique (incendie, vol, effraction…), cite la définition (clause 12/…), pas la clause qui emploie le mot.
+- L'extrait doit contenir les mots qui fondent la condition, pas seulement une phrase d'introduction.
+- Si une clause fournie permet de trancher (par exemple la définition d'un bien), tranche : INCONNUE est réservé à ce que la description du sinistre ne dit pas.
+
 Pour chaque condition et chaque exclusion :
 - "etat" : "REMPLIE" si la description du sinistre l'établit, "NON_REMPLIE" si la description établit le contraire, "INCONNUE" si la description ne permet pas de le savoir. N'invente aucun fait : dans le doute, INCONNUE.
 - Pour une exclusion, "REMPLIE" signifie que l'exclusion s'applique.
 - "extrait" : passage copié mot pour mot de la clause (30 mots au plus).
 - "justification" : ce qui, dans la description, fonde l'état (ou « non précisé »).
 - "question" : si INCONNUE, la question précise à poser à l'assuré.
+
+Sois bref : la grille doit tenir en une page.
+- Au plus 3 garanties, les plus pertinentes ; au plus 5 conditions par garantie.
+- Au plus 5 exclusions : seulement celles qui visent ce type d'événement, de bien ou de lieu. Ignore les exclusions générales sans rapport (guerre, nucléaire, faute intentionnelle…) sauf si la description les évoque.
+- Au plus 3 limites.
+- "justification" : 15 mots au plus. "question" : vide sauf si INCONNUE.
+- Ne cite jamais une clause de définition comme garantie ou exclusion.
 
 Réponds uniquement par un objet JSON :
 {
@@ -184,6 +199,10 @@ class JugeConditions:
                 break
             except ErreurLLM:
                 raise  # clé refusée, fournisseur injoignable : ce n'est pas un problème de réponse
+            except ReponseTronquee as e:
+                erreur = e
+                message += ("\n\nTa réponse précédente était trop longue et a été coupée. Recommence en plus court : "
+                            "2 garanties et 3 exclusions au plus, justifications de 10 mots, uniquement l'objet JSON.")
             except Exception as e:
                 erreur = e
                 message += "\n\nTa réponse précédente n'était pas un JSON valide. Réponds uniquement par l'objet JSON."

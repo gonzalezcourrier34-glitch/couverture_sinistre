@@ -13,7 +13,7 @@ import re
 from typing import Protocol
 
 from .faits import enrichir_requete
-from .llm import LLM
+from .llm import LLM, ErreurLLM
 from .models import Citation, ClauseRetenue, Decision, Faits, TypeClause, Verdict
 from .texte import jetons
 
@@ -72,11 +72,12 @@ class JugeLLM:
         )
         erreur: Exception | None = None
         for _ in range(self.tentatives):
-            brut = self.llm.completer(SYSTEME, message)
             try:
-                donnees = extraire_json(brut)
+                donnees = extraire_json(self.llm.completer(SYSTEME, message))
                 donnees["mode"] = self.llm.nom
                 return Verdict.model_validate(donnees)
+            except ErreurLLM:
+                raise  # clé refusée, fournisseur injoignable : pas une réponse illisible
             except Exception as e:  # réponse mal formée : on redemande une fois
                 erreur = e
                 message += "\n\nTa réponse précédente n'était pas un JSON valide. Réponds uniquement par l'objet JSON."
@@ -179,11 +180,12 @@ class JugeDocumentBrut:
 
     def juger(self, sinistre: str, faits: Faits, retenues: list[ClauseRetenue]) -> Verdict:
         message = f"## Conditions générales\n{self.texte}\n\n## Sinistre déclaré\n{sinistre}"
-        brut = self.llm.completer(SYSTEME_BRUT, message)
         try:
-            donnees = extraire_json(brut)
+            donnees = extraire_json(self.llm.completer(SYSTEME_BRUT, message))
             donnees["mode"] = f"document-brut:{self.llm.nom}"
             return Verdict.model_validate(donnees)
+        except ErreurLLM:
+            raise
         except Exception as e:
             return Verdict(
                 decision=Decision.INCERTAIN,

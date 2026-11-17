@@ -18,6 +18,8 @@ from .segmentation import segmenter_lignes
 from .texte import normaliser
 
 FORMATS = {".pdf", ".md", ".txt", ".docx"}
+# Fichiers de documentation rangés avec les contrats, qui n'en sont pas.
+IGNORES = {"sources.md", "readme.md", "lisezmoi.md"}
 
 
 def identifiant(fichier: Path) -> str:
@@ -98,20 +100,28 @@ def ingerer_fichier(fichier: str | Path, base: Base, meta: dict | None = None, f
     return contrat
 
 
+def fichiers_contrats(dossier: Path) -> list[Path]:
+    return [f for f in sorted(dossier.iterdir())
+            if f.suffix.lower() in FORMATS and f.name.lower() not in IGNORES and not f.name.startswith((".", "~$"))]
+
+
 def ingerer_dossier(dossier: str | Path, base: Base, forcer: bool = False, vectoriseur=None,
                     juge_qualite=None) -> list[Contrat]:
     """Tous les contrats du dossier, avec les métadonnées de `catalogue.json` et, si le catalogue
-    en désigne un, le profil d'assureur (`<donnees>/profils/<nom>.json`)."""
+    en désigne un, le profil d'assureur (`<donnees>/profils/<nom>.json`). Les contrats dont le
+    fichier n'est plus dans le dossier sont retirés de la base : elle reflète le dossier."""
     from .profils import charger_profil
 
     dossier = Path(dossier)
     catalogue = charger_catalogue(dossier)
     contrats = []
-    for f in sorted(dossier.iterdir()):
-        if f.suffix.lower() not in FORMATS:
-            continue
+    for f in fichiers_contrats(dossier):
         meta = catalogue.get(f.name) or {}
         profil = charger_profil(dossier.parent / "profils", meta.get("profil")) if meta.get("profil") else None
         contrats.append(ingerer_fichier(f, base, meta, forcer=forcer, vectoriseur=vectoriseur, profil=profil,
                                         juge_qualite=juge_qualite))
+    gardes = {c.id for c in contrats}
+    for ancien in base.contrats():
+        if ancien.id not in gardes:
+            base.supprimer(ancien.id)
     return contrats

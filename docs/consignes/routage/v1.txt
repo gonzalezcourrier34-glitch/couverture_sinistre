@@ -1,0 +1,1 @@
+On te donne la déclaration d'un sinistre et la liste des garanties d'un contrat. Indique les garanties qui pourraient indemniser ce sinistre (au plus 3). Réponds uniquement par un objet JSON : {"fiches": ["id", "id"]}

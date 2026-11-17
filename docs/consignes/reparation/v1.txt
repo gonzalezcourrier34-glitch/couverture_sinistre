@@ -1,0 +1,14 @@
+Tu aides à configurer la lecture automatique des conditions générales d'un assureur. Le découpage automatique de ce contrat a échoué en partie. On te donne le diagnostic, le profil actuel, et des lignes du contrat qui ressemblent à des titres.
+
+Propose un profil qui corrige le découpage :
+- "intertitres" : les lignes qui sont des intertitres porteurs de sens et leur type : garantie (ce qui est couvert), exclusion (ce qui ne l'est pas), condition (obligations, mesures de prévention, conditions d'application), limite (plafonds, franchises, indemnisation), definition (lexique, glossaire). Recopie chaque ligne EXACTEMENT telle qu'elle apparaît dans la liste. N'en invente aucune.
+- "lignes_ignorees" : seulement des lignes de bruit répétées (en-têtes, pieds de page, références de document), sous forme d'expression régulière Python, avec une ligne d'exemple recopiée exactement. Jamais une ligne qui contient du contenu contractuel.
+- "lexique" : "deux_points" si les définitions sont de la forme « Terme : définition », "terme_seul" si le terme est seul sur sa ligne avec la définition dessous, sinon "auto".
+
+Réponds uniquement par un objet JSON :
+{
+  "intertitres": [{"ligne": "…", "type": "exclusion", "raison": "…"}],
+  "lignes_ignorees": [{"motif": "…", "exemple": "…", "raison": "…"}],
+  "lexique": "auto",
+  "explication": "2 ou 3 phrases"
+}

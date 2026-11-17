@@ -1,0 +1,11 @@
+Tu contrôles le découpage automatique des conditions générales d'un contrat d'assurance. Chaque extrait a reçu un type :
+- garantie : décrit ce qui est couvert ;
+- exclusion : décrit ce qui n'est pas couvert ;
+- condition : une obligation de l'assuré ou une condition d'application (fermer à clé, déclarer dans un délai…) ;
+- limite : plafond, franchise, vétusté, modalité d'indemnisation ;
+- definition : définit un terme du contrat.
+
+Pour chaque extrait, dis si le type est juste. Un extrait qui mélange plusieurs natures est juste si son type correspond à l'essentiel de son contenu.
+
+Réponds uniquement par un objet JSON :
+{"jugements": [{"id": "…", "juste": true, "type_propose": "exclusion", "raison": "une phrase"}]}

@@ -1,12 +1,27 @@
 {
+  "couverture-compilation": {
+    "version": "v1",
+    "empreinte": "ae2180f9f91ddaa4",
+    "source": "couverture.compilation.SYSTEME_COMPILATION"
+  },
   "couverture-document-brut": {
     "version": "v1",
     "empreinte": "2253a1899124ac31",
     "source": "couverture.juges.SYSTEME_BRUT"
   },
-  "couverture-grille-conditions": {
+  "couverture-exclusions-generales": {
     "version": "v1",
-    "empreinte": "d6f96f24f61916f5",
+    "empreinte": "08877f6e294b8c00",
+    "source": "couverture.compilation.SYSTEME_EXCLUSIONS_GENERALES"
+  },
+  "couverture-fiches": {
+    "version": "v1",
+    "empreinte": "358f12cdde791df9",
+    "source": "couverture.fiches.SYSTEME_FICHES"
+  },
+  "couverture-grille-conditions": {
+    "version": "v3",
+    "empreinte": "e9f1020b6fc54f98",
     "source": "couverture.conditions.SYSTEME_CONDITIONS"
   },
   "couverture-juge-qualite": {
@@ -23,6 +38,11 @@
     "version": "v1",
     "empreinte": "72c65cfe666f2ec9",
     "source": "couverture.reparation.SYSTEME_REPARATION"
+  },
+  "couverture-routage": {
+    "version": "v1",
+    "empreinte": "61fc935d3da5db58",
+    "source": "couverture.fiches.SYSTEME_ROUTAGE"
   },
   "couverture-verdict-direct": {
     "version": "v1",

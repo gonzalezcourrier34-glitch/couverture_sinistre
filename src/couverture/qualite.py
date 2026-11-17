@@ -61,11 +61,18 @@ def juger_qualite(clauses: list[Clause], llm: LLM, graine: str, seuil: float = S
     extraits = [
         {"id": c.id, "type": c.type.value, "titres": " > ".join(c.chemin), "texte": c.texte[:1200]} for c in choisies
     ]
-    try:
-        reponse = extraire_json(llm.completer(SYSTEME_QUALITE, json.dumps(extraits, ensure_ascii=False, indent=1)))
-        jugements = {str(j.get("id")): j for j in reponse.get("jugements", [])}
-    except Exception as e:  # noqa: BLE001 (le juge est un contrôle, pas une étape indispensable)
-        return {"erreur": str(e), "modele": llm.nom}
+    message = json.dumps(extraits, ensure_ascii=False, indent=1)
+    erreur = None
+    for _ in range(2):  # une seconde tentative si la réponse est illisible ou coupée
+        try:
+            reponse = extraire_json(llm.completer(SYSTEME_QUALITE, message))
+            jugements = {str(j.get("id")): j for j in reponse.get("jugements", [])}
+            break
+        except Exception as e:  # noqa: BLE001 (le juge est un contrôle, pas une étape indispensable)
+            erreur = e
+            message += "\n\nRéponds uniquement par l'objet JSON demandé, avec une raison très courte par extrait."
+    else:
+        return {"erreur": str(erreur), "modele": llm.nom}
 
     erreurs, juges = [], 0
     for c in choisies:

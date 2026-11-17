@@ -299,7 +299,8 @@ import urllib.error  # noqa: E402
 from couverture import llm as module_llm  # noqa: E402
 from couverture.config import charger_env, lire_env  # noqa: E402
 
-VARIABLES = ["MISTRAL_API_KEY", "ANTHROPIC_API_KEY", "COUVERTURE_LLM_URL", "COUVERTURE_FOURNISSEUR", "COUVERTURE_MODELE"]
+VARIABLES = ["MISTRAL_API_KEY", "ANTHROPIC_API_KEY", "COUVERTURE_LLM_URL", "COUVERTURE_FOURNISSEUR", "COUVERTURE_MODELE",
+             "COUVERTURE_REFLEXION", "COUVERTURE_DEBUG"]
 
 
 @pytest.fixture
@@ -365,6 +366,7 @@ def test_mistral_requete_et_reessai(env_vide, monkeypatch):
     assert r.full_url == "https://api.mistral.ai/v1/chat/completions"
     assert r.get_header("Authorization") == "Bearer secret"
     assert corps["response_format"] == {"type": "json_object"} and corps["temperature"] == 0
+    assert corps["top_p"] == 1  # exigé par Mistral avec temperature=0
     assert len(envoyees) == 2
 
 
@@ -759,7 +761,7 @@ def test_metriques_ingestion_et_evaluation(tmp_path):
     assert m["contrat/a/clauses/exclusion"] == 7 and m["contrat/a/ok"] == 1 and m["contrats_a_verifier"] == 0
     assert suivi.metriques_evaluation({"n": 14, "exactitude": 0.5, "rappel_clauses_moyen": None}) == {"n": 14.0, "exactitude": 0.5}
     p = suivi.parametres_communs()
-    assert p["consigne/grille-conditions"] == "v1" and p["modele/juge"].startswith("aucun")
+    assert p["consigne/grille-conditions"] == "v3" and p["modele/juge"].startswith("aucun")
 
 
 def test_execution_enregistre_et_ne_bloque_jamais(monkeypatch):
@@ -851,3 +853,118 @@ def test_requetes_grafana_sur_une_vraie_base(tmp_path):
             # Le juge de qualité a contesté un type : il apparaît dans le tableau des contrats.
         conteste = [p for p in grafana.tableau_contrats()["panels"] if p["title"] == "Types contestés par le juge de qualité"][0]
         assert len(cx.execute(conteste["targets"][0]["rawQueryText"]).fetchall()) >= 1
+
+
+def test_reponse_en_morceaux():
+    """Mistral récent renvoie une liste de morceaux ; la réflexion du modèle est ignorée."""
+    contenu = [{"type": "thinking", "thinking": [{"type": "text", "text": "je réfléchis"}]},
+               {"type": "text", "text": '{"ok": '}, {"type": "text", "text": "true}"}]
+    assert module_llm.texte_du_message(contenu) == '{"ok": true}'
+    assert module_llm.texte_du_message("simple") == "simple"
+    assert module_llm.texte_du_message(None) == ""
+
+
+# --- Réponses coupées et fichiers de documentation -----------------------------------------------
+
+def test_reponse_coupee_signalee(env_vide, monkeypatch):
+    env_vide.setenv("MISTRAL_API_KEY", "k")
+    monkeypatch.setattr(module_llm.urllib.request, "urlopen", lambda r, timeout: _Reponse(json.dumps(
+        {"choices": [{"finish_reason": "length", "message": {"content": [{"type": "thinking", "thinking": []}]}}]}).encode()))
+    with pytest.raises(module_llm.ReponseTronquee):
+        module_llm.MistralLLM().completer("sys", "msg")
+
+
+class LLMQuiCoupe:
+    nom = "coupe"
+
+    def completer(self, systeme, message):
+        raise module_llm.ReponseTronquee("réponse coupée à 8000 tokens")
+
+
+def test_juges_prudents_si_reponse_coupee(clauses):
+    from couverture.juges import JugeLLM
+    for juge in (JugeLLM(LLMQuiCoupe()), JugeConditions(LLMQuiCoupe())):
+        v = Pipeline(clauses, juge=juge).analyser("Vélo volé dans le local commun.").verdict
+        assert v.decision == Decision.INCERTAIN and v.confiance == 0.0
+    q = juger_qualite(clauses, LLMQuiCoupe(), "g")
+    assert "coupée" in q["erreur"]
+
+
+
+def test_grille_coupee_puis_raccourcie(clauses, tmp_path, monkeypatch):
+    """Une réponse coupée relance une demande plus courte, et non « JSON invalide »."""
+    class CoupePuisRepond:
+        nom = "coupe-puis-repond"
+
+        def __init__(self):
+            self.messages = []
+
+        def completer(self, systeme, message):
+            self.messages.append(message)
+            if len(self.messages) == 1:
+                raise module_llm.ReponseTronquee("réponse coupée à 8000 tokens", '{"garanties": [')
+            return json.dumps(grille(etat_exclusion="REMPLIE"))
+
+    llm = CoupePuisRepond()
+    v = Pipeline(clauses, juge=JugeConditions(llm)).analyser("Vélo volé dans le local commun.").verdict
+    assert v.decision == Decision.NON_COUVERT
+    assert "trop longue" in llm.messages[1]
+    # Avec COUVERTURE_DEBUG, le début de la réponse coupée est gardé pour diagnostic.
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("COUVERTURE_DEBUG", "oui")
+    e = module_llm.ReponseTronquee("réponse coupée", "debut")
+    assert "data/debug" in str(e).replace("\\", "/")
+    assert list((tmp_path / "data" / "debug").glob("reponse-coupee-*.txt"))
+
+
+def test_mistral_reflexion_courte_et_repli(env_vide, monkeypatch):
+    """Réflexion « low » envoyée par défaut ; retirée si le modèle la refuse."""
+    import urllib.error
+    env_vide.setenv("MISTRAL_API_KEY", "k")
+    corps_envoyes = []
+
+    def faux_urlopen(requete, timeout):
+        corps = json.loads(requete.data)
+        corps_envoyes.append(corps)
+        if "reasoning_effort" in corps:
+            raise urllib.error.HTTPError(requete.full_url, 422, "x", {},
+                                         io.BytesIO(b'{"message": "reasoning_effort not supported"}'))
+        return _Reponse(json.dumps({"choices": [{"finish_reason": "stop", "message": {"content": "{}"}}]}).encode())
+
+    monkeypatch.setattr(module_llm.urllib.request, "urlopen", faux_urlopen)
+    llm = module_llm.MistralLLM()
+    assert llm.completer("s", "m") == "{}"
+    assert corps_envoyes[0]["reasoning_effort"] == "low" and "reasoning_effort" not in corps_envoyes[1]
+    llm.completer("s", "m")
+    assert len(corps_envoyes) == 3  # le paramètre n'est plus renvoyé ensuite
+    env_vide.setenv("COUVERTURE_REFLEXION", "defaut")
+    assert "reasoning_effort" not in module_llm.MistralLLM().extra
+
+
+def test_delai_depasse_lisible(env_vide, monkeypatch):
+    env_vide.setenv("MISTRAL_API_KEY", "k")
+    appels = []
+
+    def lent(requete, timeout):
+        appels.append(1)
+        raise TimeoutError("The read operation timed out")
+
+    monkeypatch.setattr(module_llm.urllib.request, "urlopen", lent)
+    with pytest.raises(module_llm.ReponseLente, match="pas de réponse après"):
+        module_llm.MistralLLM().completer("s", "m")
+    assert len(appels) == 1  # pas quatre fois la même requête lente
+
+def test_ingestion_ignore_la_documentation_et_retire_les_contrats_disparus(tmp_path):
+    base = Base(tmp_path / "b.sqlite")
+    d = tmp_path / "contrats"
+    d.mkdir()
+    (d / "a.md").write_text(CG_FICTIF.read_text(encoding="utf-8"), encoding="utf-8")
+    (d / "b.md").write_text(CG_FICTIF.read_text(encoding="utf-8"), encoding="utf-8")
+    (d / "SOURCES.md").write_text("# Liens des contrats", encoding="utf-8")
+    assert {c.id for c in ingerer_dossier(d, base)} == {"a", "b"}
+    (d / "b.md").unlink()
+    ingerer_dossier(d, base)
+    assert [c.id for c in base.contrats()] == ["a"]
+    with sqlite3.connect(base.chemin) as cx:
+        cx.execute("PRAGMA foreign_keys = ON")
+        assert cx.execute("SELECT COUNT(*) FROM clauses WHERE contrat_id = 'b'").fetchone()[0] == 0

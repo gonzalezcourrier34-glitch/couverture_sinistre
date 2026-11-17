@@ -37,6 +37,17 @@ def creer_app(base: Base) -> Starlette:
                 if llm is None:
                     raise ValueError("La méthode « document brut » demande un modèle configuré.")
                 cache[cle] = PipelineDocumentBrut.depuis_base(base, contrat_id, llm)
+            elif methode == "fiches":
+                from .fiches import PipelineFiches
+                from .llm import configurer_relecteur
+
+                llm = llm_configure()
+                if llm is None:
+                    raise ValueError("La méthode « fiches » demande un modèle configuré.")
+                try:
+                    cache[cle] = PipelineFiches.depuis_base(base, contrat_id, llm, relecteur=configurer_relecteur(llm))
+                except LookupError as e:
+                    raise ValueError(str(e)) from e
             else:
                 cache[cle] = Pipeline.depuis_base(base, contrat_id, methode=methode)
         return cache[cle]
@@ -70,7 +81,7 @@ def creer_app(base: Base) -> Starlette:
             return JSONResponse({"erreur": "Description trop longue (2 000 caractères au plus)."}, status_code=400)
         try:
             methode = corps.get("methode", "conditions")
-            if methode not in ("conditions", "direct", "brut"):
+            if methode not in ("conditions", "fiches", "direct", "brut"):
                 return JSONResponse({"erreur": f"Méthode inconnue : {methode}"}, status_code=400)
             p = pipeline(corps.get("contrat_id", ""), methode)
         except (KeyError, ValueError) as e:

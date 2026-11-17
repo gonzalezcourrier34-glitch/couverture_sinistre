@@ -26,6 +26,37 @@ def extrait_present(extrait: str, texte_clause: str) -> bool:
     return bool(morceaux) and all(_compact(m) in cible for m in morceaux)
 
 
+def passage_exact(extrait: str, texte_clause: str, ecart_max: int = 6, mots_min: int = 4) -> str | None:
+    """Le passage **littéral** de la clause qu'un extrait cite avec des coupures non signalées.
+
+    Le modèle écrit « l'accès a été endommagé » quand le contrat dit « l'accès (porte, fenêtre,
+    chambranle, châssis) a été endommagé ». Ce n'est pas une invention, mais ce n'est pas une
+    citation exacte. Si tous les mots de l'extrait figurent dans la clause, dans l'ordre, avec au
+    plus `ecart_max` mots sautés à chaque fois, on renvoie le passage exact qui va du premier au
+    dernier mot : la citation devient littérale. Sinon, None : l'extrait reste refusé."""
+    cibles = _compact(extrait).split()
+    if len(cibles) < mots_min:
+        return None
+    jetons = [(m, _compact(m.group())) for m in re.finditer(r"[\w%€]+", texte_clause)]
+    jetons = [(m, t) for m, t in jetons if t]
+    meilleur = None
+    for depart, (_, t) in enumerate(jetons):
+        if t != cibles[0]:
+            continue
+        i, fin, ok = depart, depart, True
+        for cible in cibles[1:]:
+            suivant = next((j for j in range(i + 1, min(i + 2 + ecart_max, len(jetons))) if jetons[j][1] == cible), None)
+            if suivant is None:
+                ok = False
+                break
+            i = fin = suivant
+        if ok and (meilleur is None or fin - depart < meilleur[1] - meilleur[0]):
+            meilleur = (depart, fin)
+    if meilleur is None:
+        return None
+    return texte_clause[jetons[meilleur[0]][0].start():jetons[meilleur[1]][0].end()]
+
+
 def valider(verdict: Verdict, retenues: list[ClauseRetenue], relocaliser: bool = False) -> Verdict:
     """`relocaliser` : si l'extrait n'est pas dans la clause annoncée, le chercher dans les autres.
     Utilisé pour la méthode « document brut », où le modèle ne connaît pas nos identifiants."""

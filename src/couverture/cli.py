@@ -4,6 +4,9 @@
   couverture contrats                              # liste les contrats et leur statut
   couverture clauses  --contrat foyer-appart123-2025
   couverture analyser --contrat foyer-appart123-2025 "Mon vélo a été volé dans le local commun…"
+  couverture compiler [--contrat foyer-appart123-2025] [--forcer]   # garanties → fiches de questions
+  couverture fiches   --contrat foyer-appart123-2025 [--exporter f.json | --importer f.json --relu-par nom]
+  couverture analyser --contrat foyer-appart123-2025 --methode fiches "…"
   couverture evaluer  --contrat fictif-habitat-serein [--methode brut]
   couverture comparer --contrat fictif-habitat-serein
   couverture serveur  --port 8000
@@ -45,7 +48,8 @@ def afficher(r: Resultat) -> str:
     if v.conditions:
         symbole = {"REMPLIE": "oui", "NON_REMPLIE": "non", "INCONNUE": " ? "}
         groupe = None
-        for c in v.conditions:
+        presumees = [c for c in v.conditions if c.justification.startswith("Présumée absente")]
+        for c in (c for c in v.conditions if not c.justification.startswith("Présumée absente")):
             if c.groupe != groupe:
                 groupe = c.groupe
                 titre = f"Garantie « {groupe} »" if c.nature == "garantie" else groupe
@@ -56,6 +60,9 @@ def afficher(r: Resultat) -> str:
             lignes.append(f"  {etat}{c.enonce} ({preuve}){marque}")
             if c.valide and c.nature != "limite":
                 lignes.append(f"        « {c.extrait} »")
+        if presumees:
+            lignes.append(f"{len(presumees)} exclusion(s) présumée(s) absente(s), la déclaration ne les évoquant pas "
+                          f"(faute intentionnelle, guerre…) : voir --json.")
         lignes.append("")
     elif v.citations:
         lignes.append("Clauses citées :")
@@ -73,17 +80,27 @@ def afficher(r: Resultat) -> str:
     return "\n".join(lignes)
 
 
-METHODES = ["conditions", "direct", "brut"]
+METHODES = ["conditions", "fiches", "direct", "brut"]
 
 
 def construire(base: Base, contrat_id: str, methode: str, hors_ligne: bool):
-    """conditions : grille condition par condition, décision calculée (méthode principale) ;
+    """fiches : contrat compilé, le modèle répond à des questions déjà écrites (voir fiches.py) ;
+    conditions : grille condition par condition, décision calculée ;
     direct : verdict du modèle en un coup sur les clauses retenues ;
     brut : contrat entier dans le prompt, sans recherche (référence « chatbot »)."""
     if hors_ligne:
         return Pipeline.depuis_base(base, contrat_id, juge=JugeHeuristique())
-    if methode in ("brut", "direct") and llm_configure() is None:
-        sys.exit(f"La méthode « {methode} » a besoin d'un modèle : définir ANTHROPIC_API_KEY ou COUVERTURE_LLM_URL.")
+    if methode in ("brut", "direct", "fiches") and llm_configure() is None:
+        sys.exit(f"La méthode « {methode} » a besoin d'un modèle : définir MISTRAL_API_KEY dans .env.")
+    if methode == "fiches":
+        from .fiches import PipelineFiches
+        from .llm import configurer_relecteur
+
+        llm = llm_configure()
+        try:
+            return PipelineFiches.depuis_base(base, contrat_id, llm, relecteur=configurer_relecteur(llm))
+        except LookupError as e:
+            sys.exit(str(e))
     if methode == "brut":
         return PipelineDocumentBrut.depuis_base(base, contrat_id, llm_configure())
     return Pipeline.depuis_base(base, contrat_id, methode=methode)
@@ -117,6 +134,78 @@ def ingerer(donnees: Path, base: Base, forcer: bool = False) -> int:
             print(f"{'':<11} ! {alerte}")
     if any(c.statut != "OK" for c in base.contrats()):
         print("\nDes contrats sont à vérifier : `couverture reparer` propose une correction (validée par vous).")
+    return 0
+
+
+def compiler_contrats(base: Base, contrat_id: str | None, forcer: bool) -> int:
+    """Compile les contrats (ou un seul) : une requête par garantie. Un contrat déjà compilé et
+    inchangé n'est pas refait, sauf les garanties qui avaient échoué ; --forcer refait tout.
+    Une compilation relue par un humain se garde."""
+    from .compilation import a_refaire, compiler, reparer_compilation, unites
+    from .consignes import CONSIGNES
+
+    llm = llm_configure()
+    if llm is None:
+        sys.exit("La compilation a besoin d'un modèle : définir MISTRAL_API_KEY dans .env.")
+    version = CONSIGNES["couverture-compilation"][2]
+    for c in [base.contrat(contrat_id)] if contrat_id else base.contrats():
+        existante = base.compilation(c.id)
+        if forcer or not existante or existante.empreinte != f"{c.empreinte}:{version}":
+            existante = None
+        clauses = base.clauses(c.id)
+        if existante:
+            reparees = reparer_compilation(existante, clauses)
+            if reparees:
+                base.enregistrer_compilation(existante)
+                print(f"{c.id} : {reparees} citation(s) recalée(s) sur le texte exact du contrat, sans appel au modèle.")
+        manquantes = a_refaire(existante, unites(clauses))
+        if existante and not manquantes and existante.exclusions_generales:
+            print(f"{c.id:<28} déjà compilé ({len(existante.fiches)} fiches" +
+                  (f", relu par {existante.relu_par})" if existante.relu_par else ")") + " : --forcer pour refaire.")
+            continue
+        print(f"{c.id} : {len(manquantes)} garantie(s) à compiler"
+              + (" (les autres sont gardées)" if existante else "") + ". Plusieurs minutes, une fois pour toutes.")
+        resultat = compiler(c.id, c.empreinte, clauses, llm, existante=existante, progression=print)
+        base.enregistrer_compilation(resultat)
+        points = resultat.points()
+        ecartes = sum(not p.valide for p in points)
+        print(f"{c.id:<28} {len(resultat.fiches)} fiches, {len(points)} questions, {ecartes} écartées "
+              f"(extrait introuvable), {len(resultat.exclusions_generales)} exclusions générales")
+        if resultat.echecs:
+            print(f"{'':<28} ! À refaire (relancer `couverture compiler`) : {', '.join(resultat.echecs)}")
+        for a_ in resultat.avertissements:
+            print(f"{'':<28} ! {a_}")
+    print("\nRelire : `couverture fiches --contrat <id>` ; corriger : --exporter puis --importer.")
+    return 0
+
+
+def fiches_cli(base: Base, contrat_id: str, exporter: str | None, importer: str | None, relu_par: str | None) -> int:
+    from .compilation import resumer, verifier_import
+    from .models import ContratCompile
+
+    if importer:
+        nouvelle = ContratCompile.model_validate_json(Path(importer).read_text(encoding="utf-8"))
+        if nouvelle.contrat_id != contrat_id:
+            sys.exit(f"Le fichier concerne {nouvelle.contrat_id}, pas {contrat_id}.")
+        actuelle = base.compilation(contrat_id, a_jour=False)
+        nouvelle.empreinte = actuelle.empreinte if actuelle else nouvelle.empreinte
+        problemes = verifier_import(nouvelle, base.clauses(contrat_id))
+        for p_ in problemes:
+            print(f"! {p_}")
+        nouvelle.relu_par = relu_par or "relecteur"
+        base.enregistrer_compilation(nouvelle)
+        print(f"Fiches importées ({len(problemes)} question(s) écartée(s)), relues par {nouvelle.relu_par}.")
+        return 1 if problemes else 0
+    compilation = base.compilation(contrat_id, a_jour=False)
+    if compilation is None:
+        sys.exit(f"Contrat non compilé : `couverture compiler --contrat {contrat_id}`.")
+    if exporter:
+        Path(exporter).write_text(compilation.model_dump_json(indent=2), encoding="utf-8")
+        print(f"Fiches exportées dans {exporter}. Corrigez les questions, puis --importer.")
+        return 0
+    if base.compilation(contrat_id) is None:
+        print("! Le contrat a changé depuis cette compilation : la refaire avec `couverture compiler`.\n")
+    print(resumer(compilation))
     return 0
 
 
@@ -189,6 +278,11 @@ def tester_modele() -> int:
         print(f"Échec de la connexion : {e}")
         return 1
     print(f"Connexion réussie. Réponse : {reponse.strip()[:200]}")
+    if hasattr(llm, "reflexion_refusee"):
+        niveau = llm.extra.get("reasoning_effort")
+        etat = ("refusé par ce modèle, il réfléchit à son niveau par défaut" if llm.reflexion_refusee
+                else f"« {niveau} » accepté" if niveau else "non demandé (niveau par défaut du modèle)")
+        print(f"Réflexion : {etat} ; {llm.derniere_reflexion} caractères de réflexion pour ce test.")
     from .llm import configurer_embeddings
 
     vectoriseur = configurer_embeddings()
@@ -239,6 +333,17 @@ def main(argv: list[str] | None = None) -> int:
 
     sous.add_parser("contrats", help="Lister les contrats de la base")
 
+    pco = sous.add_parser("compiler", help="Traduire chaque garantie en fiche de questions (une fois par contrat)")
+    pco.add_argument("--contrat", help="Un contrat précis (par défaut : tous)")
+    pco.add_argument("--forcer", action="store_true", help="Recompiler même un contrat inchangé")
+
+    pf = sous.add_parser("fiches", help="Afficher, exporter ou réimporter (après relecture) les fiches d'un contrat")
+    pf.add_argument("--contrat", required=True)
+    pf_mode = pf.add_mutually_exclusive_group()
+    pf_mode.add_argument("--exporter", metavar="FICHIER")
+    pf_mode.add_argument("--importer", metavar="FICHIER")
+    pf.add_argument("--relu-par", help="Nom du relecteur (avec --importer)")
+
     pc = sous.add_parser("clauses", help="Afficher le découpage d'un contrat")
     pc.add_argument("--contrat", required=True)
 
@@ -255,7 +360,7 @@ def main(argv: list[str] | None = None) -> int:
     pe.add_argument("--hors-ligne", action="store_true")
     pe.add_argument("--detail", action="store_true", help="Afficher chaque cas")
 
-    pk = sous.add_parser("comparer", help="Conditions, verdict direct et document brut, sur les mêmes cas")
+    pk = sous.add_parser("comparer", help="Document brut, verdict direct, conditions et fiches (si compilé), sur les mêmes cas")
     pk.add_argument("--contrat", required=True)
 
     sous.add_parser("modele", help="Afficher le modèle configuré et tester la connexion")
@@ -295,6 +400,12 @@ def main(argv: list[str] | None = None) -> int:
 
     if a.commande == "reparer":
         return reparer(donnees, base, a.contrat)
+
+    if a.commande == "compiler":
+        return compiler_contrats(base, a.contrat, a.forcer)
+
+    if a.commande == "fiches":
+        return fiches_cli(base, a.contrat, a.exporter, a.importer, a.relu_par)
 
     if a.commande == "propositions":
         return propositions(donnees, base, a.accepter, a.refuser)
@@ -393,7 +504,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     # comparer
-    ordre = ["brut", "direct", "conditions"]
+    ordre = ["brut", "direct", "conditions"] + (["fiches"] if base.compilation(a.contrat) else [])
     resultats = {m: resume(evaluer_suivi(base, donnees, a.contrat, m, False, cas)) for m in ordre}
     cles = ["exactitude", "exactitude_avant_controle", "faux_couverts", "faux_couverts_avant_controle",
             "taux_incertain", "rappel_clauses_moyen", "citations_rejetees",
