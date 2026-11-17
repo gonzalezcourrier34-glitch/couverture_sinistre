@@ -16,7 +16,7 @@ docker compose up -d --build
 
 Les ports évitent ceux de SortirIA (5000, 3001, 8010) : les deux projets peuvent tourner en même temps.
 
-Sans docker : `pip install -e ".[suivi]"` installe MLflow ; les exécutions vont alors dans `data/mlflow/mlflow.db`, à consulter avec `mlflow ui --backend-store-uri sqlite:///data/mlflow/mlflow.db`.
+Sans docker : `uv sync --extra dev --extra suivi` (ou `pip install -e ".[suivi]"`) installe MLflow ; les exécutions vont alors dans `data/mlflow/mlflow.db`, à consulter avec `mlflow ui --backend-store-uri sqlite:///data/mlflow/mlflow.db`.
 
 ## Les couches, de la plus simple à la plus détaillée
 

@@ -11,4 +11,4 @@ data/mlflow/
 
 #les dossiers persos
 perso/
-garde/
+garde/.venv/

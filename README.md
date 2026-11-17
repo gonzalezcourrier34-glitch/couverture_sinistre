@@ -103,8 +103,12 @@ contrat ─► règles générales ─► contrôles ─► OK ─────�
 
 ## Utilisation
 
+Avec [uv](https://docs.astral.sh/uv/) (ou `pip install -e ".[dev]"`) :
+
 ```bash
-pip install -e ".[dev]"
+uv sync --extra dev                      # environnement .venv, projet installé en mode éditable
+                                         # (--extra suivi en plus pour MLflow)
+# ensuite, chaque commande se lance avec « uv run » : uv run couverture modele, uv run pytest…
 
 couverture modele                        # modèle configuré et test de connexion
 couverture ingerer                       # lit data/contrats/, remplit data/base.sqlite
