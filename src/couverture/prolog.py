@@ -239,19 +239,22 @@ def schema_faits(variables: dict) -> dict:
             "properties": {"faits": {"type": "object", "additionalProperties": False, "properties": proprietes}}}
 
 
-MODES_LECTURE = ("deux_temps", "en_parallele", "un_temps")
+MODES_LECTURE = ("verifiee", "deux_temps", "en_parallele", "un_temps")
 
 
 def mode_lecture() -> str:
-    """La lecture des faits (DEMARCHE 7.38 à 7.42), choisie par COUVERTURE_LECTURE :
-    - deux_temps (par défaut, le meilleur mesuré) : le socle, puis seulement les questions de cet événement.
+    """La lecture des faits (DEMARCHE 7.38 à 7.45), choisie par COUVERTURE_LECTURE :
+    - verifiee (par défaut, la meilleure mesurée, 7.45) : les deux temps, puis une vérification : chaque fait du
+      temps 2 est soumis au modèle sous forme d'affirmation (« la déclaration dit-elle que… ? ») ; un fait
+      « non dit » redevient inconnu (7.43), sauf si le retirer ferait couvrir : le moteur arbitre (7.44) ;
+    - deux_temps : le socle, puis seulement les questions de cet événement.
       Il trouve les faits qui décident (absence, gel, cause de l'eau) ; il en invente aussi (« fermeture =
       aucune »), ce qui fait moins poser de questions, mais rarement couvrir à tort ;
     - en_parallele : le socle et la lecture complète v4 en même temps. Essayé et écarté (7.42) : la lecture
       complète oublie les faits qui décident, et les couverts à tort reviennent (11,7) ;
     - un_temps : la lecture d'avant, d'un seul coup (9,3 couverts à tort)."""
     m = os.environ.get("COUVERTURE_LECTURE", "").strip().lower()
-    return m if m in MODES_LECTURE else "deux_temps"
+    return m if m in MODES_LECTURE else "verifiee"
 
 
 def _lire(llm: LLM, systeme: str, variables: dict, message: str) -> dict:
@@ -265,6 +268,50 @@ def _lire(llm: LLM, systeme: str, variables: dict, message: str) -> dict:
     return lus
 
 
+SYSTEME_VERIFICATION = """Tu relis la déclaration d'un sinistre et tu vérifies des affirmations qu'un collègue en a tirées. Tu ne décides pas si le sinistre est couvert.
+
+Pour chaque affirmation, réponds :
+- "dit" si la déclaration l'affirme, ou l'implique sans aucun doute ;
+- "non_dit" si la déclaration ne le dit pas : elle n'en parle pas, ou il faudrait le supposer.
+
+Une affirmation plausible mais non écrite est "non_dit". Exemples : « le local n'était pas fermé » pour « on m'a volé mon vélo dans ma cave » est non_dit (la déclaration ne dit rien de la fermeture) ; « l'assuré était absent » pour « pendant mes vacances » est dit.
+
+Réponds uniquement par un objet JSON : {"verdicts": {"variable": "dit"}}"""
+
+
+def affirmation(v: str, x, voc: dict) -> str:
+    """Un fait lu, en phrase à vérifier : la question du vocabulaire et la valeur, avec son sens s'il est donné."""
+    aide = voc.get(v, {}).get("aide", {})
+    valeurs = x if isinstance(x, list) else [x]
+    rendu = ", ".join(f"{e} ({aide[e]})" if e in aide else str(e) for e in valeurs)
+    return f"- {v} : {voc.get(v, {}).get('question', v)} → {rendu}"
+
+
+def verifier_details(sinistre: str, lus: dict, llm: LLM, voc: dict) -> tuple[dict, list[str]]:
+    """Le contrôle des faits du temps 2. Les faits du socle (événement, bien, lieu) ne sont pas soumis : retirés,
+    ils rendaient tout incertain (7.26). Une vérification illisible ne retire rien (avertissement)."""
+    details = {v: x for v, x in lus.items() if v not in SOCLE and x not in (None, "", [])}
+    if not details:
+        return lus, []
+    liste = "\n".join(affirmation(v, x, voc) for v, x in details.items())
+    schema = {"type": "object", "additionalProperties": False, "required": ["verdicts"],
+              "properties": {"verdicts": {"type": "object", "additionalProperties": False,
+                                          "properties": {v: {"type": "string", "enum": ["dit", "non_dit"]} for v in details}}}}
+    try:
+        verdicts = extraire_json(completer_avec_schema(
+            llm, SYSTEME_VERIFICATION, f"## Affirmations\n{liste}\n\n## Déclaration\n{sinistre}", schema)).get("verdicts") or {}
+    except ErreurLLM:
+        raise
+    except Exception as e:  # noqa: BLE001
+        return lus, [f"vérification des faits illisible ({e}) : faits gardés"]
+    gardes, retires = dict(lus), []
+    for v, x in details.items():
+        if verdicts.get(v) == "non_dit":
+            del gardes[v]
+            retires.append(f"{v} = {x if not isinstance(x, list) else '/'.join(x)} : non dit dans la déclaration, retiré")
+    return gardes, retires
+
+
 def variables_du_temps_2(voc: dict, evenements: list[str]) -> dict:
     """Les variables à demander une fois l'événement connu : celles qui s'y appliquent (« pour »), et celles
     qui s'appliquent à tout. Sans événement lu, toutes."""
@@ -272,14 +319,15 @@ def variables_du_temps_2(voc: dict, evenements: list[str]) -> dict:
     return {v: d for v, d in voc.items() if v not in SOCLE and (not ev or not d.get("pour") or ev & set(d["pour"]))}
 
 
-def extraire_faits_regles(sinistre: str, llm: LLM) -> tuple[dict, list[str]]:
-    """Les faits lus par le modèle, et les écarts au vocabulaire (retirés)."""
+def extraire_faits_regles(sinistre: str, llm: LLM, decideur=None) -> tuple[dict, list[str]]:
+    """Les faits lus par le modèle, et les écarts au vocabulaire (retirés).
+    `decideur(faits) -> dict` (le moteur) arbitre la vérification, en mode « verifiee » (7.44)."""
     voc = vocabulaire()
     declaration = f"## Déclaration\n{sinistre}"
     mode = mode_lecture()
     if mode == "un_temps":
         lus = _lire(llm, SYSTEME_FAITS_REGLES, voc, declaration)
-    elif mode == "en_parallele":
+    elif mode == "en_parallele":  # essayé et écarté (7.42)
         # Les deux lectures partent ensemble : la réponse attend la plus lente, pas la somme.
         with ThreadPoolExecutor(max_workers=2) as ex:
             socle = ex.submit(_lire, llm, SYSTEME_LECTURE_SOCLE, {v: voc[v] for v in SOCLE}, declaration)
@@ -298,6 +346,23 @@ def extraire_faits_regles(sinistre: str, llm: LLM) -> tuple[dict, list[str]]:
             lus |= {v: x for v, x in _lire(llm, SYSTEME_LECTURE_DETAILS, details,
                                            f"## Déjà établi\n{etabli or 'rien'}\n\n{declaration}").items()
                     if v not in SOCLE}
+    if mode != "verifiee":
+        return au_vocabulaire(lus, voc)
+    lus_verifies, retraits = verifier_details(sinistre, lus, llm, voc)
+    faits, ecarts = au_vocabulaire(lus_verifies, voc)
+    if decideur is not None and any("non dit" in r for r in retraits):
+        # Un doute ne doit jamais faire couvrir : si retirer les faits « non dits » fait passer la décision à
+        # « couvert », la vérification a sans doute écarté un fait vrai qui faisait refuser (la fenêtre laissée
+        # ouverte, le chauffage coupé : 7.44). Le moteur tranche : on garde alors la lecture non vérifiée.
+        faits_lus, ecarts_lus = au_vocabulaire(lus, voc)
+        if decideur(faits)["decision"] == "COUVERT" and decideur(faits_lus)["decision"] != "COUVERT":
+            return faits_lus, ecarts_lus + ["vérification écartée : retirer ces faits aurait fait couvrir ("
+                                            + "; ".join(r.split(" : ")[0] for r in retraits) + ")"]
+    return faits, retraits + ecarts
+
+
+def au_vocabulaire(lus: dict, voc: dict) -> tuple[dict, list[str]]:
+    """Les faits lus, ramenés au vocabulaire : variables et valeurs inconnues retirées, faits hors sujet retirés."""
     faits, ecarts = {}, []
     for v, x in lus.items():
         if x in (None, "", []):
@@ -347,7 +412,7 @@ class PipelineRegles:
 
     def analyser(self, sinistre: str) -> Resultat:
         try:
-            faits, ecarts = extraire_faits_regles(sinistre, self.llm)
+            faits, ecarts = extraire_faits_regles(sinistre, self.llm, self.decideur)
         except ErreurLLM:
             raise
         except Exception as e:  # noqa: BLE001

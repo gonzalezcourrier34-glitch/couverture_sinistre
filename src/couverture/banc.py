@@ -241,7 +241,7 @@ def couche_lecture(cas: list[dict], rapports: list[dict], decideur=None) -> dict
             continue
         lus = [r["cas"][i].get("faits_lus") or {} for r in rapports]
         sans_appui = sorted({w.split(" : ")[0] for r in rapports for w in r["cas"][i].get("avertissements", [])
-                             if "sans appui" in w})
+                             if "sans appui" in w or "non dit" in w})
         comps = [comparer_faits(c["faits"], f, voc) for f in lus]
         x = {"id": c["id"], "rappel": round(sum(y["rappel"] for y in comps) / len(comps), 3),
              **{k: sorted({z for y in comps for z in y[k]}) for k in ("contradictions", "vagues", "manques", "en_trop")},
@@ -376,7 +376,7 @@ def enregistrer(donnees: Path, resultat: dict, dossier: Path | None = None) -> t
     dossier.mkdir(parents=True, exist_ok=True)
     modele = (resultat.get("modele") or "").split(":")[-1].replace("-latest", "")
     nom = f"{datetime.now():%Y%m%d-%H%M%S}-{resultat['contrat']}-{resultat['methode']}" + (f"-{modele}" if modele else "") \
-        + (f"-{resultat['lecture'].replace(' ', '-')}" if resultat.get("lecture") not in (None, "deux temps") else "")
+        + (f"-{resultat['lecture'].replace(' ', '-')}" if resultat.get("lecture") not in (None, "verifiee") else "")
     js, md = dossier / f"{nom}.json", dossier / f"{nom}.md"
     precedent = dernier(dossier, resultat["contrat"], resultat["methode"])
     texte = markdown(resultat, precedent)
@@ -470,7 +470,7 @@ def markdown(r: dict, precedent: dict | None = None) -> str:
         L += [f"Rappel des faits idéaux : {pct(m['rappel_faits'])} (les faits négatifs non dits, comme « pas de "
               f"violence », comptent comme manquants : la consigne interdit de les inventer) · contradictions : "
               f"{m['cas_avec_contradiction']} cas · faits vagues : {m['cas_avec_fait_vague']} cas · faits en trop : "
-              f"{m['cas_avec_fait_en_trop']} cas · faits retirés faute d'appui : {m.get('cas_avec_fait_sans_appui', 0)} cas", ""]
+              f"{m['cas_avec_fait_en_trop']} cas · faits retirés (sans appui ou non dits) : {m.get('cas_avec_fait_sans_appui', 0)} cas", ""]
         changes = [x for x in lec["cas"] if x.get("change")]
         if changes:
             L += ["### La lecture change la décision", ""]

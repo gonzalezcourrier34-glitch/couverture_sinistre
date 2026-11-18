@@ -194,6 +194,8 @@ class FauxLLM:
         self.faits = faits
 
     def completer(self, systeme, message):
+        if systeme == prolog.SYSTEME_VERIFICATION:  # la vérification ne retire rien ici
+            return json.dumps({"verdicts": {}})
         assert "Vocabulaire" in message, "le modèle reçoit le vocabulaire"
         return json.dumps({"faits": self.faits})
 
@@ -576,10 +578,76 @@ def test_lecture_en_parallele(monkeypatch):
             return json.dumps({"faits": {"evenement": ["vol"], "bien": ["velo", "cles"], "fermeture": "cadenas"}})
 
     monkeypatch.delenv("COUVERTURE_LECTURE", raising=False)
-    assert prolog.mode_lecture() == "deux_temps", "le meilleur mesuré reste le défaut (7.42)"
+    assert prolog.mode_lecture() == "verifiee", "la meilleure lecture mesurée est le défaut (7.45)"
     monkeypatch.setenv("COUVERTURE_LECTURE", "en_parallele")
     m = Modele()
     faits, _ = prolog.extraire_faits_regles("On m'a volé mon vélo dans ma cave fermée par un cadenas.", m)
     assert faits == {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"], "fermeture": "cadenas"}, \
         "le socle l'emporte (pas de clés), le lieu vient du socle, le détail de la lecture complète"
     assert m.max_simultanes == 2, "les deux lectures partent en même temps"
+
+
+def test_lecture_verifiee(monkeypatch):
+    """Les deux temps, puis chaque fait du temps 2 soumis comme une affirmation : « non dit » le retire (7.43).
+    Le socle n'est jamais soumis."""
+    class Modele:
+        nom, accepte_schema = "verif", True
+
+        def __init__(self):
+            self.systemes, self.affirmations = [], ""
+
+        def completer(self, systeme, message, schema=None):
+            self.systemes.append(systeme)
+            if systeme == prolog.SYSTEME_LECTURE_SOCLE:
+                return json.dumps({"faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}})
+            if systeme == prolog.SYSTEME_LECTURE_DETAILS:
+                return json.dumps({"faits": {"fermeture": "aucune", "auteur": "tiers", "absence": "oui"}})
+            self.affirmations = message
+            assert set(schema["properties"]["verdicts"]["properties"]) == {"fermeture", "auteur", "absence"}
+            return json.dumps({"verdicts": {"fermeture": "non_dit", "auteur": "non_dit", "absence": "dit"}})
+
+    monkeypatch.setenv("COUVERTURE_LECTURE", "verifiee")
+    m = Modele()
+    faits, ecarts = prolog.extraire_faits_regles("Pendant mes vacances, on m'a volé mon vélo dans ma cave.", m)
+    assert faits == {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"], "absence": "oui"}
+    assert m.systemes[-1] == prolog.SYSTEME_VERIFICATION and len(m.systemes) == 3
+    assert "Comment le local était-il fermé ?" in m.affirmations and "evenement" not in m.affirmations.split("## Déclaration")[0]
+    assert sum("non dit" in e for e in ecarts) == 2
+
+
+def test_verification_illisible_ne_retire_rien():
+    class Modele:
+        nom = "illisible"
+
+        def completer(self, systeme, message):
+            return "je ne sais pas"
+
+    lus = {"evenement": ["vol"], "fermeture": "cle"}
+    gardes, ecarts = prolog.verifier_details("Volé.", lus, Modele(), prolog.vocabulaire())
+    assert gardes == lus and "illisible" in ecarts[0]
+
+
+def test_un_doute_ne_fait_jamais_couvrir(monkeypatch, contrat):
+    """La vérification a jugé « non dit » la fenêtre laissée ouverte : sans ce fait, le moteur couvrirait.
+    Le moteur arbitre : la lecture non vérifiée est gardée (7.44)."""
+    class Modele:
+        nom, accepte_schema = "verif", True
+
+        def completer(self, systeme, message, schema=None):
+            if systeme == prolog.SYSTEME_LECTURE_SOCLE:
+                return json.dumps({"faits": {"evenement": ["vol"], "bien": ["appareil_audiovisuel"], "lieu": ["logement"]}})
+            if systeme == prolog.SYSTEME_LECTURE_DETAILS:
+                return json.dumps({"faits": {"absence": "oui", "effraction": "non", "fenetres_fermees": "non",
+                                             "fermeture": "aucune"}})
+            return json.dumps({"verdicts": {"absence": "dit", "effraction": "non_dit", "fenetres_fermees": "non_dit",
+                                            "fermeture": "non_dit"}})
+
+    monkeypatch.setenv("COUVERTURE_LECTURE", "verifiee")
+    oracle = lambda f: Moteur(contrat, f).decider()
+    sinistre = "Pendant que j'étais au travail, on est entré par la fenêtre que j'avais laissée ouverte et on a volé la télé."
+    faits, ecarts = prolog.extraire_faits_regles(sinistre, Modele(), oracle)
+    assert faits.get("fenetres_fermees") == "non" and any("vérification écartée" in e for e in ecarts)
+    assert oracle(faits)["decision"] != "COUVERT"
+    # Sans arbitre (ou quand retirer ne fait pas couvrir), la vérification s'applique.
+    faits_sans, _ = prolog.extraire_faits_regles(sinistre, Modele())
+    assert "fenetres_fermees" not in faits_sans

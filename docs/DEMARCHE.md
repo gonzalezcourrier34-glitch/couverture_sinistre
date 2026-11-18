@@ -1662,12 +1662,79 @@ du temps 2 relèvent de l'étape 2 du plan** : deux lectures indépendantes comp
 vrai est lu les deux fois ; une invention l'est rarement deux fois de la même façon. Un fait lu une seule
 fois devient inconnu, et la question est posée.
 
+### 7.43 Étape 2 revue : vérifier les faits plutôt que lire deux fois
+
+Le plan prévoyait deux lectures indépendantes comparées par le code. **En regardant les bancs, l'idée ne
+tient pas telle quelle** : les inventions du temps 2 sont **systématiques**. « On m'a volé mon vélo dans
+ma cave » donne `fermeture = aucune` aux trois exécutions, avec la même décision chaque fois ; le modèle
+répond à température 0, et deux lectures identiques inventeraient la même chose. Une seconde lecture plus
+« aléatoire » (température plus haute, autre formulation) couperait surtout les faits instables, pas ceux-là.
+
+**Ce qui est essayé à la place** (`COUVERTURE_LECTURE=verifiee`) : après les deux temps, **chaque fait du
+temps 2 est soumis au modèle comme une affirmation** (« Comment le local était-il fermé ? → aucune »), et il
+répond « dit » ou « non dit » au vu de la déclaration. Un fait « non dit » redevient inconnu : le moteur
+pose la question. Juger une affirmation est une autre tâche que remplir une liste : le modèle n'a plus à
+produire une valeur, seulement à dire si elle est écrite. Les faits du socle (événement, bien, lieu) ne sont
+jamais soumis : les retirer rendait tout incertain (7.26). Une vérification illisible ne retire rien.
+Consigne `verification-faits` v1. Un appel de plus, après les deux autres.
+
+**À mesurer**, contre les deux temps (86 %, 3 couverts à tort, 2 refus à tort, questions 36 %) : les
+questions posées doivent monter sans que les couverts à tort remontent (un fait vrai qui ferait refuser,
+jugé « non dit » à tort, donnerait un couvert de trop). Le temps aussi : trois appels à la suite.
+
+### 7.44 La lecture vérifiée mesurée, et le moteur comme arbitre
+
+**Mesure** (Small, 3 exécutions) :
+
+| Lecture | Justes | Couverts à tort | Refus à tort | Questions posées | Durée d'un passage |
+|---|---|---|---|---|---|
+| Deux temps v2 | 86 % | 3 | 2 | 36 % | 1 à 2 min |
+| **Vérifiée** | 86 % | **6,7** | 1,7 | **73 %** | 2 à 3 min |
+
+**Les questions attendues doublent** (36 % → 73 %) : la vérification retire bien les inventions
+(`fermeture = aucune` 27 fois, `effraction = non` 18, `intentionnel = non` 18, `travaux = aucun` 13…).
+**Mais le risque annoncé s'est produit** : elle retire aussi des faits **vrais qui faisaient refuser**, et
+les couverts à tort doublent. « La fenêtre de ma chambre, que j'avais laissée grande ouverte » :
+`fenetres_fermees = non` jugé « non dit » ; « je suis parti deux semaines en coupant le chauffage » :
+`prevention_gel = non` jugé « non dit ». Sans eux, le moteur couvre.
+
+**Correction : le moteur arbitre.** Un doute ne doit jamais faire couvrir. Après la vérification, Prolog
+décide deux fois, avec les faits vérifiés et avec les faits lus. Si retirer les faits « non dits » fait
+passer la décision à « couvert », la vérification est écartée pour ce cas et la lecture non vérifiée est
+gardée (avec un avertissement). Dans tous les autres cas, la vérification s'applique : elle ne peut plus
+que rendre une réponse plus prudente (une question au lieu d'un refus). C'est une asymétrie voulue, la
+même que dans tout le projet : promettre à tort coûte plus que demander. Deux décisions de plus par
+cas, sans appel au modèle. À mesurer : les questions doivent rester hautes et les couverts à tort revenir
+au niveau des deux temps.
+
+### 7.45 La lecture vérifiée et arbitrée : la meilleure, et désormais celle par défaut
+
+**Mesure** (Small, 3 exécutions) :
+
+| Lecture (Mistral Small) | Justes | Couverts à tort | Refus à tort | Questions posées | Instables | Durée d'un passage |
+|---|---|---|---|---|---|---|
+| Un temps (v4, ce matin) | 75 % | 9,3 | 5 | 52 % | 14 | 20 à 40 s |
+| Deux temps v2 | 86 % | 3 | 2 | 36 % | 8 | 1 à 2 min |
+| Vérifiée, sans arbitre | 86 % | 6,7 | 1,7 | 73 % | 8 | 2 à 3 min |
+| **Vérifiée, arbitrée par le moteur** | **87 %** | **2,7** | **2** | **55 %** | 10 | 2 à 3 min |
+
+L'arbitre a fait ce qu'on attendait : les couverts à tort reviennent à **2,7, le plus bas mesuré avec Small**,
+et les questions posées restent bien au-dessus des deux temps (55 % contre 36 %). Une partie du gain de la
+vérification est rendue (73 % → 55 %) : ce sont les cas où le moteur a jugé qu'enlever un fait aurait fait
+couvrir. **Décision : la lecture vérifiée devient la lecture par défaut.** Le prix est le temps : trois
+appels à la suite, et deux décisions de plus par cas (chacune lance aujourd'hui un SWI-Prolog). L'étape 3
+du plan (Prolog chargé une fois) devient la suivante.
+
+**Le chemin de la journée, en une ligne** : 75 % et 9,3 couverts à tort le matin (lecture d'un seul coup),
+87 % et 2,7 le soir, sans changer de modèle : en découpant la lecture, en faisant vérifier les faits plutôt
+que les relire, et en laissant le moteur décider quand un doute peut compter.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 18 nov. 2026 ; ce qui est fait est dans les sections 7.
 
 **Le plan de lecture (7.35)**
-- Étape 2 avancée : deux lectures en deux temps, comparées par le code (un fait lu une seule fois devient inconnu) ; mesurer les faits inventés, les questions posées et les couverts à tort.
+- La lecture vérifiée est la lecture par défaut (7.45). Mesurer Mistral Large avec elle, pour le recours dans la cascade.
 - Étape 3 : Prolog chargé une fois (processus permanent) ; mesurer la latence par cas.
 - Étape 4 : le temps dans le banc (médiane, p95 par étape) avec une porte.
 - Étape 2 : double lecture en parallèle comparée par le code, et recours à Mistral Large quand elles divergent ou que la réponse est « couvert ».
@@ -1750,3 +1817,5 @@ Tenu à jour le 18 nov. 2026 ; ce qui est fait est dans les sections 7.
 61. Un schéma qui oblige à répondre pousse à remplir : la case « inconnu » doit être la première offerte, pas la dernière tolérée.
 62. Quand un modèle remplit au lieu de laisser vide, chercher ce qui l'oblige à répondre (un schéma, une liste de questions) avant de réécrire la consigne : ici, c'était la liste de questions.
 63. Un fait oublié qui ferait refuser coûte plus cher qu'un fait inventé qui fait demander : on choisit la lecture qui oublie le moins ce qui décide.
+64. Comparer deux lectures ne sert à rien si les erreurs se répètent à l'identique : il faut changer de question, pas la reposer.
+65. Un contrôle qui retire des faits doit être asymétrique : il peut rendre une réponse plus prudente, jamais plus généreuse, et c'est le moteur qui dit laquelle des deux il produit.
