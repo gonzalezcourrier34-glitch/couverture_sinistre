@@ -2130,6 +2130,14 @@ Foyer atteint son meilleur niveau de couverts à tort : les aides servent aux de
 - v12 : la femme de ménage lue comme `abus_confiance = oui`. Juridiquement défendable ; la réponse reste un
   refus.
 
+**Mesure après la troisième passe** (128 tests sur le poste ; `--controler` avec SWI-Prolog : rien de
+bloquant) : AXA **76 % justes** (62 % avant), 56 % exactes, **couverts à tort 0, refus à tort 0**, 1 cas
+instable sur 15, une seule contradiction de lecture ; un cas à la fois, médiane 3,3 s et 95e centile 4,7 s.
+Deux portes échouent encore : les décisions changées par la lecture (3,67 par exécution, seuil 2) et
+l'exactitude de la chaîne (75,5 %, seuil 85 %), l'écart venant surtout des réponses suspendues par la
+confirmation. Ces 15 cas ont été écrits par celui qui a relu les règles : la prochaine mesure honnête est
+un jeu AXA écrit sans voir les règles.
+
 **Leçon 75.** Sur un contrat neuf, le banc trouve d'abord des erreurs de traduction (portée d'une exclusion),
 puis des erreurs de lecture ; les premières se corrigent une fois, les secondes demandent des aides qui
 profitent à tous les contrats.
