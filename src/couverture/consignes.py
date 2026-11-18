@@ -33,8 +33,8 @@ from pathlib import Path
 # routage, réparation, juge de qualité) restent archivées dans docs/consignes/ : c'est leur histoire.
 CONSIGNES: dict[str, tuple[str, str, str]] = {
     "couverture-faits-regles": ("couverture.prolog", "SYSTEME_FAITS_REGLES", "v4"),
-    "couverture-lecture-socle": ("couverture.prolog", "SYSTEME_LECTURE_SOCLE", "v1"),
-    "couverture-lecture-details": ("couverture.prolog", "SYSTEME_LECTURE_DETAILS", "v1"),
+    "couverture-lecture-socle": ("couverture.prolog", "SYSTEME_LECTURE_SOCLE", "v2"),
+    "couverture-lecture-details": ("couverture.prolog", "SYSTEME_LECTURE_DETAILS", "v2"),
     "couverture-redaction-regles": ("couverture.redaction", "SYSTEME_REDACTION", "v2"),
     "couverture-document-brut": ("couverture.juges", "SYSTEME_BRUT", "v1"),
     "couverture-legalbench": ("couverture.legalbench", "SYSTEME_LEGALBENCH", "v1"),

@@ -482,7 +482,7 @@ def test_lecture_en_deux_temps(monkeypatch):
     assert "velo" in sch1["properties"]["faits"]["properties"]["bien"]["items"]["enum"]
     details = set(sch2["properties"]["faits"]["properties"])
     assert {"fermeture", "effraction", "absence"} <= details and not details & {"cause_eau", "flammes", "evenement"}
-    assert sch2["properties"]["faits"]["properties"]["fermeture"]["enum"][-1] is None, "inconnu : null"
+    assert sch2["properties"]["faits"]["properties"]["fermeture"]["enum"][0] == "inconnu", "« inconnu » d'abord"
     assert "evenement = vol" in m2 and "## Déjà établi" in m2
     assert len(m2) < len(m1) + 3000, "la consigne du temps 2 est courte"
 
@@ -494,7 +494,7 @@ def test_les_regles_v4_sont_toutes_dans_les_deux_temps():
     deux = prolog.SYSTEME_LECTURE_SOCLE + prolog.SYSTEME_LECTURE_DETAILS
     for ligne in prolog.SYSTEME_FAITS_REGLES.splitlines():
         if ligne.startswith("- "):
-            coeur = _re.sub(r"Sinon, ne la mets pas", "Sinon, mets null", ligne)[:60]
+            coeur = _re.sub(r"Sinon, ne la mets pas", "Sinon, réponds", ligne)[:60]
             assert coeur in deux, ligne
 
 
@@ -530,3 +530,21 @@ def test_schema_refuse_retombe_sur_le_mode_json(monkeypatch):
     assert [e["type"] for e in envois] == ["json_schema", "json_object"] and m.schema_refuse
     module_llm.completer_avec_schema(m, "s", "m", {"type": "object"})
     assert envois[-1]["type"] == "json_object", "on ne redemande pas un schéma refusé"
+
+
+def test_inconnu_n_est_pas_un_fait(monkeypatch):
+    """« inconnu » (la réponse normale) est retiré avant tout : la variable reste inconnue et la question sera posée."""
+    class Modele:
+        nom, accepte_schema = "schema", True
+        n = 0
+
+        def completer(self, systeme, message, schema=None):
+            Modele.n += 1
+            if Modele.n == 1:
+                return json.dumps({"faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}})
+            return json.dumps({"faits": {"fermeture": "inconnu", "serrure_surete": "inconnu", "auteur": "inconnu"}})
+
+    monkeypatch.delenv("COUVERTURE_LECTURE", raising=False)
+    faits, _ = prolog.extraire_faits_regles("On m'a volé mon vélo dans ma cave.", Modele())
+    assert faits == {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}
+    assert "la clé dont le voleur s'est servi" in prolog.SYSTEME_LECTURE_SOCLE

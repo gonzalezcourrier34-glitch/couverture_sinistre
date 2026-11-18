@@ -1501,6 +1501,31 @@ une étape à la fois, chacune gardée seulement si le banc dit qu'elle amélior
 3. **Prolog en processus permanent** (moteur et contrat chargés une fois).
 4. **Le temps dans le banc** : médiane et p95 par étape, part des cas envoyés à Large, avec une porte.
 
+### 7.36 La simplification : une seule méthode, et sa référence
+
+Le projet portait encore quatre méthodes : la grille de conditions (le modèle remplit une grille à chaque
+sinistre, avec relecture et recherche hybride), les fiches (le contrat compilé en questions, avec juge de
+qualité et agent de réparation), les règles Prolog, et le document brut. Les mesures ont tranché
+(7.17 à 7.31) : les règles sont justes sur 100 % du golden set quand les faits sont bien lus ; les fiches
+plafonnaient à 74 %. Garder les anciennes méthodes coûtait en lecture du code, en tests et en consignes.
+
+**Retiré** (environ 2 750 lignes, plus d'un tiers du code : de 7 400 à 4 700) : `conditions.py`, `relecture.py`, `recherche.py`
+(embeddings, fusion RRF), `fiches.py`, `compilation.py`, `reparation.py`, `qualite.py`, `faits.py`, la
+dérive et le bilan (`derive.py`, `bilan.py`) ; les commandes `compiler`, `fiches`, `evaluer`, `comparer`,
+`reparer`, `propositions`, `derive`, `bilan` ; le mode hors ligne ; 10 consignes sur 14 (archivées dans
+`docs/consignes/`, rien n'est réécrit) ; 66 tests. Le code reste dans l'historique git (tag
+`avant-simplification`).
+
+**Gardé** : la méthode `regles` (le système) et la méthode `brut` (le contrat dans le prompt : la
+référence à battre, `couverture banc --methode brut`). Deux utilitaires de la compilation servent à la
+rédaction des règles : ils sont passés dans `llm.py`. Le banc enregistre maintenant chaque passage dans
+MLflow (il remplace `evaluer`), et les tableaux Grafana ne montrent plus que ce qui existe.
+
+**Ce que les méthodes retirées ont appris** et qui reste dans le système : la décision calculée par le code
+et non devinée par le modèle (grille), le rôle de chaque phrase du contrat (fiches : périmètre, conditions,
+obligations, exclusions, limites), la charge de la preuve, le contrôle des citations, et le fait que le
+modèle relise ne suffit pas quand il lit mal.
+
 ### 7.37 Mistral Large sur le golden v6, et LegalBench
 
 **Lecture par Mistral Large** (golden v6, 3 exécutions) : **chaîne 91 % justes, aucun couvert à tort**,
@@ -1549,53 +1574,43 @@ chargé une fois) et la mesure de la latence par cas (étape 4) doivent venir av
 (double lecture, étape 2). Restent : « la clé sous le paillasson » encore lue comme des clés volées (donc
 couvert à tort), et le rappel des questions attendues tombé à 36 %, à comprendre.
 
-### 7.36 La simplification : une seule méthode, et sa référence
+### 7.39 Pourquoi les questions ne sont plus posées : le schéma pousse à remplir
 
-Le projet portait encore quatre méthodes : la grille de conditions (le modèle remplit une grille à chaque
-sinistre, avec relecture et recherche hybride), les fiches (le contrat compilé en questions, avec juge de
-qualité et agent de réparation), les règles Prolog, et le document brut. Les mesures ont tranché
-(7.17 à 7.31) : les règles sont justes sur 100 % du golden set quand les faits sont bien lus ; les fiches
-plafonnaient à 74 %. Garder les anciennes méthodes coûtait en lecture du code, en tests et en consignes.
+En deux temps, les questions attendues n'étaient plus posées que dans 36 % des cas (52 % avant). Cas par
+cas, la cause est la même : **le modèle remplit au lieu de laisser vide**. « On m'a volé mon vélo dans ma
+cave » est lu avec `fermeture = aucune`, `auteur = tiers`, `simple_disparition = non` ; le début de feu avec
+`embrasement = non` ; le gel avec `prevention_gel = non`. La décision devient ferme (souvent « non
+couvert ») là où il fallait demander. Le schéma strict exige que chaque variable soit présente ; `null` était
+permis, mais en fin de liste, et le modèle choisissait plutôt une vraie valeur.
 
-**Retiré** (environ 2 750 lignes, plus d'un tiers du code : de 7 400 à 4 700) : `conditions.py`, `relecture.py`, `recherche.py`
-(embeddings, fusion RRF), `fiches.py`, `compilation.py`, `reparation.py`, `qualite.py`, `faits.py`, la
-dérive et le bilan (`derive.py`, `bilan.py`) ; les commandes `compiler`, `fiches`, `evaluer`, `comparer`,
-`reparer`, `propositions`, `derive`, `bilan` ; le mode hors ligne ; 10 consignes sur 14 (archivées dans
-`docs/consignes/`, rien n'est réécrit) ; 66 tests. Le code reste dans l'historique git (tag
-`avant-simplification`).
-
-**Gardé** : la méthode `regles` (le système) et la méthode `brut` (le contrat dans le prompt : la
-référence à battre, `couverture banc --methode brut`). Deux utilitaires de la compilation servent à la
-rédaction des règles : ils sont passés dans `llm.py`. Le banc enregistre maintenant chaque passage dans
-MLflow (il remplace `evaluer`), et les tableaux Grafana ne montrent plus que ce qui existe.
-
-**Ce que les méthodes retirées ont appris** et qui reste dans le système : la décision calculée par le code
-et non devinée par le modèle (grille), le rôle de chaque phrase du contrat (fiches : périmètre, conditions,
-obligations, exclusions, limites), la charge de la preuve, le contrôle des citations, et le fait que le
-modèle relise ne suffit pas quand il lit mal.
+**Correction** (`lecture-socle` v2, `lecture-details` v2) : chaque variable propose d'abord la valeur
+« inconnu », retirée par le code avant toute décision ; la consigne dit que c'est la réponse normale, et qu'on
+ne choisit pas « non », « aucune » ou « tiers » par défaut. Au passage, la règle des clés passe dans la
+consigne du temps 1 (le vocabulaire seul n'avait pas suffi) : la clé dont le voleur s'est servi n'est pas
+un bien volé. À mesurer.
 
 ## 8. Ce qui reste à faire
 
-- Refaire le banc complet avec **Mistral Large** pour la lecture (golden v6) ; si l'écart d'hier se confirme, en faire la lecture par défaut.
-- Passer LegalBench (`couverture legalbench --telecharger`, puis `couverture legalbench`).
+Tenu à jour le 18 nov. 2026 ; ce qui est fait est dans les sections 7.
 
-- Mesurer la lecture sur les nouvelles valeurs du vocabulaire (banc complet, puis Mistral Large).
-- Limite connue : la perte de clés (sans vol) n'est pas traduite.
+**Le plan de lecture (7.35)**
+- Mesurer la lecture v2 (« inconnu » d'abord, règle des clés, 7.39) : questions posées, faits inventés, couverts à tort.
+- Étape 3 : Prolog chargé une fois (processus permanent) ; mesurer la latence par cas.
+- Étape 4 : le temps dans le banc (médiane, p95 par étape) avec une porte.
+- Étape 2 : double lecture en parallèle comparée par le code, et recours à Mistral Large quand elles divergent ou que la réponse est « couvert ».
 
-- Un **nouveau jeu de validation écrit par l'auteur**, sans Claude (les 15 cas de 7.17 sont devenus de la mise au point, 7.18) ; le placer dans `data/validation/` à la place des actuels, qui rejoignent la mise au point.
-- Mesurer la chaîne complète sur ce nouveau jeu (`--jeu validation --repetitions 3`).
-- **Valider le golden set** (`couverture banc --fiche`, puis `--figer "validation"`), et y ajouter des cas écrits par l'auteur.
-- Passer le banc complet sur le poste (`couverture banc --contrat foyer-appart123-2025`) : règles (SWI-Prolog), lecture et chaîne.
-- Corriger ce que le banc montre : les périls non traduits dans le vocabulaire, les clés et le récipient (règles vol et eau), la fumée (2.1).
-- Relancer la rédaction (consigne v2) sur 2.2 et 2.9, relire, accepter le vocabulaire, mesurer le jeu `redaction` (7.20).
-- Une seconde lecture des faits comparée par le code : la lecture est devenue la source d'instabilité (7.20).
-- Mettre à jour les dépendances signalées par GitHub (43 vulnérabilités).
-- Contrôler la lecture des faits (une seconde lecture comparée par le code, comme la relecture v2).
-- Valider les 14 réponses attendues sur Foyer (proposées, pas encore validées).
-- Construire le **vocabulaire de faits commun** à partir des conditions de Foyer, puis traduire les
-  garanties en **règles Prolog** à trois issues (couvert, non couvert, incertain), en commençant par
-  la garantie vol.
-- Limite connue : la responsabilité civile de Foyer (section 5) est typée « autre » par le découpage.
+**La mesure honnête**
+- Le **jeu fermé**, écrit par l'auteur sans voir les règles (`data/ferme/`, au moins 20 cas, avec des « incertain »).
+- **Valider le golden set** (`data/golden/A_VALIDER.md`), en particulier la toiture et les clés.
+- LegalBench avec Mistral Large ; et, plus tard, des règles rédigées pour quelques clauses.
+
+**Le passage à l'échelle**
+- Traduire les garanties restantes de Foyer (tempête 2.2, électricité 2.6, mazout 2.8, responsabilité de l'immeuble 2.5, dégradations 2.11, mérule 2.12) avec la rédaction par Mistral Large.
+- Un deuxième contrat, rédigé et vérifié par le banc.
+
+**Le reste**
+- Les 43 vulnérabilités signalées par GitHub (la mise à jour du verrou n'en a pas réduit le nombre : lire la liste).
+- Limites connues : la perte de clés (sans vol) n'est pas traduite ; la responsabilité civile (section 5) est typée « autre » par le découpage ; les conditions particulières ne sont pas lues.
 
 ## 9. Les leçons, en une ligne chacune
 
@@ -1659,3 +1674,4 @@ modèle relise ne suffit pas quand il lit mal.
 58. Une explication qui sort du moteur vaut preuve ; une explication rédigée par le modèle après la décision n'en est qu'un récit.
 59. Le code qu'on garde pour mémoire se paie à chaque lecture : la mémoire est dans git et dans ce document.
 60. Une citation exacte ne prouve pas une lecture juste : la vérification arrête l'invention, pas l'excès de confiance.
+61. Un schéma qui oblige à répondre pousse à remplir : la case « inconnu » doit être la première offerte, pas la dernière tolérée.

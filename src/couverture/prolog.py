@@ -185,7 +185,8 @@ Réponds uniquement par un objet JSON : {"faits": {"evenement": ["vol"], "bien":
 SOCLE = ("evenement", "bien", "lieu")
 
 REGLES_COMMUNES = """- N'utilise que les variables et les valeurs de la liste. Une variable marquée « plusieurs » prend une liste ; les autres, une seule valeur.
-- Ne renseigne une variable que si la déclaration la dit ou l'implique clairement. Sinon, mets null (ou une liste vide) : elle restera inconnue, et le gestionnaire posera la question. Un fait inventé est plus grave qu'un fait manquant."""
+- Ne renseigne une variable que si la déclaration la dit ou l'implique clairement. Sinon, réponds "inconnu" (ou une liste vide) : elle restera inconnue, et le gestionnaire posera la question. Un fait inventé est plus grave qu'un fait manquant.
+- « inconnu » est la réponse normale pour la plupart des variables : une déclaration ne dit presque jamais tout. Ne choisis pas « non », « aucune » ou « tiers » par défaut : seulement si c'est écrit."""
 
 SYSTEME_LECTURE_SOCLE = """Tu lis la déclaration d'un sinistre et tu dis ce qui s'est passé, ce qui est touché et où, avec un vocabulaire imposé. Tu ne décides pas si le sinistre est couvert.
 
@@ -197,6 +198,7 @@ Règles :
 - « Disparu », « je ne retrouve plus » ne disent pas qu'il y a eu vol : ne mets evenement = vol que si un vol est décrit (volé, pris, cambriolé, arraché).
 - Un lieu se déduit de ce qui est écrit : une pièce ou une partie du logement (salon, cuisine, salle de bain, entrée, parquet, plafond, « chez moi », « mon appartement ») donne lieu = logement. Mais ce qui ne dit rien de l'endroit ne donne pas de lieu : « pendant que je faisais mes courses » ne dit pas où était le vélo.
 - Façade, murs, parquet, plafond, toiture : bien = element_batiment. Tuyau, canalisation : bien = canalisation.
+- bien : ce qui a été volé, perdu ou abîmé. Des clés seulement si ce sont elles qui ont été volées ou perdues : la clé dont le voleur s'est servi (sous le paillasson, dans la boîte aux lettres) n'est pas un bien volé.
 
 Réponds uniquement par un objet JSON : {"faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}}"""
 
@@ -217,15 +219,20 @@ Règles :
 Réponds uniquement par un objet JSON : {"faits": {"variable": "valeur"}}"""
 
 
+INCONNU = "inconnu"
+
+
 def schema_faits(variables: dict) -> dict:
     """Le schéma JSON de la réponse : chaque variable avec ses seules valeurs permises (listes fermées).
-    Toutes sont présentes (null ou liste vide si inconnues) : la forme stricte l'exige."""
+    Toutes sont présentes, comme la forme stricte l'exige ; « inconnu » vient en premier. Avec null en fin
+    de liste, Mistral Small remplissait au lieu de laisser vide (« fermeture = aucune » pour « volé dans ma
+    cave ») : les questions attendues n'étaient plus posées que dans 36 % des cas (7.38)."""
     proprietes = {}
     for v, d in variables.items():
         if d.get("plusieurs"):
             proprietes[v] = {"type": "array", "items": {"type": "string", "enum": list(d["valeurs"])}}
         else:
-            proprietes[v] = {"type": ["string", "null"], "enum": list(d["valeurs"]) + [None]}
+            proprietes[v] = {"type": "string", "enum": [INCONNU] + list(d["valeurs"])}
     return {"type": "object", "additionalProperties": False, "required": ["faits"],
             "properties": {"faits": {"type": "object", "additionalProperties": False,
                                      "required": list(proprietes), "properties": proprietes}}}
@@ -239,7 +246,12 @@ def mode_lecture() -> str:
 def _lire(llm: LLM, systeme: str, variables: dict, message: str) -> dict:
     liste = "\n".join(description_variable(v, d) for v, d in variables.items())
     texte = completer_avec_schema(llm, systeme, f"## Vocabulaire\n{liste}\n\n{message}", schema_faits(variables))
-    return extraire_json(texte).get("faits") or {}
+    lus = {}
+    for v, x in (extraire_json(texte).get("faits") or {}).items():
+        x = [e for e in x if e != INCONNU] if isinstance(x, list) else (None if x == INCONNU else x)
+        if x not in (None, "", []):
+            lus[v] = x
+    return lus
 
 
 def variables_du_temps_2(voc: dict, evenements: list[str]) -> dict:
