@@ -229,5 +229,25 @@ def test_latences_par_cas():
     assert m["latence_mediane_s"] == 3.0 and m["latence_p95_s"] == 20.0
     assert m["latence_decision_mediane_s"] == 0.05
     assert banc.latences([]) == {}
-    assert banc.portes({"couches": {"chaine": {"metriques": {"latence_p95_s": 31}}}},
-                       {"chaine": {"latence_p95_s_max": 30}})[0]["ok"] is False
+    assert banc.portes({"couches": {"chaine": {"metriques": {"latence_seule_p95_s": 11}}}},
+                       {"chaine": {"latence_seule_p95_s_max": 10}})[0]["ok"] is False
+
+
+def test_latence_un_cas_a_la_fois():
+    """Le temps d'un gestionnaire : des cas analysés l'un après l'autre, toujours les mêmes."""
+    from couverture import banc
+    from couverture.models import Faits, Resultat, Verdict
+
+    vus = []
+
+    class Pipeline:
+        def analyser(self, sinistre):
+            vus.append(sinistre)
+            v = Verdict(decision="INCERTAIN", justification="…", confiance=0.4, mode="test")
+            return Resultat(sinistre=sinistre, faits=Faits(), clauses_consultees=[], verdict=v,
+                            durees_ms={"lecture": 5, "decision": 1})
+
+    cas = [{"id": f"c{i}", "sinistre": f"cas {i}"} for i in range(97)]
+    m = banc.mesurer_latence(Pipeline(), cas)
+    assert m["latence_seule_nb"] == 10 and len(vus) == 10 and vus[0] == "cas 0" and vus[1] == "cas 9"
+    assert m["latence_seule_decision_mediane_s"] == 0.0 and m["latence_seule_mediane_s"] >= 0

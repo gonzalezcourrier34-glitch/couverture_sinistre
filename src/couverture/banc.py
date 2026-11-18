@@ -354,6 +354,29 @@ def portes(resultat: dict, s: dict) -> list[dict]:
 
 # --- Le passage complet ---------------------------------------------------------------------------------------
 
+CAS_LATENCE = 10
+
+
+def mesurer_latence(pipeline, cas: list[dict], n: int = CAS_LATENCE) -> dict:
+    """Le temps que vit un gestionnaire : **un cas à la fois**, sans les attentes dues aux limites de débit de
+    l'API quand le banc fait tourner plusieurs cas ensemble (DEMARCHE 7.47, 7.48). `n` cas répartis sur le
+    golden set (toujours les mêmes), analysés l'un après l'autre."""
+    pas = max(1, len(cas) // n)
+    choisis = cas[::pas][:n]
+    durees = []
+    for c in choisis:
+        debut = time.perf_counter()
+        try:
+            r = pipeline.analyser(c["sinistre"])
+        except Exception:  # noqa: BLE001  (une panne compte comme un cas long, pas comme une mesure perdue)
+            r = None
+        total = int((time.perf_counter() - debut) * 1000)
+        durees.append({"total": total, **({k: v for k, v in r.durees_ms.items() if k != "total"} if r else {})})
+    sortie = {k.replace("latence", "latence_seule", 1): v for k, v in latences(durees).items()}
+    sortie["latence_seule_nb"] = len(choisis)
+    return sortie
+
+
 def passer(donnees: Path, contrat_id: str, methode: str, couches: list[str], repetitions: int = 3,
            paralleles: int = 4, pipeline_fabrique=None, decideur=None, evaluer_fn=None) -> dict:
     """Rejoue le golden set. `pipeline_fabrique()` donne une méthode neuve par exécution ; `decideur`
@@ -381,6 +404,9 @@ def passer(donnees: Path, contrat_id: str, methode: str, couches: list[str], rep
             rapports.append((evaluer_fn or evaluer)(pipeline, cas, paralleles=paralleles))
             durees.append(time.perf_counter() - debut)
         resultat["couches"]["chaine"] = couche_chaine(cas, rapports, durees)
+        if evaluer_fn is None:  # pas dans les tests qui simulent l'évaluation
+            print(f"Latence : {min(CAS_LATENCE, len(cas))} cas, un à la fois…", flush=True)
+            resultat["couches"]["chaine"]["metriques"].update(mesurer_latence(pipeline_fabrique(), cas))
         if methode == "regles":
             lecteur = None
             if "regles" in resultat["couches"]:
@@ -516,8 +542,10 @@ def markdown(r: dict, precedent: dict | None = None) -> str:
               f"Instables : **{m['instables']}** sur {m['n']} · rappel des clauses : {pct(m['rappel_clauses'])} · "
               f"rappel des questions : {pct(m['rappel_questions'])} · erreurs du fournisseur : {m['erreurs_fournisseur']}"
               f" · durée moyenne d'une exécution : {m['duree_moyenne_s']} s"
-              + (f" · par cas : médiane {m['latence_mediane_s']} s, 95e centile {m['latence_p95_s']} s"
-                 f" (lecture {m.get('latence_lecture_mediane_s')} s, décision {m.get('latence_decision_mediane_s')} s)"
+              + (f" · par cas, un à la fois ({m.get('latence_seule_nb')} cas) : médiane {m['latence_seule_mediane_s']} s, "
+                 f"95e centile {m['latence_seule_p95_s']} s (lecture {m.get('latence_seule_lecture_mediane_s')} s, "
+                 f"décision {m.get('latence_seule_decision_mediane_s')} s)" if m.get("latence_seule_mediane_s") is not None else "")
+              + (f" · en masse (quatre à la fois) : médiane {m['latence_mediane_s']} s, 95e centile {m['latence_p95_s']} s"
                  if m.get("latence_mediane_s") is not None else ""), "", *tableau_groupes(ch["groupes"]), "",
               "### Erreurs et instabilités", ""]
         lignes = []
@@ -568,7 +596,13 @@ def resume_console(r: dict, md: Path | None = None) -> str:
         L.append(f"{titre}{pct(v('exactitude'))} justes · {pct(v('exactitude_stricte'))} exactes · "
                  f"couverts à tort {v('faux_couverts'):g} · refus à tort {v('faux_refus'):g}"
                  + (f" · instables {m['instables']}" if nom == "chaine" else ""))
-        if nom == "chaine" and m.get("latence_mediane_s") is not None:
+        if nom == "chaine" and m.get("latence_seule_mediane_s") is not None:
+            L.append(f"Temps par cas  un à la fois : médiane {m['latence_seule_mediane_s']:g} s · 95e centile "
+                     f"{m['latence_seule_p95_s']:g} s (lecture {m.get('latence_seule_lecture_mediane_s', 0):g} s, "
+                     f"décision {m.get('latence_seule_decision_mediane_s', 0):g} s)"
+                     + (f" · en masse ({m['latence_mediane_s']:g} s médiane, {m['latence_p95_s']:g} s au 95e centile)"
+                        if m.get("latence_mediane_s") is not None else ""))
+        elif nom == "chaine" and m.get("latence_mediane_s") is not None:
             L.append(f"Temps par cas  médiane {m['latence_mediane_s']:g} s · 95e centile {m['latence_p95_s']:g} s · "
                      f"lecture {m.get('latence_lecture_mediane_s', 0):g} s · décision {m.get('latence_decision_mediane_s', 0):g} s")
     echecs = [p for p in r.get("portes", []) if not p["ok"]]

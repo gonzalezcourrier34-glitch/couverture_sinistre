@@ -1771,13 +1771,69 @@ réessayer. Un cas seul, comme dans l'interface, ne rencontre pas cette limite. 
 (68 s pour 30) : elle mesure aujourd'hui le débit autorisé par la clé, pas le système. À trancher : la
 garder telle quelle (elle dit vrai sur un traitement en masse), ou mesurer la latence avec un cas à la fois.
 
+### 7.48 La latence mesurée comme la vit un gestionnaire
+
+Décision de l'auteur : la porte de latence doit mesurer **ce que vit un gestionnaire qui pose une
+question**, pas le débit d'un traitement en masse. Après la couche « chaîne », le banc analyse **dix cas
+l'un après l'autre** (toujours les mêmes, répartis sur le golden set) et en tire la médiane et le 95e
+centile du temps par cas, lecture et décision à part. La porte porte sur ce 95e centile : **10 s au
+départ**, à resserrer une fois mesuré. Le temps « en masse » (quatre cas à la fois) reste affiché, sans
+porte. Coût : une trentaine de secondes de plus par banc.
+
+### 7.49 « Je ne sais pas » plutôt qu'une réponse fausse : confirmer les faits qui portent la décision
+
+Demande de l'auteur : **le système doit dire « je ne sais pas » au lieu de donner une réponse fausse.** Les
+2,7 couverts à tort et 2,3 refus à tort qui restent viennent tous d'un fait mal lu qui porte la décision :
+« la clé sous le paillasson » lue comme des clés volées, « mes bijoux ont disparu » lu comme un vol, etc.
+
+**Le principe : une réponse ferme doit reposer sur des faits confirmés.** Quand le moteur répond « couvert »
+ou « non couvert », il désigne lui-même **les faits qui portent la décision** : ceux dont le retrait la
+change (`faits_decisifs`, quelques décisions de quelques millisecondes). Ces faits seuls, socle compris,
+sont soumis au modèle comme des affirmations (« Quel bien a été touché ? → cles (les clés elles-mêmes,
+volées ou perdues…) : la déclaration le dit-elle ? »). **Un seul « non dit », et la réponse devient
+« incertain »**, avec la question sur ce fait en premier, et la justification « Je ne peux pas trancher :
+la déclaration ne dit pas clairement… ». L'arbre de preuve affiché est celui sans le fait douteux, précédé
+d'une ligne qui le dit.
+
+Ce n'est pas la vérification de 7.43 répétée : celle-là retirait des faits inventés pour **poser plus de
+questions** ; celle-ci ne touche à aucun fait, elle **suspend une réponse ferme** dont l'appui n'est pas sûr.
+Elle s'applique aux deux réponses fermes, couvert comme non couvert. Coût : un appel de plus, seulement
+quand la réponse est ferme. À mesurer : les couverts et refus à tort doivent baisser ; l'exactitude peut
+baisser aussi (des réponses justes deviendront « incertain ») : c'est le prix accepté.
+
+### 7.50 La confirmation mesurée : plus juste, moins d'erreurs, et la latence passe
+
+**Mesure** (Small, lecture vérifiée + confirmation des faits décisifs, 3 exécutions) :
+
+| | Justes | Couverts à tort | Refus à tort | Questions posées | Instables |
+|---|---|---|---|---|---|
+| Vérifiée, arbitrée (7.45) | 87 % | 2,7 | 2,3 | 55 % | 5 |
+| **+ confirmation des faits décisifs** | **90 %** | **2,3** | **1,3** | **70 %** | 10 |
+
+Contre ce qu'on craignait, **l'exactitude monte** (87 → 90 %) : les réponses suspendues étaient surtout
+des réponses fausses, et les cas « incertain » attendus le deviennent plus souvent (questions posées
+55 → 70 %). **Latence, un cas à la fois : médiane 2,9 s, 95e centile 4,7 s : la porte (≤ 10 s) passe.**
+
+**Ce qui reste, et pourquoi la confirmation ne l'attrape pas** :
+- « la clé que j'avais laissée sous le paillasson » (`g-p03`) est toujours lue « clés volées », et le
+  modèle **confirme** ce fait : la clé est bien dans la déclaration. Une confirmation juge qu'un fait est
+  écrit, pas qu'il est bien rangé ;
+- les autres erreurs sont des **oublis** : l'hôte qui a volé (`val-03`, exclusion des vols par les hôtes),
+  l'absence pendant les vacances (`bougie-04`). Confirmer les faits lus ne peut pas retrouver un fait
+  qui n'a pas été lu.
+
+Pistes : une règle de cohérence (une clé laissée à proximité n'est pas une clé volée), et, avant de
+couvrir, demander au modèle si la déclaration évoque l'une des exclusions que le moteur présume absentes.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 18 nov. 2026 ; ce qui est fait est dans les sections 7.
 
 **Le plan de lecture (7.35)**
 - La lecture vérifiée est la lecture par défaut (7.45). Mesurer Mistral Large avec elle, pour le recours dans la cascade.
-- Le recours à Mistral Large pour les seuls cas douteux (faits retirés par la vérification, ou « couvert » sur un fait vérifié de justesse) ; et décider de la porte de latence (7.47).
+- Le recours à Mistral Large pour les seuls cas douteux (faits retirés par la vérification, ou « couvert » sur un fait vérifié de justesse).
+- La porte de latence passe (4,7 s pour 10) : la resserrer, par exemple à 8 s.
+- Les erreurs restantes (7.50) : la clé sous le paillasson (cohérence), les oublis (demander, avant de couvrir, si une exclusion présumée absente est évoquée).
 - Étape 2 : double lecture en parallèle comparée par le code, et recours à Mistral Large quand elles divergent ou que la réponse est « couvert ».
 
 **La mesure honnête**
@@ -1860,3 +1916,5 @@ Tenu à jour le 18 nov. 2026 ; ce qui est fait est dans les sections 7.
 63. Un fait oublié qui ferait refuser coûte plus cher qu'un fait inventé qui fait demander : on choisit la lecture qui oublie le moins ce qui décide.
 64. Comparer deux lectures ne sert à rien si les erreurs se répètent à l'identique : il faut changer de question, pas la reposer.
 65. Un contrôle qui retire des faits doit être asymétrique : il peut rendre une réponse plus prudente, jamais plus généreuse, et c'est le moteur qui dit laquelle des deux il produit.
+66. Avant de répondre ferme, demander au moteur sur quels faits la réponse repose, et les faire confirmer : c'est là que se décide un « je ne sais pas » honnête.
+67. Confirmer qu'un fait est écrit n'attrape ni un fait mal rangé ni un fait oublié : chaque erreur de lecture a son contrôle.

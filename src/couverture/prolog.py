@@ -406,19 +406,30 @@ def affirmation(v: str, x, voc: dict) -> str:
     return f"- {v} : {voc.get(v, {}).get('question', v)} → {rendu}"
 
 
+def juger_affirmations(sinistre: str, faits: dict, llm: LLM, voc: dict) -> dict:
+    """{variable: "dit" | "non_dit"} : chaque fait soumis au modèle comme une affirmation sur la déclaration."""
+    liste = "\n".join(affirmation(v, x, voc) for v, x in faits.items())
+    schema = {"type": "object", "additionalProperties": False, "required": ["verdicts"],
+              "properties": {"verdicts": {"type": "object", "additionalProperties": False,
+                                          "properties": {v: {"type": "string", "enum": ["dit", "non_dit"]} for v in faits}}}}
+    return extraire_json(completer_avec_schema(
+        llm, SYSTEME_VERIFICATION, f"## Affirmations\n{liste}\n\n## Déclaration\n{sinistre}", schema)).get("verdicts") or {}
+
+
+def faits_decisifs(faits: dict, decideur, decision: str) -> list[str]:
+    """Les faits qui portent la décision : ceux dont le retrait la change. Le moteur le dit en quelques
+    millisecondes ; ce sont eux qu'une réponse ferme doit avoir confirmés (7.49)."""
+    return [v for v in faits if decideur({k: x for k, x in faits.items() if k != v})["decision"] != decision]
+
+
 def verifier_details(sinistre: str, lus: dict, llm: LLM, voc: dict) -> tuple[dict, list[str]]:
     """Le contrôle des faits du temps 2. Les faits du socle (événement, bien, lieu) ne sont pas soumis : retirés,
     ils rendaient tout incertain (7.26). Une vérification illisible ne retire rien (avertissement)."""
     details = {v: x for v, x in lus.items() if v not in SOCLE and x not in (None, "", [])}
     if not details:
         return lus, []
-    liste = "\n".join(affirmation(v, x, voc) for v, x in details.items())
-    schema = {"type": "object", "additionalProperties": False, "required": ["verdicts"],
-              "properties": {"verdicts": {"type": "object", "additionalProperties": False,
-                                          "properties": {v: {"type": "string", "enum": ["dit", "non_dit"]} for v in details}}}}
     try:
-        verdicts = extraire_json(completer_avec_schema(
-            llm, SYSTEME_VERIFICATION, f"## Affirmations\n{liste}\n\n## Déclaration\n{sinistre}", schema)).get("verdicts") or {}
+        verdicts = juger_affirmations(sinistre, details, llm, voc)
     except ErreurLLM:
         raise
     except Exception as e:  # noqa: BLE001
@@ -543,12 +554,46 @@ class PipelineRegles:
         lu = time.perf_counter()
         d = self.decideur(faits)
         decide = time.perf_counter()
+        doutes: list[str] = []
+        if mode_lecture() == "verifiee" and d["decision"] in ("COUVERT", "NON_COUVERT"):
+            d, doutes, avert = self.confirmer(sinistre, faits, d)
+            ecarts = ecarts + avert
         verdict, consultees = self.verdict(d, faits)
+        if doutes:
+            # « Je ne sais pas » plutôt qu'une réponse fausse : un fait qui porte la décision n'est pas confirmé.
+            verdict.decision = Decision.INCERTAIN
+            verdict.confiance = min(verdict.confiance, 0.4)
+            verdict.justification = ("Je ne peux pas trancher : la déclaration ne dit pas clairement "
+                                     + " ; ni ".join(f"« {affirmation(v, faits[v], vocabulaire())[2:]} »" for v in doutes)
+                                     + ". " + verdict.justification)
+            verdict.informations_manquantes = list(dict.fromkeys(
+                [question(v) for v in doutes] + verdict.informations_manquantes))
+            verdict.raisonnement = [f"Réponse suspendue : fait décisif non confirmé ({', '.join(doutes)}) ; "
+                                    "ci-dessous, le raisonnement sans ce fait."] + verdict.raisonnement
         verdict.avertissements = ecarts + verdict.avertissements
         verdict = valider(verdict, consultees)
         return Resultat(sinistre=sinistre, contrat_id=self.contrat_id, methode=self.methode,
                         faits=faits_lisibles(faits), clauses_consultees=consultees, verdict=verdict,
                         durees_ms={"lecture": int((lu - debut) * 1000), "decision": int((decide - lu) * 1000)})
+
+    def confirmer(self, sinistre: str, faits: dict, d: dict) -> tuple[dict, list[str], list[str]]:
+        """Une réponse ferme doit reposer sur des faits confirmés (7.49). Le moteur dit quels faits portent la
+        décision ; le modèle confirme, sur la déclaration, que chacun y est écrit. Un seul « non dit » : la
+        réponse devient « incertain », avec la question sur ce fait. Rend (décision, faits douteux, avertissements)."""
+        decisifs = faits_decisifs(faits, self.decideur, d["decision"])
+        if not decisifs:
+            return d, [], []
+        try:
+            verdicts = juger_affirmations(sinistre, {v: faits[v] for v in decisifs}, self.llm, vocabulaire())
+        except ErreurLLM:
+            raise
+        except Exception as e:  # noqa: BLE001
+            return d, [], [f"confirmation des faits décisifs illisible ({e}) : réponse gardée"]
+        doutes = [v for v in decisifs if verdicts.get(v) == "non_dit"]
+        if not doutes:
+            return d, [], []
+        sans = {k: x for k, x in faits.items() if k not in doutes}
+        return self.decideur(sans), doutes, [f"{v} : fait décisif non confirmé par la déclaration" for v in doutes]
 
     def verdict(self, d: dict, faits: dict) -> tuple[Verdict, list[ClauseRetenue]]:
         decision = Decision(d["decision"])

@@ -700,3 +700,49 @@ def test_moteur_permanent_decide_comme_un_processus_par_decision(cas):
         assert prolog.moteur_permanent(CONTRAT).decider(faits) == prolog.executer(CONTRAT, "decider_json", faits), i
     prolog._fermer_moteurs()
     prolog._MOTEURS.clear()
+
+
+def test_je_ne_sais_pas_plutot_qu_une_reponse_fausse(monkeypatch, contrat):
+    """Une réponse ferme doit reposer sur des faits confirmés (7.49). Le moteur désigne les faits qui portent
+    la décision ; si le modèle ne les retrouve pas dans la déclaration, la réponse devient « incertain »."""
+    faits = {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"], "fermeture": "cadenas"}
+
+    def oracle(f):  # l'oracle ne rend pas les libellés des garanties : on les ajoute comme le fait moteur.pl
+        d = Explorateur(contrat, f).decider()
+        for r in d["retenues"] + d.get("possibles", []):
+            g = next(x for x in contrat.regles("garantie", 4) if x.args[0] == r["id"])
+            r.update(garantie=g.args[1], article=g.args[2], motif="…", preuves=[])
+        return d
+
+    assert oracle(faits)["decision"] == "NON_COUVERT"
+    assert "fermeture" in prolog.faits_decisifs(faits, oracle, "NON_COUVERT")
+
+    class Modele:
+        nom, accepte_schema = "confirme", True
+
+        def __init__(self, verdict):
+            self.verdict, self.confirmations = verdict, []
+
+        def completer(self, systeme, message, schema=None):
+            if systeme == prolog.SYSTEME_LECTURE_SOCLE:
+                return json.dumps({"faits": {k: faits[k] for k in ("evenement", "bien", "lieu")}})
+            if systeme == prolog.SYSTEME_LECTURE_DETAILS:
+                return json.dumps({"faits": {"fermeture": "cadenas"}})
+            props = set(schema["properties"]["verdicts"]["properties"])
+            self.confirmations.append(props)
+            if len(self.confirmations) == 1:  # la vérification de la lecture garde le cadenas
+                return json.dumps({"verdicts": {v: "dit" for v in props}})
+            # la confirmation des faits décisifs, ensuite
+            return json.dumps({"verdicts": {v: (self.verdict if v == "fermeture" else "dit") for v in props}})
+
+    monkeypatch.setenv("COUVERTURE_LECTURE", "verifiee")
+    sinistre = "On m'a volé mon vélo dans ma cave."
+    doute = prolog.PipelineRegles(CONTRAT, [], Modele("non_dit"), decideur=oracle).analyser(sinistre).verdict
+    assert doute.decision.value == "INCERTAIN" and (doute.decision_initiale or doute.decision).value == "INCERTAIN"
+    assert doute.informations_manquantes[0].startswith(prolog.question("fermeture"))
+    assert doute.justification.startswith("Je ne peux pas trancher")
+    m = Modele("dit")
+    confirme = prolog.PipelineRegles(CONTRAT, [], m, decideur=oracle).analyser(sinistre).verdict
+    # (sans clauses fournies, le contrôle des citations rétrograde toute réponse : on lit la réponse avant lui)
+    assert (confirme.decision_initiale or confirme.decision).value == "NON_COUVERT", "confirmé : la réponse ferme reste"
+    assert "fermeture" in m.confirmations[-1], "le fait décisif est soumis à confirmation"

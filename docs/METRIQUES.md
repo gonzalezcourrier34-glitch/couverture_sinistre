@@ -84,7 +84,7 @@ négatifs que la déclaration ne dit pas (« pas de violence »), et la consigne
 | Métrique | Définition | Seuil |
 |---|---|---|
 | **Cas instables** | Cas dont la réponse change d'une exécution à l'autre | ≤ 3 |
-| **Temps par cas** | Médiane et 95e centile, avec la lecture et la décision à part (quatre cas à la fois dans le banc) | 95e centile ≤ 30 s |
+| **Temps par cas** | Médiane et 95e centile sur dix cas analysés **un à la fois** (ce que vit un gestionnaire), lecture et décision à part ; le temps en masse est affiché sans porte | 95e centile ≤ 10 s |
 | Minimum et maximum | De chaque métrique sur les 3 exécutions | affichés |
 | Durée | Par exécution des cas du golden set | suivi |
 | Erreurs du fournisseur | Appels au modèle sans réponse | suivi |
@@ -108,6 +108,10 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 ---
 
 ## 5. Dernières mesures
+
+**18 nov. 2026, 17 h 10, lecture vérifiée + confirmation des faits décisifs (défaut)** : **90 % justes,
+2,3 couverts à tort, 1,3 refus à tort**, questions attendues posées 70 % ; un cas à la fois : médiane 2,9 s,
+95e centile 4,7 s (porte ≤ 10 s : passe). DEMARCHE 7.49, 7.50.
 
 **18 nov. 2026, 16 h 30, moteur chargé une fois** : mêmes résultats (87 %, 2,7 couverts à tort, 5 instables) ;
 temps par cas : médiane **2,4 s** (décision < 10 ms), 95e centile 68 s à cause des limites de débit de l'API
