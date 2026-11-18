@@ -205,6 +205,25 @@ class Moteur:
             return self.feuilles(d.args[1]) if d else []
         return []
 
+    def positives(self, t) -> list:
+        """Les feuilles qui comptent « pour » la condition (hors d'une négation, ou conclusion d'un « si »)."""
+        if not isinstance(t, Terme):
+            return []
+        if t.nom == "f":
+            return [t]
+        if t.nom in ("et", "ou"):
+            return [f for c in t.args[0] for f in self.positives(c)]
+        if t.nom == "si":
+            return self.positives(t.args[1])
+        if t.nom == "concept":
+            d = self.c.definition(t.args[0])
+            return self.positives(d.args[1]) if d else []
+        return []
+
+    def entamee(self, t) -> bool:
+        """Une condition inconnue dont un fait positif est établi : la déclaration l'a mise en jeu."""
+        return any(self.eval(f) == OUI for f in self.positives(t))
+
     def inconnues(self, t) -> list:
         return sorted({f.args[0] for f in self.feuilles(t) if self.eval(f) == INCONNU})
 
@@ -229,7 +248,7 @@ class Moteur:
                           if x not in self.ancetres("bien", b) and b not in self.ancetres("bien", x)}
                 xs.append(("partielle", a, t, b) if autres else ("totale", a, t, []))
             elif e == INCONNU and dem == "oui":
-                xs.append(("inconnue", a, t, self.inconnues(cond)))
+                xs.append(("engagee" if self.entamee(cond) else "inconnue", a, t, self.inconnues(cond)))
         os_ = []
         for o in self.c.regles("obligation", 6):
             if o.args[0] != g:
@@ -255,6 +274,9 @@ class Moteur:
         for c, _, _, e in cs:
             if e == INCONNU:
                 return {"rattachement": "rattachée", "decision": "INCERTAIN", "questions": self.inconnues(c)}
+        engagees = sorted({v for x in xs if x[0] == "engagee" for v in x[3]})
+        if engagees:
+            return {"rattachement": "rattachée", "decision": "INCERTAIN", "questions": engagees}
         if any(e == NON and lien == "oui" for e, lien, *_ in os_):
             return {"rattachement": "rattachée", "decision": "INCERTAIN", "questions": ["lien_causal"]}
         if any(e == NON and lien == "non" for e, lien, *_ in os_):

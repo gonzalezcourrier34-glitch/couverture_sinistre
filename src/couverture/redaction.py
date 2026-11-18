@@ -38,7 +38,7 @@ from .texte import normaliser
 from .validation import _compact, extrait_present, passage_exact
 
 PROPOSITIONS = prolog.DOSSIER / "propositions"
-VERSION = "v4"
+VERSION = "v5"
 IDENT = re.compile(r"^[a-z][a-z0-9_]*$")
 BLOQUANT, A_RELIRE, INFO = "bloquant", "à relire", "info"
 
@@ -60,6 +60,8 @@ La logique a trois valeurs : un fait que la déclaration ne donne pas est « inc
 2. N'emploie que les variables et les valeurs du vocabulaire. Si le texte exige un fait que le vocabulaire n'a pas, n'approxime pas avec un fait voisin : emploie une variable ou une valeur nouvelle ET déclare-la dans "vocabulaire_manquant" (variable, valeurs, question à poser à l'assuré, pourquoi, "plus_proche" : la variable existante la plus proche et pourquoi elle ne suffit pas). Un humain décidera. Avant de créer une variable, relis les questions du vocabulaire : « agression » est une violence, « complicité de l'assuré » est un auteur, « vol simple » est un vol sans effraction ni violence ; une notion qui se dit avec des faits existants s'écrit avec eux, au besoin par un concept.
 3. Traduis TOUT le texte : chaque élément d'une liste d'exclusions devient une exclusion. Ce que tu ne sais pas exprimer va dans "non_traduit" sous la forme {"article", "texte", "pourquoi"}. N'omets jamais rien en silence : une exclusion oubliée fait couvrir à tort.
 3 bis. Une exclusion garde ses réserves et ses conditions : « à l'exception du mobilier de jardin » s'écrit {"et": [condition, {"non": réserve}]}, et « si l'Assuré n'occupe que partiellement le bâtiment » fait partie de la condition. Une réserve perdue fait refuser à tort.
+3 ter. « À moins que l'Assuré ne démontre… » est une réserve de l'exclusion : {"et": [condition, {"non": preuve}]}, avec "a_demander": true. Le moteur pose la question dès que la déclaration établit la condition (les travaux), et ne la pose pas sinon.
+3 quater. « À l'extérieur » d'un bâtiment, dans une liste d'exclusions, désigne ce qui est à l'adresse du risque hors des locaux (cours, jardins, couloirs) : pas la voie publique ni un autre bâtiment, que d'autres garanties couvrent.
 4. Une condition cachée dans un tableau de limites (« si ces locaux sont fermés par… ») est une circonstance. Une limite n'a pas de condition : {"article", "texte", "montant"}. Un plafond qui ne vaut que dans un cas (« s'ils ne se trouvent pas sous clefs ») se cite tel quel ; n'invente pas de variable pour lui.
 5. Un terme défini par le contrat (« tempête », « bâtiment ») s'emploie par {"concept": "nom"} : réutilise un concept existant, ou ajoute sa définition dans "definitions" sous la forme {"concept": "nom", "condition": …, "article", "texte"}. Tout concept employé doit exister ou être défini.
 6. Si l'événement couvert est lui-même défini par le contrat (une définition de la tempête est fournie), cette définition est une condition de la garantie : mets {"concept": …} dans ses circonstances.
@@ -556,7 +558,7 @@ def chemins(contrat_id: str, article: str, dossier: Path | None = None) -> tuple
 def rediger(contrat_id: str, article: str, clauses: list[Clause], llm, dossier: Path | None = None,
             cas: list[tuple[str, dict]] | None = None) -> dict:
     """Fait rédiger la proposition par le modèle, l'enregistre et la contrôle."""
-    contrat_pl = prolog.fichier_regles(contrat_id).read_text(encoding="utf-8")
+    contrat_pl = retirer_article(prolog.fichier_regles(contrat_id).read_text(encoding="utf-8"), article)
     textes = clauses_article(clauses, article)
     if not textes:
         raise LookupError(f"Aucune clause {article} dans le contrat {contrat_id}.")
@@ -615,7 +617,7 @@ def recontroler(contrat_id: str, article: str, clauses: list[Clause], dossier: P
     """Relit la proposition enregistrée (éventuellement corrigée à la main) et refait les contrôles."""
     js, _ = chemins(contrat_id, article, dossier)
     doc = json.loads(js.read_text(encoding="utf-8"))
-    contrat_pl = prolog.fichier_regles(contrat_id).read_text(encoding="utf-8")
+    contrat_pl = retirer_article(prolog.fichier_regles(contrat_id).read_text(encoding="utf-8"), article)
     return enregistrer(contrat_id, article, doc, clauses, contrat_pl, dossier, cas)
 
 
@@ -658,8 +660,20 @@ def accepter(contrat_id: str, article: str, dossier: Path | None = None) -> Path
     if bloquants:
         raise ErreurProposition(f"{len(bloquants)} contrôle(s) bloquant(s) : relancer `--controler` après correction")
     cible = prolog.fichier_regles(contrat_id)
-    cible.write_text(fusionner(cible.read_text(encoding="utf-8"), pl.read_text(encoding="utf-8")), encoding="utf-8")
+    cible.write_text(fusionner(retirer_article(cible.read_text(encoding="utf-8"), article), pl.read_text(encoding="utf-8")),
+                     encoding="utf-8")
     return cible
+
+
+def retirer_article(contrat_pl: str, article: str) -> str:
+    """Les règles du contrat sans le bloc d'une proposition déjà acceptée pour cet article : une proposition
+    corrigée puis acceptée de nouveau remplace l'ancienne au lieu de s'y ajouter (7.58)."""
+    entete = re.compile(rf"^% --- Art\. {re.escape(article)} : proposition.*$", re.M)
+    m = entete.search(contrat_pl)
+    if not m:
+        return contrat_pl
+    suite = re.compile(r"^% --- Art\. ", re.M).search(contrat_pl, m.end())
+    return (contrat_pl[:m.start()].rstrip("\n") + "\n" + (contrat_pl[suite.start():] if suite else "")).rstrip("\n") + "\n"
 
 
 def resumer(doc: dict) -> str:

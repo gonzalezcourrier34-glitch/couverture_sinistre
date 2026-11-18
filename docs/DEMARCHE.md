@@ -2025,7 +2025,51 @@ règles emploient (`f(variable, …)` relevées dans son fichier, plus le socle 
 lit 29 variables sur 39, AXA 19. C'est aussi ce qui rend le vocabulaire commun extensible sans limite : il
 peut grossir avec chaque assureur sans alourdir la lecture des autres.
 
+**Mesure après la correction** (chaque contrat ne lit que ses variables ; moteur encore sans la règle 7.58) :
+89 % justes, couverts à tort 2,33 (le niveau d'avant AXA), refus à tort 1, instables 13 ; un cas à la fois,
+médiane 3,2 s et 95e centile 4,5 s : la porte de latence passe de nouveau, le 20 s était bien une question lente
+isolée. Rien de mesurable n'a donc été cassé par AXA ; la lecture reste la limite (20 décisions changées par
+exécution, 13 cas instables), pas les règles.
+
 **Leçon 72.** Un vocabulaire commun pour comparer, une lecture propre à chaque contrat pour décider.
+
+### 7.58 Les cas de test AXA trouvent ce que la relecture n'a pas vu
+
+**Quinze cas de vol AXA**, écrits d'après le texte du contrat (`data/golden/annotations/axa-lu-optihome-2017.jsonl`,
+faits idéaux dans `regles/cas/golden/`) : cambriolage, vol simple, plainte absente ou inconnue, agression avec
+et sans formule, vol à la tire, mobilier de jardin, cave à cadenas en immeuble, annexe à serrure à cylindre,
+voiture, femme de ménage, clés, hôtel à l'étranger, travaux. Limite assumée : je les ai écrits après avoir relu
+les règles ; ils ne sont pas indépendants, et restent « à valider par l'auteur » comme ceux de Foyer.
+
+**Premier passage, règles seules : 11 sur 15.** Deux erreurs de traduction, qu'aucun contrôle ni la relecture
+n'avaient vues :
+- *« À l'extérieur » (3.1.6.2.6)* avait été traduit avec la voie publique et « un autre bâtiment ». L'exclusion
+  tuait le vol par agression dans la rue (v05, v07) et le vol à l'hôtel (v14), que le contrat couvre
+  expressément. Dans une liste d'exclusions d'un contrat habitation, « l'extérieur », ce sont les cours,
+  jardins et couloirs à l'adresse du risque. Corrigé dans la proposition (seconde passe tracée dans
+  `meta.relecture`), et règle 3 quater ajoutée à la consigne (v5).
+- *Travaux en cours, lien causal inconnu (v15)* : le moteur répondait « couvert sous réserve ». Une exclusion
+  inconnue était toujours une réserve, même quand la déclaration en établit une partie. **Règle générale
+  ajoutée au moteur (6 bis)** : une exclusion « à demander » *entamée* (un de ses faits positifs est établi)
+  fait poser la question ; une exclusion que rien n'évoque reste une réserve. Essayée d'abord autrement
+  (une circonstance par garantie) : chaque cambriolage demandait alors « y a-t-il des travaux ? », pire.
+
+**Effet sur Foyer**, mesuré par l'oracle sur les 126 cas Foyer (golden, mise au point, validation) : un seul
+change, g2-i06 (gel pendant une absence), de « couvert sous réserve » à « incertain : les mesures contre le gel
+étaient-elles prises ? », exactement la réponse attendue par son annotation. Un test unitaire qui figeait
+l'ancien comportement est mis à jour, avec la raison.
+
+**Second passage : 15 sur 15.** Un test vérifie désormais, pour chaque contrat du golden set, que les règles
+seules donnent la réponse attendue sur les faits idéaux.
+
+**Outils rendus génériques au passage.**
+- `--accepter` remplace le bloc d'un article déjà accepté au lieu de l'ajouter une seconde fois ; les
+  contrôles d'une proposition ignorent ce bloc (sinon « la garantie existe déjà »).
+- L'empreinte du golden set est calculée par contrat, sur ses seules lignes du fichier de sinistres commun :
+  ajouter AXA ne « modifie » pas le golden de Foyer, qui reste en v6.
+
+**Leçon 73.** Trois filets, trois sortes d'erreurs : les contrôles attrapent la forme, la relecture attrape le
+sens visible, les cas attrapent le sens en action, une exclusion qui en tue une autre. Aucun ne suffit seul.
 
 ## 8. Ce qui reste à faire
 

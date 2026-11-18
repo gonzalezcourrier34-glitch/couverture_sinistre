@@ -299,6 +299,15 @@ def test_rediger_controler_accepter(tmp_path, monkeypatch, voc_etendu):
     assert "garantie(tempete_batiment," in texte and texte.startswith(":- encoding(utf8).")
     assert redaction.articles_proposes(CONTRAT, tmp_path) == ["2.2"]
 
+    # Corrigée puis acceptée de nouveau, la proposition remplace l'ancienne (7.58) au lieu de s'y ajouter.
+    corrige["proposition"]["garanties"][0]["nom"] = "Tempête (corrigée)"
+    js.write_text(json.dumps(corrige, ensure_ascii=False), encoding="utf-8")
+    assert not bloquants(redaction.recontroler(CONTRAT, "2.2", CLAUSES, tmp_path)["controles"])
+    redaction.accepter(CONTRAT, "2.2", tmp_path)
+    texte = regles.read_text(encoding="utf-8")
+    assert texte.count("garantie(tempete_batiment,") == 1 and "Tempête (corrigée)" in texte
+    assert texte.count("% --- Art. 2.2 : proposition") == 1
+
 
 def test_jeu_redaction_coherent():
     from couverture.evaluation import charger_cas, fichiers_jeu
@@ -311,7 +320,7 @@ def test_jeu_redaction_coherent():
 def test_consigne_de_redaction_versionnee():
     from couverture.consignes import CONSIGNES
 
-    assert CONSIGNES["couverture-redaction-regles"][2] == "v4"
+    assert CONSIGNES["couverture-redaction-regles"][2] == "v5"
 
 
 # --- Après la première rédaction réelle (Mistral Large, 17 nov. 2026, docs/DEMARCHE.md 7.20) ---------------

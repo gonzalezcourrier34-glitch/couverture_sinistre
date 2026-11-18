@@ -931,9 +931,12 @@
         "remorque_non_fermee → bien = remorque (valeur nouvelle) hors du bâtiment désigné",
         "vol des animaux : portée limitée au bien animal",
         "3.1.6.3 : plafonds cités en limites ; 3.1.6.5 : hors décision",
-        "sous_clefs retiré : le plafond est cité, il ne décide pas de la couverture"
+        "sous_clefs retiré : le plafond est cité, il ne décide pas de la couverture",
+        "3.1.6.2.6 : « à l'extérieur » = cours, jardins, terrasse, couloirs et dépendances sans serrure à cylindre, à l'adresse du risque ; ni la voie publique ni un autre bâtiment (axa-v05, v07, v14)",
+        "3.1.6.2.9 inchangé : avec la règle « exclusion entamée » du moteur (7.58), travaux établis et lien causal inconnu font poser la question ; travaux non évoqués restent une réserve (axa-v15)"
       ],
-      "question_metier": "le vol simple (ni effraction ni violence) est exclu pour toutes les garanties : il vide l'extension « mobilier de jardin » (Privilège) de presque tout son sens. Lecture à confirmer par un souscripteur."
+      "question_metier": "le vol simple (ni effraction ni violence) est exclu pour toutes les garanties : il vide l'extension « mobilier de jardin » (Privilège) de presque tout son sens. Lecture à confirmer par un souscripteur.",
+      "seconde_passe": "après les 15 cas de test AXA (regles/cas/golden/axa-lu-optihome-2017.jsonl)"
     }
   },
   "proposition": {
@@ -1591,7 +1594,7 @@
                 {
                   "f": [
                     "lieu",
-                    "voie_publique"
+                    "terrasse"
                   ]
                 },
                 {
@@ -1601,9 +1604,29 @@
                   ]
                 },
                 {
-                  "f": [
-                    "lieu",
-                    "autre_batiment"
+                  "et": [
+                    {
+                      "ou": [
+                        {
+                          "f": [
+                            "lieu",
+                            "abri_jardin"
+                          ]
+                        },
+                        {
+                          "f": [
+                            "lieu",
+                            "annexe"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "f": [
+                        "serrure_cylindre",
+                        "non"
+                      ]
+                    }
                   ]
                 }
               ]
@@ -1880,6 +1903,11 @@
       "gravite": "info",
       "controle": "couverture",
       "message": "hors décision (3.1.6.5) : procédure après sinistre, sans effet sur la couverture"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "prolog",
+      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
     }
   ]
 }

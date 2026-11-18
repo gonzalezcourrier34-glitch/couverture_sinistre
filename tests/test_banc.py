@@ -73,7 +73,23 @@ def test_figer_cree_une_version(tmp_path):
     assert v["version"] == 1 and banc.figer(tmp_path, CONTRAT)["version"] == 1, "même contenu, même version"
     with open(tmp_path / "golden" / "sinistres.jsonl", "a", encoding="utf-8") as f:
         f.write(json.dumps({"id": "x", "sinistre": "x"}) + "\n")
+    assert banc.figer(tmp_path, CONTRAT)["version"] == 1, "le cas d'un autre contrat ne change pas celui-ci (7.58)"
+    with open(tmp_path / "golden" / "annotations" / f"{CONTRAT}.jsonl", "a", encoding="utf-8") as f:
+        f.write(json.dumps({"sinistre_id": "x", "attendu": "INCERTAIN"}) + "\n")
     assert banc.figer(tmp_path, CONTRAT, "ajout")["version"] == 2
+
+
+@pytest.mark.parametrize("contrat_id", sorted(p.stem for p in (DONNEES / "golden" / "annotations").glob("*.jsonl")))
+def test_regles_seules_justes_pour_chaque_contrat(contrat_id):
+    """Pour chaque contrat du golden set, les règles seules, sur les faits idéaux, donnent une réponse attendue
+    ou tolérée. AXA (7.58) : les cas ont trouvé deux erreurs de traduction que la relecture n'avait pas vues."""
+    cas, etat = banc.charger(DONNEES, contrat_id)
+    assert etat["n"] >= 10 and all(c["faits"] for c in cas), "chaque cas a ses faits idéaux"
+    contrat = Contrat(prolog.fichier_regles(contrat_id))
+    r = banc.couche_regles(cas, lambda faits: Moteur(contrat, faits).decider())
+    assert r["metriques"]["faux_couverts"] == 0
+    faux = [(l["id"], l["attendu"], l["obtenu"]) for l in r["cas"] if not l["ok"]]
+    assert not faux, faux
 
 
 # --- Couche 1 : règles -------------------------------------------------------------------------------------

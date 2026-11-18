@@ -28,6 +28,8 @@
       4. exclusion « oui » (tout)     -> refus ; une exclusion ne vise qu'une garantie rattachée ;
       5. circonstance « inconnu »     -> incertain (c'est à l'assuré d'établir la garantie) ;
       6. obligation non respectée     -> incertain si le refus exige un lien causal, refus sinon ;
+      6 bis. exclusion « à demander » entamée (inconnue, mais un de ses faits positifs est établi :
+         les travaux sont en cours, le lien causal est inconnu) -> incertain, on demande ce qui manque ;
       7. sinon couvert ; une exclusion « à demander » inconnue est une réserve (charge de la
          preuve : l'assureur prouve l'exclusion) ; une exclusion qui ne vise qu'un bien
          (Portee = bien(B)) n'exclut que ce bien.
@@ -120,6 +122,19 @@ feuilles(concept(N), Fs) :- !,
     (   regle(definition(N, C, _, _)) -> feuilles(C, Fs) ; Fs = [] ).
 feuilles(_, []).
 
+%!  positives(+Condition, -Feuilles) : les faits qui comptent « pour » la condition : hors d'une
+%   négation, et la conclusion d'un « si ». Une condition inconnue dont l'un d'eux est établi est
+%   « entamée » : la déclaration l'a mise en jeu (DEMARCHE 7.58).
+positives(f(V, X), [f(V, X)]) :- !.
+positives(et(L), Fs) :- !, maplist(positives, L, Fss), append(Fss, Fs).
+positives(ou(L), Fs) :- !, maplist(positives, L, Fss), append(Fss, Fs).
+positives(si(_, B), Fs) :- !, positives(B, Fs).
+positives(concept(N), Fs) :- !,
+    (   regle(definition(N, C, _, _)) -> positives(C, Fs) ; Fs = [] ).
+positives(_, []).
+
+entamee(C) :- positives(C, Fs), member(F, Fs), eval(F, oui), !.
+
 concepts(concept(N), [N|Ns]) :- !,
     (   regle(definition(N, C, _, _)) -> concepts(C, Ns) ; Ns = [] ).
 concepts(non(C), Ns) :- !, concepts(C, Ns).
@@ -168,7 +183,9 @@ classer_exclusion(oui, bien(B), _, _, A, T, X) :- !,
     ->  X = x(partielle, A, T, B)          % d'autres biens sont touchés : seul B est exclu
     ;   X = x(totale, A, T, [])
     ).
-classer_exclusion(inconnu, _, oui, C, A, T, x(inconnue, A, T, Q)) :- inconnues(C, Q).
+classer_exclusion(inconnu, _, oui, C, A, T, X) :-
+    inconnues(C, Q),
+    (   entamee(C) -> X = x(engagee, A, T, Q) ; X = x(inconnue, A, T, Q) ).
 
 obligations(G, Os) :-
     findall(o(E, L, A, T, C),
@@ -220,6 +237,13 @@ issue(_, oui, _, _, Cs, _, _, _, _, I) :-
     inconnues(C, Q),
     preuve(A, T, "condition", P),
     I = _{rattachement:"rattachée", decision:"INCERTAIN", motif:"s'applique, selon des faits non précisés",
+          preuves:[P], questions:Q, reserves:[], partielles:[]}.
+issue(_, oui, _, _, _, Xs, _, _, _, I) :-
+    member(x(engagee, A, T, _), Xs), !,
+    findall(V, ( member(x(engagee, _, _, Vs), Xs), member(V, Vs) ), Q0), sort(Q0, Q),
+    preuve(A, T, "exclusion", P),
+    I = _{rattachement:"rattachée", decision:"INCERTAIN",
+          motif:"une exclusion est en jeu, selon des faits non précisés",
           preuves:[P], questions:Q, reserves:[], partielles:[]}.
 issue(_, oui, _, _, _, _, Os, _, _, I) :-
     member(o(non, oui, A, T, _), Os), !,

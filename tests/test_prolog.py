@@ -134,8 +134,14 @@ def test_obligations_fenetres_et_gel(contrat):
     assert Moteur(contrat, {**fenetre, "effraction": "oui"}).decider()["decision"] == "COUVERT", "l'effraction excuse"
     gel = {"evenement": "degat_eaux", "bien": ["element_batiment"], "lieu": ["logement"], "cause_eau": "gel"}
     assert Moteur(contrat, {**gel, "prevention_gel": "non"}).decider()["decision"] == "NON_COUVERT"
+    # Le gel est établi, la prévention inconnue : l'exclusion est « entamée », on pose la question (7.58).
+    # Avant, la réponse était « couvert sous réserve » ; le golden set (g2-i06) attend la question.
     d = Moteur(contrat, gel).decider()
-    assert d["decision"] == "COUVERT" and "prevention_gel" in d["retenues"][0]["reserves"]
+    assert d["decision"] == "INCERTAIN" and d["retenues"][0]["questions"] == ["prevention_gel"]
+    # Rien ne dit que l'eau vient du gel : l'exclusion n'est pas évoquée, elle reste une réserve.
+    fuite = {"evenement": "degat_eaux", "bien": ["element_batiment"], "lieu": ["logement"]}
+    d = Moteur(contrat, fuite).decider()
+    assert d["decision"] == "COUVERT" and "cause_eau" in d["retenues"][0]["reserves"]
 
 
 def test_regles_dans_le_vocabulaire(contrat):
