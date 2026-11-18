@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import json
 import os
+from concurrent.futures import ThreadPoolExecutor
 import re
 import shutil
 import subprocess
@@ -223,10 +224,11 @@ INCONNU = "inconnu"
 
 
 def schema_faits(variables: dict) -> dict:
-    """Le schéma JSON de la réponse : chaque variable avec ses seules valeurs permises (listes fermées).
-    Toutes sont présentes, comme la forme stricte l'exige ; « inconnu » vient en premier. Avec null en fin
-    de liste, Mistral Small remplissait au lieu de laisser vide (« fermeture = aucune » pour « volé dans ma
-    cave ») : les questions attendues n'étaient plus posées que dans 36 % des cas (7.38)."""
+    """Le schéma JSON de la réponse : chaque variable avec ses seules valeurs permises (listes fermées),
+    « inconnu » en premier. **Aucune variable n'est obligatoire** : quand le schéma les exigeait toutes,
+    Mistral Small remplissait au lieu de laisser vide (« fermeture = aucune » pour « volé dans ma cave »),
+    avec null en fin de liste (7.38) comme avec « inconnu » en tête (7.39). La lecture d'un seul coup, sans
+    schéma, ne le faisait pas : le modèle n'écrivait que ce qu'il avait trouvé."""
     proprietes = {}
     for v, d in variables.items():
         if d.get("plusieurs"):
@@ -234,13 +236,22 @@ def schema_faits(variables: dict) -> dict:
         else:
             proprietes[v] = {"type": "string", "enum": [INCONNU] + list(d["valeurs"])}
     return {"type": "object", "additionalProperties": False, "required": ["faits"],
-            "properties": {"faits": {"type": "object", "additionalProperties": False,
-                                     "required": list(proprietes), "properties": proprietes}}}
+            "properties": {"faits": {"type": "object", "additionalProperties": False, "properties": proprietes}}}
+
+
+MODES_LECTURE = ("deux_temps", "en_parallele", "un_temps")
 
 
 def mode_lecture() -> str:
-    """COUVERTURE_LECTURE=un_temps garde la lecture d'avant (consigne v4, tout le vocabulaire), pour comparer."""
-    return "un_temps" if os.environ.get("COUVERTURE_LECTURE", "").strip().lower() == "un_temps" else "deux_temps"
+    """La lecture des faits (DEMARCHE 7.38 à 7.42), choisie par COUVERTURE_LECTURE :
+    - deux_temps (par défaut, le meilleur mesuré) : le socle, puis seulement les questions de cet événement.
+      Il trouve les faits qui décident (absence, gel, cause de l'eau) ; il en invente aussi (« fermeture =
+      aucune »), ce qui fait moins poser de questions, mais rarement couvrir à tort ;
+    - en_parallele : le socle et la lecture complète v4 en même temps. Essayé et écarté (7.42) : la lecture
+      complète oublie les faits qui décident, et les couverts à tort reviennent (11,7) ;
+    - un_temps : la lecture d'avant, d'un seul coup (9,3 couverts à tort)."""
+    m = os.environ.get("COUVERTURE_LECTURE", "").strip().lower()
+    return m if m in MODES_LECTURE else "deux_temps"
 
 
 def _lire(llm: LLM, systeme: str, variables: dict, message: str) -> dict:
@@ -265,8 +276,18 @@ def extraire_faits_regles(sinistre: str, llm: LLM) -> tuple[dict, list[str]]:
     """Les faits lus par le modèle, et les écarts au vocabulaire (retirés)."""
     voc = vocabulaire()
     declaration = f"## Déclaration\n{sinistre}"
-    if mode_lecture() == "un_temps":
+    mode = mode_lecture()
+    if mode == "un_temps":
         lus = _lire(llm, SYSTEME_FAITS_REGLES, voc, declaration)
+    elif mode == "en_parallele":
+        # Les deux lectures partent ensemble : la réponse attend la plus lente, pas la somme.
+        with ThreadPoolExecutor(max_workers=2) as ex:
+            socle = ex.submit(_lire, llm, SYSTEME_LECTURE_SOCLE, {v: voc[v] for v in SOCLE}, declaration)
+            complet = ex.submit(_lire, llm, SYSTEME_FAITS_REGLES, voc, declaration)
+            lus_socle, lus = socle.result(), complet.result()
+        # Le socle vient de la lecture courte (elle ne perd plus le lieu) ; s'il lui manque une variable,
+        # la lecture complète la donne.
+        lus = {v: x for v, x in lus.items() if v not in SOCLE or v not in lus_socle} | lus_socle
     else:
         lus = _lire(llm, SYSTEME_LECTURE_SOCLE, {v: voc[v] for v in SOCLE}, declaration)
         evenements = [str(e) for e in (lus.get("evenement") or []) if str(e) in voc["evenement"]["valeurs"]]

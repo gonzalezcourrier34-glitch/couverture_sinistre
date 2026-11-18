@@ -376,7 +376,7 @@ def enregistrer(donnees: Path, resultat: dict, dossier: Path | None = None) -> t
     dossier.mkdir(parents=True, exist_ok=True)
     modele = (resultat.get("modele") or "").split(":")[-1].replace("-latest", "")
     nom = f"{datetime.now():%Y%m%d-%H%M%S}-{resultat['contrat']}-{resultat['methode']}" + (f"-{modele}" if modele else "") \
-        + ("-un-temps" if resultat.get("lecture") == "un temps" else "")
+        + (f"-{resultat['lecture'].replace(' ', '-')}" if resultat.get("lecture") not in (None, "deux temps") else "")
     js, md = dossier / f"{nom}.json", dossier / f"{nom}.md"
     precedent = dernier(dossier, resultat["contrat"], resultat["methode"])
     texte = markdown(resultat, precedent)

@@ -1589,12 +1589,85 @@ ne choisit pas « non », « aucune » ou « tiers » par défaut. Au passage, l
 consigne du temps 1 (le vocabulaire seul n'avait pas suffi) : la clé dont le voleur s'est servi n'est pas
 un bien volé. À mesurer.
 
+### 7.40 Lecture v2 mesurée : la vraie cause est l'obligation de répondre
+
+**Mesure** (Small, deux temps, consignes v2, 3 exécutions) : **86 % justes** (84 % en v1), 3 couverts à tort
+(2,7), **2 refus à tort** (3,7), 8 instables, faits retrouvés 91 %, 1 à 2 minutes par passage. Mais les
+**questions attendues restent posées dans 36 % des cas** : la correction de 7.39 n'a pas marché.
+
+Cas par cas, le modèle remplit toujours : `simple_disparition = non` (39 fois), `fermeture = aucune` (29),
+`auteur = tiers` (28), `intentionnel = non` (22)… alors que « inconnu » était proposé en premier et que la
+consigne disait de ne pas choisir ces valeurs par défaut. La comparaison avec la lecture d'un seul coup
+désigne la cause : sans schéma, « on m'a volé mon vélo dans ma cave » donnait bien la question sur la
+fermeture (rappel 100 % sur ce cas), avec le schéma jamais. **Ce n'est pas la consigne, c'est la forme : un
+schéma qui exige chaque variable oblige le modèle à écrire quelque chose pour chacune**, et il écrit une
+valeur plausible plutôt que « inconnu ».
+
+**Correction, un seul changement** : le schéma garde les listes fermées de valeurs, mais plus aucune
+variable n'est obligatoire (forme non stricte). Les consignes ne changent pas (v2), pour mesurer l'effet
+du schéma seul. On ne réessaie pas le garde-fou des appuis (7.26) : deux essais, deux bilans négatifs.
+
+**La clé sous le paillasson** (g2-i02, g-p03) est toujours lue comme des clés volées malgré la règle : à
+reprendre si la correction du schéma ne suffit pas (par exemple, ne pas demander `bien = cles` au temps 1
+quand un autre bien est volé).
+
+**Mesure : sans effet.** 85 % justes, 3,3 couverts à tort, 2,7 refus à tort, questions 39 % : dans le bruit
+de la v2. Le schéma n'était donc pas la cause. Le compte des faits inventés, banc par banc, la donne :
+
+| Lecture | Faits inventés (3 exécutions) | `g-q01` « volé dans ma cave » |
+|---|---|---|
+| Un temps, consigne v4 | 47 | rien d'inventé |
+| Deux temps v1 (schéma strict, null) | 217 | fermeture = aucune, auteur = tiers… |
+| Deux temps v2 (« inconnu » d'abord) | 268 | idem |
+| Deux temps v2, schéma facultatif | 261 | idem |
+
+**C'est le temps 2 lui-même** : on y présente au modèle une liste de questions ciblées (« tu réponds à
+quelques questions précises »), et il y répond, question par question, même sans rien dans la déclaration.
+Quand il traduisait la déclaration d'un seul coup, avec tout le vocabulaire, il ne gardait que ce qu'il
+trouvait. Le schéma, strict ou non, n'y change rien.
+
+### 7.41 Les deux lectures en parallèle : le socle court, le reste comme avant
+
+Ce que chaque lecture fait bien : la lecture courte (événement, bien, lieu) ne perd plus le lieu ; la
+lecture d'un seul coup (v4) n'invente presque rien. **On garde les deux, lancées en même temps** :
+le socle vient de la lecture courte, le reste de la lecture complète (et si la lecture courte n'a pas trouvé
+une variable du socle, la complète la donne). Comme les deux appels partent ensemble, la réponse attend la
+plus lente, pas la somme : on revient vers le temps de la lecture d'un seul coup. Aucune consigne nouvelle :
+`lecture-socle` v2 et la v4. Les deux autres modes restent disponibles pour comparer
+(`COUVERTURE_LECTURE=deux_temps` ou `un_temps`). À mesurer.
+
+### 7.42 Les deux lectures en parallèle : écartées
+
+**Mesure** (Small, 3 exécutions) : 80 % justes, **11,7 couverts à tort**, 1,7 refus à tort, 13 instables ;
+questions attendues 48 % (39 %), faits retrouvés 80 % (90 %) ; le temps d'un passage n'a pas baissé
+(le banc sature déjà les appels simultanés). Les couverts à tort reviennent au niveau de la lecture d'un
+seul coup (9,3).
+
+**Pourquoi** : la lecture complète invente peu, mais elle **oublie les faits qui décident** : l'absence
+(13 fois), l'effraction (9), les flammes et l'embrasement, la cause de l'eau, le gel sans chauffage,
+l'intention. Or un fait qui fait refuser (une exclusion, une obligation non respectée) et qui manque,
+c'est un « couvert » de trop. Les questions ciblées du temps 2 trouvent ces faits ; elles en inventent
+aussi, mais ces inventions font surtout répondre « non couvert » ou « incertain » au lieu de poser une
+question, rarement « couvert ».
+
+| Lecture (Small) | Justes | Couverts à tort | Refus à tort | Questions posées | Faits inventés |
+|---|---|---|---|---|---|
+| Un temps (v4) | 75 % | 9,3 | 5 | 52 % | 47 |
+| **Deux temps v2** | **86 %** | **3** | **2** | 36 % | 268 |
+| En parallèle | 80 % | 11,7 | 1,7 | 48 % | — |
+
+**Décision** : on revient à la lecture en deux temps (v2), qui reste la meilleure mesurée, par défaut ; le
+mode en parallèle reste disponible (`COUVERTURE_LECTURE=en_parallele`) mais écarté. **Les faits inventés
+du temps 2 relèvent de l'étape 2 du plan** : deux lectures indépendantes comparées par le code. Un fait
+vrai est lu les deux fois ; une invention l'est rarement deux fois de la même façon. Un fait lu une seule
+fois devient inconnu, et la question est posée.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 18 nov. 2026 ; ce qui est fait est dans les sections 7.
 
 **Le plan de lecture (7.35)**
-- Mesurer la lecture v2 (« inconnu » d'abord, règle des clés, 7.39) : questions posées, faits inventés, couverts à tort.
+- Étape 2 avancée : deux lectures en deux temps, comparées par le code (un fait lu une seule fois devient inconnu) ; mesurer les faits inventés, les questions posées et les couverts à tort.
 - Étape 3 : Prolog chargé une fois (processus permanent) ; mesurer la latence par cas.
 - Étape 4 : le temps dans le banc (médiane, p95 par étape) avec une porte.
 - Étape 2 : double lecture en parallèle comparée par le code, et recours à Mistral Large quand elles divergent ou que la réponse est « couvert ».
@@ -1675,3 +1748,5 @@ Tenu à jour le 18 nov. 2026 ; ce qui est fait est dans les sections 7.
 59. Le code qu'on garde pour mémoire se paie à chaque lecture : la mémoire est dans git et dans ce document.
 60. Une citation exacte ne prouve pas une lecture juste : la vérification arrête l'invention, pas l'excès de confiance.
 61. Un schéma qui oblige à répondre pousse à remplir : la case « inconnu » doit être la première offerte, pas la dernière tolérée.
+62. Quand un modèle remplit au lieu de laisser vide, chercher ce qui l'oblige à répondre (un schéma, une liste de questions) avant de réécrire la consigne : ici, c'était la liste de questions.
+63. Un fait oublié qui ferait refuser coûte plus cher qu'un fait inventé qui fait demander : on choisit la lecture qui oublie le moins ce qui décide.

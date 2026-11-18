@@ -328,7 +328,7 @@ COUVERTURE_MODELE=mistral-large-latest
 
 **Pourquoi** : les fiches ne savaient pas représenter une condition cachée dans un tableau de limites ni une exclusion cachée dans une définition ; une règle les exprime directement. La décision devient un calcul reproductible. Les tests utilisent aussi `tests/moteur_reference.py`, une seconde implémentation du moteur en Python : là où SWI-Prolog est installé, un test vérifie que les deux concordent.
 
-**La lecture en deux temps** (`extraire_faits_regles`) : d'abord l'événement, le bien et le lieu ; puis seulement les questions qui concernent cet événement, avec ce qui est déjà établi. Chaque appel envoie un **schéma JSON** qui n'admet que les valeurs du vocabulaire (`schema_faits`). `COUVERTURE_LECTURE=un_temps` revient à la lecture d'un seul coup, pour comparer.
+**La lecture en deux temps** (`extraire_faits_regles`) : d'abord l'événement, le bien et le lieu ; puis seulement les questions qui concernent cet événement, avec ce qui est déjà établi. Chaque appel envoie un **schéma JSON** qui n'admet que les valeurs du vocabulaire (`schema_faits`), sans rendre aucune variable obligatoire. `COUVERTURE_LECTURE=un_temps` ou `en_parallele` donnent les lectures essayées et écartées, pour comparer (DEMARCHE 7.38 à 7.42).
 
 ### `src/couverture/banc.py` et `data/golden/` — le banc d'essai
 

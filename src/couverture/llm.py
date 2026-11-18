@@ -184,9 +184,12 @@ class OpenAICompatibleLLM:
         }
         if self.json_mode:
             corps["response_format"] = {"type": "json_object"}
+        # Schéma non strict : les variables restent facultatives (une forme stricte les exige toutes, et le
+        # modèle remplit alors au lieu de laisser vide, DEMARCHE 7.40). Les valeurs hors liste sont de toute
+        # façon retirées par le code.
         if schema is not None and self.json_mode and not self.schema_refuse:
             corps["response_format"] = {"type": "json_schema",
-                                        "json_schema": {"name": "reponse", "schema": schema, "strict": True}}
+                                        "json_schema": {"name": "reponse", "schema": schema, "strict": False}}
         corps.update(self.extra)
         entetes = {"authorization": f"Bearer {self.cle_api}"} if self.cle_api else {}
         try:

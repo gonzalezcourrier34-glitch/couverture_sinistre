@@ -472,7 +472,7 @@ def test_lecture_en_deux_temps(monkeypatch):
                 return json.dumps({"faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}})
             return json.dumps({"faits": {"fermeture": "cadenas", "lieu": ["logement"], "cause_eau": "gel"}})
 
-    monkeypatch.delenv("COUVERTURE_LECTURE", raising=False)
+    monkeypatch.setenv("COUVERTURE_LECTURE", "deux_temps")
     m = Modele()
     faits, ecarts = prolog.extraire_faits_regles("On m'a volé mon vélo dans ma cave fermée par un cadenas.", m)
     assert faits == {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"], "fermeture": "cadenas"}, \
@@ -483,6 +483,7 @@ def test_lecture_en_deux_temps(monkeypatch):
     details = set(sch2["properties"]["faits"]["properties"])
     assert {"fermeture", "effraction", "absence"} <= details and not details & {"cause_eau", "flammes", "evenement"}
     assert sch2["properties"]["faits"]["properties"]["fermeture"]["enum"][0] == "inconnu", "« inconnu » d'abord"
+    assert "required" not in sch2["properties"]["faits"], "aucune variable obligatoire : le modèle remplirait (7.40)"
     assert "evenement = vol" in m2 and "## Déjà établi" in m2
     assert len(m2) < len(m1) + 3000, "la consigne du temps 2 est courte"
 
@@ -544,7 +545,41 @@ def test_inconnu_n_est_pas_un_fait(monkeypatch):
                 return json.dumps({"faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}})
             return json.dumps({"faits": {"fermeture": "inconnu", "serrure_surete": "inconnu", "auteur": "inconnu"}})
 
-    monkeypatch.delenv("COUVERTURE_LECTURE", raising=False)
+    monkeypatch.setenv("COUVERTURE_LECTURE", "deux_temps")
     faits, _ = prolog.extraire_faits_regles("On m'a volé mon vélo dans ma cave.", Modele())
     assert faits == {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}
     assert "la clé dont le voleur s'est servi" in prolog.SYSTEME_LECTURE_SOCLE
+
+
+def test_lecture_en_parallele(monkeypatch):
+    """Le mode en parallèle (essayé en 7.41, écarté en 7.42) : le socle (courte) et la lecture complète v4,
+    en même temps. Le socle vient de la première ; le reste de la seconde."""
+    import threading
+    import time as _time
+
+    class Modele:
+        nom, accepte_schema = "parallele", True
+
+        def __init__(self):
+            self.en_cours, self.max_simultanes, self.verrou = 0, 0, threading.Lock()
+
+        def completer(self, systeme, message, schema=None):
+            with self.verrou:
+                self.en_cours += 1
+                self.max_simultanes = max(self.max_simultanes, self.en_cours)
+            _time.sleep(0.05)
+            with self.verrou:
+                self.en_cours -= 1
+            if systeme == prolog.SYSTEME_LECTURE_SOCLE:
+                return json.dumps({"faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}})
+            assert systeme == prolog.SYSTEME_FAITS_REGLES and "cause_eau" in schema["properties"]["faits"]["properties"]
+            return json.dumps({"faits": {"evenement": ["vol"], "bien": ["velo", "cles"], "fermeture": "cadenas"}})
+
+    monkeypatch.delenv("COUVERTURE_LECTURE", raising=False)
+    assert prolog.mode_lecture() == "deux_temps", "le meilleur mesuré reste le défaut (7.42)"
+    monkeypatch.setenv("COUVERTURE_LECTURE", "en_parallele")
+    m = Modele()
+    faits, _ = prolog.extraire_faits_regles("On m'a volé mon vélo dans ma cave fermée par un cadenas.", m)
+    assert faits == {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"], "fermeture": "cadenas"}, \
+        "le socle l'emporte (pas de clés), le lieu vient du socle, le détail de la lecture complète"
+    assert m.max_simultanes == 2, "les deux lectures partent en même temps"
