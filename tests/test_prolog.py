@@ -334,6 +334,30 @@ def test_lecture_recoit_le_sens_des_valeurs():
     assert "ne donne pas de lieu" in prolog.SYSTEME_FAITS_REGLES
 
 
+def test_un_contrat_ne_lit_que_ses_variables(tmp_path, monkeypatch):
+    """Étanchéité entre assureurs (7.57) : une variable ajoutée pour AXA (« plainte déposée ») n'entre pas dans
+    la lecture d'un vol chez Foyer, dont les règles ne l'emploient pas."""
+    foyer = prolog.variables_du_contrat("foyer-appart123-2025")
+    assert {"effraction", "cles_a_proximite", "serrure_surete"} <= foyer
+    regles = tmp_path / "x.pl"
+    regles.write_text("% f(commentaire, oui)\n/* f(bloc, oui) */\nperimetre(g, f(effraction, oui)).\n", encoding="utf-8")
+    monkeypatch.setattr(prolog, "fichier_regles", lambda c: regles)
+    assert prolog.variables_du_contrat("x") == {"effraction"}
+
+    class Espion:
+        nom = "espion"
+        messages = []
+
+        def completer(self, systeme, message):
+            Espion.messages.append(message)
+            return json.dumps({"faits": {"evenement": ["vol"], "violence": "oui"}})
+
+    monkeypatch.setenv("COUVERTURE_LECTURE", "deux_temps")
+    faits, _ = prolog.extraire_faits_regles("On m'a volé mon vélo.", Espion(), variables={"effraction"})
+    detail = Espion.messages[-1].split("## Déjà établi")[0]
+    assert "effraction" in detail and "violence" not in detail and "violence" not in faits
+
+
 def test_consigne_de_lecture_garde_ses_regles():
     """La v3 avait perdu « une pièce du logement → lieu = logement » en en ajoutant une autre : dix cas
     couverts sont devenus incertains (DEMARCHE 7.24 bis). Les règles qui ont fait leurs preuves restent."""

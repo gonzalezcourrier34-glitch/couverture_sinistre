@@ -1998,6 +1998,35 @@ pas « à l'étranger » : le contrat dit « partout dans le monde »).
 **Leçon 71.** Ajouter des règles pour un assureur ne doit pas changer les réponses d'un autre. Le banc Foyer
 est le test de cette étanchéité : à relancer après chaque vocabulaire accepté.
 
+### 7.57 AXA accepté ; le banc Foyer bouge à peine, et on ferme quand même la porte
+
+**Acceptation.** Les règles de l'art. 3.1.6 sont ajoutées à `regles/axa-lu-optihome-2017.pl` ; 125 tests
+passent sur le poste.
+
+**Banc Foyer après l'ajout d'AXA** (même golden v6, Mistral Small, lecture vérifiée) :
+
+| | Avant AXA (7.50) | Après AXA |
+|---|---|---|
+| Règles seules | 100 % | 100 % |
+| Chaîne : justes | 90 % | 89 % |
+| Couverts à tort | 2,33 | 3 |
+| Refus à tort | 1,33 | 0,67 |
+| Instables | 10 | 9 |
+| Un cas à la fois, médiane / 95e centile | 2,9 s / 4,7 s | 2,9 s / 20,3 s |
+
+Les règles Foyer n'ont pas changé (règles seules : 100 %). L'écart de la chaîne est de l'ordre de la
+variation entre deux exécutions de Mistral Small (deux cas-exécutions sur 291 pour les couverts à tort). Le
+95e centile sur dix cas est une seule question lente : la médiane n'a pas bougé.
+
+**Mais la cause possible était réelle.** Le vocabulaire est commun ; la lecture d'un vol chez Foyer recevait
+donc les dix variables d'AXA (plainte, formule « Privilège »…), qu'aucune règle Foyer n'emploie : un prompt
+plus long, et des faits à inventer en plus. Correction : chaque contrat ne lit que les variables que ses
+règles emploient (`f(variable, …)` relevées dans son fichier, plus le socle événement / bien / lieu). Foyer
+lit 29 variables sur 39, AXA 19. C'est aussi ce qui rend le vocabulaire commun extensible sans limite : il
+peut grossir avec chaque assureur sans alourdir la lecture des autres.
+
+**Leçon 72.** Un vocabulaire commun pour comparer, une lecture propre à chaque contrat pour décider.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 18 nov. 2026 ; ce qui est fait est dans les sections 7.

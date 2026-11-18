@@ -449,10 +449,27 @@ def variables_du_temps_2(voc: dict, evenements: list[str]) -> dict:
     return {v: d for v, d in voc.items() if v not in SOCLE and (not ev or not d.get("pour") or ev & set(d["pour"]))}
 
 
-def extraire_faits_regles(sinistre: str, llm: LLM, decideur=None) -> tuple[dict, list[str]]:
+def variables_du_contrat(contrat_id: str) -> set[str] | None:
+    """Les variables que les règles du contrat emploient (`f(variable, …)`), ou None sans fichier de règles.
+    Le vocabulaire est commun à tous les assureurs ; un contrat n'en lit que ce qu'il emploie (7.57)."""
+    chemin = fichier_regles(contrat_id)
+    if not chemin.exists():
+        return None
+    texte = chemin.read_text(encoding="utf-8")
+    texte = re.sub(r"%[^\n]*", "", re.sub(r"/\*.*?\*/", "", texte, flags=re.S))
+    return set(re.findall(r"\bf\(\s*'?([a-z][a-z0-9_]*)'?\s*,", texte))
+
+
+def extraire_faits_regles(sinistre: str, llm: LLM, decideur=None,
+                          variables: set[str] | None = None) -> tuple[dict, list[str]]:
     """Les faits lus par le modèle, et les écarts au vocabulaire (retirés).
-    `decideur(faits) -> dict` (le moteur) arbitre la vérification, en mode « verifiee » (7.44)."""
+    `decideur(faits) -> dict` (le moteur) arbitre la vérification, en mode « verifiee » (7.44).
+    `variables` : celles du contrat (le socle est toujours lu) ; None : tout le vocabulaire."""
     voc = vocabulaire()
+    if variables is not None:
+        # Les règles d'AXA ne doivent pas changer ce qu'on lit pour Foyer : la plainte ou la formule
+        # « Privilège » n'ont rien à faire dans la lecture d'un vol chez Foyer (7.57).
+        voc = {v: d for v, d in voc.items() if v in SOCLE or v in variables}
     declaration = f"## Déclaration\n{sinistre}"
     mode = mode_lecture()
     if mode == "un_temps":
@@ -531,6 +548,7 @@ class PipelineRegles:
         """`decideur(faits) -> dict` : par défaut SWI-Prolog ; remplaçable dans les tests."""
         self.contrat_id, self.clauses, self.llm = contrat_id, clauses, llm
         self.decideur = decideur or (lambda faits: decider(contrat_id, faits))
+        self.variables = variables_du_contrat(contrat_id)
 
     @classmethod
     def depuis_base(cls, base, contrat_id: str, llm: LLM) -> "PipelineRegles":
@@ -543,7 +561,7 @@ class PipelineRegles:
     def analyser(self, sinistre: str) -> Resultat:
         debut = time.perf_counter()
         try:
-            faits, ecarts = extraire_faits_regles(sinistre, self.llm, self.decideur)
+            faits, ecarts = extraire_faits_regles(sinistre, self.llm, self.decideur, self.variables)
         except ErreurLLM:
             raise
         except Exception as e:  # noqa: BLE001
