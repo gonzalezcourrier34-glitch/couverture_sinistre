@@ -38,7 +38,7 @@ from .texte import normaliser
 from .validation import _compact, extrait_present, passage_exact
 
 PROPOSITIONS = prolog.DOSSIER / "propositions"
-VERSION = "v2"
+VERSION = "v3"
 IDENT = re.compile(r"^[a-z][a-z0-9_]*$")
 BLOQUANT, A_RELIRE, INFO = "bloquant", "à relire", "info"
 
@@ -51,14 +51,16 @@ Une garantie a :
 - des obligations de prévention : ce que l'assuré doit faire ; « exception » est ce qui l'excuse (ou null) ; « lien_causal » vaut true si le contrat ne refuse que s'il y a un lien causal avec le sinistre ;
 - des exclusions : « portee » vaut "tout", ou {"bien": "valeur"} si elle n'exclut qu'un bien ; « a_demander » vaut true si l'on doit poser la question quand le fait est inconnu (circonstance que le déclarant ne mentionnerait pas de lui-même), false sinon ;
 - des limites : un plafond, sans condition.
+Les exclusions d'un article (« vols exclus ») valent pour TOUTES ses garanties, extensions comprises : mets-les dans "exclusions_communes", pas dans une seule garantie. N'attache à une garantie que les exclusions qui ne valent que pour elle.
 Une condition est un terme JSON : {"f": ["variable", "valeur"]}, {"et": [c1, c2]}, {"ou": [c1, c2]}, {"non": c}, {"si": [a, b]} (si a alors b), {"concept": "nom"} (une définition).
 La logique a trois valeurs : un fait que la déclaration ne donne pas est « inconnu », et le moteur pose alors la question. N'essaie pas de compenser un fait inconnu.
 
 ## Règles d'écriture
 1. Chaque garantie, définition, circonstance, obligation, exclusion et limite porte "article" (l'identifiant de clause fourni) et "texte" : une phrase COPIÉE MOT POUR MOT de cette clause. Pas de reformulation, pas de coupure, pas de « … ».
-2. N'emploie que les variables et les valeurs du vocabulaire. Si le texte exige un fait que le vocabulaire n'a pas, n'approxime pas avec un fait voisin : emploie une variable ou une valeur nouvelle ET déclare-la dans "vocabulaire_manquant" (variable, valeurs, question à poser à l'assuré, pourquoi). Un humain décidera.
-3. Traduis TOUT le texte : chaque élément d'une liste d'exclusions devient une exclusion. Ce que tu ne sais pas exprimer va dans "non_traduit" avec sa phrase. N'omets jamais rien en silence : une exclusion oubliée fait couvrir à tort.
-4. Une condition cachée dans un tableau de limites (« si ces locaux sont fermés par… ») est une circonstance. Une limite n'a pas de condition : {"article", "texte", "montant"}.
+2. N'emploie que les variables et les valeurs du vocabulaire. Si le texte exige un fait que le vocabulaire n'a pas, n'approxime pas avec un fait voisin : emploie une variable ou une valeur nouvelle ET déclare-la dans "vocabulaire_manquant" (variable, valeurs, question à poser à l'assuré, pourquoi, "plus_proche" : la variable existante la plus proche et pourquoi elle ne suffit pas). Un humain décidera. Avant de créer une variable, relis les questions du vocabulaire : « agression » est une violence, « complicité de l'assuré » est un auteur, « vol simple » est un vol sans effraction ni violence ; une notion qui se dit avec des faits existants s'écrit avec eux, au besoin par un concept.
+3. Traduis TOUT le texte : chaque élément d'une liste d'exclusions devient une exclusion. Ce que tu ne sais pas exprimer va dans "non_traduit" sous la forme {"article", "texte", "pourquoi"}. N'omets jamais rien en silence : une exclusion oubliée fait couvrir à tort.
+3 bis. Une exclusion garde ses réserves et ses conditions : « à l'exception du mobilier de jardin » s'écrit {"et": [condition, {"non": réserve}]}, et « si l'Assuré n'occupe que partiellement le bâtiment » fait partie de la condition. Une réserve perdue fait refuser à tort.
+4. Une condition cachée dans un tableau de limites (« si ces locaux sont fermés par… ») est une circonstance. Une limite n'a pas de condition : {"article", "texte", "montant"}. Un plafond qui ne vaut que dans un cas (« s'ils ne se trouvent pas sous clefs ») se cite tel quel ; n'invente pas de variable pour lui.
 5. Un terme défini par le contrat (« tempête », « bâtiment ») s'emploie par {"concept": "nom"} : réutilise un concept existant, ou ajoute sa définition dans "definitions" sous la forme {"concept": "nom", "condition": …, "article", "texte"}. Tout concept employé doit exister ou être défini.
 6. Si l'événement couvert est lui-même défini par le contrat (une définition de la tempête est fournie), cette définition est une condition de la garantie : mets {"concept": …} dans ses circonstances.
 7. "evenements" : les valeurs de la variable evenement que cette garantie couvre (le moteur refusera de conclure pour un événement absent de toutes les règles).
@@ -74,7 +76,8 @@ La logique a trois valeurs : un fait que la déclaration ne donne pas est « inc
    "exclusions": [{"condition": {"f": ["cause_eau", "inondation"]}, "portee": "tout", "a_demander": true, "article": "2.7-b", "texte": "par une inondation ou un débordement ou refoulement d'égouts publics"},
                   {"condition": {"f": ["bien", "canalisation"]}, "portee": {"bien": "canalisation"}, "a_demander": true, "article": "2.7-b", "texte": "aux canalisations, radiateurs, robinets, citernes, chaudières et autres appareils chauffant de l'eau, qui sont à l'origine du sinistre"}],
    "limites": [{"article": "2.7", "texte": "Dégâts causés par l'eau", "montant": "valeur à neuf"}]}],
- "vocabulaire_manquant": [{"variable": "piscine", "valeurs": ["oui", "non"], "question": "L'eau venait-elle d'une piscine ?", "pourquoi": "exclusion de l'écoulement des piscines"}],
+ "exclusions_communes": [],
+ "vocabulaire_manquant": [{"variable": "piscine", "valeurs": ["oui", "non"], "question": "L'eau venait-elle d'une piscine ?", "pourquoi": "exclusion de l'écoulement des piscines", "plus_proche": "cause_eau : aucune de ses valeurs ne dit d'où vient l'eau"}],
  "non_traduit": []}"""
 
 
@@ -112,7 +115,7 @@ def concepts_existants(contrat_pl: str) -> dict[str, str]:
 def message_redaction(article: str, textes: list[Clause], definitions: list[Clause], contrat_pl: str) -> str:
     voc = prolog.vocabulaire()
     vocab = "\n".join(f"- {v}{' (plusieurs)' if d.get('plusieurs') else ''} : {', '.join(d['valeurs'])}"
-                      for v, d in voc.items())
+                      f"{' — « ' + d['question'] + ' »' if d.get('question') else ''}" for v, d in voc.items())
     concepts = "\n".join(f"- {n} : « {t} »" for n, t in concepts_existants(contrat_pl).items()) or "(aucun)"
     bloc = "\n\n".join(f"### Clause {c.id} ({' > '.join(c.chemin)})\n{c.texte}" for c in textes)
     defs = "\n\n".join(f"### Clause {c.id}\n{c.texte}" for c in definitions) or "(aucune)"
@@ -185,7 +188,17 @@ def en_prolog(prop: dict, article: str, entete: str = "") -> str:
                           f"{oui_non(x.get('a_demander'))}, {atome(x['article'])},\n    {chaine(x['texte'])}).")
         for lim in g.get("limites", []):
             lignes.append(f"limite({gid}, {atome(lim['article'])}, {chaine(lim['texte'])}, {chaine(lim.get('montant', ''))}).")
+    if prop.get("exclusions_communes"):
+        cibles = "[" + ", ".join(atome(g["id"]) for g in prop.get("garanties", [])) + "]"
+        for x in prop["exclusions_communes"]:
+            lignes.append(f"exclusion({cibles}, {terme(x['condition'])}, {portee(x.get('portee'))}, "
+                          f"{oui_non(x.get('a_demander'))}, {atome(x['article'])},\n    {chaine(x['texte'])}).")
     return "\n".join(lignes) + "\n"
+
+
+def exclusions(prop: dict) -> list[dict]:
+    """Toutes les exclusions de la proposition : celles des garanties et celles communes à l'article."""
+    return [x for g in prop.get("garanties", []) for x in g.get("exclusions", [])] + list(prop.get("exclusions_communes") or [])
 
 
 def fusionner(contrat_pl: str, *propositions_pl: str) -> str:
@@ -241,6 +254,7 @@ def erreurs_schema(prop) -> list[str]:
 
     champs(prop.get("definitions"), "definitions", "definitions")
     champs(prop.get("non_traduit"), "non_traduit", "non_traduit")
+    champs(prop.get("exclusions_communes"), "exclusions", "exclusions_communes")
     garanties = prop.get("garanties")
     if not garanties:
         erreurs.append("aucune garantie proposée")
@@ -295,6 +309,8 @@ def elements_cites(prop: dict):
                           ("exclusion", "exclusions"), ("limite", "limites")):
             for x in g.get(cle, []):
                 yield role, x
+    for x in prop.get("exclusions_communes") or []:
+        yield "exclusion", x
 
 
 def conditions(prop: dict):
@@ -307,6 +323,8 @@ def conditions(prop: dict):
                 yield x.get("condition")
                 if cle == "obligations" and x.get("exception") is not None:
                     yield x["exception"]
+    for x in prop.get("exclusions_communes") or []:
+        yield x.get("condition")
 
 
 def items_exclusion(texte: str) -> list[str]:
@@ -358,6 +376,10 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
                       f"(`--accepter-vocabulaire {article}`) ou à remplacer")
             else:
                 noter(BLOQUANT, "vocabulaire", f"{v} = {x} : hors vocabulaire, et non déclaré")
+    for m in prop.get("vocabulaire_manquant", []):
+        if m.get("variable") not in voc and not m.get("plus_proche"):
+            noter(A_RELIRE, "vocabulaire", f"{m.get('variable')} : variable nouvelle sans « plus_proche » ; "
+                  f"vérifier qu'un fait existant ne la dit pas déjà")
     for e in prop.get("evenements", []):
         if e not in voc["evenement"]["valeurs"] and ("evenement", e) not in declares:
             noter(BLOQUANT, "vocabulaire", f"evenement = {e} : hors vocabulaire, et non déclaré")
@@ -388,16 +410,34 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
                 noter(BLOQUANT, "citation", f"{role} ({art}) : « {texte[:80]} » ne figure pas dans la clause")
 
     # 3 bis. Une exclusion qui ne vise qu'un bien n'exclut que ce bien (le reste du sinistre reste couvert).
+    for x in exclusions(prop):
+        fs = feuilles(x.get("condition"))
+        if fs and all(v == "bien" for v, _ in fs) and x.get("portee") in (None, "tout"):
+            biens = ", ".join(sorted({b for _, b in fs}))
+            noter(A_RELIRE, "portée", f"exclusion « {str(x.get('texte'))[:60]} » : ne vise que {biens}, mais exclut "
+                  f"tout le sinistre ; portée {{\"bien\": …}} ?")
+
+    # 3 ter. Les exclusions de l'article valent pour toutes ses garanties (AXA 3.1.6, 7.53 : les extensions
+    # « Privilège » et « Active » couvraient un vol sans aucune exclusion). Une garantie sans exclusion, à côté
+    # d'une liste d'exclusions de l'article non mise en commun, est bloquante.
+    if any(c.type == TypeClause.EXCLUSION for c in clauses_article(clauses, article)) and not prop.get("exclusions_communes"):
+        for g in prop.get("garanties", []):
+            if not g.get("exclusions"):
+                noter(BLOQUANT, "exclusions", f"garantie {g.get('id')} : aucune exclusion, alors que l'article en a ; "
+                      f"les mettre dans « exclusions_communes »")
+    for x in exclusions(prop):
+        if re.search(r"\b(a|à) l['’]exception\b|\bsauf\b|\bhormis\b", normaliser(str(x.get("texte", "")))) \
+                and "non" not in json.dumps(x.get("condition"), ensure_ascii=False):
+            noter(A_RELIRE, "réserve", f"exclusion « {str(x.get('texte'))[:60]} » : le texte a une réserve "
+                  f"(« à l'exception de… ») que la condition ne reprend pas")
     for g in prop.get("garanties", []):
-        for x in g.get("exclusions", []):
-            fs = feuilles(x.get("condition"))
-            if fs and all(v == "bien" for v, _ in fs) and x.get("portee") in (None, "tout"):
-                biens = ", ".join(sorted({b for _, b in fs}))
-                noter(A_RELIRE, "portée", f"exclusion « {str(x.get('texte'))[:60]} » : ne vise que {biens}, mais exclut "
-                      f"tout le sinistre ; portée {{\"bien\": …}} ?")
+        for lim in g.get("limites", []):
+            if re.search(r"\bs['’]?ils?\b|\bsi\b|\blorsque\b", normaliser(str(lim.get("texte", "")))):
+                noter(A_RELIRE, "limite", f"limite « {str(lim.get('texte'))[:60]} » ({g.get('id')}) : elle pose une "
+                      f"condition ; circonstance ou garantie à part ?")
 
     # 4. Couverture des listes d'exclusions
-    textes = [x.get("texte", "") for g in prop.get("garanties", []) for x in g.get("exclusions", [])]
+    textes = [x.get("texte", "") for x in exclusions(prop)]
     textes += [n.get("texte", "") for n in non_traduits(prop)]
     for c in clauses_article(clauses, article):
         if c.type != TypeClause.EXCLUSION:
@@ -576,7 +616,8 @@ def accepter(contrat_id: str, article: str, dossier: Path | None = None) -> Path
 def resumer(doc: dict) -> str:
     prop, ctl = doc["proposition"], doc.get("controles", [])
     g = prop.get("garanties", [])
-    n = lambda cle: sum(len(x.get(cle, [])) for x in g)  # noqa: E731
+    n = lambda cle: sum(len(x.get(cle, [])) for x in g) + (len(prop.get("exclusions_communes") or [])  # noqa: E731
+                                                           if cle == "exclusions" else 0)
     lignes = [f"Art. {doc.get('meta', {}).get('article', '?')} : {len(g)} garantie(s) "
               f"({', '.join(x.get('id', '?') for x in g)}), {n('exclusions')} exclusion(s), "
               f"{n('circonstances')} circonstance(s), {n('obligations')} obligation(s), {n('limites')} limite(s) ; "

@@ -157,6 +157,50 @@ def test_non_traduit_en_simple_phrase():
     assert any("déclaré non traduit" in m and "pied d’œuvre" in m for m in messages)
 
 
+def _deux_garanties(communes: bool) -> dict:
+    """BONNE plus une extension, avec les exclusions de l'article en commun ou laissées à la seule garantie de base."""
+    prop = copy.deepcopy(BONNE)
+    ext = {**copy.deepcopy(prop["garanties"][0]), "id": "tempete_extension", "exclusions": [], "circonstances": []}
+    prop["garanties"].append(ext)
+    if communes:
+        prop["exclusions_communes"] = prop["garanties"][0].pop("exclusions")
+        prop["garanties"][0]["exclusions"] = []
+    return prop
+
+
+def test_exclusions_de_l_article_pour_toutes_ses_garanties():
+    """AXA 3.1.6 (7.53) : une extension sans les exclusions de l'article couvrirait sans elles."""
+    assert any("tempete_extension" in p["message"] for p in bloquants(controles(_deux_garanties(False)), "exclusions"))
+    prop = _deux_garanties(True)
+    assert not bloquants(controles(prop), "exclusions")
+    assert not [p for p in bloquants(controles(prop), "couverture") if "absente" in p["message"]], \
+        "les exclusions communes comptent pour la couverture de la liste"
+    pl = redaction.en_prolog(prop, "2.2")
+    assert "exclusion([tempete_batiment, tempete_extension], f(construction_close, non), tout, oui, '2.2-a'" in pl
+
+
+def test_reserve_d_exclusion_et_condition_dans_une_limite_a_relire():
+    prop = copy.deepcopy(BONNE)
+    prop["garanties"][0]["exclusions"][1]["texte"] = "à tout objet situé à l'extérieur même ceux fixés à demeure, sauf x"
+    prop["garanties"][0]["limites"][0]["texte"] = "Abri de jardin s'il est fermé"
+    ps = [p for p in controles(prop) if p["gravite"] == redaction.A_RELIRE]
+    assert any(p["controle"] == "réserve" for p in ps) and any(p["controle"] == "limite" for p in ps)
+    prop["garanties"][0]["exclusions"][1]["condition"] = {"et": [{"f": ["lieu", "jardin"]}, {"non": {"f": ["bien", "plantation"]}}]}
+    assert not any(p["controle"] == "réserve" for p in controles(prop))
+
+
+def test_variable_nouvelle_sans_plus_proche_a_relire():
+    ps = controles(BONNE)
+    assert any(p["controle"] == "vocabulaire" and "plus_proche" in p["message"] and p["gravite"] == redaction.A_RELIRE
+               for p in ps)
+
+
+def test_le_vocabulaire_donne_au_modele_porte_les_questions():
+    """Sans le sens des variables, Mistral Large a créé « agression » à côté de « violence » (7.53)."""
+    message = redaction.message_redaction("2.2", [], [], "")
+    assert "violence : oui, non — « Y a-t-il eu violences physiques ou menaces ? »" in message
+
+
 def test_exclusion_oubliee_bloque():
     """La faute la plus coûteuse : une exclusion de la liste oubliée en silence."""
     assert bloquants(controles({**BONNE, "non_traduit": []}), "couverture"), "matériaux à pied d'œuvre : ni traduit ni déclaré"
@@ -234,7 +278,7 @@ def test_jeu_redaction_coherent():
 def test_consigne_de_redaction_versionnee():
     from couverture.consignes import CONSIGNES
 
-    assert CONSIGNES["couverture-redaction-regles"][2] == "v2"
+    assert CONSIGNES["couverture-redaction-regles"][2] == "v3"
 
 
 # --- Après la première rédaction réelle (Mistral Large, 17 nov. 2026, docs/DEMARCHE.md 7.20) ---------------

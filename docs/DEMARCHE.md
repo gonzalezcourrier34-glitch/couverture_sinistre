@@ -1894,11 +1894,25 @@ citation rattachée à un article qui n'existe pas (3.1.6.2.4) ; une partie de l
 - Des conditions cachées dans les limites (sous clefs, agression), contrairement à la règle 4 de la consigne.
 - « Perte ou vol des clés » réduit au vol ; « biens dont l'Assuré n'est pas propriétaire » réduit à `hote`.
 
-**Leçon 69.** Les contrôles mécaniques attrapent la forme (citations, schéma, faits inconnus, exclusions
-omises) ; ils n'attrapent pas une traduction plausible mais fausse. Sur un contrat neuf, la relecture humaine
-n'est pas une formalité : c'est elle qui empêche une extension de garantie de couvrir sans exclusions. Deux
-contrôles mécaniques en découlent : chaque garantie d'un même article doit porter les exclusions de l'article
-(ou dire pourquoi non), et un fait nouveau proche d'une variable existante doit être signalé comme tel.
+**Leçon 69.** Les contrôles mécaniques attrapaient la forme (citations, schéma, faits inconnus, exclusions
+omises), pas une traduction plausible mais fausse. Corriger la proposition à la main aurait réglé AXA 3.1.6,
+et rien d'autre : il aurait fallu recommencer pour chaque contrat. On a donc corrigé les causes, dans la
+chaîne de rédaction elle-même (consigne `redaction-regles` v3) :
+
+| Défaut observé | Cause | Correction générale |
+|---|---|---|
+| Extensions sans exclusions | le format n'avait pas d'endroit pour « les exclusions de l'article » | champ `exclusions_communes`, écrit `exclusion([g1, g2, …], …)` ; **bloquant** si une garantie n'a aucune exclusion alors que l'article en a |
+| `agression` à côté de `violence` | le modèle ne voyait que les noms et les valeurs du vocabulaire | le vocabulaire lui est donné avec la question de chaque variable ; une variable nouvelle doit dire `plus_proche` (la variable existante la plus proche et pourquoi elle ne suffit pas), **à relire** sinon |
+| Réserves perdues (« à l'exception du mobilier de jardin ») | rien ne le demandait | règle 3 bis de la consigne ; **à relire** si le texte cité a une réserve que la condition ne reprend pas |
+| Conditions glissées dans les limites | idem | règle 4 précisée ; **à relire** si une limite porte « si », « s'ils », « lorsque » |
+| `non_traduit` en phrases | format non vérifié | écart de schéma (reprise demandée au modèle) |
+
+Rejoués sur la proposition AXA déjà rédigée, sans relancer le modèle, ces contrôles signalent seuls les cinq
+extensions sans exclusions (bloquant), les deux réserves perdues et les quatre plafonds conditionnels (à
+relire), et les quatorze variables nouvelles sans justification. La relecture humaine reste, mais elle part
+d'une liste, pas d'une lecture ligne à ligne. Ce qui n'est pas automatisé : juger qu'une justification
+`plus_proche` est bonne. La mesure suivante : relancer la rédaction avec la consigne v3 et compter ce qui
+reste.
 
 ## 8. Ce qui reste à faire
 
