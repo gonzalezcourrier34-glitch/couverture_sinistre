@@ -1944,6 +1944,41 @@ décisions humaines : 18 faits nouveaux à accepter ou à remplacer, et deux pas
 (les plafonds par formule, la procédure des objets retrouvés). Plus aucun défaut de forme ni d'omission.
 La relecture porte maintenant sur le vocabulaire, c'est-à-dire sur ce qu'aucun contrôle ne peut trancher.
 
+### 7.55 La relecture humaine d'AXA 3.1.6 : ce qu'elle a changé, et combien de temps
+
+La relecture a porté sur le JSON de la proposition, pas sur le PDF. Chaque modification est tracée dans
+`meta.relecture` du fichier (`regles/propositions/axa-lu-optihome-2017/3.1.6.json`). Environ vingt minutes
+à deux, pour une garantie de huit sous-garanties et onze exclusions.
+
+**Vocabulaire : 18 faits proposés, 11 gardés.**
+- Remplacés par l'existant : `agression` → `violence` ; `complicite_assure` → `auteur` ;
+  `dispositifs_securite_conformes` → `serrure_surete` ; `vol_associe` → deux valeurs de `evenement` (vol et
+  vandalisme, la variable en admet plusieurs) ; `remorque_non_fermee` → une valeur `remorque` de `bien`.
+- Retirés : `aggravation_non_utilisation` (le lien causal de l'obligation le dit déjà),
+  `acces_direct_partie_occupee` (c'est une limite de l'intervention : quelles portes), `sous_clefs` (un
+  plafond, qui ne décide pas de la couverture).
+- Gardés : plainte déposée, formule souscrite, occupation partielle, serrure à cylindre, séjour temporaire,
+  occupation irrégulière, travaux, lien causal des travaux, abus de confiance, biens confiés au concierge.
+
+**Deux conflits qu'aucun contrôle n'a vus.**
+- *Le vol à la tire excluait le vol par agression.* Écrit « vol sur la personne, sur la voie publique », il
+  frappait aussi l'extension agression, puisque les exclusions sont désormais communes. Ajouté : « sans
+  violence ». C'est le revers de la mise en commun de 7.53 : une exclusion commune doit être compatible avec
+  chaque extension.
+- *Le vol simple vide l'extension « mobilier de jardin ».* Un vol au jardin se fait rarement par effraction.
+  Laissé tel que le contrat l'écrit, et posé comme **question au métier** dans `meta.relecture` : c'est une
+  lecture du contrat, pas une erreur de traduction.
+
+**Autres corrections.** Le « bâtiment désigné » couvre cave, grenier et garage, pas le seul logement ; le
+personnel de maison est exclu sauf effraction ou violence (les heures de service ne sont pas un fait du
+vocabulaire : résidu connu) ; les plafonds de 3.1.6.3 sont cités en limites ; la procédure des objets
+retrouvés (3.1.6.5) est classée **hors décision**, nouveau champ : cité et vérifié mot pour mot, mais non
+bloquant.
+
+**Leçon 70.** Un contrôle mécanique de plus en découle : pour chaque extension, vérifier qu'aucune
+exclusion commune ne la rend impossible (une exclusion dont la condition est impliquée par le périmètre
+de la garantie). C'est vérifiable par le moteur lui-même, en lui donnant le périmètre comme faits.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 18 nov. 2026 ; ce qui est fait est dans les sections 7.

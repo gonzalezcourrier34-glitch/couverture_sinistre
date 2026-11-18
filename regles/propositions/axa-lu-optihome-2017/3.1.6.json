@@ -915,6 +915,25 @@
         "garantie vol_privilege_jardin : un élément de « circonstances » n'a pas condition, article, texte (champs reçus : f)",
         "garantie vol_agression : un élément de « circonstances » n'a pas condition, article, texte (champs reçus : f)"
       ]
+    },
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-18",
+      "modifications": [
+        "plainte déposée : citation précise au lieu de celle de la garantie (9 circonstances)",
+        "agression → violence = oui (la question existante couvre « violences physiques ou menaces »)",
+        "vol_associe → evenement = vandalisme ET evenement = vol (la variable evenement admet plusieurs valeurs)",
+        "acces_direct_partie_occupee retiré : c'est une limite de l'intervention (quelles portes), citée telle quelle",
+        "dispositifs_securite_conformes → serrure_surete ; aggravation_non_utilisation retiré : lien_causal = true l'exprime",
+        "batiment_designe : logement, cave, grenier, garage (et non le seul logement)",
+        "CONFLIT : le vol à la tire excluait aussi le vol par agression (vol sur la personne, sur la voie publique) ; ajouté « sans violence »",
+        "complicite_assure → auteur ; personnel exclu sauf effraction ou violence (les heures de service ne sont pas un fait du vocabulaire)",
+        "remorque_non_fermee → bien = remorque (valeur nouvelle) hors du bâtiment désigné",
+        "vol des animaux : portée limitée au bien animal",
+        "3.1.6.3 : plafonds cités en limites ; 3.1.6.5 : hors décision",
+        "sous_clefs retiré : le plafond est cité, il ne décide pas de la couverture"
+      ],
+      "question_metier": "le vol simple (ni effraction ni violence) est exclu pour toutes les garanties : il vide l'extension « mobilier de jardin » (Privilège) de presque tout son sens. Lecture à confirmer par un souscripteur."
     }
   },
   "proposition": {
@@ -941,15 +960,37 @@
             }
           ]
         },
-        "article": "3.1.6.2.1",
+        "article": "3.1.6.2",
         "texte": "les vols simples"
       },
       {
         "concept": "batiment_designe",
         "condition": {
-          "f": [
-            "lieu",
-            "logement"
+          "ou": [
+            {
+              "f": [
+                "lieu",
+                "logement"
+              ]
+            },
+            {
+              "f": [
+                "lieu",
+                "cave"
+              ]
+            },
+            {
+              "f": [
+                "lieu",
+                "grenier"
+              ]
+            },
+            {
+              "f": [
+                "lieu",
+                "garage"
+              ]
+            }
           ]
         },
         "article": "3.1.6.1",
@@ -975,33 +1016,48 @@
         ],
         "circonstances": [
           {
-            "f": [
-              "plainte_deposee",
-              "oui"
-            ]
+            "condition": {
+              "f": [
+                "plainte_deposee",
+                "oui"
+              ]
+            },
+            "article": "3.1.6.1",
+            "texte": "pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes"
           }
         ],
         "obligations": [
           {
             "condition": {
               "f": [
-                "dispositifs_securite_conformes",
+                "serrure_surete",
                 "oui"
               ]
             },
-            "exception": {
-              "f": [
-                "aggravation_non_utilisation",
-                "non"
-              ]
-            },
+            "exception": null,
             "lien_causal": true,
             "article": "3.1.6.4",
-            "texte": "L'Assuré doit munir les locaux renfermant les biens garantis, des dispositifs de sécurité ci-après : n portes donnant sur l'extérieur ou sur les parties communes de l'immeuble : au moins une serrure de sûreté ou un verrou de sûreté ; n parties vitrées facilement accessibles : volet ou bien barreaux ou ornements en métal ne laissant entre éléments qu'un espace libre de 17 cm au maximum ; n soupiraux : barreaux ou ornements en métal disposés comme il est dit à l'alinéa précédent. Les moyens de protection seront maintenus en bon état et utilisés en bon père de famille. En cas de sinistre dont la charge est aggravée en raison de la non-utilisation de ces systèmes de protection, la Compagnie se réserve le droit de réduire l'indemnité à concurrence de l'aggravation de son préjudice."
+            "texte": "portes donnant sur l’extérieur ou sur les parties communes de l’immeuble : au moins une serrure de sûreté ou un verrou de sûreté"
           }
         ],
         "exclusions": [],
-        "limites": []
+        "limites": [
+          {
+            "article": "3.1.6.3",
+            "texte": "à concurrence de 40% du montant indiqué aux conditions particulières au titre du contenu, pour les objets tels que meubles d’époque et objets de valeur",
+            "montant": "40 % du contenu"
+          },
+          {
+            "article": "3.1.6.3",
+            "texte": "concernant les timbres de collection, l’indemnité par timbre ne pourra être supérieure à 500 €",
+            "montant": "500 € par timbre"
+          },
+          {
+            "article": "3.1.6.3",
+            "texte": "à concurrence de 1500 € par sinistre pour l’ensemble constitué de l’argent comptant",
+            "montant": "1 500 € (750 € hors clefs)"
+          }
+        ]
       },
       {
         "id": "vandalisme_vol",
@@ -1017,17 +1073,21 @@
           },
           {
             "f": [
-              "vol_associe",
-              "oui"
+              "evenement",
+              "vol"
             ]
           }
         ],
         "circonstances": [
           {
-            "f": [
-              "plainte_deposee",
-              "oui"
-            ]
+            "condition": {
+              "f": [
+                "plainte_deposee",
+                "oui"
+              ]
+            },
+            "article": "3.1.6.1",
+            "texte": "pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes"
           }
         ],
         "obligations": [],
@@ -1061,10 +1121,14 @@
         ],
         "circonstances": [
           {
-            "f": [
-              "plainte_deposee",
-              "oui"
-            ]
+            "condition": {
+              "f": [
+                "plainte_deposee",
+                "oui"
+              ]
+            },
+            "article": "3.1.6.1",
+            "texte": "pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes"
           }
         ],
         "obligations": [],
@@ -1098,31 +1162,25 @@
         ],
         "circonstances": [
           {
-            "f": [
-              "plainte_deposee",
-              "oui"
-            ]
-          },
-          {
-            "si": [
-              {
-                "f": [
-                  "occupation_partielle",
-                  "oui"
-                ]
-              },
-              {
-                "f": [
-                  "acces_direct_partie_occupee",
-                  "oui"
-                ]
-              }
-            ]
+            "condition": {
+              "f": [
+                "plainte_deposee",
+                "oui"
+              ]
+            },
+            "article": "3.1.6.1",
+            "texte": "pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes"
           }
         ],
         "obligations": [],
         "exclusions": [],
-        "limites": []
+        "limites": [
+          {
+            "article": "3.1.6.1",
+            "texte": "Pour ce qui concerne les bâtiments dont l’Assuré est occupant partiel, cette intervention ne vise que les portes donnant directement accès à la partie occupée par lui.",
+            "montant": "portes de la partie occupée"
+          }
+        ]
       },
       {
         "id": "vol_monde_sejour",
@@ -1157,10 +1215,14 @@
         ],
         "circonstances": [
           {
-            "f": [
-              "plainte_deposee",
-              "oui"
-            ]
+            "condition": {
+              "f": [
+                "plainte_deposee",
+                "oui"
+              ]
+            },
+            "article": "3.1.6.1",
+            "texte": "pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes"
           }
         ],
         "obligations": [],
@@ -1200,10 +1262,14 @@
         ],
         "circonstances": [
           {
-            "f": [
-              "plainte_deposee",
-              "oui"
-            ]
+            "condition": {
+              "f": [
+                "plainte_deposee",
+                "oui"
+              ]
+            },
+            "article": "3.1.6.1",
+            "texte": "pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes"
           }
         ],
         "obligations": [],
@@ -1259,10 +1325,14 @@
         ],
         "circonstances": [
           {
-            "f": [
-              "plainte_deposee",
-              "oui"
-            ]
+            "condition": {
+              "f": [
+                "plainte_deposee",
+                "oui"
+              ]
+            },
+            "article": "3.1.6.1",
+            "texte": "pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes"
           }
         ],
         "obligations": [],
@@ -1289,7 +1359,7 @@
           },
           {
             "f": [
-              "agression",
+              "violence",
               "oui"
             ]
           },
@@ -1318,10 +1388,14 @@
         ],
         "circonstances": [
           {
-            "f": [
-              "plainte_deposee",
-              "oui"
-            ]
+            "condition": {
+              "f": [
+                "plainte_deposee",
+                "oui"
+              ]
+            },
+            "article": "3.1.6.1",
+            "texte": "pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes"
           }
         ],
         "obligations": [],
@@ -1352,7 +1426,7 @@
         },
         "portee": "tout",
         "a_demander": true,
-        "article": "3.1.6.2.1",
+        "article": "3.1.6.2",
         "texte": "les vols simples"
       },
       {
@@ -1369,12 +1443,20 @@
                 "lieu",
                 "voie_publique"
               ]
+            },
+            {
+              "non": {
+                "f": [
+                  "violence",
+                  "oui"
+                ]
+              }
             }
           ]
         },
         "portee": "tout",
         "a_demander": true,
-        "article": "3.1.6.2.2",
+        "article": "3.1.6.2",
         "texte": "les vols à la tire ou à la sauvette commis à l'extérieur du bâtiment désigné"
       },
       {
@@ -1386,7 +1468,7 @@
         },
         "portee": "tout",
         "a_demander": true,
-        "article": "3.1.6.2.3",
+        "article": "3.1.6.2",
         "texte": "les vols dans les locaux à occupation irrégulière"
       },
       {
@@ -1405,22 +1487,38 @@
               ]
             },
             {
-              "f": [
-                "auteur",
-                "personnel_prive"
-              ]
-            },
-            {
-              "f": [
-                "complicite_assure",
-                "oui"
+              "et": [
+                {
+                  "f": [
+                    "auteur",
+                    "personnel_prive"
+                  ]
+                },
+                {
+                  "non": {
+                    "ou": [
+                      {
+                        "f": [
+                          "effraction",
+                          "oui"
+                        ]
+                      },
+                      {
+                        "f": [
+                          "violence",
+                          "oui"
+                        ]
+                      }
+                    ]
+                  }
+                }
               ]
             }
           ]
         },
         "portee": "tout",
         "a_demander": true,
-        "article": "3.1.6.2.4",
+        "article": "3.1.6.2",
         "texte": "les vols commis par ou avec la complicité de ou du : n Preneur d'assurance, son conjoint, leurs ascendants ou descendants ainsi que les conjoints de ces personnes ; n l'Assuré ; n toute personne au service de l'Assuré pendant les heures de service et, si ces vols ont été commis en dehors de celles-ci, autrement que par effraction ou avec violence."
       },
       {
@@ -1433,16 +1531,50 @@
               ]
             },
             {
-              "f": [
-                "remorque_non_fermee",
-                "oui"
+              "et": [
+                {
+                  "f": [
+                    "bien",
+                    "remorque"
+                  ]
+                },
+                {
+                  "non": {
+                    "ou": [
+                      {
+                        "f": [
+                          "lieu",
+                          "logement"
+                        ]
+                      },
+                      {
+                        "f": [
+                          "lieu",
+                          "cave"
+                        ]
+                      },
+                      {
+                        "f": [
+                          "lieu",
+                          "grenier"
+                        ]
+                      },
+                      {
+                        "f": [
+                          "lieu",
+                          "garage"
+                        ]
+                      }
+                    ]
+                  }
+                }
               ]
             }
           ]
         },
         "portee": "tout",
         "a_demander": true,
-        "article": "3.1.6.2.5",
+        "article": "3.1.6.2",
         "texte": "les vols de véhicules automoteurs – à l'exception des engins de jardinage –, des remorques non enfermées dans le bâtiment désigné, ainsi que le vol de leurs accessoires et de leur contenu"
       },
       {
@@ -1506,7 +1638,7 @@
         },
         "portee": "tout",
         "a_demander": true,
-        "article": "3.1.6.2.6",
+        "article": "3.1.6.2",
         "texte": "les vols des biens se trouvant à l'extérieur, dans les cours, les jardins -à l'exception du mobilier de jardin, de l'outillage motorisé ou non et des plantations situés à l'adresse du risque - dans les couloirs et passages d'accès, ainsi que dans les dépendances isolées ou contiguës avec ou sans communication intérieure avec la construction principale et non munies de serrure à cylindre"
       },
       {
@@ -1556,7 +1688,7 @@
         },
         "portee": "tout",
         "a_demander": true,
-        "article": "3.1.6.2.7",
+        "article": "3.1.6.2",
         "texte": "si l'Assuré n'occupe que partiellement le bâtiment désigné, le vol des biens se trouvant dans les parties communes et le contenu des garages, caves et greniers s'ils ne sont pas fermés par une serrure de sûreté"
       },
       {
@@ -1566,9 +1698,11 @@
             "animal"
           ]
         },
-        "portee": "tout",
+        "portee": {
+          "bien": "animal"
+        },
         "a_demander": true,
-        "article": "3.1.6.2.8",
+        "article": "3.1.6.2",
         "texte": "le vol des animaux"
       },
       {
@@ -1592,7 +1726,7 @@
         },
         "portee": "tout",
         "a_demander": true,
-        "article": "3.1.6.2.9",
+        "article": "3.1.6.2",
         "texte": "les vols commis lorsque le bâtiment désigné est en cours de construction, de transformation ou de rénovation à moins que l'Assuré ne démontre que cette circonstance n'a pas contribué à la survenance ou à l'aggravation des conséquences du sinistre"
       },
       {
@@ -1604,7 +1738,7 @@
         },
         "portee": "tout",
         "a_demander": true,
-        "article": "3.1.6.2.10",
+        "article": "3.1.6.2",
         "texte": "le vol des biens dont l'Assuré n'est pas propriétaire"
       },
       {
@@ -1616,7 +1750,7 @@
         },
         "portee": "tout",
         "a_demander": true,
-        "article": "3.1.6.2.11",
+        "article": "3.1.6.2",
         "texte": "l'abus de confiance"
       }
     ],
@@ -1641,16 +1775,6 @@
         "question": "Quelle formule est souscrite ?",
         "pourquoi": "détermine extensions et limites",
         "plus_proche": "aucune"
-      },
-      {
-        "variable": "sous_clefs",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Les valeurs étaient-elles sous clefs ?",
-        "pourquoi": "limite 1500€ vs 750€ (3.1.6.3)",
-        "plus_proche": "fermeture"
       },
       {
         "variable": "occupation_partielle",
@@ -1683,16 +1807,6 @@
         "plus_proche": "aucune"
       },
       {
-        "variable": "agression",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Y a-t-il eu agression ?",
-        "pourquoi": "vol par agression",
-        "plus_proche": "violence"
-      },
-      {
         "variable": "travaux_construction",
         "valeurs": [
           "oui",
@@ -1723,26 +1837,6 @@
         "plus_proche": "aucune"
       },
       {
-        "variable": "complicite_assure",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Complicité de l'assuré ou personnes exclues ?",
-        "pourquoi": "exclusion 3.1.6.2.4",
-        "plus_proche": "auteur"
-      },
-      {
-        "variable": "remorque_non_fermee",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Remorque non enfermée dans le bâtiment ?",
-        "pourquoi": "exclusion 3.1.6.2.5",
-        "plus_proche": "vehicule_moteur"
-      },
-      {
         "variable": "abus_confiance",
         "valeurs": [
           "oui",
@@ -1751,16 +1845,6 @@
         "question": "Abus de confiance ?",
         "pourquoi": "exclusion 3.1.6.2.11",
         "plus_proche": "aucune"
-      },
-      {
-        "variable": "vol_associe",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Vandalisme à l'occasion d'un vol ?",
-        "pourquoi": "garantie vandalisme",
-        "plus_proche": "evenement"
       },
       {
         "variable": "confiance_assure",
@@ -1773,94 +1857,22 @@
         "plus_proche": "proprietaire"
       },
       {
-        "variable": "acces_direct_partie_occupee",
+        "variable": "bien",
         "valeurs": [
-          "oui",
-          "non"
+          "remorque"
         ],
-        "question": "Accès direct à la partie occupée ?",
-        "pourquoi": "remplacement clés occupation partielle",
-        "plus_proche": "aucune"
-      },
-      {
-        "variable": "dispositifs_securite_conformes",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Dispositifs de sécurité conformes (serrure sûreté, barreaux 17cm) ?",
-        "pourquoi": "obligation 3.1.6.4",
-        "plus_proche": "serrure_surete"
-      },
-      {
-        "variable": "aggravation_non_utilisation",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Aggravation due à la non-utilisation des protections ?",
-        "pourquoi": "réduction indemnité 3.1.6.4",
-        "plus_proche": "aucune"
+        "question": "Quels biens sont concernés ?",
+        "pourquoi": "exclusion 3.1.6.2.5",
+        "plus_proche": "vehicule_moteur : une remorque n'a pas de moteur"
       }
     ],
-    "non_traduit": [
-      {
-        "article": "3.1.6.3",
-        "texte": "Lorsque les conditions particulières mentionnent que la formule «Privilège» est souscrite, l'indemnité est limitée : n à concurrence de 40% du montant indiqué aux conditions particulières au titre du contenu, pour les objets tels que meubles d'époque et objets de valeur ; concernant les timbres de collection, l'indemnité par timbre ne pourra être supérieure à 500 € ; n à concurrence de 1500 € par sinistre pour l'ensemble constitué de l'argent comptant, des billets de banque, pièces et lingots de métaux précieux, titres et valeurs, livrets d'épargne, chèques-services, chèques-repas, pierres précieuses et perles fines non montées ; Ces objets sont assurés : – s'ils se trouvent sous clefs ; – à concurrence de 750 € par sinistre s'ils ne se trouvent pas sous clefs. Lorsque les conditions particulières mentionnent que la formule «Active» est souscrite, l'indemnité est limitée par sinistre : n à concurrence du montant indiqué aux conditions particulières au titre de la garantie vol ; n à concurrence de 40% du montant indiqué aux conditions particulières au titre de la garantie vol, pour les objets tels que meubles d'époque et objets de valeur ; concernant les timbres de collection, l'indemnité par timbre ne pourra être supérieure à 500 € ; n à concurrence de 1500 € par sinistre pour l'ensemble constitué de l'argent comptant, des billets de banque, pièces et lingots de métaux précieux, titres et valeurs, livrets d'épargne, chèques-services, chèques-repas, pierres précieuses et perles fines non montées ; Ces objets sont assurés : – s'ils se trouvent sous clefs ; – à concurrence de 750 € par sinistre s'ils ne se trouvent pas sous clefs.",
-        "pourquoi": "limites conditionnelles complexes par catégorie de biens et formule"
-      },
+    "non_traduit": [],
+    "hors_decision": [
       {
         "article": "3.1.6.5",
-        "texte": "Si les objets volés sont retrouvés, l'Assuré doit en aviser immédiatement la Compagnie. Si l'indemnité a déjà été payée, l'Assuré doit se prononcer dans les quinze jours : n soit pour le délaissement au profit de la Compagnie des objets retrouvés ; n soit pour la reprise des objets retrouvés en échange du remboursement de l'indemnité reçue, réduite du montant des frais de réparation éventuels des dégâts encourus. Si l'indemnité n'a pas encore été payée, elle n'est due que pour les dégâts éventuellement subis par ces objets.",
-        "pourquoi": "procédure post-sinistre"
+        "texte": "Si les objets volés sont retrouvés, l’Assuré doit en aviser immédiatement la Compagnie.",
+        "pourquoi": "procédure après sinistre, sans effet sur la couverture"
       }
     ]
-  },
-  "controles": [
-    {
-      "gravite": "bloquant",
-      "controle": "structure",
-      "message": "garantie vol_batiment : un élément de « circonstances » n'a pas condition, article, texte (champs reçus : f)"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "structure",
-      "message": "garantie vandalisme_vol : un élément de « circonstances » n'a pas condition, article, texte (champs reçus : f)"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "structure",
-      "message": "garantie vol_annexes : un élément de « circonstances » n'a pas condition, article, texte (champs reçus : f)"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "structure",
-      "message": "garantie remplacement_cles : un élément de « circonstances » n'a pas condition, article, texte (champs reçus : f)"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "structure",
-      "message": "garantie remplacement_cles : un élément de « circonstances » n'a pas condition, article, texte (champs reçus : si)"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "structure",
-      "message": "garantie vol_monde_sejour : un élément de « circonstances » n'a pas condition, article, texte (champs reçus : f)"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "structure",
-      "message": "garantie vol_privilege_concierge : un élément de « circonstances » n'a pas condition, article, texte (champs reçus : f)"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "structure",
-      "message": "garantie vol_privilege_jardin : un élément de « circonstances » n'a pas condition, article, texte (champs reçus : f)"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "structure",
-      "message": "garantie vol_agression : un élément de « circonstances » n'a pas condition, article, texte (champs reçus : f)"
-    }
-  ]
+  }
 }

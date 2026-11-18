@@ -215,6 +215,7 @@ CHAMPS = {
     "exclusions": ("condition", "article", "texte"),
     "limites": ("article", "texte"),
     "non_traduit": ("article", "texte", "pourquoi"),
+    "hors_decision": ("article", "texte", "pourquoi"),
 }
 
 
@@ -276,6 +277,7 @@ def erreurs_schema(prop) -> list[str]:
 
     champs(prop.get("definitions"), "definitions", "definitions")
     champs(prop.get("non_traduit"), "non_traduit", "non_traduit")
+    champs(prop.get("hors_decision"), "hors_decision", "hors_decision")
     champs(prop.get("exclusions_communes"), "exclusions", "exclusions_communes")
     garanties = prop.get("garanties")
     if not garanties:
@@ -468,12 +470,22 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
     # 4. Couverture des listes d'exclusions
     textes = [x.get("texte", "") for x in exclusions(prop)]
     textes += [n.get("texte", "") for n in non_traduits(prop)]
+    textes += [n.get("texte", "") for n in prop.get("hors_decision") or []]
     for c in clauses_article(clauses, article):
         if c.type != TypeClause.EXCLUSION:
             continue
         for item in items_exclusion(c.texte):
             if not couvert_par(item, textes):
                 noter(BLOQUANT, "couverture", f"exclusion du contrat absente des règles ({c.id}) : « {item[:100]} »")
+    # Un passage sans effet sur la décision de couverture (procédure après sinistre) : le relecteur le classe
+    # « hors décision » au lieu de le laisser non traduit (7.55). Il reste cité, donc vérifié mot pour mot.
+    index_h = {c.id: c for c in clauses}
+    for n in prop.get("hors_decision") or []:
+        clause = index_h.get(n.get("article"))
+        if clause is None or not extrait_present(n.get("texte", ""), clause.texte):
+            noter(BLOQUANT, "citation", f"hors décision ({n.get('article')}) : « {str(n.get('texte'))[:80]} » ne figure pas dans la clause")
+        else:
+            noter(INFO, "couverture", f"hors décision ({n.get('article')}) : {n.get('pourquoi', '')}")
     for n in non_traduits(prop):
         noter(BLOQUANT, "couverture", f"déclaré non traduit ({n.get('article')}) : « {str(n.get('texte'))[:100]} » "
               f"— {n.get('pourquoi', '')}")

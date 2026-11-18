@@ -223,6 +223,15 @@ def test_liste_d_exclusions_numerotee_et_incise():
     assert any(i.startswith("le vol des animaux") for i in items) and len(items) == 3
 
 
+def test_hors_decision_cite_et_non_bloquant():
+    prop = copy.deepcopy(BONNE)
+    prop["hors_decision"] = prop.pop("non_traduit")
+    ps = controles(prop)
+    assert not bloquants(ps, "couverture") and any("hors décision" in p["message"] for p in ps)
+    prop["hors_decision"][0]["texte"] = "texte inventé"
+    assert any("hors décision" in p["message"] for p in bloquants(controles(prop), "citation"))
+
+
 def test_exclusion_oubliee_bloque():
     """La faute la plus coûteuse : une exclusion de la liste oubliée en silence."""
     assert bloquants(controles({**BONNE, "non_traduit": []}), "couverture"), "matériaux à pied d'œuvre : ni traduit ni déclaré"
