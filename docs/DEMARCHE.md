@@ -1535,8 +1535,19 @@ disponible pour comparer : `COUVERTURE_LECTURE=un_temps`. Le banc note le mode d
 les valeurs du vocabulaire, ou `null` (inconnu). Si le serveur refuse le schéma (erreur 400 ou 422), le
 client revient au simple mode JSON et ne redemande plus le schéma.
 
-À mesurer : banc complet avec Small, en deux temps puis en un temps, sur le golden v6. On garde l'étape
-si la justesse monte sans que le temps double.
+**Mesure** (Small, golden v6, 3 exécutions ; schéma accepté par Mistral, aucune erreur du fournisseur) :
+
+| Lecture | Justes | Couverts à tort | Refus à tort | Instables | Rappel des faits | Durée moyenne d'un passage |
+|---|---|---|---|---|---|---|
+| Un temps (v4) | 75 % | 9,3 | 5 | 14 | 78 % | 42 s |
+| **Deux temps + schéma** | **84 %** | **2,7** | **3,7** | **8** | **90 %** | 96 s |
+
+Le lieu, qui manquait 19 fois, ne manque plus. Les couverts à tort sont divisés par trois et demi. Le prix :
+deux appels l'un après l'autre, donc un passage deux fois plus long, ce que la règle du plan refusait.
+**Décision : on garde**, parce que le gain porte sur l'erreur la plus coûteuse, et que l'étape 3 (Prolog
+chargé une fois) et la mesure de la latence par cas (étape 4) doivent venir avant d'ajouter des appels
+(double lecture, étape 2). Restent : « la clé sous le paillasson » encore lue comme des clés volées (donc
+couvert à tort), et le rappel des questions attendues tombé à 36 %, à comprendre.
 
 ### 7.36 La simplification : une seule méthode, et sa référence
 
