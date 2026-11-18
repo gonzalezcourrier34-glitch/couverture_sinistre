@@ -933,10 +933,12 @@
         "3.1.6.3 : plafonds cités en limites ; 3.1.6.5 : hors décision",
         "sous_clefs retiré : le plafond est cité, il ne décide pas de la couverture",
         "3.1.6.2.6 : « à l'extérieur » = cours, jardins, terrasse, couloirs et dépendances sans serrure à cylindre, à l'adresse du risque ; ni la voie publique ni un autre bâtiment (axa-v05, v07, v14)",
-        "3.1.6.2.9 inchangé : avec la règle « exclusion entamée » du moteur (7.58), travaux établis et lien causal inconnu font poser la question ; travaux non évoqués restent une réserve (axa-v15)"
+        "3.1.6.2.9 inchangé : avec la règle « exclusion entamée » du moteur (7.58), travaux établis et lien causal inconnu font poser la question ; travaux non évoqués restent une réserve (axa-v15)",
+        "3.1.6.2.5 : « le vol de véhicules… » vise le bien, pas le sinistre ; scindé en deux exclusions de portée bien (véhicule, remorque hors du bâtiment) ; a_demander false : le bien est connu (axa-v10 : vélos volés avec une tondeuse)"
       ],
       "question_metier": "le vol simple (ni effraction ni violence) est exclu pour toutes les garanties : il vide l'extension « mobilier de jardin » (Privilège) de presque tout son sens. Lecture à confirmer par un souscripteur.",
-      "seconde_passe": "après les 15 cas de test AXA (regles/cas/golden/axa-lu-optihome-2017.jsonl)"
+      "seconde_passe": "après les 15 cas de test AXA (regles/cas/golden/axa-lu-optihome-2017.jsonl)",
+      "troisieme_passe": "après le premier banc AXA (data/bancs/20261118-222055-…)"
     }
   },
   "proposition": {
@@ -1526,57 +1528,63 @@
       },
       {
         "condition": {
-          "ou": [
+          "f": [
+            "bien",
+            "vehicule_moteur"
+          ]
+        },
+        "portee": {
+          "bien": "vehicule_moteur"
+        },
+        "a_demander": false,
+        "article": "3.1.6.2",
+        "texte": "les vols de véhicules automoteurs – à l'exception des engins de jardinage –, des remorques non enfermées dans le bâtiment désigné, ainsi que le vol de leurs accessoires et de leur contenu"
+      },
+      {
+        "condition": {
+          "et": [
             {
               "f": [
                 "bien",
-                "vehicule_moteur"
+                "remorque"
               ]
             },
             {
-              "et": [
-                {
-                  "f": [
-                    "bien",
-                    "remorque"
-                  ]
-                },
-                {
-                  "non": {
-                    "ou": [
-                      {
-                        "f": [
-                          "lieu",
-                          "logement"
-                        ]
-                      },
-                      {
-                        "f": [
-                          "lieu",
-                          "cave"
-                        ]
-                      },
-                      {
-                        "f": [
-                          "lieu",
-                          "grenier"
-                        ]
-                      },
-                      {
-                        "f": [
-                          "lieu",
-                          "garage"
-                        ]
-                      }
+              "non": {
+                "ou": [
+                  {
+                    "f": [
+                      "lieu",
+                      "logement"
+                    ]
+                  },
+                  {
+                    "f": [
+                      "lieu",
+                      "cave"
+                    ]
+                  },
+                  {
+                    "f": [
+                      "lieu",
+                      "grenier"
+                    ]
+                  },
+                  {
+                    "f": [
+                      "lieu",
+                      "garage"
                     ]
                   }
-                }
-              ]
+                ]
+              }
             }
           ]
         },
-        "portee": "tout",
-        "a_demander": true,
+        "portee": {
+          "bien": "remorque"
+        },
+        "a_demander": false,
         "article": "3.1.6.2",
         "texte": "les vols de véhicules automoteurs – à l'exception des engins de jardinage –, des remorques non enfermées dans le bâtiment désigné, ainsi que le vol de leurs accessoires et de leur contenu"
       },
@@ -1900,9 +1908,19 @@
   },
   "controles": [
     {
+      "gravite": "à relire",
+      "controle": "réserve",
+      "message": "exclusion « les vols de véhicules automoteurs – à l'exception des engins » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
+    },
+    {
       "gravite": "info",
       "controle": "couverture",
       "message": "hors décision (3.1.6.5) : procédure après sinistre, sans effet sur la couverture"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "prolog",
+      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
     }
   ]
 }

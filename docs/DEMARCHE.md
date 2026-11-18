@@ -2104,6 +2104,36 @@ déclaration ne dit pas (`auteur = tiers`, `proprietaire = assure`) : le rappel 
 **Leçon 74.** Le coût d'un nouvel assureur n'est pas seulement la rédaction des règles : chaque variable nouvelle
 doit apprendre à être lue. La rédaction devrait proposer les aides par valeur en même temps que la variable.
 
+### 7.60 Après les aides : Foyer au meilleur niveau mesuré, AXA lit mieux mais suspend encore
+
+| | AXA avant aides | AXA après | Foyer (7.57) | Foyer après |
+|---|---|---|---|---|
+| Rappel des faits | 69 % | **81 %** | 87 % | 87 % |
+| Cas avec contradiction | 4 | 2 | 15 | 17 |
+| Chaîne : justes | 62 % | 62 % | 89 % | **90 %** |
+| Exactes | 42 % | 47 % | 65 % | 67 % |
+| Couverts à tort | 0 | 0 | 2,33 | **1,33** |
+| Refus à tort | 1,33 | 1 | 1 | 1 |
+| 95e centile, un cas à la fois | 5,2 s | 5,3 s | 4,5 s | **4,1 s** |
+
+Foyer atteint son meilleur niveau de couverts à tort : les aides servent aux deux contrats.
+
+**Ce qui reste sur AXA, cas par cas.**
+- v10 : la tondeuse est encore lue comme véhicule à moteur, et l'exclusion « les vols de véhicules
+  automoteurs » écartait **tout le sinistre**, vélos compris. Erreur de traduction : elle vise le bien, comme
+  « le vol des animaux ». Scindée en deux exclusions de portée bien (véhicule ; remorque hors du bâtiment).
+  Troisième passe tracée dans `meta.relecture`. Avec la même lecture, la réponse devient « couvert » (les vélos).
+- v06 (pickpocket) : `vol_sur_personne` lu « non » ; v09 (cadenas) : `serrure_surete = non` non lu. Aides
+  ajoutées (« pris dans une poche ou un sac que vous portiez » ; « cadenas, simple loquet »).
+- v02, v08 : la lecture donne la bonne décision, la confirmation suspend (« je ne sais pas »). C'est le prix
+  de zéro couvert à tort ; sur AXA, avec 15 cas, il pèse lourd (2 cas = 13 points).
+- v12 : la femme de ménage lue comme `abus_confiance = oui`. Juridiquement défendable ; la réponse reste un
+  refus.
+
+**Leçon 75.** Sur un contrat neuf, le banc trouve d'abord des erreurs de traduction (portée d'une exclusion),
+puis des erreurs de lecture ; les premières se corrigent une fois, les secondes demandent des aides qui
+profitent à tous les contrats.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 18 nov. 2026 ; ce qui est fait est dans les sections 7.

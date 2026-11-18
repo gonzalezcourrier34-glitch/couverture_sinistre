@@ -178,7 +178,11 @@
       "question": "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ?",
       "pour": [
         "vol"
-      ]
+      ],
+      "aide": {
+        "oui": "serrure à cylindre ou à pompe, verrou de sûreté, fermée à clé",
+        "non": "cadenas, simple loquet, porte non fermée à clé"
+      }
     },
     "effraction": {
       "valeurs": [
@@ -214,7 +218,11 @@
       "question": "Le vol a-t-il été commis sur vous (sur votre personne) ?",
       "pour": [
         "vol"
-      ]
+      ],
+      "aide": {
+        "oui": "le vol a été commis sur vous : objet arraché, ou pris dans une poche ou un sac que vous portiez",
+        "non": "les biens n'étaient pas sur vous (dans un local, un véhicule, posés)"
+      }
     },
     "auteur": {
       "valeurs": [
