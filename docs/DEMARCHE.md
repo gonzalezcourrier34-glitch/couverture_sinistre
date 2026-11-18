@@ -1856,6 +1856,19 @@ limites d'indemnité (limite), 3.1.6.4 mesures de sécurité (condition). Foyer 
 **Société Générale** reste à vérifier : sa mise en page (numéros de page pris pour des numéros d'article,
 titres aux lettres espacées) demanderait un profil plus lourd ; contrat français, il passe après AXA.
 
+### 7.52 AXA : des règles qui partent de zéro
+
+Pour Foyer, les premières garanties ont été écrites à la main pour servir de modèle. **Pour AXA, aucune
+règle n'est écrite à la main** : c'est le vrai test de la généralisation. Le fichier
+`regles/axa-lu-optihome-2017.pl` part vide (en-tête seulement) ; tant qu'il l'est, aucun événement n'est
+traduit et le moteur répond « à examiner par un gestionnaire », jamais « non couvert ». Chaque garantie
+passe ensuite par la même chaîne que la 2.9 de Foyer : Mistral Large rédige à partir des clauses de
+l'article et des définitions du lexique AXA qu'elles emploient, le code contrôle (citations mot pour mot,
+vocabulaire, concepts, chargement Prolog), l'auteur relit, puis accepte. Première garantie : **le vol
+(3.1.6)**, découpé en étendue (3.1.6.1), vols exclus (3.1.6.2), limites d'indemnité (3.1.6.3) et mesures de
+sécurité (3.1.6.4). À mesurer : ce que la rédaction réussit seule, ce qu'il faut ajouter au vocabulaire
+commun, et le temps humain de relecture.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 18 nov. 2026 ; ce qui est fait est dans les sections 7.
