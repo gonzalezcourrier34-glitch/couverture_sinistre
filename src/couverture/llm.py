@@ -32,6 +32,10 @@ class LLM(Protocol):
 class ErreurLLM(RuntimeError):
     """Le fournisseur n'a pas pu répondre (clé, quota, réseau) : inutile de réessayer la même question."""
 
+    def __init__(self, message: str, code: int | None = None):
+        super().__init__(message)
+        self.code = code  # code HTTP, s'il y en a un
+
 
 class CleRefusee(ErreurLLM):
     """Clé absente ou refusée : rien ne marchera, on arrête tout (même une évaluation en cours)."""
@@ -87,7 +91,7 @@ def _poster(url: str, corps: dict, entetes: dict, timeout: int, tentatives: int 
                 continue
             if e.code in (401, 403):
                 raise CleRefusee(f"Clé API refusée ({e.code}). Vérifier la clé dans le fichier .env.") from e
-            raise ErreurLLM(f"Erreur {e.code} du fournisseur : {detail}") from e
+            raise ErreurLLM(f"Erreur {e.code} du fournisseur : {detail}", code=e.code) from e
         except urllib.error.URLError as e:
             if isinstance(e.reason, TimeoutError):
                 raise ReponseLente(f"pas de réponse après {timeout} s") from e
@@ -166,8 +170,12 @@ class OpenAICompatibleLLM:
         self.nom = f"{fournisseur}:{modele}"
         self.reflexion_refusee = False   # le modèle a refusé reasoning_effort
         self.derniere_reflexion = 0      # caractères de réflexion dans la dernière réponse (diagnostic)
+        self.schema_refuse = False       # le serveur a refusé une sortie contrainte par un schéma
 
-    def completer(self, systeme: str, message: str) -> str:
+    # Une sortie contrainte par un schéma JSON (structured outputs) : les valeurs hors liste sont impossibles.
+    accepte_schema = True
+
+    def completer(self, systeme: str, message: str, schema: dict | None = None) -> str:
         corps = {
             "model": self.modele,
             "max_tokens": self.max_tokens,
@@ -176,11 +184,18 @@ class OpenAICompatibleLLM:
         }
         if self.json_mode:
             corps["response_format"] = {"type": "json_object"}
+        if schema is not None and self.json_mode and not self.schema_refuse:
+            corps["response_format"] = {"type": "json_schema",
+                                        "json_schema": {"name": "reponse", "schema": schema, "strict": True}}
         corps.update(self.extra)
         entetes = {"authorization": f"Bearer {self.cle_api}"} if self.cle_api else {}
         try:
             donnees = _poster(f"{self.url}/chat/completions", corps, entetes, self.timeout)
         except ErreurLLM as e:
+            # Serveur qui refuse le schéma : on revient au simple mode JSON, et on n'y revient plus.
+            if corps.get("response_format", {}).get("type") == "json_schema" and e.code in (400, 422):
+                self.schema_refuse = True
+                return self.completer(systeme, message)
             # Modèle qui ne règle pas sa réflexion : on retire le paramètre et on n'y revient plus.
             if "reasoning_effort" not in corps or "reasoning" not in str(e).lower():
                 raise
@@ -323,3 +338,11 @@ def pour_travail_long(llm: LLM, max_tokens: int = 16000, timeout: int = 300) -> 
     if hasattr(copie, "extra"):
         copie.extra = dict(copie.extra)
     return copie
+
+
+def completer_avec_schema(llm: LLM, systeme: str, message: str, schema: dict) -> str:
+    """Avec un client qui sait contraindre sa sortie (Mistral, API compatible OpenAI), le schéma est
+    envoyé ; sinon (Anthropic, modèles factices des tests), la consigne seule décrit la forme."""
+    if getattr(llm, "accepte_schema", False):
+        return llm.completer(systeme, message, schema=schema)
+    return llm.completer(systeme, message)

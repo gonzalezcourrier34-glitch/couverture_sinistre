@@ -194,7 +194,7 @@ class FauxLLM:
         self.faits = faits
 
     def completer(self, systeme, message):
-        assert "Vocabulaire" in message and "parties_communes" in message, "le modèle reçoit le vocabulaire"
+        assert "Vocabulaire" in message, "le modèle reçoit le vocabulaire"
         return json.dumps({"faits": self.faits})
 
 
@@ -320,7 +320,7 @@ def test_lecture_recoit_le_sens_des_valeurs():
         message = ""
 
         def completer(self, systeme, message):
-            Espion.message = message
+            Espion.message += message
             return json.dumps({"faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["parties_communes"],
                                          "cause_eau": "gel"}})
 
@@ -453,3 +453,80 @@ def test_la_reponse_porte_l_arbre_de_preuve(contrat):
     sortie = cli.afficher_court(Resultat(sinistre="…", contrat_id=CONTRAT, methode="regles", faits=prolog.faits_lisibles(faits),
                                          clauses_consultees=[], verdict=v))
     assert "Arbre de preuve (moteur Prolog) :" in sortie and "[non] Condition non remplie" in sortie
+
+
+# --- Lecture en deux temps (7.38) ----------------------------------------------------------------------------
+
+def test_lecture_en_deux_temps(monkeypatch):
+    """Temps 1 : événement, bien, lieu. Temps 2 : seulement les questions de cet événement, avec ce qui est établi.
+    Chaque appel envoie un schéma qui ne permet que les valeurs du vocabulaire."""
+    class Modele:
+        nom, accepte_schema = "schema", True
+
+        def __init__(self):
+            self.appels = []
+
+        def completer(self, systeme, message, schema=None):
+            self.appels.append((systeme, message, schema))
+            if len(self.appels) == 1:
+                return json.dumps({"faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}})
+            return json.dumps({"faits": {"fermeture": "cadenas", "lieu": ["logement"], "cause_eau": "gel"}})
+
+    monkeypatch.delenv("COUVERTURE_LECTURE", raising=False)
+    m = Modele()
+    faits, ecarts = prolog.extraire_faits_regles("On m'a volé mon vélo dans ma cave fermée par un cadenas.", m)
+    assert faits == {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"], "fermeture": "cadenas"}, \
+        "le temps 2 ne réécrit pas le lieu, et une cause d'eau n'est pas demandée pour un vol"
+    (s1, m1, sch1), (s2, m2, sch2) = m.appels
+    assert set(sch1["properties"]["faits"]["properties"]) == {"evenement", "bien", "lieu"}
+    assert "velo" in sch1["properties"]["faits"]["properties"]["bien"]["items"]["enum"]
+    details = set(sch2["properties"]["faits"]["properties"])
+    assert {"fermeture", "effraction", "absence"} <= details and not details & {"cause_eau", "flammes", "evenement"}
+    assert sch2["properties"]["faits"]["properties"]["fermeture"]["enum"][-1] is None, "inconnu : null"
+    assert "evenement = vol" in m2 and "## Déjà établi" in m2
+    assert len(m2) < len(m1) + 3000, "la consigne du temps 2 est courte"
+
+
+def test_les_regles_v4_sont_toutes_dans_les_deux_temps():
+    """Couper la consigne en deux ne doit perdre aucune règle (la leçon de la v3, 7.24 bis)."""
+    import re as _re
+
+    deux = prolog.SYSTEME_LECTURE_SOCLE + prolog.SYSTEME_LECTURE_DETAILS
+    for ligne in prolog.SYSTEME_FAITS_REGLES.splitlines():
+        if ligne.startswith("- "):
+            coeur = _re.sub(r"Sinon, ne la mets pas", "Sinon, mets null", ligne)[:60]
+            assert coeur in deux, ligne
+
+
+def test_lecture_un_temps_toujours_disponible(monkeypatch):
+    monkeypatch.setenv("COUVERTURE_LECTURE", "un_temps")
+    appels = []
+
+    class Modele:
+        nom = "ancien"
+
+        def completer(self, systeme, message):
+            appels.append(systeme)
+            return json.dumps({"faits": {"evenement": ["vol"]}})
+
+    prolog.extraire_faits_regles("Vélo volé.", Modele())
+    assert appels == [prolog.SYSTEME_FAITS_REGLES]
+
+
+def test_schema_refuse_retombe_sur_le_mode_json(monkeypatch):
+    from couverture import llm as module_llm
+
+    envois = []
+
+    def poster(url, corps, entetes, timeout):
+        envois.append(corps.get("response_format"))
+        if corps["response_format"]["type"] == "json_schema":
+            raise module_llm.ErreurLLM("Erreur 422 du fournisseur : schema", code=422)
+        return {"choices": [{"message": {"content": '{"faits": {}}'}, "finish_reason": "stop"}]}
+
+    monkeypatch.setattr(module_llm, "_poster", poster)
+    m = module_llm.OpenAICompatibleLLM(modele="x", url="http://serveur", json_mode=True)
+    assert module_llm.completer_avec_schema(m, "s", "m", {"type": "object"}) == '{"faits": {}}'
+    assert [e["type"] for e in envois] == ["json_schema", "json_object"] and m.schema_refuse
+    module_llm.completer_avec_schema(m, "s", "m", {"type": "object"})
+    assert envois[-1]["type"] == "json_object", "on ne redemande pas un schéma refusé"

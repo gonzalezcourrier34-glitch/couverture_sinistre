@@ -1521,6 +1521,23 @@ le modèle tire une conclusion que la moitié des lecteurs ne tirent pas. C'est 
 évitent : elles ne laissent au modèle que la lecture des faits, et la décision suit des conditions écrites.
 Suites possibles : mesurer Mistral Large sur LegalBench, et faire rédiger des règles pour quelques clauses.
 
+### 7.38 Étape 1 du plan : lecture en deux temps, sortie contrainte
+
+**Lecture en deux temps** (`prolog.extraire_faits_regles`) : le temps 1 ne demande que l'événement, le bien
+et le lieu ; le temps 2 ne demande que les variables qui concernent l'événement lu (« pour » dans le
+vocabulaire) et celles qui valent pour tout (absence, auteur, intention…), en rappelant ce qui est déjà
+établi. Pour un vol, la consigne du temps 2 ne parle plus de cause d'eau, de flammes ni de gel. La consigne
+v4 a été coupée en deux (`lecture-socle` v1, `lecture-details` v1) ; un test vérifie que chacune de ses
+règles se retrouve dans l'un des deux temps (la leçon de la v3, 7.24 bis). L'ancienne lecture reste
+disponible pour comparer : `COUVERTURE_LECTURE=un_temps`. Le banc note le mode dans son rapport.
+
+**Sortie contrainte par un schéma JSON** : chaque appel envoie un schéma où chaque variable n'admet que
+les valeurs du vocabulaire, ou `null` (inconnu). Si le serveur refuse le schéma (erreur 400 ou 422), le
+client revient au simple mode JSON et ne redemande plus le schéma.
+
+À mesurer : banc complet avec Small, en deux temps puis en un temps, sur le golden v6. On garde l'étape
+si la justesse monte sans que le temps double.
+
 ### 7.36 La simplification : une seule méthode, et sa référence
 
 Le projet portait encore quatre méthodes : la grille de conditions (le modèle remplit une grille à chaque

@@ -21,7 +21,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from .llm import extraire_json
+from .llm import completer_avec_schema, extraire_json
 from .llm import LLM, ErreurLLM
 from .models import Citation, Clause, ClauseRetenue, Condition, Decision, EtatCondition, Faits, Resultat, Verdict
 from .validation import valider
@@ -177,14 +177,96 @@ Règles :
 Réponds uniquement par un objet JSON : {"faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}}"""
 
 
+# --- Lecture en deux temps (DEMARCHE 7.38) ----------------------------------------------------------------
+#  Avec tout le vocabulaire d'un coup, Mistral Small oubliait des faits à mesure que la liste s'allongeait
+#  (7.32). Temps 1 : ce qui s'est passé, quoi, où. Temps 2 : seulement les questions qui concernent cet
+#  événement (« pour » dans le vocabulaire). Chaque règle de la consigne v4 est dans l'un des deux temps.
+
+SOCLE = ("evenement", "bien", "lieu")
+
+REGLES_COMMUNES = """- N'utilise que les variables et les valeurs de la liste. Une variable marquée « plusieurs » prend une liste ; les autres, une seule valeur.
+- Ne renseigne une variable que si la déclaration la dit ou l'implique clairement. Sinon, mets null (ou une liste vide) : elle restera inconnue, et le gestionnaire posera la question. Un fait inventé est plus grave qu'un fait manquant."""
+
+SYSTEME_LECTURE_SOCLE = """Tu lis la déclaration d'un sinistre et tu dis ce qui s'est passé, ce qui est touché et où, avec un vocabulaire imposé. Tu ne décides pas si le sinistre est couvert.
+
+Le vocabulaire donne, pour chaque variable, la question à laquelle elle répond, ses valeurs, et le sens des valeurs proches. Choisis la valeur dont le sens correspond à ce qui est écrit.
+
+Règles :
+""" + REGLES_COMMUNES + """
+- evenement : la cause, et aussi le dommage s'il est d'une autre nature. Une tempête qui arrache des tuiles et fait entrer la pluie : ["tempete", "degat_eaux"]. Ne perds jamais la cause, même si aucune valeur ne la nomme exactement : prends la plus proche par son sens, ou « autre ».
+- « Disparu », « je ne retrouve plus » ne disent pas qu'il y a eu vol : ne mets evenement = vol que si un vol est décrit (volé, pris, cambriolé, arraché).
+- Un lieu se déduit de ce qui est écrit : une pièce ou une partie du logement (salon, cuisine, salle de bain, entrée, parquet, plafond, « chez moi », « mon appartement ») donne lieu = logement. Mais ce qui ne dit rien de l'endroit ne donne pas de lieu : « pendant que je faisais mes courses » ne dit pas où était le vélo.
+- Façade, murs, parquet, plafond, toiture : bien = element_batiment. Tuyau, canalisation : bien = canalisation.
+
+Réponds uniquement par un objet JSON : {"faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}}"""
+
+SYSTEME_LECTURE_DETAILS = """Tu lis la déclaration d'un sinistre et tu réponds à quelques questions précises, avec un vocabulaire imposé. Ce qui s'est passé, ce qui est touché et où sont déjà établis : ne les répète pas. Tu ne décides pas si le sinistre est couvert.
+
+Le vocabulaire donne, pour chaque variable, la question à laquelle elle répond, ses valeurs, et le sens des valeurs proches. Choisis la valeur dont le sens correspond à ce qui est écrit.
+
+Règles :
+""" + REGLES_COMMUNES + """
+- N'ajoute jamais une absence, des portes ou des fenêtres fermées, un auteur ou une cause qui ne sont pas écrits.
+- Ne renseigne pas une variable sans rapport avec ce qui s'est passé.
+- « fermé à clé » sans autre précision : fermeture = cle, et ne renseigne pas serrure_surete.
+- Des flammes qui brûlent ou se propagent à d'autres objets : flammes = oui et embrasement = oui. « Avec la chaleur » sans flamme décrite : flammes = non.
+- vol_sur_personne = oui seulement si le bien a été pris sur la personne (arraché, dérobé sur soi).
+- Une durée dite se traduit : déposé « il y a deux semaines » donne depot_moins_30j = oui.
+- Les précautions décrites se traduisent : une fenêtre laissée ouverte donne fenetres_fermees = non ; un chauffage coupé pendant le gel, sans vidange ni isolation, donne prevention_gel = non.
+
+Réponds uniquement par un objet JSON : {"faits": {"variable": "valeur"}}"""
+
+
+def schema_faits(variables: dict) -> dict:
+    """Le schéma JSON de la réponse : chaque variable avec ses seules valeurs permises (listes fermées).
+    Toutes sont présentes (null ou liste vide si inconnues) : la forme stricte l'exige."""
+    proprietes = {}
+    for v, d in variables.items():
+        if d.get("plusieurs"):
+            proprietes[v] = {"type": "array", "items": {"type": "string", "enum": list(d["valeurs"])}}
+        else:
+            proprietes[v] = {"type": ["string", "null"], "enum": list(d["valeurs"]) + [None]}
+    return {"type": "object", "additionalProperties": False, "required": ["faits"],
+            "properties": {"faits": {"type": "object", "additionalProperties": False,
+                                     "required": list(proprietes), "properties": proprietes}}}
+
+
+def mode_lecture() -> str:
+    """COUVERTURE_LECTURE=un_temps garde la lecture d'avant (consigne v4, tout le vocabulaire), pour comparer."""
+    return "un_temps" if os.environ.get("COUVERTURE_LECTURE", "").strip().lower() == "un_temps" else "deux_temps"
+
+
+def _lire(llm: LLM, systeme: str, variables: dict, message: str) -> dict:
+    liste = "\n".join(description_variable(v, d) for v, d in variables.items())
+    texte = completer_avec_schema(llm, systeme, f"## Vocabulaire\n{liste}\n\n{message}", schema_faits(variables))
+    return extraire_json(texte).get("faits") or {}
+
+
+def variables_du_temps_2(voc: dict, evenements: list[str]) -> dict:
+    """Les variables à demander une fois l'événement connu : celles qui s'y appliquent (« pour »), et celles
+    qui s'appliquent à tout. Sans événement lu, toutes."""
+    ev = set(evenements)
+    return {v: d for v, d in voc.items() if v not in SOCLE and (not ev or not d.get("pour") or ev & set(d["pour"]))}
+
+
 def extraire_faits_regles(sinistre: str, llm: LLM) -> tuple[dict, list[str]]:
     """Les faits lus par le modèle, et les écarts au vocabulaire (retirés)."""
     voc = vocabulaire()
-    liste = "\n".join(description_variable(v, d) for v, d in voc.items())
-    message = f"## Vocabulaire\n{liste}\n\n## Déclaration\n{sinistre}"
-    donnees = extraire_json(llm.completer(SYSTEME_FAITS_REGLES, message))
+    declaration = f"## Déclaration\n{sinistre}"
+    if mode_lecture() == "un_temps":
+        lus = _lire(llm, SYSTEME_FAITS_REGLES, voc, declaration)
+    else:
+        lus = _lire(llm, SYSTEME_LECTURE_SOCLE, {v: voc[v] for v in SOCLE}, declaration)
+        evenements = [str(e) for e in (lus.get("evenement") or []) if str(e) in voc["evenement"]["valeurs"]]
+        details = variables_du_temps_2(voc, evenements)
+        if details:
+            etabli = "; ".join(f"{v} = {'/'.join(map(str, x)) if isinstance(x, list) else x}"
+                               for v, x in lus.items() if x not in (None, "", []))
+            lus |= {v: x for v, x in _lire(llm, SYSTEME_LECTURE_DETAILS, details,
+                                           f"## Déjà établi\n{etabli or 'rien'}\n\n{declaration}").items()
+                    if v not in SOCLE}
     faits, ecarts = {}, []
-    for v, x in (donnees.get("faits") or {}).items():
+    for v, x in lus.items():
         if x in (None, "", []):
             continue
         valeurs = [str(e) for e in (x if isinstance(x, list) else [x])]

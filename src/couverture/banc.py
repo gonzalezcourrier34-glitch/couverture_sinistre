@@ -355,6 +355,8 @@ def passer(donnees: Path, contrat_id: str, methode: str, couches: list[str], rep
             debut = time.perf_counter()
             pipeline = pipeline_fabrique()
             resultat["modele"] = getattr(getattr(pipeline, "llm", None), "nom", None) or resultat.get("modele")
+            if resultat["methode"] == "regles":
+                resultat["lecture"] = prolog.mode_lecture().replace("_", " ")
             rapports.append((evaluer_fn or evaluer)(pipeline, cas, paralleles=paralleles))
             durees.append(time.perf_counter() - debut)
         resultat["couches"]["chaine"] = couche_chaine(cas, rapports, durees)
@@ -373,7 +375,8 @@ def enregistrer(donnees: Path, resultat: dict, dossier: Path | None = None) -> t
     dossier = dossier or Path(donnees) / "bancs"
     dossier.mkdir(parents=True, exist_ok=True)
     modele = (resultat.get("modele") or "").split(":")[-1].replace("-latest", "")
-    nom = f"{datetime.now():%Y%m%d-%H%M%S}-{resultat['contrat']}-{resultat['methode']}" + (f"-{modele}" if modele else "")
+    nom = f"{datetime.now():%Y%m%d-%H%M%S}-{resultat['contrat']}-{resultat['methode']}" + (f"-{modele}" if modele else "") \
+        + ("-un-temps" if resultat.get("lecture") == "un temps" else "")
     js, md = dossier / f"{nom}.json", dossier / f"{nom}.md"
     precedent = dernier(dossier, resultat["contrat"], resultat["methode"])
     texte = markdown(resultat, precedent)
@@ -424,7 +427,8 @@ def markdown(r: dict, precedent: dict | None = None) -> str:
     cas = {c["id"]: c for c in r.get("_cas", [])}
     g = r["golden"]
     L = [f"# Banc d'essai — {r['contrat']}, méthode `{r['methode']}`"
-         + (f", lecture par `{r['modele']}`" if r.get("modele") else ""), "",
+         + (f", lecture par `{r['modele']}`" if r.get("modele") else "")
+         + (f" ({r['lecture']})" if r.get("lecture") else ""), "",
          f"{r['date']} · golden set v{g.get('version') or '?'} ({g['n']} cas, empreinte `{g['empreinte']}`"
          f"{'' if g['fige'] else ', **modifié depuis sa version**'}) · cas validés par l'auteur : {g['valides']} sur {g['n']}",
          ""]
@@ -521,7 +525,8 @@ def erreurs(lignes: list[dict], cas: dict) -> list[str]:
 
 def resume_console(r: dict, md: Path | None = None) -> str:
     L = [f"Banc {r['contrat']} · {r['methode']} · golden v{r['golden'].get('version') or '?'} ({r['golden']['n']} cas)"
-         + (f" · lecture : {r['modele']}" if r.get("modele") else "")]
+         + (f" · lecture : {r['modele']}" if r.get("modele") else "")
+         + (f" ({r['lecture']})" if r.get("lecture") else "")]
     for a in r.get("avertissements", []):
         L.append(f"! {a}")
     for nom, titre in (("regles", "Règles seules "), ("lecture", "Lecture       "), ("chaine", "Chaîne        ")):

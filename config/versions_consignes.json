@@ -9,6 +9,16 @@
     "empreinte": "b05ed349b373d04f",
     "source": "couverture.prolog.SYSTEME_FAITS_REGLES"
   },
+  "couverture-lecture-details": {
+    "version": "v1",
+    "empreinte": "2a4c2377210c55d8",
+    "source": "couverture.prolog.SYSTEME_LECTURE_DETAILS"
+  },
+  "couverture-lecture-socle": {
+    "version": "v1",
+    "empreinte": "484bd146206218b0",
+    "source": "couverture.prolog.SYSTEME_LECTURE_SOCLE"
+  },
   "couverture-legalbench": {
     "version": "v1",
     "empreinte": "0aaba546fd110a0d",

@@ -242,7 +242,7 @@ def banc_cli(base: Base, donnees: Path, contrat_id: str, methode: str, couches: 
     with execution(EXPERIENCE_EVALUATION, f"banc {contrat_id} · {methode}") as suivi:
         r = banc.passer(donnees, contrat_id, methode, voulues, repetitions, paralleles, pipeline_fabrique=fabrique)
         suivi.parametres(parametres_communs(str(r.get("modele", "aucun"))) | {
-            "contrat": contrat_id, "methode": methode, "couches": ",".join(voulues),
+            "contrat": contrat_id, "methode": methode, "couches": ",".join(voulues), "lecture": str(r.get("lecture", "")),
             "golden": str(r.get("golden", {}).get("version") if isinstance(r.get("golden"), dict) else r.get("golden"))})
         suivi.metriques(metriques_banc(r) | {"portes_passees": float(bool(r["passe"]))})
     _, md = banc.enregistrer(donnees, r)

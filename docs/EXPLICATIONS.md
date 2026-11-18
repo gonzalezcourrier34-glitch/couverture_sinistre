@@ -328,6 +328,8 @@ COUVERTURE_MODELE=mistral-large-latest
 
 **Pourquoi** : les fiches ne savaient pas représenter une condition cachée dans un tableau de limites ni une exclusion cachée dans une définition ; une règle les exprime directement. La décision devient un calcul reproductible. Les tests utilisent aussi `tests/moteur_reference.py`, une seconde implémentation du moteur en Python : là où SWI-Prolog est installé, un test vérifie que les deux concordent.
 
+**La lecture en deux temps** (`extraire_faits_regles`) : d'abord l'événement, le bien et le lieu ; puis seulement les questions qui concernent cet événement, avec ce qui est déjà établi. Chaque appel envoie un **schéma JSON** qui n'admet que les valeurs du vocabulaire (`schema_faits`). `COUVERTURE_LECTURE=un_temps` revient à la lecture d'un seul coup, pour comparer.
+
 ### `src/couverture/banc.py` et `data/golden/` — le banc d'essai
 
 **Rôle** : rejouer tout le système sur un jeu de référence figé (le *golden set*, 97 cas étiquetés par garantie, thème, origine et auteur), en trois couches : les **règles** seules sur les faits idéaux, la **lecture** des faits par le modèle comparée aux faits idéaux, la **chaîne** complète sur plusieurs exécutions. Des **portes** (`data/golden/seuils.json`) disent si c'est présentable ; la commande `couverture banc` sort en erreur si une porte échoue. Chaque passage est gardé dans `data/bancs/` et comparé au précédent. `--figer` versionne le golden set ; `--fiche` écrit la fiche de validation des réponses attendues.
