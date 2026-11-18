@@ -640,6 +640,10 @@ def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
             ajouts += [f"{v} = {x}" for x in nouvelles]
         else:
             voc[v] = {"valeurs": valeurs, "question": m.get("question") or f"Préciser : {v}"}
+            # Sans « pour », la variable serait lue pour tous les sinistres (un dégât des eaux se verrait demander
+            # la formule « Privilège ») : elle vaut pour les événements de la garantie qui l'a fait naître (7.56).
+            if prop.get("evenements"):
+                voc[v]["pour"] = list(prop["evenements"])
             ajouts.append(f"{v} ({', '.join(valeurs)}) : « {voc[v]['question']} »")
     if ajouts:
         chemin.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

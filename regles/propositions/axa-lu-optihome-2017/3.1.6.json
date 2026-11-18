@@ -1874,5 +1874,12 @@
         "pourquoi": "procédure après sinistre, sans effet sur la couverture"
       }
     ]
-  }
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.1.6.5) : procédure après sinistre, sans effet sur la couverture"
+    }
+  ]
 }

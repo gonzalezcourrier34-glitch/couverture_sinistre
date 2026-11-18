@@ -1979,6 +1979,25 @@ bloquant.
 exclusion commune ne la rend impossible (une exclusion dont la condition est impliquée par le périmètre
 de la garantie). C'est vérifiable par le moteur lui-même, en lui donnant le périmètre comme faits.
 
+### 7.56 Le vocabulaire accepté, et un effet de bord évité
+
+`--accepter-vocabulaire` a ajouté dix variables et une valeur (`bien = remorque`), puis `--controler`, avec
+SWI-Prolog sur le poste, n'a plus rien trouvé de bloquant : les règles fusionnées se chargent sans
+avertissement. Il n'y a pas encore de cas annotés AXA : la non-régression est vide, et c'est la prochaine
+étape.
+
+**L'effet de bord.** Les variables acceptées n'avaient pas de champ « pour ». Or la lecture ne filtre que les
+variables qui le déclarent : une variable sans « pour » est lue pour tous les sinistres. La formule
+« Privilège » ou la plainte déposée auraient été demandées pour un dégât des eaux chez Foyer, et le banc
+Foyer aurait bougé pour une raison sans rapport. Correction générale : une variable acceptée vaut pour les
+événements de la garantie qui l'a fait naître (ici vol et vandalisme). Les dix variables déjà ajoutées ont
+été complétées, et cinq questions réécrites pour être posables à un assuré (« Serrure à cylindre ? » devient
+« Les annexes ou dépendances étaient-elles fermées par une serrure à cylindre ? » ; le séjour temporaire n'est
+pas « à l'étranger » : le contrat dit « partout dans le monde »).
+
+**Leçon 71.** Ajouter des règles pour un assureur ne doit pas changer les réponses d'un autre. Le banc Foyer
+est le test de cette étanchéité : à relancer après chaque vocabulaire accepté.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 18 nov. 2026 ; ce qui est fait est dans les sections 7.

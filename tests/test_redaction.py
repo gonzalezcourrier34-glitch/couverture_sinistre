@@ -128,6 +128,8 @@ def test_vocabulaire_nouveau_declare_bloque_jusqu_a_acceptation(voc_etendu):
     ajouts = redaction.accepter_vocabulaire(BONNE, voc_etendu)
     assert len(ajouts) == 2 and not bloquants(controles(BONNE), "vocabulaire")
     assert redaction.accepter_vocabulaire(BONNE, voc_etendu) == [], "pas de doublon"
+    assert json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]["vent_fort"]["pour"] == ["tempete"], \
+        "une variable nouvelle ne vaut que pour les événements de sa garantie (7.56)"
 
 
 def test_fait_invente_non_declare():

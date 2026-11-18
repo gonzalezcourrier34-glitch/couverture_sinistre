@@ -67,7 +67,8 @@
         "objet_verre_non_vitre",
         "plantation",
         "mazout",
-        "cles"
+        "cles",
+        "remorque"
       ],
       "question": "Quels biens sont endommagés ou volés ?",
       "parents": {
@@ -482,6 +483,117 @@
       "valeurs": [
         "oui",
         "non"
+      ]
+    },
+    "plainte_deposee": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Une plainte a-t-elle été déposée auprès des autorités ?",
+      "pour": [
+        "vol",
+        "vandalisme"
+      ]
+    },
+    "formule": {
+      "valeurs": [
+        "privilege",
+        "active",
+        "standard"
+      ],
+      "question": "Quelle formule les conditions particulières mentionnent-elles (Privilège, Active, standard) ?",
+      "pour": [
+        "vol",
+        "vandalisme"
+      ]
+    },
+    "occupation_partielle": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'assuré n'occupe-t-il que partiellement le bâtiment ?",
+      "pour": [
+        "vol",
+        "vandalisme"
+      ]
+    },
+    "serrure_cylindre": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les annexes ou dépendances étaient-elles fermées par une serrure à cylindre ?",
+      "pour": [
+        "vol",
+        "vandalisme"
+      ]
+    },
+    "sejour_temporaire": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les objets volés avaient-ils été emportés lors d'un séjour temporaire hors du domicile ?",
+      "pour": [
+        "vol",
+        "vandalisme"
+      ]
+    },
+    "travaux_construction": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Bâtiment en construction/transformation/rénovation ?",
+      "pour": [
+        "vol",
+        "vandalisme"
+      ]
+    },
+    "lien_causal_travaux": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les travaux ont-ils contribué au vol ou à l'aggravation de ses conséquences ?",
+      "pour": [
+        "vol",
+        "vandalisme"
+      ]
+    },
+    "occupation_irreguliere": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Occupation irrégulière des locaux ?",
+      "pour": [
+        "vol",
+        "vandalisme"
+      ]
+    },
+    "abus_confiance": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Abus de confiance ?",
+      "pour": [
+        "vol",
+        "vandalisme"
+      ]
+    },
+    "confiance_assure": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les biens volés avaient-ils été confiés au concierge (ou à la personne qui en fait fonction) ?",
+      "pour": [
+        "vol",
+        "vandalisme"
       ]
     }
   }
