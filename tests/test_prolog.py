@@ -94,6 +94,26 @@ def test_evenement_non_traduit_jamais_refuse(contrat):
     assert Moteur(contrat, feu).decider()["decision"] == "COUVERT"
 
 
+def test_trous_trouves_par_le_golden_v5(contrat):
+    """Les sept erreurs du golden v5 (DEMARCHE 7.30), une par une."""
+    eau = {"evenement": ["degat_eaux"], "bien": ["element_batiment"], "lieu": ["logement"]}
+    d = lambda f: Moteur(contrat, f).decider()["decision"]
+    assert d({**eau, "cause_eau": "infiltration_toiture"}) == "COUVERT"          # le toit n'est pas exclu
+    assert d({**eau, "cause_eau": "infiltration_exterieure"}) == "NON_COUVERT"   # la fenêtre l'est
+    assert d({**eau, "cause_eau": "piscine_exterieure"}) == "NON_COUVERT"
+    assert d({**eau, "cause_eau": "fuite_installation", "manque_entretien": "oui"}) == "NON_COUVERT"   # 1.4
+    assert d({**eau, "cause_eau": "fuite_installation", "corrosion_visible": "oui"}) == "NON_COUVERT"
+    # Inconnues, les exclusions que l'assureur doit prouver ne deviennent pas des questions.
+    assert d({**eau, "cause_eau": "fuite_installation"}) == "COUVERT"
+    assert d({"evenement": ["bris"], "bien": ["vitre"], "lieu": ["logement"], "intentionnel": "oui"}) == "NON_COUVERT"
+    assert d({"evenement": ["vol"], "bien": ["cles"], "lieu": ["voie_publique"]}) == "COUVERT"
+    assert d({"evenement": ["vol"], "bien": ["plantation"], "lieu": ["jardin"]}) == "NON_COUVERT"
+    assert d({"evenement": ["vol"], "bien": ["mazout"], "lieu": ["cave"]}) == "NON_COUVERT"
+    # 2.11 et 2.12 ne sont pas traduites : « à examiner », jamais « non couvert ».
+    for e in ("vandalisme", "merule"):
+        assert d({**eau, "evenement": [e]}) == "INCERTAIN"
+
+
 def test_garanties_hors_sujet_ne_posent_pas_de_question(contrat):
     """Pas de question sur les flammes pour une tempête ; pas de « vol commis sur vous ? » pour un garage."""
     eau = Moteur(contrat, {"evenement": ["degat_eaux"], "bien": ["element_batiment"], "lieu": ["logement"]}).decider()

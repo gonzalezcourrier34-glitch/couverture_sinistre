@@ -106,21 +106,33 @@ perimetre(vol_reparateur, f(lieu, chez_reparateur)).
 circonstance(vol_reparateur, f(depot_moins_30j, oui), '2.10', "pendant max. 30 jours").
 limite(vol_reparateur, '2.10', "Le vol du contenu déposé chez un réparateur pendant maximum 30 jours", "500 EUR").
 
+%  Le tableau des limites cache une garantie : les clés volées, où que ce soit. La perte n'est pas
+%  un événement du vocabulaire : « perdu » n'est pas « volé », la rattacher ici ferait de chaque
+%  déclaration au bien inconnu un vol de clés possible.
+garantie(vol_cles, "Vol ou perte des clés", '2.10', "Le vol ou la perte des clés").
+perimetre(vol_cles, concept(vol)).
+perimetre(vol_cles, f(bien, cles)).
+limite(vol_cles, '2.10', "Le vol ou la perte des clés", "500 EUR").
+
 % --- Art. 2.10-a Exclusions du vol (communes aux trois garanties vol) ---------------------------------
 
-exclusion([vol_batiment, vol_personne, vol_reparateur], f(lieu, parties_communes), tout, oui, '2.10-a',
+exclusion([vol_batiment, vol_personne, vol_reparateur, vol_cles], f(lieu, parties_communes), tout, oui, '2.10-a',
     "le vol ou le vandalisme dans les parties communes du bâtiment").
-exclusion([vol_batiment, vol_personne, vol_reparateur], ou([f(auteur, assure), f(auteur, famille)]), tout, non, '2.10-a',
+exclusion([vol_batiment, vol_personne, vol_reparateur, vol_cles], ou([f(auteur, assure), f(auteur, famille)]), tout, non, '2.10-a',
     "le vol et le vandalisme commis par ou avec votre complicité ou celle d’un descendant ou ascendant").
-exclusion([vol_batiment, vol_personne, vol_reparateur], f(auteur, personnel_prive), tout, non, '2.10-a',
+exclusion([vol_batiment, vol_personne, vol_reparateur, vol_cles], f(auteur, personnel_prive), tout, non, '2.10-a',
     "le vol commis par des personnes au service privé de l’assuré").
-exclusion([vol_batiment, vol_personne, vol_reparateur], f(proprietaire, hote), tout, non, '2.10-a',
+exclusion([vol_batiment, vol_personne, vol_reparateur, vol_cles], f(proprietaire, hote), tout, non, '2.10-a',
     "le vol des biens appartenant à des hôtes").
-exclusion([vol_batiment, vol_personne, vol_reparateur], f(bien, animal), bien(animal), oui, '2.10-a',
+exclusion([vol_batiment, vol_personne, vol_reparateur, vol_cles], f(bien, animal), bien(animal), oui, '2.10-a',
     "le vol des animaux").
-exclusion([vol_batiment, vol_personne, vol_reparateur], f(bien, mobilier_jardin), bien(mobilier_jardin), oui, '2.10-a',
+exclusion([vol_batiment, vol_personne, vol_reparateur, vol_cles], f(bien, mobilier_jardin), bien(mobilier_jardin), oui, '2.10-a',
     "le vol du mobilier extérieur").
-exclusion([vol_batiment, vol_personne, vol_reparateur], f(lieu, casier), tout, non, '2.10-a',
+exclusion([vol_batiment, vol_personne, vol_reparateur, vol_cles], f(bien, plantation), bien(plantation), oui, '2.10-a',
+    "le vol des plantations du jardin").
+exclusion([vol_batiment, vol_personne, vol_reparateur, vol_cles], f(bien, mazout), bien(mazout), oui, '2.10-a',
+    "le vol de mazout de chauffage").
+exclusion([vol_batiment, vol_personne, vol_reparateur, vol_cles], f(lieu, casier), tout, non, '2.10-a',
     "le vol du contenu entreposé dans un casier d’une association sportive ou d’agrément").
 
 % --- Art. 2.1 Incendie et risques connexes -------------------------------------------------------------
@@ -146,9 +158,18 @@ exclusion(degats_eaux, f(bien, canalisation), bien(canalisation), oui, '2.7-b',
     "aux canalisations, radiateurs, robinets, citernes, chaudières et autres appareils chauffant de l'eau, qui sont à l'origine du sinistre").
 exclusion(degats_eaux, f(cause_eau, infiltration_exterieure), tout, oui, '2.7-b',
     "par une infiltration par les terrasses, balcons, portes, fenêtres et porte-fenêtre ou par les murs extérieurs").
+exclusion(degats_eaux, f(cause_eau, eau_souterraine), tout, oui, '2.7-b',
+    "par une infiltration d’eau souterraine").
+exclusion(degats_eaux, f(cause_eau, piscine_exterieure), tout, oui, '2.7-b',
+    "par l'écoulement d'eau des piscines et des bains à bulles extérieurs").
+%  Inconnue, la corrosion n'est pas une question à poser : c'est à l'assureur de la prouver.
+exclusion(degats_eaux, f(corrosion_visible, oui), tout, non, '2.7-b',
+    "par les canalisations apparentes présentant plusieurs points de corrosion visibles et non traités").
 exclusion(degats_eaux, f(cause_eau, inondation), tout, oui, '2.7-b',
     "par une inondation ou un débordement ou refoulement d'égouts publics").
 exclusion(degats_eaux, f(cause_eau, condensation), tout, non, '2.7-b', "par la condensation").
+%  « infiltration_exterieure » ne vise que terrasses, balcons, portes, fenêtres et murs :
+%  la pluie entrée par le toit (infiltration_toiture) reste couverte.
 %  L'aquarium et le matelas d'eau sont exceptés : une autre valeur du vocabulaire (debordement_aquarium).
 exclusion(degats_eaux, f(cause_eau, debordement_recipient), tout, oui, '2.7-b',
     "par le débordement ou le renversement d'un récipient non relié à l'installation hydraulique du bâtiment, autre qu’un aquarium ou un matelas d’eau").
@@ -187,3 +208,13 @@ exclusion(bris_vitrages, f(type_dommage, opacification_ou_perte_etancheite), tou
 exclusion(bris_vitrages, f(bien, couverture_piscine), bien(couverture_piscine), oui, '2.9-a',
     "les parties vitrées des serres et des couvertures de piscine").
 limite(bris_vitrages, '2.9', "Dommages causés aux vitrages d’art, frais de reconstitution des inscriptions, peintures, 5.000 EUR décorations", "5000 EUR").
+
+% --- Art. 1.4 Exclusions générales (toutes les garanties traduites) ---------------------------------
+%  « Nous ne couvrons jamais » : elles visent toutes les garanties. Inconnues, ce ne sont pas des
+%  questions à poser à chaque déclaration : l'assureur prouve l'exclusion (« non »).
+exclusion([vol_batiment, vol_personne, vol_reparateur, vol_cles, incendie, degats_eaux, bris_vitrages],
+    f(intentionnel, oui), tout, non, '1.4',
+    "résultant d’un sinistre intentionnel dont vous êtes l’auteur ou le complice").
+exclusion([vol_batiment, vol_personne, vol_reparateur, vol_cles, incendie, degats_eaux, bris_vitrages],
+    f(manque_entretien, oui), tout, non, '1.4',
+    "résultant d’un vice propre, de l’usure, d’un manque d’entretien, d’un usage inapproprié, ou de la détérioration lente et progressive des biens assurés").

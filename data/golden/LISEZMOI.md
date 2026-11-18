@@ -3,7 +3,7 @@
 Un jeu de sinistres **figé, étiqueté et versionné**, sur lequel on rejoue tout le système à chaque
 changement : `uv run couverture banc --contrat foyer-appart123-2025`.
 
-## Ce qu'il contient (version 5, 97 cas)
+## Ce qu'il contient (version 6, 97 cas)
 
 | Origine | Cas | Écrits |
 |---|---|---|

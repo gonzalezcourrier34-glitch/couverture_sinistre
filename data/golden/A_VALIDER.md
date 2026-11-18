@@ -1,4 +1,4 @@
-# Golden set — fiche de validation (foyer-appart123-2025, v5, 97 cas)
+# Golden set — fiche de validation (foyer-appart123-2025, v6, 97 cas)
 
 Pour chaque cas : la réponse attendue est-elle celle d'un gestionnaire qui lit les conditions générales ? C = couvert, NC = non couvert, ? = incertain (il manque une information, ou la garantie n'est pas traduite).
 Une réponse « acceptable » est tolérée sans être exacte.

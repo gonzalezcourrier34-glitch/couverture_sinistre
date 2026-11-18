@@ -1421,9 +1421,36 @@ Le plus grave est le dernier type d'erreur systémique : un événement « autre
 lieu de « incertain, à examiner ». Deux réponses attendues restent discutables (toiture, clés) : la
 fiche `A_VALIDER.md` les soumet à l'auteur.
 
+### 7.31 Les sept trous corrigés
+
+Chaque correction part d'une phrase du contrat (citations vérifiées contre le découpage des CG, 65 sur 65) :
+
+- **« autre » n'était pas le problème** : il désigne aussi ce qu'aucune garantie ne couvre (la brûlure
+  de bougie du recruteur, qui doit rester « non couvert »). Ce qui manquait, ce sont deux événements :
+  `vandalisme` (2.11) et `merule` (2.12). Non traduits, ils plafonnent à « incertain, à examiner ».
+- **Exclusions générales 1.4** : `intentionnel` et `manque_entretien` (usure, détérioration lente),
+  sur toutes les garanties traduites. Elles sont « à prouver par l'assureur » : inconnues, elles ne
+  deviennent pas une question posée à chaque déclaration (le test le vérifie).
+- **2.7** : la valeur `infiltration_exterieure` ne vise plus que terrasses, balcons, portes, fenêtres et
+  murs, comme le contrat ; `infiltration_toiture` reste couverte. Ajout de l'eau souterraine, des
+  piscines et bains à bulles extérieurs, et de la corrosion visible (à prouver par l'assureur).
+- **2.10** : une garantie cachée dans le tableau des limites, « le vol ou la perte des clés » (500 EUR) ;
+  les exclusions « plantations du jardin » et « mazout de chauffage ».
+
+**Une erreur évitée par le banc** : la première version de la garantie clés se rattachait aussi à la
+« simple disparition ». Le rappel des questions est tombé de 100 % à 91 % : pour un début de feu, le
+moteur ne demandait plus « y a-t-il eu embrasement ? » mais « quel bien ? », parce qu'un vol de clés
+devenait possible. La perte n'est pas un événement du vocabulaire ; la garantie se limite au vol.
+
+Les faits idéaux de 11 cas ont été précisés avec ces nouvelles valeurs (golden v6) ; les textes et les
+réponses attendues n'ont pas changé. **Règles seules (oracle) : 100 % justes, 80 % exactes, 0 couvert et
+0 refus à tort**, rappel des questions 100 %. La lecture doit maintenant reconnaître ces valeurs : le
+vocabulaire lui fournit leurs définitions (« aide »), à mesurer au prochain banc complet.
+
 ## 8. Ce qui reste à faire
 
-- Corriger les 7 erreurs des règles trouvées par le golden v5 (7.30), en commençant par « autre » → incertain.
+- Mesurer la lecture sur les nouvelles valeurs du vocabulaire (banc complet, puis Mistral Large).
+- Limite connue : la perte de clés (sans vol) n'est pas traduite.
 
 - Un **nouveau jeu de validation écrit par l'auteur**, sans Claude (les 15 cas de 7.17 sont devenus de la mise au point, 7.18) ; le placer dans `data/validation/` à la place des actuels, qui rejoignent la mise au point.
 - Mesurer la chaîne complète sur ce nouveau jeu (`--jeu validation --repetitions 3`).
@@ -1497,3 +1524,4 @@ fiche `A_VALIDER.md` les soumet à l'auteur.
 53. Un outil se justifie par ce qu'on lui fait faire : Prolog n'apporte rien comme évaluateur, il apporte comme raisonneur par hypothèses.
 54. Une question qui ne change aucune décision ne se pose pas ; une question qui tranche se pose en premier, avec ce qu'elle entraîne.
 55. Un banc qui ne trouve plus rien n'est pas la preuve que tout va bien : on l'agrandit jusqu'à ce qu'il retrouve des erreurs.
+56. Une exclusion que l'assureur doit prouver ne se pose pas en question à chaque client : inconnue, elle ne joue pas.

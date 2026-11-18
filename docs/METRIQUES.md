@@ -10,7 +10,7 @@ Démarche et historique des mesures : [DEMARCHE.md](DEMARCHE.md), parties 7.21 e
 
 | Jeu | Où | Cas | Rôle | Limite |
 |---|---|---|---|---|
-| **Golden set** (référence) | `data/golden/` (v5, figé par empreinte) | 97 | Rejoué à chaque changement ; toutes les métriques ci-dessous | Écrit par Claude, ayant servi à corriger le système : mesure la **mise au point** |
+| **Golden set** (référence) | `data/golden/` (v6, figé par empreinte) | 97 | Rejoué à chaque changement ; toutes les métriques ci-dessous | Écrit par Claude, ayant servi à corriger le système : mesure la **mise au point** |
 | Mise au point d'origine | `data/sinistres.jsonl` | 14 | Les 2 cas du recruteur et 12 variations | Inclus dans le golden set |
 | Ancienne validation | `data/validation/` | 15 | Historique (7.17) | Inclus dans le golden set |
 | Rédaction | `data/redaction/` | 10 | Tempête et bris, écrits avant les règles | Inclus dans le golden set |
@@ -107,6 +107,10 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 ---
 
 ## 5. Dernières mesures
+
+**18 nov. 2026, golden v6, règles corrigées (oracle Python, à confirmer sur SWI-Prolog)** :
+**100 % justes ou acceptables, 80 % exactes, 0 couvert et 0 refus à tort**, toutes les questions
+attendues posées, 16 questions inutiles retirées (DEMARCHE 7.31).
 
 **18 nov. 2026, golden v5 (97 cas), règles seules (oracle Python, à confirmer sur SWI-Prolog)** :
 90 % justes ou acceptables, 70 % exactes, **4 couverts à tort, 3 refus à tort**. Les 29 cas ajoutés

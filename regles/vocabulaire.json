@@ -16,7 +16,9 @@
         "mazout",
         "catastrophe_naturelle",
         "attentat",
-        "fumee"
+        "fumee",
+        "vandalisme",
+        "merule"
       ],
       "question": "Que s'est-il passé (la cause, et le dommage s'il est d'une autre nature) ?",
       "aide": {
@@ -28,7 +30,9 @@
         "catastrophe_naturelle": "débordement d'une rivière, refoulement des égouts publics, tremblement de terre, glissement de terrain",
         "attentat": "émeute, manifestation qui dégénère, attentat, conflit social",
         "fumee": "suie ou fumée qui salit ou noircit, sans incendie",
-        "autre": "rien de ce qui précède"
+        "autre": "rien de ce qui précède",
+        "vandalisme": "dégradations volontaires par un tiers : tags, rayures, portes ou vitres abîmées, sans vol",
+        "merule": "champignon (mérule) qui attaque le bois du bâtiment"
       }
     },
     "bien": {
@@ -60,7 +64,10 @@
         "appareil_audiovisuel",
         "serre",
         "couverture_piscine",
-        "objet_verre_non_vitre"
+        "objet_verre_non_vitre",
+        "plantation",
+        "mazout",
+        "cles"
       ],
       "question": "Quels biens sont endommagés ou volés ?",
       "parents": {
@@ -113,7 +120,10 @@
         "objet_verre_non_vitre": "vase, verre, bibelot en verre",
         "mobilier_jardin": "table, chaises, salon de jardin, même posés sur une terrasse",
         "element_batiment": "murs, sols, plafonds, portes, placards fixés",
-        "objet_divers": "tout autre objet"
+        "objet_divers": "tout autre objet",
+        "plantation": "plantes, arbres, arbustes, haies du jardin",
+        "mazout": "fioul (mazout) de chauffage, dans la cuve",
+        "cles": "clés d'accès au logement"
       }
     },
     "lieu": {
@@ -336,17 +346,23 @@
         "gel",
         "condensation",
         "debordement_recipient",
-        "debordement_aquarium"
+        "debordement_aquarium",
+        "infiltration_toiture",
+        "eau_souterraine",
+        "piscine_exterieure"
       ],
       "question": "D'où venait l'eau ?",
       "aide": {
         "fuite_installation": "fuite ou rupture d'un appareil relié à l'eau : tuyau, chauffe-eau, machine à laver, évier, baignoire qui déborde",
         "debordement_recipient": "récipient non relié à l'eau qui se renverse ou se brise : seau, vase, bassine (pas un aquarium)",
-        "infiltration_exterieure": "pluie entrée par le toit, une façade, une fenêtre, une terrasse",
+        "infiltration_exterieure": "pluie entrée par une terrasse, un balcon, une porte, une fenêtre ou un mur extérieur (pas par le toit)",
         "inondation": "débordement d'un cours d'eau, refoulement des égouts publics",
         "gel": "canalisation qui gèle et éclate",
         "condensation": "humidité de condensation",
-        "debordement_aquarium": "aquarium ou matelas d'eau qui fuit ou se brise"
+        "debordement_aquarium": "aquarium ou matelas d'eau qui fuit ou se brise",
+        "infiltration_toiture": "pluie entrée par le toit",
+        "eau_souterraine": "eau qui remonte du sol (nappe, remontées par les fondations)",
+        "piscine_exterieure": "fuite d'une piscine ou d'un bain à bulles extérieurs, ou de leurs installations"
       },
       "pour": [
         "degat_eaux",
@@ -408,6 +424,64 @@
       "question": "La cause du dommage est-elle le gel ?",
       "pour": [
         "bris"
+      ]
+    },
+    "intentionnel": {
+      "question": "Le dommage a-t-il été causé volontairement par l'assuré (ou avec sa complicité) ?",
+      "pour": [
+        "vol",
+        "incendie",
+        "explosion",
+        "foudre",
+        "degat_eaux",
+        "tempete",
+        "bris",
+        "autre",
+        "electricite",
+        "mazout",
+        "catastrophe_naturelle",
+        "attentat",
+        "fumee",
+        "vandalisme",
+        "merule"
+      ],
+      "valeurs": [
+        "oui",
+        "non"
+      ]
+    },
+    "manque_entretien": {
+      "question": "Le dommage vient-il de l'usure, d'un manque d'entretien ou d'une détérioration lente (fuite connue depuis longtemps, joint usé) ?",
+      "pour": [
+        "vol",
+        "incendie",
+        "explosion",
+        "foudre",
+        "degat_eaux",
+        "tempete",
+        "bris",
+        "autre",
+        "electricite",
+        "mazout",
+        "catastrophe_naturelle",
+        "attentat",
+        "fumee",
+        "vandalisme",
+        "merule"
+      ],
+      "valeurs": [
+        "oui",
+        "non"
+      ]
+    },
+    "corrosion_visible": {
+      "question": "La canalisation en cause était-elle apparente et visiblement rouillée en plusieurs points, sans traitement ?",
+      "pour": [
+        "degat_eaux"
+      ],
+      "valeurs": [
+        "oui",
+        "non"
       ]
     }
   }
