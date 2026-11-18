@@ -84,6 +84,7 @@ négatifs que la déclaration ne dit pas (« pas de violence »), et la consigne
 | Métrique | Définition | Seuil |
 |---|---|---|
 | **Cas instables** | Cas dont la réponse change d'une exécution à l'autre | ≤ 3 |
+| **Temps par cas** | Médiane et 95e centile, avec la lecture et la décision à part (quatre cas à la fois dans le banc) | 95e centile ≤ 30 s |
 | Minimum et maximum | De chaque métrique sur les 3 exécutions | affichés |
 | Durée | Par exécution des cas du golden set | suivi |
 | Erreurs du fournisseur | Appels au modèle sans réponse | suivi |
@@ -107,6 +108,14 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 ---
 
 ## 5. Dernières mesures
+
+**18 nov. 2026, 16 h 30, moteur chargé une fois** : mêmes résultats (87 %, 2,7 couverts à tort, 5 instables) ;
+temps par cas : médiane **2,4 s** (décision < 10 ms), 95e centile 68 s à cause des limites de débit de l'API
+quand quatre cas tournent à la fois (DEMARCHE 7.47).
+
+**18 nov. 2026, soir, golden v6, lecture Mistral Small vérifiée et arbitrée (défaut)** : **87 % justes,
+2,7 couverts à tort, 2 refus à tort**, questions attendues posées 55 %, 2 à 3 minutes par passage
+(DEMARCHE 7.38 à 7.45 : un temps 75 % et 9,3 couverts à tort le matin).
 
 **18 nov. 2026, golden v6, lecture Mistral Large (3 exécutions)** : règles 100 % ; **chaîne 91 % justes,
 0 couvert à tort, 0,3 refus à tort**, 9 instables ; 15 minutes par passage (Small : 20 secondes).

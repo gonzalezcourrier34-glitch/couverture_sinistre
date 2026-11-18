@@ -436,6 +436,37 @@ decider_json :-
     put_dict(preuve, D1, P, D),
     ecrire_json(D).
 
+%!  servir : le moteur reste chargé et décide à la demande (DEMARCHE 7.46).
+%   Chaque demande est un terme sur l'entrée standard : faits([Variable-Valeur, ...]). La réponse est une
+%   ligne JSON (la décision, ou {"erreur": ...}). `pret.` répond {"pret": true} : Python s'en sert pour savoir
+%   que le moteur et les règles sont chargés. La fin de l'entrée arrête la boucle.
+servir :-
+    prompt(_, ''),                       % pas d'invite « |: » dans la réponse
+    set_stream(user_input, encoding(utf8)),
+    set_stream(user_output, encoding(utf8)),
+    repeat,
+    catch(read_term(user_input, T, []), E, T = illisible(E)),
+    (   T == end_of_file
+    ->  !
+    ;   servir_un(T),
+        flush_output,
+        fail
+    ).
+
+servir_un(pret) :- !,
+    ecrire_json(_{pret:true}).
+servir_un(faits(Fs)) :- !,
+    retractall(fait(_, _)),
+    forall(member(V-X, Fs), assertz(fait(V, X))),
+    (   catch(decider_json, E, ( format(string(Texte), "~q", [E]), ecrire_json(_{erreur:Texte}) ))
+    ->  true
+    ;   ecrire_json(_{erreur:"la décision a échoué"})
+    ),
+    retractall(fait(_, _)).
+servir_un(T) :-
+    format(string(Texte), "demande inconnue : ~q", [T]),
+    ecrire_json(_{erreur:Texte}).
+
 %  Les couples (variable, valeur) employés par le contrat : comparés au vocabulaire par Python.
 vocabulaire_json :-
     findall(_{variable:V, valeur:X}, ( condition_du_contrat(C), feuille(C, f(V, X)) ), L0),

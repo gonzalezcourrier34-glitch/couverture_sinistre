@@ -12,6 +12,8 @@ Ce découpage tient à l'échelle : un nouveau contrat = un fichier d'annotation
 
 from __future__ import annotations
 
+import time
+
 import json
 from collections import Counter
 from pathlib import Path
@@ -68,7 +70,10 @@ def evaluer(pipeline, cas: list[dict], paralleles: int = 1) -> dict:
         """Une panne du fournisseur sur un cas (limite de débit persistante, réseau) ne fait pas
         perdre les autres : le cas est compté en erreur. Une clé refusée arrête tout."""
         try:
-            return pipeline.analyser(c["sinistre"])
+            debut = time.perf_counter()
+            r = pipeline.analyser(c["sinistre"])
+            r.durees_ms = {**r.durees_ms, "total": int((time.perf_counter() - debut) * 1000)}
+            return r
         except CleRefusee:
             raise
         except ErreurLLM as e:
@@ -113,7 +118,7 @@ def evaluer(pipeline, cas: list[dict], paralleles: int = 1) -> dict:
             "faits_lus": r.faits.model_dump() if r.faits else {},
             "questions": list(v.informations_manquantes),
             "avertissements": list(v.avertissements),
-            "duree_ms": getattr(r, "duree_ms", None),
+            "durees_ms": dict(r.durees_ms),
         })
     n = len(lignes)
     rappels = [l["rappel_clauses"] for l in lignes if l["rappel_clauses"] is not None]

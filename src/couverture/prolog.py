@@ -14,12 +14,17 @@ COUVERTURE_SWIPL, ou l'emplacement d'installation habituel sous Windows.
 
 from __future__ import annotations
 
+import atexit
 import json
 import os
+import queue
 from concurrent.futures import ThreadPoolExecutor
 import re
 import shutil
 import subprocess
+import tempfile
+import threading
+import time
 from pathlib import Path
 
 from .llm import completer_avec_schema, extraire_json
@@ -150,8 +155,122 @@ def executer(contrat_id: str, point: str, faits: dict | None = None, delai: int 
     return json.loads(sortie.splitlines()[-1])
 
 
+# --- Le moteur chargé une fois (DEMARCHE 7.46) -----------------------------------------------------------
+#  Lancer SWI-Prolog pour chaque décision coûte le démarrage et le chargement du moteur et des règles, et la
+#  lecture vérifiée décide jusqu'à trois fois par cas. Un processus par contrat reste ouvert : on lui envoie
+#  les faits, il répond une ligne JSON (`servir` dans moteur.pl). Les règles modifiées sur le disque relancent
+#  le processus. COUVERTURE_PROLOG_PERMANENT=non revient à un processus par décision.
+
+class MoteurPermanent:
+    def __init__(self, contrat_id: str, regles: Path, delai: int = 30):
+        exe = swipl()
+        if exe is None:
+            raise ErreurRegles("SWI-Prolog introuvable. Windows : `winget install SWI-Prolog.SWI-Prolog`, "
+                               "ou indiquer son chemin dans COUVERTURE_SWIPL.")
+        self.contrat_id, self.regles, self.delai = contrat_id, regles, delai
+        self.empreinte = self.empreinte_fichiers(regles)
+        self.verrou = threading.Lock()
+        poses = [f"assertz(parent_valeur({v}, {x}, {p}))" for v, x, p in hierarchie()
+                 if all(ATOME.match(str(t)) for t in (v, x, p))]
+        corps = ", ".join([f"consult({atome_chemin(MOTEUR)})", f"consult({atome_chemin(regles)})",
+                           "retractall(parent_valeur(_, _, _))", *poses,
+                           f"charger_domaines({atome_chemin(DOSSIER / 'vocabulaire.json')})", "servir"])
+        self.journal = tempfile.TemporaryFile(mode="w+b")   # messages de SWI-Prolog (avertissements au chargement)
+        self.p = subprocess.Popen([exe, "-q", "-g", f"catch(({corps}), E, (print_message(error, E), halt(2)))",
+                                   "-t", "halt"], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                  stderr=self.journal)
+        self.lignes: queue.Queue = queue.Queue()
+        threading.Thread(target=self._lire, daemon=True).start()
+        if self._demander("pret.").get("pret") is not True:
+            self.fermer()
+            raise ErreurRegles("SWI-Prolog ne s'est pas mis en service.")
+        self.journal.seek(0)
+        messages = self.journal.read().decode("utf-8", "replace")
+        if "Warning" in messages or "ERROR" in messages:
+            self.fermer()
+            raise ErreurRegles(f"SWI-Prolog au chargement : {messages.strip()}")
+
+    @staticmethod
+    def empreinte_fichiers(regles: Path) -> tuple:
+        return tuple(f.stat().st_mtime_ns for f in (MOTEUR, regles, DOSSIER / "vocabulaire.json"))
+
+    def _lire(self) -> None:
+        for ligne in self.p.stdout:
+            self.lignes.put(ligne)
+        self.lignes.put(None)  # fin du processus
+
+    def _demander(self, demande: str) -> dict:
+        self.p.stdin.write((demande + "\n").encode("utf-8"))
+        self.p.stdin.flush()
+        try:
+            ligne = self.lignes.get(timeout=self.delai)
+        except queue.Empty as e:
+            self.fermer()
+            raise ErreurRegles(f"SWI-Prolog n'a pas répondu en {self.delai} s.") from e
+        if ligne is None:
+            self.journal.seek(0)
+            raise ErreurRegles(f"SWI-Prolog s'est arrêté : {self.journal.read().decode('utf-8', 'replace').strip()}")
+        return json.loads(ligne.decode("utf-8"))
+
+    def decider(self, faits: dict) -> dict:
+        couples = []
+        for v, x in faits.items():
+            for val in (x if isinstance(x, list) else [x]):
+                if not (ATOME.match(str(v)) and ATOME.match(str(val))):
+                    raise ErreurRegles(f"fait mal formé : {v} = {val}")
+                couples.append(f"{v}-{val}")
+        with self.verrou:
+            d = self._demander(f"faits([{', '.join(couples)}]).")
+        if "erreur" in d:
+            raise ErreurRegles(f"SWI-Prolog : {d['erreur']}")
+        return d
+
+    def vivant(self) -> bool:
+        return self.p.poll() is None and self.empreinte == self.empreinte_fichiers(self.regles)
+
+    def fermer(self) -> None:
+        try:
+            self.p.stdin.close()
+            self.p.wait(timeout=2)
+        except Exception:  # noqa: BLE001
+            self.p.kill()
+
+
+_MOTEURS: dict[str, MoteurPermanent] = {}
+_MOTEURS_VERROU = threading.Lock()
+
+
+def moteur_permanent(contrat_id: str) -> MoteurPermanent:
+    with _MOTEURS_VERROU:
+        m = _MOTEURS.get(contrat_id)
+        if m is None or not m.vivant():
+            if m is not None:
+                m.fermer()
+            regles = fichier_regles(contrat_id)
+            if not regles.exists():
+                raise ErreurRegles(f"Pas de règles pour {contrat_id} : {regles} est absent.")
+            m = _MOTEURS[contrat_id] = MoteurPermanent(contrat_id, regles)
+        return m
+
+
+@atexit.register
+def _fermer_moteurs() -> None:
+    for m in _MOTEURS.values():
+        m.fermer()
+
+
 def decider(contrat_id: str, faits: dict) -> dict:
-    return executer(contrat_id, "decider_json", faits)
+    if os.environ.get("COUVERTURE_PROLOG_PERMANENT", "oui").strip().lower() in {"non", "0", "false"}:
+        return executer(contrat_id, "decider_json", faits)
+    try:
+        return moteur_permanent(contrat_id).decider(faits)
+    except ErreurRegles:
+        # Une seule nouvelle tentative, avec un processus neuf ; sinon l'erreur remonte.
+        with _MOTEURS_VERROU:
+            ancien = _MOTEURS.pop(contrat_id, None)
+        if ancien is not None:
+            ancien.fermer()
+        return moteur_permanent(contrat_id).decider(faits)
 
 
 # --- Lecture des faits par le modèle -------------------------------------------------------------------
@@ -411,6 +530,7 @@ class PipelineRegles:
         return cls(contrat_id, base.clauses(contrat_id), llm)
 
     def analyser(self, sinistre: str) -> Resultat:
+        debut = time.perf_counter()
         try:
             faits, ecarts = extraire_faits_regles(sinistre, self.llm, self.decideur)
         except ErreurLLM:
@@ -420,12 +540,15 @@ class PipelineRegles:
                         confiance=0.0, mode=f"regles:{self.llm.nom}", avertissements=[str(e)])
             return Resultat(sinistre=sinistre, contrat_id=self.contrat_id, methode=self.methode, faits=Faits(),
                             clauses_consultees=[], verdict=v)
+        lu = time.perf_counter()
         d = self.decideur(faits)
+        decide = time.perf_counter()
         verdict, consultees = self.verdict(d, faits)
         verdict.avertissements = ecarts + verdict.avertissements
         verdict = valider(verdict, consultees)
         return Resultat(sinistre=sinistre, contrat_id=self.contrat_id, methode=self.methode,
-                        faits=faits_lisibles(faits), clauses_consultees=consultees, verdict=verdict)
+                        faits=faits_lisibles(faits), clauses_consultees=consultees, verdict=verdict,
+                        durees_ms={"lecture": int((lu - debut) * 1000), "decision": int((decide - lu) * 1000)})
 
     def verdict(self, d: dict, faits: dict) -> tuple[Verdict, list[ClauseRetenue]]:
         decision = Decision(d["decision"])

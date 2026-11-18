@@ -1,5 +1,5 @@
 {
-  "_description": "Les portes du banc : « _max » ne pas dépasser, « _min » atteindre. Couverts à tort : zéro, c'est une promesse faite au client. Les seuils se resserrent, ils ne se relâchent pas sans le noter dans docs/DEMARCHE.md.",
+  "_description": "Les portes du banc : « _max » ne pas dépasser, « _min » atteindre. Couverts à tort : zéro, c'est une promesse faite au client. Les seuils se resserrent, ils ne se relâchent pas sans le noter dans docs/DEMARCHE.md. Latence : le 95e centile du temps par cas, mesuré avec quatre cas à la fois (30 s au départ, à resserrer).",
   "regles": {
     "faux_couverts_max": 0,
     "faux_refus_max": 0,
@@ -17,6 +17,7 @@
     "faux_refus_max": 1,
     "exactitude_min": 0.85,
     "instables_max": 3,
-    "rappel_questions_min": 0.8
+    "rappel_questions_min": 0.8,
+    "latence_p95_s_max": 30
   }
 }

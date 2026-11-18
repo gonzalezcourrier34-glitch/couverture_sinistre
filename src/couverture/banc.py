@@ -267,13 +267,33 @@ def couche_lecture(cas: list[dict], rapports: list[dict], decideur=None) -> dict
 
 # --- Couche 3 : la chaîne complète ---------------------------------------------------------------------------
 
+def centile(valeurs: list[float], q: float) -> float | None:
+    if not valeurs:
+        return None
+    v = sorted(valeurs)
+    return v[min(len(v) - 1, int(round(q * (len(v) - 1))))]
+
+
+def latences(durees: list[dict]) -> dict:
+    """Le temps d'un cas (médiane et 95e centile, en secondes), et ce que prennent la lecture et la décision.
+    Mesuré dans le banc, avec plusieurs cas à la fois : un cas seul est plus rapide (DEMARCHE 7.46)."""
+    sortie = {}
+    for etape, nom in (("total", "latence"), ("lecture", "latence_lecture"), ("decision", "latence_decision")):
+        vals = [d[etape] / 1000 for d in durees if d.get(etape) is not None]
+        if vals:
+            sortie[f"{nom}_mediane_s"] = round(centile(vals, 0.5), 2)
+            sortie[f"{nom}_p95_s"] = round(centile(vals, 0.95), 2)
+    return sortie
+
+
 def couche_chaine(cas: list[dict], rapports: list[dict], durees: list[float]) -> dict:
     index = {c["id"]: c for c in cas}
     par_execution = []
     for r in rapports:
         lignes = [ligne(index[l["id"]], l["obtenu"]) | {"questions": l.get("questions", []),
                                                          "rappel_clauses": l.get("rappel_clauses"),
-                                                         "erreur": l.get("erreur", False)} for l in r["cas"]]
+                                                         "erreur": l.get("erreur", False),
+                                                         "durees_ms": l.get("durees_ms") or {}} for l in r["cas"]]
         for l in lignes:
             # Les questions de la chaîne sont des phrases : la variable attendue est trouvée si sa question est posée.
             attendues = index[l["id"]].get("questions_attendues", [])
@@ -300,7 +320,8 @@ def couche_chaine(cas: list[dict], rapports: list[dict], durees: list[float]) ->
     agreg.update(n=len(reponses), executions=len(rapports), instables=len(instables),
                  rappel_clauses=moyenne("rappel_clauses"), rappel_questions=moyenne("rappel_questions"),
                  erreurs_fournisseur=sum(l["erreur"] for lignes in par_execution for l in lignes),
-                 duree_moyenne_s=round(sum(durees) / len(durees), 1) if durees else None)
+                 duree_moyenne_s=round(sum(durees) / len(durees), 1) if durees else None,
+                 **latences([l["durees_ms"] for lignes in par_execution for l in lignes]))
     # Les groupes sur la première exécution suffisent à situer les faiblesses ; les écarts entre
     # exécutions sont dans « instables ».
     return {"metriques": agreg, "groupes": par_groupe(par_execution[0], cas) if par_execution else {},
@@ -494,7 +515,10 @@ def markdown(r: dict, precedent: dict | None = None) -> str:
         L += ["", f"## Couche 3 — chaîne complète ({m['executions']} exécutions)", "", *tableau_metriques(m), "",
               f"Instables : **{m['instables']}** sur {m['n']} · rappel des clauses : {pct(m['rappel_clauses'])} · "
               f"rappel des questions : {pct(m['rappel_questions'])} · erreurs du fournisseur : {m['erreurs_fournisseur']}"
-              f" · durée moyenne d'une exécution : {m['duree_moyenne_s']} s", "", *tableau_groupes(ch["groupes"]), "",
+              f" · durée moyenne d'une exécution : {m['duree_moyenne_s']} s"
+              + (f" · par cas : médiane {m['latence_mediane_s']} s, 95e centile {m['latence_p95_s']} s"
+                 f" (lecture {m.get('latence_lecture_mediane_s')} s, décision {m.get('latence_decision_mediane_s')} s)"
+                 if m.get("latence_mediane_s") is not None else ""), "", *tableau_groupes(ch["groupes"]), "",
               "### Erreurs et instabilités", ""]
         lignes = []
         for i, rs in ch["reponses"].items():
@@ -544,6 +568,9 @@ def resume_console(r: dict, md: Path | None = None) -> str:
         L.append(f"{titre}{pct(v('exactitude'))} justes · {pct(v('exactitude_stricte'))} exactes · "
                  f"couverts à tort {v('faux_couverts'):g} · refus à tort {v('faux_refus'):g}"
                  + (f" · instables {m['instables']}" if nom == "chaine" else ""))
+        if nom == "chaine" and m.get("latence_mediane_s") is not None:
+            L.append(f"Temps par cas  médiane {m['latence_mediane_s']:g} s · 95e centile {m['latence_p95_s']:g} s · "
+                     f"lecture {m.get('latence_lecture_mediane_s', 0):g} s · décision {m.get('latence_decision_mediane_s', 0):g} s")
     echecs = [p for p in r.get("portes", []) if not p["ok"]]
     L.append("Portes : PASSE" if not echecs else
              "Portes : ÉCHOUE — " + " ; ".join(f"{p['couche']} {p['critere']} {p['valeur']:g} "

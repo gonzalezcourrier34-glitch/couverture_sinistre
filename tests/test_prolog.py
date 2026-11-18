@@ -7,6 +7,7 @@ donnent les mêmes réponses sur tous les cas."""
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 import pytest
@@ -651,3 +652,51 @@ def test_un_doute_ne_fait_jamais_couvrir(monkeypatch, contrat):
     # Sans arbitre (ou quand retirer ne fait pas couvrir), la vérification s'applique.
     faits_sans, _ = prolog.extraire_faits_regles(sinistre, Modele())
     assert "fenetres_fermees" not in faits_sans
+
+
+# --- Le moteur chargé une fois (7.46) -----------------------------------------------------------------------
+
+FAUX_SWIPL = """#!/usr/bin/env python3
+import json, sys
+for ligne in sys.stdin:
+    ligne = ligne.strip()
+    if ligne == "pret.":
+        print(json.dumps({"pret": True}), flush=True)
+    elif ligne.startswith("faits("):
+        print(json.dumps({"decision": "INCERTAIN", "demande": ligne, "retenues": []}), flush=True)
+"""
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="le faux SWI-Prolog est un script Python")
+def test_moteur_permanent_protocole(tmp_path, monkeypatch):
+    """Sans SWI-Prolog : un faux moteur vérifie le protocole (une demande par ligne, une ligne JSON en retour),
+    qu'un seul processus sert toutes les décisions, et qu'un processus arrêté est relancé."""
+    exe = tmp_path / "swipl"
+    exe.write_text(FAUX_SWIPL, encoding="utf-8")
+    exe.chmod(0o755)
+    monkeypatch.setenv("COUVERTURE_SWIPL", str(exe))
+    monkeypatch.delenv("COUVERTURE_PROLOG_PERMANENT", raising=False)
+    prolog._MOTEURS.clear()
+    d = prolog.decider(CONTRAT, {"evenement": ["vol"], "bien": ["velo"], "fermeture": "cadenas"})
+    assert d["demande"] == "faits([evenement-vol, bien-velo, fermeture-cadenas])."
+    m = prolog._MOTEURS[CONTRAT]
+    prolog.decider(CONTRAT, {"evenement": ["incendie"]})
+    assert prolog._MOTEURS[CONTRAT] is m, "le même processus sert les décisions suivantes"
+    m.p.kill()
+    m.p.wait()
+    assert prolog.decider(CONTRAT, {"evenement": ["vol"]})["decision"] == "INCERTAIN"
+    assert prolog._MOTEURS[CONTRAT] is not m, "un processus arrêté est relancé"
+    with pytest.raises(prolog.ErreurRegles):
+        prolog.decider(CONTRAT, {"evenement": ["vol); halt"]})
+    prolog._fermer_moteurs()
+    prolog._MOTEURS.clear()
+
+
+@avec_swipl
+def test_moteur_permanent_decide_comme_un_processus_par_decision(cas):
+    """Le moteur chargé une fois rend exactement ce que rend un SWI-Prolog lancé pour chaque décision."""
+    prolog._MOTEURS.clear()
+    for i, faits, _ in cas:
+        assert prolog.moteur_permanent(CONTRAT).decider(faits) == prolog.executer(CONTRAT, "decider_json", faits), i
+    prolog._fermer_moteurs()
+    prolog._MOTEURS.clear()

@@ -122,3 +122,5 @@ class Resultat(BaseModel):
     faits: Faits
     clauses_consultees: list[ClauseRetenue]
     verdict: Verdict
+    # Temps par étape, en millisecondes (méthode « regles ») : lecture des faits, décision du moteur.
+    durees_ms: dict[str, int] = Field(default_factory=dict)

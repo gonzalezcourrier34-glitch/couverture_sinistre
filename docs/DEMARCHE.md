@@ -1729,14 +1729,55 @@ du plan (Prolog chargé une fois) devient la suivante.
 87 % et 2,7 le soir, sans changer de modèle : en découpant la lecture, en faisant vérifier les faits plutôt
 que les relire, et en laissant le moteur décider quand un doute peut compter.
 
+### 7.46 Étapes 3 et 4 : le moteur chargé une fois, et le temps dans le banc
+
+**Le moteur chargé une fois** (`prolog.MoteurPermanent`). Chaque décision lançait un SWI-Prolog, qui
+chargeait le moteur, les règles et le vocabulaire ; la lecture vérifiée décide jusqu'à trois fois par cas.
+Désormais, un processus par contrat reste ouvert : Python lui envoie les faits sur une ligne
+(`faits([evenement-vol, bien-velo]).`), il répond une ligne JSON (`servir` dans `moteur.pl`). Un verrou
+fait passer les décisions une à une ; un processus arrêté, ou des règles modifiées sur le disque, le font
+relancer ; une erreur donne une nouvelle tentative avec un processus neuf. Les avertissements au
+chargement restent des erreurs, comme avant. `COUVERTURE_PROLOG_PERMANENT=non` revient à un processus par
+décision. Deux tests : le protocole, avec un faux SWI-Prolog (sans Prolog installé) ; et, sur le poste,
+**le moteur permanent rend exactement ce que rend un processus par décision, sur tous les cas**.
+
+**Le temps dans le banc.** Chaque cas est chronométré, et la lecture est séparée de la décision. Le banc
+donne la médiane et le 95e centile du temps par cas, et le temps médian de la lecture et de la décision.
+Une porte : 95e centile au plus 30 s, à resserrer une fois mesuré. Attention : dans le banc, quatre cas
+tournent à la fois et se partagent les appels au modèle ; un cas seul, comme dans l'interface, va plus vite.
+
+À mesurer : le temps de la décision doit devenir négligeable, et le temps par cas baisser d'autant.
+
+### 7.47 Mesure : la décision ne coûte plus rien, la lecture et le débit restent
+
+**Tests** : 113 réussis, 1 sauté (le protocole avec un faux SWI-Prolog, prévu pour Linux) ; **le test qui
+compare le moteur permanent à un processus par décision, sur tous les cas, passe sous Windows**. La suite
+de tests passe de 30 à 10 secondes : c'était surtout le démarrage de SWI-Prolog.
+
+**Banc** (lecture vérifiée, 3 exécutions) : 87 % justes, 2,7 couverts à tort, 2,3 refus à tort, **5 instables**
+(le moins mesuré), questions posées 55 %. Les décisions n'ont pas bougé, comme attendu.
+
+| Temps par cas (banc, quatre cas à la fois) | Médiane | 95e centile |
+|---|---|---|
+| Total | **2,4 s** | 68 s |
+| Lecture (trois appels au modèle) | 2,4 s | — |
+| Décision (Prolog, jusqu'à trois par cas) | **moins de 10 ms** | — |
+
+**La décision est devenue négligeable.** Un cas typique prend 2,4 s, presque tout dans la lecture. Mais
+le passage complet n'a pas raccourci (2 min 20 à 3 min 20) : **la queue est très longue** (5 % des cas
+au-delà de 68 s). Ce n'est pas le système, c'est le débit : quatre cas à la fois, trois appels chacun,
+et Mistral répond « trop de requêtes » (429) ; le client attend alors 2, 4, 8… jusqu'à 60 s avant de
+réessayer. Un cas seul, comme dans l'interface, ne rencontre pas cette limite. La porte de latence échoue
+(68 s pour 30) : elle mesure aujourd'hui le débit autorisé par la clé, pas le système. À trancher : la
+garder telle quelle (elle dit vrai sur un traitement en masse), ou mesurer la latence avec un cas à la fois.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 18 nov. 2026 ; ce qui est fait est dans les sections 7.
 
 **Le plan de lecture (7.35)**
 - La lecture vérifiée est la lecture par défaut (7.45). Mesurer Mistral Large avec elle, pour le recours dans la cascade.
-- Étape 3 : Prolog chargé une fois (processus permanent) ; mesurer la latence par cas.
-- Étape 4 : le temps dans le banc (médiane, p95 par étape) avec une porte.
+- Le recours à Mistral Large pour les seuls cas douteux (faits retirés par la vérification, ou « couvert » sur un fait vérifié de justesse) ; et décider de la porte de latence (7.47).
 - Étape 2 : double lecture en parallèle comparée par le code, et recours à Mistral Large quand elles divergent ou que la réponse est « couvert ».
 
 **La mesure honnête**

@@ -219,3 +219,15 @@ def test_le_banc_note_le_modele_de_lecture(golden, oracle, tmp_path):
     js, md = banc.enregistrer(DONNEES, r, tmp_path)
     assert js.name.endswith("-regles-mistral-large.json") and "lecture par `mistral:mistral-large-latest`" in md.read_text(encoding="utf-8")
     assert "lecture : mistral:mistral-large-latest" in banc.resume_console(r)
+
+
+def test_latences_par_cas():
+    from couverture import banc
+
+    d = [{"total": t, "lecture": t - 100, "decision": 50} for t in (1000, 2000, 3000, 4000, 20000)]
+    m = banc.latences(d)
+    assert m["latence_mediane_s"] == 3.0 and m["latence_p95_s"] == 20.0
+    assert m["latence_decision_mediane_s"] == 0.05
+    assert banc.latences([]) == {}
+    assert banc.portes({"couches": {"chaine": {"metriques": {"latence_p95_s": 31}}}},
+                       {"chaine": {"latence_p95_s_max": 30}})[0]["ok"] is False
