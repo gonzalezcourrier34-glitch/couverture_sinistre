@@ -1501,6 +1501,51 @@ une étape à la fois, chacune gardée seulement si le banc dit qu'elle amélior
 3. **Prolog en processus permanent** (moteur et contrat chargés une fois).
 4. **Le temps dans le banc** : médiane et p95 par étape, part des cas envoyés à Large, avec une porte.
 
+### 7.37 Mistral Large sur le golden v6, et LegalBench
+
+**Lecture par Mistral Large** (golden v6, 3 exécutions) : **chaîne 91 % justes, aucun couvert à tort**,
+0,3 refus à tort, 9 cas instables (Small : 75 %, 9,3 couverts à tort). 95 % sur les 68 cas d'origine,
+80 % sur les 29 nouveaux. La lecture ne change plus que 13,7 décisions par exécution, **aucune vers un
+couvert à tort**. Mais le prix est le temps : **15 minutes par passage**, contre 20 secondes avec Small.
+Ce qui reste : des questions qui manquent (rappel 61 %) et des cas difficiles par construction (le vélo
+volé avec violence, le local de l'immeuble, les traces de tournevis). Le plan de 7.35 en sort confirmé :
+garder Small pour la vitesse, et n'appeler Large que sur les cas qui le demandent.
+
+**LegalBench, Mistral Small, 133 cas** : 55 % justes (exactitude équilibrée 64 %), **32 couverts à tort**,
+et surtout **10 % des cas ambigus reconnus** : sur 59 clauses que les lecteurs jugent ambiguës, le modèle
+en tranche 53 (29 « couvert », 24 « non couvert »). Quand il répond « incertain », il a toujours raison
+(précision 100 %), mais il le dit trop rarement. **Le contrôle des citations n'a rien changé** : les 127
+citations étaient exactes. C'est la leçon du banc : vérifier qu'une phrase existe arrête une preuve
+inventée, pas une interprétation trop sûre d'elle. Sur une vraie phrase (« any work that requires heat »),
+le modèle tire une conclusion que la moitié des lecteurs ne tirent pas. C'est exactement ce que les règles
+évitent : elles ne laissent au modèle que la lecture des faits, et la décision suit des conditions écrites.
+Suites possibles : mesurer Mistral Large sur LegalBench, et faire rédiger des règles pour quelques clauses.
+
+### 7.36 La simplification : une seule méthode, et sa référence
+
+Le projet portait encore quatre méthodes : la grille de conditions (le modèle remplit une grille à chaque
+sinistre, avec relecture et recherche hybride), les fiches (le contrat compilé en questions, avec juge de
+qualité et agent de réparation), les règles Prolog, et le document brut. Les mesures ont tranché
+(7.17 à 7.31) : les règles sont justes sur 100 % du golden set quand les faits sont bien lus ; les fiches
+plafonnaient à 74 %. Garder les anciennes méthodes coûtait en lecture du code, en tests et en consignes.
+
+**Retiré** (environ 2 750 lignes, plus d'un tiers du code : de 7 400 à 4 700) : `conditions.py`, `relecture.py`, `recherche.py`
+(embeddings, fusion RRF), `fiches.py`, `compilation.py`, `reparation.py`, `qualite.py`, `faits.py`, la
+dérive et le bilan (`derive.py`, `bilan.py`) ; les commandes `compiler`, `fiches`, `evaluer`, `comparer`,
+`reparer`, `propositions`, `derive`, `bilan` ; le mode hors ligne ; 10 consignes sur 14 (archivées dans
+`docs/consignes/`, rien n'est réécrit) ; 66 tests. Le code reste dans l'historique git (tag
+`avant-simplification`).
+
+**Gardé** : la méthode `regles` (le système) et la méthode `brut` (le contrat dans le prompt : la
+référence à battre, `couverture banc --methode brut`). Deux utilitaires de la compilation servent à la
+rédaction des règles : ils sont passés dans `llm.py`. Le banc enregistre maintenant chaque passage dans
+MLflow (il remplace `evaluer`), et les tableaux Grafana ne montrent plus que ce qui existe.
+
+**Ce que les méthodes retirées ont appris** et qui reste dans le système : la décision calculée par le code
+et non devinée par le modèle (grille), le rôle de chaque phrase du contrat (fiches : périmètre, conditions,
+obligations, exclusions, limites), la charge de la preuve, le contrôle des citations, et le fait que le
+modèle relise ne suffit pas quand il lit mal.
+
 ## 8. Ce qui reste à faire
 
 - Refaire le banc complet avec **Mistral Large** pour la lecture (golden v6) ; si l'écart d'hier se confirme, en faire la lecture par défaut.
@@ -1584,3 +1629,5 @@ une étape à la fois, chacune gardée seulement si le banc dit qu'elle amélior
 56. Une exclusion que l'assureur doit prouver ne se pose pas en question à chaque client : inconnue, elle ne joue pas.
 57. Allonger ce que lit un petit modèle a un prix : chaque valeur ajoutée au vocabulaire se paie en faits oubliés ailleurs.
 58. Une explication qui sort du moteur vaut preuve ; une explication rédigée par le modèle après la décision n'en est qu'un récit.
+59. Le code qu'on garde pour mémoire se paie à chaque lecture : la mémoire est dans git et dans ce document.
+60. Une citation exacte ne prouve pas une lecture juste : la vérification arrête l'invention, pas l'excès de confiance.

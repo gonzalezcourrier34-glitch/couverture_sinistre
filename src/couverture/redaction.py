@@ -32,7 +32,7 @@ from datetime import date
 from pathlib import Path
 
 from . import prolog
-from .compilation import _appeler, pour_compiler
+from .llm import appeler_json as _appeler, pour_travail_long as pour_compiler
 from .models import Clause, TypeClause
 from .texte import normaliser
 from .validation import _compact, extrait_present, passage_exact

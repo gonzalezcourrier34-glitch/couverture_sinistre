@@ -61,7 +61,7 @@
     {
       "title": "À vérifier",
       "type": "stat",
-      "description": "Contrats mal lus selon les contrôles ou le juge de qualité : `couverture reparer`.",
+      "description": "Contrats mal lus selon les contrôles du découpage : un profil d'assureur corrige.",
       "datasource": {
         "type": "frser-sqlite-datasource",
         "uid": "couverture-sqlite"
@@ -102,51 +102,6 @@
       "id": 2
     },
     {
-      "title": "Qualité du typage (moyenne)",
-      "type": "stat",
-      "description": "Part des types de clauses confirmés par le juge de qualité.",
-      "datasource": {
-        "type": "frser-sqlite-datasource",
-        "uid": "couverture-sqlite"
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "frser-sqlite-datasource",
-            "uid": "couverture-sqlite"
-          },
-          "queryText": "SELECT AVG(json_extract(rapport, '$.qualite.score')) AS qualite FROM contrats WHERE json_extract(rapport, '$.qualite.score') IS NOT NULL",
-          "rawQueryText": "SELECT AVG(json_extract(rapport, '$.qualite.score')) AS qualite FROM contrats WHERE json_extract(rapport, '$.qualite.score') IS NOT NULL",
-          "queryType": "table",
-          "timeColumns": []
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "percentunit"
-        },
-        "overrides": []
-      },
-      "options": {
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "colorMode": "value"
-      },
-      "gridPos": {
-        "x": 12,
-        "y": 0,
-        "w": 6,
-        "h": 4
-      },
-      "id": 3
-    },
-    {
       "title": "Clauses",
       "type": "stat",
       "description": "",
@@ -182,12 +137,12 @@
         "colorMode": "value"
       },
       "gridPos": {
-        "x": 18,
+        "x": 12,
         "y": 0,
-        "w": 6,
+        "w": 12,
         "h": 4
       },
-      "id": 4
+      "id": 3
     },
     {
       "title": "Lecture des contrats",
@@ -204,8 +159,8 @@
             "type": "frser-sqlite-datasource",
             "uid": "couverture-sqlite"
           },
-          "queryText": "SELECT id AS contrat, assureur, produit, version, statut,\n       json_extract(rapport, '$.nb_clauses') AS clauses,\n       json_extract(rapport, '$.qualite.score') AS qualite_typage,\n       json_array_length(json_extract(rapport, '$.alertes')) AS alertes,\n       json_extract(rapport, '$.embeddings') AS embeddings,\n       ingere_le\nFROM contrats ORDER BY statut DESC, id",
-          "rawQueryText": "SELECT id AS contrat, assureur, produit, version, statut,\n       json_extract(rapport, '$.nb_clauses') AS clauses,\n       json_extract(rapport, '$.qualite.score') AS qualite_typage,\n       json_array_length(json_extract(rapport, '$.alertes')) AS alertes,\n       json_extract(rapport, '$.embeddings') AS embeddings,\n       ingere_le\nFROM contrats ORDER BY statut DESC, id",
+          "queryText": "SELECT id AS contrat, assureur, produit, version, statut,\n       json_extract(rapport, '$.nb_clauses') AS clauses,\n       json_array_length(json_extract(rapport, '$.alertes')) AS alertes,\n       ingere_le\nFROM contrats ORDER BY statut DESC, id",
+          "rawQueryText": "SELECT id AS contrat, assureur, produit, version, statut,\n       json_extract(rapport, '$.nb_clauses') AS clauses,\n       json_array_length(json_extract(rapport, '$.alertes')) AS alertes,\n       ingere_le\nFROM contrats ORDER BY statut DESC, id",
           "queryType": "table",
           "timeColumns": []
         }
@@ -221,7 +176,7 @@
         "w": 24,
         "h": 8
       },
-      "id": 5
+      "id": 4
     },
     {
       "title": "Clauses par type",
@@ -255,7 +210,7 @@
         "w": 12,
         "h": 8
       },
-      "id": 6
+      "id": 5
     },
     {
       "title": "Alertes",
@@ -289,41 +244,7 @@
         "w": 12,
         "h": 8
       },
-      "id": 7
-    },
-    {
-      "title": "Types contestés par le juge de qualité",
-      "type": "table",
-      "description": "",
-      "datasource": {
-        "type": "frser-sqlite-datasource",
-        "uid": "couverture-sqlite"
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "frser-sqlite-datasource",
-            "uid": "couverture-sqlite"
-          },
-          "queryText": "SELECT c.id AS contrat, json_extract(e.value, '$.titre') AS titre,\n       json_extract(e.value, '$.type') AS type_actuel, json_extract(e.value, '$.type_propose') AS type_propose,\n       json_extract(e.value, '$.raison') AS raison\nFROM contrats AS c, json_each(json_extract(c.rapport, '$.qualite.erreurs')) AS e\nORDER BY c.id",
-          "rawQueryText": "SELECT c.id AS contrat, json_extract(e.value, '$.titre') AS titre,\n       json_extract(e.value, '$.type') AS type_actuel, json_extract(e.value, '$.type_propose') AS type_propose,\n       json_extract(e.value, '$.raison') AS raison\nFROM contrats AS c, json_each(json_extract(c.rapport, '$.qualite.erreurs')) AS e\nORDER BY c.id",
-          "queryType": "table",
-          "timeColumns": []
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "options": {},
-      "gridPos": {
-        "x": 0,
-        "y": 20,
-        "w": 24,
-        "h": 7
-      },
-      "id": 8
+      "id": 6
     }
   ]
 }

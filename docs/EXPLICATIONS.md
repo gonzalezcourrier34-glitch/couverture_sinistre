@@ -1,5 +1,7 @@
 # Comprendre le projet, fichier par fichier
 
+> **18 nov. 2026 — simplification.** Les méthodes `conditions` (grille remplie par le modèle, relecture, recherche hybride) et `fiches` (contrat compilé, juge de qualité, agent de réparation), la dérive et le bilan ont été retirés : les règles Prolog les ont remplacées. Pourquoi, et ce qu'elles ont appris : [DEMARCHE.md](DEMARCHE.md), 7.36. Leurs consignes restent archivées dans `docs/consignes/`, et le code dans l'historique git (tag `avant-simplification`). Les sections « choix » et « questions » plus bas parlent encore parfois de ces méthodes : c'est leur histoire.
+
 Ce document explique **ce que fait chaque partie du projet, et pourquoi elle est faite ainsi**. Il sert à préparer l'entretien : pour chaque choix, il donne la raison et ce qui a été écarté.
 
 Sommaire :
@@ -121,46 +123,38 @@ Sommaire :
 - **Rien n'est vérifiable.** Le modèle peut citer une clause inexistante, et personne ne le voit.
 
 **L'idée** : traiter le problème comme un **raisonnement juridique**, pas comme une recherche.
-1. **Une fois par contrat** : le transformer en clauses structurées et typées, contrôlées, stockées.
-2. **À chaque sinistre** : retrouver la garantie concernée **et tout ce qui l'entoure** (exclusions, définitions, renvois).
-3. **Décider comme un gestionnaire** : une grille de conditions, chacune vérifiée sur les faits et justifiée par une citation. La décision est **calculée par des règles** à partir de cette grille, pas devinée par le modèle.
-4. **Vérifier par du code** que chaque citation existe vraiment dans le contrat.
+1. **Une fois par contrat** : le découper en clauses contrôlées, puis traduire ses garanties en **règles Prolog** (périmètre, conditions, obligations, exclusions, limites), chacune avec la phrase du contrat qu'elle traduit, mot pour mot. Les règles sont écrites à la main ou par Mistral Large, et **toujours contrôlées par le code**.
+2. **À chaque sinistre** : le modèle ne fait que **lire** la déclaration et la traduire en faits d'un vocabulaire commun.
+3. **Prolog décide**, en logique à trois valeurs (oui, non, inconnu) : couvert, non couvert, ou incertain avec la question qui tranche.
+4. **Chaque réponse se rattache à une phrase du contrat**, et l'arbre de preuve montre la déduction jusqu'aux faits déclarés.
 
 ---
 
 ## 3. Le parcours complet d'un sinistre
 
-### A. Une fois par contrat : l'ingestion (`couverture ingerer`)
+### A. Une fois par contrat
 
 ```
-PDF ─► chargement.py ─► segmentation.py ─► controles.py ─► base.py (SQLite) ─► embeddings (mistral-embed)
-       pages, nettoyage   clauses typées     OK / A_VERIFIER   contrats, clauses,   un vecteur par clause
-                          (+ profil d'assureur)                renvois, vecteurs
+PDF ─► chargement.py ─► segmentation.py ─► controles.py ─► base.py (SQLite)
+       pages, nettoyage   clauses typées     OK / A_VERIFIER   contrats, clauses, renvois
+                          (+ profil d'assureur)
 
-                                         └─► qualite.py : Mistral vérifie le type d'un échantillon ─► score, A_VERIFIER si < 80 %
-
-contrat A_VERIFIER ─► reparation.py : Mistral propose un profil ─► vérifié par le code ─► validé par vous ─► relu
-
-chaque semaine : journal des analyses ─► derive.py (PSI) ─► bilan.py ─► Markdown, et mail si configuré
+garanties ─► règles Prolog (regles/<contrat>.pl) : à la main, ou `couverture rediger` (Mistral Large)
+          ─► contrôles : citations dans le contrat, mots dans le vocabulaire, chargement, banc
 ```
 
 Sur le contrat Foyer appart 123 : 48 pages deviennent 147 clauses, dont 63 définitions. Statut `OK`.
 
-### B. À chaque question : l'analyse (`couverture analyser` ou l'interface)
+### B. À chaque sinistre (`couverture analyser` ou l'interface)
 
-Exemple : « Je me fais voler mon vélo dans le local commun de l'immeuble, qui n'était pas fermé à clé. »
+Exemple : « Mon vélo a été volé dans ma cave, fermée par un cadenas. »
 
-1. **Faits** (`faits.py`) : événement = vol ; bien = vélo ; lieu = parties communes ; la requête est enrichie avec le vocabulaire du contrat (« parties communes », « local à vélos collectif »).
-2. **Recherche** (`recherche.py`) : les mots (BM25) et le sens (embeddings) trouvent la garantie vol (`2.10`), fusionnés par RRF. L'enveloppe ajoute ses exclusions (`2.10-a`), les définitions utiles (`12/effraction`…), les renvois.
-3. **Grille** (`conditions.py`) : le modèle remplit les conditions :
-   - garantie « Vol du contenu » : *le vélo était-il dans le bâtiment assuré ?* → INCONNUE ;
-   - exclusion : *le vol a-t-il eu lieu dans les parties communes ?* → REMPLIE (art. 2.10-a, p. 12) ;
-   - exclusion : *complicité d'un proche ?* → NON_REMPLIE.
-4. **Vérification** : chaque passage cité est recherché dans la clause. Une condition sans preuve est écartée.
-5. **Décision calculée** : une exclusion est remplie → **NON_COUVERT**, confiance 0,9, condition décisive = 2.10-a.
-6. **Relecture** (`relecture.py`) : un second appel relit la condition décisive, avec le texte complet de l'art. 2.10-a et le sinistre. S'il confirme, la décision reste. S'il conteste (« le local n'est pas décrit comme une partie commune »), la condition redevient inconnue, la décision est recalculée, et la question à poser à l'assuré est ajoutée.
-7. **Affichage** : la décision, puis la grille, chaque ligne avec son état, sa citation, sa page et le texte complet de la clause.
-8. **Journal** : l'analyse est notée (décision, confiance, contestations, questions à poser), sans le texte du sinistre.
+1. **Lecture** (`prolog.py`) : Mistral traduit la déclaration en faits du vocabulaire : `evenement = vol`, `bien = velo`, `lieu = cave`, `fermeture = cadenas`. Les valeurs hors vocabulaire et les faits hors sujet sont retirés.
+2. **Décision** (`regles/moteur.pl`) : la garantie « vol du contenu dans le bâtiment » a son périmètre établi, mais sa condition « si ces locaux sont fermés avec une serrure de sûreté » est fausse : un cadenas n'est pas une serrure de sûreté (définition, art. 12). → **NON_COUVERT**.
+3. **Hypothèses** : si la réponse avait été incertaine (fermeture inconnue), le moteur aurait essayé chaque réponse et dit « serrure de sûreté ? oui → couvert ; non → non couvert ».
+4. **Arbre de preuve** : chaque condition évaluée, sa phrase du contrat, son état, jusqu'au fait déclaré `fermeture = cadenas`.
+5. **Vérification** : chaque citation est recherchée dans la clause du contrat.
+6. **Journal** : l'analyse est notée (décision, faits, questions), sans le texte du sinistre.
 
 ---
 
@@ -261,24 +255,6 @@ Le rapport liste aussi les garanties sans exclusion voisine et les clauses très
 
 **Pourquoi** : les règles générales couvrent la plupart des contrats. Quand un assureur rédige autrement, on n'ajoute pas un cas particulier dans le code : on écrit un profil, réutilisé pour toutes les versions de ses contrats. C'est ce qui rend l'approche tenable sur des centaines de contrats, comme `sources.yaml` dans SortirIA pour les agendas.
 
-### `src/couverture/reparation.py` — l'agent de réparation : il propose, un humain décide
-
-**Rôle** : pour un contrat `A_VERIFIER`, la commande `couverture reparer` :
-1. **classe** chaque alerte des contrôles en famille de problème (`diagnostiquer`) : découpage échoué, titres non reconnus, aucune exclusion, aucune garantie, lexique non reconnu, pas d'exclusions générales, renvois cassés, chacune avec un conseil ;
-2. **réunit** les lignes qui ressemblent à des titres (`candidats_titres`) : courtes, sans ponctuation finale, avec une majuscule, les plus fréquentes d'abord (un intertitre revient dans chaque section) ;
-3. **demande** à Mistral un profil : quels titres sont des intertitres et de quel type, quelles lignes sont du bruit, quel format de lexique. Consigne : recopier chaque ligne exactement, n'en inventer aucune ;
-4. **vérifie** la proposition par du code (`verifier`) :
-   - chaque intertitre doit exister mot pour mot dans le contrat, sinon il est écarté ;
-   - chaque motif de ligne à ignorer doit reconnaître son exemple, qui doit exister dans le contrat, ne pas effacer plus de 8 % des lignes, et **ne jamais effacer une ligne longue ou qui parle de garantie ou d'exclusion** ;
-   - le contrat est redécoupé avec le profil, et les contrôles sont relancés : la proposition n'est retenue que s'il y a **moins d'alertes** (ou nettement moins de clauses sans type) **et aucune nouvelle alerte** ;
-5. **enregistre** la proposition dans `data/propositions/NNN-<contrat>.json`, avec le diagnostic, la réponse du modèle, le profil, l'avant/après et ce qui a été écarté. Statut `a_valider`, ou `refusee_par_la_verification`.
-
-**Rien n'est appliqué** avant que vous lanciez `couverture propositions --accepter N`. L'acceptation écrit le profil, le rattache au contrat dans le catalogue, puis relit le contrat. `--refuser N` la classe sans effet.
-
-**Exemple** (un test le reproduit) : un assureur titre ses exclusions « Les situations hors contrat ». Le contrat sort `A_VERIFIER` (« aucune exclusion détectée »). Mistral propose cet intertitre comme exclusion, plus un intertitre inventé et un motif qui effacerait les lignes « Nous garantissons… ». La vérification garde le premier et écarte les deux autres. Après acceptation : 4 exclusions trouvées, une alerte de moins.
-
-**Pourquoi** : c'est le principe de l'agent de SortirIA (`agent/diagnosis.py`) : classer, chercher une réparation, la vérifier, la proposer sans l'appliquer. Ici, la règle est encore plus importante : un profil faux pourrait faire passer une exclusion pour une garantie, donc dire « couvert » à tort. L'IA travaille là où elle est forte (comprendre une rédaction nouvelle), une seule fois par assureur, et sous le contrôle du code puis d'un humain.
-
 ### `src/couverture/base.py` — le stockage multi-contrats
 
 **Rôle** : une base SQLite avec trois tables.
@@ -297,38 +273,8 @@ Méthodes : `enregistrer` (remplace entièrement un contrat), `contrats`, `contr
 - `ingerer_fichier` : calcule l'empreinte du fichier ; s'il n'a pas changé depuis la dernière fois, ne fait rien (idempotence) ; sinon lit, découpe, contrôle et enregistre.
 - `ingerer_dossier` : fait de même pour tous les fichiers de `data/contrats`, avec les métadonnées de `catalogue.json` (identifiant, assureur, produit, version, et le **profil d'assureur** s'il y en a un). Sans entrée au catalogue, l'identifiant est tiré du nom du fichier.
 - **L'empreinte** couvre le fichier **et** son profil : modifier le profil relance le découpage.
-- `calculer_vecteurs` : avec une clé Mistral, calcule un embedding par clause (son chemin de titres et son texte) et l'enregistre. Si la clé est ajoutée après une première ingestion, seuls les vecteurs manquants sont calculés. **Une panne des embeddings ne bloque jamais l'ingestion** (comme le juge de qualité de SortirIA) : la recherche se fait alors par les mots seuls, et le rapport le dit.
 
 **Pourquoi** : ajouter un contrat se résume à déposer un fichier et relancer `couverture ingerer`. La version du contrat compte : un client garde les CG en vigueur au moment de sa souscription.
-
-### `src/couverture/faits.py` — traduire la langue du client en langue du contrat
-
-**Rôle** :
-- `extraire_faits` repère, avec des listes de déclencheurs, les **événements** (vol, incendie, dégât des eaux, bris, dommage accidentel, responsabilité), les **biens** (vélo, mobilier, électronique, objet de valeur), les **lieux** (habitation, dépendance, parties communes, extérieur) et les **circonstances** (effraction, fermé à clé, sans flammes, antivol, violence, badge). Un déclencheur doit commencer un mot : « eau » ne doit pas trouver « bureau ».
-- `enrichir_requete` ajoute à la description les termes du contrat qui correspondent : « local commun » → « parties communes », « local à vélos collectif » ; « bougie » → « incendie », « flamme », « objet incandescent ».
-
-**Pourquoi** : le client dit « on m'a piqué mon vélo dans le local commun » ; le contrat dit « vol », « biens mobiliers », « parties communes ». Sans ce pont, la recherche par mots-clés rate les bonnes clauses. Limite : ce lexique est écrit à la main pour l'habitation.
-
-### `src/couverture/recherche.py` — retrouver la garantie et son enveloppe
-
-**Rôle** : sélectionner au plus 16 clauses à donner au juge.
-1. **La recherche hybride**, reprise de SortirIA (`build_search_query`) :
-   - **par les mots** : BM25 (écrit dans le fichier, sans dépendance), sur la description enrichie par `faits.py`. Les titres comptent double, car « 2.10 Garantie vol » dit beaucoup. Il retrouve les termes juridiques précis ;
-   - **par le sens** : la description d'origine est vectorisée par `mistral-embed` et comparée aux vecteurs des clauses (similarité cosinus). Il rapproche « on m'a chouravé ma bicyclette » de « vol », sans aucun mot commun ;
-   - **la fusion RRF** : score = 1/(60 + rang mots) + 1/(60 + rang sens), sur les 30 premiers de chaque classement. Les 5 meilleures clauses sont retenues, avec leur origine : « par les mots », « par le sens » ou les deux.
-   - Sans clé Mistral, ou si les vecteurs n'ont pas été calculés, la recherche se fait par les mots seuls, comme avant.
-2. **L'enveloppe**, pour chaque garantie ou exclusion retenue :
-   - ses **sous-sections** (`2.10` → `2.10-a`) ;
-   - ses **voisines** du même groupe qui sont des exclusions, conditions ou limites.
-3. **Les exclusions générales** qui partagent au moins un mot avec le sinistre, ou qui sont proches par le sens.
-4. **Les renvois** des clauses retenues.
-5. **Les définitions** des termes qui apparaissent dans la requête ou dans les clauses retenues.
-
-Chaque clause retenue garde **la raison** de sa sélection, affichée dans l'interface (« sous-section de 2.10 », « définition d'un terme employé »…). Le résultat est remis dans l'ordre du contrat.
-
-**Pourquoi** : c'est la différence principale avec un RAG simple. La clause qui décide, l'exclusion, ne ressemble pas à la question ; elle est retrouvée **par la structure du contrat**, pas par ressemblance. Sur Foyer, le vélo dans le local commun ramène bien la garantie vol 2.10 et l'exclusion 2.10-a. Un test le vérifie.
-
-**Pourquoi l'hybride** : les deux classements se complètent, comme dans SortirIA où « le sens rate les noms propres, les mots les retrouvent ». Ici, les mots retrouvent les termes du contrat, et le sens retrouve ce que le client dit avec ses propres mots. Le sens réduit aussi la dépendance au lexique écrit à la main dans `faits.py`, le point le plus fragile du projet. La fusion RRF est choisie parce qu'elle ne demande pas de régler des poids entre deux scores qui n'ont pas la même échelle.
 
 ### `src/couverture/llm.py` — parler au modèle
 
@@ -337,13 +283,13 @@ Chaque clause retenue garde **la raison** de sa sélection, affichée dans l'int
 - `AnthropicLLM` : l'API d'Anthropic, clé dans `ANTHROPIC_API_KEY`.
 - `OpenAICompatibleLLM` : toute API compatible OpenAI (Ollama en local, vLLM, Azure…), adresse dans `COUVERTURE_LLM_URL`. `MistralLLM` en est une variante, puisque l'API de Mistral est compatible OpenAI.
 
-`configurer()` choisit le fournisseur : celui forcé par `COUVERTURE_FOURNISSEUR`, sinon le premier dont la clé est renseignée, dans l'ordre Mistral, Anthropic, compatible OpenAI. Une valeur d'exemple laissée telle quelle (« colle-ta-cle-ici ») est ignorée. Sans rien, il renvoie `None`, et la pipeline utilise le juge heuristique.
+`configurer()` choisit le fournisseur : celui forcé par `COUVERTURE_FOURNISSEUR`, sinon le premier dont la clé est renseignée, dans l'ordre Mistral, Anthropic, compatible OpenAI. Une valeur d'exemple laissée telle quelle (« colle-ta-cle-ici ») est ignorée. Sans rien, il renvoie `None`, et l'analyse demande de configurer une clé.
 
 `_poster` envoie les requêtes avec **de nouvelles tentatives** sur les erreurs passagères : 429 (limite de débit atteinte) et erreurs serveur 5xx, en attendant de plus en plus longtemps (ou le délai indiqué par le serveur). Une clé refusée (401, 403) donne un message clair : « Clé API refusée, vérifier la clé dans le fichier .env ». Ces erreurs (`ErreurLLM`) remontent jusqu'à l'utilisateur au lieu d'être confondues avec une réponse illisible du modèle.
 
 Température 0 partout, pour des réponses stables d'une exécution à l'autre.
 
-**Embeddings** : `MistralEmbeddings` appelle `mistral-embed` par lots de 32 textes (tronqués à 6 000 caractères). `configurer_embeddings()` l'active dès que `MISTRAL_API_KEY` est renseignée ; `COUVERTURE_EMBEDDINGS=aucun` le coupe.
+**Réponses JSON** : `extraire_json` récupère l'objet JSON même entouré de texte ; `appeler_json` redemande une fois une réponse coupée ou illisible ; `pour_travail_long` donne plus de temps et de tokens au travail fait une fois par contrat (rédaction des règles).
 
 **Pourquoi Mistral par défaut** : fournisseur européen, données hébergées dans l'UE, ce qui compte pour un assureur luxembourgeois qui traite des données clients. Contexte long (suffisant pour la méthode « document brut »), prix faible, API compatible OpenAI. **Pourquoi plusieurs fournisseurs** : changer de modèle ne doit rien changer au reste, et un assureur voudra souvent un modèle hébergé chez lui.
 
@@ -360,72 +306,11 @@ COUVERTURE_MODELE=mistral-large-latest
 
 `mistral-small-latest` coûte moins cher. Pour un autre fournisseur : `ANTHROPIC_API_KEY=…`, ou `COUVERTURE_LLM_URL=http://localhost:11434/v1` pour Ollama, et `COUVERTURE_FOURNISSEUR=…` pour forcer le choix si plusieurs sont renseignés. En déploiement, les mêmes variables sont passées au conteneur (`docker run --env-file .env`).
 
-### `src/couverture/juges.py` — le juge sans modèle et la référence « brut »
+### `src/couverture/juges.py` et `pipeline.py` — la référence « document brut »
 
-**Rôle** : produire un verdict à partir du sinistre et des clauses. Tous respectent le protocole `Juge` (une méthode `juger`).
-- La méthode « direct » (le modèle conclut en un coup sur les clauses retenues) a été **retirée** le 17 novembre : elle ne servait que de point de comparaison, et la référence « brut » suffit. Sa consigne reste archivée dans `docs/consignes/verdict-direct/`.
-- **`JugeHeuristique`**, sans modèle : compte les mots communs entre le sinistre et les clauses. Il ne dit « couvert » que si aucune exclusion ne recoupe le sinistre ; il dit « non couvert » si aucune garantie ne correspond, ou si une exclusion recoupe nettement plus qu'une garantie ; sinon INCERTAIN. Il cite le passage le plus pertinent de chaque clause, en donnant plus de poids aux mots du lieu (« parties communes »), qui décident souvent.
-- **`JugeDocumentBrut`**, la référence « chatbot » : le contrat entier dans le prompt, sans recherche ni structure.
-- Outils partagés : `formater_clauses` (présente les clauses au modèle avec leur identifiant, leur type et leur chemin), `extraire_json` (récupère le JSON même entouré de texte ou de balises Markdown).
+**Rôle** : `JugeDocumentBrut` met le contrat entier dans le prompt, comme un chatbot ; `PipelineDocumentBrut` contrôle ses citations de la même façon que pour les règles, pour que la comparaison soit juste (`verdict.decision_initiale` garde la réponse non contrôlée). `pipeline.llm_configure` choisit le modèle selon l'environnement.
 
-**Pourquoi** : `brut` sert de point de comparaison pour prouver l'intérêt des méthodes structurées. L'heuristique fait tourner le système sans clé et sert de filet de sécurité : volontairement prudente, elle n'a jamais dit « couvert » à tort sur les cas de test.
-
-### `src/couverture/conditions.py` — le juge par conditions (méthode par défaut)
-
-**Rôle** : c'est le cœur de la décision.
-
-1. **Le modèle remplit une grille, sans conclure.** Le prompt (`SYSTEME_CONDITIONS`) lui demande :
-   - les garanties qui pourraient viser le sinistre, et pour chacune ses conditions, **une condition = un seul fait vérifiable** ;
-   - toutes les exclusions qui pourraient le concerner, même s'il pense qu'elles ne s'appliquent pas ;
-   - les limites à signaler ;
-   - pour chaque ligne : un état, l'extrait exact, la justification tirée de la description, et la question à poser si l'état est inconnu. Consigne clé : « N'invente aucun fait : dans le doute, INCONNUE ».
-2. **`lire_grille`** transforme le JSON en objets `Condition`. Un état non reconnu devient INCONNUE.
-3. **`verifier_conditions`** écarte toute condition dont la clause n'a pas été fournie ou dont l'extrait est introuvable.
-4. **`decider`** applique des règles explicites, sur les seules conditions prouvées :
-
-| Situation | Décision | Confiance |
-|---|---|---|
-| Une exclusion est remplie | NON_COUVERT | 0,9 |
-| Une garantie a toutes ses conditions remplies, aucune exclusion inconnue | COUVERT | 0,85 |
-| Une garantie a toutes ses conditions remplies, mais une exclusion est inconnue | INCERTAIN (on dit laquelle) | 0,6 |
-| Une garantie possible a des conditions inconnues et aucune non remplie | INCERTAIN (avec les questions) | 0,5 |
-| Toutes les garanties ont une condition non remplie | NON_COUVERT | 0,75 |
-| Aucune garantie prouvée | INCERTAIN | 0,2 |
-
-   Si une condition (hors limites) a été écartée faute de preuve, la confiance est plafonnée à 0,5.
-5. **Les conditions décisives** sont marquées et leurs citations placées en tête. Les questions des conditions inconnues deviennent « ce qu'il faut vérifier ».
-6. **Si un relecteur est configuré** (par défaut, oui), les conditions décisives sont relues et la décision recalculée en cas de contestation (voir `relecture.py`).
-
-**Pourquoi** :
-- **« Je ne sais pas » sort de la logique** : c'est une condition à l'état inconnu, et on sait laquelle. Ce n'est pas une hésitation du modèle.
-- **Des petites questions plutôt qu'une grande.** Un modèle se trompe beaucoup moins sur « ce fait remplit-il cette condition ? » que sur « ce sinistre est-il couvert par ce contrat de 48 pages ? ».
-- **Une exclusion inventée ne peut pas faire basculer la décision**, puisqu'elle est écartée avant le calcul. Un test le vérifie.
-- **C'est ainsi que travaille un gestionnaire**, et le raisonnement est lisible ligne par ligne.
-- **Les conditions particulières s'y brancheront naturellement** : « l'option est-elle souscrite ? » est une condition comme une autre.
-
-### `src/couverture/compilation.py` — compiler le contrat en fiches
-
-**Rôle** : une fois par contrat (`couverture compiler`), traduire chaque garantie en **fiche** de questions fermées, réutilisables pour tous les sinistres.
-- `unites` : pour chaque garantie (ses morceaux « 2.14~1 », « 2.14~2 » réunis), les clauses à montrer au modèle. Ses sous-sections (« 2.10-a Exclusions ») si le contrat en a ; sinon les exclusions et conditions rangées en fin de section (contrat fictif : 4.4 et 4.5 pour 4.1, 4.2, 4.3). Plus les renvois et les définitions des termes employés. Les exclusions générales sont à part ;
-- `compiler_garantie` : un appel par garantie (quatre en parallèle). Le modèle rend une ou plusieurs fiches : événements visés, conditions (OUI favorable à l'assuré), exclusions (OUI = elle s'applique, avec `a_demander`), limites ;
-- `_points` : **chaque extrait est vérifié dans la clause citée** ; une question à la citation introuvable est écartée et signalée ;
-- `compiler_exclusions_generales` : un appel pour les exclusions communes, chacune « à demander » ou « présumée absente » ;
-- `verifier_import` : après relecture humaine (`couverture fiches --exporter` puis `--importer`), revérifie tout. Un humain peut reformuler une question, pas inventer une citation.
-
-**Pourquoi** : les conditions sont des propriétés du contrat. Les faire reformuler par le modèle à chaque sinistre (méthode `conditions`) produit des grilles un peu différentes à chaque fois et répète les mêmes erreurs. Compilées une fois, elles se contrôlent une fois. Le raisonnement complet est dans `docs/DEMARCHE.md`.
-
-**Stockage** : table `compilations` de `base.py`. Une ré-ingestion ne l'efface pas (elle a coûté des appels et a pu être relue) ; son empreinte dit à quelle version du contrat elle correspond, et une compilation périmée est ignorée à l'analyse.
-
-### `src/couverture/fiches.py` — analyser avec le contrat compilé (méthode `fiches`)
-
-**Rôle** : à chaque sinistre, le modèle n'a plus qu'un métier : répondre oui / non / inconnu à des questions déjà écrites. Chaque question a un **rôle** (consigne de compilation v2) : périmètre (événement, bien, lieu), circonstance, obligation de prévention, exclusion, limite. Le modèle voit ce rôle : un périmètre décrit et contraire vaut « non », une circonstance passée sous silence vaut « inconnu ». `decider_fiche` applique, dans l'ordre : périmètre contraire → hors sujet ; circonstance non remplie → ne joue pas ; périmètre incomplet → « possible » ; exclusion qui s'applique → refus ; circonstance inconnue → incertain ; obligation non respectée → incertain (déchéance seulement s'il y a un lien causal) ; sinon couvert, **sous réserve** des exclusions et obligations inconnues (charge de la preuve : l'assuré établit la garantie, l'assureur l'exclusion). Les questions sont posées par fiche, un appel par fiche en parallèle. Les faits (événement, bien, lieu) sont extraits par un petit appel (`extraire_faits_modele`), le lexique de `faits.py` servant de secours. Les points ci-dessous décrivent la première version et restent vrais dans leur principe.
-1. `router` : les fiches dont l'événement correspond aux faits de `faits.py`. Si aucun événement n'est reconnu, `router_par_le_modele` choisit dans la liste des fiches ;
-2. `JugeFiches.juger` : un appel pour toutes les questions des fiches retenues et des exclusions générales. Une exclusion « présumée absente » restée inconnue devient « ne s'applique pas » ;
-3. `decider_fiche`, pour chaque fiche, lit comme un gestionnaire : une condition de garantie non remplie écarte la fiche **sans consulter ses exclusions** ; une fiche dont aucune condition n'est établie n'est **pas rattachée** au sinistre ; sinon, les règles de `conditions.decider`. Puis `decider_fiches` : COUVERT si une fiche l'est, sinon INCERTAIN si une fiche l'est, sinon NON_COUVERT si une fiche rattachée refuse, sinon INCERTAIN (aucune garantie rattachée). Une exclusion du vol ne fait pas tomber la garantie incendie ;
-   les exclusions générales d'une partie qui a ses propres garanties (art. 5.10, responsabilité civile) ne valent que pour cette partie ;
-4. relecture des lignes décisives (`relecture.py`), limitée aux exclusions de la fiche retenue et **sans les présumées absentes** : la consigne du relecteur dit « dans le doute, conteste », ce qui les rendrait inconnues et annulerait la présomption.
-
-**Pourquoi** : plus d'exclusion décisive oubliée par la recherche, des citations toujours valides, un appel plus petit. La méthode `conditions` reste pour comparer (`couverture comparer`).
+**Pourquoi** : c'est la méthode à battre ; `couverture banc --methode brut` la mesure sur le même golden set.
 
 ### `regles/` et `src/couverture/prolog.py` — le contrat en règles Prolog (méthode `regles`)
 
@@ -445,43 +330,15 @@ COUVERTURE_MODELE=mistral-large-latest
 
 ### `src/couverture/banc.py` et `data/golden/` — le banc d'essai
 
-**Rôle** : rejouer tout le système sur un jeu de référence figé (le *golden set*, 68 cas étiquetés par garantie, thème, origine et auteur), en trois couches : les **règles** seules sur les faits idéaux, la **lecture** des faits par le modèle comparée aux faits idéaux, la **chaîne** complète sur plusieurs exécutions. Des **portes** (`data/golden/seuils.json`) disent si c'est présentable ; la commande `couverture banc` sort en erreur si une porte échoue. Chaque passage est gardé dans `data/bancs/` et comparé au précédent. `--figer` versionne le golden set ; `--fiche` écrit la fiche de validation des réponses attendues.
+**Rôle** : rejouer tout le système sur un jeu de référence figé (le *golden set*, 97 cas étiquetés par garantie, thème, origine et auteur), en trois couches : les **règles** seules sur les faits idéaux, la **lecture** des faits par le modèle comparée aux faits idéaux, la **chaîne** complète sur plusieurs exécutions. Des **portes** (`data/golden/seuils.json`) disent si c'est présentable ; la commande `couverture banc` sort en erreur si une porte échoue. Chaque passage est gardé dans `data/bancs/` et comparé au précédent. `--figer` versionne le golden set ; `--fiche` écrit la fiche de validation des réponses attendues.
 
 **Pourquoi** : un score unique dit qu'il y a une erreur ; trois couches disent si elle vient des règles, de la lecture ou de leur combinaison. Et une référence qui change sans le dire ne mesure plus rien.
 
-### `src/couverture/relecture.py` — le juge de la grille
+### `src/couverture/legalbench.py` — le second banc, externe
 
+**Rôle** : LegalBench (`insurance_policy_interpretation`, Stanford, CC BY 4.0) : une clause en anglais, un sinistre, et la réponse de lecteurs (couvert, non couvert, ambigu). Le modèle répond et cite la phrase de la clause ; le code vérifie la citation ; une réponse ferme sans citation retrouvée devient « incertain ». Le rapport compare la réponse brute et la réponse contrôlée (exactitude, exactitude équilibrée, rappel des ambigus, couverts à tort).
 
-**Depuis la consigne v2** : le relecteur répond lui-même aux questions décisives, sans voir la réponse de la première analyse ; le code compare et ne conteste que si les deux réponses diffèrent (voir `docs/DEMARCHE.md`, 7.14 sexies).
-**Le problème qu'il règle** : le contrôle des citations vérifie qu'un passage **existe** dans le contrat. Il ne vérifie pas qu'il **justifie** l'état donné. Le modèle peut citer la bonne exclusion et se tromper sur son application aux faits.
-
-**Rôle** : après le calcul de la décision, un second appel au modèle reçoit, pour chaque condition qui pèse sur la décision, le sinistre, le texte complet de la clause (pas seulement l'extrait), la question, l'état proposé et la justification du premier appel. Il **ne voit pas la décision**. Consigne : vérifier la justification au lieu de s'y fier, et contester dans le doute.
-
-**Ce qui est relu** (`a_relire`), selon la décision :
-- NON_COUVERT : les conditions décisives (l'exclusion qui s'applique, ou les conditions non remplies) ;
-- COUVERT : les conditions de la garantie retenue, **et les exclusions jugées non applicables**. C'est là que se cache l'erreur la plus coûteuse : une exclusion écartée à tort donne un « couvert » à tort ;
-- INCERTAIN : rien, la réponse admet déjà sa limite (et on économise un appel).
-
-**Ce qui se passe** (`relire`) : une condition confirmée garde son état. Une condition contestée redevient INCONNUE ; son état d'origine est gardé (`etat_propose`), avec la raison et la question à poser. Une condition sur laquelle le relecteur ne se prononce pas est considérée comme contestée. Puis la décision est **recalculée par les mêmes règles**. Comme une contestation ne fait que remplacer un état certain par INCONNUE, la relecture **ne peut que rendre la réponse plus prudente**, jamais l'inverse. La décision d'avant est gardée (`decision_avant_relecture`) pour mesurer l'effet de la relecture.
-
-**Si la relecture est en panne** : la décision reste, avec un avertissement et une confiance plafonnée à 0,6. C'est un contrôle, pas une étape indispensable (même principe que le juge de SortirIA).
-
-**Configuration** : par défaut, le même modèle que le juge principal, dans un appel séparé. `COUVERTURE_MODELE_RELECTURE` permet un autre modèle (par exemple `mistral-small-latest`, moins cher, ou un autre modèle pour une relecture plus indépendante). `COUVERTURE_RELECTURE=non` la désactive.
-
-**Pourquoi** : c'est le cœur de la consigne, « citer ses sources et admettre ses limites ». Une citation qui existe mais ne prouve rien ne doit pas suffire. Et l'indicateur `faux_couverts_evites_par_relecture` mesure directement ce que la relecture apporte.
-
-### `src/couverture/qualite.py` — le juge de qualité à l'ingestion
-
-**Le problème qu'il règle** : les contrôles vérifient qu'un contrat a des garanties et des exclusions, pas que ce **sont** les bonnes. Une exclusion typée « garantie » passe les contrôles, et peut faire dire « couvert » à tort.
-
-**Rôle** :
-- `echantillon` : 16 clauses, **stratifiées par type** (chaque type est représenté) et **reproductibles** (tirées avec l'empreinte du contrat comme graine : même contrat, même échantillon) ;
-- `juger_qualite` : Mistral dit, pour chaque clause, si son type est juste et lequel il proposerait. Score = part de types confirmés ;
-- `appliquer` : sous le seuil de 80 %, une alerte « Typage douteux » est ajoutée et le contrat passe `A_VERIFIER`. Les erreurs relevées (titre, type actuel, type proposé) sont transmises à l'agent de réparation, qui les reçoit dans son prompt, et sa vérification compte combien de ces types le profil corrige.
-
-Lancé à l'ingestion quand un modèle est configuré ; un contrat déjà ingéré sans score est jugé à la prochaine ingestion. **Une panne du juge ne bloque jamais l'ingestion** : le rapport note l'erreur, le statut ne change pas.
-
-**Pourquoi un échantillon** : juger toutes les clauses coûterait un appel long par contrat pour peu d'information en plus ; 16 clauses suffisent à repérer un contrat dont le typage est faux de façon systématique. C'est la même logique que `judge_quality` dans SortirIA.
+**Pourquoi** : des cas que nous n'avons pas écrits, avec une réponse « ambigu » : une mesure externe du « je ne sais pas ».
 
 ### `src/couverture/journal.py` — le journal des analyses
 
@@ -490,32 +347,6 @@ Lancé à l'ingestion quand un modèle est configuré ; un contrat déjà ingér
 **Ce qui n'est pas noté** : le texte du sinistre, seulement sa longueur. Une déclaration de sinistre peut contenir des données personnelles ; le journal n'en a pas besoin.
 
 **Pourquoi** : l'évaluation mesure le système sur 14 cas écrits à l'avance. Le journal mesure ce qui se passe vraiment, et alimente la dérive et le bilan (comme `search_log.py` dans SortirIA).
-
-### `src/couverture/derive.py` — la dérive
-
-**Rôle** : `calculer` compare les 7 derniers jours aux 28 précédents, avec le PSI, sur trois familles de variables :
-- **les questions** (type d'événement, bien, lieu) : les sinistres déclarés changent (saison, nouveau produit) ; le jeu de test n'est peut-être plus représentatif ;
-- **les réponses** (décision, niveau de confiance) : le système répond autrement ; un contrat mal lu, ou un modèle changé par le fournisseur ;
-- **la fiabilité** (contestations, citations rejetées) : le modèle se trompe plus souvent.
-
-Et **par contrat** : un taux d'INCERTAIN d'au moins 60 %, en hausse de 20 points, sur au moins 10 analyses, déclenche une alerte : c'est souvent un contrat mal lu.
-
-En dessous de 30 analyses dans chaque période, la dérive n'est pas calculée : elle n'aurait pas de sens. Les petites parts sont lissées (0,0001) pour que le logarithme reste défini.
-
-**Pourquoi le PSI** : simple, lisible, avec des seuils connus ; c'est la méthode déjà utilisée dans SortirIA (et dans le projet de scoring crédit avant lui).
-
-### `src/couverture/bilan.py` — le bilan
-
-**Rôle** : `construire_bilan` écrit un rapport Markdown, dans cet ordre :
-1. **À faire** : contrats à vérifier (avec la commande à lancer), propositions de réparation en attente, dérives fortes, erreurs du modèle ;
-2. **Contrats** : statut de lecture, score du juge de qualité, nombre d'alertes ;
-3. **Activité** : nombre d'analyses, répartition des décisions, réponses corrigées par le contrôle des citations, contestations de la relecture et décisions changées, citations écartées, temps de réponse médian ;
-4. **Ce qui manque** : les questions à poser à l'assuré qui reviennent le plus. C'est la liste des informations à aller chercher ailleurs ; si « l'option vélo est-elle souscrite ? » revient 50 fois, il est temps de lire les conditions particulières ;
-5. **Dérive**.
-
-`couverture bilan` l'enregistre dans `data/bilans/` et l'affiche ; `--envoyer` l'envoie par mail si un serveur SMTP est configuré dans `.env` (`SMTP_HOTE`, `SMTP_PORT`, `SMTP_UTILISATEUR`, `SMTP_MOT_DE_PASSE`, `BILAN_DESTINATAIRE`).
-
-**Pourquoi** : comme le mail du lundi de SortirIA, il ne raconte pas tout ; il dit d'abord ce qui demande une intervention humaine.
 
 ### `src/couverture/consignes.py` — le versionnage des consignes
 
@@ -531,8 +362,8 @@ En dessous de 30 analyses dans chaque période, la dérive n'est pas calculée :
 ### `src/couverture/suivi.py` — le suivi MLflow
 
 **Rôle** :
-- **une ingestion = une exécution** (expérience `couverture-ingestion`) : versions des consignes, modèles, et par contrat le nombre de clauses par type, les alertes, le statut, le score du juge de qualité ; artefact : les rapports de contrôle ;
-- **une évaluation = une exécution** (expérience `couverture-evaluation`, une par méthode avec `couverture comparer`) : contrat et son empreinte, méthode, modèles du juge, du relecteur et des embeddings, versions des consignes, **empreinte du jeu de test** ; toutes les métriques de l'évaluation ; artefact : le rapport cas par cas.
+- **une ingestion = une exécution** (expérience `couverture-ingestion`) : par contrat, le nombre de clauses par type, les alertes, le statut ; artefact : les rapports de contrôle ;
+- **un banc = une exécution** (expérience `couverture-evaluation`) : contrat, méthode, modèle de lecture, versions des consignes, version du golden set ; les métriques de chaque couche (`regles/exactitude`, `chaine/faux_couverts`…).
 
 Les fonctions qui calculent paramètres et métriques sont pures et testées sans MLflow. `execution` ouvre une exécution et renvoie un objet dont les méthodes **ne lèvent jamais** : sans MLflow, avec `MLFLOW_ACTIF=false`, avec un serveur qui ne répond pas en 3 s, ou en cas d'erreur, le travail continue sans suivi.
 
@@ -570,39 +401,24 @@ Le détail est dans `monitoring/README.md`.
 
 **Pourquoi** : c'est le garde-fou contre les hallucinations, fait par du code, donc fiable. En gardant la décision d'origine, on peut mesurer combien de fois le contrôle a rattrapé le modèle.
 
-### `src/couverture/pipeline.py` — l'assemblage
+### `src/couverture/evaluation.py` — les jeux de cas
 
-**Rôle** :
-- `llm_configure` : choisit le modèle selon les variables d'environnement, ou aucun.
-- `juge_par_defaut` : conditions avec un modèle ; heuristique sans modèle. La méthode `fiches` a son propre assemblage (`fiches.PipelineFiches`).
-- `Pipeline.analyser` : faits → requête enrichie → recherche → juge → validation → `Resultat`. Construit depuis la base (`depuis_base`) ou depuis un fichier (`depuis_fichier`).
-- `PipelineDocumentBrut` : la référence, avec le même contrôle des citations pour que la comparaison soit juste.
-
-### `src/couverture/evaluation.py` — mesurer
-
-**Rôle** :
-- `charger_cas` : croise `data/sinistres.jsonl` (les sinistres) et `data/annotations/<contrat>.jsonl` (la réponse attendue pour ce contrat).
-- `evaluer` : rejoue chaque cas et calcule les indicateurs (voir la section 7). Une clause attendue « 4.4 » est considérée comme citée si la clause 4.4 ou l'un de ses morceaux (`4.4~2`, `4.4/terme`) l'est.
-
-**Pourquoi** : on ne peut pas dire qu'une méthode est meilleure sans la mesurer. Séparer sinistres et annotations permet de rejouer les mêmes sinistres sur chaque nouveau contrat.
+**Rôle** : `charger_cas` croise les sinistres et les réponses attendues ; `evaluer` rejoue une chaîne sur un jeu (le banc s'en sert pour sa couche « chaîne »). Une clause attendue « 4.4 » est considérée comme citée si la clause 4.4 ou l'un de ses morceaux l'est.
 
 ### `src/couverture/cli.py` — la ligne de commande
 
 | Commande | Effet |
 |---|---|
-| `couverture ingerer [--forcer]` | Lit `data/contrats`, remplit la base ; avec une clé Mistral, calcule les embeddings et fait juger le typage ; affiche statuts, scores et alertes. |
-| `couverture contrats` | Liste les contrats, leur statut, leur version. |
-| `couverture clauses --contrat ID` | Affiche le découpage : identifiant, type, pages, titre. |
-| `couverture analyser --contrat ID "…" [--methode conditions\|fiches\|brut] [--detail] [--json] [--hors-ligne]` | Analyse un sinistre : décision, motif, preuves décisives, questions à poser. `--detail` montre toutes les fiches ; `--json` la sortie complète, pour la traçabilité. |
-| `couverture evaluer --contrat ID [--methode …] [--detail]` | Indicateurs sur les cas annotés de ce contrat. |
-| `couverture comparer --contrat ID` | Les trois méthodes côte à côte (modèle requis). |
+| `couverture ingerer [--forcer]` | Lit `data/contrats`, remplit la base ; affiche statuts et alertes. |
+| `couverture contrats` / `clauses --contrat ID` | Liste les contrats ; affiche le découpage d'un contrat. |
+| `couverture regles --contrat ID [--faits JSON] [--jeu …]` | Vérifie les règles (chargement, vocabulaire, citations, cas) ; avec `--faits`, décide un cas et montre l'arbre de preuve. Sans modèle. |
+| `couverture rediger --contrat ID --article 2.2` | Mistral Large rédige les règles d'une garantie ; le code les contrôle ; `--accepter` les ajoute. |
+| `couverture analyser --contrat ID "…" [--methode regles\|brut] [--detail] [--json]` | Analyse un sinistre : décision, motif, preuves, questions, arbre de preuve. |
+| `couverture banc --contrat ID [--methode brut] [--couches …]` | Le golden set rejoué : règles, lecture, chaîne ; portes ; rapport dans `data/bancs/` et exécution MLflow. |
+| `couverture legalbench [--telecharger] [--limite N]` | Le second banc, externe (LegalBench). |
 | `couverture serveur [--port 8000]` | Lance l'interface web. |
-| `couverture derive [--jours 7] [--reference 28]` | Le PSI de chaque variable, les taux d'INCERTAIN par contrat et les alertes. |
-| `couverture bilan [--jours 7] [--sortie F] [--envoyer]` | Le bilan de la période, écrit dans `data/bilans/`, et envoyé par mail si demandé. |
 | `couverture versions [--manifeste \| --enregistrer]` | Vérifie les versions des consignes ; réécrit le manifeste ; les enregistre dans MLflow. |
-| `couverture modele` | Affiche le modèle configuré et teste la connexion (génération et embeddings). |
-| `couverture reparer [--contrat ID]` | Propose un profil d'assureur pour les contrats à vérifier. N'applique rien. |
-| `couverture propositions [--accepter N \| --refuser N]` | Liste les propositions, avec leur avant/après ; en accepte (et relit le contrat) ou en refuse une. |
+| `couverture modele` | Affiche le modèle configuré et teste la connexion. |
 
 ### `src/couverture/web.py` et `static/index.html` — l'interface
 
@@ -613,10 +429,10 @@ Le détail est dans `monitoring/README.md`.
 - `POST /api/analyser` : `{contrat_id, sinistre, methode}` → le résultat complet. Chaque analyse est notée dans le journal. La description doit faire entre 10 et 2 000 caractères. Les pipelines sont gardés en mémoire par contrat et par méthode.
 
 **La page** (HTML et JavaScript sans framework) :
-- choix du contrat (avec un avertissement s'il est `A_VERIFIER`), de la méthode (si un modèle est configuré), description du sinistre, boutons d'exemple avec les deux cas du recruteur ;
+- choix du contrat (avec un avertissement s'il est `A_VERIFIER`), de la méthode (règles Prolog ou document brut), description du sinistre, boutons d'exemple avec les deux cas du recruteur ;
 - résultat : la décision en grand avec la confiance, la justification, et un message si le contrôle a corrigé le modèle ;
 - **la grille, condition par condition** : pour chaque ligne, un état coloré (« Remplie », « Non remplie », « Inconnu » ; pour une exclusion, « S'applique » ou « Ne s'applique pas »), l'énoncé, la justification, l'extrait avec l'article et la page, le badge « décisif », et le texte complet de la clause avec le passage surligné ;
-- pour chaque condition relue : « ✓ Confirmée par la relecture » ou « ⚠ Contestée par la relecture », avec l'état d'origine et la raison ; un message en haut si la relecture a changé la décision ;
+- l'arbre de preuve du moteur Prolog, dans un bloc dépliable ;
 - « Comment la réponse a été construite » : chaque clause lue et la raison de sa sélection.
 
 Le contenu est inséré comme du texte, jamais comme du HTML, pour éviter qu'un contenu malveillant s'exécute dans la page.
@@ -625,7 +441,7 @@ Le contenu est inséré comme du texte, jamais comme du HTML, pour éviter qu'un
 
 ### `src/couverture/__init__.py`
 
-Expose `Pipeline`, `Resultat`, `Verdict`, `Decision` pour un usage en Python, et la version du paquet.
+Expose `Resultat`, `Verdict`, `Decision` pour un usage en Python, et la version du paquet.
 
 ### Fichiers à la racine
 

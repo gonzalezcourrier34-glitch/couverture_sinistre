@@ -29,7 +29,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from pathlib import Path
 
-from .juges import extraire_json
+from .llm import extraire_json
 from .validation import extrait_present
 
 TACHE = "insurance_policy_interpretation"

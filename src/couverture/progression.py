@@ -3,7 +3,7 @@
     Évaluation  [██████████░░░░░░░░░░]  7/14  écoulé 1 min 52 s, reste ~1 min 50 s  velo-05
 
 Sans dépendance. Elle s'écrit sur la sortie d'erreur, pour ne pas se mêler aux résultats (le JSON
-de `couverture evaluer` reste propre), et seulement dans un terminal : rien dans un fichier ni
+du banc reste propre), et seulement dans un terminal : rien dans un fichier ni
 dans les tests. Utilisable depuis plusieurs fils d'exécution (les cas tournent en parallèle).
 """
 

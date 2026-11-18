@@ -7,12 +7,9 @@ Tables :
   contrats(id, assureur, produit, version, fichier, empreinte, statut, rapport, texte_brut, ingere_le)
   clauses(contrat_id, id, ordre, article, groupe, titre, chemin, texte, type, pages)
   renvois(contrat_id, source_id, cible_id)
-  vecteurs(contrat_id, clause_id, modele, vecteur)   embeddings des clauses, un jeu par modèle
-  compilations(contrat_id, empreinte, donnees)      contrat compilé en fiches (voir compilation.py)
 
-Les compilations ne sont pas effacées par une ré-ingestion : elles coûtent des appels au
-modèle et peuvent avoir été relues par un humain. Leur empreinte dit à quel contrat elles
-correspondent ; une compilation dont l'empreinte ne correspond plus est ignorée.
+Une base créée avant le 18 nov. 2026 peut garder les tables `vecteurs` et `compilations` des méthodes
+retirées : elles ne sont plus lues.
 """
 
 from __future__ import annotations
@@ -24,7 +21,7 @@ from pathlib import Path
 
 from pydantic import BaseModel
 
-from .models import Clause, ContratCompile, TypeClause
+from .models import Clause, TypeClause
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS contrats (
@@ -44,15 +41,6 @@ CREATE TABLE IF NOT EXISTS clauses (
 CREATE TABLE IF NOT EXISTS renvois (
     contrat_id TEXT REFERENCES contrats(id) ON DELETE CASCADE,
     source_id TEXT, cible_id TEXT
-);
-CREATE TABLE IF NOT EXISTS vecteurs (
-    contrat_id TEXT REFERENCES contrats(id) ON DELETE CASCADE,
-    clause_id TEXT, modele TEXT, vecteur TEXT,
-    PRIMARY KEY (contrat_id, clause_id, modele)
-);
-CREATE TABLE IF NOT EXISTS compilations (
-    contrat_id TEXT PRIMARY KEY,
-    empreinte TEXT, donnees TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_clauses_type ON clauses(contrat_id, type);
 CREATE INDEX IF NOT EXISTS idx_clauses_groupe ON clauses(contrat_id, groupe);
@@ -155,21 +143,6 @@ class Base:
             for l in lignes
         ]
 
-    def enregistrer_vecteurs(self, contrat_id: str, modele: str, vecteurs: dict[str, list[float]]) -> None:
-        with self._cx() as cx:
-            cx.execute("DELETE FROM vecteurs WHERE contrat_id = ? AND modele = ?", (contrat_id, modele))
-            cx.executemany(
-                "INSERT INTO vecteurs VALUES (?,?,?,?)",
-                [(contrat_id, cid, modele, json.dumps(v)) for cid, v in vecteurs.items()],
-            )
-
-    def vecteurs(self, contrat_id: str, modele: str) -> dict[str, list[float]]:
-        with self._cx() as cx:
-            lignes = cx.execute(
-                "SELECT clause_id, vecteur FROM vecteurs WHERE contrat_id = ? AND modele = ?", (contrat_id, modele)
-            ).fetchall()
-        return {cid: json.loads(v) for cid, v in lignes}
-
     def maj_rapport(self, contrat_id: str, rapport: dict) -> None:
         """Met à jour le rapport et le statut qu'il porte (un juge peut faire passer un contrat à A_VERIFIER)."""
         with self._cx() as cx:
@@ -177,22 +150,6 @@ class Base:
                        (json.dumps(rapport, ensure_ascii=False), rapport.get("statut"), contrat_id))
 
     def supprimer(self, contrat_id: str) -> None:
-        """Retire un contrat et tout ce qui en dépend (clauses, renvois, vecteurs)."""
+        """Retire un contrat et tout ce qui en dépend (clauses, renvois)."""
         with self._cx() as cx:
             cx.execute("DELETE FROM contrats WHERE id = ?", (contrat_id,))
-            cx.execute("DELETE FROM compilations WHERE contrat_id = ?", (contrat_id,))
-
-    def enregistrer_compilation(self, compilation: ContratCompile) -> None:
-        with self._cx() as cx:
-            cx.execute("INSERT OR REPLACE INTO compilations VALUES (?,?,?)",
-                       (compilation.contrat_id, compilation.empreinte, compilation.model_dump_json()))
-
-    def compilation(self, contrat_id: str, a_jour: bool = True) -> ContratCompile | None:
-        """Le contrat compilé ; avec `a_jour`, seulement s'il correspond au contrat actuellement en base."""
-        with self._cx() as cx:
-            l = cx.execute("SELECT empreinte, donnees FROM compilations WHERE contrat_id = ?", (contrat_id,)).fetchone()
-        if not l:
-            return None
-        if a_jour and l[0].split(":")[0] != (self.empreinte(contrat_id) or ""):
-            return None
-        return ContratCompile.model_validate_json(l[1])

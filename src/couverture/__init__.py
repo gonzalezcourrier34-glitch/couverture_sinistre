@@ -1,7 +1,6 @@
-"""Pipeline de décision de couverture d'un sinistre à partir des conditions générales."""
+"""Couverture d'un sinistre à partir des conditions générales : le modèle lit les faits, Prolog décide."""
 
 from .models import Decision, Resultat, Verdict
-from .pipeline import Pipeline
 
-__all__ = ["Pipeline", "Resultat", "Verdict", "Decision"]
-__version__ = "0.1.0"
+__all__ = ["Resultat", "Verdict", "Decision"]
+__version__ = "0.2.0"

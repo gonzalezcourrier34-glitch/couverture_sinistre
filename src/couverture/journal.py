@@ -4,7 +4,7 @@ Sert à trois choses, comme le journal des recherches de SortirIA (`app/search_l
   - mesurer en production ce que l'évaluation ne voit pas (taux d'INCERTAIN réel, contestations) ;
   - repérer ce qui manque : les questions à poser qui reviennent sans cesse (souvent les
     conditions particulières : « l'option est-elle souscrite ? ») ;
-  - détecter la dérive (`derive.py`).
+  - suivre la dérive dans Grafana (monitoring/).
 
 Le texte du sinistre n'est pas conservé : seulement sa longueur et les faits repérés
 (événement, bien, lieu). Une déclaration de sinistre peut contenir des données personnelles.

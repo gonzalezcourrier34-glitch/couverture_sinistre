@@ -10,9 +10,11 @@ Le choix se fait par variables d'environnement, voir `configurer()`.
 
 from __future__ import annotations
 
+import copy
 import json
 import os
 import random
+import re
 import threading
 import time
 import urllib.error
@@ -282,64 +284,42 @@ def configurer(usage: str = "analyse") -> LLM | None:
 # --- Embeddings (recherche par le sens) -----------------------------------------------
 
 
-class Vectoriseur(Protocol):
-    nom: str
+# --- Réponses JSON ------------------------------------------------------------------------------------
 
-    def vectoriser(self, textes: list[str]) -> list[list[float]]: ...
-
-
-class MistralEmbeddings:
-    """`mistral-embed` : un vecteur par texte, pour la recherche par le sens.
-    Même principe que SortirIA (`agent/services.py:embed_with_mistral`)."""
-
-    URL = "https://api.mistral.ai/v1"
-    MODELE_DEFAUT = "mistral-embed"
-    LOT = 32               # textes par appel
-    LONGUEUR_MAX = 6000    # caractères gardés par texte (les clauses longues sont tronquées)
-
-    def __init__(self, modele: str | None = None, cle_api: str | None = None, timeout: int = 90):
-        self.modele = modele or os.environ.get("COUVERTURE_MODELE_EMBEDDINGS") or self.MODELE_DEFAUT
-        self.cle_api = cle_api or os.environ["MISTRAL_API_KEY"]
-        self.url = os.environ.get("MISTRAL_URL", self.URL).rstrip("/")
-        self.timeout = timeout
-        self.nom = f"mistral:{self.modele}"
-
-    def vectoriser(self, textes: list[str]) -> list[list[float]]:
-        vecteurs: list[list[float]] = []
-        for debut in range(0, len(textes), self.LOT):
-            lot = [t[: self.LONGUEUR_MAX] or " " for t in textes[debut : debut + self.LOT]]
-            donnees = _poster(f"{self.url}/embeddings", {"model": self.modele, "input": lot},
-                              {"authorization": f"Bearer {self.cle_api}"}, self.timeout)
-            ordonnes = sorted(donnees["data"], key=lambda d: d.get("index", 0))
-            vecteurs.extend(d["embedding"] for d in ordonnes)
-        return vecteurs
+def extraire_json(texte: str) -> dict:
+    """L'objet JSON d'une réponse de modèle (avec ou sans bloc de code autour)."""
+    texte = re.sub(r"^```(?:json)?|```$", "", texte.strip(), flags=re.MULTILINE).strip()
+    debut, fin = texte.find("{"), texte.rfind("}")
+    if debut == -1 or fin == -1:
+        raise ValueError("Aucun objet JSON dans la réponse du modèle")
+    return json.loads(texte[debut : fin + 1])
 
 
-def configurer_embeddings() -> Vectoriseur | None:
-    """Le vectoriseur configuré, ou None (la recherche se fait alors par les mots seuls).
-    Actif dès que MISTRAL_API_KEY est renseignée ; COUVERTURE_EMBEDDINGS=aucun le coupe."""
-    if os.environ.get("COUVERTURE_EMBEDDINGS", "").strip().lower() in ("aucun", "non", "0"):
-        return None
-    cle = os.environ.get("MISTRAL_API_KEY", "").strip()
-    if cle and not cle.startswith("colle"):
-        return MistralEmbeddings()
-    return None
+def appeler_json(llm: LLM, systeme: str, message: str, tentatives: int = 2) -> dict:
+    """Un appel dont on attend un JSON ; une réponse coupée ou illisible est redemandée une fois."""
+    erreur: Exception | None = None
+    for _ in range(tentatives):
+        try:
+            return extraire_json(llm.completer(systeme, message))
+        except ErreurLLM:
+            raise
+        except ReponseTronquee as e:
+            erreur = e
+            message += "\n\nTa réponse précédente était trop longue. Recommence plus court."
+        except Exception as e:  # noqa: BLE001
+            erreur = e
+            message += "\n\nTa réponse précédente n'était pas un JSON valide. Réponds uniquement par l'objet JSON."
+    raise ValueError(str(erreur))
 
 
-def configurer_relecteur(principal: LLM | None) -> LLM | None:
-    """Le juge de la grille. Par défaut, le même fournisseur que le modèle principal, avec le modèle
-    `COUVERTURE_MODELE_RELECTURE` s'il est donné (un autre modèle rend la relecture plus indépendante).
-    `COUVERTURE_RELECTURE=non` la désactive."""
-    if principal is None or os.environ.get("COUVERTURE_RELECTURE", "").strip().lower() in ("non", "aucun", "0"):
-        return None
-    modele = os.environ.get("COUVERTURE_MODELE_RELECTURE", "").strip()
-    if not modele:
-        return principal
-    if isinstance(principal, MistralLLM):
-        return MistralLLM(modele=modele)
-    if isinstance(principal, AnthropicLLM):
-        return AnthropicLLM(modele=modele)
-    if isinstance(principal, OpenAICompatibleLLM):
-        return OpenAICompatibleLLM(modele=modele, url=principal.url, cle_api=principal.cle_api,
-                                   json_mode=principal.json_mode, extra=principal.extra)
-    return principal
+def pour_travail_long(llm: LLM, max_tokens: int = 16000, timeout: int = 300) -> LLM:
+    """Le travail sur un contrat (rédaction des règles) se fait une fois : on laisse au modèle le temps
+    de réfléchir. Mistral Large a réfléchi jusqu'à 7 500 tokens sur une clause complexe."""
+    copie = copy.copy(llm)
+    if hasattr(copie, "max_tokens"):
+        copie.max_tokens = max(getattr(copie, "max_tokens", 0), max_tokens)
+    if hasattr(copie, "timeout"):
+        copie.timeout = max(getattr(copie, "timeout", 0), timeout)
+    if hasattr(copie, "extra"):
+        copie.extra = dict(copie.extra)
+    return copie

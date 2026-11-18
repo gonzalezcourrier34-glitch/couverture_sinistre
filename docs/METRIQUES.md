@@ -108,6 +108,13 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 
 ## 5. Dernières mesures
 
+**18 nov. 2026, golden v6, lecture Mistral Large (3 exécutions)** : règles 100 % ; **chaîne 91 % justes,
+0 couvert à tort, 0,3 refus à tort**, 9 instables ; 15 minutes par passage (Small : 20 secondes).
+
+**18 nov. 2026, LegalBench, Mistral Small, 133 cas** : 55 % justes, exactitude équilibrée 64 %, 32 couverts à
+tort, **ambigus reconnus 10 %** (précision des « incertain » 100 %) ; contrôle des citations sans effet
+(toutes exactes). Détail : DEMARCHE 7.37.
+
 **18 nov. 2026, golden v6, chaîne complète, lecture Mistral Small (SWI-Prolog, 3 exécutions)** :
 règles seules 100 % ; **chaîne 75 % justes, 9,3 couverts à tort**, 14 cas instables. Sur les 68 cas
 d'hier seulement : 76 % (85 % hier), la lecture s'est dégradée avec le vocabulaire plus long (DEMARCHE 7.32).

@@ -3,35 +3,28 @@
   couverture ingerer                               # lit data/contrats/ et remplit la base
   couverture contrats                              # liste les contrats et leur statut
   couverture clauses  --contrat foyer-appart123-2025
+  couverture regles   --contrat foyer-appart123-2025 [--faits '{"evenement": "vol"}']   # sans modèle
+  couverture rediger  --contrat foyer-appart123-2025 --article 2.2                     # Mistral Large rédige
   couverture analyser --contrat foyer-appart123-2025 "Mon vélo a été volé dans le local commun…"
-  couverture compiler [--contrat foyer-appart123-2025] [--forcer]   # garanties → fiches de questions
-  couverture fiches   --contrat foyer-appart123-2025 [--exporter f.json | --importer f.json --relu-par nom]
-  couverture analyser --contrat foyer-appart123-2025 --methode fiches "…"
-  couverture evaluer  --contrat fictif-habitat-serein [--methode brut]
-  couverture comparer --contrat fictif-habitat-serein
+  couverture banc     --contrat foyer-appart123-2025 [--methode brut]                  # golden set, portes
+  couverture legalbench [--telecharger]                                                # second banc, externe
   couverture serveur  --port 8000
-  couverture reparer                              # propose un profil pour les contrats à vérifier
-  couverture propositions [--accepter N | --refuser N]
   couverture versions [--manifeste | --enregistrer] # consignes versionnées (manifeste, MLflow)
-  couverture derive                               # PSI des 7 derniers jours contre les 28 précédents
-  couverture bilan [--envoyer]                    # ce qui demande une intervention, puis les chiffres
+  couverture modele                                # modèle configuré, test de connexion
 """
 
 from __future__ import annotations
 
 import argparse
 import json
-import re
 import sys
 from pathlib import Path
 
 from .base import Base
 from .config import charger_env
-from .evaluation import charger_cas, evaluer, fichiers_jeu
 from .ingestion import ingerer_dossier
-from .juges import JugeHeuristique
 from .models import Resultat
-from .pipeline import Pipeline, PipelineDocumentBrut, llm_configure
+from .pipeline import PipelineDocumentBrut, llm_configure
 
 
 ROLES = {"evenement": "‹événement›", "bien": "‹bien›", "lieu": "‹lieu›", "circonstance": "‹circonstance›"}
@@ -126,153 +119,42 @@ def afficher(r: Resultat) -> str:
     return "\n".join(lignes)
 
 
-METHODES = ["conditions", "fiches", "regles", "brut"]
+METHODES = ["regles", "brut"]
 
 
-def construire(base: Base, contrat_id: str, methode: str, hors_ligne: bool):
-    """fiches : contrat compilé, le modèle répond à des questions déjà écrites (voir fiches.py) ;
-    conditions : grille condition par condition, décision calculée ;
-    brut : contrat entier dans le prompt, sans recherche (référence « chatbot »)."""
-    if hors_ligne:
-        return Pipeline.depuis_base(base, contrat_id, juge=JugeHeuristique())
-    if methode in ("brut", "fiches", "regles") and llm_configure() is None:
+def construire(base: Base, contrat_id: str, methode: str = "regles"):
+    """regles : le modèle lit les faits, Prolog décide (le système) ;
+    brut : le contrat entier dans le prompt (la référence « chatbot », pour comparer)."""
+    if llm_configure() is None:
         sys.exit(f"La méthode « {methode} » a besoin d'un modèle : définir MISTRAL_API_KEY dans .env.")
-    if methode == "regles":
-        from .prolog import PipelineRegles
-
-        try:
-            return PipelineRegles.depuis_base(base, contrat_id, llm_configure())
-        except LookupError as e:
-            sys.exit(str(e))
-    if methode == "fiches":
-        from .fiches import PipelineFiches
-        from .llm import configurer_relecteur
-
-        llm = llm_configure()
-        try:
-            return PipelineFiches.depuis_base(base, contrat_id, llm, relecteur=configurer_relecteur(llm))
-        except LookupError as e:
-            sys.exit(str(e))
     if methode == "brut":
         return PipelineDocumentBrut.depuis_base(base, contrat_id, llm_configure())
-    return Pipeline.depuis_base(base, contrat_id, methode=methode)
+    from .prolog import PipelineRegles
+
+    try:
+        return PipelineRegles.depuis_base(base, contrat_id, llm_configure())
+    except LookupError as e:
+        sys.exit(str(e))
 
 
 def ingerer(donnees: Path, base: Base, forcer: bool = False) -> int:
-    from .llm import configurer_embeddings
-
-    vectoriseur = configurer_embeddings()
-    if vectoriseur is None:
-        print("Sans clé Mistral : pas d'embeddings, la recherche se fera par les mots seuls.")
-    juge_qualite = llm_configure("contrat")
-    from .suivi import EXPERIENCE_INGESTION, execution, metriques_ingestion, parametres_communs
+    from .ingestion import fichiers_contrats
+    from .progression import Barre
+    from .suivi import EXPERIENCE_INGESTION, execution, metriques_ingestion
 
     with execution(EXPERIENCE_INGESTION, "ingestion") as suivi:
-        from .ingestion import fichiers_contrats
-        from .progression import Barre
-
         barre = Barre(len(fichiers_contrats(donnees / "contrats")), "Ingestion")
-        contrats = ingerer_dossier(donnees / "contrats", base, forcer=forcer, vectoriseur=vectoriseur,
-                                   juge_qualite=juge_qualite, barre=barre)
+        contrats = ingerer_dossier(donnees / "contrats", base, forcer=forcer, barre=barre)
         barre.terminer()
-        suivi.parametres(parametres_communs(juge_qualite, None, vectoriseur) | {"forcer": forcer})
+        suivi.parametres({"forcer": forcer})
         suivi.metriques(metriques_ingestion(contrats))
         suivi.artefact_json("rapports.json", {c.id: c.rapport for c in contrats})
     for c in contrats:
         print(f"{c.statut:<11} {c.id:<28} {c.rapport.get('nb_clauses', 0):>4} clauses  {c.rapport.get('par_type', {})}")
-        if "embeddings" in c.rapport:
-            print(f"{'':<11}   embeddings : {c.rapport['embeddings']}")
-        q = c.rapport.get("qualite", {})
-        if "score" in q:
-            print(f"{'':<11}   qualité du typage : {q['score']:.0%} confirmés sur {q['echantillon']} clauses ({q['modele']})")
-        elif "erreur" in q:
-            print(f"{'':<11}   qualité du typage : non jugée ({q['erreur']})")
         for alerte in c.rapport.get("alertes", []):
             print(f"{'':<11} ! {alerte}")
     if any(c.statut != "OK" for c in base.contrats()):
-        print("\nDes contrats sont à vérifier : `couverture reparer` propose une correction (validée par vous).")
-    return 0
-
-
-def compiler_contrats(base: Base, contrat_id: str | None, forcer: bool) -> int:
-    """Compile les contrats (ou un seul) : une requête par garantie. Un contrat déjà compilé et
-    inchangé n'est pas refait, sauf les garanties qui avaient échoué ; --forcer refait tout.
-    Une compilation relue par un humain se garde."""
-    from .compilation import a_refaire, compiler, reparer_compilation, unites
-    from .consignes import CONSIGNES
-
-    llm = llm_configure("contrat")
-    if llm is None:
-        sys.exit("La compilation a besoin d'un modèle : définir MISTRAL_API_KEY dans .env.")
-    version = CONSIGNES["couverture-compilation"][2]
-    for c in [base.contrat(contrat_id)] if contrat_id else base.contrats():
-        existante = base.compilation(c.id)
-        if forcer or not existante or existante.empreinte != f"{c.empreinte}:{version}":
-            existante = None
-        clauses = base.clauses(c.id)
-        if existante:
-            reparees = reparer_compilation(existante, clauses)
-            if reparees:
-                base.enregistrer_compilation(existante)
-                print(f"{c.id} : {reparees} citation(s) recalée(s) sur le texte exact du contrat, sans appel au modèle.")
-        manquantes = a_refaire(existante, unites(clauses))
-        if existante and not manquantes and existante.exclusions_generales:
-            print(f"{c.id:<28} déjà compilé ({len(existante.fiches)} fiches" +
-                  (f", relu par {existante.relu_par})" if existante.relu_par else ")") + " : --forcer pour refaire.")
-            continue
-        print(f"{c.id} : {len(manquantes)} garantie(s) à compiler"
-              + (" (les autres sont gardées)" if existante else "") + ". Plusieurs minutes, une fois pour toutes.")
-        from .progression import Barre
-
-        generales = existante is None or not existante.exclusions_generales
-        barre = Barre(len(manquantes) + (1 if generales else 0), "Compilation")
-
-        def etape(texte, barre=barre):
-            barre.ecrire(texte)
-            barre.avancer(texte.split()[0])
-
-        resultat = compiler(c.id, c.empreinte, clauses, llm, existante=existante, progression=etape)
-        barre.terminer()
-        base.enregistrer_compilation(resultat)
-        points = resultat.points()
-        ecartes = sum(not p.valide for p in points)
-        print(f"{c.id:<28} {len(resultat.fiches)} fiches, {len(points)} questions, {ecartes} écartées "
-              f"(extrait introuvable), {len(resultat.exclusions_generales)} exclusions générales")
-        if resultat.echecs:
-            print(f"{'':<28} ! À refaire (relancer `couverture compiler`) : {', '.join(resultat.echecs)}")
-        if resultat.avertissements:
-            print(f"{'':<28} {len(resultat.avertissements)} avertissement(s) : `couverture fiches --contrat {c.id}`.")
-    print("\nRelire : `couverture fiches --contrat <id>` ; corriger : --exporter puis --importer.")
-    return 0
-
-
-def fiches_cli(base: Base, contrat_id: str, exporter: str | None, importer: str | None, relu_par: str | None) -> int:
-    from .compilation import resumer, verifier_import
-    from .models import ContratCompile
-
-    if importer:
-        nouvelle = ContratCompile.model_validate_json(Path(importer).read_text(encoding="utf-8"))
-        if nouvelle.contrat_id != contrat_id:
-            sys.exit(f"Le fichier concerne {nouvelle.contrat_id}, pas {contrat_id}.")
-        actuelle = base.compilation(contrat_id, a_jour=False)
-        nouvelle.empreinte = actuelle.empreinte if actuelle else nouvelle.empreinte
-        problemes = verifier_import(nouvelle, base.clauses(contrat_id))
-        for p_ in problemes:
-            print(f"! {p_}")
-        nouvelle.relu_par = relu_par or "relecteur"
-        base.enregistrer_compilation(nouvelle)
-        print(f"Fiches importées ({len(problemes)} question(s) écartée(s)), relues par {nouvelle.relu_par}.")
-        return 1 if problemes else 0
-    compilation = base.compilation(contrat_id, a_jour=False)
-    if compilation is None:
-        sys.exit(f"Contrat non compilé : `couverture compiler --contrat {contrat_id}`.")
-    if exporter:
-        Path(exporter).write_text(compilation.model_dump_json(indent=2), encoding="utf-8")
-        print(f"Fiches exportées dans {exporter}. Corrigez les questions, puis --importer.")
-        return 0
-    if base.compilation(contrat_id) is None:
-        print("! Le contrat a changé depuis cette compilation : la refaire avec `couverture compiler`.\n")
-    print(resumer(compilation))
+        print("\nDes contrats sont à vérifier : un profil d'assureur (data/profils/) corrige le découpage.")
     return 0
 
 
@@ -354,8 +236,15 @@ def banc_cli(base: Base, donnees: Path, contrat_id: str, methode: str, couches: 
         print(f"Golden set figé : version {v['version']} (empreinte {v['empreintes'][contrat_id]}).")
         return 0
     voulues = [c.strip() for c in couches.split(",") if c.strip()]
-    fabrique = (lambda: construire(base, contrat_id, methode, False)) if "chaine" in voulues else None
-    r = banc.passer(donnees, contrat_id, methode, voulues, repetitions, paralleles, pipeline_fabrique=fabrique)
+    fabrique = (lambda: construire(base, contrat_id, methode)) if "chaine" in voulues else None
+    from .suivi import EXPERIENCE_EVALUATION, execution, metriques_banc, parametres_communs
+
+    with execution(EXPERIENCE_EVALUATION, f"banc {contrat_id} · {methode}") as suivi:
+        r = banc.passer(donnees, contrat_id, methode, voulues, repetitions, paralleles, pipeline_fabrique=fabrique)
+        suivi.parametres(parametres_communs(str(r.get("modele", "aucun"))) | {
+            "contrat": contrat_id, "methode": methode, "couches": ",".join(voulues),
+            "golden": str(r.get("golden", {}).get("version") if isinstance(r.get("golden"), dict) else r.get("golden"))})
+        suivi.metriques(metriques_banc(r) | {"portes_passees": float(bool(r["passe"]))})
     _, md = banc.enregistrer(donnees, r)
     print(banc.resume_console(r, md))
     return 0 if r["passe"] else 1
@@ -474,56 +363,6 @@ def regles_cli(base: Base, donnees: Path, contrat_id: str, faits_json: str | Non
     return 1 if problemes else 0
 
 
-def reparer(donnees: Path, base: Base, contrat_id: str | None) -> int:
-    from .chargement import charger_lignes
-    from .ingestion import charger_catalogue
-    from .profils import charger_profil
-    from .reparation import Propositions, decrire, proposer_reparation
-    from .texte import normaliser
-
-    llm = llm_configure("contrat")
-    if llm is None:
-        print("La réparation a besoin d'un modèle : renseigner MISTRAL_API_KEY dans le fichier .env.")
-        return 1
-    cibles = [base.contrat(contrat_id)] if contrat_id else [c for c in base.contrats() if c.statut != "OK"]
-    if not cibles:
-        print("Aucun contrat à vérifier.")
-        return 0
-    catalogue = charger_catalogue(donnees / "contrats")
-    depot = Propositions(donnees)
-    for c in cibles:
-        meta = catalogue.get(c.fichier, {})
-        nom = meta.get("profil") or re.sub(r"[^a-z0-9]+", "-", normaliser(c.assureur or c.id)).strip("-")[:40]
-        actuel = charger_profil(donnees / "profils", meta["profil"]) if meta.get("profil") else None
-        lignes = charger_lignes(donnees / "contrats" / c.fichier)
-        print(f"Analyse de {c.id} ({llm.nom})…")
-        p = proposer_reparation(c.id, c.fichier, lignes, c.rapport, actuel, nom, llm, depot)
-        print(decrire(p))
-    print("\nRien n'est appliqué sans vous : `couverture propositions --accepter N` ou `--refuser N`.")
-    return 0
-
-
-def propositions(donnees: Path, base: Base, accepter: int | None, refuser: int | None) -> int:
-    from .reparation import Propositions, decrire
-
-    depot = Propositions(donnees)
-    if accepter is not None:
-        p = depot.accepter(accepter)
-        print(f"Proposition {accepter} acceptée : profil « {p['profil']['nom']} » écrit, rattaché à {p['fichier']}.")
-        print("Relecture du contrat avec ce profil :")
-        return ingerer(donnees, base)
-    if refuser is not None:
-        depot.refuser(refuser)
-        print(f"Proposition {refuser} refusée.")
-        return 0
-    toutes = depot.toutes()
-    if not toutes:
-        print("Aucune proposition.")
-    for p in toutes:
-        print(decrire(p) + "\n")
-    return 0
-
-
 def tester_modele() -> int:
     from .llm import ErreurLLM
 
@@ -533,13 +372,13 @@ def tester_modele() -> int:
         print(f"Configuration invalide : {e}")
         return 1
     if llm is None:
-        print("Aucun modèle configuré : le juge heuristique (sans modèle) sera utilisé.")
+        print("Aucun modèle configuré.")
         print("Créer un fichier .env à la racine du projet avec la ligne : MISTRAL_API_KEY=votre-clé")
         return 1
     contrat = llm_configure("contrat")
     print(f"Modèle des analyses : {llm.nom}")
     if contrat is not None and contrat.nom != llm.nom:
-        print(f"Modèle des contrats (compilation, qualité, réparation) : {contrat.nom}")
+        print(f"Modèle des contrats (rédaction des règles) : {contrat.nom}")
     try:
         reponse = llm.completer('Réponds uniquement par un objet JSON.', 'Renvoie {"ok": true}.')
     except ErreurLLM as e:
@@ -551,89 +390,7 @@ def tester_modele() -> int:
         etat = ("refusé par ce modèle, il réfléchit à son niveau par défaut" if llm.reflexion_refusee
                 else f"« {niveau} » accepté" if niveau else "non demandé (niveau par défaut du modèle)")
         print(f"Réflexion : {etat} ; {llm.derniere_reflexion} caractères de réflexion pour ce test.")
-    from .llm import configurer_embeddings
-
-    vectoriseur = configurer_embeddings()
-    if vectoriseur:
-        try:
-            dim = len(vectoriseur.vectoriser(["vol de vélo"])[0])
-            print(f"Embeddings : {vectoriseur.nom}, vecteurs de dimension {dim}.")
-        except ErreurLLM as e:
-            print(f"Embeddings indisponibles ({e}) : la recherche se fera par les mots seuls.")
     return 0
-
-
-def evaluer_suivi(base: Base, donnees: Path, contrat_id: str, methode: str, hors_ligne: bool, cas: list,
-                  paralleles: int = 4, jeu: str = "mise_au_point") -> dict:
-    """Une évaluation, enregistrée comme une exécution MLflow (si le suivi est disponible)."""
-    from .evaluation import fichiers_jeu
-    from .suivi import EXPERIENCE_EVALUATION, empreinte_fichiers, execution, metriques_evaluation, parametres_communs
-
-    pipeline = construire(base, contrat_id, methode, hors_ligne)
-    juge = getattr(pipeline, "juge", None)
-    llm = getattr(juge, "llm", None)
-    relecteur = getattr(juge, "relecteur", None)
-    vectoriseur = getattr(getattr(pipeline, "recherche", None), "vectoriseur", None)
-    nom = f"{contrat_id} · {getattr(pipeline, 'methode', methode)}"
-    with execution(EXPERIENCE_EVALUATION, nom) as suivi:
-        rapport = evaluer(pipeline, cas, paralleles=paralleles)
-        suivi.parametres(parametres_communs(llm, relecteur, vectoriseur) | {
-            "contrat": contrat_id,
-            "methode": getattr(pipeline, "methode", methode),
-            "jeu": jeu,
-            "jeu_de_test": empreinte_fichiers(*fichiers_jeu(donnees, contrat_id, jeu)),
-            "contrat_empreinte": base.empreinte(contrat_id) or "",
-        })
-        suivi.metriques(metriques_evaluation(rapport))
-        suivi.artefact_json("rapport.json", rapport)
-    return rapport
-
-
-def tableau(rapport: dict) -> str:
-    """Une ligne par cas, puis les indicateurs qui comptent."""
-    lignes = [f"{'cas':<11}{'attendu':<14}{'obtenu':<14}{'':<4}confiance"]
-    for c in rapport["cas"]:
-        marque = "err" if c.get("erreur") else "ok" if c["obtenu"] == c["attendu"] else ("~" if c.get("acceptable") else "X")
-        lignes.append(f"{c['id']:<11}{c['attendu']:<14}{c['obtenu']:<14}{marque:<4}{c['confiance']:.2f}")
-    lignes.append("")
-    lignes.append(f"Exactitude {rapport['exactitude']:.0%} (stricte {rapport['exactitude_stricte']:.0%})  ·  "
-                  f"couverts à tort {rapport['faux_couverts']}  ·  refus à tort {rapport['faux_refus']}  ·  "
-                  f"incertains {rapport['taux_incertain']:.0%}"
-                  + (f"  ·  erreurs du fournisseur {rapport['erreurs_fournisseur']} (relancer)" if rapport.get("erreurs_fournisseur") else ""))
-    lignes.append("ok : exact   ~ : réponse acceptable (cas ambigu)   X : erreur   err : pas de réponse du fournisseur   ·   détail : --detail")
-    return "\n".join(lignes)
-
-
-ABREGE = {"COUVERT": "C", "NON_COUVERT": "NC", "INCERTAIN": "?"}
-
-
-def tableau_repete(rapports: list[dict]) -> str:
-    """Plusieurs exécutions : la réponse de chaque cas à chaque fois, les cas instables, et
-    chaque indicateur en moyenne (minimum – maximum)."""
-    n = len(rapports)
-    lignes = [f"{'cas':<11}{'attendu':<14}{'réponses (' + str(n) + ' exécutions)':<26}stable"]
-    instables = 0
-    for i, c in enumerate(rapports[0]["cas"]):
-        obtenus = [r["cas"][i]["obtenu"] for r in rapports]
-        stable = len(set(obtenus)) == 1
-        instables += not stable
-        lignes.append(f"{c['id']:<11}{ABREGE[c['attendu']]:<14}{' '.join(ABREGE[o] for o in obtenus):<26}"
-                      f"{'oui' if stable else 'NON'}")
-
-    def stat(cle, pourcent=False):
-        v = [r[cle] for r in rapports]
-        f = (lambda x: f"{x:.0%}") if pourcent else (lambda x: f"{x:g}")
-        return f"{f(sum(v) / n)} ({f(min(v))} – {f(max(v))})"
-
-    lignes += ["", f"Exactitude {stat('exactitude', True)}  ·  stricte {stat('exactitude_stricte', True)}",
-               f"Couverts à tort {stat('faux_couverts')}  ·  refus à tort {stat('faux_refus')}  ·  "
-               f"incertains {stat('taux_incertain', True)}",
-               f"Cas instables : {instables} sur {len(rapports[0]['cas'])}"]
-    return "\n".join(lignes)
-
-
-def resume(rapport: dict) -> dict:
-    return {k: v for k, v in rapport.items() if k != "cas"}
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -646,10 +403,6 @@ def main(argv: list[str] | None = None) -> int:
     pi.add_argument("--forcer", action="store_true", help="Relire même les fichiers inchangés")
 
     sous.add_parser("contrats", help="Lister les contrats de la base")
-
-    pco = sous.add_parser("compiler", help="Traduire chaque garantie en fiche de questions (une fois par contrat)")
-    pco.add_argument("--contrat", help="Un contrat précis (par défaut : tous)")
-    pco.add_argument("--forcer", action="store_true", help="Recompiler même un contrat inchangé")
 
     pg = sous.add_parser("regles", help="Vérifier les règles Prolog d'un contrat (chargement, vocabulaire, citations, cas)")
     pg.add_argument("--contrat", required=True)
@@ -683,60 +436,22 @@ def main(argv: list[str] | None = None) -> int:
     pw.add_argument("--accepter-vocabulaire", metavar="ARTICLE",
                     help="Ajouter au vocabulaire commun les faits nouveaux déclarés par le modèle pour cet article")
 
-    pf = sous.add_parser("fiches", help="Afficher, exporter ou réimporter (après relecture) les fiches d'un contrat")
-    pf.add_argument("--contrat", required=True)
-    pf_mode = pf.add_mutually_exclusive_group()
-    pf_mode.add_argument("--exporter", metavar="FICHIER")
-    pf_mode.add_argument("--importer", metavar="FICHIER")
-    pf.add_argument("--relu-par", help="Nom du relecteur (avec --importer)")
-
     pc = sous.add_parser("clauses", help="Afficher le découpage d'un contrat")
     pc.add_argument("--contrat", required=True)
 
     pa = sous.add_parser("analyser", help="Analyser un sinistre sur un contrat")
     pa.add_argument("--contrat", required=True)
     pa.add_argument("sinistre")
-    pa.add_argument("--methode", choices=METHODES, default="conditions")
+    pa.add_argument("--methode", choices=METHODES, default="regles")
     pa.add_argument("--json", action="store_true", help="Sortie JSON complète (traçabilité)")
-    pa.add_argument("--detail", action="store_true", help="Toutes les fiches et toutes les questions")
-    pa.add_argument("--hors-ligne", action="store_true", help="Juge heuristique, sans modèle")
-
-    pe = sous.add_parser("evaluer", help="Évaluer sur les sinistres annotés d'un contrat")
-    pe.add_argument("--contrat", required=True)
-    pe.add_argument("--methode", choices=METHODES, default="conditions")
-    pe.add_argument("--hors-ligne", action="store_true")
-    pe.add_argument("--detail", "--json", dest="detail", action="store_true", help="Rapport complet en JSON")
-    pe.add_argument("--paralleles", type=int, default=4, help="Cas traités en même temps (défaut : 4)")
-    pe.add_argument("--jeu", choices=["mise_au_point", "validation", "redaction", "golden"], default="mise_au_point",
-                    help="Cas de mise au point (défaut), de validation (data/validation) ou des garanties rédigées par le modèle (data/redaction)")
-    pe.add_argument("--repetitions", type=int, default=1,
-                    help="Rejouer N fois et signaler les cas instables (une seule exécution de 14 cas est bruitée)")
-
-    pk = sous.add_parser("comparer", help="Document brut, conditions et fiches (si compilé), sur les mêmes cas")
-    pk.add_argument("--contrat", required=True)
+    pa.add_argument("--detail", action="store_true", help="Toutes les conditions et l'arbre de preuve complet")
 
     sous.add_parser("modele", help="Afficher le modèle configuré et tester la connexion")
-
-    pr = sous.add_parser("reparer", help="Proposer un profil d'assureur pour un contrat mal lu (à valider)")
-    pr.add_argument("--contrat", help="Un contrat précis (par défaut : tous ceux à vérifier)")
-
-    pp = sous.add_parser("propositions", help="Lister, accepter ou refuser les propositions de réparation")
-    pp.add_argument("--accepter", type=int, metavar="N")
-    pp.add_argument("--refuser", type=int, metavar="N")
 
     pv = sous.add_parser("versions", help="Versions des consignes : vérifier, réécrire le manifeste, enregistrer dans MLflow")
     groupe = pv.add_mutually_exclusive_group()
     groupe.add_argument("--manifeste", action="store_true", help="Réécrire config/versions_consignes.json")
     groupe.add_argument("--enregistrer", action="store_true", help="Enregistrer les consignes dans MLflow (Prompt Registry)")
-
-    pd = sous.add_parser("derive", help="Dérive des questions et des réponses (PSI, 7 jours contre 28)")
-    pd.add_argument("--jours", type=int, default=7)
-    pd.add_argument("--reference", type=int, default=28)
-
-    pb = sous.add_parser("bilan", help="Bilan de la période : à faire, contrats, activité, ce qui manque, dérive")
-    pb.add_argument("--jours", type=int, default=7)
-    pb.add_argument("--sortie", help="Fichier Markdown (défaut : <donnees>/bilans/bilan-AAAA-MM-JJ.md)")
-    pb.add_argument("--envoyer", action="store_true", help="Envoyer par mail (SMTP configuré dans .env)")
 
     ps = sous.add_parser("serveur", help="Lancer l'interface web")
     ps.add_argument("--hote", default="127.0.0.1")
@@ -750,15 +465,6 @@ def main(argv: list[str] | None = None) -> int:
     if a.commande == "ingerer":
         return ingerer(donnees, base, a.forcer)
 
-    if a.commande == "reparer":
-        return reparer(donnees, base, a.contrat)
-
-    if a.commande == "compiler":
-        return compiler_contrats(base, a.contrat, a.forcer)
-
-    if a.commande == "fiches":
-        return fiches_cli(base, a.contrat, a.exporter, a.importer, a.relu_par)
-
     if a.commande == "regles":
         return regles_cli(base, donnees, a.contrat, a.faits, a.jeu)
 
@@ -770,9 +476,6 @@ def main(argv: list[str] | None = None) -> int:
 
     if a.commande == "rediger":
         return rediger_cli(base, a.contrat, a.article or [], a.controler, a.accepter, a.accepter_vocabulaire)
-
-    if a.commande == "propositions":
-        return propositions(donnees, base, a.accepter, a.refuser)
 
     if a.commande == "versions":
         from . import consignes
@@ -799,36 +502,6 @@ def main(argv: list[str] | None = None) -> int:
             print(f"! {p_}")
         return 1 if problemes else 0
 
-    if a.commande == "derive":
-        from .derive import calculer
-        from .journal import Journal
-
-        d = calculer(Journal(base.chemin), jours=a.jours, reference=a.reference)
-        print(f"{d['periode']} : {d['volumes']['recent']} analyses contre {d['volumes']['reference']}. Statut : {d['statut']}.")
-        for nom, v in d["variables"].items():
-            print(f"  {nom:<18} {v['famille']:<10} PSI {v['psi']:<7} {v['niveau']}")
-        for contrat, v in d["contrats"].items():
-            print(f"  {contrat:<28} INCERTAIN {v['incertain_recent']:.0%} (référence : "
-                  f"{'—' if v['incertain_reference'] is None else format(v['incertain_reference'], '.0%')})")
-        for alerte in d["alertes"]:
-            print(f"  ! {alerte}")
-        return 0
-
-    if a.commande == "bilan":
-        from datetime import date
-
-        from .bilan import construire_bilan, envoyer
-
-        texte, chiffres = construire_bilan(base, donnees, jours=a.jours)
-        sortie = Path(a.sortie) if a.sortie else donnees / "bilans" / f"bilan-{date.today().isoformat()}.md"
-        sortie.parent.mkdir(parents=True, exist_ok=True)
-        sortie.write_text(texte, encoding="utf-8")
-        print(texte)
-        print(f"Bilan écrit dans {sortie}.")
-        if a.envoyer:
-            print(envoyer(texte, f"Couverture sinistre — bilan ({chiffres['a_faire']} point(s) à traiter)"))
-        return 0
-
     if a.commande == "modele":
         return tester_modele()
 
@@ -854,38 +527,12 @@ def main(argv: list[str] | None = None) -> int:
         from .journal import Journal
 
         debut = time.perf_counter()
-        r = construire(base, a.contrat, a.methode, a.hors_ligne).analyser(a.sinistre)
+        r = construire(base, a.contrat, a.methode).analyser(a.sinistre)
         Journal(base.chemin).noter(r, duree_ms=int((time.perf_counter() - debut) * 1000))
         print(r.model_dump_json(indent=2) if a.json else afficher(r) if a.detail else afficher_court(r))
         return 0
 
-    jeu = getattr(a, "jeu", "mise_au_point")
-    cas = charger_cas(*fichiers_jeu(donnees, a.contrat, jeu))
-
-    if a.commande == "evaluer":
-        if a.repetitions > 1:
-            rapports = [evaluer_suivi(base, donnees, a.contrat, a.methode, a.hors_ligne, cas, a.paralleles, jeu)
-                        for _ in range(a.repetitions)]
-            print(tableau_repete(rapports))
-            return 0
-        rapport = evaluer_suivi(base, donnees, a.contrat, a.methode, a.hors_ligne, cas, a.paralleles, jeu)
-        if a.detail:
-            json.dump(rapport, sys.stdout, ensure_ascii=False, indent=2)
-            print()
-        else:
-            print(tableau(rapport))
-        return 0
-
-    # comparer
-    ordre = ["brut", "conditions"] + (["fiches"] if base.compilation(a.contrat) else [])
-    resultats = {m: resume(evaluer_suivi(base, donnees, a.contrat, m, False, cas)) for m in ordre}
-    cles = ["exactitude", "exactitude_avant_controle", "faux_couverts", "faux_couverts_avant_controle",
-            "taux_incertain", "rappel_clauses_moyen", "citations_rejetees",
-            "decisions_changees_par_relecture", "faux_couverts_evites_par_relecture"]
-    print(f"{'':<30}" + "".join(f"{m:>14}" for m in ordre))
-    for k in cles:
-        print(f"{k:<30}" + "".join(f"{str(resultats[m][k]):>14}" for m in ordre))
-    return 0
+    return 1
 
 
 def principal() -> int:

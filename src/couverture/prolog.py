@@ -21,7 +21,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from .juges import extraire_json
+from .llm import extraire_json
 from .llm import LLM, ErreurLLM
 from .models import Citation, Clause, ClauseRetenue, Condition, Decision, EtatCondition, Faits, Resultat, Verdict
 from .validation import valider

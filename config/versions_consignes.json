@@ -1,43 +1,13 @@
 {
-  "couverture-compilation": {
-    "version": "v2",
-    "empreinte": "adfd9dd33a64f794",
-    "source": "couverture.compilation.SYSTEME_COMPILATION"
-  },
   "couverture-document-brut": {
     "version": "v1",
     "empreinte": "2253a1899124ac31",
     "source": "couverture.juges.SYSTEME_BRUT"
   },
-  "couverture-exclusions-generales": {
-    "version": "v1",
-    "empreinte": "08877f6e294b8c00",
-    "source": "couverture.compilation.SYSTEME_EXCLUSIONS_GENERALES"
-  },
-  "couverture-faits": {
-    "version": "v1",
-    "empreinte": "abfd7fdb00abe919",
-    "source": "couverture.fiches.SYSTEME_FAITS"
-  },
   "couverture-faits-regles": {
     "version": "v4",
     "empreinte": "b05ed349b373d04f",
     "source": "couverture.prolog.SYSTEME_FAITS_REGLES"
-  },
-  "couverture-fiches": {
-    "version": "v3",
-    "empreinte": "516083e66b9f9534",
-    "source": "couverture.fiches.SYSTEME_FICHES"
-  },
-  "couverture-grille-conditions": {
-    "version": "v3",
-    "empreinte": "e9f1020b6fc54f98",
-    "source": "couverture.conditions.SYSTEME_CONDITIONS"
-  },
-  "couverture-juge-qualite": {
-    "version": "v1",
-    "empreinte": "7caefafb96ab5d2d",
-    "source": "couverture.qualite.SYSTEME_QUALITE"
   },
   "couverture-legalbench": {
     "version": "v1",
@@ -48,20 +18,5 @@
     "version": "v2",
     "empreinte": "37c9e33892c5f25f",
     "source": "couverture.redaction.SYSTEME_REDACTION"
-  },
-  "couverture-relecture": {
-    "version": "v2",
-    "empreinte": "1524d865fa778a47",
-    "source": "couverture.relecture.SYSTEME_RELECTURE"
-  },
-  "couverture-reparation": {
-    "version": "v1",
-    "empreinte": "72c65cfe666f2ec9",
-    "source": "couverture.reparation.SYSTEME_REPARATION"
-  },
-  "couverture-routage": {
-    "version": "v1",
-    "empreinte": "61fc935d3da5db58",
-    "source": "couverture.fiches.SYSTEME_ROUTAGE"
   }
 }

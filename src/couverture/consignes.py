@@ -29,20 +29,13 @@ import json
 from pathlib import Path
 
 # nom MLflow → (module, variable, version)
+# Les consignes des méthodes retirées le 18 nov. 2026 (grille de conditions, relecture, fiches, compilation,
+# routage, réparation, juge de qualité) restent archivées dans docs/consignes/ : c'est leur histoire.
 CONSIGNES: dict[str, tuple[str, str, str]] = {
-    "couverture-grille-conditions": ("couverture.conditions", "SYSTEME_CONDITIONS", "v3"),
-    "couverture-relecture": ("couverture.relecture", "SYSTEME_RELECTURE", "v2"),
-    "couverture-document-brut": ("couverture.juges", "SYSTEME_BRUT", "v1"),
-    "couverture-juge-qualite": ("couverture.qualite", "SYSTEME_QUALITE", "v1"),
-    "couverture-reparation": ("couverture.reparation", "SYSTEME_REPARATION", "v1"),
-    "couverture-compilation": ("couverture.compilation", "SYSTEME_COMPILATION", "v2"),
-    "couverture-exclusions-generales": ("couverture.compilation", "SYSTEME_EXCLUSIONS_GENERALES", "v1"),
-    "couverture-fiches": ("couverture.fiches", "SYSTEME_FICHES", "v3"),
-    "couverture-legalbench": ("couverture.legalbench", "SYSTEME_LEGALBENCH", "v1"),
-    "couverture-routage": ("couverture.fiches", "SYSTEME_ROUTAGE", "v1"),
-    "couverture-faits": ("couverture.fiches", "SYSTEME_FAITS", "v1"),
     "couverture-faits-regles": ("couverture.prolog", "SYSTEME_FAITS_REGLES", "v4"),
     "couverture-redaction-regles": ("couverture.redaction", "SYSTEME_REDACTION", "v2"),
+    "couverture-document-brut": ("couverture.juges", "SYSTEME_BRUT", "v1"),
+    "couverture-legalbench": ("couverture.legalbench", "SYSTEME_LEGALBENCH", "v1"),
 }
 
 RACINE = Path(__file__).resolve().parents[2]

@@ -103,9 +103,7 @@
       <div id="bloc-methode" class="cache" style="flex: 0 1 220px">
         <label for="methode">Méthode</label>
         <select id="methode">
-          <option value="conditions">Condition par condition</option>
           <option value="regles">Règles Prolog</option>
-          <option value="fiches">Contrat compilé (fiches)</option>
           <option value="brut">Document brut (référence)</option>
         </select>
       </div>
@@ -200,10 +198,6 @@ function afficher(r) {
         el("div", { class: "discret" }, `Confiance ${Math.round(v.confiance * 100)} %`),
         el("div", { class: "barre" }, el("span", { style: `width:${Math.round(v.confiance * 100)}%` })))),
     el("p", { class: "justification" }, v.justification));
-  if (v.decision_avant_relecture && v.decision_avant_relecture !== v.decision) {
-    verdict.append(el("div", { class: "correction" },
-      `Une seconde lecture indépendante a contesté la première analyse (« ${LIBELLES[v.decision_avant_relecture]} ») : les conditions contestées sont marquées ci-dessous.`));
-  }
   if (v.decision_initiale && v.decision_initiale !== v.decision) {
     verdict.append(el("div", { class: "correction" },
       `Le modèle avait répondu « ${LIBELLES[v.decision_initiale]} », mais ses citations ne tenaient pas : la réponse a été ramenée à « ${LIBELLES[v.decision]} ».`));

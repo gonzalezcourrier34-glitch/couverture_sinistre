@@ -1,14 +1,11 @@
 """Suivi des exécutions avec MLflow, sur le modèle de SortirIA (`agent/tracking.py`).
 
 Deux expériences :
-  - `couverture-ingestion` : **une ingestion = une exécution**. Paramètres : modèles, versions
-    des consignes, profils d'assureur ; métriques par contrat : clauses par type, alertes,
-    score du juge de qualité, statut ;
-  - `couverture-evaluation` : **une évaluation = une exécution** (une par méthode avec
-    `couverture comparer`). Paramètres : contrat, méthode, modèles (juge et relecteur),
-    versions des consignes, empreinte du jeu de test ; métriques : exactitude, faux « couvert »,
-    INCERTAIN, rappel des clauses, citations rejetées, effet de la relecture ; artefact :
-    le rapport complet, cas par cas.
+  - `couverture-ingestion` : **une ingestion = une exécution**. Métriques par contrat : clauses
+    par type, alertes, statut ;
+  - `couverture-evaluation` : **un banc = une exécution**. Paramètres : contrat, méthode, modèle de
+    lecture, versions des consignes, version du golden set ; métriques : celles de chaque couche du
+    banc (`regles/exactitude`, `lecture/decisions_changees`, `chaine/faux_couverts`…).
 
 C'est ce qui permet de comparer deux versions d'une consigne, ou deux modèles, sur les mêmes
 cas : chaque exécution porte les versions qui l'ont produite.
@@ -50,12 +47,22 @@ def cle(*parties) -> str:
 
 # --- Ce qu'on enregistre (fonctions pures) -----------------------------------------------------
 
-def parametres_communs(llm=None, relecteur=None, vectoriseur=None) -> dict[str, str]:
+def parametres_communs(modele: str = "aucun") -> dict[str, str]:
     p = {f"consigne/{nom.removeprefix('couverture-')}": v for nom, (_, _, v) in CONSIGNES.items()}
-    p["modele/juge"] = getattr(llm, "nom", "aucun (heuristique)")
-    p["modele/relecteur"] = getattr(relecteur, "nom", "aucun")
-    p["modele/embeddings"] = getattr(vectoriseur, "nom", "aucun")
+    p["modele/lecture"] = modele
     return p
+
+
+def metriques_banc(resultat: dict) -> dict[str, float]:
+    """Les métriques numériques de chaque couche du banc : « chaine/exactitude », « lecture/rappel_faits »…"""
+    m = {}
+    for couche, r in resultat.get("couches", {}).items():
+        for k, v in r.get("metriques", {}).items():
+            if isinstance(v, dict) and isinstance(v.get("moyenne"), (int, float)):  # plusieurs exécutions
+                v = v["moyenne"]
+            if isinstance(v, (int, float)) and not isinstance(v, bool):
+                m[cle(couche, k)] = float(v)
+    return m
 
 
 def metriques_ingestion(contrats) -> dict[str, float]:
@@ -71,17 +78,6 @@ def metriques_ingestion(contrats) -> dict[str, float]:
         if "score" in r.get("qualite", {}):
             m[cle("contrat", c.id, "qualite_typage")] = float(r["qualite"]["score"])
     return m
-
-
-METRIQUES_EVALUATION = [
-    "n", "exactitude", "exactitude_avant_controle", "faux_couverts", "faux_couverts_avant_controle",
-    "taux_incertain", "rappel_clauses_moyen", "citations_rejetees", "conditions_contestees",
-    "decisions_changees_par_relecture", "faux_couverts_evites_par_relecture",
-]
-
-
-def metriques_evaluation(rapport: dict) -> dict[str, float]:
-    return {k: float(rapport[k]) for k in METRIQUES_EVALUATION if rapport.get(k) is not None}
 
 
 def empreinte_fichiers(*chemins: Path) -> str:

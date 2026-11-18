@@ -7,10 +7,9 @@ exécute toutes sur une vraie base SQLite et échoue si le JSON n'est plus à jo
 
 Grafana lit directement la base SQLite du projet (`data/base.sqlite`), avec le plugin
 `frser-sqlite-datasource`. Deux tableaux :
-  - « Couverture sinistre — Réponses » : usage, décisions, fiabilité (relecture, contrôle des
-    citations), temps de réponse, ce qui manque, versions des consignes en service, erreurs ;
-  - « Couverture sinistre — Contrats » : lecture de chaque contrat, qualité du typage,
-    alertes, clauses par type.
+  - « Couverture sinistre — Réponses » : usage, décisions, fiabilité (contrôle des citations),
+    temps de réponse, ce qui manque, versions des consignes en service, erreurs ;
+  - « Couverture sinistre — Contrats » : lecture de chaque contrat, alertes, clauses par type.
 """
 
 from __future__ import annotations
@@ -90,9 +89,9 @@ def tableau_reponses() -> dict:
         panneau("Analyses", f"SELECT COUNT(*) AS analyses FROM analyses WHERE {OK} AND {PERIODE}", "stat", 6, 4),
         panneau("Part d'INCERTAIN", f"SELECT AVG(decision = 'INCERTAIN') AS incertain FROM analyses WHERE {OK} AND {PERIODE}",
                 "stat", 6, 4, "Trop haut : le système ne tranche presque jamais. Trop bas sur des cas ambigus : il tranche au hasard.", "percentunit"),
-        panneau("Décisions changées par la relecture",
-                f"SELECT COUNT(*) AS changees FROM analyses WHERE {OK} AND decision_avant_relecture IS NOT NULL AND {PERIODE}",
-                "stat", 6, 4, "Réponses que le juge de la grille a rendues plus prudentes."),
+        panneau("Réponses fermes (couvert / non couvert)",
+                f"SELECT AVG(decision != 'INCERTAIN') AS fermes FROM analyses WHERE {OK} AND {PERIODE}",
+                "stat", 6, 4, "Part des réponses tranchées sans question à poser.", "percentunit"),
         panneau("Erreurs du modèle", f"SELECT COUNT(*) AS erreurs FROM analyses WHERE erreur IS NOT NULL AND {PERIODE}", "stat", 6, 4),
         panneau("Décisions par jour",
                 f"""SELECT {JOUR} AS time,
@@ -107,14 +106,11 @@ GROUP BY date(date) ORDER BY time""", empile=True),
         titre_section("Fiabilité : ce que les contrôles rattrapent"),
         panneau("Rattrapages par jour",
                 f"""SELECT {JOUR} AS time,
-       SUM(contestations > 0) AS analyses_contestees,
-       SUM(decision_avant_relecture IS NOT NULL) AS changees_par_relecture,
        SUM(decision_initiale != decision) AS corrigees_par_controle,
        SUM(citations_rejetees + conditions_ecartees) AS preuves_ecartees
 FROM analyses WHERE {OK} AND {PERIODE}
 GROUP BY date(date) ORDER BY time""",
-                description="Contestations du juge de la grille, décisions qu'il a changées, réponses corrigées par le "
-                            "contrôle des citations, citations ou conditions écartées faute de preuve."),
+                description="Réponses corrigées par le contrôle des citations, citations ou conditions écartées faute de preuve."),
         panneau("Temps de réponse par jour",
                 f"SELECT {JOUR} AS time, AVG(duree_ms) AS moyen, MAX(duree_ms) AS maximum FROM analyses WHERE {OK} AND {PERIODE} "
                 f"GROUP BY date(date) ORDER BY time", unite="ms"),
@@ -155,18 +151,12 @@ def tableau_contrats() -> dict:
     p = [
         panneau("Contrats", "SELECT COUNT(*) AS contrats FROM contrats", "stat", 6, 4),
         panneau("À vérifier", "SELECT COUNT(*) AS a_verifier FROM contrats WHERE statut != 'OK'", "stat", 6, 4,
-                "Contrats mal lus selon les contrôles ou le juge de qualité : `couverture reparer`."),
-        panneau("Qualité du typage (moyenne)",
-                "SELECT AVG(json_extract(rapport, '$.qualite.score')) AS qualite FROM contrats "
-                "WHERE json_extract(rapport, '$.qualite.score') IS NOT NULL", "stat", 6, 4,
-                "Part des types de clauses confirmés par le juge de qualité.", "percentunit"),
-        panneau("Clauses", "SELECT COUNT(*) AS clauses FROM clauses", "stat", 6, 4),
+                "Contrats mal lus selon les contrôles du découpage : un profil d'assureur corrige."),
+        panneau("Clauses", "SELECT COUNT(*) AS clauses FROM clauses", "stat", 12, 4),
         panneau("Lecture des contrats",
                 """SELECT id AS contrat, assureur, produit, version, statut,
        json_extract(rapport, '$.nb_clauses') AS clauses,
-       json_extract(rapport, '$.qualite.score') AS qualite_typage,
        json_array_length(json_extract(rapport, '$.alertes')) AS alertes,
-       json_extract(rapport, '$.embeddings') AS embeddings,
        ingere_le
 FROM contrats ORDER BY statut DESC, id""", "table", 24, 8),
         panneau("Clauses par type",
@@ -180,12 +170,6 @@ FROM clauses GROUP BY contrat_id ORDER BY contrat_id""", "table", 12, 8,
                 """SELECT c.id AS contrat, a.value AS alerte
 FROM contrats AS c, json_each(json_extract(c.rapport, '$.alertes')) AS a
 ORDER BY c.id""", "table", 12, 8),
-        panneau("Types contestés par le juge de qualité",
-                """SELECT c.id AS contrat, json_extract(e.value, '$.titre') AS titre,
-       json_extract(e.value, '$.type') AS type_actuel, json_extract(e.value, '$.type_propose') AS type_propose,
-       json_extract(e.value, '$.raison') AS raison
-FROM contrats AS c, json_each(json_extract(c.rapport, '$.qualite.erreurs')) AS e
-ORDER BY c.id""", "table", 24, 7),
     ]
     return tableau("couverture-contrats", "Couverture sinistre — Contrats", p,
                    "Comment chaque contrat a été lu. Source : tables `contrats` et `clauses`.")

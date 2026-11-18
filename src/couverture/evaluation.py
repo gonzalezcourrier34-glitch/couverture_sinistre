@@ -1,4 +1,4 @@
-"""Évaluation : les mêmes sinistres, rejoués sur chaque contrat.
+"""Les jeux de cas, et le rejeu d'une chaîne sur un jeu (utilisé par le banc, couche « chaîne »).
 
 - `data/sinistres.jsonl` : les sinistres, indépendants de tout contrat ;
 - `data/annotations/<contrat_id>.jsonl` : pour ce contrat, la décision attendue et les
@@ -107,8 +107,6 @@ def evaluer(pipeline, cas: list[dict], paralleles: int = 1) -> dict:
             "clauses_citees": sorted(citees),
             "rappel_clauses": round(len(trouvees) / len(attendues), 2) if attendues else None,
             "citations_rejetees": sum(not ci.valide for ci in v.citations),
-            "avant_relecture": v.decision_avant_relecture.value if v.decision_avant_relecture else None,
-            "contestations": sum(c.relecture == "contestee" for c in v.conditions),
             "confiance": v.confiance,
             "erreur": v.mode == "erreur",
             # Pour le banc : ce que le modèle a lu, et les questions posées.
@@ -134,11 +132,6 @@ def evaluer(pipeline, cas: list[dict], paralleles: int = 1) -> dict:
         "erreurs_fournisseur": sum(l["erreur"] for l in lignes),
         "rappel_clauses_moyen": round(sum(rappels) / len(rappels), 3) if rappels else None,
         "citations_rejetees": sum(l["citations_rejetees"] for l in lignes),
-        "conditions_contestees": sum(l["contestations"] for l in lignes),
-        "decisions_changees_par_relecture": sum(bool(l["avant_relecture"]) for l in lignes),
-        # La relecture a-t-elle évité des « couvert » à tort ? Ceux qu'elle a fait passer à autre chose, et qui n'étaient pas couverts.
-        "faux_couverts_evites_par_relecture": sum(
-            l["avant_relecture"] == "COUVERT" and l["attendu"] != "COUVERT" for l in lignes),
         "confusion": {f"{a}->{o}": k for (a, o), k in sorted(confusion.items())},
         "cas": lignes,
     }

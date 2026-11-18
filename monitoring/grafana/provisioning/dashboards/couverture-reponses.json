@@ -117,9 +117,9 @@
       "id": 3
     },
     {
-      "title": "Décisions changées par la relecture",
+      "title": "Réponses fermes (couvert / non couvert)",
       "type": "stat",
-      "description": "Réponses que le juge de la grille a rendues plus prudentes.",
+      "description": "Part des réponses tranchées sans question à poser.",
       "datasource": {
         "type": "frser-sqlite-datasource",
         "uid": "couverture-sqlite"
@@ -131,14 +131,16 @@
             "type": "frser-sqlite-datasource",
             "uid": "couverture-sqlite"
           },
-          "queryText": "SELECT COUNT(*) AS changees FROM analyses WHERE erreur IS NULL AND decision_avant_relecture IS NOT NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()",
-          "rawQueryText": "SELECT COUNT(*) AS changees FROM analyses WHERE erreur IS NULL AND decision_avant_relecture IS NOT NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()",
+          "queryText": "SELECT AVG(decision != 'INCERTAIN') AS fermes FROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()",
+          "rawQueryText": "SELECT AVG(decision != 'INCERTAIN') AS fermes FROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()",
           "queryType": "table",
           "timeColumns": []
         }
       ],
       "fieldConfig": {
-        "defaults": {},
+        "defaults": {
+          "unit": "percentunit"
+        },
         "overrides": []
       },
       "options": {
@@ -307,7 +309,7 @@
     {
       "title": "Rattrapages par jour",
       "type": "timeseries",
-      "description": "Contestations du juge de la grille, décisions qu'il a changées, réponses corrigées par le contrôle des citations, citations ou conditions écartées faute de preuve.",
+      "description": "Réponses corrigées par le contrôle des citations, citations ou conditions écartées faute de preuve.",
       "datasource": {
         "type": "frser-sqlite-datasource",
         "uid": "couverture-sqlite"
@@ -319,8 +321,8 @@
             "type": "frser-sqlite-datasource",
             "uid": "couverture-sqlite"
           },
-          "queryText": "SELECT unixepoch(date(date)) AS time,\n       SUM(contestations > 0) AS analyses_contestees,\n       SUM(decision_avant_relecture IS NOT NULL) AS changees_par_relecture,\n       SUM(decision_initiale != decision) AS corrigees_par_controle,\n       SUM(citations_rejetees + conditions_ecartees) AS preuves_ecartees\nFROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()\nGROUP BY date(date) ORDER BY time",
-          "rawQueryText": "SELECT unixepoch(date(date)) AS time,\n       SUM(contestations > 0) AS analyses_contestees,\n       SUM(decision_avant_relecture IS NOT NULL) AS changees_par_relecture,\n       SUM(decision_initiale != decision) AS corrigees_par_controle,\n       SUM(citations_rejetees + conditions_ecartees) AS preuves_ecartees\nFROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()\nGROUP BY date(date) ORDER BY time",
+          "queryText": "SELECT unixepoch(date(date)) AS time,\n       SUM(decision_initiale != decision) AS corrigees_par_controle,\n       SUM(citations_rejetees + conditions_ecartees) AS preuves_ecartees\nFROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()\nGROUP BY date(date) ORDER BY time",
+          "rawQueryText": "SELECT unixepoch(date(date)) AS time,\n       SUM(decision_initiale != decision) AS corrigees_par_controle,\n       SUM(citations_rejetees + conditions_ecartees) AS preuves_ecartees\nFROM analyses WHERE erreur IS NULL AND unixepoch(date) BETWEEN $__unixEpochFrom() AND $__unixEpochTo()\nGROUP BY date(date) ORDER BY time",
           "queryType": "time series",
           "timeColumns": [
             "time"

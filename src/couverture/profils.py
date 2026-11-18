@@ -14,8 +14,8 @@ Un profil est un fichier JSON dans `<donnees>/profils/<nom>.json` :
 }
 Le catalogue des contrats désigne le profil : "profil": "foyer".
 
-Les profils sont proposés par l'agent de réparation (`reparation.py`) et ne sont
-appliqués qu'après validation humaine.
+Un profil s'écrit à la main quand le découpage d'un contrat est signalé à vérifier
+(l'agent de réparation qui en proposait a été retiré le 18 nov. 2026, voir DEMARCHE 7.36).
 """
 
 from __future__ import annotations
