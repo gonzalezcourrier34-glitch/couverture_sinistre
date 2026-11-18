@@ -118,6 +118,9 @@ def but(faits: dict, point: str = "decider_json", fichiers: tuple = ()) -> str:
         if not all(ATOME.match(str(t)) for t in (v, x, p)):
             raise ErreurRegles(f"hiérarchie mal formée : {v} {x} {p}")
         poses.append(f"assertz(parent_valeur({v}, {x}, {p}))")
+    if point == "decider_json":
+        # Les valeurs possibles de chaque variable, pour le raisonnement par hypothèses (moteur.pl).
+        poses.append(f"charger_domaines({atome_chemin(DOSSIER / 'vocabulaire.json')})")
     corps = ", ".join(["set_stream(user_output, encoding(utf8))", *charges, "retractall(fait(_, _))",
                        "retractall(parent_valeur(_, _, _))", *poses, point])
     return f"catch(({corps}), E, (print_message(error, E), halt(2)))"
@@ -262,6 +265,9 @@ class PipelineRegles:
         if decision == Decision.NON_COUVERT:
             vars_ += [v for r in possibles for v in r.get("questions", [])]
         demander = list(dict.fromkeys(question(v) for v in vars_))
+        exploration = d.get("exploration")
+        if exploration:
+            demander, motif = questions_explorees(exploration, vars_, motif)
         confiance = {"COUVERT": 0.85, "NON_COUVERT": 0.85, "INCERTAIN": 0.4}[decision.value]
         if non_traduits:
             confiance = 0.3
@@ -295,6 +301,32 @@ class PipelineRegles:
         v = Verdict(decision=decision, justification=motif, citations=citations, conditions=conditions,
                     informations_manquantes=demander, confiance=confiance, mode=f"regles:{self.llm.nom}+prolog")
         return v, consultees
+
+
+ISSUE = {"COUVERT": "couvert", "NON_COUVERT": "non couvert", "INCERTAIN": "encore incertain", "ERREUR": "?"}
+
+
+def questions_explorees(exploration: dict, vars_: list[str], motif: str) -> tuple[list[str], str]:
+    """Les questions classées par le raisonnement par hypothèses du moteur (moteur.pl, explorer/2) :
+    décisives d'abord, avec ce que chaque réponse entraîne ; les inutiles ne sont pas posées.
+    Les questions sans domaine (le lien de causalité, une appréciation) sont gardées telles quelles."""
+    explorees = {q["variable"]: q for q in exploration.get("questions", [])}
+    lignes = []
+    for q in exploration.get("questions", []):
+        if q["effet"] == "inutile":
+            continue
+        texte = question(q["variable"])
+        if q["effet"] == "décisive":
+            issues = " ; ".join(f"{'/'.join(i['valeurs'][:4])}{'…' if len(i['valeurs']) > 4 else ''} → {ISSUE[i['decision']]}"
+                                for i in q["issues"])
+            texte += f" ({issues})"
+        lignes.append(texte)
+    lignes += [question(v) for v in vars_ if v not in explorees]
+    ensemble = exploration.get("ensemble") or []
+    if ensemble:
+        motif += (" Une seule question tranche : " if len(ensemble) == 1 else " Ces deux questions tranchent : ") \
+            + " ; ".join(f"« {question(v)} »" for v in ensemble) + "."
+    return list(dict.fromkeys(lignes)), motif
 
 
 def faits_lisibles(faits: dict) -> Faits:

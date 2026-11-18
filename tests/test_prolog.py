@@ -13,7 +13,7 @@ import pytest
 
 from couverture import prolog
 from couverture.models import Decision
-from moteur_reference import Contrat, Moteur, Terme
+from moteur_reference import Explorateur, Contrat, Moteur, Terme
 
 RACINE = Path(__file__).resolve().parents[1]
 CONTRAT = "foyer-appart123-2025"
@@ -229,11 +229,16 @@ avec_swipl = pytest.mark.skipif(prolog.swipl() is None, reason="SWI-Prolog absen
 
 @avec_swipl
 def test_prolog_et_oracle_concordent(contrat, cas, cas_validation):
-    for i, faits, _ in cas + cas_validation:
+    """Les deux moteurs, sur tous les cas (golden set compris) : même décision, mêmes garanties retenues,
+    et le même raisonnement par hypothèses (questions, effets, issues, ensemble qui tranche)."""
+    golden = [(d["sinistre_id"], d["faits"], None)
+              for d in lire(RACINE / "regles" / "cas" / "golden" / f"{CONTRAT}.jsonl")]
+    for i, faits, _ in cas + cas_validation + golden:
         p = prolog.decider(CONTRAT, faits)
-        o = Moteur(contrat, faits).decider()
+        o = Explorateur(contrat, faits).decider()
         assert p["decision"] == o["decision"], i
         assert [r["id"] for r in p["retenues"]] == [r["id"] for r in o["retenues"]], i
+        assert p.get("exploration") == o.get("exploration"), i
 
 
 @avec_swipl
@@ -336,3 +341,36 @@ def test_cle_recipient_fumee_casier(contrat):
     casier = Moteur(contrat, {"evenement": ["vol"], "bien": ["velo"], "lieu": ["casier"]}).decider()
     assert casier["decision"] == "NON_COUVERT" and not casier["possibles"], \
         "exclusion certaine : pas de question « commis sur vous ? »"
+
+
+# --- Le raisonnement par hypothèses (Prolog, explorer/2 ; miroir : Explorateur) ---------------------------------
+
+def test_question_decisive_et_paire(contrat):
+    garage = {"evenement": "vol", "bien": ["velo"], "lieu": ["garage"], "fermeture": "cle", "effraction": "oui"}
+    e = Explorateur(contrat, garage).decider()["exploration"]
+    assert e["ensemble"] == ["serrure_surete"]
+    q = e["questions"][0]
+    assert q["effet"] == "décisive" and q["issues"] == [{"decision": "COUVERT", "valeurs": ["oui"]},
+                                                        {"decision": "NON_COUVERT", "valeurs": ["non"]}]
+    cave = Explorateur(contrat, {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}).decider()["exploration"]
+    assert cave["ensemble"] == ["fermeture", "serrure_surete"], "aucune seule ne suffit, la paire tranche"
+
+
+def test_questions_inutiles_retirees(contrat):
+    disparu = Explorateur(contrat, {"bien": ["electronique"], "lieu": ["logement"]}).decider()["exploration"]
+    effets = {q["variable"]: q["effet"] for q in disparu["questions"]}
+    assert effets.get("flammes") == "inutile", "pour un ordinateur disparu, les flammes ne changent rien"
+    assert [q["effet"] for q in disparu["questions"]] == sorted((q["effet"] for q in disparu["questions"]),
+                                                               key=lambda e: ["décisive", "utile", "inutile"].index(e))
+
+
+def test_verdict_avec_exploration():
+    exploration = {"ensemble": ["serrure_surete"], "questions": [
+        {"variable": "serrure_surete", "effet": "décisive",
+         "issues": [{"decision": "COUVERT", "valeurs": ["oui"]}, {"decision": "NON_COUVERT", "valeurs": ["non"]}]},
+        {"variable": "flammes", "effet": "inutile", "issues": [{"decision": "INCERTAIN", "valeurs": ["non", "oui"]}]}]}
+    lignes, motif = prolog.questions_explorees(exploration, ["serrure_surete", "flammes", "lien_causal"], "À préciser.")
+    assert lignes[0].startswith(prolog.question("serrure_surete")) and "oui → couvert ; non → non couvert" in lignes[0]
+    assert prolog.question("flammes") not in " ".join(lignes), "la question inutile n'est pas posée"
+    assert prolog.question("lien_causal") in lignes, "une question sans domaine reste posée"
+    assert "Une seule question tranche" in motif

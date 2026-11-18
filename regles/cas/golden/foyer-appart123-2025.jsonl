@@ -66,3 +66,32 @@
 {"sinistre_id": "g-h07", "faits": {"evenement": ["electricite"], "bien": ["animal"], "lieu": ["logement"]}}
 {"sinistre_id": "g-m01", "faits": {"evenement": ["vol", "bris"], "bien": ["electronique", "vitre"], "lieu": ["logement"], "effraction": "oui"}}
 {"sinistre_id": "g-m02", "faits": {"evenement": ["incendie", "degat_eaux"], "bien": ["mobilier", "element_batiment"], "lieu": ["logement"], "flammes": "oui", "embrasement": "oui"}}
+{"sinistre_id": "g2-i01", "faits": {"evenement": ["vol"], "bien": ["velo"]}}
+{"sinistre_id": "g2-i02", "faits": {"evenement": ["vol"], "bien": ["objet_divers"], "lieu": ["logement"], "absence": "oui", "effraction": "non"}}
+{"sinistre_id": "g2-i03", "faits": {"evenement": ["degat_eaux"], "bien": ["element_batiment"], "lieu": ["logement"]}}
+{"sinistre_id": "g2-i04", "faits": {"bien": ["bijoux"], "lieu": ["logement"]}}
+{"sinistre_id": "g2-i05", "faits": {"evenement": ["incendie"], "lieu": ["logement"], "flammes": "oui"}}
+{"sinistre_id": "g2-i06", "faits": {"evenement": ["degat_eaux"], "bien": ["canalisation", "element_batiment"], "lieu": ["logement"], "cause_eau": "gel", "absence": "oui"}}
+{"sinistre_id": "g2-i08", "faits": {"evenement": ["vol"], "bien": ["objet_divers"], "lieu": ["autre_batiment"]}}
+{"sinistre_id": "g2-i11", "faits": {"evenement": ["tempete"], "bien": ["element_batiment"], "lieu": ["terrasse"]}}
+{"sinistre_id": "g2-i12", "faits": {"evenement": ["vol"], "bien": ["appareil_audiovisuel"], "lieu": ["logement"], "absence": "oui"}}
+{"sinistre_id": "g2-i15", "faits": {"evenement": ["autre"], "bien": ["element_batiment"], "lieu": ["logement"]}}
+{"sinistre_id": "g2-i16", "faits": {"evenement": ["degat_eaux"], "lieu": ["logement"]}}
+{"sinistre_id": "g2-i17", "faits": {"evenement": ["autre"], "bien": ["element_batiment"], "lieu": ["logement"]}}
+{"sinistre_id": "g2-i13", "faits": {"evenement": ["degat_eaux"], "bien": ["element_batiment"], "lieu": ["logement"], "cause_eau": "fuite_installation"}}
+{"sinistre_id": "g2-i14", "faits": {"evenement": ["degat_eaux"], "bien": ["canalisation", "objet_divers"], "lieu": ["cave"], "cause_eau": "fuite_installation"}}
+{"sinistre_id": "g2-p12", "faits": {"evenement": ["bris"], "bien": ["vitre"], "lieu": ["logement"], "auteur": "assure"}}
+{"sinistre_id": "g2-p01", "faits": {"evenement": ["vol"], "bien": ["objet_divers"], "lieu": ["logement"], "absence": "oui", "portes_fermees": "oui", "effraction": "non"}}
+{"sinistre_id": "g2-i07", "faits": {"evenement": ["vol"], "bien": ["electronique"], "lieu": ["voie_publique"], "vol_sur_personne": "non"}}
+{"sinistre_id": "g2-p03", "faits": {"evenement": ["vol"], "bien": ["objet_divers"], "lieu": ["jardin"]}}
+{"sinistre_id": "g2-p04", "faits": {"evenement": ["vol"], "bien": ["objet_divers"], "lieu": ["cave"]}}
+{"sinistre_id": "g2-p06", "faits": {"evenement": ["vol"], "bien": ["objet_divers"], "lieu": ["voie_publique"], "vol_sur_personne": "oui", "violence": "non"}}
+{"sinistre_id": "g2-p08", "faits": {"evenement": ["degat_eaux"], "bien": ["mobilier"], "lieu": ["logement", "terrasse"]}}
+{"sinistre_id": "g2-p09", "faits": {"evenement": ["degat_eaux"], "bien": ["element_batiment"], "lieu": ["logement"], "cause_eau": "infiltration_exterieure"}}
+{"sinistre_id": "g2-p10", "faits": {"evenement": ["electricite"], "bien": ["electronique"], "lieu": ["logement"]}}
+{"sinistre_id": "g2-l01", "faits": {"evenement": ["vol"], "bien": ["appareil_audiovisuel", "electronique", "valeurs"], "lieu": ["logement"], "effraction": "oui"}}
+{"sinistre_id": "g2-l02", "faits": {"evenement": ["degat_eaux"], "bien": ["element_batiment"], "lieu": ["logement"], "cause_eau": "fuite_installation"}}
+{"sinistre_id": "g2-l03", "faits": {"evenement": ["vol"], "bien": ["objet_divers"], "lieu": ["logement"], "absence": "non"}}
+{"sinistre_id": "g2-l04", "faits": {"evenement": ["degat_eaux"], "bien": ["element_batiment"], "lieu": ["logement"], "cause_eau": "fuite_installation"}}
+{"sinistre_id": "g2-m01", "faits": {"evenement": ["incendie"], "bien": ["mobilier", "element_batiment"], "lieu": ["logement"], "flammes": "oui", "embrasement": "oui"}}
+{"sinistre_id": "g2-m02", "faits": {"evenement": ["tempete", "bris", "degat_eaux"], "bien": ["vitre", "mobilier"], "lieu": ["logement"]}}

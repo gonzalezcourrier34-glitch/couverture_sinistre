@@ -45,7 +45,9 @@ def test_golden_complet_et_coherent(golden):
         assert c["faits"] is not None and prolog.verifier_faits(c["faits"]) == [], c["id"]
         assert all(q in voc for q in c.get("questions_attendues", [])), c["id"]
         if c["attendu"] == "INCERTAIN" and c.get("garantie") != "aucune":
-            assert c.get("questions_attendues") or "INCERTAIN" in c.get("acceptables", []) or c["id"] == "g-q02", c["id"]
+            # « Incertain » se justifie par une question à poser, ou par une garantie non traduite
+            # (la réponse est alors « à examiner par un gestionnaire », sans question).
+            assert c.get("questions_attendues") or "hors_regles" in c["themes"] or c["id"] == "g-q02", c["id"]
 
 
 def test_golden_couvre_ce_qui_compte(golden):
@@ -53,8 +55,9 @@ def test_golden_couvre_ce_qui_compte(golden):
     cas, _ = golden
     themes = {t for c in cas for t in c["themes"]}
     assert {"base", "variante", "piege", "langue", "info_manquante", "hors_regles", "multi"} <= themes
+    assert sum(c["attendu"] == "INCERTAIN" for c in cas) >= 10, "savoir dire « je ne sais pas » doit être testé"
     garanties = {c["garantie"] for c in cas}
-    assert {"2.10", "2.1", "2.7", "2.2", "2.9", "2.3", "2.6", "2.8", "2.4"} <= garanties
+    assert {"2.10", "2.1", "2.7", "2.2", "2.9", "2.3", "2.6", "2.8", "2.4", "2.5", "2.11", "2.12", "1.4"} <= garanties
     assert sum(c["attendu"] == "COUVERT" for c in cas) >= 20 and sum(c["attendu"] == "NON_COUVERT" for c in cas) >= 20
 
 
@@ -80,7 +83,8 @@ def test_couche_regles(golden, oracle):
     r = banc.couche_regles(cas, oracle)
     m = r["metriques"]
     assert m["n"] == len(cas) and 0 <= m["exactitude_stricte"] <= m["exactitude"] <= 1
-    assert m["faux_couverts"] == sum(l["obtenu"] == "COUVERT" and l["attendu"] != "COUVERT" for l in r["cas"])
+    assert m["faux_couverts"] == sum(l["obtenu"] == "COUVERT" and l["attendu"] != "COUVERT" and not l["ok"] for l in r["cas"]), \
+        "une réponse tolérée par l'annotation n'est pas un couvert à tort"
     assert "thème : piege" in r["groupes"] and "garantie : 2.10" in r["groupes"]
     q01 = next(l for l in r["cas"] if l["id"] == "g-q01")
     assert q01["obtenu"] == "INCERTAIN" and q01["rappel_questions"] == 1.0, "la cave : demander la serrure"
@@ -199,3 +203,19 @@ def test_fiche_de_validation():
     texte = banc.fiche_validation(DONNEES, CONTRAT)
     assert "## Garantie 2.10" in texte and "`g-p06`" in texte and "--figer" in texte
     assert texte.index("## Garantie 2.1 ") if "## Garantie 2.1 " in texte else True
+
+
+def test_le_banc_note_le_modele_de_lecture(golden, oracle, tmp_path):
+    cas, _ = golden
+
+    class AvecModele(PipelineSimulee):
+        class llm:
+            nom = "mistral:mistral-large-latest"
+
+    PipelineSimulee.appel = 0
+    r = banc.passer(DONNEES, CONTRAT, "regles", ["chaine"], repetitions=1, paralleles=2,
+                    pipeline_fabrique=lambda: AvecModele(cas, oracle))
+    assert r["modele"] == "mistral:mistral-large-latest"
+    js, md = banc.enregistrer(DONNEES, r, tmp_path)
+    assert js.name.endswith("-regles-mistral-large.json") and "lecture par `mistral:mistral-large-latest`" in md.read_text(encoding="utf-8")
+    assert "lecture : mistral:mistral-large-latest" in banc.resume_console(r)

@@ -66,3 +66,32 @@
 {"id": "g-h07", "famille": "2.6", "source": "golden", "sinistre": "Mon chat s'est électrocuté en mordant un câble électrique."}
 {"id": "g-m01", "famille": "2.10", "source": "golden", "sinistre": "Des cambrioleurs ont forcé la porte, volé mon ordinateur et cassé la vitre de la porte-fenêtre en partant."}
 {"id": "g-m02", "famille": "2.1", "source": "golden", "sinistre": "Un incendie chez le voisin s'est propagé à mon appartement ; les pompiers ont inondé le salon en l'éteignant."}
+{"id": "g2-i01", "famille": "2.10", "source": "golden", "sinistre": "Mon vélo a été volé dans le local de mon immeuble."}
+{"id": "g2-i02", "famille": "2.10", "source": "golden", "sinistre": "On a cambriolé mon appartement pendant le week-end où j'étais absent. La serrure porte des rayures, mais la porte s'ouvre et se ferme normalement."}
+{"id": "g2-i03", "famille": "2.7", "source": "golden", "sinistre": "Une tache d'humidité est apparue au plafond de ma chambre, juste sous la salle de bain du voisin du dessus."}
+{"id": "g2-i04", "famille": "2.10", "source": "golden", "sinistre": "Mes bijoux ont disparu de ma chambre après le passage du plombier."}
+{"id": "g2-i05", "famille": "2.1", "source": "golden", "sinistre": "Il y a eu un début de feu dans la cuisine."}
+{"id": "g2-i06", "famille": "2.7", "source": "golden", "sinistre": "Pendant mon absence d'une semaine en février, une canalisation a gelé et a éclaté ; l'eau a abîmé le sol de la salle de bain."}
+{"id": "g2-i08", "famille": "2.10", "source": "golden", "sinistre": "On m'a volé mon sac au restaurant."}
+{"id": "g2-i11", "famille": "2.2", "source": "golden", "sinistre": "Après le gros coup de vent d'hier, des tuiles de l'immeuble sont tombées sur mon balcon et l'ont abîmé."}
+{"id": "g2-i12", "famille": "2.10", "source": "golden", "sinistre": "Pendant mes vacances, quelqu'un est entré chez moi et a volé ma télévision ; je ne sais pas comment il est entré."}
+{"id": "g2-i15", "famille": "2.12", "source": "golden", "sinistre": "Un champignon s'est développé derrière les plinthes et a attaqué le parquet ; l'expert parle de mérule."}
+{"id": "g2-i16", "famille": "2.5", "source": "golden", "sinistre": "De l'eau de mon appartement s'est infiltrée chez le voisin du dessous, qui me demande de payer ses réparations."}
+{"id": "g2-i17", "famille": "2.11", "source": "golden", "sinistre": "Des inconnus ont tagué et rayé la porte d'entrée de mon appartement."}
+{"id": "g2-i13", "famille": "1.4", "source": "golden", "sinistre": "Le joint de la douche fuyait depuis des mois ; l'eau a fini par abîmer le mur de la salle de bain."}
+{"id": "g2-i14", "famille": "2.7", "source": "golden", "sinistre": "Le tuyau apparent de ma cave, très rouillé depuis longtemps, a cédé et l'eau a abîmé les cartons que j'y stockais."}
+{"id": "g2-p12", "famille": "1.4", "source": "golden", "sinistre": "Énervé, j'ai donné un coup de poing dans la vitre de la porte-fenêtre, qui s'est brisée."}
+{"id": "g2-p01", "famille": "2.10", "source": "golden", "sinistre": "Pendant mes vacances, des cambrioleurs ont ouvert ma porte sans la casser : il n'y a que des traces de tournevis. J'avais bien fermé à clé."}
+{"id": "g2-i07", "famille": "2.10", "source": "golden", "sinistre": "Mon ordinateur portable a été volé dans ma voiture, garée devant chez moi."}
+{"id": "g2-p03", "famille": "2.10", "source": "golden", "sinistre": "On a arraché et volé les rosiers de mon jardin."}
+{"id": "g2-p04", "famille": "2.10", "source": "golden", "sinistre": "On a siphonné le fioul de la cuve de chauffage, dans ma cave."}
+{"id": "g2-p06", "famille": "2.10", "source": "golden", "sinistre": "On m'a volé mes clés d'appartement dans la poche, dans le tram, sans violence."}
+{"id": "g2-p08", "famille": "2.7", "source": "golden", "sinistre": "Le bain à bulles installé sur ma terrasse a fui et l'eau a abîmé le canapé du salon."}
+{"id": "g2-p09", "famille": "2.7", "source": "golden", "sinistre": "Des infiltrations par la toiture de l'immeuble ont taché le plafond de mon salon."}
+{"id": "g2-p10", "famille": "2.6", "source": "golden", "sinistre": "Une surtension a grillé l'ordinateur que j'utilise pour mon activité d'indépendant."}
+{"id": "g2-l01", "famille": "2.10", "source": "golden", "sinistre": "cambriolage chez moi cette nuit, porte défoncée, ils ont pris la tv, la console et 200 € en liquide"}
+{"id": "g2-l02", "famille": "2.7", "source": "golden", "sinistre": "Bonjour, suite à notre conversation téléphonique de lundi avec votre collègue, je vous confirme par écrit que mardi, en rentrant du travail vers 18 h, j'ai constaté que le flexible de la machine à laver s'était détaché ; l'eau a coulé sur le parquet du couloir et de la chambre. Le plombier est passé le lendemain. Je joins les photos."}
+{"id": "g2-l03", "famille": "2.10", "source": "golden", "sinistre": "Je n'étais pas absente et la porte n'était pas ouverte : quelqu'un est entré pendant que je dormais et a pris mon sac dans l'entrée."}
+{"id": "g2-l04", "famille": "2.7", "source": "golden", "sinistre": "Le lave-vaisselle est tombé en panne et a fui pendant la nuit ; le parquet de la cuisine est gondolé."}
+{"id": "g2-m01", "famille": "2.1", "source": "golden", "sinistre": "Un court-circuit a provoqué un incendie dans le salon ; pour entrer, les pompiers ont dû casser la porte d'entrée."}
+{"id": "g2-m02", "famille": "2.9", "source": "golden", "sinistre": "La tempête a cassé la fenêtre du salon et la pluie a abîmé le canapé."}

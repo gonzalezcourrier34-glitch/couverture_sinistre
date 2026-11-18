@@ -99,8 +99,9 @@ def metriques(lignes: list[dict]) -> dict:
     return {"n": len(lignes),
             "exactitude": round(sum(l["ok"] for l in lignes) / n, 3),
             "exactitude_stricte": round(sum(l["exact"] for l in lignes) / n, 3),
-            "faux_couverts": sum(l["obtenu"] == "COUVERT" and l["attendu"] != "COUVERT" for l in lignes),
-            "faux_refus": sum(l["obtenu"] == "NON_COUVERT" and l["attendu"] == "COUVERT" for l in lignes),
+            # Une réponse tolérée par l'annotation (« acceptables ») n'est pas une erreur, même « couvert ».
+            "faux_couverts": sum(l["obtenu"] == "COUVERT" and not l["ok"] for l in lignes),
+            "faux_refus": sum(l["obtenu"] == "NON_COUVERT" and l["attendu"] == "COUVERT" and not l["ok"] for l in lignes),
             "taux_incertain": round(sum(l["obtenu"] == "INCERTAIN" for l in lignes) / n, 3)}
 
 
@@ -124,11 +125,13 @@ def rappel(attendus: list, obtenus) -> float | None:
 # --- Couche 1 : les règles seules ---------------------------------------------------------------------------
 
 def questions_decision(d: dict) -> list[str]:
-    """Les variables demandées par le moteur (comme PipelineRegles.verdict)."""
+    """Les variables demandées par le moteur (comme PipelineRegles.verdict) : sans les questions que le
+    raisonnement par hypothèses a jugées inutiles."""
     vs = [v for r in d.get("retenues", []) for v in r.get("questions", []) + r.get("reserves", [])]
     if d.get("decision") == "NON_COUVERT":
         vs += [v for r in d.get("possibles", []) for v in r.get("questions", [])]
-    return list(dict.fromkeys(vs))
+    inutiles = {q["variable"] for q in (d.get("exploration") or {}).get("questions", []) if q["effet"] == "inutile"}
+    return [v for v in dict.fromkeys(vs) if v not in inutiles]
 
 
 def couche_regles(cas: list[dict], decideur) -> dict:
@@ -141,6 +144,9 @@ def couche_regles(cas: list[dict], decideur) -> dict:
         l = ligne(c, d["decision"])
         q = questions_decision(d)
         articles = {p.get("article") for r in d.get("retenues", []) for p in r.get("preuves", [])}
+        ex = d.get("exploration") or {}
+        l.update(tranchable=bool(ex.get("ensemble")),
+                 inutiles=sum(x["effet"] == "inutile" for x in ex.get("questions", [])))
         l.update(questions=q, rappel_questions=rappel(c.get("questions_attendues", []), q),
                  rappel_clauses=rappel(c.get("clauses_attendues", []), articles) if articles else None,
                  non_traduits=d.get("non_traduits", []))
@@ -151,6 +157,11 @@ def couche_regles(cas: list[dict], decideur) -> dict:
     # Un gestionnaire qui reçoit six questions pour un vélo volé n'en lit aucune : on compte.
     nq = [len(l["questions"]) for l in lignes if l["obtenu"] == "INCERTAIN"]
     m["questions_par_incertain"] = round(sum(nq) / len(nq), 1) if nq else None
+    # Le raisonnement par hypothèses (Prolog) : combien d'incertains une ou deux questions tranchent,
+    # et combien de questions inutiles ne sont plus posées.
+    inc = [l for l in lignes if l["obtenu"] == "INCERTAIN"]
+    m["incertains_tranchables"] = round(sum(l["tranchable"] for l in inc) / len(inc), 3) if inc else None
+    m["questions_inutiles_retirees"] = sum(l["inutiles"] for l in lignes)
     return {"metriques": m, "groupes": par_groupe(lignes, cas), "cas": lignes}
 
 
@@ -229,9 +240,12 @@ def couche_lecture(cas: list[dict], rapports: list[dict], decideur=None) -> dict
         if not c.get("faits"):
             continue
         lus = [r["cas"][i].get("faits_lus") or {} for r in rapports]
+        sans_appui = sorted({w.split(" : ")[0] for r in rapports for w in r["cas"][i].get("avertissements", [])
+                             if "sans appui" in w})
         comps = [comparer_faits(c["faits"], f, voc) for f in lus]
         x = {"id": c["id"], "rappel": round(sum(y["rappel"] for y in comps) / len(comps), 3),
-             **{k: sorted({z for y in comps for z in y[k]}) for k in ("contradictions", "vagues", "manques", "en_trop")}}
+             **{k: sorted({z for y in comps for z in y[k]}) for k in ("contradictions", "vagues", "manques", "en_trop")},
+             "sans_appui": sans_appui}
         if decideur is not None:
             ideal = decideur(c["faits"])["decision"]
             obtenues = [decideur(faits_depuis_lecture(f))["decision"] for f in lus]
@@ -243,7 +257,8 @@ def couche_lecture(cas: list[dict], rapports: list[dict], decideur=None) -> dict
     m = {"rappel_faits": round(sum(x["rappel"] for x in par_cas) / n, 3),
          "cas_avec_contradiction": sum(bool(x["contradictions"]) for x in par_cas),
          "cas_avec_fait_vague": sum(bool(x["vagues"]) for x in par_cas),
-         "cas_avec_fait_en_trop": sum(bool(x["en_trop"]) for x in par_cas)}
+         "cas_avec_fait_en_trop": sum(bool(x["en_trop"]) for x in par_cas),
+         "cas_avec_fait_sans_appui": sum(bool(x["sans_appui"]) for x in par_cas)}
     if decideur is not None:
         m["decisions_changees"] = round(sum(x["change"] for x in par_cas), 2)
         m["decisions_changees_vers_couvert"] = sum(x["grave"] for x in par_cas)
@@ -262,7 +277,8 @@ def couche_chaine(cas: list[dict], rapports: list[dict], durees: list[float]) ->
         for l in lignes:
             # Les questions de la chaîne sont des phrases : la variable attendue est trouvée si sa question est posée.
             attendues = index[l["id"]].get("questions_attendues", [])
-            l["rappel_questions"] = rappel(attendues, {v for v in attendues if prolog.question(v) in l["questions"]})
+            l["rappel_questions"] = rappel(attendues, {v for v in attendues
+                                                      if any(q.startswith(prolog.question(v)) for q in l["questions"])})
         par_execution.append(lignes)
 
     def moyenne(cle, filtre=lambda x: x is not None):
@@ -337,7 +353,9 @@ def passer(donnees: Path, contrat_id: str, methode: str, couches: list[str], rep
         rapports, durees = [], []
         for _ in range(max(1, repetitions)):
             debut = time.perf_counter()
-            rapports.append((evaluer_fn or evaluer)(pipeline_fabrique(), cas, paralleles=paralleles))
+            pipeline = pipeline_fabrique()
+            resultat["modele"] = getattr(getattr(pipeline, "llm", None), "nom", None) or resultat.get("modele")
+            rapports.append((evaluer_fn or evaluer)(pipeline, cas, paralleles=paralleles))
             durees.append(time.perf_counter() - debut)
         resultat["couches"]["chaine"] = couche_chaine(cas, rapports, durees)
         if methode == "regles":
@@ -354,7 +372,8 @@ def passer(donnees: Path, contrat_id: str, methode: str, couches: list[str], rep
 def enregistrer(donnees: Path, resultat: dict, dossier: Path | None = None) -> tuple[Path, Path]:
     dossier = dossier or Path(donnees) / "bancs"
     dossier.mkdir(parents=True, exist_ok=True)
-    nom = f"{datetime.now():%Y%m%d-%H%M%S}-{resultat['contrat']}-{resultat['methode']}"
+    modele = (resultat.get("modele") or "").split(":")[-1].replace("-latest", "")
+    nom = f"{datetime.now():%Y%m%d-%H%M%S}-{resultat['contrat']}-{resultat['methode']}" + (f"-{modele}" if modele else "")
     js, md = dossier / f"{nom}.json", dossier / f"{nom}.md"
     precedent = dernier(dossier, resultat["contrat"], resultat["methode"])
     texte = markdown(resultat, precedent)
@@ -365,7 +384,7 @@ def enregistrer(donnees: Path, resultat: dict, dossier: Path | None = None) -> t
 
 
 def dernier(dossier: Path, contrat_id: str, methode: str) -> dict | None:
-    fichiers_ = sorted(Path(dossier).glob(f"*-{contrat_id}-{methode}.json"))
+    fichiers_ = sorted(Path(dossier).glob(f"*-{contrat_id}-{methode}*.json"))
     return json.loads(fichiers_[-1].read_text(encoding="utf-8")) if fichiers_ else None
 
 
@@ -404,7 +423,8 @@ def tableau_groupes(g: dict) -> list[str]:
 def markdown(r: dict, precedent: dict | None = None) -> str:
     cas = {c["id"]: c for c in r.get("_cas", [])}
     g = r["golden"]
-    L = [f"# Banc d'essai — {r['contrat']}, méthode `{r['methode']}`", "",
+    L = [f"# Banc d'essai — {r['contrat']}, méthode `{r['methode']}`"
+         + (f", lecture par `{r['modele']}`" if r.get("modele") else ""), "",
          f"{r['date']} · golden set v{g.get('version') or '?'} ({g['n']} cas, empreinte `{g['empreinte']}`"
          f"{'' if g['fige'] else ', **modifié depuis sa version**'}) · cas validés par l'auteur : {g['valides']} sur {g['n']}",
          ""]
@@ -429,6 +449,9 @@ def markdown(r: dict, precedent: dict | None = None) -> str:
         L += ["", "## Couche 1 — règles seules (faits idéaux, sans modèle)", "", *tableau_metriques(reg["metriques"]),
               "", f"Rappel des questions attendues : {pct(reg['metriques'].get('rappel_questions'))} · "
               f"questions posées par réponse « incertain » : {fmt(reg['metriques'].get('questions_par_incertain'))}", "",
+              f"Raisonnement par hypothèses : incertains tranchés par une ou deux questions : "
+              f"{pct(reg['metriques'].get('incertains_tranchables'))} · questions inutiles retirées : "
+              f"{reg['metriques'].get('questions_inutiles_retirees', 0)}", "",
               *tableau_groupes(reg["groupes"]), "", "### Erreurs des règles", ""]
         L += erreurs(reg["cas"], cas) or ["Aucune."]
 
@@ -443,7 +466,7 @@ def markdown(r: dict, precedent: dict | None = None) -> str:
         L += [f"Rappel des faits idéaux : {pct(m['rappel_faits'])} (les faits négatifs non dits, comme « pas de "
               f"violence », comptent comme manquants : la consigne interdit de les inventer) · contradictions : "
               f"{m['cas_avec_contradiction']} cas · faits vagues : {m['cas_avec_fait_vague']} cas · faits en trop : "
-              f"{m['cas_avec_fait_en_trop']} cas", ""]
+              f"{m['cas_avec_fait_en_trop']} cas · faits retirés faute d'appui : {m.get('cas_avec_fait_sans_appui', 0)} cas", ""]
         changes = [x for x in lec["cas"] if x.get("change")]
         if changes:
             L += ["### La lecture change la décision", ""]
@@ -453,7 +476,8 @@ def markdown(r: dict, precedent: dict | None = None) -> str:
                          + (f" · **contredit** : {'; '.join(x['contradictions'])}" if x["contradictions"] else "")
                          + (f" · vague : {'; '.join(x['vagues'])}" if x["vagues"] else "")
                          + (f" · manque : {'; '.join(x['manques'])}" if x["manques"] else "")
-                         + (f" · en trop : {'; '.join(x['en_trop'])}" if x["en_trop"] else ""))
+                         + (f" · en trop : {'; '.join(x['en_trop'])}" if x["en_trop"] else "")
+                         + (f" · retiré sans appui : {'; '.join(x['sans_appui'])}" if x.get("sans_appui") else ""))
             L.append("")
         autres = [x for x in lec["cas"] if not x.get("change") and x["contradictions"]]
         if autres:
@@ -474,7 +498,7 @@ def markdown(r: dict, precedent: dict | None = None) -> str:
             bons = [o == c.get("attendu") or o in c.get("acceptables", []) for o in rs]
             if all(bons) and len(set(rs)) == 1:
                 continue
-            grave = any(o == "COUVERT" and c.get("attendu") != "COUVERT" for o in rs)
+            grave = any(o == "COUVERT" and c.get("attendu") != "COUVERT" and o not in c.get("acceptables", []) for o in rs)
             lignes.append(f"- {'**⚠ couvert à tort** ' if grave else ''}`{i}` attendu {ABREGE.get(c.get('attendu'), '?')}, "
                           f"obtenu {' '.join(ABREGE.get(o, o) for o in rs)} — {c.get('sinistre', '')[:110]}"
                           f"{'…' if len(c.get('sinistre', '')) > 110 else ''} *({c.get('note', '')[:120]})*")
@@ -496,7 +520,8 @@ def erreurs(lignes: list[dict], cas: dict) -> list[str]:
 
 
 def resume_console(r: dict, md: Path | None = None) -> str:
-    L = [f"Banc {r['contrat']} · {r['methode']} · golden v{r['golden'].get('version') or '?'} ({r['golden']['n']} cas)"]
+    L = [f"Banc {r['contrat']} · {r['methode']} · golden v{r['golden'].get('version') or '?'} ({r['golden']['n']} cas)"
+         + (f" · lecture : {r['modele']}" if r.get("modele") else "")]
     for a in r.get("avertissements", []):
         L.append(f"! {a}")
     for nom, titre in (("regles", "Règles seules "), ("lecture", "Lecture       "), ("chaine", "Chaîne        ")):

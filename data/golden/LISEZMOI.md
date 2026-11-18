@@ -3,7 +3,7 @@
 Un jeu de sinistres **figé, étiqueté et versionné**, sur lequel on rejoue tout le système à chaque
 changement : `uv run couverture banc --contrat foyer-appart123-2025`.
 
-## Ce qu'il contient (version 1, 68 cas)
+## Ce qu'il contient (version 5, 97 cas)
 
 | Origine | Cas | Écrits |
 |---|---|---|
@@ -11,7 +11,7 @@ changement : `uv run couverture banc --contrat foyer-appart123-2025`.
 | `mise_au_point` | 12 | variations des deux cas, ayant servi à écrire les règles |
 | `validation_ex` | 15 | l'ancien jeu de validation, devenu mise au point (DEMARCHE 7.18) |
 | `redaction` | 10 | tempête et bris de vitrages, écrits avant toute règle |
-| `golden` | 29 | nouveaux : langue, informations manquantes, pièges, garanties non traduites, sinistres multiples |
+| `golden` | 58 | nouveaux : langue, informations manquantes, pièges, garanties non traduites, sinistres multiples ; en v5, 13 cas dont la bonne réponse est « incertain », les garanties 2.5, 2.11, 2.12 et les exclusions générales 1.4 |
 
 Chaque cas porte : la réponse attendue (`attendu`), les réponses tolérées (`acceptables`), les
 clauses qui la fondent (`clauses_attendues`), les questions qu'un gestionnaire poserait

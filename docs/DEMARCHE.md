@@ -1255,7 +1255,175 @@ cuisson non lue comme un bris ; l'inondation et les égouts non lus comme une ca
 naturelle. **Une règle plus juste rend plus coûteuse une lecture fausse** : c'est l'argument pour
 le garde-fou structurel de la lecture (chaque fait décisif cite les mots de la déclaration).
 
+### 7.26 Le garde-fou de la lecture : chaque fait cite les mots de la déclaration
+
+État committé (`42b6b38`) : règles parfaites sur le golden set ; dans la chaîne, 3,7 couverts et 3,7
+refus à tort par exécution, **tous dus à la lecture** : un fait inventé (« absent », « dans le
+logement »), oublié (la fenêtre ouverte) ou mal choisi (l'aquarium lu « récipient »).
+
+**Ce qui a été essayé avant** : retoucher la consigne (v3, v4). Chaque phrase ajoutée en a défait
+une autre, et Mistral Small ignorait même un exemple écrit mot pour mot (7.25).
+
+**Le garde-fou** reprend le principe des citations du contrat, appliqué à la déclaration : pour
+chaque variable renseignée, le modèle recopie dans « appuis » **les mots exacts de la déclaration**
+qui la fondent ; le code (`prolog.verifier_appuis`) vérifie que ces mots y figurent, à la ponctuation
+et aux accents près, et **retire tout fait sans appui**. Le fait devient inconnu : le moteur pose la
+question au lieu de couvrir ou de refuser sur un fait inventé. Si le modèle oublie complètement les
+appuis, il est relancé une fois.
+
+**Ce que le garde-fou ne fait pas, à dire avant de mesurer** : il vérifie que les mots *existent*,
+pas qu'ils *prouvent* le fait. « Pendant que je faisais mes courses » est bien dans la déclaration ;
+s'il est donné comme appui de « lieu = logement », le fait passe. Il arrête les inventions sans aucun
+mot (« absent », « portes fermées » sortis de nulle part), pas un appui détourné. Un test documente
+cette limite. Contre l'appui détourné, la piste suivante est une seconde lecture comparée par le
+code.
+
+Consigne de lecture **v5** : comparée ligne à ligne à la v4 avant livraison, elle ne fait
+qu'**ajouter** la règle des appuis (aucune règle perdue, leçon 44).
+
+**À mesurer au banc** : surtout les couverts à tort de la chaîne (3,7), et ce que le garde-fou coûte
+en faits justes retirés (plus d'« incertain »).
+
+**Premier passage sur le poste : trop strict.**
+
+| Chaîne | Justes | Exactes | Couverts à tort | Refus à tort | Faits idéaux retrouvés |
+|---|---|---|---|---|---|
+| État committé | 85 % | 65 % | 3,7 | 3,7 | 77 % |
+| Appuis, vérification stricte | 71 % | 35 % | **2** | 3 | **53 %** |
+
+Les couverts à tort baissent (les inventions sont arrêtées), mais trop de faits justes sont retirés :
+même le cambriolage avec la porte forcée devient « incertain ». **Le diagnostic, sur deux analyses
+réelles** : pour un fait à plusieurs valeurs, le modèle colle les morceaux de la déclaration
+(« forcé la porte volé mon ordinateur cassé la vitre », « meuble de cuisine parquet ») : tous les mots
+y sont, dans l'ordre, mais pas d'un seul tenant, et la vérification les refusait. En revanche,
+« violence : non » et « vol sur la personne : non » étaient retirés à raison : aucun mot ne les fonde.
+**Correction** : un appui est accepté si ses mots figurent dans la déclaration dans le même ordre, avec
+de petits écarts (le mécanisme qui répare déjà les citations du contrat) ; un mot absent suffit
+toujours à refuser. Les appuis réels sont gardés en test. Le banc compte désormais les faits retirés
+faute d'appui, pour mesurer le coût du garde-fou au lieu de le déduire.
+
+**Second passage (appuis acceptés en morceaux ordonnés)** :
+
+| Chaîne | Justes | Exactes | Couverts à tort | Refus à tort | Instables | Cas touchés par le garde-fou |
+|---|---|---|---|---|---|---|
+| État committé | 85 % | 65 % | 3,7 | 3,7 | 8 | — |
+| Appuis stricts | 71 % | 35 % | 2 | 3 | 11 | — |
+| Appuis assouplis | 74 % | 39 % | 2,7 | 3 | 14 | 20 sur 68 |
+
+**Décision : le garde-fou est abandonné, retour à la lecture v4.** Il arrête bien des inventions
+(couverts à tort 3,7 → 2,7), mais il retire surtout des faits **centraux et justes** : « vol » pour un
+cambriolage avec la porte fracturée, « incendie » pour la friteuse en feu, « bris » pour la table de
+cuisson fendue (l'événement et les biens comptent pour 15 des 30 faits retirés). Les inventions
+visées (« dans le logement », « volé » pour « disparu ») sont rares. Deux essais, deux bilans
+négatifs : on n'insiste pas. Ce qui reste : le banc compte désormais les faits retirés et note le
+modèle de lecture. La consigne v5 reste archivée, marquée abandonnée.
+
+### 7.27 Le modèle ou la méthode ?
+
+L'auteur demande « le meilleur » plutôt qu'un compromis. Toutes les erreurs restantes sont des erreurs
+de lecture, et Mistral Small a ignoré des consignes explicites (7.25). Avant de construire autre chose,
+**une mesure qui ne demande aucun code** : la même chaîne, la même consigne (v4), avec **Mistral Large**
+pour lire les faits (`COUVERTURE_MODELE=mistral-large-latest`). Elle dit si le plafond vient du modèle
+ou de la méthode. Le banc note désormais le modèle dans le nom et l'en-tête de chaque rapport.
+
+Ensuite, selon le résultat : si Large lit nettement mieux, **la double lecture comparée par le code**
+(deux lectures ; un fait décisif sur lequel elles divergent devient inconnu) est la protection solide
+contre les inventions, sans retirer les faits sur lesquels les lectures s'accordent.
+
+### 7.28 Ce que Prolog apporte : le raisonnement par hypothèses
+
+**La question de l'auteur** : « est-ce que Prolog apporte quelque chose ? » La réponse honnête, au
+17 nov. : presque rien. Le moteur n'était qu'un évaluateur de conditions, et `moteur_reference.py`
+le refaisait en Python à l'identique. L'auteur veut que Prolog apporte quelque chose : on lui donne
+le travail pour lequel il est fait.
+
+**Le défaut visé, mesuré par le banc** : quand la décision est « incertain », le moteur listait
+toutes les questions possibles (jusqu'à six pour un vélo volé), sans dire lesquelles comptent ;
+rappel des questions attendues : 67 %.
+
+**Le raisonnement par hypothèses** (`explorer/2` dans `moteur.pl`) : pour chaque question, le moteur
+**essaie chaque réponse possible** — il pose le fait (`assertz`), décide, le retire (`retract`) — et
+classe la question :
+- **décisive** : chaque réponse donne une décision ferme (« serrure de sûreté ? oui → couvert ; non →
+  non couvert ») ;
+- **utile** : une réponse au moins change la décision, sans toujours trancher seule ;
+- **inutile** : la décision ne change pas, quelle que soit la réponse ; elle n'est plus posée.
+Sans question décisive, il cherche **une paire de questions qui tranche toujours** (bornée à 400
+essais). Les valeurs possibles viennent du vocabulaire (`vocabulaire.json`, lu par Prolog), et un
+fait vague n'est essayé qu'avec ses précisions (hiérarchie de 7.22 bis).
+
+**Ce que ça donne sur le golden set** (oracle ; à confirmer par SWI-Prolog) :
+- le garage (velo-07) : une seule question tranche, et la réponse le dit (« oui → couvert ; non →
+  non couvert ») ;
+- la cave (g-q01) : aucune question seule ne suffit, mais « comment la cave était-elle fermée ? » et
+  « serrure de sûreté ? » ensemble tranchent toujours ;
+- **8 questions sur 29 étaient inutiles** (« y a-t-il eu des flammes ? » pour un ordinateur disparu) :
+  elles ne sont plus posées ;
+- **seuls 2 incertains sur 16 se tranchent par une ou deux questions** : les autres attendent une
+  garantie non traduite ou une appréciation humaine (le lien de causalité). Le moteur le sait et le dit,
+  au lieu de laisser croire qu'une question suffira.
+
+**Ce que Prolog apporte, dit honnêtement** : le raisonnement hypothétique (poser un fait, décider,
+le retirer) et la recherche d'un ensemble de questions sont naturels en Prolog, sur les mêmes règles,
+en quelques dizaines de lignes. Python le fait aussi : l'oracle le refait pour le test différentiel,
+et c'est la preuve qu'on contrôle ce que Prolog calcule. Mais c'est désormais un vrai usage,
+mesurable au banc (incertains tranchés, questions inutiles retirées), pas une préférence de langage.
+Prochain usage du même type : l'explication en arbre de preuve, et la comparaison de deux versions
+d'un contrat (« quels sinistres changent de décision ? »).
+
+### 7.29 La fiche métriques, et les jeux de cas externes
+
+À la demande de l'auteur (« c'est la base pour démarrer »), les jeux de cas, les métriques, les seuils
+et leurs limites sont réunis dans une fiche : [METRIQUES.md](METRIQUES.md). En la rédigeant, un
+déséquilibre est apparu : le golden set ne compte que **3 cas dont la bonne réponse est « incertain »**
+sur 68, alors que savoir dire « je ne sais pas » est au cœur de la demande du recruteur ; le jeu fermé
+devra en contenir davantage.
+
+**Recherche de jeux publics** : aucun ne donne la réponse selon les CG de Foyer (elle dépend du contrat).
+Sources retenues : LegalBench `insurance_policy_interpretation` (138 couples déclaration-police, réponse
+couvert / non couvert / ambigu, CC BY 4.0) comme second banc de généralisation ; les décisions des
+médiateurs (FSPO irlandais, Financial Ombudsman britannique), la Médiation de l'Assurance et Judilibre
+comme sources de situations réelles pour le jeu fermé, à réécrire et à annoter selon les CG de Foyer.
+
+### 7.30 Le golden set complété (v5)
+
+Trois manques relevés en 7.29 : trop peu de cas « incertain » (3 sur 68), des garanties jamais testées
+(2.5 responsabilité immeuble, 2.11 dégradations, 2.12 mérule, exclusions générales 1.4), et peu de
+situations comme les écrivent les clients. **29 cas ajoutés**, chacun avec une note qui cite les CG :
+10 où la bonne réponse est « incertain » (le local de l'immeuble : commun ou privatif ? des rayures sur
+la serrure sans réparation : ce n'est pas une effraction au sens du contrat, la porte était-elle fermée
+à clé ? les bijoux disparus après le passage du plombier ; le gel sans savoir si l'on chauffait…),
+les garanties manquantes, des pièges (traces de tournevis mais porte fermée à clé, rosiers volés, fioul
+siphonné, clés volées, bain à bulles, infiltration par la toiture, coup de poing dans la vitre,
+ordinateur professionnel), un courriel long et un message en style SMS, des sinistres multiples.
+Golden **v5 : 97 cas, 13 « incertain »**, figé par empreinte.
+
+Deux règles du banc corrigées en chemin : une réponse **tolérée par l'annotation** (« acceptables »)
+n'est plus comptée comme couvert à tort ; un cas « incertain » sans question attendue n'est admis que
+pour une garantie non traduite (la réponse est alors « à examiner par un gestionnaire »).
+
+**Mesure, règles seules (oracle)** : 90 % justes, 70 % exactes, **4 couverts à tort, 3 refus à tort**
+(v4 : 100 %, 0, 0). Les nouveaux cas trouvent des trous, et c'est leur rôle :
+
+| Cas | Attendu | Obtenu | Cause |
+|---|---|---|---|
+| Joint de douche qui fuyait depuis des mois | non couvert | couvert | exclusions générales 1.4 (manque d'entretien) non traduites |
+| Coup de poing dans la vitre | non couvert | couvert | 1.4 (sinistre intentionnel) non traduite |
+| Tuyau apparent rouillé | non couvert | couvert | exclusion « corrosion visible » de 2.7 absente |
+| Bain à bulles extérieur | non couvert | couvert | exclusion « piscines, bains à bulles » de 2.7 absente |
+| Infiltration par la toiture | couvert | non couvert | la règle exclut toute infiltration extérieure, le contrat seulement terrasses, balcons, portes, fenêtres, murs |
+| Clés volées dans le tram | couvert | non couvert | la limite « clés » de 2.10 n'est pas traduite |
+| Portes taguées (2.11) | couvert | non couvert | « autre » est traité comme un événement traduit |
+| Mérule (2.12) | incertain | non couvert | idem |
+| Rosiers, fioul | non couvert | incertain | « plantations » et « mazout » manquent au vocabulaire (sans danger) |
+
+Le plus grave est le dernier type d'erreur systémique : un événement « autre » donne « non couvert » au
+lieu de « incertain, à examiner ». Deux réponses attendues restent discutables (toiture, clés) : la
+fiche `A_VALIDER.md` les soumet à l'auteur.
+
 ## 8. Ce qui reste à faire
+
+- Corriger les 7 erreurs des règles trouvées par le golden v5 (7.30), en commençant par « autre » → incertain.
 
 - Un **nouveau jeu de validation écrit par l'auteur**, sans Claude (les 15 cas de 7.17 sont devenus de la mise au point, 7.18) ; le placer dans `data/validation/` à la place des actuels, qui rejoignent la mise au point.
 - Mesurer la chaîne complète sur ce nouveau jeu (`--jeu validation --repetitions 3`).
@@ -1322,3 +1490,10 @@ le garde-fou structurel de la lecture (chaque fait décisif cite les mots de la 
 46. Le banc sert d'abord à refuser un commit : une amélioration annoncée se mesure avant d'être gardée.
 47. Quand chaque retouche de consigne en défait une autre, il faut un garde-fou dans le code, pas une phrase de plus.
 48. Une exclusion certaine dispense de toute question : le « je ne sais pas » ne doit pas porter sur ce qui ne changera rien.
+49. Un fait lu se cite comme une clause du contrat : les mots d'abord, la vérification par le code ensuite.
+50. Un garde-fou se règle sur ce que le modèle produit vraiment : regarder ses sorties avant d'assouplir ou de durcir.
+51. Un garde-fou qui retire plus de faits justes qu'il n'arrête d'inventions se retire : deux essais négatifs suffisent.
+52. Avant d'ajouter de la méthode, mesurer ce que donne un meilleur modèle : c'est la question la moins chère.
+53. Un outil se justifie par ce qu'on lui fait faire : Prolog n'apporte rien comme évaluateur, il apporte comme raisonneur par hypothèses.
+54. Une question qui ne change aucune décision ne se pose pas ; une question qui tranche se pose en premier, avec ce qu'elle entraîne.
+55. Un banc qui ne trouve plus rien n'est pas la preuve que tout va bien : on l'agrandit jusqu'à ce qu'il retrouve des erreurs.

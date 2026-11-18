@@ -41,6 +41,7 @@
 
 :- dynamic fait/2.
 :- dynamic parent_valeur/3.       % parent_valeur(Variable, Valeur, Parent) : la hiérarchie du vocabulaire
+:- dynamic domaine/2.             % domaine(Variable, Valeur) : les valeurs possibles, lues dans vocabulaire.json
 
 %!  regle(+But) : appelle un prédicat du contrat, sans erreur s'il n'en a aucune clause.
 regle(But) :-
@@ -291,13 +292,98 @@ plafonner([], D, D) :- !.
 plafonner(_, D, D) :- get_dict(decision, D, "COUVERT"), !.
 plafonner(NT, D0, D) :- put_dict(_{decision:"INCERTAIN", non_traduits:NT, aucune:false}, D0, D).
 
+% --- Raisonnement par hypothèses : quelles questions comptent ? --------------------------------------
+/*  Quand la décision dépend de faits inconnus, le moteur ne se contente pas de lister les questions :
+    il **essaie chaque réponse possible** (assertz, décision, retract) et classe chaque question :
+      - décisive : chaque réponse donne une décision ferme (« oui → COUVERT, non → NON_COUVERT ») ;
+      - utile    : une réponse au moins change la décision, sans toujours trancher seule ;
+      - inutile  : quelle que soit la réponse, la décision ne change pas : on ne la pose pas.
+    Sans question décisive, il cherche une paire de questions qui tranche toujours.
+    C'est du raisonnement hypothétique sur les mêmes règles : ce pour quoi Prolog est fait.        */
+
+charger_domaines(Fichier) :-
+    retractall(domaine(_, _)),
+    setup_call_cleanup(open(Fichier, read, S, [encoding(utf8)]), json_read_dict(S, J), close(S)),
+    get_dict(variables, J, Vars),
+    forall(( get_dict(V, Vars, Def), get_dict(valeurs, Def, Xs), member(X0, Xs), atom_string(X, X0) ),
+           assertz(domaine(V, X))).
+
+%  Les variables demandées par la décision (questions et réserves), qui ont un domaine connu.
+questions_posees(D, Vs) :-
+    get_dict(retenues, D, Rs),
+    ( get_dict(possibles, D, Ps) -> true ; Ps = [] ),
+    findall(V, ( member(R, Rs), ( get_dict(questions, R, Q) ; get_dict(reserves, R, Q) ), member(V, Q) ), V1),
+    findall(V, ( member(P, Ps), get_dict(questions, P, Q), member(V, Q) ), V2),
+    append(V1, V2, V0),
+    include(a_un_domaine, V0, V3),
+    list_to_set(V3, Vs).
+
+a_un_domaine(V) :- atom(V), domaine(V, _), !.
+
+%  Les valeurs à essayer : tout le domaine ; ou, si un fait vague existe déjà, ses précisions.
+valeurs_a_essayer(V, Xs) :-
+    (   fait(V, _)
+    ->  findall(X, ( domaine(V, X), \+ fait(V, X), fait(V, P), ancetre(V, X, P) ), X0)
+    ;   findall(X, domaine(V, X), X0)
+    ),
+    sort(X0, Xs).
+
+%  essai(+Hypotheses, -Decision) : la décision si l'on ajoute ces faits ; rien n'est laissé derrière.
+essai(Hyps, Dec) :-
+    forall(member(V=X, Hyps), assertz(fait(V, X))),
+    (   catch(decider(D), _, fail) -> get_dict(decision, D, Dec) ; Dec = "ERREUR" ),
+    forall(member(V=X, Hyps), retract(fait(V, X))).
+
+ferme(Dec) :- Dec \== "INCERTAIN", Dec \== "ERREUR".
+
+explorer_question(Courante, V, Q) :-
+    valeurs_a_essayer(V, Xs), Xs \== [],
+    findall(X-Dec, ( member(X, Xs), essai([V=X], Dec) ), Paires),
+    findall(Dec, member(_-Dec, Paires), Ds0), sort(Ds0, Ds),
+    (   forall(member(Dec, Ds), ferme(Dec)), Ds = [_, _|_] -> Effet = "décisive"
+    ;   forall(member(Dec, Ds), ferme(Dec)), Ds = [Seule], Seule \== Courante -> Effet = "décisive"
+    ;   Ds \== [Courante] -> Effet = "utile"
+    ;   Effet = "inutile"
+    ),
+    findall(_{decision:Dec, valeurs:Vals},
+            ( member(Dec, Ds), findall(X, member(X-Dec, Paires), Vals) ), Issues),
+    Q = _{variable:V, effet:Effet, issues:Issues}.
+
+rang("décisive", 0).
+rang("utile", 1).
+rang("inutile", 2).
+
+%  Une paire de questions dont toutes les réponses croisées donnent une décision ferme (bornée à 400 essais).
+paire_decisive(Vs, [V1, V2]) :-
+    append(_, [V1|Reste], Vs), member(V2, Reste),
+    valeurs_a_essayer(V1, X1s), valeurs_a_essayer(V2, X2s),
+    length(X1s, N1), length(X2s, N2), N1 * N2 =< 400,
+    forall(( member(X1, X1s), member(X2, X2s) ), ( essai([V1=X1, V2=X2], Dec), ferme(Dec) )), !.
+
+explorer(D, _{questions:Qs, ensemble:Ens}) :-
+    get_dict(decision, D, Courante),
+    questions_posees(D, Vs),
+    findall(R-Q, ( member(V, Vs), explorer_question(Courante, V, Q), get_dict(effet, Q, E), rang(E, R) ), RQs),
+    keysort(RQs, Tries), pairs_values(Tries, Qs),
+    (   member(Q, Qs), get_dict(effet, Q, "décisive") -> get_dict(variable, Q, V0), Ens = [V0]
+    ;   findall(V, ( member(Q, Qs), get_dict(effet, Q, "utile"), get_dict(variable, Q, V) ), Utiles),
+        paire_decisive(Utiles, Paire) -> Ens = Paire
+    ;   Ens = []
+    ).
+
 % --- Points d'entrée (appelés par src/couverture/prolog.py) --------------------------------------------
 
 ecrire_json(Terme) :-
     json_write_dict(current_output, Terme, [width(0)]),
     nl.
 
-decider_json :- decider(D), ecrire_json(D).
+decider_json :-
+    decider(D0),
+    (   domaine(_, _), questions_posees(D0, [_|_])
+    ->  explorer(D0, E), put_dict(exploration, D0, E, D)
+    ;   D = D0
+    ),
+    ecrire_json(D).
 
 %  Les couples (variable, valeur) employés par le contrat : comparés au vocabulaire par Python.
 vocabulaire_json :-

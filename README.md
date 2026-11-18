@@ -72,7 +72,7 @@ uv run couverture modele                                   # modèles configuré
 uv run couverture ingerer                                  # lit data/contrats/
 uv run couverture regles   --contrat foyer-appart123-2025  # vérifie les règles Prolog (sans modèle)
 uv run couverture rediger  --contrat foyer-appart123-2025 --article 2.2 --article 2.9  # Mistral Large rédige des règles, le code les contrôle
-uv run couverture banc     --contrat foyer-appart123-2025  # banc d'essai : golden set (68 cas), règles, lecture, chaîne, portes
+uv run couverture banc     --contrat foyer-appart123-2025  # banc d'essai : golden set (97 cas), règles, lecture, chaîne, portes
 uv run couverture analyser --contrat foyer-appart123-2025 --methode regles "…"
 uv run couverture compiler --contrat foyer-appart123-2025  # fiches : une fois par contrat (Mistral Large, ~15 min)
 uv run couverture fiches   --contrat foyer-appart123-2025  # relire les fiches (--exporter / --importer)
@@ -108,7 +108,9 @@ Les sinistres sont indépendants des contrats. Des variations changent **un seul
 
 ## Résultats à ce stade
 
-- **Tests** : 157 passent (plus 2 tests Prolog là où SWI-Prolog est installé), sans clé ni réseau ; la CI les relance à chaque envoi.
+Comment on évalue (jeux de cas, métriques, seuils, ce que valent les chiffres) : [docs/METRIQUES.md](docs/METRIQUES.md).
+
+- **Tests** : 161 passent (plus 2 tests Prolog là où SWI-Prolog est installé), sans clé ni réseau ; la CI les relance à chaque envoi.
 - **Foyer appart 123** (48 pages) : 147 clauses, dont 63 définitions ; compilé en 36 fiches et 350 questions.
 - **Évaluation Foyer, 14 cas, trois exécutions** :
 
@@ -121,7 +123,7 @@ Les sinistres sont indépendants des contrats. Des variations changent **un seul
 - **Jeu de validation, 15 cas nouveaux** (`--jeu validation`), règles seules sur les faits idéaux : 87 % justes ou acceptables, mais **2 couverts à tort**. Les deux viennent d'obligations de prévention que le vocabulaire n'exprime pas (fenêtres laissées ouvertes, mesures contre le gel). Mesure enregistrée avant toute correction. Chaîne complète (le modèle lit les faits) : 67 %, 2 couverts et 1 refus à tort : la lecture des faits coûte 20 points sur des cas nouveaux. Corrigé ensuite (cause et dommage, événements non traduits, fenêtres, gel, texte des règles) : 100 % sur les faits idéaux, mais ces 15 cas sont désormais de la mise au point ; un nouveau jeu reste à écrire (DEMARCHE 7.18). Chaîne complète après correction : 87 %, aucun refus à tort, mais 4 cas sur 15 instables d'une exécution à l'autre (la lecture des faits).
 - **Règles rédigées par Mistral Large** (tempête, bris de vitrages) : exclusions toutes traduites, citations exactes, faits manquants déclarés ; un écart au schéma et une définition restrictive oubliée, désormais contrôlés (DEMARCHE 7.20). Détail : [docs/DEMARCHE.md](docs/DEMARCHE.md), 7.17.
 
-- **Banc d'essai** (`data/golden/`, 68 cas, trois couches, portes), premier passage complet : règles seules 85 % (2 couverts et 7 refus à tort), chaîne complète 83 % avec **5 couverts à tort** (2 viennent des règles, 3 de la lecture des faits) et 8 cas instables. Le bris de vitrages, rédigé par Mistral Large, est en service. Puis tous les périls du contrat nommés : règles seules 96 %, aucun refus à tort ; la lecture v3 a fait reculer la chaîne (une règle perdue en réécrivant la consigne), corrigée en v4. Avec les quatre phrases du contrat qui manquaient (clé, récipient, fumée, casier) : **règles seules 100 %, aucun couvert ni refus à tort** ; les erreurs restantes viennent toutes de la lecture des faits. Détail : DEMARCHE 7.21 à 7.25.
+- **Banc d'essai** (`data/golden/`, 68 cas, trois couches, portes), premier passage complet : règles seules 85 % (2 couverts et 7 refus à tort), chaîne complète 83 % avec **5 couverts à tort** (2 viennent des règles, 3 de la lecture des faits) et 8 cas instables. Le bris de vitrages, rédigé par Mistral Large, est en service. Puis tous les périls du contrat nommés : règles seules 96 %, aucun refus à tort ; la lecture v3 a fait reculer la chaîne (une règle perdue en réécrivant la consigne), corrigée en v4. Avec les quatre phrases du contrat qui manquaient (clé, récipient, fumée, casier) : **règles seules 100 %, aucun couvert ni refus à tort** ; les erreurs restantes viennent toutes de la lecture des faits. Quand la réponse est « incertain », le moteur Prolog essaie chaque réponse possible et dit quelle question tranche (« serrure de sûreté ? oui → couvert ; non → non couvert ») ; les questions inutiles ne sont plus posées. Golden set complété (v5, 97 cas, dont 13 où la bonne réponse est « incertain ») : il trouve 4 couverts et 3 refus à tort dans les règles, à corriger (DEMARCHE 7.30). Détail : DEMARCHE 7.21 à 7.30.
 
 ## Limites connues
 

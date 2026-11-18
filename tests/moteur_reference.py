@@ -301,3 +301,84 @@ def et3(es):
 
 def ou3(es):
     return OUI if OUI in es else INCONNU if INCONNU in es else NON
+
+
+# --- Raisonnement par hypothèses (miroir de explorer/2 dans moteur.pl) ---------------------------------------
+
+def domaines_du_vocabulaire() -> dict:
+    voc = json.loads((Path(__file__).resolve().parents[1] / "regles" / "vocabulaire.json").read_text(encoding="utf-8"))
+    return {v: list(d["valeurs"]) for v, d in voc["variables"].items()}
+
+
+RANG = {"décisive": 0, "utile": 1, "inutile": 2}
+
+
+def ferme(dec: str) -> bool:
+    return dec not in ("INCERTAIN", "ERREUR")
+
+
+class Explorateur:
+    """Essaie chaque réponse possible aux questions d'une décision, comme le fait Prolog (assertz, décision, retract)."""
+
+    def __init__(self, contrat: Contrat, faits: dict, domaines: dict | None = None, hierarchie: list | None = None):
+        self.c, self.faits, self.h = contrat, faits, hierarchie
+        self.domaines = domaines_du_vocabulaire() if domaines is None else domaines
+        self.m = Moteur(contrat, faits, hierarchie)
+
+    def essai(self, hyps: list[tuple]) -> str:
+        f = {v: set(x if isinstance(x, list) else [x]) for v, x in self.faits.items()}
+        for v, x in hyps:
+            f.setdefault(v, set()).add(x)
+        return Moteur(self.c, {v: sorted(xs) for v, xs in f.items()}, self.h).decider()["decision"]
+
+    def questions_posees(self, d: dict) -> list:
+        vs = []
+        for r in d.get("retenues", []):
+            vs += list(r.get("questions", [])) + list(r.get("reserves", []))
+        for r in d.get("possibles", []):
+            vs += list(r.get("questions", []))
+        return list(dict.fromkeys(v for v in vs if v in self.domaines and self.domaines[v]))
+
+    def valeurs(self, v: str) -> list:
+        if v in self.m.faits:
+            connus = self.m.faits[v]
+            return sorted(x for x in self.domaines[v]
+                          if x not in connus and any(p in self.m.ancetres(v, x) for p in connus))
+        return sorted(self.domaines[v])
+
+    def question(self, courante: str, v: str) -> dict | None:
+        xs = self.valeurs(v)
+        if not xs:
+            return None
+        paires = [(x, self.essai([(v, x)])) for x in xs]
+        ds = sorted({d for _, d in paires})
+        if all(map(ferme, ds)) and (len(ds) >= 2 or ds[0] != courante):
+            effet = "décisive"
+        elif ds != [courante]:
+            effet = "utile"
+        else:
+            effet = "inutile"
+        return {"variable": v, "effet": effet,
+                "issues": [{"decision": d, "valeurs": [x for x, e in paires if e == d]} for d in ds]}
+
+    def paire(self, vs: list) -> list:
+        for i, v1 in enumerate(vs):
+            for v2 in vs[i + 1:]:
+                x1s, x2s = self.valeurs(v1), self.valeurs(v2)
+                if len(x1s) * len(x2s) > 400:
+                    continue
+                if all(ferme(self.essai([(v1, a), (v2, b)])) for a in x1s for b in x2s):
+                    return [v1, v2]
+        return []
+
+    def decider(self) -> dict:
+        d = self.m.decider()
+        vs = self.questions_posees(d)
+        if not vs:
+            return d
+        qs = [q for v in vs if (q := self.question(d["decision"], v))]
+        qs.sort(key=lambda q: RANG[q["effet"]])
+        decisives = [q["variable"] for q in qs if q["effet"] == "décisive"]
+        ens = decisives[:1] or self.paire([q["variable"] for q in qs if q["effet"] == "utile"])
+        d["exploration"] = {"questions": qs, "ensemble": ens}
+        return d

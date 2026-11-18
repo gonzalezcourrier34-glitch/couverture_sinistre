@@ -114,6 +114,7 @@ def evaluer(pipeline, cas: list[dict], paralleles: int = 1) -> dict:
             # Pour le banc : ce que le modèle a lu, et les questions posées.
             "faits_lus": r.faits.model_dump() if r.faits else {},
             "questions": list(v.informations_manquantes),
+            "avertissements": list(v.avertissements),
             "duree_ms": getattr(r, "duree_ms", None),
         })
     n = len(lignes)
