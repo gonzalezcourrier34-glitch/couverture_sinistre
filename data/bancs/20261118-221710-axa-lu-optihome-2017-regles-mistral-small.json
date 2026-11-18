@@ -1,0 +1,1852 @@
+{
+ "date": "2026-11-18T22:14:46",
+ "contrat": "axa-lu-optihome-2017",
+ "methode": "regles",
+ "golden": {
+  "version": 7,
+  "empreinte": "dded110154b31222",
+  "fige": true,
+  "n": 15,
+  "valides": 0,
+  "auteurs": {
+   "claude": 15
+  }
+ },
+ "couches": {
+  "regles": {
+   "metriques": {
+    "n": 15,
+    "exactitude": 1.0,
+    "exactitude_stricte": 0.933,
+    "faux_couverts": 0,
+    "faux_refus": 0,
+    "taux_incertain": 0.2,
+    "rappel_questions": 1.0,
+    "questions_par_incertain": 1.0,
+    "incertains_tranchables": 0.333,
+    "questions_inutiles_retirees": 15
+   },
+   "groupes": {
+    "auteur : claude": {
+     "n": 15,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.933,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.2
+    },
+    "garantie : 3.1.6": {
+     "n": 15,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.933,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.2
+    },
+    "thème : base": {
+     "n": 6,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "thème : incertain": {
+     "n": 2,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 1.0
+    },
+    "thème : piege": {
+     "n": 7,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.857,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.143
+    }
+   },
+   "cas": [
+    {
+     "id": "axa-v01",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 1,
+     "questions": [
+      "abus_confiance",
+      "occupation_irreguliere",
+      "travaux_construction"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "axa-v02",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "axa-v03",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "axa-v04",
+     "attendu": "INCERTAIN",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 3,
+     "questions": [
+      "plainte_deposee"
+     ],
+     "rappel_questions": 1.0,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "axa-v05",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 1,
+     "questions": [
+      "abus_confiance",
+      "occupation_irreguliere",
+      "travaux_construction"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "axa-v06",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "axa-v07",
+     "attendu": "INCERTAIN",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 3,
+     "questions": [
+      "formule"
+     ],
+     "rappel_questions": 1.0,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "axa-v08",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "axa-v09",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "axa-v10",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 1,
+     "questions": [
+      "abus_confiance",
+      "occupation_irreguliere",
+      "travaux_construction"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "axa-v11",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "axa-v12",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "axa-v13",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 2,
+     "questions": [
+      "abus_confiance",
+      "occupation_irreguliere",
+      "travaux_construction"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "axa-v14",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 1,
+     "questions": [
+      "abus_confiance",
+      "occupation_irreguliere",
+      "travaux_construction"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "axa-v15",
+     "attendu": "NON_COUVERT",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": false,
+     "tranchable": true,
+     "inutiles": 3,
+     "questions": [
+      "lien_causal_travaux"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    }
+   ]
+  },
+  "chaine": {
+   "metriques": {
+    "exactitude": {
+     "moyenne": 0.622,
+     "min": 0.533,
+     "max": 0.667
+    },
+    "exactitude_stricte": {
+     "moyenne": 0.422,
+     "min": 0.333,
+     "max": 0.467
+    },
+    "faux_couverts": {
+     "moyenne": 0.0,
+     "min": 0,
+     "max": 0
+    },
+    "faux_refus": {
+     "moyenne": 1.333,
+     "min": 1,
+     "max": 2
+    },
+    "taux_incertain": {
+     "moyenne": 0.578,
+     "min": 0.533,
+     "max": 0.6
+    },
+    "n": 15,
+    "executions": 3,
+    "instables": 3,
+    "rappel_clauses": 0.689,
+    "rappel_questions": 0.667,
+    "erreurs_fournisseur": 0,
+    "duree_moyenne_s": 35.2,
+    "latence_mediane_s": 3.33,
+    "latence_p95_s": 69.3,
+    "latence_lecture_mediane_s": 2.72,
+    "latence_lecture_p95_s": 4.01,
+    "latence_decision_mediane_s": 0.01,
+    "latence_decision_p95_s": 0.02,
+    "latence_seule_mediane_s": 3.48,
+    "latence_seule_p95_s": 5.24,
+    "latence_seule_lecture_mediane_s": 3.24,
+    "latence_seule_lecture_p95_s": 4.39,
+    "latence_seule_decision_mediane_s": 0.01,
+    "latence_seule_decision_p95_s": 0.01,
+    "latence_seule_nb": 10
+   },
+   "groupes": {
+    "auteur : claude": {
+     "n": 15,
+     "exactitude": 0.533,
+     "exactitude_stricte": 0.333,
+     "faux_couverts": 0,
+     "faux_refus": 2,
+     "taux_incertain": 0.533
+    },
+    "garantie : 3.1.6": {
+     "n": 15,
+     "exactitude": 0.533,
+     "exactitude_stricte": 0.333,
+     "faux_couverts": 0,
+     "faux_refus": 2,
+     "taux_incertain": 0.533
+    },
+    "thème : base": {
+     "n": 6,
+     "exactitude": 0.5,
+     "exactitude_stricte": 0.5,
+     "faux_couverts": 0,
+     "faux_refus": 2,
+     "taux_incertain": 0.167
+    },
+    "thème : incertain": {
+     "n": 2,
+     "exactitude": 0.5,
+     "exactitude_stricte": 0.5,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.5
+    },
+    "thème : piege": {
+     "n": 7,
+     "exactitude": 0.571,
+     "exactitude_stricte": 0.143,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.857
+    }
+   },
+   "reponses": {
+    "axa-v01": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "axa-v02": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "axa-v03": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "axa-v04": [
+     "NON_COUVERT",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "axa-v05": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "axa-v06": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "axa-v07": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "axa-v08": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "axa-v09": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "axa-v10": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "axa-v11": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "axa-v12": [
+     "INCERTAIN",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "axa-v13": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "axa-v14": [
+     "NON_COUVERT",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "axa-v15": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ]
+   },
+   "instables": [
+    "axa-v04",
+    "axa-v12",
+    "axa-v14"
+   ],
+   "executions": [
+    [
+     {
+      "id": "axa-v01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2987,
+       "decision": 7,
+       "total": 3591
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ?",
+       "Y a-t-il eu violences physiques ou menaces ?",
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Qui est l'auteur ?",
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2981,
+       "decision": 7,
+       "total": 3577
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2889,
+       "decision": 6,
+       "total": 2897
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v04",
+      "attendu": "INCERTAIN",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2721,
+       "decision": 6,
+       "total": 3347
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "axa-v05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Quels biens sont endommagés ou volés ? (appareil_audiovisuel/bijoux/cadre/canalisation… → couvert ; animal/remorque/vehicule_moteur → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2843,
+       "decision": 16,
+       "total": 4006
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ? (oui → couvert ; non → non couvert)",
+       "À qui appartiennent les biens ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2472,
+       "decision": 27,
+       "total": 2504
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v07",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "À qui appartiennent les biens ?",
+       "Quelle formule les conditions particulières mentionnent-elles (Privilège, Active, standard) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2652,
+       "decision": 7,
+       "total": 2663
+      },
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "axa-v08",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ?",
+       "Y a-t-il eu violences physiques ou menaces ?",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2802,
+       "decision": 3,
+       "total": 3439
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v09",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "L'assuré n'occupe-t-il que partiellement le bâtiment ?",
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ?",
+       "À qui appartiennent les biens ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2729,
+       "decision": 11,
+       "total": 2743
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v10",
+      "attendu": "COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2665,
+       "decision": 7,
+       "total": 3338
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2437,
+       "decision": 7,
+       "total": 3485
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v12",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2529,
+       "decision": 8,
+       "total": 2539
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v13",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ? (personnel_prive/tiers → couvert ; assure/famille → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2600,
+       "decision": 12,
+       "total": 3328
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v14",
+      "attendu": "COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2535,
+       "decision": 5,
+       "total": 3257
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v15",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Les travaux ont-ils contribué au vol ou à l'aggravation de ses conséquences ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2687,
+       "decision": 8,
+       "total": 2697
+      },
+      "rappel_questions": null
+     }
+    ],
+    [
+     {
+      "id": "axa-v01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 4010,
+       "decision": 7,
+       "total": 4763
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ?",
+       "Y a-t-il eu violences physiques ou menaces ?",
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Qui est l'auteur ?",
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2602,
+       "decision": 2,
+       "total": 3156
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Une plainte a-t-elle été déposée auprès des autorités ?",
+       "Une plainte a-t-elle été déposée auprès des autorités ? (oui → couvert ; non → non couvert)",
+       "À qui appartiennent les biens ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2539,
+       "decision": 7,
+       "total": 3163
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v04",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Une plainte a-t-elle été déposée auprès des autorités ?",
+       "À qui appartiennent les biens ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3100,
+       "decision": 13,
+       "total": 3115
+      },
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "axa-v05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3067,
+       "decision": 5,
+       "total": 4640
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ? (oui → couvert ; non → non couvert)",
+       "À qui appartiennent les biens ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2859,
+       "decision": 7,
+       "total": 2870
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v07",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "À qui appartiennent les biens ?",
+       "Quelle formule les conditions particulières mentionnent-elles (Privilège, Active, standard) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2718,
+       "decision": 8,
+       "total": 2729
+      },
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "axa-v08",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ?",
+       "Y a-t-il eu violences physiques ou menaces ?",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3491,
+       "decision": 5,
+       "total": 4046
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v09",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "L'assuré n'occupe-t-il que partiellement le bâtiment ?",
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ?",
+       "À qui appartiennent les biens ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2845,
+       "decision": 11,
+       "total": 2858
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v10",
+      "attendu": "COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2993,
+       "decision": 8,
+       "total": 3680
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2445,
+       "decision": 5,
+       "total": 3003
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v12",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2717,
+       "decision": 5,
+       "total": 3308
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v13",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ? (personnel_prive/tiers → couvert ; assure/famille → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3086,
+       "decision": 9,
+       "total": 3641
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v14",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "À qui appartiennent les biens ?",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2644,
+       "decision": 6,
+       "total": 3335
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v15",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Les travaux ont-ils contribué au vol ou à l'aggravation de ses conséquences ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2651,
+       "decision": 11,
+       "total": 2664
+      },
+      "rappel_questions": null
+     }
+    ],
+    [
+     {
+      "id": "axa-v01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3055,
+       "decision": 6,
+       "total": 3762
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ?",
+       "Y a-t-il eu violences physiques ou menaces ?",
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Qui est l'auteur ?",
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2514,
+       "decision": 5,
+       "total": 3229
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2443,
+       "decision": 8,
+       "total": 2454
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v04",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2530,
+       "decision": 13,
+       "total": 2545
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "axa-v05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Quels biens sont endommagés ou volés ? (appareil_audiovisuel/bijoux/cadre/canalisation… → couvert ; animal/remorque/vehicule_moteur → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2383,
+       "decision": 16,
+       "total": 3575
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ? (oui → couvert ; non → non couvert)",
+       "À qui appartiennent les biens ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3439,
+       "decision": 13,
+       "total": 3456
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v07",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "À qui appartiennent les biens ?",
+       "Quelle formule les conditions particulières mentionnent-elles (Privilège, Active, standard) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2428,
+       "decision": 8,
+       "total": 2440
+      },
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "axa-v08",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ?",
+       "Y a-t-il eu violences physiques ou menaces ?",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2653,
+       "decision": 5,
+       "total": 3311
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v09",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "L'assuré n'occupe-t-il que partiellement le bâtiment ?",
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ?",
+       "À qui appartiennent les biens ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3762,
+       "decision": 12,
+       "total": 3776
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v10",
+      "attendu": "COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2465,
+       "decision": 9,
+       "total": 3481
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3496,
+       "decision": 8,
+       "total": 70319
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v12",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2841,
+       "decision": 3,
+       "total": 69299
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v13",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ? (personnel_prive/tiers → couvert ; assure/famille → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 69277,
+       "decision": 8,
+       "total": 69926
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v14",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "À qui appartiennent les biens ?",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 68602,
+       "decision": 5,
+       "total": 69120
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "axa-v15",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Les travaux ont-ils contribué au vol ou à l'aggravation de ses conséquences ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2583,
+       "decision": 8,
+       "total": 2593
+      },
+      "rappel_questions": null
+     }
+    ]
+   ]
+  },
+  "lecture": {
+   "metriques": {
+    "rappel_faits": 0.69,
+    "cas_avec_contradiction": 4,
+    "cas_avec_fait_vague": 0,
+    "cas_avec_fait_en_trop": 2,
+    "cas_avec_fait_sans_appui": 14,
+    "decisions_changees": 5.33,
+    "decisions_changees_vers_couvert": 0
+   },
+   "cas": [
+    {
+     "id": "axa-v01",
+     "rappel": 0.815,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "proprietaire = assure",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "sejour_temporaire = non",
+      "violence = non",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "axa-v02",
+     "rappel": 0.741,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "proprietaire = assure",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "serrure_surete = non",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "axa-v03",
+     "rappel": 0.625,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "proprietaire = assure",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "violence = non",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "INCERTAIN",
+      "NON_COUVERT",
+      "INCERTAIN"
+     ],
+     "change": 0.6666666666666666,
+     "grave": false
+    },
+    {
+     "id": "axa-v04",
+     "rappel": 0.542,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "proprietaire = assure",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "abus_confiance = non",
+      "sejour_temporaire = non",
+      "violence = non",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.3333333333333333,
+     "grave": false
+    },
+    {
+     "id": "axa-v05",
+     "rappel": 0.778,
+     "contradictions": [
+      "bien : valeurs lu objet_divers"
+     ],
+     "vagues": [],
+     "manques": [
+      "bien = valeurs",
+      "proprietaire = assure"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "effraction = non"
+     ],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "axa-v06",
+     "rappel": 0.667,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "effraction = non",
+      "proprietaire = assure",
+      "violence = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "abus_confiance = non",
+      "auteur = tiers",
+      "effraction = non",
+      "violence = non"
+     ],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "axa-v07",
+     "rappel": 0.875,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "proprietaire = assure"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "effraction = non"
+     ],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "axa-v08",
+     "rappel": 0.9,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "proprietaire = assure"
+     ],
+     "en_trop": [
+      "abus_confiance = non",
+      "sejour_temporaire = non"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "axa-v09",
+     "rappel": 0.433,
+     "contradictions": [
+      "bien : objet_divers lu mobilier",
+      "bien : objet_divers lu mobilier_jardin"
+     ],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "occupation_partielle = oui",
+      "proprietaire = assure",
+      "serrure_surete = non",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "serrure_surete = non",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "axa-v10",
+     "rappel": 0.5,
+     "contradictions": [
+      "lieu : annexe lu garage"
+     ],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "proprietaire = assure",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "serrure_surete = non",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "axa-v11",
+     "rappel": 0.667,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "proprietaire = assure",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "violence = non",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "axa-v12",
+     "rappel": 0.667,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "proprietaire = assure",
+      "violence = non",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [
+      "abus_confiance = oui"
+     ],
+     "sans_appui": [
+      "abus_confiance = oui"
+     ],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "INCERTAIN",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.3333333333333333,
+     "grave": false
+    },
+    {
+     "id": "axa-v13",
+     "rappel": 0.625,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "proprietaire = assure",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "auteur = tiers",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "axa-v14",
+     "rappel": 0.778,
+     "contradictions": [
+      "proprietaire : assure lu hote"
+     ],
+     "vagues": [],
+     "manques": [
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "violence = non",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "axa-v15",
+     "rappel": 0.741,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "proprietaire = assure",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "abus_confiance = non",
+      "auteur = tiers",
+      "sejour_temporaire = non",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.0,
+     "grave": false
+    }
+   ]
+  }
+ },
+ "avertissements": [],
+ "modele": "mistral:mistral-small-latest",
+ "lecture": "verifiee",
+ "portes": [
+  {
+   "couche": "regles",
+   "critere": "faux_couverts",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 0,
+   "ok": true
+  },
+  {
+   "couche": "regles",
+   "critere": "faux_refus",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 0,
+   "ok": true
+  },
+  {
+   "couche": "regles",
+   "critere": "exactitude",
+   "sens": "min",
+   "seuil": 0.95,
+   "valeur": 1.0,
+   "ok": true
+  },
+  {
+   "couche": "regles",
+   "critere": "rappel_questions",
+   "sens": "min",
+   "seuil": 0.9,
+   "valeur": 1.0,
+   "ok": true
+  },
+  {
+   "couche": "regles",
+   "critere": "questions_par_incertain",
+   "sens": "max",
+   "seuil": 3,
+   "valeur": 1.0,
+   "ok": true
+  },
+  {
+   "couche": "lecture",
+   "critere": "decisions_changees",
+   "sens": "max",
+   "seuil": 2,
+   "valeur": 5.33,
+   "ok": false
+  },
+  {
+   "couche": "lecture",
+   "critere": "decisions_changees_vers_couvert",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 0,
+   "ok": true
+  },
+  {
+   "couche": "lecture",
+   "critere": "cas_avec_contradiction",
+   "sens": "max",
+   "seuil": 5,
+   "valeur": 4,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "faux_couverts",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 0.0,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "faux_refus",
+   "sens": "max",
+   "seuil": 1,
+   "valeur": 1.333,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "exactitude",
+   "sens": "min",
+   "seuil": 0.85,
+   "valeur": 0.622,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "instables",
+   "sens": "max",
+   "seuil": 3,
+   "valeur": 3,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "rappel_questions",
+   "sens": "min",
+   "seuil": 0.8,
+   "valeur": 0.667,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "latence_seule_p95_s",
+   "sens": "max",
+   "seuil": 10,
+   "valeur": 5.24,
+   "ok": true
+  }
+ ],
+ "passe": false
+}

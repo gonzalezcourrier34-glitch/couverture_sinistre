@@ -2071,6 +2071,39 @@ seules donnent la réponse attendue sur les faits idéaux.
 **Leçon 73.** Trois filets, trois sortes d'erreurs : les contrôles attrapent la forme, la relecture attrape le
 sens visible, les cas attrapent le sens en action, une exclusion qui en tue une autre. Aucun ne suffit seul.
 
+### 7.59 Premier banc AXA : les règles sont justes, la lecture des nouvelles variables ne l'est pas encore
+
+Golden AXA figé en v7 (15 cas). Banc, Mistral Small, lecture vérifiée, trois exécutions :
+
+| | AXA (15 cas) | Foyer (97 cas, 7.57) |
+|---|---|---|
+| Règles seules | 100 % justes | 100 % |
+| Chaîne : justes | 62 % | 89 % |
+| Couverts à tort | **0** | 2,33 |
+| Refus à tort | 1,33 | 1 |
+| Instables | 3 | 13 |
+| Un cas à la fois, médiane / 95e centile | 3,5 s / 5,2 s | 3,2 s / 4,5 s |
+
+Le test différentiel Prolog / oracle passe avec la règle « exclusion entamée » (128 tests sur le poste).
+
+**Où la chaîne perd.** Pas dans les règles : dans la lecture des variables nouvelles, qui n'ont pas encore les
+aides par valeur que celles de Foyer ont reçues en trente itérations.
+- v14 (hôtel) : `proprietaire = hote` ; le modèle a lu « hôte » comme « hôtel ».
+- v10 : « garage séparé de la maison » lu `garage` et non `annexe` ; la tondeuse lue comme véhicule à moteur.
+- v09 : « j'habite un appartement » n'est pas compris comme une occupation partielle.
+- v02, v03, v08 : la lecture donne la bonne décision, mais la confirmation des faits décisifs suspend la réponse
+  (« je ne sais pas ») : c'est le prix, voulu, de zéro couvert à tort.
+
+**Correction : des aides par valeur** pour `proprietaire` (« un hôte, pas un hôtel »), `occupation_partielle`,
+`lieu` (garage attenant / annexe séparée), `bien = vehicule_moteur` (pas une tondeuse), `violence` (bousculade,
+arrachage / pickpocket). Elles servent aussi à Foyer, dont le banc est à relancer.
+
+**Biais de mesure à corriger plus tard.** Les faits idéaux AXA contiennent des valeurs par défaut que la
+déclaration ne dit pas (`auteur = tiers`, `proprietaire = assure`) : le rappel des faits (69 %) est sous-estimé.
+
+**Leçon 74.** Le coût d'un nouvel assureur n'est pas seulement la rédaction des règles : chaque variable nouvelle
+doit apprendre à être lue. La rédaction devrait proposer les aides par valeur en même temps que la variable.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 18 nov. 2026 ; ce qui est fait est dans les sections 7.

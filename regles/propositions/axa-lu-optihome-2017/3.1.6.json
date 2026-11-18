@@ -1903,11 +1903,6 @@
       "gravite": "info",
       "controle": "couverture",
       "message": "hors décision (3.1.6.5) : procédure après sinistre, sans effet sur la couverture"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "prolog",
-      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
     }
   ]
 }

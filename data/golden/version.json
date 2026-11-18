@@ -1,8 +1,9 @@
 {
-  "version": 6,
+  "version": 7,
   "date": "2026-11-18",
   "empreintes": {
-    "foyer-appart123-2025": "0b83f83b91580639"
+    "foyer-appart123-2025": "0b83f83b91580639",
+    "axa-lu-optihome-2017": "dded110154b31222"
   },
   "historique": [
     "v1 (2026-11-17) : 68 cas : 39 existants étiquetés, 29 nouveaux",
@@ -10,6 +11,7 @@
     "v3 (2026-11-17) : périls du contrat nommés dans le vocabulaire (électricité, mazout, catastrophe naturelle, attentat, fumée) : faits idéaux de 8 cas réécrits",
     "v4 (2026-11-17) : règles clé, récipient, fumée, casier : faits idéaux de g-p03, g-p05, g-p09 dans le vocabulaire étendu",
     "v5 (2026-11-18) : 29 cas nouveaux : 10 où la bonne réponse est « incertain », garanties 2.5, 2.11, 2.12 et exclusions générales 1.4, pièges (effraction, toiture, clés, bain à bulles…), langue, sinistres multiples",
-    "v6 (2026-11-18) : faits idéaux précisés avec le vocabulaire étendu (mérule, vandalisme, plantation, mazout, clés, toiture, piscine, entretien, intention, corrosion) ; cas et réponses attendues inchangés"
+    "v6 (2026-11-18) : faits idéaux précisés avec le vocabulaire étendu (mérule, vandalisme, plantation, mazout, clés, toiture, piscine, entretien, intention, corrosion) ; cas et réponses attendues inchangés",
+    "v7 (2026-11-18) : 15 cas vol AXA (3.1.6)"
   ]
 }

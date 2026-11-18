@@ -124,7 +124,8 @@
         "objet_divers": "tout autre objet",
         "plantation": "plantes, arbres, arbustes, haies du jardin",
         "mazout": "fioul (mazout) de chauffage, dans la cuve",
-        "cles": "les clés elles-mêmes, volées ou perdues (pas les clés dont le voleur s'est servi, ni la serrure)"
+        "cles": "les clés elles-mêmes, volées ou perdues (pas les clés dont le voleur s'est servi, ni la serrure)",
+        "vehicule_moteur": "voiture, moto, scooter (pas une tondeuse ni un autre engin de jardinage : objet_divers)"
       }
     },
     "lieu": {
@@ -148,8 +149,8 @@
       "aide": {
         "logement": "l'intérieur de votre logement (pièces, entrée)",
         "parties_communes": "locaux partagés de l'immeuble : local à vélos ou à poubelles commun, cave ou couloir communs, hall, escalier",
-        "annexe": "dépendance privée, sans communication avec le logement (remise, cabanon)",
-        "garage": "garage ou box privatif",
+        "annexe": "dépendance privée sans communication avec le logement : remise, cabanon, garage séparé de la maison",
+        "garage": "garage ou box privatif, attenant à la maison ou dans l'immeuble",
         "cave": "cave privative",
         "terrasse": "terrasse ou balcon attenant au logement",
         "voie_publique": "rue, transports, magasin, tout lieu public",
@@ -199,7 +200,11 @@
       "question": "Y a-t-il eu violences physiques ou menaces ?",
       "pour": [
         "vol"
-      ]
+      ],
+      "aide": {
+        "oui": "coups, bousculade, arrachage, menaces",
+        "non": "aucun contact ni menace : vol à la tire, pickpocket, disparition"
+      }
     },
     "vol_sur_personne": {
       "valeurs": [
@@ -228,7 +233,11 @@
       "question": "À qui appartiennent les biens ?",
       "pour": [
         "vol"
-      ]
+      ],
+      "aide": {
+        "assure": "les biens vous appartiennent (à vous ou à votre ménage), même emportés en voyage ou à l'hôtel",
+        "hote": "les biens appartiennent à un invité que vous hébergez (un hôte, pas un hôtel)"
+      }
     },
     "simple_disparition": {
       "valeurs": [
@@ -513,11 +522,15 @@
         "oui",
         "non"
       ],
-      "question": "L'assuré n'occupe-t-il que partiellement le bâtiment ?",
+      "question": "L'assuré n'occupe-t-il qu'une partie du bâtiment (un appartement dans un immeuble) ?",
       "pour": [
         "vol",
         "vandalisme"
-      ]
+      ],
+      "aide": {
+        "oui": "vous habitez un appartement, ou une partie d'un bâtiment partagé avec d'autres occupants",
+        "non": "vous occupez seul tout le bâtiment (maison individuelle)"
+      }
     },
     "serrure_cylindre": {
       "valeurs": [
