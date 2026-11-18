@@ -38,7 +38,7 @@ from .texte import normaliser
 from .validation import _compact, extrait_present, passage_exact
 
 PROPOSITIONS = prolog.DOSSIER / "propositions"
-VERSION = "v5"
+VERSION = "v6"
 IDENT = re.compile(r"^[a-z][a-z0-9_]*$")
 BLOQUANT, A_RELIRE, INFO = "bloquant", "à relire", "info"
 
@@ -57,7 +57,7 @@ La logique a trois valeurs : un fait que la déclaration ne donne pas est « inc
 
 ## Règles d'écriture
 1. Chaque garantie, définition, circonstance, obligation, exclusion et limite porte "article" (l'identifiant de clause fourni) et "texte" : une phrase COPIÉE MOT POUR MOT de cette clause. Pas de reformulation, pas de coupure, pas de « … ».
-2. N'emploie que les variables et les valeurs du vocabulaire. Si le texte exige un fait que le vocabulaire n'a pas, n'approxime pas avec un fait voisin : emploie une variable ou une valeur nouvelle ET déclare-la dans "vocabulaire_manquant" (variable, valeurs, question à poser à l'assuré, pourquoi, "plus_proche" : la variable existante la plus proche et pourquoi elle ne suffit pas). Un humain décidera. Avant de créer une variable, relis les questions du vocabulaire : « agression » est une violence, « complicité de l'assuré » est un auteur, « vol simple » est un vol sans effraction ni violence ; une notion qui se dit avec des faits existants s'écrit avec eux, au besoin par un concept.
+2. N'emploie que les variables et les valeurs du vocabulaire. Si le texte exige un fait que le vocabulaire n'a pas, n'approxime pas avec un fait voisin : emploie une variable ou une valeur nouvelle ET déclare-la dans "vocabulaire_manquant" (variable, valeurs, question à poser à l'assuré, pourquoi, "plus_proche" : la variable existante la plus proche et pourquoi elle ne suffit pas, "aide" : pour chaque valeur, ce qu'un assuré dirait dans sa déclaration pour qu'on la retienne). Un humain décidera. Avant de créer une variable, relis les questions du vocabulaire : « agression » est une violence, « complicité de l'assuré » est un auteur, « vol simple » est un vol sans effraction ni violence ; une notion qui se dit avec des faits existants s'écrit avec eux, au besoin par un concept.
 3. Traduis TOUT le texte : chaque élément d'une liste d'exclusions devient une exclusion. Ce que tu ne sais pas exprimer va dans "non_traduit" sous la forme {"article", "texte", "pourquoi"}. N'omets jamais rien en silence : une exclusion oubliée fait couvrir à tort.
 3 bis. Une exclusion garde ses réserves et ses conditions : « à l'exception du mobilier de jardin » s'écrit {"et": [condition, {"non": réserve}]}, et « si l'Assuré n'occupe que partiellement le bâtiment » fait partie de la condition. Une réserve perdue fait refuser à tort.
 3 ter. « À moins que l'Assuré ne démontre… » est une réserve de l'exclusion : {"et": [condition, {"non": preuve}]}, avec "a_demander": true. Le moteur pose la question dès que la déclaration établit la condition (les travaux), et ne la pose pas sinon.
@@ -79,7 +79,7 @@ La logique a trois valeurs : un fait que la déclaration ne donne pas est « inc
                   {"condition": {"f": ["bien", "canalisation"]}, "portee": {"bien": "canalisation"}, "a_demander": true, "article": "2.7-b", "texte": "aux canalisations, radiateurs, robinets, citernes, chaudières et autres appareils chauffant de l'eau, qui sont à l'origine du sinistre"}],
    "limites": [{"article": "2.7", "texte": "Dégâts causés par l'eau", "montant": "valeur à neuf"}]}],
  "exclusions_communes": [],
- "vocabulaire_manquant": [{"variable": "piscine", "valeurs": ["oui", "non"], "question": "L'eau venait-elle d'une piscine ?", "pourquoi": "exclusion de l'écoulement des piscines", "plus_proche": "cause_eau : aucune de ses valeurs ne dit d'où vient l'eau"}],
+ "vocabulaire_manquant": [{"variable": "piscine", "valeurs": ["oui", "non"], "question": "L'eau venait-elle d'une piscine ?", "pourquoi": "exclusion de l'écoulement des piscines", "plus_proche": "cause_eau : aucune de ses valeurs ne dit d'où vient l'eau", "aide": {"oui": "l'eau venait de la piscine, du bassin", "non": "l'eau venait d'ailleurs"}}],
  "non_traduit": []}"""
 
 
@@ -407,6 +407,9 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
             else:
                 noter(BLOQUANT, "vocabulaire", f"{v} = {x} : hors vocabulaire, et non déclaré")
     for m in prop.get("vocabulaire_manquant", []):
+        if m.get("variable") not in voc and not m.get("aide"):
+            noter(A_RELIRE, "vocabulaire", f"{m.get('variable')} : variable nouvelle sans « aide » par valeur ; "
+                  f"elle sera mal lue (7.59)")
         if m.get("variable") not in voc and not m.get("plus_proche"):
             noter(A_RELIRE, "vocabulaire", f"{m.get('variable')} : variable nouvelle sans « plus_proche » ; "
                   f"vérifier qu'un fait existant ne la dit pas déjà")
@@ -639,9 +642,17 @@ def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
         if v in voc:
             nouvelles = [x for x in valeurs if x not in voc[v]["valeurs"]]
             voc[v]["valeurs"] += nouvelles
+            for x in nouvelles:
+                if (m.get("aide") or {}).get(x):
+                    voc[v].setdefault("aide", {})[x] = str(m["aide"][x])
             ajouts += [f"{v} = {x}" for x in nouvelles]
         else:
             voc[v] = {"valeurs": valeurs, "question": m.get("question") or f"Préciser : {v}"}
+            # Une variable nouvelle doit apprendre à être lue : sans aide, le premier banc AXA a lu « hôte »
+            # comme « hôtel » (7.59). La rédaction propose l'aide, le relecteur l'accepte avec la variable.
+            aide = {str(k): str(x) for k, x in (m.get("aide") or {}).items() if str(k) in valeurs}
+            if aide:
+                voc[v]["aide"] = aide
             # Sans « pour », la variable serait lue pour tous les sinistres (un dégât des eaux se verrait demander
             # la formule « Privilège ») : elle vaut pour les événements de la garantie qui l'a fait naître (7.56).
             if prop.get("evenements"):

@@ -130,6 +130,12 @@ def test_vocabulaire_nouveau_declare_bloque_jusqu_a_acceptation(voc_etendu):
     assert redaction.accepter_vocabulaire(BONNE, voc_etendu) == [], "pas de doublon"
     assert json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]["vent_fort"]["pour"] == ["tempete"], \
         "une variable nouvelle ne vaut que pour les événements de sa garantie (7.56)"
+    prop = copy.deepcopy(BONNE)
+    prop["vocabulaire_manquant"] = [{"variable": "grele", "valeurs": ["oui", "non"], "question": "Grêle ?",
+                                     "aide": {"oui": "grêlons, impacts de grêle", "peut-etre": "ignorée"}}]
+    redaction.accepter_vocabulaire(prop, voc_etendu)
+    assert json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]["grele"]["aide"] == \
+        {"oui": "grêlons, impacts de grêle"}, "l'aide est reprise, pour les seules valeurs déclarées (7.62)"
 
 
 def test_fait_invente_non_declare():
@@ -320,7 +326,7 @@ def test_jeu_redaction_coherent():
 def test_consigne_de_redaction_versionnee():
     from couverture.consignes import CONSIGNES
 
-    assert CONSIGNES["couverture-redaction-regles"][2] == "v5"
+    assert CONSIGNES["couverture-redaction-regles"][2] == "v6"
 
 
 # --- Après la première rédaction réelle (Mistral Large, 17 nov. 2026, docs/DEMARCHE.md 7.20) ---------------

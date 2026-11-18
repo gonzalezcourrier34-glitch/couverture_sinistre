@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -159,7 +160,7 @@ def ingerer(donnees: Path, base: Base, forcer: bool = False) -> int:
 
 
 def rediger_cli(base: Base, contrat_id: str, articles: list[str], controler: bool, a_accepter: str | None,
-                vocabulaire: str | None) -> int:
+                vocabulaire: str | None, paralleles: int = 1) -> int:
     """Rédaction des règles d'une garantie par le modèle (Mistral Large), contrôles, acceptation."""
     from . import prolog, redaction
     from .evaluation import lire_jsonl
@@ -201,19 +202,34 @@ def rediger_cli(base: Base, contrat_id: str, articles: list[str], controler: boo
     llm = llm_configure("contrat")
     if llm is None:
         sys.exit("La rédaction a besoin d'un modèle : définir MISTRAL_API_KEY dans .env.")
+    from .llm import ErreurLLM
     from .progression import Barre
 
     barre = Barre(len(articles), "Rédaction")
     docs = []
-    for art in articles:
-        barre.ecrire(f"art. {art} : rédaction par {llm.nom}…")
+
+    def une(art):
         try:
-            docs.append(redaction.rediger(contrat_id, art, clauses, llm, cas=cas))
-        except (LookupError, ValueError, prolog.ErreurRegles) as e:
+            return redaction.rediger(contrat_id, art, clauses, llm, cas=cas)
+        except (LookupError, ValueError, prolog.ErreurRegles, ErreurLLM) as e:
             barre.ecrire(f"art. {art} : échec ({e}) ; la réponse du modèle, si elle est arrivée, est gardée : "
                          f"`couverture rediger --contrat {contrat_id} --controler --article {art}`")
-        barre.avancer(art)
+            return None
+
+    # Les articles sont indépendants : une rédaction attend surtout le modèle (6 à 27 min), on en lance
+    # plusieurs à la fois (7.62). Les doublons entre propositions (un concept défini deux fois) sont vus
+    # au contrôle qui suit chaque acceptation.
+    barre.ecrire(f"{len(articles)} article(s), {max(1, paralleles)} à la fois, par {llm.nom}…")
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    with ThreadPoolExecutor(max_workers=max(1, paralleles)) as ex:
+        futurs = {ex.submit(une, art): art for art in articles}
+        for f in as_completed(futurs):
+            d = f.result()
+            if d is not None:
+                docs.append(d)
+            barre.avancer(futurs[f])
     barre.terminer()
+    docs.sort(key=lambda d: [(0, int(x), "") if x.isdigit() else (1, 0, x) for x in re.split(r"[.~-]", d["meta"]["article"])])
     for d in docs:
         print(redaction.resumer(d))
     print(f"Propositions dans regles/propositions/{contrat_id}/ (JSON : la source, corrigible à la main ; .pl : les règles).")
@@ -432,6 +448,7 @@ def main(argv: list[str] | None = None) -> int:
     pw.add_argument("--contrat", required=True)
     pw.add_argument("--article", action="append", help="Article à traduire (répétable), ex. --article 2.2 --article 2.9")
     pw.add_argument("--controler", action="store_true", help="Refaire les contrôles des propositions enregistrées, sans modèle")
+    pw.add_argument("--paralleles", type=int, default=3, help="Articles rédigés à la fois (défaut 3)")
     pw.add_argument("--accepter", metavar="ARTICLE", help="Ajouter la proposition aux règles du contrat (si rien ne bloque)")
     pw.add_argument("--accepter-vocabulaire", metavar="ARTICLE",
                     help="Ajouter au vocabulaire commun les faits nouveaux déclarés par le modèle pour cet article")
@@ -475,7 +492,8 @@ def main(argv: list[str] | None = None) -> int:
         return legalbench_cli(donnees, a.telecharger, a.fichier, a.split, a.limite, a.paralleles)
 
     if a.commande == "rediger":
-        return rediger_cli(base, a.contrat, a.article or [], a.controler, a.accepter, a.accepter_vocabulaire)
+        return rediger_cli(base, a.contrat, a.article or [], a.controler, a.accepter, a.accepter_vocabulaire,
+                           a.paralleles)
 
     if a.commande == "versions":
         from . import consignes

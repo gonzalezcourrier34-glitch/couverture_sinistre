@@ -36,7 +36,7 @@ CONSIGNES: dict[str, tuple[str, str, str]] = {
     "couverture-lecture-socle": ("couverture.prolog", "SYSTEME_LECTURE_SOCLE", "v2"),
     "couverture-lecture-details": ("couverture.prolog", "SYSTEME_LECTURE_DETAILS", "v2"),
     "couverture-verification-faits": ("couverture.prolog", "SYSTEME_VERIFICATION", "v1"),
-    "couverture-redaction-regles": ("couverture.redaction", "SYSTEME_REDACTION", "v5"),
+    "couverture-redaction-regles": ("couverture.redaction", "SYSTEME_REDACTION", "v6"),
     "couverture-document-brut": ("couverture.juges", "SYSTEME_BRUT", "v1"),
     "couverture-legalbench": ("couverture.legalbench", "SYSTEME_LEGALBENCH", "v1"),
 }

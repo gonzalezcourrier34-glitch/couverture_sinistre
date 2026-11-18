@@ -2199,6 +2199,29 @@ cas et le banc ; 11 variables et 1 valeur ajoutées au vocabulaire commun, avec 
 **Ce que ces chiffres ne disent pas.** Les 15 cas AXA ont été écrits par Claude après avoir relu les règles :
 ils mesurent la cohérence, pas la justesse face à un sinistre réel. Sur 15 cas, un cas pèse 6,7 points.
 
+### 7.62 Toutes les garanties : Foyer d'abord, AXA ensuite, et deux outils avant de commencer
+
+Objectif fixé par l'auteur le 18 au soir : traduire **toutes** les garanties de Foyer, puis toutes celles d'AXA,
+avec la chaîne mise au point sur AXA 3.1.6 (rédaction, contrôles, relecture, cas, banc).
+
+**L'inventaire Foyer.** Déjà traduits : incendie (2.1), dégâts des eaux (2.7), bris de vitrages (2.9, rédigé par
+le modèle), vol (2.10), exclusions générales (1.4). Restent, en trois lots :
+- **Lot A, dommages aux biens** : tempête (2.2), catastrophes naturelles (2.3), attentat et conflit du travail
+  (2.4), électricité (2.6), mazout (2.8), dégradations immobilières (2.11), mérule (2.12).
+- **Lot B** : responsabilité civile immeuble (2.5), extensions (3.1), garanties complémentaires (4), pack
+  multimédia (6.1).
+- **Lot C, d'une autre nature** : responsabilité civile vie privée (section 5), assistance (2.13), défense et
+  recours (2.14). Ce ne sont pas des dommages aux biens : le vocabulaire actuel (événement, bien, lieu) n'y suffit
+  pas, il faudra des faits de responsabilité (tiers lésé, faute, activité).
+
+**Deux outils avant de lancer.**
+- *Rédaction en parallèle* (`--paralleles`, 3 par défaut) : une rédaction attend surtout le modèle (6 à 27
+  minutes) ; onze articles l'un après l'autre prendraient des heures. Un échec n'arrête pas les autres ; les
+  doublons entre propositions (un concept défini deux fois) sont vus au contrôle qui suit chaque acceptation.
+- *Les aides de lecture proposées par la rédaction* (consigne v6, leçon 74) : chaque variable nouvelle vient avec,
+  pour chaque valeur, ce qu'un assuré dirait pour qu'on la retienne ; `--accepter-vocabulaire` les reprend. Sans
+  elles, le premier banc AXA avait perdu 14 points de lecture. Une variable nouvelle sans aide est « à relire ».
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 18 nov. 2026, 22 h 40 ; ce qui est fait est dans les sections 7.
