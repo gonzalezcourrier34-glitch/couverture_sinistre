@@ -38,6 +38,7 @@ CONSIGNES: dict[str, tuple[str, str, str]] = {
     "couverture-compilation": ("couverture.compilation", "SYSTEME_COMPILATION", "v2"),
     "couverture-exclusions-generales": ("couverture.compilation", "SYSTEME_EXCLUSIONS_GENERALES", "v1"),
     "couverture-fiches": ("couverture.fiches", "SYSTEME_FICHES", "v3"),
+    "couverture-legalbench": ("couverture.legalbench", "SYSTEME_LEGALBENCH", "v1"),
     "couverture-routage": ("couverture.fiches", "SYSTEME_ROUTAGE", "v1"),
     "couverture-faits": ("couverture.fiches", "SYSTEME_FAITS", "v1"),
     "couverture-faits-regles": ("couverture.prolog", "SYSTEME_FAITS_REGLES", "v4"),

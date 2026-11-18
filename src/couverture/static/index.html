@@ -49,6 +49,7 @@
   .jauge .barre { height: 6px; background: var(--ligne); border-radius: 3px; overflow: hidden; }
   .jauge .barre span { display: block; height: 100%; background: var(--accent); }
   .justification { font-size: 17px; margin: 16px 0 0; }
+  .arbre { font-size: 12.5px; line-height: 1.45; white-space: pre-wrap; overflow-x: auto; margin: 12px 0 0; }
   .correction { margin-top: 12px; font-size: 14px; color: var(--ambre); }
 
   h2 { font-size: 20px; margin: 0 0 12px; }
@@ -235,6 +236,12 @@ function afficher(r) {
     const liste = el("ul", { class: "liste" });
     for (const [type, texte] of aVerifier) liste.append(el("li", {}, el("strong", {}, type + " : "), texte));
     zone.append(el("section", { class: "carte" }, el("h2", {}, "Ce que le contrat ne permet pas de trancher"), liste));
+  }
+
+  if (v.raisonnement && v.raisonnement.length) {
+    const det = el("details", {}, el("summary", {}, "Arbre de preuve du moteur Prolog : chaque condition, sa phrase du contrat, son état"),
+      el("pre", { class: "arbre" }, v.raisonnement.join("\n")));
+    zone.append(el("section", { class: "carte" }, det));
   }
 
   if (r.clauses_consultees.length || v.avertissements.length) {

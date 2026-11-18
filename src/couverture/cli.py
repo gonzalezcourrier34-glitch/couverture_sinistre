@@ -71,6 +71,9 @@ def afficher_court(r: Resultat) -> str:
         if limites:
             lignes.append("Limites :")
             lignes += [f"  - {c.enonce} (art. {c.clause_id})" for c in limites]
+    if v.raisonnement:
+        lignes.append("Arbre de preuve (moteur Prolog) :")
+        lignes += [f"  {l}" for l in v.raisonnement]
     if v.avertissements:
         lignes.append(f"{len(v.avertissements)} avertissement(s) : --detail.")
     return "\n".join(lignes)
@@ -358,6 +361,34 @@ def banc_cli(base: Base, donnees: Path, contrat_id: str, methode: str, couches: 
     return 0 if r["passe"] else 1
 
 
+def legalbench_cli(donnees: Path, telecharger: bool, fichier: str | None, split: str, limite: int | None,
+                   paralleles: int) -> int:
+    """LegalBench : le modèle répond et cite, le code vérifie la citation ; réponse brute et contrôlée comparées."""
+    from . import legalbench as lb
+    from .llm import configurer
+
+    if telecharger:
+        f = lb.telecharger(donnees)
+        cas = lb.charger(f)
+        print(f"{len(cas)} cas téléchargés : {f}")
+        return 0
+    f = Path(fichier) if fichier else Path(donnees) / lb.DOSSIER / lb.FICHIER
+    if not f.exists():
+        print(f"Données absentes ({f}) : `couverture legalbench --telecharger` d'abord.")
+        return 1
+    cas = [c for c in lb.charger(f) if split == "tout" or c.get("split", split) == split]
+    if limite:
+        cas = cas[:limite]
+    llm = configurer("analyse")
+    if llm is None:
+        print("Aucun modèle configuré (MISTRAL_API_KEY dans .env) : ce banc juge avec le modèle.")
+        return 1
+    r = lb.passer(cas, llm, paralleles)
+    _, md = lb.enregistrer(donnees, r)
+    print(lb.resume_console(r, md))
+    return 0
+
+
 def regles_cli(base: Base, donnees: Path, contrat_id: str, faits_json: str | None, jeu: str = "mise_au_point") -> int:
     """Vérifie les règles Prolog d'un contrat, sans appel au modèle :
     1. SWI-Prolog est là et les règles se chargent sans avertissement ;
@@ -386,6 +417,9 @@ def regles_cli(base: Base, donnees: Path, contrat_id: str, faits_json: str | Non
             print(f"Décision : {d['decision']}")
             for r in d["retenues"]:
                 print(f"  « {r['garantie']} » ({r['article']}) : {r['motif']}")
+            if d.get("preuve"):
+                print("Arbre de preuve :")
+                print("\n".join(f"  {l}" for l in prolog.arbre_lisible(d["preuve"])))
             return 0
         employes = prolog.executer(contrat_id, "vocabulaire_json")
         citations = prolog.executer(contrat_id, "citations_json")
@@ -634,6 +668,13 @@ def main(argv: list[str] | None = None) -> int:
                      help="Enregistrer la version du golden set (après l'avoir modifié ou validé)")
     pb_.add_argument("--fiche", action="store_true", help="Écrire data/golden/A_VALIDER.md, la fiche de relecture des cas")
 
+    pl_ = sous.add_parser("legalbench", help="Second banc, externe : LegalBench insurance_policy_interpretation (Stanford, CC BY 4.0)")
+    pl_.add_argument("--telecharger", action="store_true", help="Télécharger les données (Hugging Face) dans data/externes/legalbench/")
+    pl_.add_argument("--fichier", help="Un autre fichier de cas (.jsonl téléchargé, ou .tsv / .csv LegalBench d'origine)")
+    pl_.add_argument("--split", choices=["test", "train", "tout"], default="test")
+    pl_.add_argument("--limite", type=int, help="Seulement les N premiers cas (essai rapide)")
+    pl_.add_argument("--paralleles", type=int, default=4)
+
     pw = sous.add_parser("rediger", help="Faire rédiger par le modèle les règles Prolog d'une garantie, puis les contrôler")
     pw.add_argument("--contrat", required=True)
     pw.add_argument("--article", action="append", help="Article à traduire (répétable), ex. --article 2.2 --article 2.9")
@@ -723,6 +764,9 @@ def main(argv: list[str] | None = None) -> int:
 
     if a.commande == "banc":
         return banc_cli(base, donnees, a.contrat, a.methode, a.couches, a.repetitions, a.paralleles, a.figer, a.fiche)
+
+    if a.commande == "legalbench":
+        return legalbench_cli(donnees, a.telecharger, a.fichier, a.split, a.limite, a.paralleles)
 
     if a.commande == "rediger":
         return rediger_cli(base, a.contrat, a.article or [], a.controler, a.accepter, a.accepter_vocabulaire)

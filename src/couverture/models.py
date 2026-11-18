@@ -108,6 +108,9 @@ class Verdict(BaseModel):
     # Décision de la grille avant la relecture, si la relecture l'a changée.
     decision_avant_relecture: Decision | None = None
     avertissements: list[str] = Field(default_factory=list)
+    # Méthode « règles » : l'arbre de preuve du moteur Prolog, et sa lecture en lignes.
+    preuve: list[dict] = Field(default_factory=list)
+    raisonnement: list[str] = Field(default_factory=list)
 
 
 class Point(BaseModel):

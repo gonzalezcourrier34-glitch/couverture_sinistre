@@ -39,6 +39,11 @@
     "empreinte": "7caefafb96ab5d2d",
     "source": "couverture.qualite.SYSTEME_QUALITE"
   },
+  "couverture-legalbench": {
+    "version": "v1",
+    "empreinte": "0aaba546fd110a0d",
+    "source": "couverture.legalbench.SYSTEME_LEGALBENCH"
+  },
   "couverture-redaction-regles": {
     "version": "v2",
     "empreinte": "37c9e33892c5f25f",

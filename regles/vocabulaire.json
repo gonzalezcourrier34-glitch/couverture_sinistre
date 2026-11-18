@@ -123,7 +123,7 @@
         "objet_divers": "tout autre objet",
         "plantation": "plantes, arbres, arbustes, haies du jardin",
         "mazout": "fioul (mazout) de chauffage, dans la cuve",
-        "cles": "clés d'accès au logement"
+        "cles": "les clés elles-mêmes, volées ou perdues (pas les clés dont le voleur s'est servi, ni la serrure)"
       }
     },
     "lieu": {

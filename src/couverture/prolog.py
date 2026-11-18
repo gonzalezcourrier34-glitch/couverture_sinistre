@@ -299,8 +299,98 @@ class PipelineRegles:
         consultees = [ClauseRetenue(clause=index[i], score=0.0, raison="règle")
                       for i in dict.fromkeys(c.clause_id for c in conditions) if i in index]
         v = Verdict(decision=decision, justification=motif, citations=citations, conditions=conditions,
-                    informations_manquantes=demander, confiance=confiance, mode=f"regles:{self.llm.nom}+prolog")
+                    informations_manquantes=demander, confiance=confiance, mode=f"regles:{self.llm.nom}+prolog",
+                    preuve=d.get("preuve", []), raisonnement=arbre_lisible(d.get("preuve", [])))
         return v, consultees
+
+
+# --- Arbre de preuve, en lignes lisibles --------------------------------------------------------------
+
+MARQUE = {"oui": "[oui]", "non": "[non]", "inconnu": "[ ? ]"}
+
+
+def _vu(n: dict) -> str:
+    return f"déclaré : {', '.join(n['declare'])}" if n["declare"] else "non déclaré"
+
+
+def _condition(n: dict, prof: int, lignes: list[str], complet: bool, cites: set) -> None:
+    """Une condition et ses sous-conditions, élaguée : d'un « ou » vrai, la branche vraie ; d'un « et »
+    faux, les branches fausses ; un « si » dont la prémisse est fausse est sans objet. Ce qui a décidé
+    reste, le reste se compte. Le texte d'une définition n'est cité qu'une fois."""
+    ind, m, t = "  " * prof, MARQUE[n["etat"]], n["type"]
+    enfants = n["enfants"]
+    if t == "fait":
+        lignes.append(f"{ind}{m} {n['variable']} = {n['attendu']} ({_vu(n)})")
+    elif t in ("vrai", "faux"):
+        lignes.append(f"{ind}{m} {t}")
+    elif t == "concept":
+        texte = "" if n["nom"] in cites and not complet else f" : « {n['texte']} »"
+        cites.add(n["nom"])
+        lignes.append(f"{ind}{m} {n['nom']} (art. {n['article']}{texte})")
+        _condition(enfants[0], prof + 1, lignes, complet, cites)
+    elif t == "non":
+        lignes.append(f"{ind}{m} pas :")
+        _condition(enfants[0], prof + 1, lignes, complet, cites)
+    elif t == "si" and enfants[0]["etat"] == "non" and not complet:
+        lignes.append(f"{ind}{m} sans objet ici :")
+        _condition(enfants[0], prof + 1, lignes, complet, cites)
+    elif t == "si":
+        lignes.append(f"{ind}{m} si … alors … :")
+        for e in enfants:
+            _condition(e, prof + 1, lignes, complet, cites)
+    elif t == "ou" and all(e["type"] == "fait" for e in enfants) and len({e["variable"] for e in enfants}) == 1:
+        lignes.append(f"{ind}{m} {enfants[0]['variable']} parmi {', '.join(e['attendu'] for e in enfants)} ({_vu(enfants[0])})")
+    else:
+        garder = {("ou", "oui"): "oui", ("et", "non"): "non"}.get((t, n["etat"]))
+        montres = enfants if complet or garder is None else [e for e in enfants if e["etat"] == garder]
+        lignes.append(f"{ind}{m} {'toutes' if t == 'et' else 'l’une'} de :")
+        for e in montres:
+            _condition(e, prof + 1, lignes, complet, cites)
+        if len(montres) < len(enfants):
+            lignes.append(f"{ind}  … {len(enfants) - len(montres)} autre(s), sans effet sur la conclusion")
+
+
+SENS = {
+    "périmètre": ("Périmètre", {"oui": "établi", "non": "non établi", "inconnu": "inconnu"}),
+    "condition": ("Condition", {"oui": "remplie", "non": "non remplie", "inconnu": "inconnue"}),
+    "obligation": ("Obligation", {"oui": "respectée", "non": "non respectée", "inconnu": "à vérifier"}),
+    "exclusion": ("Exclusion", {"oui": "s'applique", "non": "ne s'applique pas", "inconnu": "à établir"}),
+}
+
+
+def arbre_lisible(preuve: list[dict], complet: bool = False) -> list[str]:
+    """L'arbre de preuve du moteur (moteur.pl, arbres_de_preuve/2) en lignes : la garantie, puis chaque nœud avec
+    sa phrase du contrat et son état, jusqu'aux faits déclarés. Sans `complet`, les exclusions qui ne
+    jouent pas, et celles que l'assureur devrait prouver sans que la déclaration les évoque, sont
+    comptées au lieu d'être listées."""
+    lignes: list[str] = []
+    for g in preuve:
+        lignes.append(f"Garantie « {g['nom']} » (art. {g['article']}) → {ISSUE.get(g['decision'], g['decision'])}")
+        cites: set = set()
+        ecartees, presumees = 0, []
+        for n in g["enfants"]:
+            if n["type"] == "exclusion" and not complet:
+                if n["etat"] == "non":
+                    ecartees += 1
+                    continue
+                if n["etat"] == "inconnu" and n.get("a_demander") == "non":
+                    presumees.append(n["article"])
+                    continue
+            role, sens = SENS[n["type"]]
+            phrase = f" — art. {n['article']} : « {n['texte']} »" if n.get("article") else ""
+            lignes.append(f"  {MARQUE[n['etat']]} {role} {sens[n['etat']]}{phrase}")
+            for e in n["enfants"]:
+                _condition(e, 3, lignes, complet, cites)
+            if n["type"] == "obligation" and n["exception"]["etat"] == "oui":
+                lignes.append("      sans incidence ici :")
+                _condition(n["exception"], 4, lignes, complet, cites)
+        if ecartees:
+            lignes.append(f"  {ecartees} exclusion(s) examinée(s) : aucune ne s'applique")
+        if presumees:
+            arts = ", ".join(dict.fromkeys(presumees))
+            lignes.append(f"  {len(presumees)} exclusion(s) que la déclaration n'évoque pas (art. {arts}) : "
+                          "l'assureur devrait les prouver, elles ne changent pas la réponse")
+    return lignes
 
 
 ISSUE = {"COUVERT": "couvert", "NON_COUVERT": "non couvert", "INCERTAIN": "encore incertain", "ERREUR": "?"}

@@ -1,0 +1,7834 @@
+{
+ "date": "2026-11-18T09:59:59",
+ "contrat": "foyer-appart123-2025",
+ "methode": "regles",
+ "golden": {
+  "version": 6,
+  "empreinte": "0b83f83b91580639",
+  "fige": true,
+  "n": 97,
+  "valides": 0,
+  "auteurs": {
+   "claude": 97
+  }
+ },
+ "couches": {
+  "regles": {
+   "metriques": {
+    "n": 97,
+    "exactitude": 1.0,
+    "exactitude_stricte": 0.804,
+    "faux_couverts": 0,
+    "faux_refus": 0,
+    "taux_incertain": 0.247,
+    "rappel_questions": 1.0,
+    "questions_par_incertain": 0.8,
+    "incertains_tranchables": 0.208,
+    "questions_inutiles_retirees": 16
+   },
+   "groupes": {
+    "auteur : claude": {
+     "n": 97,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.804,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.247
+    },
+    "garantie : 1.4": {
+     "n": 2,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "garantie : 2.1": {
+     "n": 13,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.077
+    },
+    "garantie : 2.10": {
+     "n": 40,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.875,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.225
+    },
+    "garantie : 2.11": {
+     "n": 1,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 1.0
+    },
+    "garantie : 2.12": {
+     "n": 1,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 1.0
+    },
+    "garantie : 2.2": {
+     "n": 6,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.667,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.5
+    },
+    "garantie : 2.3": {
+     "n": 2,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 1.0
+    },
+    "garantie : 2.4": {
+     "n": 1,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "garantie : 2.5": {
+     "n": 1,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 1.0
+    },
+    "garantie : 2.6": {
+     "n": 4,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 1.0
+    },
+    "garantie : 2.7": {
+     "n": 16,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.875,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "garantie : 2.8": {
+     "n": 1,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 1.0
+    },
+    "garantie : 2.9": {
+     "n": 7,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "garantie : aucune": {
+     "n": 2,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.5,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.5
+    },
+    "thème : base": {
+     "n": 2,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "thème : hors_regles": {
+     "n": 24,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.5,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.583
+    },
+    "thème : info_manquante": {
+     "n": 16,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.688,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.625
+    },
+    "thème : langue": {
+     "n": 11,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "thème : multi": {
+     "n": 8,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "thème : piege": {
+     "n": 55,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.836,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.2
+    },
+    "thème : variante": {
+     "n": 13,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.923,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.077
+    }
+   },
+   "cas": [
+    {
+     "id": "velo-01",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "velo-02",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "velo-03",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.5,
+     "non_traduits": []
+    },
+    {
+     "id": "velo-04",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "velo-05",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "velo-06",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "velo-07",
+     "attendu": "COUVERT",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": false,
+     "tranchable": true,
+     "inutiles": 0,
+     "questions": [
+      "serrure_surete"
+     ],
+     "rappel_questions": 1.0,
+     "rappel_clauses": 0.5,
+     "non_traduits": []
+    },
+    {
+     "id": "bougie-01",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "bougie-02",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "bougie-03",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "bougie-04",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.5,
+     "non_traduits": []
+    },
+    {
+     "id": "bougie-05",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "autre-01",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "autre-02",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.5,
+     "non_traduits": []
+    },
+    {
+     "id": "val-01",
+     "attendu": "NON_COUVERT",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": false,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [
+      "lien_causal"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "val-02",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "val-03",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "val-04",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.5,
+     "non_traduits": []
+    },
+    {
+     "id": "val-05",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "val-06",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "val-07",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "val-08",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "val-09",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "val-10",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.5,
+     "non_traduits": []
+    },
+    {
+     "id": "val-11",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "val-12",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "val-13",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.0,
+     "non_traduits": []
+    },
+    {
+     "id": "val-14",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "val-15",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "red-t01",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 1,
+     "questions": [
+      "cause_eau"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 0.0,
+     "non_traduits": []
+    },
+    {
+     "id": "red-t02",
+     "attendu": "NON_COUVERT",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": false,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.0,
+     "non_traduits": [
+      "tempete"
+     ]
+    },
+    {
+     "id": "red-t03",
+     "attendu": "NON_COUVERT",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": false,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.0,
+     "non_traduits": [
+      "tempete"
+     ]
+    },
+    {
+     "id": "red-t04",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 1,
+     "questions": [
+      "cause_eau"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 0.0,
+     "non_traduits": []
+    },
+    {
+     "id": "red-b01",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 0,
+     "questions": [
+      "travaux_batiment",
+      "travaux_vitres",
+      "type_dommage",
+      "vitre_placee"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "red-b02",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 0,
+     "questions": [
+      "travaux_batiment",
+      "travaux_vitres",
+      "vitre_placee"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "red-b03",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.0,
+     "non_traduits": []
+    },
+    {
+     "id": "red-b04",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.0,
+     "non_traduits": []
+    },
+    {
+     "id": "red-b05",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "red-b06",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g-l01",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g-l02",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g-l03",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g-l04",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g-l05",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g-l06",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g-l07",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": null,
+     "non_traduits": []
+    },
+    {
+     "id": "g-q01",
+     "attendu": "INCERTAIN",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 0,
+     "questions": [
+      "fermeture",
+      "serrure_surete"
+     ],
+     "rappel_questions": 1.0,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g-q02",
+     "attendu": "INCERTAIN",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 2,
+     "questions": [
+      "evenement"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g-q03",
+     "attendu": "INCERTAIN",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 3,
+     "questions": [
+      "lieu",
+      "violence",
+      "depot_moins_30j"
+     ],
+     "rappel_questions": 1.0,
+     "rappel_clauses": null,
+     "non_traduits": []
+    },
+    {
+     "id": "g-q04",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 1,
+     "questions": [
+      "cause_eau"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g-p01",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g-p02",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g-p03",
+     "attendu": "NON_COUVERT",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": false,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [
+      "lien_causal"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g-p04",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.5,
+     "non_traduits": []
+    },
+    {
+     "id": "g-p05",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g-p06",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g-p07",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g-p08",
+     "attendu": "NON_COUVERT",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": false,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": [
+      "tempete"
+     ]
+    },
+    {
+     "id": "g-p09",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g-h01",
+     "attendu": "COUVERT",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": false,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.0,
+     "non_traduits": [
+      "electricite"
+     ]
+    },
+    {
+     "id": "g-h02",
+     "attendu": "COUVERT",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": false,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.0,
+     "non_traduits": [
+      "electricite"
+     ]
+    },
+    {
+     "id": "g-h03",
+     "attendu": "COUVERT",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": false,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.0,
+     "non_traduits": [
+      "mazout"
+     ]
+    },
+    {
+     "id": "g-h04",
+     "attendu": "COUVERT",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": false,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.0,
+     "non_traduits": [
+      "catastrophe_naturelle"
+     ]
+    },
+    {
+     "id": "g-h05",
+     "attendu": "COUVERT",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": false,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.0,
+     "non_traduits": [
+      "catastrophe_naturelle"
+     ]
+    },
+    {
+     "id": "g-h06",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [
+      "travaux_batiment",
+      "travaux_vitres",
+      "type_dommage",
+      "vitre_placee"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 0.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g-h07",
+     "attendu": "COUVERT",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": false,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.0,
+     "non_traduits": [
+      "electricite"
+     ]
+    },
+    {
+     "id": "g-m01",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g-m02",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-i01",
+     "attendu": "INCERTAIN",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 3,
+     "questions": [
+      "lieu",
+      "violence",
+      "depot_moins_30j"
+     ],
+     "rappel_questions": 1.0,
+     "rappel_clauses": 0.5,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-i02",
+     "attendu": "INCERTAIN",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": false,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [
+      "cles_a_proximite",
+      "fenetres_fermees",
+      "portes_fermees"
+     ],
+     "rappel_questions": 1.0,
+     "rappel_clauses": 0.5,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-i03",
+     "attendu": "INCERTAIN",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": false,
+     "tranchable": true,
+     "inutiles": 1,
+     "questions": [
+      "cause_eau"
+     ],
+     "rappel_questions": 1.0,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-i04",
+     "attendu": "INCERTAIN",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 2,
+     "questions": [
+      "evenement"
+     ],
+     "rappel_questions": 1.0,
+     "rappel_clauses": 0.5,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-i05",
+     "attendu": "INCERTAIN",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 0,
+     "questions": [
+      "bien",
+      "embrasement"
+     ],
+     "rappel_questions": 1.0,
+     "rappel_clauses": 0.5,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-i06",
+     "attendu": "INCERTAIN",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": false,
+     "tranchable": true,
+     "inutiles": 0,
+     "questions": [
+      "prevention_gel"
+     ],
+     "rappel_questions": 1.0,
+     "rappel_clauses": 0.5,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-i08",
+     "attendu": "INCERTAIN",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 0,
+     "questions": [
+      "violence",
+      "vol_sur_personne"
+     ],
+     "rappel_questions": 1.0,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-i11",
+     "attendu": "INCERTAIN",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.0,
+     "non_traduits": [
+      "tempete"
+     ]
+    },
+    {
+     "id": "g2-i12",
+     "attendu": "INCERTAIN",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": false,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [
+      "cles_a_proximite",
+      "fenetres_fermees",
+      "portes_fermees"
+     ],
+     "rappel_questions": 1.0,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-i15",
+     "attendu": "INCERTAIN",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.0,
+     "non_traduits": [
+      "merule"
+     ]
+    },
+    {
+     "id": "g2-i16",
+     "attendu": "COUVERT",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": false,
+     "tranchable": true,
+     "inutiles": 0,
+     "questions": [
+      "bien"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 0.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-i17",
+     "attendu": "COUVERT",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": false,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.0,
+     "non_traduits": [
+      "vandalisme"
+     ]
+    },
+    {
+     "id": "g2-i13",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-i14",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-p12",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-p01",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [
+      "cles_a_proximite",
+      "fenetres_fermees"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 0.5,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-i07",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-p03",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-p04",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-p06",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-p08",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-p09",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-p10",
+     "attendu": "NON_COUVERT",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": false,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.0,
+     "non_traduits": [
+      "electricite"
+     ]
+    },
+    {
+     "id": "g2-l01",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-l02",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-l03",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [
+      "cles_a_proximite"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-l04",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-m01",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "g2-m02",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 2,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.0,
+     "non_traduits": []
+    }
+   ]
+  },
+  "chaine": {
+   "metriques": {
+    "exactitude": {
+     "moyenne": 0.753,
+     "min": 0.753,
+     "max": 0.753
+    },
+    "exactitude_stricte": {
+     "moyenne": 0.546,
+     "min": 0.536,
+     "max": 0.557
+    },
+    "faux_couverts": {
+     "moyenne": 9.333,
+     "min": 9,
+     "max": 10
+    },
+    "faux_refus": {
+     "moyenne": 5.0,
+     "min": 4,
+     "max": 6
+    },
+    "taux_incertain": {
+     "moyenne": 0.299,
+     "min": 0.289,
+     "max": 0.309
+    },
+    "n": 97,
+    "executions": 3,
+    "instables": 14,
+    "rappel_clauses": 0.588,
+    "rappel_questions": 0.515,
+    "erreurs_fournisseur": 0,
+    "duree_moyenne_s": 41.9
+   },
+   "groupes": {
+    "auteur : claude": {
+     "n": 97,
+     "exactitude": 0.753,
+     "exactitude_stricte": 0.557,
+     "faux_couverts": 9,
+     "faux_refus": 5,
+     "taux_incertain": 0.299
+    },
+    "garantie : 1.4": {
+     "n": 2,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "garantie : 2.1": {
+     "n": 13,
+     "exactitude": 0.769,
+     "exactitude_stricte": 0.769,
+     "faux_couverts": 2,
+     "faux_refus": 0,
+     "taux_incertain": 0.154
+    },
+    "garantie : 2.10": {
+     "n": 40,
+     "exactitude": 0.7,
+     "exactitude_stricte": 0.6,
+     "faux_couverts": 6,
+     "faux_refus": 1,
+     "taux_incertain": 0.25
+    },
+    "garantie : 2.11": {
+     "n": 1,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 1.0
+    },
+    "garantie : 2.12": {
+     "n": 1,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 1.0
+    },
+    "garantie : 2.2": {
+     "n": 6,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.5,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.333
+    },
+    "garantie : 2.3": {
+     "n": 2,
+     "exactitude": 0.5,
+     "exactitude_stricte": 0.0,
+     "faux_couverts": 0,
+     "faux_refus": 1,
+     "taux_incertain": 0.5
+    },
+    "garantie : 2.4": {
+     "n": 1,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 1.0
+    },
+    "garantie : 2.5": {
+     "n": 1,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 1.0
+    },
+    "garantie : 2.6": {
+     "n": 4,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 1.0
+    },
+    "garantie : 2.7": {
+     "n": 16,
+     "exactitude": 0.562,
+     "exactitude_stricte": 0.5,
+     "faux_couverts": 1,
+     "faux_refus": 2,
+     "taux_incertain": 0.188
+    },
+    "garantie : 2.8": {
+     "n": 1,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 1.0
+    },
+    "garantie : 2.9": {
+     "n": 7,
+     "exactitude": 0.857,
+     "exactitude_stricte": 0.714,
+     "faux_couverts": 0,
+     "faux_refus": 1,
+     "taux_incertain": 0.143
+    },
+    "garantie : aucune": {
+     "n": 2,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.5,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.5
+    },
+    "thème : base": {
+     "n": 2,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "thème : hors_regles": {
+     "n": 24,
+     "exactitude": 0.917,
+     "exactitude_stricte": 0.333,
+     "faux_couverts": 0,
+     "faux_refus": 2,
+     "taux_incertain": 0.583
+    },
+    "thème : info_manquante": {
+     "n": 16,
+     "exactitude": 0.625,
+     "exactitude_stricte": 0.375,
+     "faux_couverts": 3,
+     "faux_refus": 0,
+     "taux_incertain": 0.438
+    },
+    "thème : langue": {
+     "n": 11,
+     "exactitude": 0.909,
+     "exactitude_stricte": 0.909,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.091
+    },
+    "thème : multi": {
+     "n": 8,
+     "exactitude": 0.875,
+     "exactitude_stricte": 0.75,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.25
+    },
+    "thème : piege": {
+     "n": 55,
+     "exactitude": 0.655,
+     "exactitude_stricte": 0.527,
+     "faux_couverts": 8,
+     "faux_refus": 4,
+     "taux_incertain": 0.218
+    },
+    "thème : variante": {
+     "n": 13,
+     "exactitude": 0.769,
+     "exactitude_stricte": 0.538,
+     "faux_couverts": 2,
+     "faux_refus": 0,
+     "taux_incertain": 0.308
+    }
+   },
+   "reponses": {
+    "velo-01": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "velo-02": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "velo-03": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "velo-04": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "velo-05": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "velo-06": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "velo-07": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "bougie-01": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "bougie-02": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "bougie-03": [
+     "COUVERT",
+     "COUVERT",
+     "INCERTAIN"
+    ],
+    "bougie-04": [
+     "COUVERT",
+     "NON_COUVERT",
+     "COUVERT"
+    ],
+    "bougie-05": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "autre-01": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "autre-02": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "val-01": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "val-02": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "val-03": [
+     "COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "val-04": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "val-05": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "val-06": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "val-07": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "val-08": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "val-09": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "val-10": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "val-11": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "val-12": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "val-13": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "val-14": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "val-15": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "red-t01": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "red-t02": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "red-t03": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "red-t04": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "red-b01": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "red-b02": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "red-b03": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "red-b04": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "red-b05": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "COUVERT"
+    ],
+    "red-b06": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "g-l01": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "g-l02": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g-l03": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "g-l04": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g-l05": [
+     "INCERTAIN",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g-l06": [
+     "COUVERT",
+     "INCERTAIN",
+     "COUVERT"
+    ],
+    "g-l07": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "g-q01": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "g-q02": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g-q03": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g-q04": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g-p01": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "g-p02": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g-p03": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g-p04": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "g-p05": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "g-p06": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "g-p07": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g-p08": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "g-p09": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "g-h01": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "g-h02": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "g-h03": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "g-h04": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "g-h05": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "g-h06": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "g-h07": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "g-m01": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g-m02": [
+     "COUVERT",
+     "NON_COUVERT",
+     "COUVERT"
+    ],
+    "g2-i01": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "g2-i02": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "g2-i03": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "g2-i04": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g2-i05": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "g2-i06": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g2-i08": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "g2-i11": [
+     "COUVERT",
+     "INCERTAIN",
+     "COUVERT"
+    ],
+    "g2-i12": [
+     "INCERTAIN",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g2-i15": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "g2-i16": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "COUVERT"
+    ],
+    "g2-i17": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "g2-i13": [
+     "NON_COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g2-i14": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "g2-p12": [
+     "NON_COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g2-p01": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "COUVERT"
+    ],
+    "g2-i07": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "g2-p03": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "g2-p04": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "g2-p06": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g2-p08": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "g2-p09": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g2-p10": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "g2-l01": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g2-l02": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g2-l03": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g2-l04": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g2-m01": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g2-m02": [
+     "COUVERT",
+     "INCERTAIN",
+     "INCERTAIN"
+    ]
+   },
+   "instables": [
+    "bougie-03",
+    "bougie-04",
+    "g-l05",
+    "g-l06",
+    "g-m02",
+    "g2-i11",
+    "g2-i12",
+    "g2-i13",
+    "g2-i16",
+    "g2-m02",
+    "g2-p01",
+    "g2-p12",
+    "red-b05",
+    "val-03"
+   ],
+   "executions": [
+    [
+     {
+      "id": "velo-01",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-04",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ?",
+       "Le vol a-t-il été commis sur vous (sur votre personne) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-07",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "bougie-01",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "bougie-02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "bougie-03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "bougie-04",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "bougie-05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "autre-01",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "autre-02",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Où se trouvaient les biens ? (annexe/cave/garage/grenier… → couvert ; abri_jardin/autre_batiment/casier/chez_reparateur… → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-01",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Étiez-vous absent au moment des faits ?",
+       "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-04",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-05",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-06",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Le bien était-il déposé chez le réparateur depuis 30 jours au plus ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-07",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-08",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-09",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Où se trouvaient les biens ? (annexe/cave/garage/grenier… → couvert ; abri_jardin/autre_batiment/casier/chez_reparateur… → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-10",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-12",
+      "attendu": "COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-13",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-14",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-15",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-t01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-t02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-t03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-t04",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b01",
+      "attendu": "COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ? (aucun/entretien_reparation → couvert ; autres_que_entretien_reparation → non couvert)",
+       "Des travaux (autres que nettoyage) sont-ils effectués sur les vitres ? (aucun/nettoyage → couvert ; autres_que_nettoyage → non couvert)",
+       "La vitre était-elle placée ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b04",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b05",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l01",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l04",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l05",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Où se trouvaient les biens ? (annexe/cave/garage/grenier… → couvert ; abri_jardin/autre_batiment/casier/chez_reparateur… → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l06",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l07",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": null,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-q01",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Comment le local était-il fermé ?",
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "g-q02",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-q03",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?"
+      ],
+      "rappel_clauses": null,
+      "erreur": false,
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "g-q04",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p01",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p04",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Où se trouvaient les biens ? (annexe/cave/garage/grenier… → couvert ; abri_jardin/autre_batiment/casier/chez_reparateur… → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p05",
+      "attendu": "COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p07",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p08",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p09",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h01",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h02",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h03",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h04",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h05",
+      "attendu": "COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h06",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h07",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-m01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-m02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ? (debordement_aquarium/fuite_installation/gel/infiltration_toiture → couvert ; condensation/debordement_recipient/eau_souterraine/infiltration_exterieure… → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i01",
+      "attendu": "INCERTAIN",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "g2-i02",
+      "attendu": "INCERTAIN",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "g2-i03",
+      "attendu": "INCERTAIN",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "g2-i04",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?",
+       "Les fenêtres et autres ouvertures facilement accessibles étaient-elles fermées ?",
+       "Les portes extérieures étaient-elles fermées à clé ?"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "g2-i05",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Quels biens sont endommagés ou volés ?",
+       "Le feu s'est-il propagé (embrasement) ?"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "g2-i06",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "g2-i08",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ?",
+       "Le vol a-t-il été commis sur vous (sur votre personne) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "g2-i11",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "D'où venait l'eau ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i12",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Le non-respect de l'obligation de prévention a-t-il permis ou facilité le sinistre ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "g2-i15",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i16",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Quels biens sont endommagés ou volés ? (animal/appareil_audiovisuel/bijoux/cadre… → couvert ; canalisation/cles/couverture_piscine/mazout… → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i17",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i13",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i14",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p12",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p01",
+      "attendu": "COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i07",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Où se trouvaient les biens ?",
+       "Y a-t-il eu violences physiques ou menaces ?",
+       "Le bien était-il déposé chez le réparateur depuis 30 jours au plus ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p04",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p06",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p08",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p09",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p10",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-l01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-l02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-l03",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-l04",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-m01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-m02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     }
+    ],
+    [
+     {
+      "id": "velo-01",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-04",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ?",
+       "Le vol a-t-il été commis sur vous (sur votre personne) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-07",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "bougie-01",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "bougie-02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "bougie-03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "bougie-04",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "bougie-05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "autre-01",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "autre-02",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Où se trouvaient les biens ? (annexe/cave/garage/grenier… → couvert ; abri_jardin/autre_batiment/casier/chez_reparateur… → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-01",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Étiez-vous absent au moment des faits ?",
+       "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-04",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-05",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-06",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Le bien était-il déposé chez le réparateur depuis 30 jours au plus ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-07",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-08",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-09",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Où se trouvaient les biens ? (annexe/cave/garage/grenier… → couvert ; abri_jardin/autre_batiment/casier/chez_reparateur… → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-10",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-12",
+      "attendu": "COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-13",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-14",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-15",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-t01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-t02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-t03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-t04",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b01",
+      "attendu": "COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ? (aucun/entretien_reparation → couvert ; autres_que_entretien_reparation → non couvert)",
+       "Des travaux (autres que nettoyage) sont-ils effectués sur les vitres ? (aucun/nettoyage → couvert ; autres_que_nettoyage → non couvert)",
+       "La vitre était-elle placée ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b04",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b05",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l01",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l04",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l06",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ?",
+       "Le vol a-t-il été commis sur vous (sur votre personne) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l07",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": null,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-q01",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Comment le local était-il fermé ?",
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "g-q02",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-q03",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?"
+      ],
+      "rappel_clauses": null,
+      "erreur": false,
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "g-q04",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p01",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p04",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Où se trouvaient les biens ? (annexe/cave/garage/grenier… → couvert ; abri_jardin/autre_batiment/casier/chez_reparateur… → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p05",
+      "attendu": "COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p07",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p08",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p09",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h01",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h02",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h03",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h04",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h05",
+      "attendu": "COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h06",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h07",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-m01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-m02",
+      "attendu": "COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i01",
+      "attendu": "INCERTAIN",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "g2-i02",
+      "attendu": "INCERTAIN",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "g2-i03",
+      "attendu": "INCERTAIN",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "g2-i04",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?",
+       "Les fenêtres et autres ouvertures facilement accessibles étaient-elles fermées ?",
+       "Les portes extérieures étaient-elles fermées à clé ?"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "g2-i05",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Quels biens sont endommagés ou volés ?",
+       "Le feu s'est-il propagé (embrasement) ?",
+       "Y a-t-il eu des flammes ?"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "g2-i06",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "g2-i08",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ?",
+       "Le vol a-t-il été commis sur vous (sur votre personne) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "g2-i11",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i12",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?",
+       "Les fenêtres et autres ouvertures facilement accessibles étaient-elles fermées ?",
+       "Les portes extérieures étaient-elles fermées à clé ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "g2-i15",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i16",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Quels biens sont endommagés ou volés ? (animal/appareil_audiovisuel/bijoux/cadre… → couvert ; canalisation/cles/couverture_piscine/mazout… → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i17",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i13",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i14",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p12",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ? (aucun/entretien_reparation → couvert ; autres_que_entretien_reparation → non couvert)",
+       "Des travaux (autres que nettoyage) sont-ils effectués sur les vitres ? (aucun/nettoyage → couvert ; autres_que_nettoyage → non couvert)",
+       "Quel est le type de dommage ? (bris/felure → couvert ; opacification_ou_perte_etancheite/rayure_ou_ecaillement → non couvert)",
+       "La vitre était-elle placée ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p01",
+      "attendu": "COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i07",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Où se trouvaient les biens ?",
+       "Y a-t-il eu violences physiques ou menaces ?",
+       "Le bien était-il déposé chez le réparateur depuis 30 jours au plus ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p04",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p06",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p08",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p09",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p10",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-l01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-l02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-l03",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-l04",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-m01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-m02",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     }
+    ],
+    [
+     {
+      "id": "velo-01",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-04",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ?",
+       "Le vol a-t-il été commis sur vous (sur votre personne) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-07",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "bougie-01",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "bougie-02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "bougie-03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Où se trouvaient les biens ? (annexe/cave/garage/grenier… → couvert ; abri_jardin/autre_batiment/casier/chez_reparateur… → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "bougie-04",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "bougie-05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "autre-01",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "autre-02",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Où se trouvaient les biens ? (annexe/cave/garage/grenier… → couvert ; abri_jardin/autre_batiment/casier/chez_reparateur… → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-01",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Étiez-vous absent au moment des faits ?",
+       "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-04",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-05",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-06",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Le bien était-il déposé chez le réparateur depuis 30 jours au plus ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-07",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-08",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-09",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Où se trouvaient les biens ? (annexe/cave/garage/grenier… → couvert ; abri_jardin/autre_batiment/casier/chez_reparateur… → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-10",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-12",
+      "attendu": "COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-13",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-14",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "val-15",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-t01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-t02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-t03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-t04",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b01",
+      "attendu": "COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ? (aucun/entretien_reparation → couvert ; autres_que_entretien_reparation → non couvert)",
+       "Des travaux (autres que nettoyage) sont-ils effectués sur les vitres ? (aucun/nettoyage → couvert ; autres_que_nettoyage → non couvert)",
+       "La vitre était-elle placée ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b04",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b05",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ? (aucun/entretien_reparation → couvert ; autres_que_entretien_reparation → non couvert)",
+       "Des travaux (autres que nettoyage) sont-ils effectués sur les vitres ? (aucun/nettoyage → couvert ; autres_que_nettoyage → non couvert)",
+       "Quel est le type de dommage ? (bris/felure → couvert ; opacification_ou_perte_etancheite/rayure_ou_ecaillement → non couvert)",
+       "La vitre était-elle placée ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l01",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l04",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l06",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l07",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": null,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-q01",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Comment le local était-il fermé ?",
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "g-q02",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-q03",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?"
+      ],
+      "rappel_clauses": null,
+      "erreur": false,
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "g-q04",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p01",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p04",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Où se trouvaient les biens ? (annexe/cave/garage/grenier… → couvert ; abri_jardin/autre_batiment/casier/chez_reparateur… → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p05",
+      "attendu": "COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p07",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p08",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p09",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h01",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h02",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h03",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h04",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h05",
+      "attendu": "COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h06",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h07",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-m01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g-m02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ? (debordement_aquarium/fuite_installation/gel/infiltration_toiture → couvert ; condensation/debordement_recipient/eau_souterraine/infiltration_exterieure… → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i01",
+      "attendu": "INCERTAIN",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "g2-i02",
+      "attendu": "INCERTAIN",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "g2-i03",
+      "attendu": "INCERTAIN",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "g2-i04",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?",
+       "Les fenêtres et autres ouvertures facilement accessibles étaient-elles fermées ?",
+       "Les portes extérieures étaient-elles fermées à clé ?"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "g2-i05",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Quels biens sont endommagés ou volés ?",
+       "Le feu s'est-il propagé (embrasement) ?",
+       "Y a-t-il eu des flammes ?"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "g2-i06",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "g2-i08",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ?",
+       "Le vol a-t-il été commis sur vous (sur votre personne) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "g2-i11",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "D'où venait l'eau ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i12",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?",
+       "Les fenêtres et autres ouvertures facilement accessibles étaient-elles fermées ?",
+       "Les portes extérieures étaient-elles fermées à clé ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "g2-i15",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i16",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i17",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i13",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i14",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p12",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ? (aucun/entretien_reparation → couvert ; autres_que_entretien_reparation → non couvert)",
+       "Des travaux (autres que nettoyage) sont-ils effectués sur les vitres ? (aucun/nettoyage → couvert ; autres_que_nettoyage → non couvert)",
+       "Quel est le type de dommage ? (bris/felure → couvert ; opacification_ou_perte_etancheite/rayure_ou_ecaillement → non couvert)",
+       "La vitre était-elle placée ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i07",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Où se trouvaient les biens ?",
+       "Y a-t-il eu violences physiques ou menaces ?",
+       "Le bien était-il déposé chez le réparateur depuis 30 jours au plus ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p04",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p06",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p08",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p09",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p10",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-l01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-l02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-l03",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-l04",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-m01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-m02",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "rappel_questions": null
+     }
+    ]
+   ]
+  },
+  "lecture": {
+   "metriques": {
+    "rappel_faits": 0.778,
+    "cas_avec_contradiction": 20,
+    "cas_avec_fait_vague": 3,
+    "cas_avec_fait_en_trop": 32,
+    "cas_avec_fait_sans_appui": 0,
+    "decisions_changees": 31.33,
+    "decisions_changees_vers_couvert": 14
+   },
+   "cas": [
+    {
+     "id": "velo-01",
+     "rappel": 0.667,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "effraction = non",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "velo-02",
+     "rappel": 0.833,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "velo-03",
+     "rappel": 0.667,
+     "contradictions": [
+      "fermeture : cadenas lu cle"
+     ],
+     "vagues": [],
+     "manques": [
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "velo-04",
+     "rappel": 0.833,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "effraction = non",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "velo-05",
+     "rappel": 0.8,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [
+      "auteur = tiers",
+      "fermeture = cle"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "velo-06",
+     "rappel": 0.5,
+     "contradictions": [
+      "fermeture : cadenas lu cle"
+     ],
+     "vagues": [],
+     "manques": [
+      "fermeture = cadenas",
+      "violence = non",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [
+      "effraction = oui"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "velo-07",
+     "rappel": 0.833,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "bougie-01",
+     "rappel": 0.222,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "absence = oui",
+      "embrasement = non",
+      "evenement = autre",
+      "flammes = non",
+      "lieu = jardin"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "bougie-02",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "bougie-03",
+     "rappel": 0.2,
+     "contradictions": [
+      "bien : mobilier lu element_batiment",
+      "evenement : autre lu fumee"
+     ],
+     "vagues": [],
+     "manques": [
+      "embrasement = non",
+      "flammes = non",
+      "lieu = logement"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "INCERTAIN"
+     ],
+     "change": 1.0,
+     "grave": true
+    },
+    {
+     "id": "bougie-04",
+     "rappel": 0.833,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "absence = oui"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "NON_COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.6666666666666666,
+     "grave": true
+    },
+    {
+     "id": "bougie-05",
+     "rappel": 0.792,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "absence = oui"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "autre-01",
+     "rappel": 0.8,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "violence = oui"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "autre-02",
+     "rappel": 0.667,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "lieu = logement"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "val-01",
+     "rappel": 0.625,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "absence = oui",
+      "effraction = non",
+      "portes_fermees = oui",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [
+      "fermeture = aucune",
+      "fermeture = cle"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 1.0,
+     "grave": true
+    },
+    {
+     "id": "val-02",
+     "rappel": 0.778,
+     "contradictions": [
+      "auteur : personnel_prive lu famille"
+     ],
+     "vagues": [],
+     "manques": [
+      "effraction = non"
+     ],
+     "en_trop": [
+      "fermeture = cle",
+      "proprietaire = assure"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "val-03",
+     "rappel": 0.778,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "proprietaire = hote",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [
+      "auteur = tiers"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.3333333333333333,
+     "grave": true
+    },
+    {
+     "id": "val-04",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "val-05",
+     "rappel": 0.714,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "effraction = non",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "val-06",
+     "rappel": 0.5,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "depot_moins_30j = oui",
+      "effraction = oui",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "val-07",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "val-08",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "val-09",
+     "rappel": 0.0,
+     "contradictions": [
+      "bien : objet_divers lu electronique",
+      "evenement : autre lu fumee"
+     ],
+     "vagues": [],
+     "manques": [
+      "embrasement = non",
+      "flammes = non",
+      "lieu = logement"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "val-10",
+     "rappel": 0.571,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "absence = oui",
+      "prevention_gel = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 1.0,
+     "grave": true
+    },
+    {
+     "id": "val-11",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "val-12",
+     "rappel": 0.667,
+     "contradictions": [
+      "cause_eau : fuite_installation lu debordement_recipient"
+     ],
+     "vagues": [],
+     "manques": [
+      "lieu = logement"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "val-13",
+     "rappel": 0.833,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "cause_eau = infiltration_toiture"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "val-14",
+     "rappel": 0.8,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [
+      "absence = oui",
+      "fermeture = cle"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "val-15",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "red-t01",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "red-t02",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "red-t03",
+     "rappel": 0.667,
+     "contradictions": [
+      "lieu : garage lu annexe",
+      "lieu : garage lu autre_batiment"
+     ],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "red-t04",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "red-b01",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "intentionnel = oui"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "red-b02",
+     "rappel": 0.75,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "lieu = logement"
+     ],
+     "en_trop": [
+      "cause_dommage = autre"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "red-b03",
+     "rappel": 0.444,
+     "contradictions": [
+      "evenement : bris lu autre"
+     ],
+     "vagues": [
+      "bien : appareil_audiovisuel lu electronique"
+     ],
+     "manques": [
+      "lieu = logement"
+     ],
+     "en_trop": [
+      "cause_dommage = autre",
+      "type_dommage = felure"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "red-b04",
+     "rappel": 0.667,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "lieu = logement"
+     ],
+     "en_trop": [
+      "type_dommage = bris"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "red-b05",
+     "rappel": 0.667,
+     "contradictions": [
+      "evenement : bris lu autre"
+     ],
+     "vagues": [],
+     "manques": [
+      "lieu = logement",
+      "vitre_placee = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.3333333333333333,
+     "grave": true
+    },
+    {
+     "id": "red-b06",
+     "rappel": 0.5,
+     "contradictions": [
+      "evenement : bris lu vandalisme"
+     ],
+     "vagues": [],
+     "manques": [
+      "type_dommage = rayure_ou_ecaillement"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "g-l01",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g-l02",
+     "rappel": 0.833,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "absence = oui"
+     ],
+     "en_trop": [
+      "auteur = tiers"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g-l03",
+     "rappel": 0.167,
+     "contradictions": [
+      "bien : mobilier_jardin lu mobilier",
+      "lieu : jardin lu terrasse"
+     ],
+     "vagues": [],
+     "manques": [
+      "absence = oui",
+      "embrasement = non",
+      "flammes = non",
+      "lieu = jardin"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g-l04",
+     "rappel": 0.833,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g-l05",
+     "rappel": 0.933,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "lieu = logement"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "INCERTAIN",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.3333333333333333,
+     "grave": false
+    },
+    {
+     "id": "g-l06",
+     "rappel": 0.722,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "violence = oui",
+      "vol_sur_personne = oui"
+     ],
+     "en_trop": [
+      "auteur = tiers"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "INCERTAIN",
+      "COUVERT"
+     ],
+     "change": 0.3333333333333333,
+     "grave": false
+    },
+    {
+     "id": "g-l07",
+     "rappel": 0.667,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = famille"
+     ],
+     "en_trop": [
+      "lieu = logement"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g-q01",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g-q02",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "evenement = vol"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 1.0,
+     "grave": true
+    },
+    {
+     "id": "g-q03",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "lieu = logement"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 1.0,
+     "grave": true
+    },
+    {
+     "id": "g-q04",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "cause_eau = fuite_installation"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g-p01",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g-p02",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "fermeture = cle",
+      "vol_sur_personne = non"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g-p03",
+     "rappel": 0.666,
+     "contradictions": [
+      "bien : objet_divers lu cles"
+     ],
+     "vagues": [],
+     "manques": [
+      "absence = oui",
+      "portes_fermees = oui"
+     ],
+     "en_trop": [
+      "fermeture = cle"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 1.0,
+     "grave": true
+    },
+    {
+     "id": "g-p04",
+     "rappel": 0.8,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "lieu = logement"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "g-p05",
+     "rappel": 0.75,
+     "contradictions": [
+      "cause_eau : debordement_aquarium lu debordement_recipient"
+     ],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "g-p06",
+     "rappel": 0.75,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "lieu = logement"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g-p07",
+     "rappel": 0.6,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "embrasement = non",
+      "flammes = oui"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g-p08",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g-p09",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g-h01",
+     "rappel": 0.667,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "lieu = logement"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g-h02",
+     "rappel": 0.333,
+     "contradictions": [
+      "bien : objet_divers lu electronique"
+     ],
+     "vagues": [],
+     "manques": [
+      "lieu = logement"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g-h03",
+     "rappel": 0.667,
+     "contradictions": [
+      "bien : element_batiment lu mazout"
+     ],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g-h04",
+     "rappel": 0.556,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "lieu = logement"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g-h05",
+     "rappel": 0.6,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "bien = element_batiment"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "g-h06",
+     "rappel": 0.75,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "g-h07",
+     "rappel": 0.667,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "lieu = logement"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g-m01",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "auteur = tiers",
+      "fermeture = cle",
+      "vol_sur_personne = non"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g-m02",
+     "rappel": 0.571,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "embrasement = oui",
+      "flammes = oui"
+     ],
+     "en_trop": [
+      "cause_eau = inondation"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "NON_COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.3333333333333333,
+     "grave": false
+    },
+    {
+     "id": "g2-i01",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "lieu = parties_communes"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "g2-i02",
+     "rappel": 0.6,
+     "contradictions": [
+      "bien : objet_divers lu element_batiment",
+      "effraction : non lu oui"
+     ],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "fermeture = cle"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "g2-i03",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "cause_eau = infiltration_exterieure"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "g2-i04",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "absence = oui",
+      "evenement = vol"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 1.0,
+     "grave": true
+    },
+    {
+     "id": "g2-i05",
+     "rappel": 0.778,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "flammes = oui"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g2-i06",
+     "rappel": 0.833,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g2-i08",
+     "rappel": 0.667,
+     "contradictions": [
+      "lieu : autre_batiment lu voie_publique"
+     ],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g2-i11",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "COUVERT",
+      "INCERTAIN",
+      "COUVERT"
+     ],
+     "change": 0.6666666666666666,
+     "grave": true
+    },
+    {
+     "id": "g2-i12",
+     "rappel": 0.75,
+     "contradictions": [],
+     "vagues": [
+      "bien : appareil_audiovisuel lu electronique"
+     ],
+     "manques": [],
+     "en_trop": [
+      "fenetres_fermees = non",
+      "portes_fermees = non"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "INCERTAIN",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.3333333333333333,
+     "grave": false
+    },
+    {
+     "id": "g2-i15",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g2-i16",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "bien = element_batiment",
+      "cause_eau = fuite_installation"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "COUVERT"
+     ],
+     "change": 0.3333333333333333,
+     "grave": true
+    },
+    {
+     "id": "g2-i17",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g2-i13",
+     "rappel": 0.867,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "manque_entretien = oui"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.6666666666666666,
+     "grave": true
+    },
+    {
+     "id": "g2-i14",
+     "rappel": 0.944,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "manque_entretien = oui"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g2-p12",
+     "rappel": 0.667,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = assure",
+      "intentionnel = oui"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.6666666666666666,
+     "grave": true
+    },
+    {
+     "id": "g2-p01",
+     "rappel": 0.333,
+     "contradictions": [
+      "bien : objet_divers lu cles",
+      "bien : objet_divers lu element_batiment",
+      "effraction : non lu oui"
+     ],
+     "vagues": [],
+     "manques": [
+      "absence = oui",
+      "portes_fermees = oui"
+     ],
+     "en_trop": [
+      "auteur = tiers",
+      "fermeture = cle"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.6666666666666666,
+     "grave": false
+    },
+    {
+     "id": "g2-i07",
+     "rappel": 0.5,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "lieu = voie_publique",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [
+      "absence = oui"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "g2-p03",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g2-p04",
+     "rappel": 0.667,
+     "contradictions": [
+      "evenement : vol lu mazout"
+     ],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "g2-p06",
+     "rappel": 0.8,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "violence = non",
+      "vol_sur_personne = oui"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g2-p08",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g2-p09",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g2-p10",
+     "rappel": 0.667,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "lieu = logement"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g2-l01",
+     "rappel": 0.833,
+     "contradictions": [],
+     "vagues": [
+      "bien : appareil_audiovisuel lu electronique/valeurs"
+     ],
+     "manques": [],
+     "en_trop": [
+      "fermeture = cle",
+      "portes_fermees = non",
+      "vol_sur_personne = non"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g2-l02",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g2-l03",
+     "rappel": 0.75,
+     "contradictions": [
+      "bien : objet_divers lu valeurs"
+     ],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "portes_fermees = oui",
+      "vol_sur_personne = non"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g2-l04",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g2-m01",
+     "rappel": 0.833,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "g2-m02",
+     "rappel": 0.833,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "cause_eau = infiltration_exterieure"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.6666666666666666,
+     "grave": false
+    }
+   ]
+  }
+ },
+ "avertissements": [],
+ "modele": "mistral:mistral-small-latest",
+ "portes": [
+  {
+   "couche": "regles",
+   "critere": "faux_couverts",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 0,
+   "ok": true
+  },
+  {
+   "couche": "regles",
+   "critere": "faux_refus",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 0,
+   "ok": true
+  },
+  {
+   "couche": "regles",
+   "critere": "exactitude",
+   "sens": "min",
+   "seuil": 0.95,
+   "valeur": 1.0,
+   "ok": true
+  },
+  {
+   "couche": "regles",
+   "critere": "rappel_questions",
+   "sens": "min",
+   "seuil": 0.9,
+   "valeur": 1.0,
+   "ok": true
+  },
+  {
+   "couche": "regles",
+   "critere": "questions_par_incertain",
+   "sens": "max",
+   "seuil": 3,
+   "valeur": 0.8,
+   "ok": true
+  },
+  {
+   "couche": "lecture",
+   "critere": "decisions_changees",
+   "sens": "max",
+   "seuil": 2,
+   "valeur": 31.33,
+   "ok": false
+  },
+  {
+   "couche": "lecture",
+   "critere": "decisions_changees_vers_couvert",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 14,
+   "ok": false
+  },
+  {
+   "couche": "lecture",
+   "critere": "cas_avec_contradiction",
+   "sens": "max",
+   "seuil": 5,
+   "valeur": 20,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "faux_couverts",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 9.333,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "faux_refus",
+   "sens": "max",
+   "seuil": 1,
+   "valeur": 5.0,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "exactitude",
+   "sens": "min",
+   "seuil": 0.85,
+   "valeur": 0.753,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "instables",
+   "sens": "max",
+   "seuil": 3,
+   "valeur": 14,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "rappel_questions",
+   "sens": "min",
+   "seuil": 0.8,
+   "valeur": 0.515,
+   "ok": false
+  }
+ ],
+ "passe": false
+}

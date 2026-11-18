@@ -264,6 +264,56 @@ class Moteur:
         return {"rattachement": "rattachée", "decision": "COUVERT", "questions": [], "reserves": reserves,
                 "partielles": [x[3] for x in xs if x[0] == "partielle"]}
 
+    # Arbre de preuve (miroir de arbre/2, arbre_garantie/2 et arbres_de_preuve/2)
+    def arbre(self, t) -> dict:
+        e = self.eval(t)
+        if t in ("vrai", "faux"):
+            return {"type": str(t), "etat": e, "enfants": []}
+        if t.nom == "f":
+            v, x = t.args
+            return {"type": "fait", "variable": v, "attendu": x, "declare": sorted(self.faits.get(v, set())),
+                    "etat": e, "enfants": []}
+        if t.nom == "non":
+            return {"type": "non", "etat": e, "enfants": [self.arbre(t.args[0])]}
+        if t.nom in ("et", "ou"):
+            return {"type": t.nom, "etat": e, "enfants": [self.arbre(c) for c in t.args[0]]}
+        if t.nom == "si":
+            return {"type": "si", "etat": e, "enfants": [self.arbre(t.args[0]), self.arbre(t.args[1])]}
+        d = self.c.definition(t.args[0])
+        return {"type": "concept", "nom": t.args[0], "article": d.args[2], "texte": d.args[3], "etat": e,
+                "enfants": [self.arbre(d.args[1])]}
+
+    def arbre_garantie(self, g) -> dict:
+        gar = next(x for x in self.c.regles("garantie", 4) if x.args[0] == g)
+        r = self.garantie(g)
+        es = []
+        for p in self.c.regles("perimetre", 2):
+            if p.args[0] == g:
+                a = self.arbre(p.args[1])
+                es.append({"type": "périmètre", "etat": a["etat"], "enfants": [a]})
+        if r["rattachement"] != "hors":
+            for c in self.c.regles("circonstance", 4):
+                if c.args[0] == g:
+                    a = self.arbre(c.args[1])
+                    es.append({"type": "condition", "article": c.args[2], "texte": c.args[3], "etat": a["etat"], "enfants": [a]})
+            for o in self.c.regles("obligation", 6):
+                if o.args[0] == g:
+                    cond, exc, _, art, txt = o.args[1:]
+                    e = OUI if self.eval(exc) == OUI else self.eval(cond)
+                    es.append({"type": "obligation", "article": art, "texte": txt, "etat": e,
+                               "enfants": [self.arbre(cond)], "exception": self.arbre(exc)})
+            for x in self.c.regles("exclusion", 6):
+                cible, cond, _, dem, art, txt = x.args
+                if cible == "tous" or cible == g or (isinstance(cible, list) and g in cible):
+                    a = self.arbre(cond)
+                    es.append({"type": "exclusion", "article": art, "texte": txt, "a_demander": dem, "etat": a["etat"],
+                               "enfants": [a]})
+        return {"type": "garantie", "id": g, "nom": gar.args[1], "article": gar.args[2], "texte": gar.args[3],
+                "decision": r["decision"], "enfants": es}
+
+    def preuve(self, d: dict) -> list:
+        return [self.arbre_garantie(g) for g in dict.fromkeys(r["id"] for r in d.get("retenues", []))]
+
     def decider(self) -> dict:
         d = self.combiner()
         traduits = {e.args[0] for e in self.c.regles("evenement_traduit", 1)}
@@ -375,10 +425,12 @@ class Explorateur:
         d = self.m.decider()
         vs = self.questions_posees(d)
         if not vs:
+            d["preuve"] = self.m.preuve(d)
             return d
         qs = [q for v in vs if (q := self.question(d["decision"], v))]
         qs.sort(key=lambda q: RANG[q["effet"]])
         decisives = [q["variable"] for q in qs if q["effet"] == "décisive"]
         ens = decisives[:1] or self.paire([q["variable"] for q in qs if q["effet"] == "utile"])
         d["exploration"] = {"questions": qs, "ensemble": ens}
+        d["preuve"] = self.m.preuve(d)
         return d

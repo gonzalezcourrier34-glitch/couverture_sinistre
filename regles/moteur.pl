@@ -292,6 +292,55 @@ plafonner([], D, D) :- !.
 plafonner(_, D, D) :- get_dict(decision, D, "COUVERT"), !.
 plafonner(NT, D0, D) :- put_dict(_{decision:"INCERTAIN", non_traduits:NT, aucune:false}, D0, D).
 
+% --- Arbre de preuve : pourquoi cette décision ------------------------------------------------------
+/*  Pour chaque garantie retenue, l'arbre de ce que le moteur a évalué : périmètre, conditions,
+    obligations, exclusions, chacune avec sa phrase du contrat, son état (oui, non, inconnu) et ses
+    sous-conditions jusqu'aux faits déclarés. C'est la trace de la déduction elle-même, pas une
+    explication écrite après coup : chaque nœud est recalculé avec le même eval/2 que la décision.
+*/
+
+%!  arbre(+Condition, -Noeud)
+arbre(C, T) :- eval(C, E), arbre_noeud(C, E, T).
+
+arbre_noeud(f(V, X), E, _{type:"fait", variable:V, attendu:X, declare:Ds, etat:E, enfants:[]}) :- !,
+    findall(D, fait(V, D), D0), sort(D0, Ds).
+arbre_noeud(non(C), E, _{type:"non", etat:E, enfants:[T]}) :- !, arbre(C, T).
+arbre_noeud(et(L), E, _{type:"et", etat:E, enfants:Ts}) :- !, maplist(arbre, L, Ts).
+arbre_noeud(ou(L), E, _{type:"ou", etat:E, enfants:Ts}) :- !, maplist(arbre, L, Ts).
+arbre_noeud(si(A, B), E, _{type:"si", etat:E, enfants:[TA, TB]}) :- !, arbre(A, TA), arbre(B, TB).
+arbre_noeud(concept(N), E, _{type:"concept", nom:N, article:A, texte:Tx, etat:E, enfants:[T]}) :- !,
+    once(regle(definition(N, C, A, Tx))), arbre(C, T).
+arbre_noeud(vrai, E, _{type:"vrai", etat:E, enfants:[]}) :- !.
+arbre_noeud(faux, E, _{type:"faux", etat:E, enfants:[]}).
+
+etat_noeud(T, E) :- get_dict(etat, T, E).
+
+%!  arbre_garantie(+Garantie, -Noeud) : une garantie hors de son périmètre ne montre que son périmètre.
+arbre_garantie(G, _{type:"garantie", id:G, nom:Nom, article:A, texte:T, decision:Dec, enfants:Es}) :-
+    regle(garantie(G, Nom, A, T)),
+    evaluer_garantie(G, R),
+    get_dict(decision, R, Dec),
+    findall(N, ( regle(perimetre(G, C)), arbre(C, TC), etat_noeud(TC, E),
+                 N = _{type:"périmètre", etat:E, enfants:[TC]} ), Ps),
+    (   get_dict(rattachement, R, "hors")
+    ->  Es = Ps
+    ;   findall(N, ( regle(circonstance(G, C, A1, T1)), arbre(C, TC), etat_noeud(TC, E),
+                     N = _{type:"condition", article:A1, texte:T1, etat:E, enfants:[TC]} ), Cs),
+        findall(N, ( regle(obligation(G, C, X, _, A1, T1)), etat_obligation(C, X, E),
+                     arbre(C, TC), arbre(X, TX),
+                     N = _{type:"obligation", article:A1, texte:T1, etat:E, enfants:[TC], exception:TX} ), Os),
+        findall(N, ( regle(exclusion(Cible, C, _, Dem, A1, T1)), vise(Cible, G), arbre(C, TC), etat_noeud(TC, E),
+                     N = _{type:"exclusion", article:A1, texte:T1, a_demander:Dem, etat:E, enfants:[TC]} ), Xs),
+        append([Ps, Cs, Os, Xs], Es)
+    ).
+
+%!  arbres_de_preuve(+Decision, -Arbres) : un arbre par garantie retenue.
+arbres_de_preuve(D, Ts) :-
+    get_dict(retenues, D, Rs),
+    findall(G, ( member(R, Rs), get_dict(id, R, G) ), G0),
+    list_to_set(G0, Gs),
+    maplist(arbre_garantie, Gs, Ts).
+
 % --- Raisonnement par hypothèses : quelles questions comptent ? --------------------------------------
 /*  Quand la décision dépend de faits inconnus, le moteur ne se contente pas de lister les questions :
     il **essaie chaque réponse possible** (assertz, décision, retract) et classe chaque question :
@@ -380,9 +429,11 @@ ecrire_json(Terme) :-
 decider_json :-
     decider(D0),
     (   domaine(_, _), questions_posees(D0, [_|_])
-    ->  explorer(D0, E), put_dict(exploration, D0, E, D)
-    ;   D = D0
+    ->  explorer(D0, E), put_dict(exploration, D0, E, D1)
+    ;   D1 = D0
     ),
+    arbres_de_preuve(D1, P),
+    put_dict(preuve, D1, P, D),
     ecrire_json(D).
 
 %  Les couples (variable, valeur) employés par le contrat : comparés au vocabulaire par Python.

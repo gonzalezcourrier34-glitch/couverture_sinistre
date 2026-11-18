@@ -1,0 +1,181 @@
+{
+ "tache": "insurance_policy_interpretation",
+ "date": "2026-11-18T11:02:53",
+ "modele": "mistral:mistral-small-latest",
+ "n": 10,
+ "brute": {
+  "n": 10,
+  "exactitude": 0.6,
+  "exactitude_equilibree": 0.667,
+  "faux_couverts": 2,
+  "faux_refus": 0,
+  "rappel_par_classe": {
+   "COUVERT": 1.0,
+   "NON_COUVERT": 1.0,
+   "INCERTAIN": 0.0
+  },
+  "precision_incertain": null,
+  "taux_incertain": 0.0,
+  "erreurs": 0
+ },
+ "controlee": {
+  "n": 10,
+  "exactitude": 0.6,
+  "exactitude_equilibree": 0.667,
+  "faux_couverts": 2,
+  "faux_refus": 0,
+  "rappel_par_classe": {
+   "COUVERT": 1.0,
+   "NON_COUVERT": 1.0,
+   "INCERTAIN": 0.0
+  },
+  "precision_incertain": null,
+  "taux_incertain": 0.0,
+  "erreurs": 0
+ },
+ "confusion_brute": {
+  "COUVERT": {
+   "COUVERT": 3,
+   "NON_COUVERT": 0,
+   "INCERTAIN": 0,
+   "ERREUR": 0
+  },
+  "NON_COUVERT": {
+   "COUVERT": 0,
+   "NON_COUVERT": 3,
+   "INCERTAIN": 0,
+   "ERREUR": 0
+  },
+  "INCERTAIN": {
+   "COUVERT": 2,
+   "NON_COUVERT": 2,
+   "INCERTAIN": 0,
+   "ERREUR": 0
+  }
+ },
+ "confusion_controlee": {
+  "COUVERT": {
+   "COUVERT": 3,
+   "NON_COUVERT": 0,
+   "INCERTAIN": 0,
+   "ERREUR": 0
+  },
+  "NON_COUVERT": {
+   "COUVERT": 0,
+   "NON_COUVERT": 3,
+   "INCERTAIN": 0,
+   "ERREUR": 0
+  },
+  "INCERTAIN": {
+   "COUVERT": 2,
+   "NON_COUVERT": 2,
+   "INCERTAIN": 0,
+   "ERREUR": 0
+  }
+ },
+ "citations_introuvables": 0,
+ "reponses_fermes": 10,
+ "changees_par_le_controle": 0,
+ "cas": [
+  {
+   "id": "test-0",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "coverage for \"General Damages,\" which includes losses from \"missed employment due to injuries that occur under regular working conditions.\"",
+   "citation_trouvee": true,
+   "raison": "La chute de Gavin s'est produite dans le cadre de ses conditions de travail habituelles (réparation d'un climatiseur en hauteur avec une échelle), ce qui correspond à la clause.",
+   "duree_s": 1.19
+  },
+  {
+   "id": "test-1",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "loss or damage to the policy holder's car as a result of fire, lightning or explosion",
+   "citation_trouvee": true,
+   "raison": "La déclaration indique que le véhicule de Ken a été détruit par un incendie (le feu s'est propagé à sa voiture). La clause couvre explicitement les dommages résultant d'un incendie.",
+   "duree_s": 1.0
+  },
+  {
+   "id": "test-2",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "any work that requires, uses or produces any sources of heat that could ignite flammable materials",
+   "citation_trouvee": true,
+   "raison": "L'utilisation d'un pistolet à chaleur pour sécher de la colle (source de chaleur) correspond à la définition de 'Hot Work' dans la clause, car cet outil pourrait enflammer des matériaux inflammables.",
+   "duree_s": 1.17
+  },
+  {
+   "id": "test-3",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "costs associated with repairing deliberate damage to the policyholder's property made by an adverse third party",
+   "citation_trouvee": true,
+   "raison": "Le sinistre a été causé par les enfants de Beth (un tiers non adverse) et non par un tiers adverse.",
+   "duree_s": 1.01
+  },
+  {
+   "id": "test-4",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "damage to buildings and contents caused by a sudden, unforeseen flow of water from an internal source, such as a burst pipe or faulty appliance",
+   "citation_trouvee": true,
+   "raison": "Le sinistre est causé par de la peinture, et non par de l'eau, même si le déclencheur est une fuite d'eau (tub qui se fissure). La clause ne couvre que les dommages causés par un écoulement d'eau.",
+   "duree_s": 1.02
+  },
+  {
+   "id": "test-5",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "necessary and reasonable costs that you incur in locating and fixing accidental damage to cables or pipes in your home",
+   "citation_trouvee": true,
+   "raison": "La clause couvre les coûts nécessaires et raisonnables engagés pour localiser et réparer des dommages accidentels causés aux canalisations dans la maison, ce qui inclut les travaux de démolition pour accéder à la canalisation.",
+   "duree_s": 0.98
+  },
+  {
+   "id": "test-6",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "loss or damage to the policy holder's 1) car; or 2) car accessories (while in or on the car).",
+   "citation_trouvee": true,
+   "raison": "Le GPS est un accessoire du véhicule et était dans la voiture au moment du sinistre.",
+   "duree_s": 1.06
+  },
+  {
+   "id": "test-7",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "damage to plants, bushes, shrubs and trees within the boundaries of the land belonging to the home caused by civil commotion, strikes, or labor and political disturbances.",
+   "citation_trouvee": true,
+   "raison": "Le sinistre n'est pas causé par les grèves ou troubles eux-mêmes, mais par l'absence de fertilisant due à la fermeture du magasin voisin en grève.",
+   "duree_s": 1.02
+  },
+  {
+   "id": "test-8",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "loss or damage as a result of fire to the policy holder's car or audio equipment (while in or on the car)",
+   "citation_trouvee": true,
+   "raison": "Le sinistre concerne un smartphone et un haut-parleur Bluetooth, qui ne sont pas des équipements audio intégrés au véhicule ou situés dans/on le véhicule au moment du sinistre.",
+   "duree_s": 0.84
+  },
+  {
+   "id": "test-9",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "damage to buildings and contents caused by a sudden, unforeseen flow of water from an internal source, such as a burst pipe or faulty appliance.",
+   "citation_trouvee": true,
+   "raison": "Le sinistre implique un écoulement de jus de tomate, et non d'eau, même si le liquide provient d'une source interne.",
+   "duree_s": 1.08
+  }
+ ]
+}

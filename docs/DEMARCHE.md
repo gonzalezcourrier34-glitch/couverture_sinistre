@@ -1447,7 +1447,64 @@ réponses attendues n'ont pas changé. **Règles seules (oracle) : 100 % justes,
 0 refus à tort**, rappel des questions 100 %. La lecture doit maintenant reconnaître ces valeurs : le
 vocabulaire lui fournit leurs définitions (« aide »), à mesurer au prochain banc complet.
 
+### 7.32 Le banc complet sur le golden v6 : la lecture recule
+
+**Mesure sur le poste** (Mistral Small, 3 exécutions) : règles seules 100 % ; **chaîne 75 % justes,
+9,3 couverts à tort, 14 cas instables** ; la lecture change 31 décisions par exécution, dont 14 vers un
+couvert à tort. Une partie vient des 29 cas nouveaux, faits pour être difficiles (72 % justes). Mais
+**sur les 68 cas d'hier, la chaîne passe de 85 % à 76 %**, et des couverts à tort apparaissent sur des cas
+qui passaient (le gel sans chauffage, la bougie, la fenêtre laissée ouverte). Les règles sont justes sur
+les faits idéaux : c'est donc la lecture qui a reculé. Explication la plus probable : le vocabulaire
+envoyé au modèle s'est allongé (intention, entretien, corrosion, clés, toiture…), et Mistral Small omet
+davantage de faits (le lieu manque 19 fois, l'absence 9 fois). Un cas montre une confusion directe :
+« la clé laissée sous le paillasson » lu comme « clés volées » ; le sens de cette valeur est précisé.
+
+**Ce qui change la décision** : le banc d'hier soir avec **Mistral Large** pour lire les faits (golden
+v4) donnait **96 % sur ces 68 cas, sans aucun couvert à tort** (85 % avec Small). La lecture par Large est
+la mesure à refaire sur le golden v6 avant toute autre retouche.
+
+### 7.33 L'arbre de preuve
+
+Prolog n'apportait jusque-là que la décision et les questions qui tranchent. Il rend maintenant **la
+trace de sa déduction** : pour chaque garantie retenue, chaque condition évaluée, avec sa phrase du
+contrat et son état (oui, non, inconnu), jusqu'aux faits déclarés. Pour le vélo dans la cave fermée au
+cadenas : « [non] Condition non remplie — art. 2.10 : « si ces locaux sont fermés avec une serrure de
+sûreté » → serrure_de_surete (art. 12) → [oui] fermeture = cadenas (déclaré : cadenas) ». Ce n'est pas une
+explication rédigée après coup par un modèle : chaque nœud est recalculé par le même `eval/2` que la
+décision. L'affichage élague ce qui n'a pas compté (la branche vraie d'un « ou », les branches fausses
+d'un « et », les exclusions qui ne jouent pas, comptées). L'arbre est dans la réponse (`analyser`, page
+web, `regles --faits`), et l'oracle Python le reconstruit : le test différentiel compare les deux arbres
+sur tous les cas.
+
+### 7.34 Le second banc : LegalBench
+
+Le golden set est écrit par Claude, pour un contrat. LegalBench (`insurance_policy_interpretation`,
+Stanford, CC BY 4.0, 138 cas) apporte des clauses et des réponses que nous n'avons pas écrites, avec une
+troisième réponse, « ambigu », quand les lecteurs ne s'accordent pas : une mesure externe du « je ne sais
+pas ». Chaque cas ayant sa propre clause, sans règles ni vocabulaire, le banc mesure le principe du
+projet **sans le moteur** : le modèle répond et cite mot pour mot la phrase de la clause ; le code vérifie
+la citation ; une réponse ferme sans citation retrouvée devient « incertain ». On compare la réponse brute
+et la réponse contrôlée (exactitude, exactitude équilibrée, rappel des ambigus, couverts à tort).
+Les données se téléchargent sur le poste. Mesure à faire. Suite possible : faire rédiger des règles pour
+chaque clause, pour tester aussi la rédaction et le moteur.
+
+### 7.35 Le plan : une lecture fiable et rapide
+
+Les règles sont justes ; toutes les erreurs viennent de la lecture des faits. Plan arrêté le 18 nov.,
+une étape à la fois, chacune gardée seulement si le banc dit qu'elle améliore la justesse **et** le temps :
+
+0. **Mesures de référence** : banc complet avec Small (fait : 75 %) et avec Large, sur le golden v6 ; temps par cas.
+1. **Sortie contrainte par un schéma JSON** (valeurs du vocabulaire en listes fermées) et **lecture en deux
+   temps** (événement, bien, lieu ; puis les seules questions de cet événement).
+2. **Double lecture en parallèle**, comparée par le code, et **cascade** : Mistral Large ne relit que si les
+   deux lectures divergent ou si la réponse est « couvert ».
+3. **Prolog en processus permanent** (moteur et contrat chargés une fois).
+4. **Le temps dans le banc** : médiane et p95 par étape, part des cas envoyés à Large, avec une porte.
+
 ## 8. Ce qui reste à faire
+
+- Refaire le banc complet avec **Mistral Large** pour la lecture (golden v6) ; si l'écart d'hier se confirme, en faire la lecture par défaut.
+- Passer LegalBench (`couverture legalbench --telecharger`, puis `couverture legalbench`).
 
 - Mesurer la lecture sur les nouvelles valeurs du vocabulaire (banc complet, puis Mistral Large).
 - Limite connue : la perte de clés (sans vol) n'est pas traduite.
@@ -1525,3 +1582,5 @@ vocabulaire lui fournit leurs définitions (« aide »), à mesurer au prochain 
 54. Une question qui ne change aucune décision ne se pose pas ; une question qui tranche se pose en premier, avec ce qu'elle entraîne.
 55. Un banc qui ne trouve plus rien n'est pas la preuve que tout va bien : on l'agrandit jusqu'à ce qu'il retrouve des erreurs.
 56. Une exclusion que l'assureur doit prouver ne se pose pas en question à chaque client : inconnue, elle ne joue pas.
+57. Allonger ce que lit un petit modèle a un prix : chaque valeur ajoutée au vocabulaire se paie en faits oubliés ailleurs.
+58. Une explication qui sort du moteur vaut preuve ; une explication rédigée par le modèle après la décision n'en est qu'un récit.

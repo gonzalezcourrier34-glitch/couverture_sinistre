@@ -259,6 +259,7 @@ def test_prolog_et_oracle_concordent(contrat, cas, cas_validation):
         assert p["decision"] == o["decision"], i
         assert [r["id"] for r in p["retenues"]] == [r["id"] for r in o["retenues"]], i
         assert p.get("exploration") == o.get("exploration"), i
+        assert p["preuve"] == o["preuve"], i
 
 
 @avec_swipl
@@ -394,3 +395,61 @@ def test_verdict_avec_exploration():
     assert prolog.question("flammes") not in " ".join(lignes), "la question inutile n'est pas posée"
     assert prolog.question("lien_causal") in lignes, "une question sans domaine reste posée"
     assert "Une seule question tranche" in motif
+
+
+# --- Arbre de preuve (moteur.pl, arbres_de_preuve/2) -----------------------------------------------------
+
+def test_arbre_de_preuve_cave_au_cadenas(contrat):
+    """Le vélo dans la cave fermée au cadenas : l'arbre montre la condition non remplie, sa phrase du contrat,
+    la définition de la serrure de sûreté et le fait déclaré qui la contredit."""
+    d = Explorateur(contrat, {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"], "fermeture": "cadenas"}).decider()
+    assert d["decision"] == "NON_COUVERT" and [g["id"] for g in d["preuve"]] == ["vol_batiment"]
+    g = d["preuve"][0]
+    condition = next(n for n in g["enfants"] if n["type"] == "condition" and n["etat"] == "non")
+    assert condition["texte"] == "si ces locaux sont fermés avec une serrure de sûreté"
+    lignes = prolog.arbre_lisible(d["preuve"])
+    texte = "\n".join(lignes)
+    assert lignes[0].startswith("Garantie « Vol du contenu dans le bâtiment » (art. 2.10) → non couvert")
+    assert "[non] Condition non remplie — art. 2.10" in texte
+    assert "serrure_de_surete (art. 12/serrure-de-surete" in texte
+    assert "[oui] fermeture = cadenas (déclaré : cadenas)" in texte
+    assert "sans objet ici" in texte, "la condition du garage ne s'applique pas à une cave"
+    assert "l'assureur devrait les prouver" in texte, "les exclusions présumées sont comptées, pas listées"
+    assert len(lignes) < len(prolog.arbre_lisible(d["preuve"], complet=True))
+
+
+def test_arbre_de_preuve_suit_chaque_decision(contrat, cas):
+    """Chaque arbre redit la décision de sa garantie, et un nœud n'est jamais « oui » si ses enfants
+    l'interdisent (cohérence de la logique à trois valeurs dans la trace)."""
+    def coherent(n):
+        es = [e["etat"] for e in n["enfants"]]
+        if n["type"] == "et" and es:
+            assert n["etat"] == ("non" if "non" in es else "inconnu" if "inconnu" in es else "oui")
+        if n["type"] == "ou" and es:
+            assert n["etat"] == ("oui" if "oui" in es else "inconnu" if "inconnu" in es else "non")
+        for e in n["enfants"]:
+            coherent(e)
+    for i, faits, _ in cas:
+        d = Explorateur(contrat, faits).decider()
+        retenues = {r["id"]: r["decision"] for r in d["retenues"]}
+        assert {g["id"]: g["decision"] for g in d["preuve"]} == retenues, i
+        for g in d["preuve"]:
+            coherent(g)
+
+
+def test_la_reponse_porte_l_arbre_de_preuve(contrat):
+    faits = {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"], "fermeture": "cadenas"}
+    def oracle(f):  # l'oracle ne rend pas les libellés des garanties : on les ajoute comme le fait moteur.pl
+        d = Explorateur(contrat, f).decider()
+        for r in d["retenues"]:
+            g = next(x for x in contrat.regles("garantie", 4) if x.args[0] == r["id"])
+            r.update(garantie=g.args[1], article=g.args[2], motif="…", preuves=[])
+        return d
+    p = prolog.PipelineRegles(CONTRAT, [], FauxLLM(faits), decideur=oracle)
+    v = p.analyser("On m'a volé mon vélo dans ma cave fermée par un cadenas.").verdict
+    assert v.preuve and v.raisonnement[0].startswith("Garantie « Vol du contenu dans le bâtiment »")
+    from couverture import cli
+    from couverture.models import Resultat
+    sortie = cli.afficher_court(Resultat(sinistre="…", contrat_id=CONTRAT, methode="regles", faits=prolog.faits_lisibles(faits),
+                                         clauses_consultees=[], verdict=v))
+    assert "Arbre de preuve (moteur Prolog) :" in sortie and "[non] Condition non remplie" in sortie

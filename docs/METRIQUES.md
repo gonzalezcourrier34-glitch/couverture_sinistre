@@ -108,6 +108,11 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 
 ## 5. Dernières mesures
 
+**18 nov. 2026, golden v6, chaîne complète, lecture Mistral Small (SWI-Prolog, 3 exécutions)** :
+règles seules 100 % ; **chaîne 75 % justes, 9,3 couverts à tort**, 14 cas instables. Sur les 68 cas
+d'hier seulement : 76 % (85 % hier), la lecture s'est dégradée avec le vocabulaire plus long (DEMARCHE 7.32).
+**Rappel, 17 nov., golden v4, lecture Mistral Large : 96 % sur ces 68 cas, aucun couvert à tort.**
+
 **18 nov. 2026, golden v6, règles corrigées (oracle Python, à confirmer sur SWI-Prolog)** :
 **100 % justes ou acceptables, 80 % exactes, 0 couvert et 0 refus à tort**, toutes les questions
 attendues posées, 16 questions inutiles retirées (DEMARCHE 7.31).
@@ -162,6 +167,25 @@ Sources utiles :
 Usage prévu : s'inspirer de situations réelles pour le **jeu fermé** (réécrites en déclarations et
 annotées selon les CG de Foyer par l'auteur), et LegalBench comme **second banc** de généralisation.
 
+### Le second banc : LegalBench (`couverture legalbench`)
+
+Chaque cas a sa propre clause, en anglais, sans règles ni vocabulaire écrits pour elle. Le banc mesure
+donc le **principe** du projet sans les règles : le modèle répond et **cite mot pour mot** la phrase de
+la clause qui fonde sa réponse ; le code vérifie la citation ; une réponse ferme sans citation retrouvée
+devient « incertain ». Deux colonnes : la réponse du modèle, et la réponse contrôlée.
+
+| Métrique | Définition | Pourquoi |
+|---|---|---|
+| Exactitude | Réponse = réponse des lecteurs (3 classes) | Lisible |
+| **Exactitude équilibrée** | Moyenne des rappels par classe (métrique de LegalBench) | Un modèle qui répond toujours « couvert » ne passe pas pour bon |
+| **Rappel « ambigu »** | Part des cas ambigus reconnus comme tels | Le « je ne sais pas » sur des données que nous n'avons pas écrites |
+| Précision « incertain » | Parmi les « incertain » répondus, part de vrais ambigus | Ne pas tout déclarer incertain pour bien paraître |
+| Couverts / refus à tort | Comme le banc | Le coût métier |
+| Citations introuvables | Réponses fermes dont la phrase citée n'est pas dans la clause | Ce que le contrôle attrape |
+
+Données : `couverture legalbench --telecharger` (Hugging Face, sur le poste) dans `data/externes/legalbench/`,
+avec leur attribution (CC BY 4.0). Rapports : `data/bancs/<date>-legalbench-<modèle>.md`.
+
 ---
 
 ## 8. À faire
@@ -169,4 +193,5 @@ annotées selon les CG de Foyer par l'auteur), et LegalBench comme **second banc
 1. Créer le jeu fermé (`data/ferme/`, ≥ 20 cas, auteur), avec plus de cas dont la bonne réponse est « incertain ».
 2. Valider le golden set (`couverture banc --fiche`, puis `--figer "validation"`).
 3. Mesurer la lecture par Mistral Large, puis la double lecture si elle aide.
-4. LegalBench comme second banc.
+4. Passer LegalBench (`couverture legalbench`), avec Mistral Small puis Large.
+5. Suite possible : faire rédiger des règles pour chaque clause de LegalBench, pour tester aussi le moteur.

@@ -73,6 +73,8 @@ uv run couverture ingerer                                  # lit data/contrats/
 uv run couverture regles   --contrat foyer-appart123-2025  # vérifie les règles Prolog (sans modèle)
 uv run couverture rediger  --contrat foyer-appart123-2025 --article 2.2 --article 2.9  # Mistral Large rédige des règles, le code les contrôle
 uv run couverture banc     --contrat foyer-appart123-2025  # banc d'essai : golden set (97 cas), règles, lecture, chaîne, portes
+uv run couverture legalbench --telecharger                 # second banc, externe : LegalBench (Stanford, CC BY 4.0)
+uv run couverture legalbench                               # le modèle répond et cite, le code vérifie la citation
 uv run couverture analyser --contrat foyer-appart123-2025 --methode regles "…"
 uv run couverture compiler --contrat foyer-appart123-2025  # fiches : une fois par contrat (Mistral Large, ~15 min)
 uv run couverture fiches   --contrat foyer-appart123-2025  # relire les fiches (--exporter / --importer)
@@ -82,7 +84,7 @@ uv run couverture evaluer  --contrat foyer-appart123-2025 --methode regles --jeu
 uv run couverture serveur                                  # interface sur http://127.0.0.1:8000
 ```
 
-`analyser` donne la décision, le motif, les preuves décisives et les questions à poser ; `--detail` montre toutes les fiches. Les commandes longues affichent une barre de progression. Autres commandes : `contrats`, `clauses`, `comparer`, `reparer`, `propositions`, `versions`, `derive`, `bilan` (`--help`).
+`analyser` donne la décision, le motif, les preuves décisives, les questions à poser et l'**arbre de preuve** du moteur Prolog (chaque condition, sa phrase du contrat, son état, jusqu'aux faits déclarés) ; `--detail` montre toutes les fiches. Les commandes longues affichent une barre de progression. Autres commandes : `contrats`, `clauses`, `comparer`, `reparer`, `propositions`, `versions`, `derive`, `bilan` (`--help`).
 
 Avec docker : `docker compose up -d --build` lance l'application (8020), MLflow (5010) et Grafana (3011).
 

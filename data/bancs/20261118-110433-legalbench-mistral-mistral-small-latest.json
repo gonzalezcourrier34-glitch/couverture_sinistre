@@ -1,0 +1,1411 @@
+{
+ "tache": "insurance_policy_interpretation",
+ "date": "2026-11-18T11:04:33",
+ "modele": "mistral:mistral-small-latest",
+ "n": 133,
+ "brute": {
+  "n": 133,
+  "exactitude": 0.549,
+  "exactitude_equilibree": 0.635,
+  "faux_couverts": 32,
+  "faux_refus": 4,
+  "rappel_par_classe": {
+   "COUVERT": 0.915,
+   "NON_COUVERT": 0.889,
+   "INCERTAIN": 0.102
+  },
+  "precision_incertain": 1.0,
+  "taux_incertain": 0.045,
+  "erreurs": 0
+ },
+ "controlee": {
+  "n": 133,
+  "exactitude": 0.549,
+  "exactitude_equilibree": 0.635,
+  "faux_couverts": 32,
+  "faux_refus": 4,
+  "rappel_par_classe": {
+   "COUVERT": 0.915,
+   "NON_COUVERT": 0.889,
+   "INCERTAIN": 0.102
+  },
+  "precision_incertain": 1.0,
+  "taux_incertain": 0.045,
+  "erreurs": 0
+ },
+ "confusion_brute": {
+  "COUVERT": {
+   "COUVERT": 43,
+   "NON_COUVERT": 4,
+   "INCERTAIN": 0,
+   "ERREUR": 0
+  },
+  "NON_COUVERT": {
+   "COUVERT": 3,
+   "NON_COUVERT": 24,
+   "INCERTAIN": 0,
+   "ERREUR": 0
+  },
+  "INCERTAIN": {
+   "COUVERT": 29,
+   "NON_COUVERT": 24,
+   "INCERTAIN": 6,
+   "ERREUR": 0
+  }
+ },
+ "confusion_controlee": {
+  "COUVERT": {
+   "COUVERT": 43,
+   "NON_COUVERT": 4,
+   "INCERTAIN": 0,
+   "ERREUR": 0
+  },
+  "NON_COUVERT": {
+   "COUVERT": 3,
+   "NON_COUVERT": 24,
+   "INCERTAIN": 0,
+   "ERREUR": 0
+  },
+  "INCERTAIN": {
+   "COUVERT": 29,
+   "NON_COUVERT": 24,
+   "INCERTAIN": 6,
+   "ERREUR": 0
+  }
+ },
+ "citations_introuvables": 0,
+ "reponses_fermes": 127,
+ "changees_par_le_controle": 0,
+ "cas": [
+  {
+   "id": "test-0",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "coverage for \"General Damages,\" which includes losses from \"missed employment due to injuries that occur under regular working conditions.\"",
+   "citation_trouvee": true,
+   "raison": "La clause couvre les pertes de revenus liées à des blessures subies dans le cadre de conditions de travail normales, ce qui correspond au sinistre décrit.",
+   "duree_s": 1.19
+  },
+  {
+   "id": "test-1",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "loss or damage to the policy holder's car as a result of fire, lightning or explosion",
+   "citation_trouvee": true,
+   "raison": "La déclaration indique que la voiture de Ken a été détruite par un incendie (le feu s'est propagé de la maison du voisin à sa voiture).",
+   "duree_s": 1.08
+  },
+  {
+   "id": "test-2",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "any work that requires, uses or produces any sources of heat that could ignite flammable materials",
+   "citation_trouvee": true,
+   "raison": "L'utilisation d'un pistolet à chaleur pour sécher de la colle (source de chaleur) correspond à la définition de 'Hot Work' donnée dans la clause, car elle pourrait enflammer des matériaux inflammables.",
+   "duree_s": 1.08
+  },
+  {
+   "id": "test-3",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "costs associated with repairing deliberate damage to the policyholder's property made by an adverse third party",
+   "citation_trouvee": true,
+   "raison": "Le sinistre est causé par les enfants de Beth (tiers non adverse) et non par un tiers adverse.",
+   "duree_s": 1.08
+  },
+  {
+   "id": "test-4",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "damage to buildings and contents caused by a sudden, unforeseen flow of water from an internal source, such as a burst pipe or faulty appliance",
+   "citation_trouvee": true,
+   "raison": "Le sinistre implique une fuite de peinture, et non d'eau, même si l'origine est un écoulement interne.",
+   "duree_s": 1.05
+  },
+  {
+   "id": "test-5",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "necessary and reasonable costs that you incur in locating and fixing accidental damage to cables or pipes in your home",
+   "citation_trouvee": true,
+   "raison": "La clause couvre les coûts nécessaires et raisonnables engagés pour localiser et réparer des dommages accidentels causés aux tuyaux dans la maison, ce qui inclut les travaux de Justin pour accéder à la canalisation et récupérer l'anneau.",
+   "duree_s": 1.33
+  },
+  {
+   "id": "test-6",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "loss or damage to the policy holder's 1) car; or 2) car accessories (while in or on the car).",
+   "citation_trouvee": true,
+   "raison": "Le GPS est un accessoire du véhicule et était dans la voiture au moment du sinistre.",
+   "duree_s": 0.92
+  },
+  {
+   "id": "test-7",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "damage to plants, bushes, shrubs and trees within the boundaries of the land belonging to the home caused by civil commotion, strikes, or labor and political disturbances.",
+   "citation_trouvee": true,
+   "raison": "Le sinistre n'est pas causé par les grèves ou troubles eux-mêmes, mais par l'absence de fertilisant due à la grève, ce qui n'est pas couvert par la clause.",
+   "duree_s": 1.67
+  },
+  {
+   "id": "test-8",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "loss or damage as a result of fire to the policy holder's car or audio equipment (while in or on the car)",
+   "citation_trouvee": true,
+   "raison": "Le sinistre concerne un smartphone et un haut-parleur Bluetooth, qui ne sont pas des équipements audio intégrés au véhicule ni mentionnés comme couverts dans la clause.",
+   "duree_s": 0.91
+  },
+  {
+   "id": "test-9",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "\"damage to buildings and contents caused by a sudden, unforeseen flow of water from an internal source, such as a burst pipe or faulty appliance.\"",
+   "citation_trouvee": true,
+   "raison": "Le sinistre implique un écoulement de jus de tomate, et non d'eau, même si le liquide provient d'une source interne.",
+   "duree_s": 1.06
+  },
+  {
+   "id": "test-10",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "only applies if the damage occurs \"while temporarily away from home anywhere in the world.\"",
+   "citation_trouvee": true,
+   "raison": "La clause exige que les dommages surviennent 'temporairement' en l'absence du domicile. Le fait que Vivian ait quitté son domicile pour s'installer définitivement à l'étranger exclut le caractère temporaire de son absence.",
+   "duree_s": 1.16
+  },
+  {
+   "id": "test-11",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "Loss and Accidental Damage, which only applies if the damage occurs \"while temporarily away from home anywhere in the world.\"",
+   "citation_trouvee": true,
+   "raison": "La clause couvre explicitement les dommages subis lorsque l'assuré est temporairement absent de son domicile, ce qui correspond à la situation décrite dans la déclaration de sinistre.",
+   "duree_s": 0.91
+  },
+  {
+   "id": "test-12",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "loss or damage resulting from ground heave of the site on which the building stands, or landslip.",
+   "citation_trouvee": true,
+   "raison": "La chute d'un arbre n'est ni un 'ground heave' ni un 'landslip'.",
+   "duree_s": 0.7
+  },
+  {
+   "id": "test-13",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "actions involving deliberate destruction or damage to the policyholder's property",
+   "citation_trouvee": true,
+   "raison": "Le sinistre implique une action délibérée (conduite à haute vitesse et déversement de déchets) causant des dommages à la propriété d'Olivia, ce qui correspond à la définition de 'Malicious Acts or Vandalism'.",
+   "duree_s": 0.93
+  },
+  {
+   "id": "test-14",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "any work on her home or belongings that requires, uses or produces any sources of heat that could ignite flammable materials",
+   "citation_trouvee": true,
+   "raison": "Le sinistre n'est pas lié à un travail nécessitant, utilisant ou produisant de la chaleur (Hot Work), mais à une cigarette allumée par négligence.",
+   "duree_s": 0.91
+  },
+  {
+   "id": "test-15",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "damages stemming from \"Personal Accident\", defined as \"accidental injury while traveling in your car.\"",
+   "citation_trouvee": true,
+   "raison": "La déclaration de sinistre indique que Gwen a subi une blessure accidentelle (au poignet) alors qu'elle conduisait son SUV, ce qui correspond à la définition de \"Personal Accident\" dans la clause.",
+   "duree_s": 1.37
+  },
+  {
+   "id": "test-16",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "\"accidental injury while traveling in or getting into or out of your car, resulting in permanent and total loss of use of one or more limbs.\"",
+   "citation_trouvee": true,
+   "raison": "La clause exige une perte permanente et totale de l'usage d'un ou plusieurs membres, ce qui n'est pas le cas ici (récupération complète après trois mois).",
+   "duree_s": 0.86
+  },
+  {
+   "id": "test-17",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "coverage for \"Vehicle Glass\" damage, defined as \"broken glass in the car's windows or windshield.\"",
+   "citation_trouvee": true,
+   "raison": "La clause couvre explicitement les dommages au verre du véhicule, y compris le pare-brise, même si le verre n'est que partiellement brisé ou ébréché.",
+   "duree_s": 1.1
+  },
+  {
+   "id": "test-18",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "an invasion of the property by a large volume of water caused by a rapid build-up from outside the buildings",
+   "citation_trouvee": true,
+   "raison": "La déclaration de sinistre décrit une invasion de la propriété par un grand volume d'eau provenant de l'extérieur des bâtiments, ce qui correspond à la définition de 'Flooding' dans la clause.",
+   "duree_s": 0.83
+  },
+  {
+   "id": "test-19",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "loss or damage to the policy holder's car as a result of fire, lightning or explosion",
+   "citation_trouvee": true,
+   "raison": "Le sinistre décrit ne résulte pas d'un incendie, d'un éclair ou d'une explosion, mais d'une fumée causée par une cigarette qui n'a pas pris feu.",
+   "duree_s": 0.91
+  },
+  {
+   "id": "test-20",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "excludes \"identity theft connected with the policyholder's occupation.\"",
+   "citation_trouvee": true,
+   "raison": "Le sinistre est lié à l'activité professionnelle de Jack (consultant en affaires) qui utilise régulièrement le réseau informatique du restaurant pour des réunions professionnelles, ce qui le connecte à son occupation.",
+   "duree_s": 1.12
+  },
+  {
+   "id": "test-21",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "the damages that you are legally liable to pay for damage to third party property",
+   "citation_trouvee": true,
+   "raison": "La clause couvre les dommages causés à la propriété d'un tiers pour lesquels Dave est légalement responsable, ce qui est le cas ici.",
+   "duree_s": 0.83
+  },
+  {
+   "id": "test-22",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "loss or damage to the policy holder's … 2) audio equipment (while in the car)",
+   "citation_trouvee": true,
+   "raison": "La clause couvre explicitement les dommages aux équipements audio situés dans la voiture.",
+   "duree_s": 0.72
+  },
+  {
+   "id": "test-23",
+   "attendu": "INCERTAIN",
+   "brute": "INCERTAIN",
+   "decision": "INCERTAIN",
+   "citation": "an invasion of the property by a large volume of water caused by a rapid build-up from outside the buildings",
+   "citation_trouvee": true,
+   "raison": "Le sinistre décrit une montée progressive des eaux sur une semaine, ce qui ne correspond pas clairement à un 'rapide build-up' (accumulation rapide) depuis l'extérieur des bâtiments.",
+   "duree_s": 0.84
+  },
+  {
+   "id": "test-24",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "loss or damage as a result of theft to the policy holder's car or car accessories (while in or on the car)",
+   "citation_trouvee": true,
+   "raison": "La clause couvre explicitement la perte ou les dommages résultant d'un vol des accessoires du véhicule, à condition qu'ils soient dans ou sur la voiture. Ici, les housses de siège haut de gamme ont été volées alors qu'elles se trouvaient dans la voiture.",
+   "duree_s": 1.09
+  },
+  {
+   "id": "test-25",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "damage from wind speeds with gusts of at least 55 mph",
+   "citation_trouvee": true,
+   "raison": "le sinistre est causé par la chute d'un outil, et non par les vents eux-mêmes.",
+   "duree_s": 0.91
+  },
+  {
+   "id": "test-26",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "missed employment due to injuries that occur under regular working conditions",
+   "citation_trouvee": true,
+   "raison": "La chute de Gavin est survenue alors qu'il effectuait une activité personnelle (installation de lumières de Noël) et non dans le cadre de ses conditions de travail habituelles.",
+   "duree_s": 0.81
+  },
+  {
+   "id": "test-27",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "loss or damage to the contents of the policyholder's home caused when first responders force an entry into the policyholder's home because of an emergency or perceived emergency involving the policyholder",
+   "citation_trouvee": true,
+   "raison": "La clause couvre les dommages causés par une entrée forcée des premiers intervenants en raison d'une urgence ou d'une urgence perçue impliquant le souscripteur.",
+   "duree_s": 0.95
+  },
+  {
+   "id": "test-28",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "oil leaking from a fixed oil-fired heating installation",
+   "citation_trouvee": true,
+   "raison": "La clause limite la couverture aux fuites d'huile provenant d'une installation de chauffage fixe au mazout, ce qui exclut explicitement un lampadaire à huile portable.",
+   "duree_s": 1.09
+  },
+  {
+   "id": "test-29",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "loss or damage to the contents of the policyholder's home caused when first responders force an entry into the policyholder's home because of an emergency involving the policyholder",
+   "citation_trouvee": true,
+   "raison": "La clause couvre les dommages causés par une entrée forcée des premiers intervenants en raison d'une urgence impliquant le souscripteur. Ici, la police a forcé l'entrée en raison d'une urgence (présence d'un cambrioleur) impliquant Salma.",
+   "duree_s": 1.11
+  },
+  {
+   "id": "test-30",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "damage to plants, bushes, shrubs and trees within the boundaries of the land belonging to the home caused by malicious people or vandals",
+   "citation_trouvee": true,
+   "raison": "La déclaration de sinistre mentionne des individus masqués piétinant les plantes de Margot, ce qui correspond à une action de 'vandales'.",
+   "duree_s": 1.09
+  },
+  {
+   "id": "test-31",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "accidental injury while traveling in your car",
+   "citation_trouvee": true,
+   "raison": "L'accident s'est produit alors que Gwen n'était plus en train de voyager dans sa voiture (après avoir garé le véhicule).",
+   "duree_s": 0.9
+  },
+  {
+   "id": "test-32",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "excludes \"identity theft connected with the policyholder's occupation.\"",
+   "citation_trouvee": true,
+   "raison": "Le sinistre est lié à l'activité professionnelle de Jack (consultant en gestion), ce qui entre dans le champ de l'exclusion.",
+   "duree_s": 0.73
+  },
+  {
+   "id": "test-33",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "covers accidental damage to her home and belongings from \"Hot Work,\" defined as \"any work that requires, uses or produces any sources of heat that could ignite flammable materials.\"",
+   "citation_trouvee": true,
+   "raison": "L'utilisation d'un pistolet à chaleur pour sécher de la colle relève clairement de la définition de 'Hot Work' donnée dans la clause, car cet outil produit une source de chaleur susceptible d'enflammer des matériaux inflammables.",
+   "duree_s": 1.01
+  },
+  {
+   "id": "test-34",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "loss of or damage to the policyholder's car if, at the time of the incident, it was under the custody or control of anyone with the policyholder's permission who is not covered under the policy",
+   "citation_trouvee": true,
+   "raison": "Le sinistre s'est produit alors que la voiture était sous la garde ou le contrôle d'un tiers (l'ami) avec la permission de Jenny, et ce tiers n'est pas couvert par la police.",
+   "duree_s": 1.07
+  },
+  {
+   "id": "test-35",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "necessary and reasonable costs that you incur in locating and fixing accidental damage to cables, pipes, underground drain pipes or tanks providing services to and from your home",
+   "citation_trouvee": true,
+   "raison": "La clause couvre les coûts nécessaires et raisonnables pour localiser et réparer des dommages accidentels aux tuyaux, y compris ceux qui fournissent des services à la maison.",
+   "duree_s": 0.99
+  },
+  {
+   "id": "test-36",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "loss or damage caused by theft or attempted theft if your car was taken by a member of your family or household",
+   "citation_trouvee": true,
+   "raison": "La clause exclut explicitement le vol commis par un membre de la famille ou du foyer, ce qui inclut l'ex-épouse considérée comme un membre du foyer dans ce contexte.",
+   "duree_s": 0.87
+  },
+  {
+   "id": "test-37",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "loss or damage to the policy holder's 1) car; or 2) audio equipment (while in the car).",
+   "citation_trouvee": true,
+   "raison": "La clause limite explicitement la couverture aux dommages au véhicule ou à l'équipement audio du véhicule. Le laptop n'est ni l'un ni l'autre.",
+   "duree_s": 0.86
+  },
+  {
+   "id": "test-38",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "an invasion of the property by a large volume of water caused by a sudden release from outside the buildings",
+   "citation_trouvee": true,
+   "raison": "La déclaration de sinistre décrit une invasion de la propriété par un grand volume d'eau causée par une libération soudaine depuis l'extérieur des bâtiments, ce qui correspond à la définition de 'Flooding' dans la clause.",
+   "duree_s": 0.79
+  },
+  {
+   "id": "test-39",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "loss of or damage to the policyholder's car if, at the time of the incident, it was under the custody or control of anyone with the policyholder's permission who is not covered under the policy",
+   "citation_trouvee": true,
+   "raison": "Le sinistre est survenu alors que la voiture était sous la garde ou le contrôle du voisin (avec la permission de Jenny), qui n'est pas couvert par la police.",
+   "duree_s": 0.93
+  },
+  {
+   "id": "test-40",
+   "attendu": "NON_COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "accidental injury while traveling in your car",
+   "citation_trouvee": true,
+   "raison": "L'accident (blessure au poignet) s'est produit alors que Gwen manipulait un sac de courses pour le mettre dans sa voiture, ce qui constitue une activité directement liée à son trajet en voiture.",
+   "duree_s": 0.9
+  },
+  {
+   "id": "test-41",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "damage to plants, bushes, shrubs and trees within the boundaries of the land belonging to the home caused by civil commotion, strikes, or labor and political disturbances",
+   "citation_trouvee": true,
+   "raison": "Le sinistre est causé par une grève (strike), qui est explicitement mentionnée dans la clause comme cause de dommage couvert.",
+   "duree_s": 1.15
+  },
+  {
+   "id": "test-42",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "damage to buildings and contents caused by a sudden, unforeseen flow of water from an internal source, such as a burst pipe or faulty appliance",
+   "citation_trouvee": true,
+   "raison": "Le sinistre correspond à un écoulement d'eau soudain et imprévu provenant d'une source interne (le refroidisseur d'eau), ce qui est explicitement couvert par la clause.",
+   "duree_s": 1.83
+  },
+  {
+   "id": "test-43",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "any work that requires, uses or produces any sources of heat that could ignite flammable materials",
+   "citation_trouvee": true,
+   "raison": "L'utilisation d'un pistolet à chaleur pour sécher de la colle (source de chaleur) correspond à la définition de 'Hot Work' dans la clause.",
+   "duree_s": 0.79
+  },
+  {
+   "id": "test-44",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "damage to buildings and contents caused by a sudden, unforeseen flow of water from an internal source, such as a burst pipe or faulty appliance",
+   "citation_trouvee": true,
+   "raison": "La déclaration de sinistre mentionne un tuyau qui a soudainement éclaté, ce qui correspond à la définition d'un 'Escape of Water' dans la clause.",
+   "duree_s": 0.82
+  },
+  {
+   "id": "test-45",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "damage caused by a storm",
+   "citation_trouvee": true,
+   "raison": "La clause couvre les dommages causés par une tempête. La foudre est un phénomène météorologique lié à une tempête, et le sinistre (incendie de la toiture) est une conséquence directe de cet événement.",
+   "duree_s": 1.06
+  },
+  {
+   "id": "test-46",
+   "attendu": "INCERTAIN",
+   "brute": "INCERTAIN",
+   "decision": "INCERTAIN",
+   "citation": "damage to the policyholder's property caused by naturally-occurring fire",
+   "citation_trouvee": true,
+   "raison": "Le sinistre implique un départ de feu causé par un défaut technique d'un appareil (grill au propane), ce qui pourrait ne pas être considéré comme un feu « naturellement-occurring ».",
+   "duree_s": 1.07
+  },
+  {
+   "id": "test-47",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "accidental injury while traveling in or getting into or out of your car, resulting in permanent and total loss of use of one or more limbs",
+   "citation_trouvee": true,
+   "raison": "La déclaration de sinistre indique une blessure accidentelle (accident de voiture) survenue en conduisant vers un lieu (traveling in your car), entraînant une perte permanente et totale de l'usage du genou gauche, ce qui correspond à la définition de 'Personal Accident'.",
+   "duree_s": 1.06
+  },
+  {
+   "id": "test-48",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "necessary and reasonable costs that you incur in locating and fixing accidental damage to cables or pipes in your home",
+   "citation_trouvee": true,
+   "raison": "La clause couvre les coûts nécessaires et raisonnables engagés pour localiser et réparer des dommages accidentels aux tuyaux dans la maison, ce qui inclut les travaux de Justin.",
+   "duree_s": 0.97
+  },
+  {
+   "id": "test-49",
+   "attendu": "COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "Cooper's car insurance policy includes coverage for \"Vehicle Theft,\" which applies only if \"the policyholder's car contains a working GPS tracking device.\"",
+   "citation_trouvee": true,
+   "raison": "Le sinistre implique un vol du véhicule, mais la clause exige que le véhicule soit équipé d'un GPS **en fonctionnement** au moment du vol. La déclaration ne précise pas si le GPS était actif lors du vol.",
+   "duree_s": 0.99
+  },
+  {
+   "id": "test-50",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "coverage for \"Vehicle Theft,\" defined as loss or damage as a result of theft to the policy holder's car or audio equipment (while in or on the car)",
+   "citation_trouvee": true,
+   "raison": "La clause couvre explicitement le vol de l'équipement audio (ici, le casque Bluetooth) lorsqu'il se trouve dans ou sur la voiture.",
+   "duree_s": 0.87
+  },
+  {
+   "id": "test-51",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "covers accidental damage to her home and belongings from \"Hot Work,\" defined as \"any work on her home or belongings that requires, uses or produces any sources of heat that could ignite flammable materials.\"",
+   "citation_trouvee": true,
+   "raison": "La déclaration de sinistre décrit un dommage accidentel causé par un outil de soudage (source de chaleur produisant une flamme) utilisé sur un véhicule dans le garage, ce qui correspond à la définition de 'Hot Work'.",
+   "duree_s": 1.1
+  },
+  {
+   "id": "test-52",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "damage to the policyholder's property caused by naturally-occurring fire",
+   "citation_trouvee": true,
+   "raison": "Le sinistre implique un feu d'origine naturelle (brush fire) ayant causé des dommages à la propriété de Fatema.",
+   "duree_s": 0.67
+  },
+  {
+   "id": "test-53",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "damage to the policy holder's … car accessories, including children's car seats (while in or on the car)",
+   "citation_trouvee": true,
+   "raison": "Le siège auto est considéré comme un accessoire du véhicule et était initialement dans ou sur la voiture, ce qui entre dans la définition de 'Vehicle Damage'.",
+   "duree_s": 1.12
+  },
+  {
+   "id": "test-54",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "excludes \"identity theft connected with the policyholder's business.\"",
+   "citation_trouvee": true,
+   "raison": "Le sinistre est lié à l'activité professionnelle de Jason (concession automobile), ce qui est explicitement exclu par la clause.",
+   "duree_s": 0.73
+  },
+  {
+   "id": "test-55",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "loss or damage to the policy holder's 1) car; or 2) car accessories (while in or on the car)",
+   "citation_trouvee": true,
+   "raison": "Le sinistre concerne un accessoire du véhicule (tablette utilisée pour la navigation) qui était dans la voiture au moment de l'accident, ce qui correspond à la définition des 'car accessories' dans la clause.",
+   "duree_s": 0.96
+  },
+  {
+   "id": "test-56",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "damage to buildings and contents caused by a sudden, unforeseen flow of water from an internal source",
+   "citation_trouvee": true,
+   "raison": "Le sinistre est causé par une fuite lente et non soudaine, ce qui ne correspond pas à la définition de 'sudden' dans la clause.",
+   "duree_s": 0.81
+  },
+  {
+   "id": "test-57",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "damage from hail of such intensity that it causes damage to hard surfaces or breaks glass",
+   "citation_trouvee": true,
+   "raison": "La clause couvre explicitement les dommages causés par la grêle aux surfaces dures, ce qui inclut les tuiles d'argile du toit.",
+   "duree_s": 1.16
+  },
+  {
+   "id": "test-58",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "loss or damage caused by wear and tear",
+   "citation_trouvee": true,
+   "raison": "La déclaration de sinistre mentionne une accumulation progressive de rouille, ce qui correspond clairement à de l'usure (wear and tear).",
+   "duree_s": 0.7
+  },
+  {
+   "id": "test-59",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "damage to buildings and contents caused by a sudden, unforeseen flow of water from an internal source, such as a burst pipe or faulty appliance",
+   "citation_trouvee": true,
+   "raison": "La fuite du tuyau est un écoulement d'eau soudain et imprévu provenant d'une source interne, ce qui correspond à la définition de la clause.",
+   "duree_s": 0.82
+  },
+  {
+   "id": "test-60",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "damage to the policy holder's … car accessories, including children's car seats (while in or on the car)",
+   "citation_trouvee": true,
+   "raison": "La clause couvre explicitement les accessoires du véhicule, y compris les sièges auto pour enfants, lorsqu'ils sont dans ou sur la voiture. Le sinistre concerne un siège auto endommagé alors qu'il était sur le coffre de la voiture au moment de l'accident.",
+   "duree_s": 1.71
+  },
+  {
+   "id": "test-61",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "necessary and reasonable costs that you incur in locating and fixing accidental damage to cables, pipes, underground drain pipes or tanks providing services to and from your home.",
+   "citation_trouvee": true,
+   "raison": "Le sinistre est dû à une usure progressive des tuyaux, et non à un dommage accidentel.",
+   "duree_s": 0.91
+  },
+  {
+   "id": "test-62",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "oil leaking from a fixed oil-fired heating installation",
+   "citation_trouvee": true,
+   "raison": "La déclaration indique que l'huile a fui du chauffage fixe à mazout, ce qui correspond exactement à la définition de 'Escape of Oil'.",
+   "duree_s": 0.88
+  },
+  {
+   "id": "test-63",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "Dillon's car insurance policy includes coverage for \"Vehicle Theft\"",
+   "citation_trouvee": true,
+   "raison": "La clause couvre explicitement le vol du véhicule, et le sinistre correspond à un vol par un inconnu, non exclu par les conditions mentionnées.",
+   "duree_s": 0.83
+  },
+  {
+   "id": "test-64",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "oil leaking from a fixed oil-fired heating installation",
+   "citation_trouvee": true,
+   "raison": "La clause couvre l'échappement d'huile provenant d'une installation de chauffage fixe au mazout. Bien que l'huile provienne d'une lampe à huile, celle-ci est montée sur un mur (fixe) et fonctionne au mazout, ce qui correspond à la définition donnée.",
+   "duree_s": 0.96
+  },
+  {
+   "id": "test-65",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "damage to the policy holder's … car accessories, including children's car seats (while in or on the car)",
+   "citation_trouvee": true,
+   "raison": "La clause couvre explicitement les accessoires du véhicule, y compris les sièges auto pour enfants, lorsqu'ils sont dans ou sur la voiture. Le siège était sur le coffre (partie du véhicule) au moment du sinistre.",
+   "duree_s": 1.01
+  },
+  {
+   "id": "test-66",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "Harper's insurance covers damage from \"House Removal,\" which includes \"damage to belongings that occurs while being stored by professional removal contractors.\"",
+   "citation_trouvee": true,
+   "raison": "La clause limite la couverture aux dommages subis par les biens lorsqu'ils sont stockés par des déménageurs professionnels, ce qui n'est pas le cas ici (le stockage a été effectué par le cousin de Harper).",
+   "duree_s": 0.95
+  },
+  {
+   "id": "test-67",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "costs associated with repairing deliberate damage to the policyholder's property made by an adverse third party",
+   "citation_trouvee": true,
+   "raison": "Le sinistre a été causé par le fils de Beth, qui n'est pas un tiers adverse (adverse third party), mais un membre de sa famille.",
+   "duree_s": 0.81
+  },
+  {
+   "id": "test-68",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "necessary and reasonable costs that you incur in locating and fixing accidental damage to cables, pipes, underground drain pipes or tanks providing services to and from your home.",
+   "citation_trouvee": true,
+   "raison": "Le sinistre n'est pas dû à un dommage accidentel, mais à une installation défectueuse par Jett lui-même.",
+   "duree_s": 0.88
+  },
+  {
+   "id": "test-69",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "Vehicle Damage",
+   "citation_trouvee": true,
+   "raison": "La déclaration de sinistre décrit un dommage au véhicule causé par un accident, ce qui relève clairement de la couverture 'Vehicle Damage'.",
+   "duree_s": 1.02
+  },
+  {
+   "id": "test-70",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "actions involving deliberate destruction or damage to the policyholder's property",
+   "citation_trouvee": true,
+   "raison": "La déclaration de sinistre indique que les adolescents ont délibérément répandu des déchets sur la propriété d'Olivia, ce qui correspond à une action de destruction ou de dommage intentionnel.",
+   "duree_s": 0.98
+  },
+  {
+   "id": "test-71",
+   "attendu": "INCERTAIN",
+   "brute": "INCERTAIN",
+   "decision": "INCERTAIN",
+   "citation": "\"Identity Theft,\" which excludes \"identity theft connected with the policyholder's business.\"",
+   "citation_trouvee": true,
+   "raison": "Le terme 'connected with the policyholder's business' est ambigu : il n'est pas clair si le vol d'identité lié à l'utilisation d'un ordinateur professionnel (même depuis le domicile) est considéré comme 'connecté à l'activité professionnelle'.",
+   "duree_s": 1.01
+  },
+  {
+   "id": "test-72",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "coverage for \"Vehicle Theft,\" defined as loss or damage as a result of theft to the policy holder's car or audio equipment (while in or on the car)",
+   "citation_trouvee": true,
+   "raison": "La clause couvre explicitement le vol de l'équipement audio situé dans ou sur la voiture, ce qui correspond au sinistre déclaré.",
+   "duree_s": 1.68
+  },
+  {
+   "id": "test-73",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "loss or damage resulting from ground heave of the site on which the building stands",
+   "citation_trouvee": true,
+   "raison": "La déclaration de sinistre mentionne un déplacement du sol sous la maison causant des fissures à la fondation, ce qui correspond à la définition de 'ground heave' dans la clause.",
+   "duree_s": 0.84
+  },
+  {
+   "id": "test-74",
+   "attendu": "INCERTAIN",
+   "brute": "INCERTAIN",
+   "decision": "INCERTAIN",
+   "citation": "\"accidental injury while traveling in or getting into or out of your car, resulting in permanent and total loss of use of one or more limbs.\"",
+   "citation_trouvee": true,
+   "raison": "Le sinistre implique une perte temporaire de l'usage du genou (non permanente) et non une perte totale et permanente d'un membre, ce qui rend le sens de 'permanent and total loss of use' incertain pour ce cas.",
+   "duree_s": 1.06
+  },
+  {
+   "id": "test-75",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "coverage for \"Vehicle Theft,\" defined as loss or damage as a result of theft to the policy holder's car or car accessories (while in or on the car)",
+   "citation_trouvee": true,
+   "raison": "Le sinistre correspond à une perte due à un vol d'un accessoire (smartphone) laissé dans le véhicule, ce qui est explicitement couvert par la définition de 'Vehicle Theft'.",
+   "duree_s": 0.93
+  },
+  {
+   "id": "test-76",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "oil leaking from a fixed oil-fired heating installation",
+   "citation_trouvee": true,
+   "raison": "Le sinistre implique un déversement de kérosène transporté manuellement dans la cuisine, et non une fuite d'huile provenant d'une installation de chauffage fixe au mazout.",
+   "duree_s": 0.86
+  },
+  {
+   "id": "test-77",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "loss or damage to the contents of the policyholder's home caused when first responders force an entry into the policyholder's home because of an emergency involving the policyholder",
+   "citation_trouvee": true,
+   "raison": "La clause couvre les dommages causés par une entrée forcée par des premiers intervenants en raison d'une urgence impliquant le souscripteur. Sam, en tant que pompier hors service, est considéré comme un premier intervenant.",
+   "duree_s": 1.17
+  },
+  {
+   "id": "test-78",
+   "attendu": "COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "loss or damage resulting from ground heave of the site on which the building stands, or landslip.",
+   "citation_trouvee": true,
+   "raison": "Le sinistre est causé par un tremblement de terre, qui n'est ni un 'ground heave' ni un 'landslip' selon la définition de la clause.",
+   "duree_s": 0.82
+  },
+  {
+   "id": "test-79",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "an invasion of the property by a large volume of water caused by a sudden release from outside the buildings",
+   "citation_trouvee": true,
+   "raison": "Le sinistre est causé par une fuite d'un baril de pluie situé à côté de la maison, et non par une invasion soudaine d'eau provenant de l'extérieur des bâtiments.",
+   "duree_s": 1.41
+  },
+  {
+   "id": "test-80",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "key replacement in the case of theft",
+   "citation_trouvee": true,
+   "raison": "La clause couvre explicitement le remplacement des clés en cas de vol.",
+   "duree_s": 0.56
+  },
+  {
+   "id": "test-81",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "damage from hail of such intensity that it causes damage to hard surfaces or breaks glass",
+   "citation_trouvee": true,
+   "raison": "La clause limite la couverture aux dommages causés aux surfaces dures ou au verre, ce qui n'est pas le cas des plantes.",
+   "duree_s": 0.82
+  },
+  {
+   "id": "test-82",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "necessary and reasonable costs that you incur in locating and fixing accidental damage to cables or pipes in your home",
+   "citation_trouvee": true,
+   "raison": "La clause couvre les coûts nécessaires et raisonnables engagés pour localiser et réparer des dommages accidentels causés aux tuyaux dans la maison, ce qui correspond à la situation décrite.",
+   "duree_s": 1.14
+  },
+  {
+   "id": "test-83",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "\"damage to buildings and contents caused by a sudden, unforeseen flow of water from an internal source, such as a burst pipe or faulty appliance.\"",
+   "citation_trouvee": true,
+   "raison": "La clause limite la couverture aux fuites provenant de sources internes comme des canalisations ou des appareils défectueux. Un aquarium n'est pas mentionné comme une source couverte.",
+   "duree_s": 1.47
+  },
+  {
+   "id": "test-84",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "coverage for \"Vehicle Theft,\" defined as loss or damage as a result of theft to the policy holder's car or car accessories (while in or on the car)",
+   "citation_trouvee": true,
+   "raison": "La clause couvre explicitement la perte résultant d'un vol de biens laissés dans la voiture, ce qui correspond au sinistre déclaré.",
+   "duree_s": 0.89
+  },
+  {
+   "id": "test-85",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "damage caused by a storm",
+   "citation_trouvee": true,
+   "raison": "La foudre est un phénomène météorologique lié à une tempête, donc le sinistre est causé par une tempête.",
+   "duree_s": 0.77
+  },
+  {
+   "id": "test-86",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "damage to buildings and contents caused by a sudden, unforeseen flow of water from an internal source, such as a burst pipe or faulty appliance",
+   "citation_trouvee": true,
+   "raison": "Le sinistre correspond à un écoulement d'eau soudain et imprévu provenant d'une source interne (la baignoire), causant des dommages aux bâtiments et au contenu.",
+   "duree_s": 1.15
+  },
+  {
+   "id": "test-87",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "oil leaking from a fixed oil-fired heating installation",
+   "citation_trouvee": true,
+   "raison": "Le sinistre correspond à une fuite d'huile ('oil leaking') provenant d'une installation de chauffage fixe au fioul ('fixed oil-fired heating installation'), ce qui est explicitement couvert par la clause.",
+   "duree_s": 0.89
+  },
+  {
+   "id": "test-88",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "damage to the policyholder's property caused by naturally-occurring fire",
+   "citation_trouvee": true,
+   "raison": "Le sinistre implique un feu naturel (brush fire) qui a causé l'explosion du réservoir de propane et endommagé le garage de Fatema.",
+   "duree_s": 0.95
+  },
+  {
+   "id": "test-89",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "loss or damage to the contents of the policyholder's home caused when first responders force an entry into the policyholder's home because of an emergency or perceived emergency involving the policyholder",
+   "citation_trouvee": true,
+   "raison": "La déclaration de sinistre indique que la police a forcé l'entrée en raison d'une urgence ou d'une urgence perçue impliquant la policyholder (Joanne), ce qui correspond à la définition des 'Emergency Damages'.",
+   "duree_s": 1.01
+  },
+  {
+   "id": "test-90",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "damage to plants, bushes, shrubs and trees within the boundaries of the land belonging to the home caused by civil commotion, strikes, or labor and political disturbances.",
+   "citation_trouvee": true,
+   "raison": "Le sinistre n'est pas causé par un dommage direct aux plantes dû à une grève, mais par l'impossibilité d'obtenir de l'engrais en raison de la grève des travailleurs du magasin voisin.",
+   "duree_s": 1.61
+  },
+  {
+   "id": "test-91",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "loss or damage caused by theft or attempted theft if your car was taken by a member of your family or household, or taken by an employee or ex-employee",
+   "citation_trouvee": true,
+   "raison": "Le sinistre est causé par un employé (personal assistant) de Dillon, ce qui est explicitement exclu par la clause.",
+   "duree_s": 0.73
+  },
+  {
+   "id": "test-92",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "only applies if the damage occurs \"while temporarily away from home anywhere in the world.\"",
+   "citation_trouvee": true,
+   "raison": "La clause limite la couverture aux dommages survenant pendant une absence temporaire, ce qui n'est pas le cas ici (déménagement permanent à l'étranger).",
+   "duree_s": 0.77
+  },
+  {
+   "id": "test-93",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "Vehicle Damage",
+   "citation_trouvee": true,
+   "raison": "La clause couvre explicitement les dommages au véhicule (« Vehicle Damage »), et le sinistre déclaré (dommage à la roue avant gauche causé par un accident) relève de cette catégorie.",
+   "duree_s": 0.76
+  },
+  {
+   "id": "test-94",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "loss or damage resulting from ground heave of the site on which the building stands, or landslip.",
+   "citation_trouvee": true,
+   "raison": "Le sinistre est causé par des danseurs agités et non par un mouvement naturel du sol (ground heave) ou un glissement de terrain (landslip).",
+   "duree_s": 1.13
+  },
+  {
+   "id": "test-95",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "loss or damage to the policy holder's car as a result of fire, lightning or explosion",
+   "citation_trouvee": true,
+   "raison": "La clause couvre explicitement les dommages causés par un incendie au véhicule de l'assuré, ce qui inclut ici les dommages par fumée résultant d'un incendie.",
+   "duree_s": 0.83
+  },
+  {
+   "id": "test-96",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "loss or damage as a result of fire to the policy holder's car or audio equipment (while in or on the car)",
+   "citation_trouvee": true,
+   "raison": "Le sinistre implique un dommage causé par un incendie à un équipement audio du véhicule (enceinte stéréo), ce qui correspond à la définition de la couverture.",
+   "duree_s": 0.97
+  },
+  {
+   "id": "test-97",
+   "attendu": "COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "identity theft connected with the policyholder's occupation",
+   "citation_trouvee": true,
+   "raison": "Le sinistre est lié à l'activité professionnelle de Jack (consultant en entreprise), même si l'acte frauduleux a eu lieu à son domicile.",
+   "duree_s": 0.87
+  },
+  {
+   "id": "test-98",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "key replacement in the case of theft",
+   "citation_trouvee": true,
+   "raison": "La clause couvre explicitement le remplacement des clés en cas de vol, mais la déclaration de sinistre ne précise pas si la perte de la clé est due à un vol.",
+   "duree_s": 0.77
+  },
+  {
+   "id": "test-99",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "damage to belongings caused while being removed by professional removal contractors from the home",
+   "citation_trouvee": true,
+   "raison": "La déclaration de sinistre correspond exactement à la définition de 'House Removal' : des dommages aux biens causés pendant leur retrait par des déménageurs professionnels depuis le domicile.",
+   "duree_s": 0.86
+  },
+  {
+   "id": "test-100",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "actions involving deliberate destruction or damage to the policyholder's property.",
+   "citation_trouvee": true,
+   "raison": "Le sinistre décrit (un accident causé par un camion-poubelle) ne relève pas d'une action délibérée de destruction ou de dommage.",
+   "duree_s": 0.95
+  },
+  {
+   "id": "test-101",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "damage from wind speeds with gusts of at least 55 mph",
+   "citation_trouvee": true,
+   "raison": "La déclaration indique que des vents dépassant 55 mph ont soufflé, ce qui correspond à la définition de la clause.",
+   "duree_s": 0.87
+  },
+  {
+   "id": "test-102",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "damage to plants, bushes, shrubs and trees within the boundaries of the land belonging to the home caused by malicious people or vandals",
+   "citation_trouvee": true,
+   "raison": "Le sinistre implique des dommages aux plantes de Margot causées par des personnes, ce qui correspond à la définition de 'damage caused by malicious people or vandals'.",
+   "duree_s": 0.91
+  },
+  {
+   "id": "test-103",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "loss or damage to the contents of the policyholder's home caused when first responders force an entry into the policyholder's home because of an emergency or perceived emergency involving the policyholder",
+   "citation_trouvee": true,
+   "raison": "La clause couvre les dommages causés par une entrée forcée des premiers intervenants en raison d'une urgence ou d'une urgence perçue impliquant l'assuré, ce qui correspond à la déclaration de sinistre.",
+   "duree_s": 1.1
+  },
+  {
+   "id": "test-104",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "damage to belongings that occurs while being stored by professional removal contractors",
+   "citation_trouvee": true,
+   "raison": "Le sinistre concerne des biens stockés par un cousin propriétaire d'une entreprise de déménagement, et non par des 'professional removal contractors'.",
+   "duree_s": 0.94
+  },
+  {
+   "id": "test-105",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "coverage for \"Vehicle Glass\" damage, defined as \"broken glass in the car's windows or windshield.\"",
+   "citation_trouvee": true,
+   "raison": "La déclaration de sinistre mentionne explicitement un dommage au pare-brise (windshield) du véhicule, qui est couvert par la définition de la clause.",
+   "duree_s": 0.88
+  },
+  {
+   "id": "test-106",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "broken glass in the car's windows or windshield",
+   "citation_trouvee": true,
+   "raison": "La clause ne couvre que les dommages impliquant une casse de verre ('broken glass'), or la déclaration indique qu'il n'y a qu'une éraflure cosmétique sans bris de verre.",
+   "duree_s": 0.82
+  },
+  {
+   "id": "test-107",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "an invasion of the property by a large volume of water caused by a sudden release from outside the buildings",
+   "citation_trouvee": true,
+   "raison": "Le sinistre est causé par une fuite d'un waterbed à l'intérieur de la propriété, et non par une invasion d'eau provenant de l'extérieur des bâtiments.",
+   "duree_s": 0.8
+  },
+  {
+   "id": "test-108",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "broken glass, and any scratching to the bodywork caused solely and directly by broken glass",
+   "citation_trouvee": true,
+   "raison": "La déclaration indique que des éclats de verre du miroir brisé ont causé des rayures sur la carrosserie, ce qui correspond à la définition de la couverture pour les dommages au verre du véhicule.",
+   "duree_s": 0.83
+  },
+  {
+   "id": "test-109",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "Cooper's car insurance policy includes coverage for \"Vehicle Theft,\" which applies only if \"the policyholder's car contains a working GPS tracking device.\"",
+   "citation_trouvee": true,
+   "raison": "La clause exige explicitement la présence d'un GPS fonctionnel dans le véhicule pour que la couverture s'applique.",
+   "duree_s": 0.74
+  },
+  {
+   "id": "test-110",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "damage from hail of such intensity that it causes damage to hard surfaces or breaks glass",
+   "citation_trouvee": true,
+   "raison": "La déclaration indique que la fenêtre du velux est ébréchée, ce qui correspond à un dommage à une surface dure (le verre).",
+   "duree_s": 1.09
+  },
+  {
+   "id": "test-111",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "any work on her home or belongings that requires, uses or produces any sources of heat that could ignite flammable materials",
+   "citation_trouvee": true,
+   "raison": "L'utilisation d'un compresseur d'air à moteur essence pour réparer une moto dans le garage de Shannon constitue un travail nécessitant une source de chaleur (le moteur du compresseur) susceptible d'enflammer des matériaux inflammables.",
+   "duree_s": 1.0
+  },
+  {
+   "id": "test-112",
+   "attendu": "COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "loss of or damage to the policyholder's car if, at the time of the incident, it was under the custody or control of anyone with the policyholder's permission who is not covered under the policy",
+   "citation_trouvee": true,
+   "raison": "La voiture était sous la garde ou le contrôle de Jenny elle-même (elle a laissé la clé dans son coffre-fort), mais la clause exclut spécifiquement les dommages lorsque la voiture est sous la garde ou le contrôle d'une personne non couverte par la police, ce qui n'est pas le cas ici. Cependant, la clause ne couvre pas les dommages lorsque la voiture est sous la garde du propriétaire, donc le sinistre n'est pas couvert.",
+   "duree_s": 1.4
+  },
+  {
+   "id": "test-113",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "damage to plants, bushes, shrubs and trees within the boundaries of the land belonging to the home caused by malicious people or vandals",
+   "citation_trouvee": true,
+   "raison": "Le sinistre est causé par le chien du voisin, et non par des personnes malveillantes ou des vandales.",
+   "duree_s": 1.03
+  },
+  {
+   "id": "test-114",
+   "attendu": "INCERTAIN",
+   "brute": "INCERTAIN",
+   "decision": "INCERTAIN",
+   "citation": "the policyholder's car contains a working GPS tracking device",
+   "citation_trouvee": true,
+   "raison": "le terme 'GPS tracking device' est ambigu : un smartphone utilisé pour la navigation et la musique peut être considéré comme un dispositif de suivi GPS, mais la clause ne précise pas si un appareil non dédié (comme un smartphone) est couvert.",
+   "duree_s": 1.04
+  },
+  {
+   "id": "test-115",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "damage from wind speeds with gusts of at least 55 mph",
+   "citation_trouvee": true,
+   "raison": "La déclaration de sinistre indique que des vents dépassant 55 mph ont endommagé le toit, ce qui correspond à la définition de \"Wind Damage\" dans la clause.",
+   "duree_s": 0.83
+  },
+  {
+   "id": "test-116",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "broken glass, and any scratching to the bodywork caused solely and directly by broken glass",
+   "citation_trouvee": true,
+   "raison": "La clause couvre explicitement les rayures sur la carrosserie causées uniquement et directement par du verre brisé, ce qui correspond à la situation décrite.",
+   "duree_s": 0.96
+  },
+  {
+   "id": "test-117",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "loss or damage to the policy holder's 1) car; or 2) car accessories (while in or on the car).",
+   "citation_trouvee": true,
+   "raison": "La clause limite la couverture aux dommages subis par la voiture elle-même ou ses accessoires, mais pas aux objets personnels comme une guitare.",
+   "duree_s": 1.03
+  },
+  {
+   "id": "test-118",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "General Damages, which includes losses from \"missed employment due to injuries that occur under regular working conditions.\"",
+   "citation_trouvee": true,
+   "raison": "La chute de Gavin n'est pas survenue dans le cadre de ses conditions de travail habituelles (réparation d'un climatiseur professionnel), mais lors d'une aide personnelle à sa petite amie.",
+   "duree_s": 0.97
+  },
+  {
+   "id": "test-119",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "costs associated with repairing deliberate damage to the policyholder's property made by an adverse third party",
+   "citation_trouvee": true,
+   "raison": "La déclaration de sinistre indique que des adolescents du quartier ont délibérément vandalisé la propriété de Beth avec de la peinture en aérosol, ce qui correspond à une 'Malicious Act or Vandalism' selon la définition de la clause.",
+   "duree_s": 68.43
+  },
+  {
+   "id": "test-120",
+   "attendu": "NON_COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "damage caused by a storm",
+   "citation_trouvee": true,
+   "raison": "Le sinistre est causé par un incendie déclenché par une chute de bougie, elle-même liée à une coupure de courant due à un orage (tempête). La clause couvre les dommages causés par une tempête, et l'origine de l'incendie est directement liée à cet événement.",
+   "duree_s": 1.08
+  },
+  {
+   "id": "test-121",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "the damages that you are legally liable to pay for damage to third party property",
+   "citation_trouvee": true,
+   "raison": "La clause couvre les dommages causés à la propriété d'un tiers pour lesquels Dave est légalement responsable, ce qui est le cas ici (collision avec les aménagements paysagers du restaurant).",
+   "duree_s": 66.76
+  },
+  {
+   "id": "test-122",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "coverage for \"Vehicle Theft,\" defined as loss or damage as a result of theft to the policy holder's car or audio equipment (while in or on the car).",
+   "citation_trouvee": true,
+   "raison": "La clause limite la couverture au vol du véhicule ou de l'équipement audio, et non à d'autres biens personnels comme un ordinateur portable.",
+   "duree_s": 68.17
+  },
+  {
+   "id": "test-123",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "key replacement in the case of theft",
+   "citation_trouvee": true,
+   "raison": "La clause couvre explicitement le remplacement des clés en cas de vol, et le sinistre décrit une perte de clé due à une négligence assimilable à un vol.",
+   "duree_s": 67.61
+  },
+  {
+   "id": "test-124",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "loss or damage resulting from ground heave of the site on which the building stands, or landslip.",
+   "citation_trouvee": true,
+   "raison": "Le sinistre est causé par un choc externe (collision de camions) et non par un mouvement du sol (ground heave) ou un glissement de terrain (landslip).",
+   "duree_s": 1.01
+  },
+  {
+   "id": "test-125",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "loss or damage resulting from ground heave of the site on which the building stands, or landslip.",
+   "citation_trouvee": true,
+   "raison": "Le sinistre est causé par de l'eau (water damage), ce qui n'est pas couvert par la définition de 'Ground Heave' ou 'landslip'.",
+   "duree_s": 0.82
+  },
+  {
+   "id": "test-126",
+   "attendu": "INCERTAIN",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "loss or damage to the policy holder's … 2) audio equipment (while in the car).",
+   "citation_trouvee": true,
+   "raison": "Le Bluetooth speaker est un équipement audio portable et se trouvait dans la voiture au moment du sinistre.",
+   "duree_s": 0.79
+  },
+  {
+   "id": "test-127",
+   "attendu": "NON_COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "loss or damage to the contents of the policyholder's home caused when first responders force an entry into the policyholder's home because of an emergency involving the policyholder",
+   "citation_trouvee": true,
+   "raison": "La déclaration indique que Sam a fait une entrée forcée dans la maison de Salma en raison d'une urgence (présence d'un cambrioleur), ce qui correspond à la définition des 'Emergency Damages'.",
+   "duree_s": 0.93
+  },
+  {
+   "id": "test-128",
+   "attendu": "INCERTAIN",
+   "brute": "INCERTAIN",
+   "decision": "INCERTAIN",
+   "citation": "an invasion of the property by a large volume of water caused by a rapid build-up from outside the buildings",
+   "citation_trouvee": true,
+   "raison": "Le sinistre décrit une montée progressive et non rapide de l'eau, ce qui ne correspond pas clairement à la définition de 'Flooding' nécessitant un 'rapid build-up'.",
+   "duree_s": 0.87
+  },
+  {
+   "id": "test-129",
+   "attendu": "NON_COUVERT",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "broken glass, and any scratching to the bodywork caused solely and directly by broken glass.",
+   "citation_trouvee": true,
+   "raison": "Le sinistre concerne une déformation du capot (bodywork) causée par un impact direct d'une balle de baseball, et non par du verre brisé ou des rayures causées par du verre brisé.",
+   "duree_s": 0.85
+  },
+  {
+   "id": "test-130",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "damage to buildings and contents caused by a sudden, unforeseen flow of water from an internal source, such as a burst pipe or faulty appliance",
+   "citation_trouvee": true,
+   "raison": "La fuite de la machine à laver est un écoulement soudain et imprévu d'eau provenant d'une source interne (appareil défectueux), ce qui correspond à la définition de la clause.",
+   "duree_s": 0.9
+  },
+  {
+   "id": "test-131",
+   "attendu": "INCERTAIN",
+   "brute": "NON_COUVERT",
+   "decision": "NON_COUVERT",
+   "citation": "loss or damage as a result of fire to the policy holder's car or audio equipment (while in or on the car)",
+   "citation_trouvee": true,
+   "raison": "Le sinistre concerne un smartphone et des billets, qui ne sont pas couverts par la définition de 'Vehicle Fire' (seul le véhicule ou l'équipement audio dans le véhicule est couvert).",
+   "duree_s": 1.18
+  },
+  {
+   "id": "test-132",
+   "attendu": "COUVERT",
+   "brute": "COUVERT",
+   "decision": "COUVERT",
+   "citation": "oil leaking from a fixed oil-fired heating installation",
+   "citation_trouvee": true,
+   "raison": "La déclaration de sinistre indique clairement qu'il y a une fuite d'huile provenant d'une installation de chauffage fixe au fioul, ce qui correspond exactement à la définition de 'Escape of Oil' dans la clause.",
+   "duree_s": 0.84
+  }
+ ]
+}
