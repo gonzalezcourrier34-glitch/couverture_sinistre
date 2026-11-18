@@ -2142,9 +2142,66 @@ un jeu AXA écrit sans voir les règles.
 puis des erreurs de lecture ; les premières se corrigent une fois, les secondes demandent des aides qui
 profitent à tous les contrats.
 
+### 7.61 Synthèse du 18 novembre au soir : un deuxième assureur, de zéro règle à 76 %
+
+Ce que la soirée devait montrer : que la méthode tient sur un contrat qu'on n'a pas écrit à la main. La garantie
+vol d'AXA Luxembourg (art. 3.1.6 : 8 sous-garanties, 11 exclusions) a été rédigée par Mistral Large, contrôlée par
+le code, relue, testée, mesurée. Chaque erreur trouvée a été corrigée **dans la méthode** (consigne, contrôles,
+moteur, outils) et pas seulement dans le contrat : la question de l'auteur à mi-parcours, « il faut que ce soit
+généralisable, non ? », a fixé la règle.
+
+**La progression d'AXA 3.1.6, étape par étape**
+
+| Étape | Section | Résultat | Correction générale qui en sort |
+|---|---|---|---|
+| Rédaction 1 (consigne v2) | 7.53 | plantage des contrôles ; puis 16 bloquants, extensions sans exclusions, faits en double | `non_traduit` en phrases toléré ; 4 contrôles nouveaux (exclusions communes, réserves, limites conditionnelles, `plus_proche`) ; vocabulaire donné avec son sens |
+| Rédaction 2 (consigne v3), 27 min | 7.54 | fond juste (exclusions communes, vol simple en concept, réserves gardées) ; forme cassée : 9 bloquants | conditions nues remises en forme par le code (pas de reprise de 10 min) ; listes numérotées et citations en double |
+| Contrôles rejoués (v4), sans modèle | 7.54 | 20 bloquants, tous des décisions humaines (18 faits nouveaux, 2 non traduits) | — |
+| Relecture humaine, ~20 min à deux | 7.55 | 18 faits proposés → 11 gardés ; conflit tire / agression corrigé ; question métier posée (jardin) | champ `hors_decision` |
+| Vocabulaire accepté | 7.56 | 0 bloquant ; règles chargées par SWI-Prolog | une variable acceptée ne vaut que pour les événements de sa garantie (« pour ») |
+| Règles acceptées ; banc Foyer | 7.57 | Foyer inchangé dans la marge | chaque contrat ne lit que les variables de ses règles |
+| 15 cas AXA, règles seules | 7.58 | **11 / 15**, puis **15 / 15** | consigne v5 (« à l'extérieur ») ; moteur : exclusion **entamée** = question (améliore aussi Foyer, g2-i06) ; `--accepter` remplace ; golden par contrat |
+| Premier banc AXA | 7.59 | 62 % justes, 0 couvert à tort | aides par valeur des variables nouvelles |
+| Banc après les aides | 7.60 | 62 % (lecture 69 → 81 %) | exclusion « véhicules » limitée au bien ; aides vol sur la personne, serrure de sûreté |
+| Banc final | 7.60 | **76 % justes, 0 couvert à tort, 0 refus à tort**, 1 instable ; 95e centile 4,7 s | — |
+
+**Le banc AXA, dans le temps** (15 cas, Mistral Small, lecture vérifiée, 3 exécutions)
+
+| | 22 h 17 | 22 h 20 | 22 h 37 |
+|---|---|---|---|
+| Règles seules | 100 % | 100 % | 100 % |
+| Rappel des faits | 69 % | 81 % | 82 % |
+| Contradictions de lecture | 4 | 2 | 1 |
+| Décisions changées par la lecture | 5,33 | 6,33 | 3,67 |
+| Chaîne : justes | 62 % | 62 % | **76 %** |
+| Chaîne : exactes | 42 % | 47 % | 56 % |
+| Couverts à tort | 0 | 0 | **0** |
+| Refus à tort | 1,33 | 1 | **0** |
+| Instables | 3 | 4 | 1 |
+| 95e centile, un cas à la fois | 5,2 s | 5,3 s | 4,7 s |
+
+**Foyer pendant ce temps** (97 cas) : rien n'a été cassé, et les corrections générales l'ont amélioré.
+
+| | Avant AXA (17 h 10) | AXA accepté (21 h 59) | Lecture par contrat (22 h 13) | Aides (22 h 31) |
+|---|---|---|---|---|
+| Règles seules | 100 % | 100 % | 100 % | 100 % (81 % exactes) |
+| Chaîne : justes | 90 % | 89 % | 89 % | **90 %** |
+| Couverts à tort | 2,33 | 3 | 2,33 | **1,33** (meilleur mesuré) |
+| Refus à tort | 1,33 | 0,67 | 1 | 1 |
+| Instables | 10 | 9 | 13 | 12 |
+| 95e centile, un cas à la fois | 4,7 s | 20,3 s (une question lente) | 4,5 s | **4,1 s** |
+
+**Ce que coûte un nouvel assureur, mesuré.** Pour une garantie de 8 sous-garanties : 2 rédactions par Mistral
+Large (6 puis 27 minutes) ; environ 20 minutes de relecture à deux, puis deux passes plus courtes guidées par les
+cas et le banc ; 11 variables et 1 valeur ajoutées au vocabulaire commun, avec leurs aides de lecture ; 15 cas
+écrits. Le prochain assureur bénéficie de tout ce qui a été rendu générique ce soir.
+
+**Ce que ces chiffres ne disent pas.** Les 15 cas AXA ont été écrits par Claude après avoir relu les règles :
+ils mesurent la cohérence, pas la justesse face à un sinistre réel. Sur 15 cas, un cas pèse 6,7 points.
+
 ## 8. Ce qui reste à faire
 
-Tenu à jour le 18 nov. 2026 ; ce qui est fait est dans les sections 7.
+Tenu à jour le 18 nov. 2026, 22 h 40 ; ce qui est fait est dans les sections 7.
 
 **Le plan de lecture (7.35)**
 - La lecture vérifiée est la lecture par défaut (7.45). Mesurer Mistral Large avec elle, pour le recours dans la cascade.
@@ -2159,8 +2216,12 @@ Tenu à jour le 18 nov. 2026 ; ce qui est fait est dans les sections 7.
 - LegalBench avec Mistral Large ; et, plus tard, des règles rédigées pour quelques clauses.
 
 **Le passage à l'échelle**
-- Traduire les garanties restantes de Foyer (tempête 2.2, électricité 2.6, mazout 2.8, responsabilité de l'immeuble 2.5, dégradations 2.11, mérule 2.12) avec la rédaction par Mistral Large.
-- Le deuxième contrat : AXA Luxembourg OptiHome, découpé et OK (7.51) ; rédiger ses règles (vol d'abord), écrire ses cas, passer le banc.
+- Traduire les garanties restantes de Foyer (tempête 2.2, électricité 2.6, mazout 2.8, responsabilité de l'immeuble 2.5, dégradations 2.11, mérule 2.12) avec la rédaction par Mistral Large, consigne v5.
+- AXA : la garantie vol est faite (7.53 à 7.61). Suite : un **jeu AXA écrit par l'auteur sans voir les règles** ; puis les autres garanties (incendie, dégâts des eaux…) ; la **question métier** du vol simple au jardin (7.55) à poser à un souscripteur.
+- Faire **proposer les aides par valeur** par la rédaction, en même temps que chaque variable nouvelle (leçon 74).
+- Contrôle mécanique à écrire : aucune exclusion commune ne doit rendre une extension impossible (leçon 70) ; le moteur peut le vérifier en prenant le périmètre de chaque garantie comme faits.
+- Le coût de la confirmation sur AXA (deux réponses justes suspendues sur 15) : mesurer si la confirmation peut épargner les faits que la lecture et la vérification donnent tous deux.
+- Faits idéaux AXA : retirer les valeurs par défaut que la déclaration ne dit pas (`auteur = tiers`, `proprietaire = assure`), qui sous-estiment le rappel.
 
 **Le reste**
 - Les 43 vulnérabilités signalées par GitHub (la mise à jour du verrou n'en a pas réduit le nombre : lire la liste).
@@ -2236,3 +2297,11 @@ Tenu à jour le 18 nov. 2026 ; ce qui est fait est dans les sections 7.
 66. Avant de répondre ferme, demander au moteur sur quels faits la réponse repose, et les faire confirmer : c'est là que se décide un « je ne sais pas » honnête.
 67. Confirmer qu'un fait est écrit n'attrape ni un fait mal rangé ni un fait oublié : chaque erreur de lecture a son contrôle.
 68. Un « à vérifier » se lit avant de se corriger : la moitié des alertes d'AXA venaient de deux limites générales du découpage, pas du contrat.
+69. Les contrôles mécaniques attrapent la forme, pas une traduction plausible mais fausse : corriger la chaîne, pas le contrat.
+70. Une exclusion commune doit être compatible avec chaque extension : le vol à la tire excluait le vol par agression.
+71. Ajouter des règles pour un assureur ne doit pas changer les réponses d'un autre : le banc du premier est le test d'étanchéité.
+72. Un vocabulaire commun pour comparer, une lecture propre à chaque contrat pour décider.
+73. Trois filets, trois sortes d'erreurs : les contrôles la forme, la relecture le sens visible, les cas le sens en action.
+74. Chaque variable nouvelle doit apprendre à être lue : la rédaction devrait proposer ses aides en même temps qu'elle.
+75. Sur un contrat neuf, le banc trouve d'abord des erreurs de traduction, puis des erreurs de lecture.
+76. Une exclusion que rien n'évoque reste une réserve ; une exclusion que la déclaration entame devient une question (précise la leçon 56).

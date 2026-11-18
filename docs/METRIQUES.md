@@ -109,6 +109,16 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 
 ## 5. Dernières mesures
 
+**18 nov. 2026, 22 h 37, AXA Luxembourg OptiHome, garantie vol (15 cas, golden v7), règles rédigées par
+Mistral Large puis relues** : règles seules 100 % ; **chaîne 76 % justes, 0 couvert à tort, 0 refus à tort**,
+1 instable ; rappel des faits 82 % ; un cas à la fois : médiane 3,3 s, 95e centile 4,7 s. Progression depuis le
+premier banc (62 %) et détail : DEMARCHE 7.59 à 7.61. Cas écrits par Claude après relecture des règles : à
+confirmer par un jeu indépendant.
+
+**18 nov. 2026, 22 h 31, Foyer, après les corrections générales de la soirée** (lecture limitée aux variables
+du contrat, aides de lecture, moteur « exclusion entamée ») : **90 % justes, 1,33 couvert à tort** (meilleur
+mesuré), 1 refus à tort, 12 instables ; 95e centile 4,1 s. DEMARCHE 7.57 à 7.61.
+
 **18 nov. 2026, 17 h 10, lecture vérifiée + confirmation des faits décisifs (défaut)** : **90 % justes,
 2,3 couverts à tort, 1,3 refus à tort**, questions attendues posées 70 % ; un cas à la fois : médiane 2,9 s,
 95e centile 4,7 s (porte ≤ 10 s : passe). DEMARCHE 7.49, 7.50.
@@ -209,6 +219,8 @@ avec leur attribution (CC BY 4.0). Rapports : `data/bancs/<date>-legalbench-<mod
 ---
 
 ## 8. À faire
+
+0. AXA : un jeu de cas écrit par l'auteur sans voir les règles ; les faits idéaux sans valeurs par défaut.
 
 1. Créer le jeu fermé (`data/ferme/`, ≥ 20 cas, auteur), avec plus de cas dont la bonne réponse est « incertain ».
 2. Valider le golden set (`couverture banc --fiche`, puis `--figer "validation"`).

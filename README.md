@@ -98,8 +98,17 @@ Contrat Foyer « appart 123 » (48 pages, 147 clauses). Golden set de 97 cas (do
 | Mesure | Justes | Couverts à tort | Refus à tort |
 |---|---|---|---|
 | **Règles seules** (faits idéaux, SWI-Prolog) | **100 %** | **0** | **0** |
-| Chaîne complète, lecture Mistral Small vérifiée et confirmée (3 exécutions) | 90 % | 2,3 | 1,3 |
+| Chaîne complète, lecture Mistral Small vérifiée et confirmée (3 exécutions) | 90 % | 1,3 | 1 |
 | Chaîne complète, lecture Mistral Large (3 exécutions) | 91 % | 0 | 0,3 |
+
+Deuxième contrat, **AXA Luxembourg OptiHome**, garantie vol (8 sous-garanties, 11 exclusions) : règles **rédigées par Mistral Large**, contrôlées par le code, relues, puis testées sur 15 cas.
+
+| Mesure (AXA, 15 cas) | Justes | Couverts à tort | Refus à tort |
+|---|---|---|---|
+| **Règles seules** | **100 %** | **0** | **0** |
+| Chaîne complète, Mistral Small (3 exécutions) | 76 % (62 % au premier banc) | **0** | **0** |
+
+Les erreurs trouvées sur AXA ont été corrigées dans la méthode (consigne de rédaction, contrôles, moteur), ce qui a aussi amélioré Foyer. Détail et progression : `docs/DEMARCHE.md`, sections 7.52 à 7.61.
 
 Les règles sont justes ; **toutes les erreurs restantes viennent de la lecture des faits**. La lecture par Small se fait en deux temps (l'événement, puis les questions qui le concernent), puis chaque fait est vérifié ; le moteur empêche qu'un doute fasse couvrir, et avant toute réponse ferme il fait confirmer les faits qui la portent : sinon, la réponse est « je ne sais pas », avec la question. Un cas prend 2,9 s (médiane, un cas à la fois). Mistral Large lit encore mieux, mais 15 minutes par passage du banc contre 2 à 3 avec Small. Le chantier en cours : la vitesse (Prolog chargé une fois) et le recours à Mistral Large pour les cas qui le demandent (DEMARCHE 7.35 à 7.45). Sur LegalBench (133 clauses externes, Mistral Small sans règles), le modèle cite juste mais tranche 90 % des cas que des lecteurs jugent ambigus : c'est ce que les règles évitent. La seule vraie mesure reste à faire : un jeu fermé écrit par l'auteur, sans voir les règles.
 
