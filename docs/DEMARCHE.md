@@ -1825,6 +1825,37 @@ des réponses fausses, et les cas « incertain » attendus le deviennent plus so
 Pistes : une règle de cohérence (une clé laissée à proximité n'est pas une clé volée), et, avant de
 couvrir, demander au modèle si la déclaration évoque l'une des exclusions que le moteur présume absentes.
 
+### 7.51 Trois contrats de plus : AXA Luxembourg, Société Générale, MACSF
+
+Pour montrer que la méthode se généralise, trois conditions générales réelles sont téléchargées par
+l'auteur (liens dans `data/contrats/SOURCES.md` ; le lien MACSF sert désormais la version d'avril 2026,
+ajoutée au catalogue). Première ingestion, sans rien changer :
+
+| Contrat | Clauses | Statut | Alertes |
+|---|---|---|---|
+| MACSF Multirisque Habitation (2026) | 207 | OK | — |
+| Société Générale Habitation (2025) | 157 | À vérifier | aucune définition reconnue |
+| **AXA Luxembourg OptiHome (2017)** | 292 | À vérifier | 118 clauses sans type ; 25 renvois introuvables |
+
+**AXA, le second contrat visé** (luxembourgeois, comme le recruteur). Deux causes, deux corrections
+générales, plus un profil d'assureur :
+- **Le profil ne reconnaissait pas les titres numérotés.** AXA titre ses sections « 3.1.6.1 Etendue de la
+  garantie », « 3.1.6.2 Vols exclus » ; le profil comparait le titre avec son numéro. Il le compare
+  désormais sans. Profil `data/profils/axa-lu.json` : « étendue de la garantie », « objet de la
+  garantie » → garantie ; « montant des garanties », « estimation des dommages » → limite ; « délai de
+  carence », « étendue territoriale » → condition.
+- **Les renvois vers des sous-points énumérés dans le texte** (« 3.1.7.2.9 les pertes… » écrit dans la clause
+  3.1.7.2) n'avaient pas de clause à eux. Un tel renvoi mène maintenant à la clause qui le contient (au plus
+  deux niveaux au-dessus).
+
+Résultat : **AXA passe à OK** (293 clauses : 34 garanties, 25 exclusions, 51 conditions, 18 limites, 71
+définitions ; 94 « autre », surtout les dispositions administratives : résiliation, prime, prescription).
+Pour la garantie vol, par exemple : 3.1.6.1 étendue (garantie), 3.1.6.2 vols exclus (exclusion), 3.1.6.3
+limites d'indemnité (limite), 3.1.6.4 mesures de sécurité (condition). Foyer est inchangé.
+
+**Société Générale** reste à vérifier : sa mise en page (numéros de page pris pour des numéros d'article,
+titres aux lettres espacées) demanderait un profil plus lourd ; contrat français, il passe après AXA.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 18 nov. 2026 ; ce qui est fait est dans les sections 7.
@@ -1843,7 +1874,7 @@ Tenu à jour le 18 nov. 2026 ; ce qui est fait est dans les sections 7.
 
 **Le passage à l'échelle**
 - Traduire les garanties restantes de Foyer (tempête 2.2, électricité 2.6, mazout 2.8, responsabilité de l'immeuble 2.5, dégradations 2.11, mérule 2.12) avec la rédaction par Mistral Large.
-- Un deuxième contrat, rédigé et vérifié par le banc.
+- Le deuxième contrat : AXA Luxembourg OptiHome, découpé et OK (7.51) ; rédiger ses règles (vol d'abord), écrire ses cas, passer le banc.
 
 **Le reste**
 - Les 43 vulnérabilités signalées par GitHub (la mise à jour du verrou n'en a pas réduit le nombre : lire la liste).
@@ -1918,3 +1949,4 @@ Tenu à jour le 18 nov. 2026 ; ce qui est fait est dans les sections 7.
 65. Un contrôle qui retire des faits doit être asymétrique : il peut rendre une réponse plus prudente, jamais plus généreuse, et c'est le moteur qui dit laquelle des deux il produit.
 66. Avant de répondre ferme, demander au moteur sur quels faits la réponse repose, et les faire confirmer : c'est là que se décide un « je ne sais pas » honnête.
 67. Confirmer qu'un fait est écrit n'attrape ni un fait mal rangé ni un fait oublié : chaque erreur de lecture a son contrôle.
+68. Un « à vérifier » se lit avant de se corriger : la moitié des alertes d'AXA venaient de deux limites générales du découpage, pas du contrat.

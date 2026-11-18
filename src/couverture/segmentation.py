@@ -100,11 +100,21 @@ def resoudre(ref: str, ids: list[str]) -> list[str]:
     if ref in ids:
         return [ref]
     enfants = [i for i in ids if i.startswith(ref + ".") or i.startswith(ref + "-") or i.startswith(ref + "/")]
-    return enfants[:4]
+    if enfants:
+        return enfants[:4]
+    # Un sous-point énuméré dans le texte d'une clause (« 3.1.7.2.9 les pertes… » dans la clause 3.1.7.2) n'a
+    # pas de clause à lui : le renvoi mène à la clause qui le contient (au plus deux niveaux au-dessus).
+    parties = ref.split(".")
+    for n in (1, 2):
+        if len(parties) - n >= 2 and (parent := ".".join(parties[:-n])) in ids:
+            return [parent]
+    return []
 
 
 def type_du_profil(titre: str, intertitres: dict[str, str]) -> TypeClause | None:
-    t = normaliser(titre).rstrip(" :.").strip()
+    # Le titre d'une section numérotée commence par son numéro (« 3.1.6.1 Etendue de la garantie ») :
+    # le profil parle du titre seul.
+    t = re.sub(r"^[\d.\s'’-]+", "", normaliser(titre)).rstrip(" :.").strip()
     for phrase, type_ in intertitres.items():
         if t == phrase or (t.startswith(phrase) and len(t) <= len(phrase) + 20):
             return TypeClause(type_)

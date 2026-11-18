@@ -563,3 +563,24 @@ def test_ingestion_ignore_la_documentation_et_retire_les_contrats_disparus(tmp_p
     with sqlite3.connect(base.chemin) as cx:
         cx.execute("PRAGMA foreign_keys = ON")
         assert cx.execute("SELECT COUNT(*) FROM clauses WHERE contrat_id = 'b'").fetchone()[0] == 0
+
+
+def test_profil_reconnait_un_titre_numerote():
+    """« 3.1.6.1 Etendue de la garantie » (AXA) : le profil parle du titre sans son numéro."""
+    from couverture.segmentation import type_du_profil
+
+    assert type_du_profil("3.1.6.1 Etendue de la garantie", {"etendue de la garantie": "garantie"}).value == "garantie"
+    assert type_du_profil("Etendue de la garantie", {"etendue de la garantie": "garantie"}).value == "garantie"
+    assert type_du_profil("3.1.6 Vol", {"etendue de la garantie": "garantie"}) is None
+
+
+def test_renvoi_vers_un_sous_point_enumere():
+    """« 3.1.7.2.9 les pertes… » est énuméré dans le texte de la clause 3.1.7.2 : le renvoi y mène."""
+    from couverture.segmentation import resoudre
+
+    ids = ["3.1.7", "3.1.7.1", "3.1.7.2", "4.1"]
+    assert resoudre("3.1.7.2.9", ids) == ["3.1.7.2"]
+    assert resoudre("3.1.7.2.9.1", ids) == ["3.1.7.2"]
+    assert resoudre("3.1", ids) == ["3.1.7", "3.1.7.1", "3.1.7.2"]
+    assert resoudre("5.2", ids) == [] and resoudre("4", ids) == ["4.1"]
+    assert resoudre("9.9.9", ids) == []
