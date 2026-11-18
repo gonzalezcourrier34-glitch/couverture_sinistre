@@ -201,7 +201,15 @@ CHAMPS = {
     "obligations": ("condition", "article", "texte"),
     "exclusions": ("condition", "article", "texte"),
     "limites": ("article", "texte"),
+    "non_traduit": ("article", "texte", "pourquoi"),
 }
+
+
+def non_traduits(prop: dict) -> list[dict]:
+    """Les passages déclarés non traduits. Le modèle renvoie parfois une simple phrase au lieu de l'objet
+    {"article", "texte", "pourquoi"} (AXA 3.1.6, 7.53) : on la garde, sans article, plutôt que de planter."""
+    return [n if isinstance(n, dict) else {"article": None, "texte": str(n), "pourquoi": "rendu sans article ni raison"}
+            for n in prop.get("non_traduit") or []]
 
 
 def erreurs_schema(prop) -> list[str]:
@@ -232,6 +240,7 @@ def erreurs_schema(prop) -> list[str]:
                     erreurs.append(f"{ou} : {e}")
 
     champs(prop.get("definitions"), "definitions", "definitions")
+    champs(prop.get("non_traduit"), "non_traduit", "non_traduit")
     garanties = prop.get("garanties")
     if not garanties:
         erreurs.append("aucune garantie proposée")
@@ -318,7 +327,10 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
     def noter(gravite, controle, message):
         problemes.append({"gravite": gravite, "controle": controle, "message": message})
 
-    # 1. Structure
+    # 1. Structure. Un « non_traduit » en simple phrase est mis en forme (sans article) : il reste bloquant
+    # plus bas, et une seconde rédaction de plusieurs minutes pour une question de forme serait du gaspillage.
+    if isinstance(prop, dict) and prop.get("non_traduit"):
+        prop["non_traduit"] = non_traduits(prop)
     schema = erreurs_schema(prop)
     if not schema:
         try:
@@ -386,20 +398,20 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
 
     # 4. Couverture des listes d'exclusions
     textes = [x.get("texte", "") for g in prop.get("garanties", []) for x in g.get("exclusions", [])]
-    textes += [n.get("texte", "") for n in prop.get("non_traduit", [])]
+    textes += [n.get("texte", "") for n in non_traduits(prop)]
     for c in clauses_article(clauses, article):
         if c.type != TypeClause.EXCLUSION:
             continue
         for item in items_exclusion(c.texte):
             if not couvert_par(item, textes):
                 noter(BLOQUANT, "couverture", f"exclusion du contrat absente des règles ({c.id}) : « {item[:100]} »")
-    for n in prop.get("non_traduit", []):
+    for n in non_traduits(prop):
         noter(BLOQUANT, "couverture", f"déclaré non traduit ({n.get('article')}) : « {str(n.get('texte'))[:100]} » "
               f"— {n.get('pourquoi', '')}")
 
     # 4 bis. La définition de l'événement couvert (« tempête ») est une condition de la garantie.
     titres = normaliser(" ".join(c.chemin[-1] for c in clauses_article(clauses, article) if c.chemin))
-    employes = {x.get("article") for _, x in elements_cites(prop)} | {n.get("article") for n in prop.get("non_traduit", [])}
+    employes = {x.get("article") for _, x in elements_cites(prop)} | {n.get("article") for n in non_traduits(prop)}
     for d in definitions_utiles(clauses, clauses_article(clauses, article)):
         terme_defini = normaliser((d.chemin[-1] if d.chemin else d.id.split("/")[-1]).replace("-", " "))
         if terme_defini and re.search(rf"\b{re.escape(terme_defini)}", titres) and d.id not in employes:

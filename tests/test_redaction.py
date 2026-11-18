@@ -147,6 +147,16 @@ def test_citation_reparee_ou_refusee():
     assert any("article 9.9 inconnu" in p["message"] for p in bloquants(controles(prop), "citation"))
 
 
+def test_non_traduit_en_simple_phrase():
+    """AXA 3.1.6 : Mistral Large a rendu « non_traduit » comme une liste de phrases. Le schéma le signale
+    (une reprise est demandée au modèle) et les contrôles ne plantent pas : le passage reste bloquant."""
+    prop = copy.deepcopy(BONNE)
+    prop["non_traduit"] = ["aux matériaux à pied d’œuvre : pas de fait pour cela"]
+    assert any("non_traduit" in e and "pas un objet" in e for e in redaction.erreurs_schema(prop))
+    messages = [p["message"] for p in bloquants(controles(prop), "couverture")]
+    assert any("déclaré non traduit" in m and "pied d’œuvre" in m for m in messages)
+
+
 def test_exclusion_oubliee_bloque():
     """La faute la plus coûteuse : une exclusion de la liste oubliée en silence."""
     assert bloquants(controles({**BONNE, "non_traduit": []}), "couverture"), "matériaux à pied d'œuvre : ni traduit ni déclaré"

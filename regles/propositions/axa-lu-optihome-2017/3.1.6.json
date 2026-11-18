@@ -1,0 +1,604 @@
+{
+  "meta": {
+    "article": "3.1.6",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-18",
+    "consigne": "redaction-regles v2"
+  },
+  "proposition": {
+    "evenements": [
+      "vol",
+      "vandalisme"
+    ],
+    "definitions": [
+      {
+        "concept": "contenu",
+        "condition": {
+          "ou": [
+            {
+              "f": [
+                "bien",
+                "mobilier"
+              ]
+            },
+            {
+              "f": [
+                "bien",
+                "electronique"
+              ]
+            },
+            {
+              "f": [
+                "bien",
+                "bijoux"
+              ]
+            },
+            {
+              "f": [
+                "bien",
+                "valeurs"
+              ]
+            },
+            {
+              "f": [
+                "bien",
+                "objet_divers"
+              ]
+            }
+          ]
+        },
+        "article": "3.1.6.1",
+        "texte": "Le vol ou la tentative de vol du contenu ou des valeurs situés dans le bâtiment désigné"
+      }
+    ],
+    "garanties": [
+      {
+        "id": "vol_base",
+        "nom": "Vol",
+        "article": "3.1.6.1",
+        "texte": "La Compagnie garantit, pour autant qu'une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes : n Le vol ou la tentative de vol du contenu ou des valeurs situés dans le bâtiment désigné. n Les dégâts causés par vandalisme au contenu à l'occasion d'un vol ou d'une tentative de vol.",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "vol"
+            ]
+          },
+          {
+            "f": [
+              "plainte_deposee",
+              "oui"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "concept": "contenu"
+              },
+              {
+                "f": [
+                  "bien",
+                  "valeurs"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [
+          {
+            "condition": {
+              "f": [
+                "serrure_surete",
+                "non"
+              ]
+            },
+            "texte": "portes donnant sur l'extérieur ou sur les parties communes de l'immeuble : au moins une serrure de sûreté ou un verrou de sûreté",
+            "article": "3.1.6.4",
+            "lien_causal": true
+          },
+          {
+            "condition": {
+              "f": [
+                "protection_vitree",
+                "aucun"
+              ]
+            },
+            "texte": "parties vitrées facilement accessibles : volet ou bien barreaux ou ornements en métal ne laissant entre éléments qu'un espace libre de 17 cm au maximum",
+            "article": "3.1.6.4",
+            "lien_causal": true
+          }
+        ],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "vol_simple",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.6.2.1",
+            "texte": "les vols simples"
+          },
+          {
+            "condition": {
+              "f": [
+                "vol_a_la_tire",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.6.2.2",
+            "texte": "les vols à la tire ou à la sauvette commis à l'extérieur du bâtiment désigné"
+          },
+          {
+            "condition": {
+              "f": [
+                "occupation_irreguliere",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.6.2.3",
+            "texte": "les vols dans les locaux à occupation irrégulière"
+          },
+          {
+            "condition": {
+              "f": [
+                "vol_avec_complicite",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.6.2.4",
+            "texte": "les vols commis par ou avec la complicité de ou du : n Preneur d'assurance, son conjoint, leurs ascendants ou descendants ainsi que les conjoints de ces personnes ; n l'Assuré ; n toute personne au service de l'Assuré pendant les heures de service et, si ces vols ont été commis en dehors de celles-ci, autrement que par effraction ou avec violence."
+          },
+          {
+            "condition": {
+              "f": [
+                "bien",
+                "vehicule_moteur"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.6.2.5",
+            "texte": "les vols de véhicules automoteurs – à l'exception des engins de jardinage –, des remorques non enfermées dans le bâtiment désigné, ainsi que le vol de leurs accessoires et de leur contenu"
+          },
+          {
+            "condition": {
+              "f": [
+                "lieu",
+                "jardin"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.6.2.6",
+            "texte": "les vols des biens se trouvant à l'extérieur, dans les cours, les jardins -à l'exception du mobilier de jardin, de l'outillage motorisé ou non et des plantations situés à l'adresse du risque - dans les couloirs et passages d'accès, ainsi que dans les dépendances isolées ou contiguës avec ou sans communication intérieure avec la construction principale et non munies de serrure à cylindre"
+          },
+          {
+            "condition": {
+              "f": [
+                "lieu",
+                "parties_communes"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.6.2.7",
+            "texte": "si l'Assuré n'occupe que partiellement le bâtiment désigné, le vol des biens se trouvant dans les parties communes et le contenu des garages, caves et greniers s'ils ne sont pas fermés par une serrure de sûreté"
+          },
+          {
+            "condition": {
+              "f": [
+                "bien",
+                "animal"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.6.2.8",
+            "texte": "le vol des animaux"
+          },
+          {
+            "condition": {
+              "f": [
+                "batiment_en_construction",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.6.2.9",
+            "texte": "les vols commis lorsque le bâtiment désigné est en cours de construction, de transformation ou de rénovation à moins que l'Assuré ne démontre que cette circonstance n'a pas contribué à la survenance ou à l'aggravation des conséquences du sinistre"
+          },
+          {
+            "condition": {
+              "f": [
+                "proprietaire",
+                "hote"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.6.2.10",
+            "texte": "le vol des biens dont l'Assuré n'est pas propriétaire"
+          },
+          {
+            "condition": {
+              "f": [
+                "abus_confiance",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.6.2.11",
+            "texte": "l'abus de confiance"
+          }
+        ],
+        "limites": []
+      },
+      {
+        "id": "vol_annexes",
+        "nom": "Vol annexes",
+        "article": "3.1.6.1",
+        "texte": "Le vol ou la tentative de vol du contenu entreposé dans les annexes même non contiguës et équipées de serrures à cylindre. Cette intervention se fait sans application de la règle proportionnelle à concurrence de 2.500 € par sinistre.",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "vol"
+            ]
+          },
+          {
+            "f": [
+              "lieu",
+              "annexe"
+            ]
+          },
+          {
+            "f": [
+              "serrure_cylindre",
+              "oui"
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "3.1.6.1",
+            "texte": "Cette intervention se fait sans application de la règle proportionnelle à concurrence de 2.500 € par sinistre.",
+            "montant": 2500
+          }
+        ]
+      },
+      {
+        "id": "vol_cles",
+        "nom": "Vol clés",
+        "article": "3.1.6.1",
+        "texte": "Les frais liés au remplacement des clés et serrures du bâtiment désigné suite à la perte ou au vol des clés",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "vol"
+            ]
+          },
+          {
+            "f": [
+              "bien",
+              "cles"
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      },
+      {
+        "id": "vol_sejour",
+        "nom": "Vol séjour temporaire",
+        "article": "3.1.6.1",
+        "texte": "au vol par effraction dans un bâtiment situé partout dans le monde, d'objets personnels appartenant à l'Assuré et déplacés dans le cadre d'un séjour temporaire avec un maximum de 2.500 € par sinistre.",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "vol"
+            ]
+          },
+          {
+            "f": [
+              "effraction",
+              "oui"
+            ]
+          },
+          {
+            "f": [
+              "sejour_temporaire",
+              "oui"
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "3.1.6.1",
+            "texte": "avec un maximum de 2.500 € par sinistre.",
+            "montant": 2500
+          }
+        ]
+      },
+      {
+        "id": "vol_privilege",
+        "nom": "Vol Privilège",
+        "article": "3.1.6.1",
+        "texte": "Lorsque les conditions particulières mentionnent que la formule «Privilège» est souscrite, la Compagnie étend sans supplément de prime la portée de la garantie",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "vol"
+            ]
+          },
+          {
+            "f": [
+              "formule_privilege",
+              "oui"
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "3.1.6.1",
+            "texte": "au vol survenu au domicile des concierges [...] à concurrence de 2.500 € par sinistre",
+            "montant": 2500
+          },
+          {
+            "article": "3.1.6.1",
+            "texte": "au vol [...] du mobilier de jardin [...] à concurrence de 5.000 € par sinistre",
+            "montant": 5000
+          },
+          {
+            "article": "3.1.6.1",
+            "texte": "au vol par agression [...] à concurrence de 6.000 € par sinistre",
+            "montant": 6000
+          },
+          {
+            "article": "3.1.6.1",
+            "texte": "les valeurs sont indemnisées à concurrence de 750 €",
+            "montant": 750
+          },
+          {
+            "article": "3.1.6.3",
+            "texte": "à concurrence de 40% du montant indiqué aux conditions particulières au titre du contenu, pour les objets tels que meubles d'époque et objets de valeur",
+            "montant": "40%"
+          },
+          {
+            "article": "3.1.6.3",
+            "texte": "concernant les timbres de collection, l'indemnité par timbre ne pourra être supérieure à 500 €",
+            "montant": 500
+          },
+          {
+            "article": "3.1.6.3",
+            "texte": "à concurrence de 1500 € par sinistre pour l'ensemble constitué de l'argent comptant [...] s'ils se trouvent sous clefs",
+            "montant": 1500
+          },
+          {
+            "article": "3.1.6.3",
+            "texte": "à concurrence de 750 € par sinistre s'ils ne se trouvent pas sous clefs",
+            "montant": 750
+          }
+        ]
+      },
+      {
+        "id": "vol_active",
+        "nom": "Vol Active",
+        "article": "3.1.6.1",
+        "texte": "Lorsque les conditions particulières mentionnant que a formule \"Active\" est souscrite, la Compagnie étend sans supplément de prime la portée de la garantie au vol par agression",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "vol"
+            ]
+          },
+          {
+            "f": [
+              "formule_active",
+              "oui"
+            ]
+          },
+          {
+            "f": [
+              "agression",
+              "oui"
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "3.1.6.1",
+            "texte": "Cette intervention se fait sans application de la règle proportionnelle à concurrence de 2.500 € par sinistre",
+            "montant": 2500
+          },
+          {
+            "article": "3.1.6.1",
+            "texte": "les valeurs sont indemnisées à concurrence de 750 €",
+            "montant": 750
+          },
+          {
+            "article": "3.1.6.3",
+            "texte": "à concurrence de 40% du montant indiqué aux conditions particulières au titre de la garantie vol, pour les objets tels que meubles d'époque et objets de valeur",
+            "montant": "40%"
+          },
+          {
+            "article": "3.1.6.3",
+            "texte": "concernant les timbres de collection, l'indemnité par timbre ne pourra être supérieure à 500 €",
+            "montant": 500
+          },
+          {
+            "article": "3.1.6.3",
+            "texte": "à concurrence de 1500 € par sinistre pour l'ensemble constitué de l'argent comptant [...] s'ils se trouvent sous clefs",
+            "montant": 1500
+          },
+          {
+            "article": "3.1.6.3",
+            "texte": "à concurrence de 750 € par sinistre s'ils ne se trouvent pas sous clefs",
+            "montant": 750
+          }
+        ]
+      }
+    ],
+    "vocabulaire_manquant": [
+      {
+        "variable": "plainte_deposee",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Une plainte a-t-elle été déposée auprès des autorités ?",
+        "pourquoi": "condition de la garantie"
+      },
+      {
+        "variable": "formule_privilege",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La formule «Privilège» est-elle souscrite ?",
+        "pourquoi": "extension de garantie"
+      },
+      {
+        "variable": "formule_active",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La formule «Active» est-elle souscrite ?",
+        "pourquoi": "extension de garantie"
+      },
+      {
+        "variable": "serrure_cylindre",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Équipées de serrures à cylindre ?",
+        "pourquoi": "condition annexes"
+      },
+      {
+        "variable": "sejour_temporaire",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Séjour temporaire ?",
+        "pourquoi": "condition vol mondial"
+      },
+      {
+        "variable": "agression",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Vol par agression ?",
+        "pourquoi": "extension Privilège/Active"
+      },
+      {
+        "variable": "protection_vitree",
+        "valeurs": [
+          "volet",
+          "barreaux",
+          "aucun"
+        ],
+        "question": "Quelle protection pour les parties vitrées accessibles ?",
+        "pourquoi": "obligation de sécurité"
+      },
+      {
+        "variable": "vol_simple",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Vol simple ?",
+        "pourquoi": "exclusion"
+      },
+      {
+        "variable": "vol_a_la_tire",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Vol à la tire/sauvette à l'extérieur ?",
+        "pourquoi": "exclusion"
+      },
+      {
+        "variable": "occupation_irreguliere",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Locaux à occupation irrégulière ?",
+        "pourquoi": "exclusion"
+      },
+      {
+        "variable": "vol_avec_complicite",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Complicité du preneur/assuré/famille/personnel ?",
+        "pourquoi": "exclusion"
+      },
+      {
+        "variable": "batiment_en_construction",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Bâtiment en construction/transformation/rénovation ?",
+        "pourquoi": "exclusion"
+      },
+      {
+        "variable": "abus_confiance",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Abus de confiance ?",
+        "pourquoi": "exclusion"
+      },
+      {
+        "variable": "sous_clefs",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Valeurs sous clefs ?",
+        "pourquoi": "limite indemnité"
+      }
+    ],
+    "non_traduit": [
+      "Clause 3.1.6.5 (Objets volés retrouvés) : procédure de notification et délai de 15 jours non traduite en règles logiques"
+    ]
+  }
+}

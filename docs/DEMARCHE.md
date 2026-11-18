@@ -1869,6 +1869,37 @@ vocabulaire, concepts, chargement Prolog), l'auteur relit, puis accepte. Premiè
 sécurité (3.1.6.4). À mesurer : ce que la rédaction réussit seule, ce qu'il faut ajouter au vocabulaire
 commun, et le temps humain de relecture.
 
+### 7.53 Première rédaction AXA (vol, 3.1.6) : un plantage, puis ce que les contrôles voient et ne voient pas
+
+**Le plantage.** Mistral Large a rendu « non_traduit » comme une liste de phrases au lieu d'objets
+{"article", "texte", "pourquoi"}. Le contrôle des listes d'exclusions appelait `.get` sur une chaîne et
+plantait, après six minutes de rédaction (la proposition brute était heureusement déjà sauvée). Correction :
+le schéma signale désormais cet écart (ce qui déclenche la reprise par le modèle), et les contrôles mettent
+la phrase en forme sans article ; elle reste bloquante. Un test reproduit le cas.
+
+**Ce que les contrôles signalent (16 bloquants).** Treize faits nouveaux à accepter ou remplacer ; une
+citation rattachée à un article qui n'existe pas (3.1.6.2.4) ; une partie de la liste d'exclusions oubliée
+(les remorques non enfermées) ; le passage déclaré non traduit (objets volés retrouvés, 3.1.6.5).
+
+**Ce qu'ils ne voient pas, et que la relecture a trouvé.**
+- Des faits inventés alors que le vocabulaire commun les a déjà : `agression` pour `violence`,
+  `vol_avec_complicite` pour `auteur`, `vol_simple` pour « ni effraction ni violence ». Le contrôle repère un
+  fait nouveau, pas un fait nouveau *redondant*. Le vocabulaire commun est justement ce qui rend les règles
+  comparables d'un assureur à l'autre : l'accepter tel quel l'aurait fragmenté.
+- Les exclusions ne sont attachées qu'à la garantie de base. Les extensions « Privilège » et « Active »
+  couvriraient un vol sans aucune exclusion : le genre d'erreur qui fait couvrir à tort.
+- Des exceptions aux exclusions perdues : le vol au jardin est exclu en entier, alors que le mobilier de
+  jardin, l'outillage et les plantations sont réservés ; l'exclusion des parties communes oublie sa
+  condition (« si l'Assuré n'occupe que partiellement le bâtiment »).
+- Des conditions cachées dans les limites (sous clefs, agression), contrairement à la règle 4 de la consigne.
+- « Perte ou vol des clés » réduit au vol ; « biens dont l'Assuré n'est pas propriétaire » réduit à `hote`.
+
+**Leçon 69.** Les contrôles mécaniques attrapent la forme (citations, schéma, faits inconnus, exclusions
+omises) ; ils n'attrapent pas une traduction plausible mais fausse. Sur un contrat neuf, la relecture humaine
+n'est pas une formalité : c'est elle qui empêche une extension de garantie de couvrir sans exclusions. Deux
+contrôles mécaniques en découlent : chaque garantie d'un même article doit porter les exclusions de l'article
+(ou dire pourquoi non), et un fait nouveau proche d'une variable existante doit être signalé comme tel.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 18 nov. 2026 ; ce qui est fait est dans les sections 7.
