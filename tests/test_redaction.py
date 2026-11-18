@@ -201,6 +201,28 @@ def test_le_vocabulaire_donne_au_modele_porte_les_questions():
     assert "violence : oui, non — « Y a-t-il eu violences physiques ou menaces ? »" in message
 
 
+def test_condition_nue_enveloppee_et_signalee():
+    """AXA 3.1.6 v3 (7.54) : les circonstances rendues comme {"f": …}, deux fois de suite. Elles sont enveloppées
+    avec la citation de leur garantie, et l'avertissement revient tant qu'elles ne sont pas précisées."""
+    prop = copy.deepcopy(BONNE)
+    prop["garanties"][0]["circonstances"].append({"f": ["vent_fort", "oui"]})
+    ps = controles(prop)
+    assert not bloquants(ps, "structure")
+    assert any(p["controle"] == "structure" and p["gravite"] == redaction.A_RELIRE for p in ps)
+    redaction.controler(prop, CLAUSES, prolog.fichier_regles(CONTRAT).read_text(encoding="utf-8"), "2.2")
+    c = prop["garanties"][0]["circonstances"][-1]
+    assert c["a_preciser"] and c["article"] == "2.2" and c["condition"] == {"f": ["vent_fort", "oui"]}
+    assert any(p["controle"] == "structure" for p in controles(prop)), "toujours signalée au contrôle suivant"
+
+
+def test_liste_d_exclusions_numerotee_et_incise():
+    texte = ("En outre, ne sont pas assurés : 3.1.6.2.1 les vols simples ; 3.1.6.2.5 les vols de véhicules "
+             "automoteurs – à l’exception des engins de jardinage –, des remorques non enfermées ; 3.1.6.2.8 le vol des animaux.")
+    items = redaction.items_exclusion(texte)
+    assert any(i.startswith("les vols de véhicules automoteurs – à l’exception") and "remorques" in i for i in items)
+    assert any(i.startswith("le vol des animaux") for i in items) and len(items) == 3
+
+
 def test_exclusion_oubliee_bloque():
     """La faute la plus coûteuse : une exclusion de la liste oubliée en silence."""
     assert bloquants(controles({**BONNE, "non_traduit": []}), "couverture"), "matériaux à pied d'œuvre : ni traduit ni déclaré"
@@ -278,7 +300,7 @@ def test_jeu_redaction_coherent():
 def test_consigne_de_redaction_versionnee():
     from couverture.consignes import CONSIGNES
 
-    assert CONSIGNES["couverture-redaction-regles"][2] == "v3"
+    assert CONSIGNES["couverture-redaction-regles"][2] == "v4"
 
 
 # --- Après la première rédaction réelle (Mistral Large, 17 nov. 2026, docs/DEMARCHE.md 7.20) ---------------

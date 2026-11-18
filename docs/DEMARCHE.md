@@ -1914,6 +1914,36 @@ d'une liste, pas d'une lecture ligne à ligne. Ce qui n'est pas automatisé : ju
 `plus_proche` est bonne. La mesure suivante : relancer la rédaction avec la consigne v3 et compter ce qui
 reste.
 
+### 7.54 Deuxième rédaction AXA (consigne v3) : le fond suit, la forme casse, le code répare
+
+**Mesure.** 27 minutes : la première réponse avait un défaut de forme, la reprise (une seconde rédaction
+complète) l'a répété. Les neuf circonstances étaient rendues comme des conditions nues (`{"f": …}`) au lieu
+de `{"condition", "article", "texte"}`. Ce défaut bloquait tous les autres contrôles.
+
+**Le fond a suivi la consigne v3.**
+- Les onze exclusions sont mises en commun : elles valent pour les huit garanties, extensions comprises.
+- « Vol simple » est un concept écrit avec des faits existants (ni effraction ni violence), pas une variable.
+- Les réserves sont gardées : le vol au jardin exclut tout sauf le mobilier de jardin et les plantations ;
+  l'exclusion des parties communes garde « si l'Assuré n'occupe que partiellement le bâtiment ».
+- Chaque variable nouvelle nomme sa voisine (`plus_proche`). Le modèle a pourtant gardé `agression` à côté
+  de `violence` et `complicite_assure` à côté de `auteur` : nommer la voisine ne suffit pas à s'en servir.
+
+**Corrections générales (consigne v4).**
+- Une condition nue est enveloppée par le code avec l'article et la citation de sa garantie, et marquée
+  `a_preciser` : l'avertissement revient à chaque contrôle tant que le relecteur ne l'a pas précisée. Cette
+  remise en forme se fait aussi avant de décider d'une reprise : ce que le code sait réparer ne vaut pas dix
+  minutes de modèle de plus. L'exemple de la consigne montre désormais une circonstance complète.
+- Deux faux positifs du contrôle, présents dans les deux rédactions : une liste d'exclusions numérotée
+  (« 3.1.6.2.4 les vols… ») n'était pas découpée par numéro, et un tiret d'incise (« automoteurs – à
+  l'exception des engins de jardinage – ») était pris pour une puce. Et une citation présente mot pour mot
+  dans trois articles (3.1.6.2, 3.1.7.2, 3.3.1.3) n'était rattachée à aucun ; on préfère maintenant la clause
+  parente du sous-point cité.
+
+**Résultat, sans relancer le modèle.** Sur la rédaction v3, il reste 20 points bloquants, tous de vraies
+décisions humaines : 18 faits nouveaux à accepter ou à remplacer, et deux passages déclarés non traduits
+(les plafonds par formule, la procédure des objets retrouvés). Plus aucun défaut de forme ni d'omission.
+La relecture porte maintenant sur le vocabulaire, c'est-à-dire sur ce qu'aucun contrôle ne peut trancher.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 18 nov. 2026 ; ce qui est fait est dans les sections 7.

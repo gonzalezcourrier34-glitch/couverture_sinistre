@@ -38,7 +38,7 @@ from .texte import normaliser
 from .validation import _compact, extrait_present, passage_exact
 
 PROPOSITIONS = prolog.DOSSIER / "propositions"
-VERSION = "v3"
+VERSION = "v4"
 IDENT = re.compile(r"^[a-z][a-z0-9_]*$")
 BLOQUANT, A_RELIRE, INFO = "bloquant", "à relire", "info"
 
@@ -71,7 +71,7 @@ La logique a trois valeurs : un fait que la déclaration ne donne pas est « inc
  "definitions": [{"concept": "gel_prevenu", "condition": {"f": ["prevention_gel", "oui"]}, "article": "2.7", "texte": "maintenir une température positive dans tous les locaux"}],
  "garanties": [{"id": "degats_eaux", "nom": "Dégâts causés par l'eau", "article": "2.7", "texte": "Nous couvrons l'ensemble des dommages causés par l'eau",
    "perimetre": [{"f": ["evenement", "degat_eaux"]}, {"ou": [{"concept": "contenu"}, {"f": ["bien", "element_batiment"]}]}, {"concept": "batiment"}],
-   "circonstances": [],
+   "circonstances": [{"condition": {"f": ["plainte_deposee", "oui"]}, "article": "2.7", "texte": "pour autant qu'une plainte ait été déposée"}],
    "obligations": [],
    "exclusions": [{"condition": {"f": ["cause_eau", "inondation"]}, "portee": "tout", "a_demander": true, "article": "2.7-b", "texte": "par une inondation ou un débordement ou refoulement d'égouts publics"},
                   {"condition": {"f": ["bien", "canalisation"]}, "portee": {"bien": "canalisation"}, "a_demander": true, "article": "2.7-b", "texte": "aux canalisations, radiateurs, robinets, citernes, chaudières et autres appareils chauffant de l'eau, qui sont à l'origine du sinistre"}],
@@ -218,6 +218,28 @@ CHAMPS = {
 }
 
 
+def envelopper_conditions_nues(prop: dict) -> list[str]:
+    """Une circonstance, obligation ou exclusion rendue comme une condition nue ({"f": …} au lieu de
+    {"condition", "article", "texte"}) : Mistral Large l'a fait sur AXA 3.1.6 (7.54), et la reprise demandée ne
+    l'a pas corrigé. On l'enveloppe avec l'article et la citation de sa garantie, qui sont dans la même clause,
+    plutôt que de payer une nouvelle rédaction ; la citation reste à préciser par le relecteur."""
+    notes = []
+    for g in prop.get("garanties") or []:
+        if not isinstance(g, dict):
+            continue
+        for nature in ("circonstances", "obligations", "exclusions"):
+            for k, x in enumerate(g.get(nature) or []):
+                if isinstance(x, dict) and len(x) == 1 and next(iter(x)) in ("f", "et", "ou", "non", "si", "concept"):
+                    g[nature][k] = x = {"condition": x, "article": g.get("article"), "texte": g.get("texte", ""),
+                                        "a_preciser": True}
+                if isinstance(x, dict) and x.get("a_preciser"):
+                    # Le marqueur reste dans le JSON enregistré : l'avertissement revient à chaque contrôle tant que
+                    # le relecteur n'a pas remplacé la citation et retiré « a_preciser ».
+                    notes.append(f"garantie {g.get('id')} : {nature[:-1]} {json.dumps(x['condition'], ensure_ascii=False)[:60]} "
+                                 f"rendue sans citation ; rattachée à celle de la garantie, à préciser")
+    return notes
+
+
 def non_traduits(prop: dict) -> list[dict]:
     """Les passages déclarés non traduits. Le modèle renvoie parfois une simple phrase au lieu de l'objet
     {"article", "texte", "pourquoi"} (AXA 3.1.6, 7.53) : on la garde, sans article, plutôt que de planter."""
@@ -328,8 +350,10 @@ def conditions(prop: dict):
 
 
 def items_exclusion(texte: str) -> list[str]:
-    """Les éléments d'une liste d'exclusions (puces « • » ou « - »), sans la phrase d'introduction."""
-    morceaux = re.split(r"(?:^|\s)[•\-–]\s", texte)
+    """Les éléments d'une liste d'exclusions (puces « • » ou « - », ou sous-points numérotés « 3.1.6.2.4 »), sans
+    la phrase d'introduction. Un tiret au milieu d'une phrase (« automoteurs – à l'exception des engins – ») est une
+    incise, pas une puce : le tiret long ne coupe qu'en début de ligne ou après « : ; . » (AXA, 7.54)."""
+    morceaux = re.split(r"(?:^|\s)[•\-]\s|(?:^|[:;.]\s*|\n\s*)–\s|(?:^|\s)\d+(?:\.\d+){2,}\s+", texte)
     return [m.strip(" .;") for m in morceaux if len(_compact(m).split()) >= 3 and not m.strip().endswith(":")]
 
 
@@ -349,6 +373,8 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
     # plus bas, et une seconde rédaction de plusieurs minutes pour une question de forme serait du gaspillage.
     if isinstance(prop, dict) and prop.get("non_traduit"):
         prop["non_traduit"] = non_traduits(prop)
+    for note in envelopper_conditions_nues(prop) if isinstance(prop, dict) else []:
+        noter(A_RELIRE, "structure", note)
     schema = erreurs_schema(prop)
     if not schema:
         try:
@@ -393,7 +419,10 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
             # Le texte est peut-être exact, mais rattaché à la mauvaise clause (« 12 » pour « 12/sanitaires ») :
             # s'il figure dans une seule clause, on la rattache, comme la compilation des fiches le faisait.
             ailleurs = [c.id for c in clauses if texte and extrait_present(texte, c.texte)]
-            prefixees = [i for i in ailleurs if art and (i.startswith(str(art) + "/") or i.startswith(str(art) + "-"))]
+            # Les sous-points numérotés d'une liste (« 3.1.6.2.4 ») ne sont pas des clauses : leur clause est le
+            # parent (3.1.6.2), à préférer à un texte identique ailleurs dans le contrat (AXA, 7.54).
+            prefixees = [i for i in ailleurs if art and (i.startswith(str(art) + "/") or i.startswith(str(art) + "-")
+                                                        or str(art).startswith(i + "."))]
             choix = prefixees if len(prefixees) == 1 else ailleurs
             if len(choix) == 1:
                 x["article"] = choix[0]
@@ -525,6 +554,10 @@ def rediger(contrat_id: str, article: str, clauses: list[Clause], llm, dossier: 
     meta = {"article": article, "modele": getattr(llm, "nom", "?"), "date": date.today().isoformat(),
             "consigne": "redaction-regles " + VERSION}
     sauver(contrat_id, article, {"meta": meta, "proposition": prop}, dossier)   # une rédaction coûte des minutes
+    if isinstance(prop, dict):
+        # Ce que le code sait remettre en forme ne vaut pas une reprise de plus de dix minutes (7.54).
+        envelopper_conditions_nues(prop)
+        prop["non_traduit"] = non_traduits(prop)
     schema = erreurs_schema(prop)
     if schema:
         # Une seule reprise : on renvoie au modèle ses écarts au schéma, en clair.
