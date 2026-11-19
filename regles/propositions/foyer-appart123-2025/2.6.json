@@ -1,0 +1,239 @@
+{
+  "meta": {
+    "article": "2.6",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-18",
+    "consigne": "redaction-regles v6",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-19",
+      "modifications": [
+        "usage professionnel : la variable directement, pas le concept « materiel » (une définition du lexique qui ne dit pas l'usage)",
+        "hors_batiment → non(concept batiment), déjà défini",
+        "exclusions des appareils : portée limitée au bien (un congélateur et un ordinateur grillés : le congélateur reste couvert)",
+        "garantie du fabricant : a_demander false ; c'est à l'assureur de l'établir (comme la corrosion en 2.7)"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "electricite"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "action_electricite",
+        "nom": "Action de l'électricité",
+        "article": "2.6",
+        "texte": "Nous couvrons les dommages matériels directement causés par l’action de l’électricité, y compris : • l’électrocution des animaux domestiques, • la décongélation ou détérioration des denrées alimentaires utilisées dans le cadre de votre vie privée, suite à l’arrêt d’une durée de 6 heures ou au dérangement d’une installation de réfrigération ou de congélation provoqué par l’action de l’électricité ou par une coupure de courant soudaine et imprévisible suite à un dysfonctionnement du réseau de distribution d’électricité. Nous prenons également en charge les frais liés à la recherche, la réparation ou le remplacement de la pièce défectueuse à l'origine du sinistre, ainsi que la remise en état consécutive.",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "electricite"
+            ]
+          },
+          {
+            "concept": "batiment"
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "si": [
+                {
+                  "f": [
+                    "bien",
+                    "denrees_alimentaires"
+                  ]
+                },
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "cause_perte_alimentaire",
+                        "arret_6h"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "cause_perte_alimentaire",
+                        "derangement_installation"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "cause_perte_alimentaire",
+                        "coupure_soudaine_reseau"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "article": "2.6",
+            "texte": "suite à l’arrêt d’une durée de 6 heures ou au dérangement d’une installation de réfrigération ou de congélation provoqué par l’action de l’électricité ou par une coupure de courant soudaine et imprévisible suite à un dysfonctionnement du réseau de distribution d’électricité"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "2.6",
+            "texte": "Perte de denrées alimentaires suite à une variation de température due à une panne 500 EUR de courant d’au moins 6 heures (y compris blackout",
+            "montant": "500 EUR"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "et": [
+            {
+              "ou": [
+                {
+                  "f": [
+                    "bien",
+                    "electronique"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "appareil_informatique"
+                  ]
+                }
+              ]
+            },
+            {
+              "f": [
+                "usage_professionnel",
+                "oui"
+              ]
+            }
+          ]
+        },
+        "portee": {
+          "bien": "appareil_informatique"
+        },
+        "a_demander": false,
+        "article": "2.6-a",
+        "texte": "les dommages aux appareils électroniques et informatiques dont l’usage est professionnel"
+      },
+      {
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "bien",
+                "appareil_informatique"
+              ]
+            },
+            {
+              "non": {
+                "concept": "batiment"
+              }
+            },
+            {
+              "non": {
+                "f": [
+                  "usage_professionnel",
+                  "oui"
+                ]
+              }
+            }
+          ]
+        },
+        "portee": {
+          "bien": "appareil_informatique"
+        },
+        "a_demander": false,
+        "article": "2.6-a",
+        "texte": "ainsi que les dommages aux autres appareils informatiques en dehors du bâtiment assuré"
+      },
+      {
+        "condition": {
+          "f": [
+            "garantie_fabricant",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "2.6-a",
+        "texte": "les dégâts tombant sous la garantie du fabriquant ou du fournisseur"
+      }
+    ],
+    "vocabulaire_manquant": [
+      {
+        "variable": "bien",
+        "valeurs": [
+          "denrees_alimentaires",
+          "appareil_informatique"
+        ],
+        "question": "Quels biens ?",
+        "aide": {
+          "denrees_alimentaires": "aliments du frigo ou du congélateur",
+          "appareil_informatique": "ordinateur, portable, tablette, imprimante"
+        },
+        "pourquoi": "2.6",
+        "plus_proche": "electronique : ne distingue pas l'informatique"
+      },
+      {
+        "variable": "usage_professionnel",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "L'usage du bien endommagé est-il professionnel ?",
+        "pourquoi": "l'exclusion 2.6-a vise les appareils électroniques et informatiques à usage professionnel",
+        "plus_proche": "formule (mais décrit la formule d'assurance, pas l'usage du bien)",
+        "aide": {
+          "oui": "le bien sert pour l'activité professionnelle, le travail",
+          "non": "le bien sert uniquement pour la vie privée, les loisirs"
+        }
+      },
+      {
+        "variable": "garantie_fabricant",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Les dégâts sont-ils couverts par la garantie du fabricant ou du fournisseur ?",
+        "pourquoi": "l'exclusion 2.6-a exclut les dégâts tombant sous garantie externe du fabricant ou fournisseur",
+        "plus_proche": "aucune variable existante ne décrit une garantie externe",
+        "aide": {
+          "oui": "le fabricant ou le vendeur prend en charge la réparation (garantie constructeur, garantie commerciale)",
+          "non": "pas de garantie externe, seul l'assurance peut intervenir"
+        }
+      },
+      {
+        "variable": "cause_perte_alimentaire",
+        "valeurs": [
+          "arret_6h",
+          "derangement_installation",
+          "coupure_soudaine_reseau",
+          "autre"
+        ],
+        "question": "Quelle est la cause de la perte des denrées alimentaires ?",
+        "pourquoi": "la garantie 2.6 conditionne la couverture des denrées à des causes spécifiques liées à l'électricité",
+        "plus_proche": "cause_dommage (valeurs gel/autre, non spécifique à l'électricité)",
+        "aide": {
+          "arret_6h": "coupure de courant ou arrêt de l'installation d'au moins 6 heures",
+          "derangement_installation": "dérangement de l'installation de réfrigération ou congélation provoqué par l'électricité",
+          "coupure_soudaine_reseau": "coupure de courant soudaine et imprévisible due à un dysfonctionnement du réseau de distribution",
+          "autre": "autre cause liée à l'action de l'électricité"
+        }
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "à relire",
+      "controle": "prolog",
+      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
+    }
+  ]
+}

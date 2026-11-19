@@ -218,3 +218,143 @@ exclusion([vol_batiment, vol_personne, vol_reparateur, vol_cles, incendie, degat
 exclusion([vol_batiment, vol_personne, vol_reparateur, vol_cles, incendie, degats_eaux, bris_vitrages],
     f(manque_entretien, oui), tout, non, '1.4',
     "résultant d’un vice propre, de l’usure, d’un manque d’entretien, d’un usage inapproprié, ou de la détérioration lente et progressive des biens assurés").
+
+% --- Art. 2.12 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-18 ---
+evenement_traduit(merule).
+garantie(degats_merule, "Dégâts dus à la mérule", '2.12',
+    "Nous couvrons les dégâts dus à la mérule survenue postérieurement à la prise d’effet de la garantie.").
+perimetre(degats_merule, f(evenement, merule)).
+perimetre(degats_merule, ou([concept(contenu), f(bien, element_batiment)])).
+perimetre(degats_merule, concept(batiment)).
+circonstance(degats_merule, f(merule_apres_prise_effet, oui), '2.12',
+    "survenue postérieurement à la prise d’effet de la garantie").
+
+% --- Art. 2.2 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-18 ---
+evenement_traduit(tempete).
+definition(tempete, ou([f(vent_80_kmh_irm, oui), f(vent_dommages_voisins, oui)]), '12/tempete',
+    "• L’action du vent mesurée à une vitesse de pointe d’au moins 80 km/h par la station de l’I.R.M. la plus proche du bâtiment • L’action du vent qui endommage d’autres biens qui sont situés dans les 10 km du bâtiment et qui sont assurables contre le vent de tempête ou présentent une résistance au vent équivalente aux biens assurables.").
+garantie(tempete, "Tempête, la grêle, la pression de la neige ou de la glace", '2.2',
+    "Nous couvrons les dommages matériels directement causés par les aléas précisés.").
+perimetre(tempete, f(evenement, tempete)).
+circonstance(tempete, si(f(alea_tempete, vent), concept(tempete)), '12/tempete',
+    "L’action du vent mesurée à une vitesse de pointe d’au moins 80 km/h par la station de l’I.R.M. la plus proche du bâtiment").
+exclusion(tempete, et([f(construction_delabree, oui), non(f(residence_principale, oui))]), tout, oui, '2.2-a',
+    "aux constructions délabrées ou en cours de démolition et à leur contenu éventuel, sauf si ces constructions constituent votre logement principal").
+exclusion(tempete, et([ou([f(lieu, jardin), f(lieu, terrasse)]), non(f(bien, element_batiment))]), tout, oui, '2.2-a',
+    "à tout objet situé à l'extérieur même ceux fixés à demeure").
+exclusion(tempete, et([ou([f(lieu, annexe), f(lieu, abri_jardin)]), f(construction_close, non)]), tout, oui, '2.2-a',
+    "à tout objet situé dans une annexe non entièrement close ou couverte").
+exclusion(tempete, f(bien, materiaux_construction), bien(materiaux_construction), non, '2.2-a',
+    "aux matériaux à pied d’œuvre").
+exclusion(tempete, et([ou([f(lieu, annexe), f(lieu, abri_jardin)]), f(annexe_ancree_beton, non)]), tout, oui, '2.2-a',
+    "aux annexes contiguës ou isolées faisant partie du bâtiment qui ne sont pas fixées au sol par un ancrage en béton, ansi qu’à leur contenu").
+exclusion(tempete, f(construction_close, non), tout, oui, '2.2-a',
+    "aux constructions non entièrement closes ou couvertes, à ce qui y est incorporé ainsi qu’à leur contenu").
+limite(tempete, '2.2', "Abri de jardin et son éventuel contenu 1.000 EUR", "1000 EUR").
+
+% --- Art. 2.3 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-18 ---
+evenement_traduit(catastrophe_naturelle).
+definition(inondation, f(cause_eau, inondation), '12/inondation',
+    "Débordement de cours d’eau, canaux, lacs, étangs ou mers, suite à des précipitations atmosphériques, à une fonte des neiges ou de glace, à une rupture de digues ou à un raz-de- marée ainsi que l'inondation, le débordement ou le refoulement d'égouts publics, le glissement ou affaissement de terrain qui en résulte • Inondations résultant de mesures prises par une autorité légalement constituée pour la sauvegarde et la protection des biens et des personnes, à savoir par l'ouverture ou la destruction d'écluses, de barrages ou de digues dans le but d'éviter une inondation éventuelle ou l'extension de celle-ci • Ruissellement ou accumulation d'eaux occasionnées par des crues, des précipitations atmosphériques une tempête ou une fonte des neiges ou de glaces. Sont également considérés comme une seule et même inondation, le débordement initial d’un cours d’eau, d’un canal, d’un lac, d'un étang ou d’une mer et tout débordement survenu dans un délai de 168 heures après la décrue, c'est-à-dire le retour de ce cours d’eau, ce canal, ce lac, cet étang ou cette mer dans les limites habituelles, ainsi que les périls assurés qui en résultent directement.").
+definition(tremblement_de_terre, f(evenement, catastrophe_naturelle), '12/tremblement-de-terre',
+    "Tout séisme d’origine naturelle enregistré avec une magnitude minimale de quatre degrés sur l'échelle de Richter ou qui détruit, brise ou endommage des biens assurables contre ce péril dans les 10 km du bâtiment désigné ainsi que l’inondation, le débordement ou refoulement d’égouts publics, le glissement ou affaissement de terrain qui en résulte. Sont considérés comme un seul et même tremblement de terre, le séisme initial et ses répliques survenues dans les 72 heures, ainsi que les périls assurés qui en résultent directement.").
+definition(debordement_ou_refoulement_egouts, f(cause_eau, inondation), '12/debordement-ou-refoulement-d-e',
+    "Tout débordement ou refoulement d’égouts publics occasionné par des crues, des précipitations atmosphériques, une tempête, une fonte des neiges ou de glace ou une inondation.").
+definition(glissement_ou_affaissement_terrain, f(evenement, catastrophe_naturelle), '12/glissement-ou-affaissement-de-',
+    "Mouvement dû en tout ou en partie à un phénomène naturel, à l'exception du tremblement de terre et de l’inondation, d'une masse importante de terrain qui détruit ou endommage des biens.").
+garantie(catastrophes_naturelles, "Catastrophes naturelles", '2.3',
+    "Nous couvrons les dégâts qui découlent directement ou indirectement de : • l’inondation • le tremblement de terre • le débordement ou refoulement d'égouts publics • le glissement ou affaissement de terrain en ce compris les périls assurés par les autres garanties de base, dont la survenance résulte directement d’une catastrophe naturelle.").
+perimetre(catastrophes_naturelles, f(evenement, catastrophe_naturelle)).
+perimetre(catastrophes_naturelles, ou([concept(inondation), concept(tremblement_de_terre), concept(debordement_ou_refoulement_egouts), concept(glissement_ou_affaissement_terrain)])).
+exclusion(catastrophes_naturelles, et([f(construction_delabree, oui), non(f(residence_principale, oui))]), tout, oui, '2.3-a',
+    "aux constructions délabrées ou en cours de démolition et à leur contenu éventuel, sauf si ces constructions constituent votre logement principal").
+exclusion(catastrophes_naturelles, f(reparation_loi_particuliere, oui), tout, oui, '2.3-a',
+    "aux biens dont la réparation des dommages est organisée par des lois particulières ou par des conventions internationales.").
+exclusion(catastrophes_naturelles, et([ou([f(lieu, jardin), f(lieu, terrasse)]), non(f(bien, element_batiment))]), tout, oui, '2.3-a',
+    "à tout objet situé à l'extérieur même fixé à demeure").
+exclusion(catastrophes_naturelles, et([ou([f(lieu, annexe), f(lieu, abri_jardin)]), f(construction_close, non)]), tout, oui, '2.3-a',
+    "à tout objet situé dans une annexe non entièrement close ou couverte").
+exclusion(catastrophes_naturelles, si(ou([concept(inondation), concept(debordement_ou_refoulement_egouts)]), f(batiment_construit_plus_18_mois_apres_classement, oui)), tout, oui, '2.3-a',
+    "au bâtiment, à une partie de bâtiment ou au contenu d’un bâtiment qui a été construit plus de dix-huit mois après la date de publication au Moniteur belge de l'arrêté royal classant la zone où ce bâtiment est situé comme zone à risque").
+exclusion(catastrophes_naturelles, si(ou([concept(inondation), concept(debordement_ou_refoulement_egouts)]), f(extension_sol_avant_classement, oui)), tout, oui, '2.3-a',
+    "aux extensions au sol des biens existant avant la date de classement de la zone à risque.").
+exclusion(catastrophes_naturelles, si(ou([concept(inondation), concept(debordement_ou_refoulement_egouts)]), et([f(lieu, cave), f(contenu_moins_10cm_sol, oui), f(occupation_partielle, oui)])), tout, oui, '2.3-a',
+    "au contenu entreposé à moins de 10 cm du sol dans les caves d’immeubles à appartements multiples").
+limite(catastrophes_naturelles, '2.3', "Le total des indemnités dues à nos assurés lors de la survenance d’une catastrophe naturelle est limité conformément à l’article 130, §2 et §3 de la loi du 4 avril 2014 relative aux assurances. Si les limites prévues par cet article devaient être dépassées, l’indemnité due en vertu de chaque contrat d’assurance sera réduite à due concurrence.", "limite légale article 130").
+limite(catastrophes_naturelles, '2.3', "Abri de jardin et son éventuel contenu 1.000 EUR", "1000 EUR").
+
+% --- Art. 2.4 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-18 ---
+evenement_traduit(attentat).
+evenement_traduit(conflit_du_travail).
+definition(conflit_du_travail, f(evenement, conflit_du_travail), '12/conflit-du-travail',
+    "Toute contestation collective sous quelque forme qu’elle se manifeste dans le cadre des relations du travail, en ce compris : • la grève : arrêt concerté du travail par un groupe de salariés, employés, fonctionnaires ou indépendants • le lock-out : fermeture provisoire décidée par une entreprise afin d’amener son personnel à composer dans un «conflit du travail».").
+garantie(attentat_conflit_travail, "Attentat et conflit du travail", '2.4',
+    "Nous prenons en charge exclusivement sous cette garantie : • la destruction des biens assurés ou leur détérioration par des personnes prenant part à un attentat ou à un conflit du travail • les conséquences des mesures prises par une autorité légalement constituée pour la sauvegarde et la protection de ces biens, lors de tels événements.").
+perimetre(attentat_conflit_travail, ou([f(evenement, attentat), f(evenement, conflit_du_travail)])).
+perimetre(attentat_conflit_travail, ou([concept(contenu), f(bien, element_batiment)])).
+perimetre(attentat_conflit_travail, concept(batiment)).
+limite(attentat_conflit_travail, '2.4', "Notre garantie est limitée aux montants assurés et en tout état de cause à 1.497.671,24 EUR.", "1497671.24 EUR").
+exclusion([attentat_conflit_travail], f(cause_nucleaire, oui), tout, oui, '2.4-a',
+    "les dommages causés par des armes ou des engins destinés à exploser par une modification de structure du noyau atomique").
+exclusion([attentat_conflit_travail], f(graffiti_mur_exterieur, oui), tout, oui, '2.4-a',
+    "les graffitis et autres inscriptions sur les murs extérieurs").
+exclusion([attentat_conflit_travail], et([f(evenement, vandalisme), ou([f(bien, mobilier_jardin), f(bien, serre), f(bien, plantation)])]), tout, non, '2.4-a',
+    "le vandalisme au mobilier extérieur, serres, plantations").
+
+% --- Art. 2.6 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-18 ---
+evenement_traduit(electricite).
+garantie(action_electricite, "Action de l'électricité", '2.6',
+    "Nous couvrons les dommages matériels directement causés par l’action de l’électricité, y compris : • l’électrocution des animaux domestiques, • la décongélation ou détérioration des denrées alimentaires utilisées dans le cadre de votre vie privée, suite à l’arrêt d’une durée de 6 heures ou au dérangement d’une installation de réfrigération ou de congélation provoqué par l’action de l’électricité ou par une coupure de courant soudaine et imprévisible suite à un dysfonctionnement du réseau de distribution d’électricité. Nous prenons également en charge les frais liés à la recherche, la réparation ou le remplacement de la pièce défectueuse à l'origine du sinistre, ainsi que la remise en état consécutive.").
+perimetre(action_electricite, f(evenement, electricite)).
+perimetre(action_electricite, concept(batiment)).
+circonstance(action_electricite, si(f(bien, denrees_alimentaires), ou([f(cause_perte_alimentaire, arret_6h), f(cause_perte_alimentaire, derangement_installation), f(cause_perte_alimentaire, coupure_soudaine_reseau)])), '2.6',
+    "suite à l’arrêt d’une durée de 6 heures ou au dérangement d’une installation de réfrigération ou de congélation provoqué par l’action de l’électricité ou par une coupure de courant soudaine et imprévisible suite à un dysfonctionnement du réseau de distribution d’électricité").
+limite(action_electricite, '2.6', "Perte de denrées alimentaires suite à une variation de température due à une panne 500 EUR de courant d’au moins 6 heures (y compris blackout", "500 EUR").
+exclusion([action_electricite], et([ou([f(bien, electronique), f(bien, appareil_informatique)]), f(usage_professionnel, oui)]), bien(appareil_informatique), non, '2.6-a',
+    "les dommages aux appareils électroniques et informatiques dont l’usage est professionnel").
+exclusion([action_electricite], et([f(bien, appareil_informatique), non(concept(batiment)), non(f(usage_professionnel, oui))]), bien(appareil_informatique), non, '2.6-a',
+    "ainsi que les dommages aux autres appareils informatiques en dehors du bâtiment assuré").
+exclusion([action_electricite], f(garantie_fabricant, oui), tout, non, '2.6-a',
+    "les dégâts tombant sous la garantie du fabriquant ou du fournisseur").
+
+% --- Art. 2.8 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-18 ---
+evenement_traduit(mazout).
+garantie(degats_mazout, "Dégâts causés par le mazout", '2.8',
+    "Nous couvrons les dégâts causés par tout combustible liquide de chauffage du bâtiment").
+perimetre(degats_mazout, f(evenement, mazout)).
+perimetre(degats_mazout, concept(batiment)).
+obligation(degats_mazout, si(f(periode_gel, oui), f(prevention_gel, oui)), faux, oui, '2.8-a',
+    "En période de gel, vous devez : • maintenir une température positive dans tous les locaux, ou • vidanger les installations hydrauliques et de chauffage, ou • isoler efficacement ces installations contre le gel. Nous refuserons notre intervention s’il existe un lien causal direct entre le non-respect de ces obligations et la survenance du sinistre.").
+exclusion(degats_mazout, et([f(bien, canalisation), f(bien_a_l_origine_sinistre, oui)]), bien(canalisation), oui, '2.8-b',
+    "les dégâts causés aux citernes ou canalisations qui sont à l'origine du sinistre").
+exclusion(degats_mazout, et([f(bien, citerne), f(bien_a_l_origine_sinistre, oui)]), bien(citerne), oui, '2.8-b',
+    "les dégâts causés aux citernes ou canalisations qui sont à l'origine du sinistre").
+exclusion(degats_mazout, f(controle_citerne_conforme, non), tout, oui, '2.8-b',
+    "les dégâts causés en cas de non-respect de la réglementation applicable au contrôle des citernes").
+exclusion(degats_mazout, f(bien, mazout), bien(mazout), oui, '2.8-b',
+    "la pertes de combustible liquide de chauffage subie à l’occasion d’un sinistre").
+
+% --- Art. 2.11 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-18 ---
+evenement_traduit(vol).
+evenement_traduit(vandalisme).
+garantie(degradations_vol_vandalisme, "Dégradations immobilières suite à des actes de vol, vandalisme et malveillance", '2.11',
+    "Nous couvrons les dégradations immobilières sauf les dégâts causés : • au bâtiment libre de toute occupation depuis plus de 90 jours au moment du sinistre • aux matériaux à pied d'œuvre se trouvant à l’extérieur ou dans un bâtiment non fermé à clé • par ou avec la complicité d'un assuré, d'un descendant ou ascendant, du conjoint ou partenaire de chacun d'eux ou d'un locataire ou des personnes vivant à son foyer.").
+perimetre(degradations_vol_vandalisme, ou([concept(vol), f(evenement, vandalisme)])).
+perimetre(degradations_vol_vandalisme, f(bien, element_batiment)).
+perimetre(degradations_vol_vandalisme, concept(batiment)).
+obligation(degradations_vol_vandalisme, si(f(absence, oui), et([f(portes_fermees, oui), f(fenetres_fermees, oui)])), f(effraction, oui), oui, '2.11-a',
+    "en cas d’absence, fermer à clé ou au moyen d'un dispositif électronique toutes les portes extérieures du bâtiment. Si seulement une partie du bâtiment est occupée par l’assuré, les portes donnant sur les parties communes doivent être fermées de la même manière. Vous devez de même fermer correctement les fenêtres, oscillo-battants, soupiraux et autres ouvertures du bâtiment facilement accessibles").
+obligation(degradations_vol_vandalisme, non(f(cles_a_proximite, oui)), f(effraction, oui), oui, '2.11-a',
+    "ne pas laisser les clés d'accès aux locaux à proximité de ceux-ci").
+obligation(degradations_vol_vandalisme, si(f(lieu, abri_jardin), f(serrure_surete, oui)), f(effraction, oui), oui, '2.11-a',
+    "fermer l’abri de jardin à l’aide d’une serrure de sûreté").
+obligation(degradations_vol_vandalisme, si(f(bien, mobilier_jardin), f(materiel_jardin_range, oui)), f(effraction, oui), oui, '2.11-a',
+    "ranger le matériel de jardin dans un local fermé à clé lorsqu’il n’est pas utilisé").
+obligation(degradations_vol_vandalisme, f(dispositifs_antivol_installes, oui), faux, oui, '2.11-a',
+    "installer les dispositifs de protection antivol que, le cas échéant, nous imposons et qui sont mentionnés en conditions particulières, les maintenir en bon état de fonctionnement et les utiliser en cas d’absence").
+exclusion(degradations_vol_vandalisme, f(batiment_vacant_90j, oui), tout, oui, '2.11',
+    "au bâtiment libre de toute occupation depuis plus de 90 jours au moment du sinistre").
+exclusion(degradations_vol_vandalisme, et([f(bien, materiaux_construction), ou([ou([f(lieu, jardin), f(lieu, terrasse)]), f(fermeture, aucune)])]), bien(materiaux_construction), non, '2.11',
+    "aux matériaux à pied d'œuvre se trouvant à l’extérieur ou dans un bâtiment non fermé à clé").
+exclusion(degradations_vol_vandalisme, ou([f(auteur, assure), f(auteur, famille), f(auteur, locataire), f(auteur, personnel_prive)]), tout, oui, '2.11',
+    "par ou avec la complicité d'un assuré, d'un descendant ou ascendant, du conjoint ou partenaire de chacun d'eux ou d'un locataire ou des personnes vivant à son foyer").

@@ -1,0 +1,93 @@
+{
+  "meta": {
+    "article": "2.12",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-18",
+    "consigne": "redaction-regles v6",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-19",
+      "modifications": [
+        "acceptée telle quelle"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "merule"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "degats_merule",
+        "nom": "Dégâts dus à la mérule",
+        "article": "2.12",
+        "texte": "Nous couvrons les dégâts dus à la mérule survenue postérieurement à la prise d’effet de la garantie.",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "merule"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "concept": "contenu"
+              },
+              {
+                "f": [
+                  "bien",
+                  "element_batiment"
+                ]
+              }
+            ]
+          },
+          {
+            "concept": "batiment"
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "merule_apres_prise_effet",
+                "oui"
+              ]
+            },
+            "article": "2.12",
+            "texte": "survenue postérieurement à la prise d’effet de la garantie"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "merule_apres_prise_effet",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La mérule est-elle survenue après la prise d'effet de la garantie ?",
+        "pourquoi": "La clause 2.12 limite la couverture aux dégâts dus à la mérule survenue postérieurement à la prise d'effet de la garantie",
+        "plus_proche": "aucune variable du vocabulaire ne porte sur la date de survenance d'un événement par rapport à la prise d'effet du contrat",
+        "aide": {
+          "oui": "la mérule est apparue après le début du contrat, après la date de prise d'effet",
+          "non": "la mérule existait déjà avant la prise d'effet du contrat"
+        }
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "à relire",
+      "controle": "prolog",
+      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
+    }
+  ]
+}

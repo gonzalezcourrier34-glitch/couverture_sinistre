@@ -1,0 +1,926 @@
+{
+  "meta": {
+    "article": "4",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-18",
+    "consigne": "redaction-regles v6"
+  },
+  "proposition": {
+    "evenements": [
+      "vol",
+      "incendie",
+      "explosion",
+      "foudre",
+      "degat_eaux",
+      "tempete",
+      "bris",
+      "autre",
+      "electricite",
+      "mazout",
+      "catastrophe_naturelle",
+      "attentat",
+      "fumee",
+      "vandalisme",
+      "merule"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "frais_sauvetage",
+        "nom": "Frais de sauvetage",
+        "article": "4~1",
+        "texte": "• frais de sauvetage",
+        "perimetre": [
+          {
+            "f": [
+              "sinistre_assure",
+              "oui"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "couverture_rc_locative",
+                  "oui"
+                ]
+              },
+              {
+                "f": [
+                  "couverture_contenu",
+                  "oui"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      },
+      {
+        "id": "frais_deblai_demolition",
+        "nom": "Frais de déblai et de démolition",
+        "article": "4~1",
+        "texte": "• frais de déblai et de démolition des biens assurés, en ce compris les frais d'abattage, d'élagage et d'enlèvement de l'arbre ou du pylône qui a causé les dégâts",
+        "perimetre": [
+          {
+            "f": [
+              "sinistre_assure",
+              "oui"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "couverture_rc_locative",
+                  "oui"
+                ]
+              },
+              {
+                "f": [
+                  "couverture_contenu",
+                  "oui"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      },
+      {
+        "id": "frais_nettoyage",
+        "nom": "Frais de nettoyage des locaux endommagés",
+        "article": "4~1",
+        "texte": "• frais de nettoyage des locaux endommagés après travaux",
+        "perimetre": [
+          {
+            "f": [
+              "sinistre_assure",
+              "oui"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "couverture_rc_locative",
+                  "oui"
+                ]
+              },
+              {
+                "f": [
+                  "couverture_contenu",
+                  "oui"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      },
+      {
+        "id": "frais_conservation_entreposage",
+        "nom": "Frais de conservation et d'entreposage",
+        "article": "4~1",
+        "texte": "• frais de conservation et d'entreposage des biens sauvés",
+        "perimetre": [
+          {
+            "f": [
+              "sinistre_assure",
+              "oui"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "couverture_rc_locative",
+                  "oui"
+                ]
+              },
+              {
+                "f": [
+                  "couverture_contenu",
+                  "oui"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      },
+      {
+        "id": "frais_logement_provisoire",
+        "nom": "Frais de logement provisoire",
+        "article": "4~1",
+        "texte": "• frais de logement provisoire pendant la durée normale de non habitabilité de votre bâtiment",
+        "perimetre": [
+          {
+            "f": [
+              "sinistre_assure",
+              "oui"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "couverture_rc_locative",
+                  "oui"
+                ]
+              },
+              {
+                "f": [
+                  "couverture_contenu",
+                  "oui"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      },
+      {
+        "id": "chomage_immobilier",
+        "nom": "Chômage immobilier",
+        "article": "4~1",
+        "texte": "• le chômage immobilier pendant la durée normale de reconstruction de votre bâtiment.",
+        "perimetre": [
+          {
+            "f": [
+              "sinistre_assure",
+              "oui"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "couverture_rc_locative",
+                  "oui"
+                ]
+              },
+              {
+                "f": [
+                  "couverture_contenu",
+                  "oui"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "non": {
+                "f": [
+                  "cumul_chomage_logement",
+                  "oui"
+                ]
+              }
+            },
+            "article": "4~1",
+            "texte": "Cette indemnité ne peut se cumuler pour une même période et un même logement sinistré avec la garantie des frais de logement provisoire"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "4~1",
+            "texte": "et ce pour une période maximale de 18 mois",
+            "montant": "18 mois"
+          }
+        ]
+      },
+      {
+        "id": "frais_eau_mazout_canalisation",
+        "nom": "Frais liés aux dégâts causés par l'eau et le mazout (canalisation)",
+        "article": "4~1",
+        "texte": "• frais liés aux garanties dégâts causés par l'eau et le mazout c'est-à-dire les frais liés à la recherche, la réparation ou le remplacement de la partie de canalisation à l'origine du sinistre y compris les radiateurs, ainsi que la remise en état consécutive.",
+        "perimetre": [
+          {
+            "f": [
+              "sinistre_assure",
+              "oui"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "couverture_rc_locative",
+                  "oui"
+                ]
+              },
+              {
+                "f": [
+                  "couverture_contenu",
+                  "oui"
+                ]
+              }
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "evenement",
+                  "degat_eaux"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "mazout"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "4~1",
+            "texte": "Nous prenons en charge ces frais jusqu'à concurrence de maximum 1.100 EUR lorsque les biens assurés n'ont pas été endommagés",
+            "montant": "1.100 EUR"
+          }
+        ]
+      },
+      {
+        "id": "moins_value_batiment",
+        "nom": "Moins-value du bâtiment",
+        "article": "4~1",
+        "texte": "Nous couvrons également la moins-value du bâtiment pouvant en résulter et fixée par l'expert, jusqu'à concurrence de maximum 2.200 EUR par sinistre",
+        "perimetre": [
+          {
+            "f": [
+              "sinistre_assure",
+              "oui"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "couverture_rc_locative",
+                  "oui"
+                ]
+              },
+              {
+                "f": [
+                  "couverture_contenu",
+                  "oui"
+                ]
+              }
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "evenement",
+                  "degat_eaux"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "mazout"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "4~1",
+            "texte": "jusqu'à concurrence de maximum 2.200 EUR par sinistre",
+            "montant": "2.200 EUR"
+          }
+        ]
+      },
+      {
+        "id": "avance_fonds",
+        "nom": "Avance de fonds",
+        "article": "4~2",
+        "texte": "• l'avance de fonds jusqu'à 7.700 EUR, pour couvrir les frais de première nécessité et les réparations en cas de non habitabilité du bâtiment. Cette avance n'implique aucune reconnaissance de la prise en charge du sinistre et est déduite de l'indemnité définitive éventuelle",
+        "perimetre": [
+          {
+            "f": [
+              "sinistre_assure",
+              "oui"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "couverture_rc_locative",
+                  "oui"
+                ]
+              },
+              {
+                "f": [
+                  "couverture_contenu",
+                  "oui"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "non_habitabilite",
+                "oui"
+              ]
+            },
+            "article": "4~2",
+            "texte": "en cas de non habitabilité du bâtiment"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "4~2",
+            "texte": "jusqu'à 7.700 EUR",
+            "montant": "7.700 EUR"
+          }
+        ]
+      },
+      {
+        "id": "frais_medicaux",
+        "nom": "Frais médicaux et pharmaceutiques",
+        "article": "4~2",
+        "texte": "• frais médicaux et pharmaceutiques à concurrence de 2.000 EUR.",
+        "perimetre": [
+          {
+            "f": [
+              "sinistre_assure",
+              "oui"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "couverture_rc_locative",
+                  "oui"
+                ]
+              },
+              {
+                "f": [
+                  "couverture_contenu",
+                  "oui"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "4~2",
+            "texte": "à concurrence de 2.000 EUR",
+            "montant": "2.000 EUR"
+          }
+        ]
+      },
+      {
+        "id": "frais_expertise",
+        "nom": "Frais d'expertise",
+        "article": "4~2",
+        "texte": "• frais d'expertise c'est-à-dire les frais et honoraires de votre expert et le cas échéant ceux d'un tiers-expert, calculés en pourcentage des indemnités dues hors TVA, conformément au barème repris ci-après, à l'exclusion de celles relatives aux assurances de responsabilité et des pertes indirectes.",
+        "perimetre": [
+          {
+            "f": [
+              "sinistre_assure",
+              "oui"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "couverture_rc_locative",
+                  "oui"
+                ]
+              },
+              {
+                "f": [
+                  "couverture_contenu",
+                  "oui"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "assurance_responsabilite",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "4~2",
+            "texte": "à l'exclusion de celles relatives aux assurances de responsabilité"
+          },
+          {
+            "condition": {
+              "f": [
+                "pertes_indirectes",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "4~2",
+            "texte": "et des pertes indirectes"
+          }
+        ],
+        "limites": []
+      },
+      {
+        "id": "frais_expertise_contestation",
+        "nom": "Frais d'expertise en cas de contestation",
+        "article": "4~2",
+        "texte": "Uniquement pour les frais d'expertise dépassant le barème prévu ci-dessus : en cas de contestation sur l'évaluation des dommages suite à un sinistre, vous désignez un expert qui fixera l'indemnité en concertation avec notre expert. Nous avançons les frais de cet expert, et le cas échéant ceux du tiers-expert. Toutefois, si vous n'obtenez pas raison, ces frais restent définitivement à votre charge et doivent nous être remboursés.",
+        "perimetre": [
+          {
+            "f": [
+              "sinistre_assure",
+              "oui"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "couverture_rc_locative",
+                  "oui"
+                ]
+              },
+              {
+                "f": [
+                  "couverture_contenu",
+                  "oui"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "frais_expertise_depassent_bareme",
+                "oui"
+              ]
+            },
+            "article": "4~2",
+            "texte": "Uniquement pour les frais d'expertise dépassant le barème prévu ci-dessus"
+          },
+          {
+            "condition": {
+              "f": [
+                "contestation_evaluation",
+                "oui"
+              ]
+            },
+            "article": "4~2",
+            "texte": "en cas de contestation sur l'évaluation des dommages suite à un sinistre"
+          }
+        ],
+        "obligations": [
+          {
+            "condition": {
+              "non": {
+                "f": [
+                  "obtenu_raison",
+                  "oui"
+                ]
+              }
+            },
+            "article": "4~2",
+            "texte": "si vous n'obtenez pas raison, ces frais restent définitivement à votre charge et doivent nous être remboursés",
+            "lien_causal": false
+          }
+        ],
+        "exclusions": [],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "sinistre_assure",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le sinistre est-il couvert par une garantie de base ou par une garantie facultative souscrite ?",
+        "pourquoi": "Condition d'application des garanties complémentaires (article 4~1)",
+        "plus_proche": "evenement : indique la nature du sinistre mais pas s'il est couvert par une garantie de base",
+        "aide": {
+          "oui": "le sinistre est couvert par une garantie de base ou facultative",
+          "non": "le sinistre n'est pas couvert"
+        }
+      },
+      {
+        "variable": "couverture_rc_locative",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La couverture RC locative est-elle mentionnée dans les conditions particulières ?",
+        "pourquoi": "Condition d'application des garanties complémentaires selon les couvertures souscrites (article 4~1)",
+        "plus_proche": "formule : indique la formule d'assurance mais pas spécifiquement la RC locative",
+        "aide": {
+          "oui": "la RC locative est souscrite/mentionnée",
+          "non": "pas de RC locative"
+        }
+      },
+      {
+        "variable": "couverture_contenu",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La couverture contenu est-elle mentionnée dans les conditions particulières ?",
+        "pourquoi": "Condition d'application des garanties complémentaires selon les couvertures souscrites (article 4~1)",
+        "plus_proche": "formule : indique la formule d'assurance mais pas spécifiquement le contenu",
+        "aide": {
+          "oui": "la garantie contenu est souscrite/mentionnée",
+          "non": "pas de garantie contenu"
+        }
+      },
+      {
+        "variable": "non_habitabilite",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le bâtiment est-il non habitable ?",
+        "pourquoi": "Condition pour l'avance de fonds et les frais de logement provisoire (article 4~1 et 4~2)",
+        "plus_proche": "lieu : indique où se trouvent les biens mais pas l'habitabilité du bâtiment",
+        "aide": {
+          "oui": "le bâtiment est inhabitable, on ne peut plus y vivre",
+          "non": "le bâtiment est habitable"
+        }
+      },
+      {
+        "variable": "cumul_chomage_logement",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le chômage immobilier est-il demandé en même temps que les frais de logement provisoire pour la même période et le même logement sinistré ?",
+        "pourquoi": "Condition de non-cumulation entre chômage immobilier et logement provisoire (article 4~1)",
+        "plus_proche": "aucune variable ne décrit le cumul de deux types de frais",
+        "aide": {
+          "oui": "on demande à la fois le chômage immobilier et le logement provisoire pour la même période et le même logement",
+          "non": "on ne demande pas les deux en même temps pour la même période et le même logement"
+        }
+      },
+      {
+        "variable": "assurance_responsabilite",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "S'agit-il d'une assurance de responsabilité ?",
+        "pourquoi": "Exclusion des frais d'expertise pour les assurances de responsabilité (article 4~2)",
+        "plus_proche": "evenement : ne distingue pas la responsabilité civile",
+        "aide": {
+          "oui": "c'est un sinistre de responsabilité civile",
+          "non": "ce n'est pas un sinistre de responsabilité"
+        }
+      },
+      {
+        "variable": "pertes_indirectes",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "S'agit-il de pertes indirectes ?",
+        "pourquoi": "Exclusion des frais d'expertise pour les pertes indirectes (article 4~2)",
+        "plus_proche": "type_dommage : décrit le dommage direct, pas les pertes indirectes",
+        "aide": {
+          "oui": "ce sont des pertes financières indirectes (chômage, perte de loyer, etc.)",
+          "non": "ce sont des dommages directs"
+        }
+      },
+      {
+        "variable": "frais_expertise_depassent_bareme",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Les frais d'expertise dépassent-ils le barème prévu ?",
+        "pourquoi": "Condition pour la procédure de contestation avec avance des frais (article 4~2)",
+        "plus_proche": "aucune variable ne compare les frais au barème",
+        "aide": {
+          "oui": "les frais d'expertise sont supérieurs au barème contractuel",
+          "non": "les frais sont dans le barème"
+        }
+      },
+      {
+        "variable": "contestation_evaluation",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Y a-t-il contestation sur l'évaluation des dommages ?",
+        "pourquoi": "Condition pour la désignation d'un expert en concertation (article 4~2)",
+        "plus_proche": "aucune variable ne décrit un désaccord sur l'évaluation",
+        "aide": {
+          "oui": "l'assuré conteste le montant des dommages évalué",
+          "non": "pas de contestation"
+        }
+      },
+      {
+        "variable": "obtenu_raison",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "L'assuré a-t-il obtenu raison dans la contestation ?",
+        "pourquoi": "Détermine si les frais d'expertise avancés restent à charge de l'assuré (article 4~2)",
+        "plus_proche": "aucune variable ne décrit l'issue d'une contestation",
+        "aide": {
+          "oui": "l'assuré a gagné le litige, les frais sont couverts",
+          "non": "l'assuré a perdu, il doit rembourser les frais avancés"
+        }
+      }
+    ],
+    "non_traduit": [
+      {
+        "article": "4~1",
+        "texte": "La règle proportionnelle n'est jamais d'application pour l'ensemble de ces garanties complémentaires.",
+        "pourquoi": "Règle générale d'application excluant la règle proportionnelle, non exprimable comme condition logique de périmètre"
+      },
+      {
+        "article": "4~2",
+        "texte": "Barème appliqué en % de ces indemnités Jusqu’à 7.500 EUR 5% De 7.500 EUR à 50.000 EUR 375 EUR + 3,5% pour la partie dépassant 7.500 EUR De 50.000 EUR à 250.000 EUR 1.862,50 EUR + 2% pour la partie dépassant 50.000 EUR De 250.000 EUR à 500.000 EUR 5.862,50 EUR + 1,5% pour la partie dépassant 250.000 EUR De 500.000 EUR à 1.500.000 EUR 9.612,50 EUR + 0,75% pour la partie dépassant 500.000 EUR Au-delà de 1.500.000 EUR 17.112,50 EUR + 0,35% pour la partie dépassant 1.500.000 EUR avec un maximum de 25.000 EUR",
+        "pourquoi": "Calcul progressif par tranches de montants avec paliers et pourcentage, non exprimable en une seule limite forfaitaire"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "sinistre_assure = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "couverture_rc_locative = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "couverture_contenu = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "cumul_chomage_logement = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "non_habitabilite = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "assurance_responsabilite = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "pertes_indirectes = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "frais_expertise_depassent_bareme = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "contestation_evaluation = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "obtenu_raison = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "citation",
+      "message": "garantie (4~2) : « • frais d'expertise c'est-à-dire les frais et honoraires de votre expert et le c » ne figure pas dans la clause"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "citation",
+      "message": "garantie (4~2) : « Uniquement pour les frais d'expertise dépassant le barème prévu ci-dessus : en c » ne figure pas dans la clause"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "limite",
+      "message": "limite « Nous prenons en charge ces frais jusqu'à concurrence de maxi » (frais_eau_mazout_canalisation) : elle pose une condition ; circonstance ou garantie à part ?"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (4~1) : « La règle proportionnelle n'est jamais d'application pour l'ensemble de ces garanties complémentaires » — Règle générale d'application excluant la règle proportionnelle, non exprimable comme condition logique de périmètre"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (4~2) : « Barème appliqué en % de ces indemnités Jusqu’à 7.500 EUR 5% De 7.500 EUR à 50.000 EUR 375 EUR + 3,5% » — Calcul progressif par tranches de montants avec paliers et pourcentage, non exprimable en une seule limite forfaitaire"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "velo-06 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "bougie-01 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "bougie-03 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "bougie-04 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "velo-06 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "bougie-01 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "bougie-03 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "bougie-04 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "val-04 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "val-09 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "val-15 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "red-b03 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "red-b04 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "g-l03 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "g-l07 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "g-h04 : INCERTAIN → NON_COUVERT avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "g-h05 : INCERTAIN → NON_COUVERT avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "g2-i07 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "g2-p04 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "val-04 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "val-09 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "val-15 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    }
+  ]
+}

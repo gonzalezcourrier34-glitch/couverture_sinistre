@@ -82,7 +82,8 @@ def voc_etendu(tmp_path, monkeypatch):
 
 
 def controles(prop):
-    pl = prolog.fichier_regles(CONTRAT).read_text(encoding="utf-8")
+    # Comme `recontroler` : sans le bloc déjà accepté pour l'article, ici la tempête (2.2, acceptée le 19 nov.).
+    pl = redaction.retirer_article(prolog.fichier_regles(CONTRAT).read_text(encoding="utf-8"), "2.2")
     return redaction.controler(copy.deepcopy(prop), CLAUSES, pl, "2.2")
 
 
@@ -108,7 +109,8 @@ def test_regles_generees_et_fusion_evaluees_par_l_oracle(tmp_path):
     assert "evenement_traduit(tempete)." in pl and "perimetre(tempete_batiment, f(evenement, tempete))." in pl
     assert "exclusion(tempete_batiment, f(construction_close, non), tout, oui, '2.2-a'," in pl
     fusion = tmp_path / "fusion.pl"
-    fusion.write_text(redaction.fusionner(prolog.fichier_regles(CONTRAT).read_text(encoding="utf-8"), pl), encoding="utf-8")
+    sans_tempete = redaction.retirer_article(prolog.fichier_regles(CONTRAT).read_text(encoding="utf-8"), "2.2")
+    fusion.write_text(redaction.fusionner(sans_tempete, pl), encoding="utf-8")
     contrat = Contrat(fusion)
     tempete = {"evenement": ["tempete", "degat_eaux"], "bien": ["element_batiment", "mobilier"], "lieu": ["logement"],
                "cause_eau": "infiltration_exterieure", "vent_fort": "oui", "construction_close": "oui"}
@@ -124,9 +126,10 @@ def test_regles_generees_et_fusion_evaluees_par_l_oracle(tmp_path):
 def test_vocabulaire_nouveau_declare_bloque_jusqu_a_acceptation(voc_etendu):
     ps = controles(BONNE)
     voc = bloquants(ps, "vocabulaire")
-    assert len(voc) == 2 and all("déclaré par le modèle" in p["message"] for p in voc)
+    assert any(p["message"].startswith("vent_fort = oui") for p in voc)
+    assert all("déclaré par le modèle" in p["message"] for p in voc)
     ajouts = redaction.accepter_vocabulaire(BONNE, voc_etendu)
-    assert len(ajouts) == 2 and not bloquants(controles(BONNE), "vocabulaire")
+    assert any(x.startswith("vent_fort (oui, non)") for x in ajouts) and not bloquants(controles(BONNE), "vocabulaire")
     assert redaction.accepter_vocabulaire(BONNE, voc_etendu) == [], "pas de doublon"
     assert json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]["vent_fort"]["pour"] == ["tempete"], \
         "une variable nouvelle ne vaut que pour les événements de sa garantie (7.56)"

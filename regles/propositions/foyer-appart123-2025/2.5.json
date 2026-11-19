@@ -1,0 +1,566 @@
+{
+  "meta": {
+    "article": "2.5",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-18",
+    "consigne": "redaction-regles v6"
+  },
+  "proposition": {
+    "evenements": [
+      "vol",
+      "incendie",
+      "explosion",
+      "foudre",
+      "degat_eaux",
+      "tempete",
+      "bris",
+      "autre",
+      "electricite",
+      "mazout",
+      "catastrophe_naturelle",
+      "attentat",
+      "fumee",
+      "vandalisme",
+      "merule"
+    ],
+    "definitions": [
+      {
+        "concept": "trouble_de_voisinage",
+        "condition": {
+          "f": [
+            "trouble_voisinage",
+            "oui"
+          ]
+        },
+        "article": "2.5",
+        "texte": "Notre garantie s'étend au trouble de voisinage au sens de l'article 3.101, à l'exclusion de l'article 3.102, du Code civil"
+      },
+      {
+        "concept": "terrain_attennant",
+        "condition": {
+          "et": [
+            {
+              "concept": "jardin"
+            },
+            {
+              "f": [
+                "superficie_terrain",
+                "moins_5_hectares"
+              ]
+            }
+          ]
+        },
+        "article": "2.5",
+        "texte": "du terrain attenant au bâtiment, sans dépasser au total 5 hectares, y compris l'ensemble des constructions répondant au champ d'application du contrat qui y sont situées"
+      }
+    ],
+    "garanties": [
+      {
+        "id": "rc_immeuble",
+        "nom": "Responsabilité civile immeuble",
+        "article": "2.5",
+        "texte": "Nous prenons en charge la responsabilité civile que vous pouvez encourir sur base : • du livre 6 du Code civil • de l'article 1721 du Code civil c'est-à-dire le recours des locataires pour les dommages causés aux tiers du fait : • du bâtiment, du contenu en ce compris le contenu destiné à l'usage du jardin, de la piscine, de l'étang de baignade ou du bain à bulles extérieur (eau comprise), à l'exception des animaux • des trottoirs, notamment suite au défaut d'enlèvement de la neige, de la glace ou du verglas • des ascenseurs et monte-charge pour autant qu'ils soient déclarés conformes à la réglementation en vigueur par un organisme de contrôle entretenus annuellement par une entreprise agréée • du terrain attenant au bâtiment, sans dépasser au total 5 hectares, y compris l'ensemble des constructions répondant au champ d'application du contrat qui y sont situées.",
+        "perimetre": [
+          {
+            "f": [
+              "type_sinistre",
+              "responsabilite_civile"
+            ]
+          },
+          {
+            "f": [
+              "tiers_victime",
+              "oui"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "source_responsabilite",
+                  "batiment"
+                ]
+              },
+              {
+                "et": [
+                  {
+                    "ou": [
+                      {
+                        "concept": "contenu"
+                      },
+                      {
+                        "f": [
+                          "bien",
+                          "mobilier_jardin"
+                        ]
+                      },
+                      {
+                        "f": [
+                          "bien",
+                          "couverture_piscine"
+                        ]
+                      },
+                      {
+                        "f": [
+                          "bien",
+                          "plantation"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "non": {
+                      "f": [
+                        "bien",
+                        "animal"
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "f": [
+                  "source_responsabilite",
+                  "trottoir"
+                ]
+              },
+              {
+                "f": [
+                  "source_responsabilite",
+                  "ascenseur"
+                ]
+              },
+              {
+                "f": [
+                  "source_responsabilite",
+                  "terrain_attennant"
+                ]
+              },
+              {
+                "concept": "trouble_de_voisinage"
+              }
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "si": [
+                {
+                  "f": [
+                    "source_responsabilite",
+                    "ascenseur"
+                  ]
+                },
+                {
+                  "et": [
+                    {
+                      "f": [
+                        "ascenseur_conforme",
+                        "oui"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "ascenseur_entretien_annuel",
+                        "oui"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "article": "2.5",
+            "texte": "des ascenseurs et monte-charge pour autant qu'ils soient déclarés conformes à la réglementation en vigueur par un organisme de contrôle entretenus annuellement par une entreprise agréée"
+          },
+          {
+            "condition": {
+              "si": [
+                {
+                  "f": [
+                    "source_responsabilite",
+                    "trottoir"
+                  ]
+                },
+                {
+                  "f": [
+                    "defaut_enlevement_neige_glace",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "article": "2.5",
+            "texte": "des trottoirs, notamment suite au défaut d'enlèvement de la neige, de la glace ou du verglas"
+          },
+          {
+            "condition": {
+              "si": [
+                {
+                  "concept": "trouble_de_voisinage"
+                },
+                {
+                  "et": [
+                    {
+                      "f": [
+                        "evenement_soudain_imprevisible",
+                        "oui"
+                      ]
+                    },
+                    {
+                      "non": {
+                        "f": [
+                          "meme_immeuble_logements_multiples",
+                          "oui"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "article": "2.5",
+            "texte": "s'ils découlent d'un événement soudain, imprévisible pour vous, sauf s'il oppose les occupants d'un même immeuble à logements multiples"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "cause_amiante",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.5-a",
+            "texte": "par l'amiante sous toutes ses formes"
+          },
+          {
+            "condition": {
+              "f": [
+                "garde_biens",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.5-a",
+            "texte": "à des biens dont vous avez la garde"
+          },
+          {
+            "condition": {
+              "f": [
+                "conformite_controle_citerne",
+                "non"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.5-a",
+            "texte": "en cas de non-respect de la réglementation applicable au contrôle des citernes"
+          }
+        ],
+        "limites": [
+          {
+            "article": "2.5",
+            "texte": "Nous couvrons par fait dommageable : • 18.425.000 EUR pour l'indemnisation des dommages résultant de lésions corporelles",
+            "montant": "18425000 EUR"
+          },
+          {
+            "article": "2.5",
+            "texte": "Nous couvrons par fait dommageable : • 3.685.000 EUR pour l'indemnisation des dommages résultant de dégâts matériels",
+            "montant": "3685000 EUR"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "type_sinistre",
+        "valeurs": [
+          "responsabilite_civile",
+          "dommage_propre"
+        ],
+        "question": "S'agit-il d'une demande de responsabilité civile (dommage causé à un tiers) ou d'un dommage à vos propres biens ?",
+        "pourquoi": "La garantie 2.5 couvre la responsabilité civile, pas les dommages directs aux biens assurés",
+        "plus_proche": "evenement : décrit la cause du dommage, pas la nature juridique du sinistre",
+        "aide": {
+          "responsabilite_civile": "un tiers réclame des dommages et intérêts, vous êtes tenu responsable",
+          "dommage_propre": "vos propres biens sont endommagés"
+        }
+      },
+      {
+        "variable": "tiers_victime",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La victime du dommage est-elle un tiers (personne non assurée) ?",
+        "pourquoi": "La garantie couvre les dommages causés aux tiers",
+        "plus_proche": "auteur : indique qui a commis l'acte, pas qui est victime",
+        "aide": {
+          "oui": "la victime n'est pas assurée au contrat",
+          "non": "la victime est assurée (conjoint, enfant, etc.)"
+        }
+      },
+      {
+        "variable": "source_responsabilite",
+        "valeurs": [
+          "batiment",
+          "contenu",
+          "trottoir",
+          "ascenseur",
+          "terrain_attennant",
+          "trouble_voisinage"
+        ],
+        "question": "De quoi la responsabilité civile découle-t-elle (bâtiment, contenu, trottoir, ascenseur, terrain attenant, trouble de voisinage) ?",
+        "pourquoi": "La clause 2.5 énumère les sources spécifiques de responsabilité couvertes",
+        "plus_proche": "lieu : indique où se trouvent les biens, pas la source de la responsabilité",
+        "aide": {
+          "batiment": "le dommage vient du bâtiment lui-même (vice de construction, défaut d'entretien)",
+          "contenu": "le dommage vient d'un bien meuble (y compris ceux du jardin/piscine)",
+          "trottoir": "le dommage vient du trottoir (neige, glace non enlevées)",
+          "ascenseur": "le dommage vient d'un ascenseur ou monte-charge",
+          "terrain_attennant": "le dommage vient du terrain attenant au bâtiment",
+          "trouble_voisinage": "il s'agit d'un trouble de voisinage au sens de l'article 3.101 du Code civil"
+        }
+      },
+      {
+        "variable": "ascenseur_conforme",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "L'ascenseur est-il déclaré conforme à la réglementation en vigueur par un organisme de contrôle ?",
+        "pourquoi": "Condition pour la couverture des ascenseurs dans la clause 2.5",
+        "plus_proche": "aucune variable existante ne couvre la conformité réglementaire des ascenseurs",
+        "aide": {
+          "oui": "l'ascenseur a été déclaré conforme par un organisme agréé",
+          "non": "pas de déclaration de conformité ou non conforme"
+        }
+      },
+      {
+        "variable": "ascenseur_entretien_annuel",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "L'ascenseur est-il entretenu annuellement par une entreprise agréée ?",
+        "pourquoi": "Condition pour la couverture des ascenseurs dans la clause 2.5",
+        "plus_proche": "manque_entretien : concerne l'usure générale, pas spécifiquement l'entretien annuel réglementaire des ascenseurs",
+        "aide": {
+          "oui": "contrat d'entretien annuel avec une entreprise agréée en place",
+          "non": "pas d'entretien annuel ou entreprise non agréée"
+        }
+      },
+      {
+        "variable": "trouble_voisinage",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "S'agit-il d'un trouble de voisinage au sens de l'article 3.101 du Code civil (et non 3.102) ?",
+        "pourquoi": "La garantie s'étend spécifiquement aux troubles de voisinage de l'article 3.101",
+        "plus_proche": "aucune variable existante ne distingue les troubles de voisinage légaux",
+        "aide": {
+          "oui": "trouble anormal de voisinage selon l'article 3.101 (nuisances excessives)",
+          "non": "autre type de litige"
+        }
+      },
+      {
+        "variable": "evenement_soudain_imprevisible",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le trouble de voisinage découle-t-il d'un événement soudain et imprévisible pour vous ?",
+        "pourquoi": "Condition pour la couverture des troubles de voisinage dans la clause 2.5",
+        "plus_proche": "aucune variable existante ne caractérise la soudaineté et l'imprévisibilité d'un événement",
+        "aide": {
+          "oui": "l'événement était soudain et imprévisible (ex: rupture de canalisation)",
+          "non": "l'événement était prévisible ou progressif (ex: travaux bruyants prévus)"
+        }
+      },
+      {
+        "variable": "meme_immeuble_logements_multiples",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le litige oppose-t-il les occupants d'un même immeuble à logements multiples ?",
+        "pourquoi": "Exception à la couverture des troubles de voisinage dans la clause 2.5",
+        "plus_proche": "occupation_partielle : concerne l'occupation partielle du bâtiment par l'assuré, pas les litiges entre occupants",
+        "aide": {
+          "oui": "les deux parties sont dans le même immeuble à appartements",
+          "non": "les parties sont dans des immeubles différents ou l'un n'est pas dans l'immeuble"
+        }
+      },
+      {
+        "variable": "defaut_enlevement_neige_glace",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le dommage au trottoir résulte-t-il d'un défaut d'enlèvement de la neige, de la glace ou du verglas ?",
+        "pourquoi": "La clause 2.5 mentionne spécifiquement ce cas pour les trottoirs",
+        "plus_proche": "prevention_gel : concerne le gel dans les locaux, pas l'enlèvement de neige sur le trottoir",
+        "aide": {
+          "oui": "la neige/glace n'a pas été enlevée du trottoir",
+          "non": "autre cause sur le trottoir"
+        }
+      },
+      {
+        "variable": "cause_amiante",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le dommage est-il causé par l'amiante sous quelque forme que ce soit ?",
+        "pourquoi": "Exclusion spécifique de la clause 2.5-a",
+        "plus_proche": "aucune variable existante ne mentionne l'amiante",
+        "aide": {
+          "oui": "présence d'amiante dans les matériaux, poussières d'amiante",
+          "non": "autre matériau"
+        }
+      },
+      {
+        "variable": "garde_biens",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Les biens endommagés étaient-ils sous votre garde (confiés à votre responsabilité) ?",
+        "pourquoi": "Exclusion de la clause 2.5-a pour les biens dont l'assuré a la garde",
+        "plus_proche": "confiance_assure : concerne les biens confiés au concierge, pas la garde générale",
+        "aide": {
+          "oui": "biens confiés à votre garde (ex: dépôt, prêt)",
+          "non": "biens appartenant à des tiers sans lien de garde"
+        }
+      },
+      {
+        "variable": "conformite_controle_citerne",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La réglementation applicable au contrôle des citernes est-elle respectée ?",
+        "pourquoi": "Exclusion de la clause 2.5-a en cas de non-respect",
+        "plus_proche": "manque_entretien : général, pas spécifique au contrôle réglementaire des citernes",
+        "aide": {
+          "oui": "contrôles réglementaires des citernes effectués et conformes",
+          "non": "non-respect de la réglementation sur les citernes"
+        }
+      },
+      {
+        "variable": "superficie_terrain",
+        "valeurs": [
+          "moins_5_hectares",
+          "plus_5_hectares"
+        ],
+        "question": "Quelle est la superficie totale du terrain attenant au bâtiment ?",
+        "pourquoi": "La clause 2.5 limite la couverture du terrain attenant à 5 hectares maximum",
+        "plus_proche": "aucune variable existante ne mesure la superficie du terrain",
+        "aide": {
+          "moins_5_hectares": "le terrain fait moins de 5 hectares",
+          "plus_5_hectares": "le terrain fait plus de 5 hectares"
+        }
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "trouble_voisinage = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "superficie_terrain = moins_5_hectares : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "type_sinistre = responsabilite_civile : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "tiers_victime = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "source_responsabilite = batiment : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "source_responsabilite = trottoir : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "source_responsabilite = ascenseur : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "source_responsabilite = terrain_attennant : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "ascenseur_conforme = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "ascenseur_entretien_annuel = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "defaut_enlevement_neige_glace = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "evenement_soudain_imprevisible = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "meme_immeuble_logements_multiples = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "cause_amiante = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "garde_biens = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "conformite_controle_citerne = non : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "citation",
+      "message": "limite (2.5) : « Nous couvrons par fait dommageable : • 3.685.000 EUR pour l'indemnisation des do » ne figure pas dans la clause"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "concept",
+      "message": "concept inconnu : jardin"
+    }
+  ]
+}

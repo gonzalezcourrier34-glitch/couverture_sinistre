@@ -498,6 +498,11 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
     # 4 bis. La définition de l'événement couvert (« tempête ») est une condition de la garantie.
     titres = normaliser(" ".join(c.chemin[-1] for c in clauses_article(clauses, article) if c.chemin))
     employes = {x.get("article") for _, x in elements_cites(prop)} | {n.get("article") for n in non_traduits(prop)}
+    # Un concept déjà défini dans les règles du contrat, et employé par la proposition, compte aussi (7.63) :
+    # `concept(vol)` renvoie à la définition 12/vol acceptée avec la garantie vol.
+    employes_c = {n for c in conditions(prop) for n in re.findall(r'"concept":\s*"([a-z0-9_]+)"', json.dumps(c))}
+    employes |= {a for n, a in re.findall(r"^definition\(\s*([a-z0-9_]+)\s*,.*?,\s*'([^']+)'", contrat_pl or "", re.M | re.S)
+                 if n in employes_c}
     for d in definitions_utiles(clauses, clauses_article(clauses, article)):
         terme_defini = normaliser((d.chemin[-1] if d.chemin else d.id.split("/")[-1]).replace("-", " "))
         if terme_defini and re.search(rf"\b{re.escape(terme_defini)}", titres) and d.id not in employes:
@@ -642,6 +647,10 @@ def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
         if v in voc:
             nouvelles = [x for x in valeurs if x not in voc[v]["valeurs"]]
             voc[v]["valeurs"] += nouvelles
+            avant = list(voc[v].get("pour") or [])
+            if avant and prop.get("evenements"):
+                voc[v]["pour"] = avant + [e for e in prop["evenements"] if e not in avant]
+                ajouts += [f"{v} : lue aussi pour {e}" for e in prop["evenements"] if e not in avant]
             for x in nouvelles:
                 if (m.get("aide") or {}).get(x):
                     voc[v].setdefault("aide", {})[x] = str(m["aide"][x])
@@ -658,8 +667,26 @@ def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
             if prop.get("evenements"):
                 voc[v]["pour"] = list(prop["evenements"])
             ajouts.append(f"{v} ({', '.join(valeurs)}) : « {voc[v]['question']} »")
+    ajouts += etendre_pour(prop, voc)
     if ajouts:
         chemin.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return ajouts
+
+
+def etendre_pour(prop: dict, voc: dict) -> list[str]:
+    """Une variable existante que la proposition emploie doit être lue pour les événements de ses garanties :
+    `prevention_gel`, lue pour les dégâts des eaux, sert aussi au mazout (2.8). Sans cela, la lecture
+    restreinte aux événements (7.56) ne la chercherait jamais dans une déclaration de mazout (7.63)."""
+    evenements = list(prop.get("evenements") or [])
+    ajouts = []
+    for v in sorted({v for c in conditions(prop) for v, _ in feuilles(c)}):
+        d = voc.get(v)
+        if not d or not d.get("pour") or not evenements:
+            continue
+        manquants = [e for e in evenements if e not in d["pour"]]
+        if manquants:
+            d["pour"] = d["pour"] + manquants
+            ajouts.append(f"{v} : lue aussi pour {', '.join(manquants)}")
     return ajouts
 
 

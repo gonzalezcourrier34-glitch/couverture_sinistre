@@ -1,0 +1,652 @@
+{
+  "meta": {
+    "article": "3.1",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-18",
+    "consigne": "redaction-regles v6"
+  },
+  "proposition": {
+    "evenements": [
+      "vol",
+      "incendie",
+      "degat_eaux",
+      "tempete",
+      "bris",
+      "autre",
+      "electricite",
+      "mazout",
+      "catastrophe_naturelle",
+      "attentat",
+      "fumee",
+      "vandalisme",
+      "merule",
+      "explosion",
+      "foudre"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "sejour_temporaire_contenu",
+        "nom": "Contenu en séjour temporaire",
+        "article": "3.1",
+        "texte": "Le déplacement de votre contenu à l'occasion d'un séjour temporaire dans un bâtiment à concurrence de 5.000 EUR (à l'exception d'une caravane tractable ou d'un mobilhome pour lesquels la limite d'indemnisation est fixée à 500 EUR)",
+        "perimetre": [
+          {
+            "concept": "contenu"
+          },
+          {
+            "f": [
+              "sejour_temporaire",
+              "oui"
+            ]
+          },
+          {
+            "f": [
+              "lieu",
+              "autre_batiment"
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "type_logement_temporaire",
+                "caravane_mobilhome"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1",
+            "texte": "à l'exception d'une caravane tractable ou d'un mobilhome pour lesquels la limite d'indemnisation est fixée à 500 EUR"
+          }
+        ],
+        "limites": [
+          {
+            "article": "3.1",
+            "texte": "à concurrence de 5.000 EUR",
+            "montant": "5000 EUR"
+          },
+          {
+            "article": "3.1",
+            "texte": "la limite d'indemnisation est fixée à 500 EUR",
+            "montant": "500 EUR"
+          }
+        ]
+      },
+      {
+        "id": "demenagement_transport",
+        "nom": "Déménagement et transport",
+        "article": "3.1",
+        "texte": "Votre nouvelle adresse en Belgique à partir du début de votre déménagement. Après 30 jours, l'assurance n'est acquise qu'à la nouvelle situation du risque. Le contenu est également couvert lors de son transport dans un véhicule dont vous êtes le détenteur à concurrence de 5.000 EUR.",
+        "perimetre": [
+          {
+            "concept": "contenu"
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "lieu",
+                  "logement"
+                ]
+              },
+              {
+                "f": [
+                  "lieu",
+                  "vehicule_moteur"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "demenagement_en_cours",
+                "oui"
+              ]
+            },
+            "article": "3.1",
+            "texte": "à partir du début de votre déménagement"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "3.1",
+            "texte": "à concurrence de 5.000 EUR",
+            "montant": "5000 EUR"
+          }
+        ]
+      },
+      {
+        "id": "residence_remplacement",
+        "nom": "Résidence de remplacement",
+        "article": "3.1",
+        "texte": "La résidence de remplacement (meublée ou non) : si votre résidence principale est temporairement inhabitable à la suite d'un sinistre, nous couvrons pendant 18 mois votre responsabilité locative pour les dégâts causés à cette résidence de remplacement",
+        "perimetre": [
+          {
+            "f": [
+              "lieu",
+              "autre_batiment"
+            ]
+          },
+          {
+            "f": [
+              "auteur",
+              "assure"
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "residence_principale_inhabitable",
+                "oui"
+              ]
+            },
+            "article": "3.1",
+            "texte": "si votre résidence principale est temporairement inhabitable à la suite d'un sinistre"
+          },
+          {
+            "condition": {
+              "f": [
+                "couverture_rc_locative",
+                "oui"
+              ]
+            },
+            "article": "3.1",
+            "texte": "Si nous couvrons votre résidence principale, et en fonction des couvertures (RC locative et/ou contenu) mentionnées dans vos conditions particulières"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "3.1",
+            "texte": "jusqu'à concurrence de 1.000.000 EUR",
+            "montant": "1000000 EUR"
+          },
+          {
+            "article": "3.1",
+            "texte": "pendant 18 mois",
+            "montant": "18 mois"
+          }
+        ]
+      },
+      {
+        "id": "villegiature",
+        "nom": "Résidence de villégiature",
+        "article": "3.1",
+        "texte": "La résidence de villégiature (meublée ou non), à l'occasion d'un séjour temporaire nous couvrons votre responsabilité contractuelle pour les dégâts causés à cette résidence de villégiature, l'hôtel ou un logement similaire",
+        "perimetre": [
+          {
+            "f": [
+              "lieu",
+              "autre_batiment"
+            ]
+          },
+          {
+            "f": [
+              "sejour_temporaire",
+              "oui"
+            ]
+          },
+          {
+            "f": [
+              "auteur",
+              "assure"
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "couverture_rc_locative",
+                "oui"
+              ]
+            },
+            "article": "3.1",
+            "texte": "Si nous couvrons votre résidence principale, et en fonction des couvertures (RC locative et/ou contenu) mentionnées dans vos conditions particulières"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "3.1",
+            "texte": "jusqu'à concurrence de 1.000.000 EUR",
+            "montant": "1000000 EUR"
+          }
+        ]
+      },
+      {
+        "id": "fete_famille",
+        "nom": "Local de fête de famille",
+        "article": "3.1",
+        "texte": "Le local que vous occupez à l'occasion d'une fête de famille, c'est-à-dire une festivité privée à caractère familial. Nous couvrons votre responsabilité locative pour les dégâts que vous causez à ce local. Les tentes, chapiteaux et péniches à quai sont assimilés aux locaux de fête",
+        "perimetre": [
+          {
+            "f": [
+              "lieu",
+              "autre_batiment"
+            ]
+          },
+          {
+            "f": [
+              "auteur",
+              "assure"
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "fete_famille",
+                "oui"
+              ]
+            },
+            "article": "3.1",
+            "texte": "à l'occasion d'une fête de famille, c'est-à-dire une festivité privée à caractère familial"
+          },
+          {
+            "condition": {
+              "f": [
+                "couverture_rc_locative",
+                "oui"
+              ]
+            },
+            "article": "3.1",
+            "texte": "Si nous couvrons votre résidence principale, et en fonction des couvertures (RC locative et/ou contenu) mentionnées dans vos conditions particulières"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "3.1",
+            "texte": "jusqu'à concurrence de 1.000.000 EUR",
+            "montant": "1000000 EUR"
+          }
+        ]
+      },
+      {
+        "id": "abandon_recours",
+        "nom": "Abandon de recours",
+        "article": "3.1",
+        "texte": "L'abandon de recours : nous abandonnons tout recours envers les parents ou alliés en ligne directe auxquels vous prêtez ou louez votre habitation sauf en cas de malveillance ou dans la mesure où ces personnes disposent d'une assurance garantissant leur responsabilité",
+        "perimetre": [
+          {
+            "f": [
+              "auteur",
+              "famille"
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "couverture_rc_locative",
+                "oui"
+              ]
+            },
+            "article": "3.1",
+            "texte": "Si nous couvrons votre résidence principale, et en fonction des couvertures (RC locative et/ou contenu) mentionnées dans vos conditions particulières"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "malveillance",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1",
+            "texte": "sauf en cas de malveillance"
+          },
+          {
+            "condition": {
+              "f": [
+                "assurance_rc_tiers",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1",
+            "texte": "ou dans la mesure où ces personnes disposent d'une assurance garantissant leur responsabilité"
+          }
+        ],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "demenagement_en_cours",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Êtes-vous en cours de déménagement vers une nouvelle adresse en Belgique ?",
+        "pourquoi": "Couverture nouvelle adresse",
+        "plus_proche": "sejour_temporaire",
+        "aide": {
+          "oui": "je déménage",
+          "non": "pas de déménagement"
+        }
+      },
+      {
+        "variable": "residence_principale_inhabitable",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Votre résidence principale est-elle temporairement inhabitable à la suite d'un sinistre ?",
+        "pourquoi": "Condition résidence de remplacement",
+        "plus_proche": "aucune",
+        "aide": {
+          "oui": "mon logement est inhabitable",
+          "non": "mon logement est habitable"
+        }
+      },
+      {
+        "variable": "fete_famille",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "S'agit-il d'une fête de famille (festivité privée à caractère familial) ?",
+        "pourquoi": "Local de fête",
+        "plus_proche": "sejour_temporaire",
+        "aide": {
+          "oui": "fête familiale privée",
+          "non": "autre occasion"
+        }
+      },
+      {
+        "variable": "malveillance",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Y a-t-il eu malveillance de la part du parent ou allié ?",
+        "pourquoi": "Exception abandon de recours",
+        "plus_proche": "intentionnel",
+        "aide": {
+          "oui": "acte malveillant volontaire du tiers",
+          "non": "pas de malveillance"
+        }
+      },
+      {
+        "variable": "assurance_rc_tiers",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le parent/allié dispose-t-il d'une assurance garantissant sa responsabilité ?",
+        "pourquoi": "Exception abandon de recours",
+        "plus_proche": "aucune",
+        "aide": {
+          "oui": "il a une assurance RC",
+          "non": "pas d'assurance"
+        }
+      },
+      {
+        "variable": "type_logement_temporaire",
+        "valeurs": [
+          "caravane_mobilhome",
+          "autre"
+        ],
+        "question": "Le logement temporaire est-il une caravane tractable ou un mobilhome ?",
+        "pourquoi": "Limite 500 EUR vs 5000 EUR",
+        "plus_proche": "vehicule_moteur",
+        "aide": {
+          "caravane_mobilhome": "caravane ou mobilhome",
+          "autre": "autre bâtiment"
+        }
+      },
+      {
+        "variable": "couverture_rc_locative",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Vos conditions particulières couvrent-elles la RC locative ?",
+        "pourquoi": "Condition pour extensions à 1.000.000 EUR",
+        "plus_proche": "formule",
+        "aide": {
+          "oui": "RC locative couverte",
+          "non": "pas de RC locative"
+        }
+      }
+    ],
+    "non_traduit": [
+      {
+        "article": "3.1",
+        "texte": "Il faut préciser que la règle proportionnelle n'est jamais d'application pour l'ensemble de ces extensions",
+        "pourquoi": "Note générale non traduisible en condition logique"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "type_logement_temporaire = caravane_mobilhome : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "lieu = vehicule_moteur : hors vocabulaire, et non déclaré"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "demenagement_en_cours = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "residence_principale_inhabitable = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "couverture_rc_locative = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "fete_famille = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "malveillance = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "assurance_rc_tiers = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1`) ou à remplacer"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "réserve",
+      "message": "exclusion « à l'exception d'une caravane tractable ou d'un mobilhome pou » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "réserve",
+      "message": "exclusion « sauf en cas de malveillance » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (3.1) : « Il faut préciser que la règle proportionnelle n'est jamais d'application pour l'ensemble de ces exte » — Note générale non traduisible en condition logique"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "velo-06 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "bougie-01 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "bougie-03 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "bougie-04 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "velo-06 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "bougie-01 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "bougie-03 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "bougie-04 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "val-02 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "val-03 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "val-04 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "val-05 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "val-09 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "val-14 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "val-15 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "red-b03 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "red-b04 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "g-l03 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "g-l07 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "g-h05 : INCERTAIN → NON_COUVERT avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "g2-i07 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "g2-p04 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "g2-p08 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "val-02 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "val-03 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "val-04 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "val-05 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "val-09 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "val-14 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "val-15 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
+    }
+  ]
+}

@@ -29,7 +29,7 @@
 {"sinistre_id": "val-15", "faits": {"evenement": "vol", "bien": ["vehicule_moteur"], "lieu": ["garage"], "fermeture": "cle", "effraction": "oui"}}
 {"sinistre_id": "red-t01", "faits": {"evenement": ["tempete", "degat_eaux"], "bien": ["element_batiment", "mobilier"], "lieu": ["logement"]}}
 {"sinistre_id": "red-t02", "faits": {"evenement": ["tempete"], "bien": ["mobilier_jardin"], "lieu": ["terrasse"]}}
-{"sinistre_id": "red-t03", "faits": {"evenement": ["tempete"], "bien": ["element_batiment"], "lieu": ["garage"]}}
+{"sinistre_id": "red-t03", "faits": {"evenement": ["tempete"], "bien": ["element_batiment"], "lieu": ["annexe"], "alea_tempete": "neige_glace", "annexe_ancree_beton": "non", "construction_close": "non"}}
 {"sinistre_id": "red-t04", "faits": {"evenement": ["tempete", "degat_eaux"], "bien": ["element_batiment"], "lieu": ["logement"]}}
 {"sinistre_id": "red-b01", "faits": {"evenement": ["bris"], "bien": ["vitre"], "lieu": ["logement"]}}
 {"sinistre_id": "red-b02", "faits": {"evenement": ["bris"], "bien": ["table_cuisson_vitroceramique"], "lieu": ["logement"], "type_dommage": "felure"}}
@@ -73,7 +73,7 @@
 {"sinistre_id": "g2-i05", "faits": {"evenement": ["incendie"], "lieu": ["logement"], "flammes": "oui"}}
 {"sinistre_id": "g2-i06", "faits": {"evenement": ["degat_eaux"], "bien": ["canalisation", "element_batiment"], "lieu": ["logement"], "cause_eau": "gel", "absence": "oui"}}
 {"sinistre_id": "g2-i08", "faits": {"evenement": ["vol"], "bien": ["objet_divers"], "lieu": ["autre_batiment"]}}
-{"sinistre_id": "g2-i11", "faits": {"evenement": ["tempete"], "bien": ["element_batiment"], "lieu": ["terrasse"]}}
+{"sinistre_id": "g2-i11", "faits": {"evenement": ["tempete"], "bien": ["element_batiment"], "lieu": ["terrasse"], "alea_tempete": "vent"}}
 {"sinistre_id": "g2-i12", "faits": {"evenement": ["vol"], "bien": ["appareil_audiovisuel"], "lieu": ["logement"], "absence": "oui"}}
 {"sinistre_id": "g2-i15", "faits": {"evenement": ["merule"], "bien": ["element_batiment"], "lieu": ["logement"]}}
 {"sinistre_id": "g2-i16", "faits": {"evenement": ["degat_eaux"], "lieu": ["logement"]}}
@@ -88,7 +88,7 @@
 {"sinistre_id": "g2-p06", "faits": {"evenement": ["vol"], "bien": ["cles"], "lieu": ["voie_publique"], "vol_sur_personne": "oui", "violence": "non"}}
 {"sinistre_id": "g2-p08", "faits": {"evenement": ["degat_eaux"], "bien": ["mobilier"], "lieu": ["logement", "terrasse"], "cause_eau": "piscine_exterieure"}}
 {"sinistre_id": "g2-p09", "faits": {"evenement": ["degat_eaux"], "bien": ["element_batiment"], "lieu": ["logement"], "cause_eau": "infiltration_toiture"}}
-{"sinistre_id": "g2-p10", "faits": {"evenement": ["electricite"], "bien": ["electronique"], "lieu": ["logement"]}}
+{"sinistre_id": "g2-p10", "faits": {"evenement": ["electricite"], "bien": ["appareil_informatique"], "lieu": ["logement"], "usage_professionnel": "oui"}}
 {"sinistre_id": "g2-l01", "faits": {"evenement": ["vol"], "bien": ["appareil_audiovisuel", "electronique", "valeurs"], "lieu": ["logement"], "effraction": "oui"}}
 {"sinistre_id": "g2-l02", "faits": {"evenement": ["degat_eaux"], "bien": ["element_batiment"], "lieu": ["logement"], "cause_eau": "fuite_installation"}}
 {"sinistre_id": "g2-l03", "faits": {"evenement": ["vol"], "bien": ["objet_divers"], "lieu": ["logement"], "absence": "non"}}

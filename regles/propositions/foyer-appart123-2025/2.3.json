@@ -1,0 +1,450 @@
+{
+  "meta": {
+    "article": "2.3",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-18",
+    "consigne": "redaction-regles v6",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-19",
+      "modifications": [
+        "vocabulaire harmonisé avec 2.2 : construction_delabree, residence_principale, construction_close ; « à l'extérieur » = jardin ou terrasse",
+        "immeuble_appartements_multiples → occupation_partielle (variable existante, « un appartement dans un immeuble »)",
+        "risque aggravé : hors décision (un autre régime, indiqué aux conditions particulières) ; en circonstance, il faisait poser la question à chaque catastrophe naturelle",
+        "« à tout objet situé à l'extérieur » : les objets, pas le bâtiment (bien ≠ element_batiment)",
+        "bien_reconstruit_apres_sinistre retiré de toutes les exclusions : la phrase vise l'indemnisation des biens reconstruits ; classée hors décision"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "catastrophe_naturelle"
+    ],
+    "definitions": [
+      {
+        "concept": "inondation",
+        "condition": {
+          "f": [
+            "cause_eau",
+            "inondation"
+          ]
+        },
+        "article": "12/inondation",
+        "texte": "Débordement de cours d’eau, canaux, lacs, étangs ou mers, suite à des précipitations atmosphériques, à une fonte des neiges ou de glace, à une rupture de digues ou à un raz-de- marée ainsi que l'inondation, le débordement ou le refoulement d'égouts publics, le glissement ou affaissement de terrain qui en résulte • Inondations résultant de mesures prises par une autorité légalement constituée pour la sauvegarde et la protection des biens et des personnes, à savoir par l'ouverture ou la destruction d'écluses, de barrages ou de digues dans le but d'éviter une inondation éventuelle ou l'extension de celle-ci • Ruissellement ou accumulation d'eaux occasionnées par des crues, des précipitations atmosphériques une tempête ou une fonte des neiges ou de glaces. Sont également considérés comme une seule et même inondation, le débordement initial d’un cours d’eau, d’un canal, d’un lac, d'un étang ou d’une mer et tout débordement survenu dans un délai de 168 heures après la décrue, c'est-à-dire le retour de ce cours d’eau, ce canal, ce lac, cet étang ou cette mer dans les limites habituelles, ainsi que les périls assurés qui en résultent directement."
+      },
+      {
+        "concept": "tremblement_de_terre",
+        "condition": {
+          "f": [
+            "evenement",
+            "catastrophe_naturelle"
+          ]
+        },
+        "article": "12/tremblement-de-terre",
+        "texte": "Tout séisme d’origine naturelle enregistré avec une magnitude minimale de quatre degrés sur l'échelle de Richter ou qui détruit, brise ou endommage des biens assurables contre ce péril dans les 10 km du bâtiment désigné ainsi que l’inondation, le débordement ou refoulement d’égouts publics, le glissement ou affaissement de terrain qui en résulte. Sont considérés comme un seul et même tremblement de terre, le séisme initial et ses répliques survenues dans les 72 heures, ainsi que les périls assurés qui en résultent directement."
+      },
+      {
+        "concept": "debordement_ou_refoulement_egouts",
+        "condition": {
+          "f": [
+            "cause_eau",
+            "inondation"
+          ]
+        },
+        "article": "12/debordement-ou-refoulement-d-e",
+        "texte": "Tout débordement ou refoulement d’égouts publics occasionné par des crues, des précipitations atmosphériques, une tempête, une fonte des neiges ou de glace ou une inondation."
+      },
+      {
+        "concept": "glissement_ou_affaissement_terrain",
+        "condition": {
+          "f": [
+            "evenement",
+            "catastrophe_naturelle"
+          ]
+        },
+        "article": "12/glissement-ou-affaissement-de-",
+        "texte": "Mouvement dû en tout ou en partie à un phénomène naturel, à l'exception du tremblement de terre et de l’inondation, d'une masse importante de terrain qui détruit ou endommage des biens."
+      }
+    ],
+    "garanties": [
+      {
+        "id": "catastrophes_naturelles",
+        "nom": "Catastrophes naturelles",
+        "article": "2.3",
+        "texte": "Nous couvrons les dégâts qui découlent directement ou indirectement de : • l’inondation • le tremblement de terre • le débordement ou refoulement d'égouts publics • le glissement ou affaissement de terrain en ce compris les périls assurés par les autres garanties de base, dont la survenance résulte directement d’une catastrophe naturelle.",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "catastrophe_naturelle"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "concept": "inondation"
+              },
+              {
+                "concept": "tremblement_de_terre"
+              },
+              {
+                "concept": "debordement_ou_refoulement_egouts"
+              },
+              {
+                "concept": "glissement_ou_affaissement_terrain"
+              }
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "construction_delabree",
+                    "oui"
+                  ]
+                },
+                {
+                  "non": {
+                    "f": [
+                      "residence_principale",
+                      "oui"
+                    ]
+                  }
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.3-a",
+            "texte": "aux constructions délabrées ou en cours de démolition et à leur contenu éventuel, sauf si ces constructions constituent votre logement principal"
+          },
+          {
+            "condition": {
+              "f": [
+                "reparation_loi_particuliere",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.3-a",
+            "texte": "aux biens dont la réparation des dommages est organisée par des lois particulières ou par des conventions internationales."
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "lieu",
+                        "jardin"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "lieu",
+                        "terrasse"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "non": {
+                    "f": [
+                      "bien",
+                      "element_batiment"
+                    ]
+                  }
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.3-a",
+            "texte": "à tout objet situé à l'extérieur même fixé à demeure"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "lieu",
+                        "annexe"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "lieu",
+                        "abri_jardin"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "f": [
+                    "construction_close",
+                    "non"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.3-a",
+            "texte": "à tout objet situé dans une annexe non entièrement close ou couverte"
+          },
+          {
+            "condition": {
+              "si": [
+                {
+                  "ou": [
+                    {
+                      "concept": "inondation"
+                    },
+                    {
+                      "concept": "debordement_ou_refoulement_egouts"
+                    }
+                  ]
+                },
+                {
+                  "f": [
+                    "batiment_construit_plus_18_mois_apres_classement",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.3-a",
+            "texte": "au bâtiment, à une partie de bâtiment ou au contenu d’un bâtiment qui a été construit plus de dix-huit mois après la date de publication au Moniteur belge de l'arrêté royal classant la zone où ce bâtiment est situé comme zone à risque"
+          },
+          {
+            "condition": {
+              "si": [
+                {
+                  "ou": [
+                    {
+                      "concept": "inondation"
+                    },
+                    {
+                      "concept": "debordement_ou_refoulement_egouts"
+                    }
+                  ]
+                },
+                {
+                  "f": [
+                    "extension_sol_avant_classement",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.3-a",
+            "texte": "aux extensions au sol des biens existant avant la date de classement de la zone à risque."
+          },
+          {
+            "condition": {
+              "si": [
+                {
+                  "ou": [
+                    {
+                      "concept": "inondation"
+                    },
+                    {
+                      "concept": "debordement_ou_refoulement_egouts"
+                    }
+                  ]
+                },
+                {
+                  "et": [
+                    {
+                      "f": [
+                        "lieu",
+                        "cave"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "contenu_moins_10cm_sol",
+                        "oui"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "occupation_partielle",
+                        "oui"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.3-a",
+            "texte": "au contenu entreposé à moins de 10 cm du sol dans les caves d’immeubles à appartements multiples"
+          }
+        ],
+        "limites": [
+          {
+            "article": "2.3",
+            "texte": "Le total des indemnités dues à nos assurés lors de la survenance d’une catastrophe naturelle est limité conformément à l’article 130, §2 et §3 de la loi du 4 avril 2014 relative aux assurances. Si les limites prévues par cet article devaient être dépassées, l’indemnité due en vertu de chaque contrat d’assurance sera réduite à due concurrence.",
+            "montant": "limite légale article 130"
+          },
+          {
+            "article": "2.3",
+            "texte": "Abri de jardin et son éventuel contenu 1.000 EUR",
+            "montant": "1000 EUR"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "construction_delabree",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La construction était-elle délabrée ou en cours de démolition ?",
+        "aide": {
+          "oui": "bâtiment en ruine, abandonné, en démolition",
+          "non": "bâtiment en état normal"
+        },
+        "pourquoi": "exclusions 2.2-a, 2.3-a",
+        "plus_proche": "travaux_construction : construire n'est pas démolir"
+      },
+      {
+        "variable": "residence_principale",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Ce bâtiment est-il votre logement principal ?",
+        "aide": {
+          "oui": "vous y habitez à l'année",
+          "non": "seconde résidence, bien loué, dépendance"
+        },
+        "pourquoi": "réserve des exclusions 2.2-a, 2.3-a",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "construction_close",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le bâtiment ou l'annexe était-il entièrement clos et couvert ?",
+        "aide": {
+          "oui": "murs, toit, portes et fenêtres en place",
+          "non": "toit ou mur manquant, ouvert sur un côté, chantier, carport"
+        },
+        "pourquoi": "exclusions 2.2-a, 2.3-a",
+        "plus_proche": "fermeture : dit comment on ferme, pas si le bâtiment est clos"
+      },
+      {
+        "variable": "reparation_loi_particuliere",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La réparation des dommages est-elle organisée par des lois particulières ou conventions internationales ?",
+        "pourquoi": "exclusion 2.3-a",
+        "plus_proche": "aucune",
+        "aide": {
+          "oui": "oui, couvert par loi spéciale ou convention internationale",
+          "non": "non"
+        }
+      },
+      {
+        "variable": "batiment_construit_plus_18_mois_apres_classement",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le bâtiment a-t-il été construit plus de 18 mois après la publication au Moniteur belge du classement de la zone comme zone à risque ?",
+        "pourquoi": "exclusion inondation 2.3-a",
+        "plus_proche": "travaux_construction",
+        "aide": {
+          "oui": "construit plus de 18 mois après le classement",
+          "non": "construit avant ou dans les 18 mois suivant le classement"
+        }
+      },
+      {
+        "variable": "extension_sol_avant_classement",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "S'agit-il d'une extension au sol d'un bien existant avant la date de classement de la zone à risque ?",
+        "pourquoi": "exclusion inondation 2.3-a",
+        "plus_proche": "aucune",
+        "aide": {
+          "oui": "extension au sol construite avant le classement",
+          "non": "autre cas"
+        }
+      },
+      {
+        "variable": "contenu_moins_10cm_sol",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le contenu était-il entreposé à moins de 10 cm du sol ?",
+        "pourquoi": "exclusion inondation caves 2.3-a",
+        "plus_proche": "aucune",
+        "aide": {
+          "oui": "posé à moins de 10 cm du sol",
+          "non": "surélevé à plus de 10 cm du sol"
+        }
+      }
+    ],
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "2.3",
+        "texte": "Il se peut que votre habitation constitue un risque aggravé pour cette garantie; dans ce cas, vos conditions particulières le mentionneraient expressément et votre garantie ne serait pas celle décrite ci-dessous mais bien celle du Bureau de Tarification, dont vous trouverez les conditions sur le site www.bt-tb.be.",
+        "pourquoi": "un risque aggravé change de régime (Bureau de Tarification), il n'exclut pas : fait des conditions particulières, à lire avec elles"
+      },
+      {
+        "article": "2.3-a",
+        "texte": "Sont toutefois couverts, les dégâts causés aux biens ou parties de biens qui sont reconstruits ou reconstitués après un sinistre et qui correspondent à la valeur de reconstruction ou de reconstitution des biens avant le sinistre.",
+        "pourquoi": "règle d'indemnisation des biens reconstruits, sans effet sur la question de couverture"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "à relire",
+      "controle": "limite",
+      "message": "limite « Le total des indemnités dues à nos assurés lors de la surven » (catastrophes_naturelles) : elle pose une condition ; circonstance ou garantie à part ?"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.3) : un risque aggravé change de régime (Bureau de Tarification), il n'exclut pas : fait des conditions particulières, à lire avec elles"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.3-a) : règle d'indemnisation des biens reconstruits, sans effet sur la question de couverture"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "prolog",
+      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
+    }
+  ]
+}

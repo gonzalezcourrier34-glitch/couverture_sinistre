@@ -1,0 +1,214 @@
+{
+  "meta": {
+    "article": "2.4",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-18",
+    "consigne": "redaction-regles v6",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-19",
+      "modifications": [
+        "circonstance « détruits par des participants ou par les mesures de l'autorité » retirée : c'est ce que l'événement attentat ou conflit du travail désigne ; la garder faisait poser la question à chaque déclaration",
+        "evenement = conflit_du_travail accepté, avec son aide",
+        "suspension par arrêté ministériel : hors décision"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "attentat",
+      "conflit_du_travail"
+    ],
+    "definitions": [
+      {
+        "concept": "conflit_du_travail",
+        "condition": {
+          "f": [
+            "evenement",
+            "conflit_du_travail"
+          ]
+        },
+        "article": "12/conflit-du-travail",
+        "texte": "Toute contestation collective sous quelque forme qu’elle se manifeste dans le cadre des relations du travail, en ce compris : • la grève : arrêt concerté du travail par un groupe de salariés, employés, fonctionnaires ou indépendants • le lock-out : fermeture provisoire décidée par une entreprise afin d’amener son personnel à composer dans un «conflit du travail»."
+      }
+    ],
+    "garanties": [
+      {
+        "id": "attentat_conflit_travail",
+        "nom": "Attentat et conflit du travail",
+        "article": "2.4",
+        "texte": "Nous prenons en charge exclusivement sous cette garantie : • la destruction des biens assurés ou leur détérioration par des personnes prenant part à un attentat ou à un conflit du travail • les conséquences des mesures prises par une autorité légalement constituée pour la sauvegarde et la protection de ces biens, lors de tels événements.",
+        "perimetre": [
+          {
+            "ou": [
+              {
+                "f": [
+                  "evenement",
+                  "attentat"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "conflit_du_travail"
+                ]
+              }
+            ]
+          },
+          {
+            "ou": [
+              {
+                "concept": "contenu"
+              },
+              {
+                "f": [
+                  "bien",
+                  "element_batiment"
+                ]
+              }
+            ]
+          },
+          {
+            "concept": "batiment"
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "2.4",
+            "texte": "Notre garantie est limitée aux montants assurés et en tout état de cause à 1.497.671,24 EUR.",
+            "montant": "1497671.24 EUR"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "f": [
+            "cause_nucleaire",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "2.4-a",
+        "texte": "les dommages causés par des armes ou des engins destinés à exploser par une modification de structure du noyau atomique"
+      },
+      {
+        "condition": {
+          "f": [
+            "graffiti_mur_exterieur",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "2.4-a",
+        "texte": "les graffitis et autres inscriptions sur les murs extérieurs"
+      },
+      {
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "evenement",
+                "vandalisme"
+              ]
+            },
+            {
+              "ou": [
+                {
+                  "f": [
+                    "bien",
+                    "mobilier_jardin"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "serre"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "plantation"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "2.4-a",
+        "texte": "le vandalisme au mobilier extérieur, serres, plantations"
+      }
+    ],
+    "vocabulaire_manquant": [
+      {
+        "variable": "evenement",
+        "valeurs": [
+          "conflit_du_travail"
+        ],
+        "question": "Que s'est-il passé ?",
+        "aide": {
+          "conflit_du_travail": "grève, lock-out, manifestation de travailleurs"
+        },
+        "pourquoi": "2.4",
+        "plus_proche": "attentat : distinct"
+      },
+      {
+        "variable": "cause_nucleaire",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Les dommages ont-ils été causés par des armes ou engins destinés à exploser par modification de la structure du noyau atomique ?",
+        "pourquoi": "Exclusion 2.4-a pour dommages causés par armes ou engins nucléaires",
+        "plus_proche": "cause_dommage : ne contient que gel/autre, ne permet pas d'identifier une cause nucléaire",
+        "aide": {
+          "oui": "explosion nucléaire, bombe atomique, arme nucléaire, engin à fission",
+          "non": "toute autre cause (conventionnelle, incendie, etc.)"
+        }
+      },
+      {
+        "variable": "graffiti_mur_exterieur",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "S'agit-il de graffitis ou autres inscriptions sur les murs extérieurs ?",
+        "pourquoi": "Exclusion 2.4-a pour graffitis et inscriptions sur murs extérieurs",
+        "plus_proche": "type_dommage : ne contient pas la notion de graffiti ou d'inscription murale",
+        "aide": {
+          "oui": "tags, graffitis, inscriptions peintes ou gravées sur les murs extérieurs du bâtiment",
+          "non": "autre type de dommage (bris, rayure, etc.)"
+        }
+      }
+    ],
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "2.4",
+        "texte": "Nous pouvons suspendre cette garantie lorsque nous y sommes autorisés par arrêté ministériel. La suspension prend cours 7 jours après sa notification.",
+        "pourquoi": "suspension de la garantie par arrêté ministériel : procédure de l'assureur, sans effet sur un sinistre déclaré"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.4) : suspension de la garantie par arrêté ministériel : procédure de l'assureur, sans effet sur un sinistre déclaré"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "prolog",
+      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
+    }
+  ]
+}

@@ -81,9 +81,22 @@ def test_exclusion_partielle(contrat):
     assert seul["decision"] == "NON_COUVERT", "si seul le bien exclu est touché, l'exclusion est totale"
 
 
-def test_evenement_non_traduit_jamais_refuse(contrat):
+def contrat_sans(tmp_path, *articles):
+    """Le contrat Foyer sans les articles donnés : un test qui a besoin d'une garantie non traduite la retire
+    lui-même, au lieu de dépendre de l'avancement des traductions (7.63)."""
+    from couverture import redaction
+    texte = prolog.fichier_regles(CONTRAT).read_text(encoding="utf-8")
+    for a in articles:
+        texte = redaction.retirer_article(texte, a)
+    f = tmp_path / "contrat.pl"
+    f.write_text(texte, encoding="utf-8")
+    return Contrat(f)
+
+
+def test_evenement_non_traduit_jamais_refuse(tmp_path):
     """Un événement dont la garantie n'est pas en règles (la tempête) : au plus INCERTAIN, même si une
     garantie traduite refuse. « autre » ne compte pas ; un COUVERT reste couvert."""
+    contrat = contrat_sans(tmp_path, "2.2")
     tempete = {"evenement": ["tempete", "degat_eaux"], "bien": ["element_batiment"], "lieu": ["logement"],
                "cause_eau": "infiltration_exterieure"}
     d = Moteur(contrat, tempete).decider()
@@ -95,7 +108,8 @@ def test_evenement_non_traduit_jamais_refuse(contrat):
     assert Moteur(contrat, feu).decider()["decision"] == "COUVERT"
 
 
-def test_trous_trouves_par_le_golden_v5(contrat):
+def test_trous_trouves_par_le_golden_v5(tmp_path):
+    contrat = contrat_sans(tmp_path, "2.11", "2.12")
     """Les sept erreurs du golden v5 (DEMARCHE 7.30), une par une."""
     eau = {"evenement": ["degat_eaux"], "bien": ["element_batiment"], "lieu": ["logement"]}
     d = lambda f: Moteur(contrat, f).decider()["decision"]

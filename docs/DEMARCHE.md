@@ -2222,6 +2222,65 @@ le modèle), vol (2.10), exclusions générales (1.4). Restent, en trois lots :
   pour chaque valeur, ce qu'un assuré dirait pour qu'on la retienne ; `--accepter-vocabulaire` les reprend. Sans
   elles, le premier banc AXA avait perdu 14 points de lecture. Une variable nouvelle sans aide est « à relire ».
 
+### 7.63 Foyer, lot A : sept garanties rédigées en 19 minutes, relues, acceptées
+
+**La rédaction.** Onze articles (lots A et B) rédigés par Mistral Large, trois à la fois : **19 minutes** en tout
+(une seule garantie AXA en avait pris 27 la veille, seule). Aucun plantage, aucune condition nue. La consigne v6
+a tenu : chaque variable nouvelle est venue avec ses aides de lecture et sa voisine la plus proche.
+
+**Le défaut de la rédaction en parallèle : le vocabulaire.** Chaque proposition ignore les autres. Le même fait
+est arrivé sous plusieurs noms : « à l'extérieur » trois fois (`a_l_exterieur`, `situe_exterieur`,
+`lieu = exterieur`), les constructions délabrées et le logement principal deux fois (2.2 et 2.3), le contrôle des
+citernes deux fois (2.5 et 2.8), les matériaux à pied d'œuvre en variable (2.2) et en bien (2.11). Harmonisé à la
+relecture (`relecture/foyer_lot_a.py`, tracé dans `meta.relecture` de chaque proposition) : 95 faits proposés pour
+les onze articles ; pour les sept du lot A, 50 proposés, **24 gardés** sous un nom commun.
+
+**Les corrections de fond, article par article.**
+- *2.2 tempête* : la définition (vent ≥ 80 km/h ou dégâts dans les 10 km) ne vaut que pour le vent ; la garantie
+  couvre aussi la grêle et la neige. Variable `alea_tempete` (vent, grêle, neige ou glace) et circonstance
+  `si(vent, tempête)`. « Tout objet à l'extérieur » vise les objets, pas le bâtiment (un balcon abîmé par des
+  tuiles, g2-i11, était refusé).
+- *2.3 catastrophes naturelles* : le « risque aggravé » n'exclut pas, il change de régime (Bureau de
+  Tarification) ; en circonstance, il faisait poser une question à chaque inondation : hors décision. La phrase
+  sur les biens reconstruits, que le modèle avait ajoutée à chaque exclusion, concerne l'indemnisation : hors
+  décision.
+- *2.4 attentat* : la circonstance « détruits par des participants » est ce que l'événement désigne ; elle faisait
+  poser la question à chaque fois : retirée.
+- *2.6 électricité* : exclusion des appareils professionnels limitée au bien (un congélateur et un ordinateur
+  grillés : le congélateur reste couvert) ; la garantie du fabricant est à l'assureur de l'établir.
+- *2.8 mazout* : citerne en valeur de `bien` ; les frais d'assainissement des terres sont des frais exclus, pas un
+  sinistre exclu : hors décision.
+- *2.11 dégradations* : `malveillance` est du vandalisme ; les obligations « abri de jardin » et « matériel de
+  jardin » s'appliquaient à tout sinistre : conditionnées.
+- *2.12 mérule* : acceptée telle quelle.
+
+**Trois corrections générales.**
+- Une variable existante qu'un nouvel article emploie est désormais lue pour ses événements aussi :
+  `prevention_gel` servait au mazout mais n'était lue que pour les dégâts des eaux (`etendre_pour`). Une variable
+  proposée par deux articles prend les événements des deux.
+- Le contrôle « la définition de l'événement couvert est employée » reconnaît un concept déjà défini dans les
+  règles du contrat (`concept(vol)` → 12/vol).
+- Les tests qui ont besoin d'une garantie non traduite la retirent eux-mêmes du contrat (`retirer_article`) au
+  lieu de dépendre de l'avancement des traductions : quatre tests supposaient la tempête non traduite.
+
+**Golden v8** : les faits idéaux de trois cas écrits quand ces garanties n'étaient pas traduites ont été complétés
+(g2-p10 : l'usage professionnel ; g2-i11 : le vent ; red-t03 : neige, annexe sans ancrage, non close).
+
+**Règles seules (oracle), Foyer, 97 cas : 100 % justes, 0 couvert à tort, 0 refus à tort, 92 % exactes (87 %
+avant le lot A)** : des « incertain » de cas hors règles deviennent des réponses fermes justes (denrées décongelées,
+fioul, tags sur la porte). AXA inchangé (100 %).
+
+**Le lot B attend.** Les extensions (3.1) et les garanties complémentaires (4) ne s'appliquent qu'**après** un
+sinistre couvert (frais de sauvetage, logement provisoire, séjour temporaire) ; traduites comme des garanties
+ordinaires, elles ont fait passer 25 refus justes à « incertain » au contrôle de non-régression. Il faut au moteur
+la notion de **garantie accessoire** : évaluée seulement si une garantie de base couvre, et qui ne change jamais la
+décision. La responsabilité civile immeuble (2.5) demande, comme la section 5, un vocabulaire de responsabilité
+(tiers lésé, origine du dommage). Le pack multimédia (6.1) demande trois événements nouveaux (chute, heurt, corps
+étranger) et une option des conditions particulières.
+
+**Leçon 77.** Rédiger en parallèle va trois fois plus vite, mais chaque proposition invente son vocabulaire : la
+relecture commence par harmoniser les noms, avant de juger le fond.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 18 nov. 2026, 22 h 40 ; ce qui est fait est dans les sections 7.
@@ -2328,3 +2387,4 @@ Tenu à jour le 18 nov. 2026, 22 h 40 ; ce qui est fait est dans les sections 7.
 74. Chaque variable nouvelle doit apprendre à être lue : la rédaction devrait proposer ses aides en même temps qu'elle.
 75. Sur un contrat neuf, le banc trouve d'abord des erreurs de traduction, puis des erreurs de lecture.
 76. Une exclusion que rien n'évoque reste une réserve ; une exclusion que la déclaration entame devient une question (précise la leçon 56).
+77. Rédiger en parallèle va trois fois plus vite, mais chaque proposition invente son vocabulaire : la relecture commence par harmoniser les noms.

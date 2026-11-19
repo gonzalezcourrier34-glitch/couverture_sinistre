@@ -2,98 +2,96 @@
   "meta": {
     "article": "2.2",
     "modele": "mistral:mistral-large-latest",
-    "date": "2026-11-17",
-    "consigne": "redaction-regles v1"
+    "date": "2026-11-18",
+    "consigne": "redaction-regles v6",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-19",
+      "modifications": [
+        "la définition de la tempête (vent ≥ 80 km/h ou dégâts dans les 10 km) ne vaut que pour le vent : circonstance si(alea_tempete = vent, tempête) ; grêle et neige restent couvertes sans elle",
+        "citation de la circonstance : la définition 12/tempete (au lieu de celle de la garantie)",
+        "vocabulaire harmonisé avec 2.3 et 2.11 : construction_delabree, residence_principale, construction_close, bien = materiaux_construction ; « à l'extérieur » = jardin ou terrasse (règle 3 quater)",
+        "« à tout objet situé à l'extérieur » : les objets, pas le bâtiment (bien ≠ element_batiment ; g2-i11, un balcon abîmé par des tuiles)",
+        "exclusion « constructions non closes » en double : gardée une fois (la plus complète)",
+        "matériaux à pied d'œuvre : portée limitée au bien"
+      ]
+    }
   },
   "proposition": {
     "evenements": [
-      "tempete",
-      "grele",
-      "pression_neige_glace"
+      "tempete"
     ],
     "definitions": [
       {
-        "id": "abri_de_jardin",
-        "nom": "Abri de jardin",
-        "article": "12/abri-de-jardin",
-        "texte": "Ensembe des constructions destinées à l'usage ou la décoration du jardin dont la superficie est inférieure à 60m²."
+        "concept": "tempete",
+        "condition": {
+          "ou": [
+            {
+              "f": [
+                "vent_80_kmh_irm",
+                "oui"
+              ]
+            },
+            {
+              "f": [
+                "vent_dommages_voisins",
+                "oui"
+              ]
+            }
+          ]
+        },
+        "article": "12/tempete",
+        "texte": "• L’action du vent mesurée à une vitesse de pointe d’au moins 80 km/h par la station de l’I.R.M. la plus proche du bâtiment • L’action du vent qui endommage d’autres biens qui sont situés dans les 10 km du bâtiment et qui sont assurables contre le vent de tempête ou présentent une résistance au vent équivalente aux biens assurables."
       }
     ],
     "garanties": [
       {
-        "id": "tempete_grele_pression_neige",
+        "id": "tempete",
         "nom": "Tempête, la grêle, la pression de la neige ou de la glace",
         "article": "2.2",
         "texte": "Nous couvrons les dommages matériels directement causés par les aléas précisés.",
         "perimetre": [
           {
-            "ou": [
-              {
-                "f": [
-                  "evenement",
-                  "tempete"
-                ]
-              },
-              {
-                "f": [
-                  "evenement",
-                  "grele"
-                ]
-              },
-              {
-                "f": [
-                  "evenement",
-                  "pression_neige_glace"
-                ]
-              }
-            ]
-          },
-          {
-            "ou": [
-              {
-                "concept": "batiment"
-              },
-              {
-                "concept": "contenu"
-              },
-              {
-                "concept": "abri_de_jardin"
-              },
-              {
-                "f": [
-                  "lieu",
-                  "abri_jardin"
-                ]
-              }
+            "f": [
+              "evenement",
+              "tempete"
             ]
           }
         ],
-        "circonstances": [],
+        "circonstances": [
+          {
+            "condition": {
+              "si": [
+                {
+                  "f": [
+                    "alea_tempete",
+                    "vent"
+                  ]
+                },
+                {
+                  "concept": "tempete"
+                }
+              ]
+            },
+            "article": "12/tempete",
+            "texte": "L’action du vent mesurée à une vitesse de pointe d’au moins 80 km/h par la station de l’I.R.M. la plus proche du bâtiment"
+          }
+        ],
         "obligations": [],
         "exclusions": [
           {
             "condition": {
               "et": [
                 {
-                  "ou": [
-                    {
-                      "f": [
-                        "construction_delabree",
-                        "oui"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "construction_en_cours_demolition",
-                        "oui"
-                      ]
-                    }
+                  "f": [
+                    "construction_delabree",
+                    "oui"
                   ]
                 },
                 {
                   "non": {
                     "f": [
-                      "logement_principal",
+                      "residence_principale",
                       "oui"
                     ]
                   }
@@ -107,21 +105,31 @@
           },
           {
             "condition": {
-              "f": [
-                "construction_entierement_close_couverte",
-                "non"
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "2.2-a",
-            "texte": "aux constructions non entièrement closes ou couvertes"
-          },
-          {
-            "condition": {
-              "f": [
-                "a_exterieur",
-                "oui"
+              "et": [
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "lieu",
+                        "jardin"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "lieu",
+                        "terrasse"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "non": {
+                    "f": [
+                      "bien",
+                      "element_batiment"
+                    ]
+                  }
+                }
               ]
             },
             "portee": "tout",
@@ -133,14 +141,24 @@
             "condition": {
               "et": [
                 {
-                  "f": [
-                    "lieu",
-                    "annexe"
+                  "ou": [
+                    {
+                      "f": [
+                        "lieu",
+                        "annexe"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "lieu",
+                        "abri_jardin"
+                      ]
+                    }
                   ]
                 },
                 {
                   "f": [
-                    "construction_entierement_close_couverte",
+                    "construction_close",
                     "non"
                   ]
                 }
@@ -154,12 +172,14 @@
           {
             "condition": {
               "f": [
-                "materiaux_pied_oeuvre",
-                "oui"
+                "bien",
+                "materiaux_construction"
               ]
             },
-            "portee": "tout",
-            "a_demander": true,
+            "portee": {
+              "bien": "materiaux_construction"
+            },
+            "a_demander": false,
             "article": "2.2-a",
             "texte": "aux matériaux à pied d’œuvre"
           },
@@ -167,14 +187,24 @@
             "condition": {
               "et": [
                 {
-                  "f": [
-                    "lieu",
-                    "annexe"
+                  "ou": [
+                    {
+                      "f": [
+                        "lieu",
+                        "annexe"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "lieu",
+                        "abri_jardin"
+                      ]
+                    }
                   ]
                 },
                 {
                   "f": [
-                    "annexe_fixee_ancrage_beton",
+                    "annexe_ancree_beton",
                     "non"
                   ]
                 }
@@ -188,7 +218,7 @@
           {
             "condition": {
               "f": [
-                "construction_entierement_close_couverte",
+                "construction_close",
                 "non"
               ]
             },
@@ -200,107 +230,137 @@
         ],
         "limites": [
           {
-            "condition": {
-              "ou": [
-                {
-                  "concept": "abri_de_jardin"
-                },
-                {
-                  "f": [
-                    "lieu",
-                    "abri_jardin"
-                  ]
-                }
-              ]
-            },
-            "plafond": 1000,
             "article": "2.2",
-            "texte": "Nous couvrons dans les limites suivantes les dégâts causés aux biens suivants : Abri de jardin et son éventuel contenu 1.000 EUR"
+            "texte": "Abri de jardin et son éventuel contenu 1.000 EUR",
+            "montant": "1000 EUR"
           }
         ]
       }
     ],
+    "exclusions_communes": [],
     "vocabulaire_manquant": [
-      {
-        "variable": "evenement",
-        "valeurs": [
-          "grele",
-          "pression_neige_glace"
-        ],
-        "question": "L'événement est-il une grêle ou une pression de la neige ou de la glace ?",
-        "pourquoi": "La garantie 2.2 couvre la grêle et la pression de la neige ou de la glace en plus de la tempête"
-      },
       {
         "variable": "construction_delabree",
         "valeurs": [
           "oui",
           "non"
         ],
-        "question": "La construction est-elle délabrée ?",
-        "pourquoi": "Exclusion des constructions délabrées (2.2-a)"
+        "question": "La construction était-elle délabrée ou en cours de démolition ?",
+        "aide": {
+          "oui": "bâtiment en ruine, abandonné, en démolition",
+          "non": "bâtiment en état normal"
+        },
+        "pourquoi": "exclusions 2.2-a, 2.3-a",
+        "plus_proche": "travaux_construction : construire n'est pas démolir"
       },
       {
-        "variable": "construction_en_cours_demolition",
+        "variable": "residence_principale",
         "valeurs": [
           "oui",
           "non"
         ],
-        "question": "La construction est-elle en cours de démolition ?",
-        "pourquoi": "Exclusion des constructions en cours de démolition (2.2-a)"
+        "question": "Ce bâtiment est-il votre logement principal ?",
+        "aide": {
+          "oui": "vous y habitez à l'année",
+          "non": "seconde résidence, bien loué, dépendance"
+        },
+        "pourquoi": "réserve des exclusions 2.2-a, 2.3-a",
+        "plus_proche": "aucune"
       },
       {
-        "variable": "logement_principal",
+        "variable": "construction_close",
         "valeurs": [
           "oui",
           "non"
         ],
-        "question": "Cette construction constitue-t-elle votre logement principal ?",
-        "pourquoi": "Exception à l'exclusion des constructions délabrées ou en démolition (2.2-a)"
+        "question": "Le bâtiment ou l'annexe était-il entièrement clos et couvert ?",
+        "aide": {
+          "oui": "murs, toit, portes et fenêtres en place",
+          "non": "toit ou mur manquant, ouvert sur un côté, chantier, carport"
+        },
+        "pourquoi": "exclusions 2.2-a, 2.3-a",
+        "plus_proche": "fermeture : dit comment on ferme, pas si le bâtiment est clos"
       },
       {
-        "variable": "construction_entierement_close_couverte",
+        "variable": "annexe_ancree_beton",
         "valeurs": [
           "oui",
           "non"
         ],
-        "question": "La construction est-elle entièrement close et couverte ?",
-        "pourquoi": "Exclusion des constructions non entièrement closes ou couvertes (2.2-a)"
+        "question": "L'annexe (abri, remise) est-elle fixée au sol par un ancrage en béton ?",
+        "aide": {
+          "oui": "posée sur une dalle ou des plots en béton",
+          "non": "simplement posée sur le sol"
+        },
+        "pourquoi": "exclusion 2.2-a",
+        "plus_proche": "aucune"
       },
       {
-        "variable": "a_exterieur",
+        "variable": "alea_tempete",
+        "valeurs": [
+          "vent",
+          "grele",
+          "neige_glace"
+        ],
+        "question": "Quel phénomène a causé les dégâts : le vent, la grêle, ou le poids de la neige ou de la glace ?",
+        "aide": {
+          "vent": "tempête, rafales, arbre ou tuiles arrachés par le vent",
+          "grele": "grêlons, impacts de grêle",
+          "neige_glace": "toit ou auvent écrasé par la neige, la glace"
+        },
+        "pourquoi": "2.2 couvre trois aléas ; la définition de la tempête ne vaut que pour le vent",
+        "plus_proche": "evenement = tempete : ne distingue pas les trois"
+      },
+      {
+        "variable": "vent_80_kmh_irm",
         "valeurs": [
           "oui",
           "non"
         ],
-        "question": "L'objet est-il situé à l'extérieur ?",
-        "pourquoi": "Exclusion des objets situés à l'extérieur (2.2-a)"
+        "question": "Le vent a-t-il atteint une vitesse de pointe d'au moins 80 km/h selon la station IRM la plus proche du bâtiment ?",
+        "pourquoi": "définition de la tempête (critère 1 : vent mesuré à 80 km/h)",
+        "plus_proche": "aucune variable ne mesure la vitesse du vent",
+        "aide": {
+          "oui": "le vent a soufflé à 80 km/h ou plus selon les relevés officiels de la station météo la plus proche",
+          "non": "le vent était inférieur à 80 km/h selon les relevés officiels"
+        }
       },
       {
-        "variable": "materiaux_pied_oeuvre",
+        "variable": "vent_dommages_voisins",
         "valeurs": [
           "oui",
           "non"
         ],
-        "question": "S'agit-il de matériaux à pied d'œuvre ?",
-        "pourquoi": "Exclusion des matériaux à pied d'œuvre (2.2-a)"
+        "question": "Le vent a-t-il endommagé d'autres biens situés dans les 10 km du bâtiment (assurables contre le vent ou de résistance équivalente) ?",
+        "pourquoi": "définition de la tempête (critère 2 alternatif : dommages aux voisins dans les 10 km)",
+        "plus_proche": "aucune variable ne décrit les dommages causés aux biens voisins",
+        "aide": {
+          "oui": "le vent a causé des dégâts visibles chez les voisins dans un rayon de 10 km (toits arrachés, arbres tombés sur des biens)",
+          "non": "aucun dommage voisin constaté dans les 10 km"
+        }
       },
       {
-        "variable": "annexe_fixee_ancrage_beton",
+        "variable": "bien",
         "valeurs": [
-          "oui",
-          "non"
+          "citerne",
+          "materiaux_construction"
         ],
-        "question": "L'annexe est-elle fixée au sol par un ancrage en béton ?",
-        "pourquoi": "Exclusion des annexes non fixées au sol par un ancrage en béton (2.2-a)"
+        "question": "Quels biens ?",
+        "aide": {
+          "citerne": "cuve à mazout, citerne",
+          "materiaux_construction": "matériaux de construction pas encore posés : briques, ciment, tuiles sur le chantier"
+        },
+        "pourquoi": "2.8-b ; 2.2-a et 2.11 (« matériaux à pied d'œuvre »)",
+        "plus_proche": "canalisation, element_batiment : déjà posés"
       }
     ],
     "non_traduit": []
   },
   "controles": [
     {
-      "gravite": "bloquant",
-      "controle": "structure",
-      "message": "'concept'"
+      "gravite": "à relire",
+      "controle": "prolog",
+      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
     }
   ]
 }

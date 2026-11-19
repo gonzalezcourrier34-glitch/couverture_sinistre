@@ -18,7 +18,8 @@
         "attentat",
         "fumee",
         "vandalisme",
-        "merule"
+        "merule",
+        "conflit_du_travail"
       ],
       "question": "Que s'est-il passé (la cause, et le dommage s'il est d'une autre nature) ?",
       "aide": {
@@ -32,7 +33,8 @@
         "fumee": "suie ou fumée qui salit ou noircit, sans incendie",
         "autre": "rien de ce qui précède",
         "vandalisme": "dégradations volontaires par un tiers : tags, rayures, portes ou vitres abîmées, sans vol",
-        "merule": "champignon (mérule) qui attaque le bois du bâtiment"
+        "merule": "champignon (mérule) qui attaque le bois du bâtiment",
+        "conflit_du_travail": "grève, lock-out, manifestation de travailleurs"
       }
     },
     "bien": {
@@ -68,7 +70,11 @@
         "plantation",
         "mazout",
         "cles",
-        "remorque"
+        "remorque",
+        "citerne",
+        "materiaux_construction",
+        "denrees_alimentaires",
+        "appareil_informatique"
       ],
       "question": "Quels biens sont endommagés ou volés ?",
       "parents": {
@@ -125,7 +131,11 @@
         "plantation": "plantes, arbres, arbustes, haies du jardin",
         "mazout": "fioul (mazout) de chauffage, dans la cuve",
         "cles": "les clés elles-mêmes, volées ou perdues (pas les clés dont le voleur s'est servi, ni la serrure)",
-        "vehicule_moteur": "voiture, moto, scooter (pas une tondeuse ni un autre engin de jardinage : objet_divers)"
+        "vehicule_moteur": "voiture, moto, scooter (pas une tondeuse ni un autre engin de jardinage : objet_divers)",
+        "citerne": "cuve à mazout, citerne",
+        "materiaux_construction": "matériaux de construction pas encore posés : briques, ciment, tuiles sur le chantier",
+        "denrees_alimentaires": "aliments du frigo ou du congélateur",
+        "appareil_informatique": "ordinateur, portable, tablette, imprimante"
       }
     },
     "lieu": {
@@ -167,7 +177,8 @@
       ],
       "question": "Comment le local était-il fermé ?",
       "pour": [
-        "vol"
+        "vol",
+        "vandalisme"
       ]
     },
     "serrure_surete": {
@@ -177,7 +188,8 @@
       ],
       "question": "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ?",
       "pour": [
-        "vol"
+        "vol",
+        "vandalisme"
       ],
       "aide": {
         "oui": "serrure à cylindre ou à pompe, verrou de sûreté, fermée à clé",
@@ -193,7 +205,8 @@
       "pour": [
         "vol",
         "bris",
-        "attentat"
+        "attentat",
+        "vandalisme"
       ]
     },
     "violence": {
@@ -229,9 +242,13 @@
         "tiers",
         "assure",
         "famille",
-        "personnel_prive"
+        "personnel_prive",
+        "locataire"
       ],
-      "question": "Qui est l'auteur ?"
+      "question": "Qui est l'auteur ?",
+      "aide": {
+        "locataire": "la personne qui loue le logement, ou quelqu'un vivant chez elle"
+      }
     },
     "proprietaire": {
       "valeurs": [
@@ -281,7 +298,8 @@
       ],
       "question": "Les portes extérieures étaient-elles fermées à clé ?",
       "pour": [
-        "vol"
+        "vol",
+        "vandalisme"
       ]
     },
     "fenetres_fermees": {
@@ -291,7 +309,8 @@
       ],
       "question": "Les fenêtres et autres ouvertures facilement accessibles étaient-elles fermées ?",
       "pour": [
-        "vol"
+        "vol",
+        "vandalisme"
       ]
     },
     "cles_a_proximite": {
@@ -301,7 +320,8 @@
       ],
       "question": "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?",
       "pour": [
-        "vol"
+        "vol",
+        "vandalisme"
       ]
     },
     "flammes": {
@@ -353,7 +373,8 @@
       ],
       "question": "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ?",
       "pour": [
-        "degat_eaux"
+        "degat_eaux",
+        "mazout"
       ]
     },
     "cause_eau": {
@@ -533,7 +554,8 @@
       "question": "L'assuré n'occupe-t-il qu'une partie du bâtiment (un appartement dans un immeuble) ?",
       "pour": [
         "vol",
-        "vandalisme"
+        "vandalisme",
+        "catastrophe_naturelle"
       ],
       "aide": {
         "oui": "vous habitez un appartement, ou une partie d'un bâtiment partagé avec d'autres occupants",
@@ -612,6 +634,342 @@
         "non"
       ],
       "question": "Les biens volés avaient-ils été confiés au concierge (ou à la personne qui en fait fonction) ?",
+      "pour": [
+        "vol",
+        "vandalisme"
+      ]
+    },
+    "merule_apres_prise_effet": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La mérule est-elle survenue après la prise d'effet de la garantie ?",
+      "aide": {
+        "oui": "la mérule est apparue après le début du contrat, après la date de prise d'effet",
+        "non": "la mérule existait déjà avant la prise d'effet du contrat"
+      },
+      "pour": [
+        "merule"
+      ]
+    },
+    "construction_delabree": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La construction était-elle délabrée ou en cours de démolition ?",
+      "aide": {
+        "oui": "bâtiment en ruine, abandonné, en démolition",
+        "non": "bâtiment en état normal"
+      },
+      "pour": [
+        "tempete",
+        "catastrophe_naturelle"
+      ]
+    },
+    "residence_principale": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Ce bâtiment est-il votre logement principal ?",
+      "aide": {
+        "oui": "vous y habitez à l'année",
+        "non": "seconde résidence, bien loué, dépendance"
+      },
+      "pour": [
+        "tempete",
+        "catastrophe_naturelle"
+      ]
+    },
+    "construction_close": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le bâtiment ou l'annexe était-il entièrement clos et couvert ?",
+      "aide": {
+        "oui": "murs, toit, portes et fenêtres en place",
+        "non": "toit ou mur manquant, ouvert sur un côté, chantier, carport"
+      },
+      "pour": [
+        "tempete",
+        "catastrophe_naturelle"
+      ]
+    },
+    "annexe_ancree_beton": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'annexe (abri, remise) est-elle fixée au sol par un ancrage en béton ?",
+      "aide": {
+        "oui": "posée sur une dalle ou des plots en béton",
+        "non": "simplement posée sur le sol"
+      },
+      "pour": [
+        "tempete"
+      ]
+    },
+    "alea_tempete": {
+      "valeurs": [
+        "vent",
+        "grele",
+        "neige_glace"
+      ],
+      "question": "Quel phénomène a causé les dégâts : le vent, la grêle, ou le poids de la neige ou de la glace ?",
+      "aide": {
+        "vent": "tempête, rafales, arbre ou tuiles arrachés par le vent",
+        "grele": "grêlons, impacts de grêle",
+        "neige_glace": "toit ou auvent écrasé par la neige, la glace"
+      },
+      "pour": [
+        "tempete"
+      ]
+    },
+    "vent_80_kmh_irm": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le vent a-t-il atteint une vitesse de pointe d'au moins 80 km/h selon la station IRM la plus proche du bâtiment ?",
+      "aide": {
+        "oui": "le vent a soufflé à 80 km/h ou plus selon les relevés officiels de la station météo la plus proche",
+        "non": "le vent était inférieur à 80 km/h selon les relevés officiels"
+      },
+      "pour": [
+        "tempete"
+      ]
+    },
+    "vent_dommages_voisins": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le vent a-t-il endommagé d'autres biens situés dans les 10 km du bâtiment (assurables contre le vent ou de résistance équivalente) ?",
+      "aide": {
+        "oui": "le vent a causé des dégâts visibles chez les voisins dans un rayon de 10 km (toits arrachés, arbres tombés sur des biens)",
+        "non": "aucun dommage voisin constaté dans les 10 km"
+      },
+      "pour": [
+        "tempete"
+      ]
+    },
+    "reparation_loi_particuliere": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La réparation des dommages est-elle organisée par des lois particulières ou conventions internationales ?",
+      "aide": {
+        "oui": "oui, couvert par loi spéciale ou convention internationale",
+        "non": "non"
+      },
+      "pour": [
+        "catastrophe_naturelle"
+      ]
+    },
+    "batiment_construit_plus_18_mois_apres_classement": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le bâtiment a-t-il été construit plus de 18 mois après la publication au Moniteur belge du classement de la zone comme zone à risque ?",
+      "aide": {
+        "oui": "construit plus de 18 mois après le classement",
+        "non": "construit avant ou dans les 18 mois suivant le classement"
+      },
+      "pour": [
+        "catastrophe_naturelle"
+      ]
+    },
+    "extension_sol_avant_classement": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "S'agit-il d'une extension au sol d'un bien existant avant la date de classement de la zone à risque ?",
+      "aide": {
+        "oui": "extension au sol construite avant le classement",
+        "non": "autre cas"
+      },
+      "pour": [
+        "catastrophe_naturelle"
+      ]
+    },
+    "contenu_moins_10cm_sol": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le contenu était-il entreposé à moins de 10 cm du sol ?",
+      "aide": {
+        "oui": "posé à moins de 10 cm du sol",
+        "non": "surélevé à plus de 10 cm du sol"
+      },
+      "pour": [
+        "catastrophe_naturelle"
+      ]
+    },
+    "cause_nucleaire": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les dommages ont-ils été causés par des armes ou engins destinés à exploser par modification de la structure du noyau atomique ?",
+      "aide": {
+        "oui": "explosion nucléaire, bombe atomique, arme nucléaire, engin à fission",
+        "non": "toute autre cause (conventionnelle, incendie, etc.)"
+      },
+      "pour": [
+        "attentat",
+        "conflit_du_travail"
+      ]
+    },
+    "graffiti_mur_exterieur": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "S'agit-il de graffitis ou autres inscriptions sur les murs extérieurs ?",
+      "aide": {
+        "oui": "tags, graffitis, inscriptions peintes ou gravées sur les murs extérieurs du bâtiment",
+        "non": "autre type de dommage (bris, rayure, etc.)"
+      },
+      "pour": [
+        "attentat",
+        "conflit_du_travail"
+      ]
+    },
+    "usage_professionnel": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'usage du bien endommagé est-il professionnel ?",
+      "aide": {
+        "oui": "le bien sert pour l'activité professionnelle, le travail",
+        "non": "le bien sert uniquement pour la vie privée, les loisirs"
+      },
+      "pour": [
+        "electricite"
+      ]
+    },
+    "garantie_fabricant": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les dégâts sont-ils couverts par la garantie du fabricant ou du fournisseur ?",
+      "aide": {
+        "oui": "le fabricant ou le vendeur prend en charge la réparation (garantie constructeur, garantie commerciale)",
+        "non": "pas de garantie externe, seul l'assurance peut intervenir"
+      },
+      "pour": [
+        "electricite"
+      ]
+    },
+    "cause_perte_alimentaire": {
+      "valeurs": [
+        "arret_6h",
+        "derangement_installation",
+        "coupure_soudaine_reseau",
+        "autre"
+      ],
+      "question": "Quelle est la cause de la perte des denrées alimentaires ?",
+      "aide": {
+        "arret_6h": "coupure de courant ou arrêt de l'installation d'au moins 6 heures",
+        "derangement_installation": "dérangement de l'installation de réfrigération ou congélation provoqué par l'électricité",
+        "coupure_soudaine_reseau": "coupure de courant soudaine et imprévisible due à un dysfonctionnement du réseau de distribution",
+        "autre": "autre cause liée à l'action de l'électricité"
+      },
+      "pour": [
+        "electricite"
+      ]
+    },
+    "bien_a_l_origine_sinistre": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le bien endommagé est-il à l'origine du sinistre (la cause du sinistre) ?",
+      "aide": {
+        "oui": "c'est la canalisation ou la citerne qui a fui et causé les dégâts",
+        "non": "le bien endommagé n'est pas la cause, il subit le dommage"
+      },
+      "pour": [
+        "mazout"
+      ]
+    },
+    "periode_gel": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le sinistre s'est-il produit en période de gel ?",
+      "aide": {
+        "oui": "il gelait au moment des faits",
+        "non": "il ne gelait pas au moment des faits"
+      },
+      "pour": [
+        "mazout"
+      ]
+    },
+    "controle_citerne_conforme": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La citerne avait-elle passé les contrôles réglementaires ?",
+      "aide": {
+        "oui": "contrôle périodique fait, attestation",
+        "non": "contrôle non fait ou citerne non conforme"
+      },
+      "pour": [
+        "mazout"
+      ]
+    },
+    "batiment_vacant_90j": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le bâtiment était-il libre de toute occupation depuis plus de 90 jours au moment du sinistre ?",
+      "aide": {
+        "oui": "bâtiment vide/inoccupé depuis plus de 90 jours",
+        "non": "occupé ou vacant depuis moins de 90 jours"
+      },
+      "pour": [
+        "vol",
+        "vandalisme"
+      ]
+    },
+    "dispositifs_antivol_installes": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les dispositifs de protection antivol imposés ont-ils été installés, maintenus en bon état et utilisés en cas d'absence ?",
+      "aide": {
+        "oui": "alarme installée, entretenue et activée",
+        "non": "absence ou non-utilisation"
+      },
+      "pour": [
+        "vol",
+        "vandalisme"
+      ]
+    },
+    "materiel_jardin_range": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le matériel de jardin était-il rangé dans un local fermé à clé ?",
+      "aide": {
+        "oui": "tondeuse, outils rangés dans l'abri ou le garage fermé",
+        "non": "laissés dehors ou dans un local ouvert"
+      },
       "pour": [
         "vol",
         "vandalisme"

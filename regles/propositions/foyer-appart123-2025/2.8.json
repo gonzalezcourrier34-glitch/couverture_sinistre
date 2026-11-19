@@ -1,0 +1,222 @@
+{
+  "meta": {
+    "article": "2.8",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-18",
+    "consigne": "redaction-regles v6",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-19",
+      "modifications": [
+        "variable citerne → bien = citerne (valeur nouvelle de bien) ; respect_reglementation_citerne → controle_citerne_conforme (nom partagé avec 2.5)",
+        "frais d'assainissement des terres : hors décision (des frais exclus, pas un sinistre exclu)",
+        "prevention_gel : variable existante, désormais lue aussi pour le mazout (accepter étend « pour »)"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "mazout"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "degats_mazout",
+        "nom": "Dégâts causés par le mazout",
+        "article": "2.8",
+        "texte": "Nous couvrons les dégâts causés par tout combustible liquide de chauffage du bâtiment",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "mazout"
+            ]
+          },
+          {
+            "concept": "batiment"
+          }
+        ],
+        "circonstances": [],
+        "obligations": [
+          {
+            "condition": {
+              "si": [
+                {
+                  "f": [
+                    "periode_gel",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "prevention_gel",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "lien_causal": true,
+            "article": "2.8-a",
+            "texte": "En période de gel, vous devez : • maintenir une température positive dans tous les locaux, ou • vidanger les installations hydrauliques et de chauffage, ou • isoler efficacement ces installations contre le gel. Nous refuserons notre intervention s’il existe un lien causal direct entre le non-respect de ces obligations et la survenance du sinistre."
+          }
+        ],
+        "exclusions": [
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "bien",
+                    "canalisation"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien_a_l_origine_sinistre",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": {
+              "bien": "canalisation"
+            },
+            "a_demander": true,
+            "article": "2.8-b",
+            "texte": "les dégâts causés aux citernes ou canalisations qui sont à l'origine du sinistre"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "bien",
+                    "citerne"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien_a_l_origine_sinistre",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": {
+              "bien": "citerne"
+            },
+            "a_demander": true,
+            "article": "2.8-b",
+            "texte": "les dégâts causés aux citernes ou canalisations qui sont à l'origine du sinistre"
+          },
+          {
+            "condition": {
+              "f": [
+                "controle_citerne_conforme",
+                "non"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.8-b",
+            "texte": "les dégâts causés en cas de non-respect de la réglementation applicable au contrôle des citernes"
+          },
+          {
+            "condition": {
+              "f": [
+                "bien",
+                "mazout"
+              ]
+            },
+            "portee": {
+              "bien": "mazout"
+            },
+            "a_demander": true,
+            "article": "2.8-b",
+            "texte": "la pertes de combustible liquide de chauffage subie à l’occasion d’un sinistre"
+          }
+        ],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "bien",
+        "valeurs": [
+          "citerne",
+          "materiaux_construction"
+        ],
+        "question": "Quels biens ?",
+        "aide": {
+          "citerne": "cuve à mazout, citerne",
+          "materiaux_construction": "matériaux de construction pas encore posés : briques, ciment, tuiles sur le chantier"
+        },
+        "pourquoi": "2.8-b ; 2.2-a et 2.11 (« matériaux à pied d'œuvre »)",
+        "plus_proche": "canalisation, element_batiment : déjà posés"
+      },
+      {
+        "variable": "bien_a_l_origine_sinistre",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le bien endommagé est-il à l'origine du sinistre (la cause du sinistre) ?",
+        "pourquoi": "l'exclusion ne vise que les citernes ou canalisations qui sont à l'origine du sinistre, pas celles qui subissent un dommage",
+        "plus_proche": "cause_dommage : indique la cause naturelle (gel) mais pas si le bien lui-même est la cause matérielle",
+        "aide": {
+          "oui": "c'est la canalisation ou la citerne qui a fui et causé les dégâts",
+          "non": "le bien endommagé n'est pas la cause, il subit le dommage"
+        }
+      },
+      {
+        "variable": "periode_gel",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le sinistre s'est-il produit en période de gel ?",
+        "pourquoi": "condition d'application de l'obligation de prévention spécifique au gel (clause 2.8-a)",
+        "plus_proche": "cause_dommage : gel indique que le gel est la cause du dommage, pas seulement la période",
+        "aide": {
+          "oui": "il gelait au moment des faits",
+          "non": "il ne gelait pas au moment des faits"
+        }
+      },
+      {
+        "variable": "controle_citerne_conforme",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La citerne avait-elle passé les contrôles réglementaires ?",
+        "aide": {
+          "oui": "contrôle périodique fait, attestation",
+          "non": "contrôle non fait ou citerne non conforme"
+        },
+        "pourquoi": "2.8-b (et 2.5-a)",
+        "plus_proche": "aucune"
+      }
+    ],
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "2.8-b",
+        "texte": "les frais liés à l’assainissement des terres polluées (évacuées ou non), en ce compris leur déblaiement et leur transport",
+        "pourquoi": "des frais exclus, pas un sinistre exclu : sans effet sur la couverture"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.8-b) : des frais exclus, pas un sinistre exclu : sans effet sur la couverture"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "prolog",
+      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
+    }
+  ]
+}

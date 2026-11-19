@@ -1,0 +1,353 @@
+{
+  "meta": {
+    "article": "2.11",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-18",
+    "consigne": "redaction-regles v6",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-19",
+      "modifications": [
+        "evenement = malveillance retiré : le vandalisme est un acte de malveillance ; périmètre concept(vol) ou vandalisme (la définition 12/vol est employée, comme le demandait le contrôle)",
+        "obligations de l'abri de jardin et du matériel de jardin : conditionnées (si lieu = abri de jardin ; si bien = mobilier de jardin) ; non conditionnées, elles s'appliquaient à tout sinistre",
+        "bien = materiaux_pied_oeuvre → materiaux_construction (partagé avec 2.2) ; lieu = exterieur → jardin ou terrasse",
+        "materiel_jardin_rangé → materiel_jardin_range (pas d'accent dans un nom de variable)"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "vol",
+      "vandalisme"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "degradations_vol_vandalisme",
+        "nom": "Dégradations immobilières suite à des actes de vol, vandalisme et malveillance",
+        "article": "2.11",
+        "texte": "Nous couvrons les dégradations immobilières sauf les dégâts causés : • au bâtiment libre de toute occupation depuis plus de 90 jours au moment du sinistre • aux matériaux à pied d'œuvre se trouvant à l’extérieur ou dans un bâtiment non fermé à clé • par ou avec la complicité d'un assuré, d'un descendant ou ascendant, du conjoint ou partenaire de chacun d'eux ou d'un locataire ou des personnes vivant à son foyer.",
+        "perimetre": [
+          {
+            "ou": [
+              {
+                "concept": "vol"
+              },
+              {
+                "f": [
+                  "evenement",
+                  "vandalisme"
+                ]
+              }
+            ]
+          },
+          {
+            "f": [
+              "bien",
+              "element_batiment"
+            ]
+          },
+          {
+            "concept": "batiment"
+          }
+        ],
+        "circonstances": [],
+        "obligations": [
+          {
+            "condition": {
+              "si": [
+                {
+                  "f": [
+                    "absence",
+                    "oui"
+                  ]
+                },
+                {
+                  "et": [
+                    {
+                      "f": [
+                        "portes_fermees",
+                        "oui"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "fenetres_fermees",
+                        "oui"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "exception": {
+              "f": [
+                "effraction",
+                "oui"
+              ]
+            },
+            "lien_causal": true,
+            "article": "2.11-a",
+            "texte": "en cas d’absence, fermer à clé ou au moyen d'un dispositif électronique toutes les portes extérieures du bâtiment. Si seulement une partie du bâtiment est occupée par l’assuré, les portes donnant sur les parties communes doivent être fermées de la même manière. Vous devez de même fermer correctement les fenêtres, oscillo-battants, soupiraux et autres ouvertures du bâtiment facilement accessibles"
+          },
+          {
+            "condition": {
+              "non": {
+                "f": [
+                  "cles_a_proximite",
+                  "oui"
+                ]
+              }
+            },
+            "exception": {
+              "f": [
+                "effraction",
+                "oui"
+              ]
+            },
+            "lien_causal": true,
+            "article": "2.11-a",
+            "texte": "ne pas laisser les clés d'accès aux locaux à proximité de ceux-ci"
+          },
+          {
+            "condition": {
+              "si": [
+                {
+                  "f": [
+                    "lieu",
+                    "abri_jardin"
+                  ]
+                },
+                {
+                  "f": [
+                    "serrure_surete",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "exception": {
+              "f": [
+                "effraction",
+                "oui"
+              ]
+            },
+            "lien_causal": true,
+            "article": "2.11-a",
+            "texte": "fermer l’abri de jardin à l’aide d’une serrure de sûreté"
+          },
+          {
+            "condition": {
+              "si": [
+                {
+                  "f": [
+                    "bien",
+                    "mobilier_jardin"
+                  ]
+                },
+                {
+                  "f": [
+                    "materiel_jardin_range",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "exception": {
+              "f": [
+                "effraction",
+                "oui"
+              ]
+            },
+            "lien_causal": true,
+            "article": "2.11-a",
+            "texte": "ranger le matériel de jardin dans un local fermé à clé lorsqu’il n’est pas utilisé"
+          },
+          {
+            "condition": {
+              "f": [
+                "dispositifs_antivol_installes",
+                "oui"
+              ]
+            },
+            "lien_causal": true,
+            "article": "2.11-a",
+            "texte": "installer les dispositifs de protection antivol que, le cas échéant, nous imposons et qui sont mentionnés en conditions particulières, les maintenir en bon état de fonctionnement et les utiliser en cas d’absence"
+          }
+        ],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "batiment_vacant_90j",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.11",
+            "texte": "au bâtiment libre de toute occupation depuis plus de 90 jours au moment du sinistre"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "bien",
+                    "materiaux_construction"
+                  ]
+                },
+                {
+                  "ou": [
+                    {
+                      "ou": [
+                        {
+                          "f": [
+                            "lieu",
+                            "jardin"
+                          ]
+                        },
+                        {
+                          "f": [
+                            "lieu",
+                            "terrasse"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "f": [
+                        "fermeture",
+                        "aucune"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "portee": {
+              "bien": "materiaux_construction"
+            },
+            "a_demander": false,
+            "article": "2.11",
+            "texte": "aux matériaux à pied d'œuvre se trouvant à l’extérieur ou dans un bâtiment non fermé à clé"
+          },
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "auteur",
+                    "assure"
+                  ]
+                },
+                {
+                  "f": [
+                    "auteur",
+                    "famille"
+                  ]
+                },
+                {
+                  "f": [
+                    "auteur",
+                    "locataire"
+                  ]
+                },
+                {
+                  "f": [
+                    "auteur",
+                    "personnel_prive"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.11",
+            "texte": "par ou avec la complicité d'un assuré, d'un descendant ou ascendant, du conjoint ou partenaire de chacun d'eux ou d'un locataire ou des personnes vivant à son foyer"
+          }
+        ],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "batiment_vacant_90j",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le bâtiment était-il libre de toute occupation depuis plus de 90 jours au moment du sinistre ?",
+        "pourquoi": "exclusion du bâtiment vacant depuis plus de 90 jours",
+        "plus_proche": "occupation_irreguliere : ne mesure pas la durée de vacance",
+        "aide": {
+          "oui": "bâtiment vide/inoccupé depuis plus de 90 jours",
+          "non": "occupé ou vacant depuis moins de 90 jours"
+        }
+      },
+      {
+        "variable": "dispositifs_antivol_installes",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Les dispositifs de protection antivol imposés ont-ils été installés, maintenus en bon état et utilisés en cas d'absence ?",
+        "pourquoi": "obligation de prévention des dispositifs antivol",
+        "plus_proche": "aucune variable existante",
+        "aide": {
+          "oui": "alarme installée, entretenue et activée",
+          "non": "absence ou non-utilisation"
+        }
+      },
+      {
+        "variable": "materiel_jardin_range",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le matériel de jardin était-il rangé dans un local fermé à clé ?",
+        "aide": {
+          "oui": "tondeuse, outils rangés dans l'abri ou le garage fermé",
+          "non": "laissés dehors ou dans un local ouvert"
+        },
+        "pourquoi": "2.11-a",
+        "plus_proche": "fermeture : dit comment le local est fermé, pas si le matériel y était"
+      },
+      {
+        "variable": "auteur",
+        "valeurs": [
+          "locataire"
+        ],
+        "question": "Qui est l'auteur ?",
+        "aide": {
+          "locataire": "la personne qui loue le logement, ou quelqu'un vivant chez elle"
+        },
+        "pourquoi": "2.11",
+        "plus_proche": "tiers"
+      },
+      {
+        "variable": "bien",
+        "valeurs": [
+          "citerne",
+          "materiaux_construction"
+        ],
+        "question": "Quels biens ?",
+        "aide": {
+          "citerne": "cuve à mazout, citerne",
+          "materiaux_construction": "matériaux de construction pas encore posés : briques, ciment, tuiles sur le chantier"
+        },
+        "pourquoi": "2.8-b ; 2.2-a et 2.11 (« matériaux à pied d'œuvre »)",
+        "plus_proche": "canalisation, element_batiment : déjà posés"
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "à relire",
+      "controle": "prolog",
+      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
+    }
+  ]
+}
