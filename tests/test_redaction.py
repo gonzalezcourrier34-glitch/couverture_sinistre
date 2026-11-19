@@ -250,6 +250,14 @@ def test_hors_decision_cite_et_non_bloquant():
     assert any("hors décision" in p["message"] for p in bloquants(controles(prop), "citation"))
 
 
+def test_garantie_accessoire_en_prolog():
+    prop = copy.deepcopy(BONNE)
+    prop["garanties"][0]["accessoire"] = True
+    pl = redaction.en_prolog(prop, "4")
+    assert "accessoire(tempete_batiment)." in pl
+    assert "evenement_traduit(" not in pl, "des frais accessoires ne traduisent pas l'événement (7.68)"
+
+
 def test_exclusion_oubliee_bloque():
     """La faute la plus coûteuse : une exclusion de la liste oubliée en silence."""
     assert bloquants(controles({**BONNE, "non_traduit": []}), "couverture"), "matériaux à pied d'œuvre : ni traduit ni déclaré"
@@ -336,7 +344,7 @@ def test_jeu_redaction_coherent():
 def test_consigne_de_redaction_versionnee():
     from couverture.consignes import CONSIGNES
 
-    assert CONSIGNES["couverture-redaction-regles"][2] == "v7"
+    assert CONSIGNES["couverture-redaction-regles"][2] == "v8"
 
 
 # --- Après la première rédaction réelle (Mistral Large, 17 nov. 2026, docs/DEMARCHE.md 7.20) ---------------

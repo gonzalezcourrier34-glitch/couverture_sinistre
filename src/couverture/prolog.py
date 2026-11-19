@@ -633,6 +633,12 @@ class PipelineRegles:
         else:
             motif = {"COUVERT": "Couvert. ", "NON_COUVERT": "Non couvert. ", "INCERTAIN": "À préciser. "}[decision.value] \
                 + " ; ".join(motifs[:3]) + "."
+        accessoires = d.get("accessoires") or []
+        if accessoires and decision == Decision.COUVERT:
+            # 7.68 : ce qui peut s'ajouter à la garantie qui couvre, sans changer la décision.
+            motif += " Peuvent s'y ajouter : " + " ; ".join(
+                f"« {a['garantie']} » ({a['article']})" + (" sous réserve de précisions" if a.get("decision") == "INCERTAIN"
+                                                          or a.get("reserves") else "") for a in accessoires[:4]) + "."
         if non_traduits:
             evts = ", ".join(non_traduits)
             motif = (f"À examiner par un gestionnaire : l'événement « {evts} » relève d'une garantie qui n'est pas "

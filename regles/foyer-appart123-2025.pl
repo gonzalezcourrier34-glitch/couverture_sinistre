@@ -15,7 +15,7 @@
 */
 
 :- discontiguous definition/4, precision/3, garantie/4, perimetre/2, circonstance/4,
-                 obligation/6, exclusion/6, limite/4, evenement_traduit/1.
+                 obligation/6, exclusion/6, limite/4, evenement_traduit/1, accessoire/1.
 
 %  Les événements dont les garanties sont traduites ici. Un autre événement déclaré (tempête, bris de
 %  vitrage…) relève d'une garantie qui n'est pas encore en règles : le moteur ne conclut alors pas

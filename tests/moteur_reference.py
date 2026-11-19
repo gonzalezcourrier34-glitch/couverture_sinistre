@@ -342,11 +342,23 @@ class Moteur:
         nt = sorted(e for e in self.faits.get("evenement", set()) if e != "autre" and e not in traduits)
         if nt and d["decision"] != "COUVERT":
             d.update(decision="INCERTAIN", non_traduits=nt, aucune=False)
+        d["accessoires"] = []
+        if d["decision"] == "COUVERT":           # 7.68 : une garantie accessoire ne joue qu'après un sinistre couvert
+            for g in self.c.regles("garantie", 4):
+                if g.args[0] in self.accessoires():
+                    r = self.garantie(g.args[0])
+                    if r["rattachement"] != "hors" and r["decision"] != "NON_COUVERT":
+                        d["accessoires"].append({**r, "id": g.args[0]})
         return d
+
+    def accessoires(self) -> set:
+        return {a.args[0] for a in self.c.regles("accessoire", 1)}
 
     def combiner(self) -> dict:
         rs = []
         for g in self.c.regles("garantie", 4):
+            if g.args[0] in self.accessoires():
+                continue
             r = self.garantie(g.args[0])
             r["id"] = g.args[0]
             rs.append(r)

@@ -38,7 +38,7 @@ from .texte import normaliser
 from .validation import _compact, extrait_present, passage_exact
 
 PROPOSITIONS = prolog.DOSSIER / "propositions"
-VERSION = "v7"
+VERSION = "v8"
 IDENT = re.compile(r"^[a-z][a-z0-9_]*$")
 BLOQUANT, A_RELIRE, INFO = "bloquant", "à relire", "info"
 
@@ -51,6 +51,7 @@ Une garantie a :
 - des obligations de prévention : ce que l'assuré doit faire ; « exception » est ce qui l'excuse (ou null) ; « lien_causal » vaut true si le contrat ne refuse que s'il y a un lien causal avec le sinistre ;
 - des exclusions : « portee » vaut "tout", ou {"bien": "valeur"} si elle n'exclut qu'un bien ; « a_demander » vaut true si l'on doit poser la question quand le fait est inconnu (circonstance que le déclarant ne mentionnerait pas de lui-même), false sinon ;
 - des limites : un plafond, sans condition.
+Une garantie qui ne joue qu'après un sinistre couvert par une autre (frais de sauvetage, de déblai, de logement provisoire, extension à un séjour temporaire, pertes indirectes) porte "accessoire": true : elle ne décide pas si le sinistre est couvert, elle dit ce qui s'y ajoute. Ne mets pas dans son périmètre tous les événements du contrat.
 Les exclusions d'un article (« vols exclus ») valent pour TOUTES ses garanties, extensions comprises : mets-les dans "exclusions_communes", pas dans une seule garantie. N'attache à une garantie que les exclusions qui ne valent que pour elle.
 Une condition est un terme JSON : {"f": ["variable", "valeur"]}, {"et": [c1, c2]}, {"ou": [c1, c2]}, {"non": c}, {"si": [a, b]} (si a alors b), {"concept": "nom"} (une définition).
 La logique a trois valeurs : un fait que la déclaration ne donne pas est « inconnu », et le moteur pose alors la question. N'essaie pas de compenser un fait inconnu.
@@ -171,8 +172,11 @@ def oui_non(b) -> str:
 def en_prolog(prop: dict, article: str, entete: str = "") -> str:
     """Les règles d'une proposition, sans directive : elles s'ajoutent à la suite du fichier du contrat."""
     lignes = [f"% --- Art. {article} : proposition rédigée par le modèle{(' — ' + entete) if entete else ''} ---"]
-    for e in prop.get("evenements", []):
-        lignes.append(f"evenement_traduit({atome(e)}).")
+    # Un événement n'est « traduit » que par une garantie de base : des frais accessoires ne disent pas si une
+    # tempête est couverte (7.68).
+    if any(not g.get("accessoire") for g in prop.get("garanties", [])) or not prop.get("garanties"):
+        for e in prop.get("evenements", []):
+            lignes.append(f"evenement_traduit({atome(e)}).")
     for d in prop.get("definitions", []):
         lignes.append(f"definition({atome(d['concept'])}, {terme(d['condition'])}, {atome(d['article'])},\n    {chaine(d['texte'])}).")
     for g in prop.get("garanties", []):
@@ -190,6 +194,9 @@ def en_prolog(prop: dict, article: str, entete: str = "") -> str:
                           f"{oui_non(x.get('a_demander'))}, {atome(x['article'])},\n    {chaine(x['texte'])}).")
         for lim in g.get("limites", []):
             lignes.append(f"limite({gid}, {atome(lim['article'])}, {chaine(lim['texte'])}, {chaine(lim.get('montant', ''))}).")
+    for g in prop.get("garanties", []):
+        if g.get("accessoire"):
+            lignes.append(f"accessoire({atome(g['id'])}).")
     if prop.get("exclusions_communes"):
         cibles = "[" + ", ".join(atome(g["id"]) for g in prop.get("garanties", [])) + "]"
         for x in prop["exclusions_communes"]:

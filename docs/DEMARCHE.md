@@ -2417,9 +2417,41 @@ cambriolage : limitée à l'incendie et aux autres événements. axa-v07 n'atten
 **Leçon 80.** Un juge plus fort corrige les erreurs de fait, pas les erreurs de choix ; et un juge plus strict
 coûte des réponses justes. Le bon réglage dépend de qui lit la réponse.
 
+### 7.68 Les garanties accessoires : ce qui s'ajoute à un sinistre couvert, sans décider s'il l'est
+
+**Le problème.** Le lot B de Foyer (art. 3.1, extensions ; art. 4, garanties complémentaires) et celui d'AXA
+(3.1.8, 3.1.9, 3.2.3) décrivent des garanties qui ne jouent qu'**après** un sinistre couvert : frais de sauvetage,
+de déblai, de logement provisoire, extension à un séjour temporaire, pertes indirectes. Traduites comme des
+garanties ordinaires, elles entraient dans la décision : leur périmètre (« tout sinistre couvert ») rattachait
+chaque déclaration, leurs conditions inconnues (« le logement est-il inhabitable ? ») faisaient passer des refus
+justes à « incertain », et leur seule présence marquait les événements comme « traduits ». Le contrôle de
+non-régression du lot B de Foyer refusait les propositions pour cette raison (25 cas).
+
+**Ce qui change, dans le moteur et non dans un contrat.**
+- Un fait `accessoire(Garantie)`. Une garantie accessoire **n'entre pas dans la décision** : COUVERT, INCERTAIN
+  ou NON_COUVERT se décident sur les garanties de base seules, exactement comme avant.
+- Si la décision est COUVERT, le moteur évalue les accessoires et liste dans la réponse (`accessoires`) celles qui
+  s'appliquent ou pourraient s'appliquer, avec leurs questions. Le motif ajoute : « Peuvent s'y ajouter :
+  « Frais de logement provisoire » (4) sous réserve de précisions ». Elles ne changent jamais la décision.
+- Un sinistre non couvert n'ouvre aucune accessoire, même si ses conditions sont remplies ; un sinistre incertain
+  ne pose que les questions de la garantie de base.
+- Une proposition faite seulement d'accessoires ne marque aucun événement comme « traduit » : des frais de déblai
+  ne disent pas si une tempête est couverte.
+- L'oracle Python (`tests/moteur_reference.py`) fait de même, pour le test différentiel avec SWI-Prolog.
+- Rédaction : champ `"accessoire": true` sur la garantie, émis en `accessoire(id).` ; **consigne v8**, qui dit au
+  modèle quand le mettre et de ne pas mettre tous les événements du contrat dans le périmètre.
+
+**Tests.** 127 réussis (2 nouveaux) : décision inchangée et accessoire listée quand c'est couvert ; aucune accessoire
+pour un refus ; seule la question de la garantie de base pour un doute ; pas d'`evenement_traduit` pour une
+proposition d'accessoires.
+
+**Leçon 81.** Une garantie n'est pas toujours une réponse à « est-ce couvert ? ». Certaines répondent à « et
+qu'est-ce qui s'y ajoute ? ». Les mettre au même niveau dans le moteur dégrade les décisions qu'elles ne
+concernent pas ; la distinction se fait une fois, dans le moteur, et vaut pour tous les contrats.
+
 ## 8. Ce qui reste à faire
 
-Tenu à jour le 18 nov. 2026, 22 h 40 ; ce qui est fait est dans les sections 7.
+Tenu à jour le 19 nov. 2026 ; ce qui est fait est dans les sections 7.
 
 **Le plan de lecture (7.35)**
 - La lecture vérifiée est la lecture par défaut (7.45). Mesurer Mistral Large avec elle, pour le recours dans la cascade.

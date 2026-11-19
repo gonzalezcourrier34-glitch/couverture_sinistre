@@ -12,7 +12,7 @@
 */
 
 :- discontiguous definition/4, precision/3, garantie/4, perimetre/2, circonstance/4,
-                 obligation/6, exclusion/6, limite/4, evenement_traduit/1.
+                 obligation/6, exclusion/6, limite/4, evenement_traduit/1, accessoire/1.
 
 % --- Art. 3.1.6 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-18 ---
 evenement_traduit(vol).

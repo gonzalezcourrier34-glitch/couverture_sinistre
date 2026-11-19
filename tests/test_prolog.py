@@ -93,6 +93,34 @@ def contrat_sans(tmp_path, *articles):
     return Contrat(f)
 
 
+def test_garantie_accessoire_ne_change_jamais_la_decision(tmp_path):
+    """7.68 : des frais de logement provisoire ne disent pas si un incendie est couvert. Une garantie accessoire
+    n'entre pas dans la décision ; si le sinistre est couvert, elle est listée, avec ses questions."""
+    regles = tmp_path / "c.pl"
+    regles.write_text(''':- discontiguous garantie/4, perimetre/2, circonstance/4, accessoire/1.
+evenement_traduit(incendie).
+garantie(incendie, "Incendie", '1', "Nous couvrons l'incendie").
+perimetre(incendie, f(evenement, incendie)).
+circonstance(incendie, f(flammes, oui), '1', "des flammes").
+garantie(logement_provisoire, "Frais de logement provisoire", '4', "les frais de logement provisoire").
+perimetre(logement_provisoire, f(evenement, incendie)).
+circonstance(logement_provisoire, f(non_habitabilite, oui), '4', "si le logement est inhabitable").
+accessoire(logement_provisoire).
+''', encoding="utf-8")
+    contrat = Contrat(regles)
+    couvert = Moteur(contrat, {"evenement": ["incendie"], "flammes": "oui"}).decider()
+    assert couvert["decision"] == "COUVERT" and [g["id"] for g in couvert["garanties"]] == ["incendie"]
+    acc = couvert["accessoires"]
+    assert [a["id"] for a in acc] == ["logement_provisoire"] and acc[0]["decision"] == "INCERTAIN"
+    assert "non_habitabilite" in acc[0]["questions"]
+    refuse = Moteur(contrat, {"evenement": ["incendie"], "flammes": "non", "non_habitabilite": "oui"}).decider()
+    assert refuse["decision"] == "NON_COUVERT" and refuse["accessoires"] == [], \
+        "un sinistre non couvert n'ouvre aucune garantie accessoire, même si ses conditions sont remplies"
+    doute = Moteur(contrat, {"evenement": ["incendie"]}).decider()
+    assert doute["decision"] == "INCERTAIN" and doute["accessoires"] == [] and doute["retenues"][0]["questions"] == ["flammes"], \
+        "la question posée est celle de la garantie de base, pas celle des frais"
+
+
 def test_evenement_non_traduit_jamais_refuse(tmp_path):
     """Un événement dont la garantie n'est pas en règles (la tempête) : au plus INCERTAIN, même si une
     garantie traduite refuse. « autre » ne compte pas ; un COUVERT reste couvert."""

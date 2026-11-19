@@ -301,11 +301,24 @@ rattachement(V, R) :- get_dict(rattachement, R, V).
 decision_est(V, R) :- get_dict(decision, R, V).
 
 decider(D) :-
-    findall(R, ( regle(garantie(G, _, _, _)), evaluer_garantie(G, R) ), Rs),
+    findall(R, ( regle(garantie(G, _, _, _)), \+ regle(accessoire(G)), evaluer_garantie(G, R) ), Rs),
     combiner(Rs, D0),
     non_traduits(NT),
     plafonner(NT, D0, D1),
-    put_dict(garanties, D1, Rs, D).
+    accessoires(D1, Acc),
+    put_dict(_{garanties:Rs, accessoires:Acc}, D1, D).
+
+%!  accessoires(+Decision, -Accessoires)
+%   Une garantie accessoire (frais de sauvetage, logement provisoire, extension en séjour : DEMARCHE 7.68)
+%   ne joue qu'après un sinistre couvert par une garantie de base. Elle ne change jamais la décision : si la
+%   décision est COUVERT, on liste celles qui s'appliquent ou pourraient s'appliquer (avec leurs questions) ;
+%   sinon, aucune. Traduites comme des garanties ordinaires, elles faisaient passer des refus justes à
+%   « incertain » (25 cas au contrôle de non-régression du lot B de Foyer).
+accessoires(D, Acc) :-
+    get_dict(decision, D, "COUVERT"), !,
+    findall(R, ( regle(accessoire(G)), evaluer_garantie(G, R),
+                 \+ get_dict(rattachement, R, "hors"), \+ get_dict(decision, R, "NON_COUVERT") ), Acc).
+accessoires(_, []).
 
 %  Les événements déclarés dont aucune garantie n'est traduite en règles.
 non_traduits(NT) :-
