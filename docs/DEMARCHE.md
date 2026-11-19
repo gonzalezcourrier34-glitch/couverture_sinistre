@@ -2754,6 +2754,53 @@ un fait mal compris ; c'est à l'aide du vocabulaire de le faire.
 **Leçon 90.** Assouplir un vérificateur laisse passer les bons faits négatifs et les mauvaises lectures : chaque
 assouplissement se mesure sur les refus à tort, pas seulement sur l'exactitude.
 
+### 7.77 L'aide ne suffit pas : la vérification v3 limite la souplesse aux « non »
+
+**Banc** (assureur A, 15 h 51, après l'aide de `cause_eau`) : chaîne 86 % justes, 74 % exactes, 4 couverts à tort,
+2 refus à tort, 11 instables ; 95e centile de 21 s (un appel lent du fournisseur ; médiane 3,7 s). `g2-i16` reste
+refusé trois fois sur trois : Mistral Small lit toujours `cause_eau = infiltration_exterieure` malgré l'aide, et la
+vérification v2 le garde. Les couverts à tort sont ceux d'avant (`red-b06`, `g-p03`, `g2-p08` systématiques ;
+`bougie-04`, `val-09` une fois). `val-09` (« sans flammes ») montre aussi que la vérification reste bruitée : le
+« non » écrit en toutes lettres y a été retiré une fois.
+
+**Diagnostic.** La v2 voulait garder les négations écrites ; sa seconde phrase (« un détail écrit correspond au
+sens donné ») valait pour toutes les valeurs, et le vérificateur s'en est servi pour un fait positif sur un mot
+commun (« infiltrée »). **Consigne `verification-faits` v3** : la souplesse ne vaut que pour « non » ; pour toute
+autre valeur, le vérificateur doit confronter l'écrit au sens de la valeur et à ce qu'il écarte. L'exemple donné
+n'est pas tiré du golden set (une machine à laver, pas l'eau qui passe chez le voisin), pour que `g2-i16` continue
+de mesurer quelque chose.
+
+**Le levier suivant**, si la v3 ne suffit pas : la confirmation des faits décisifs par Mistral Large (7.67), qui
+ramenait les couverts à tort de 4 à 1,67 au prix d'une médiane de 8,6 s ; l'appliquer aussi aux refus.
+
+**Leçon 91.** Un exemple de consigne tiré d'un cas du jeu d'essai rend ce cas inutile pour la mesure : prendre un
+exemple voisin.
+
+### 7.78 La v3 mesurée, et un recours pour les faits retirés à tort
+
+**Banc** (16 h 10, golden v12). **Assureur A** : chaîne **90 % justes**, 76 % exactes, 4,33 couverts à tort,
+**0,67 refus à tort** (le plus bas mesuré), 11 instables ; médiane 4,1 s, 95e centile 5,4 s. `g2-i16` revient à
+« incertain » (acceptable) : le fait mal lu n'est plus gardé. Les couverts à tort restent les trois systématiques
+(`red-b06`, `g-p03`, `g2-p08`) et deux occasionnels (`bougie-04`, `val-09`). **Assureur B** : 76 % justes
+(78 % avec la v2, 73 % avec la v1), 0 couvert à tort, 0 refus à tort.
+
+**Ce que la consigne ne règle pas.** Chez B, `b-v06` et `b-v09` restent « incertain » trois fois sur trois : le
+rapport montre que la vérification par Mistral Small retire toujours `serrure_surete = non` (« un simple
+cadenas »), `violence = non` (« sans que je m'en rende compte »), et même `auteur = personnel_prive` (« la femme de
+ménage »), malgré la v3 qui les donne en exemple. Le petit modèle, en vérificateur, est prudent au-delà de ce
+qu'on lui demande ; trois versions de consigne n'y changent plus grand-chose.
+
+**Le recours** (`prolog.rappeler`). Après la vérification, les faits retirés qui, rétablis, **changeraient la
+décision** (le moteur le dit en quelques millisecondes) sont soumis à un second avis, celui du modèle de
+confirmation (Mistral Large, `COUVERTURE_MODELE_CONFIRMATION`) ; ceux qu'il trouve écrits sont rétablis. C'est le
+pendant de la confirmation (7.49, 7.67) : la confirmation vérifie les faits qui portent une réponse ferme, le
+recours ceux dont l'absence l'empêche. Il ne coûte qu'un appel, et seulement dans ces cas-là. Sans modèle de
+confirmation distinct, pas de recours : le même petit modèle redirait la même chose. Test :
+`test_recours_retablit_un_fait_retire_qui_tranche`.
+
+**Leçon 92.** Quand trois versions d'une consigne ne changent plus le comportement d'un petit modèle, ce n'est
+plus la consigne qu'il faut changer, c'est qui décide : un second avis plus fort, réservé aux faits qui comptent.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.
@@ -2874,3 +2921,5 @@ Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les section
 88. Deux bancs ne se comparent qu'à configuration égale : le rapport doit nommer celle de son point de comparaison.
 89. Un vérificateur trop strict ôte au système les « non » qui permettent de refuser : dire ce qu'est une négation écrite.
 90. Assouplir un vérificateur laisse passer les bons « non » et les mauvaises lectures : mesurer les refus à tort.
+91. Un exemple de consigne tiré du jeu d'essai rend ce cas inutile pour la mesure : prendre un exemple voisin.
+92. Quand une consigne ne change plus un petit modèle, changer qui décide : un second avis plus fort, sur les seuls faits qui comptent.

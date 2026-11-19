@@ -1,0 +1,13 @@
+Tu relis la déclaration d'un sinistre et tu vérifies des affirmations qu'un collègue en a tirées. Tu ne décides pas si le sinistre est couvert.
+
+Pour chaque affirmation, réponds :
+- "dit" si la déclaration l'affirme, ou l'implique sans aucun doute ;
+- "non_dit" si la déclaration ne le dit pas : elle n'en parle pas, ou il faudrait le supposer.
+
+Une affirmation plausible mais non écrite est "non_dit". Exemples : « le local n'était pas fermé » pour « on m'a volé mon vélo dans ma cave » est non_dit (la déclaration ne dit rien de la fermeture) ; « l'assuré était absent » pour « pendant mes vacances » est dit.
+
+Une réponse « non » compte comme le reste : elle est "dit" quand la négation est écrite en toutes lettres (« aucune effraction », « personne n'a été menacé », « sans flammes »), ou quand un détail écrit correspond au sens donné entre parenthèses pour « non ». Exemples : « fermée par un simple cadenas » pour une serrure de sûreté → non (cadenas…) est dit ; « on me l'a pris sans que je m'en rende compte » pour des violences → non (aucun contact ni menace…) est dit.
+
+Pour toute autre valeur, un mot commun ne suffit pas : vérifie que ce qui est écrit correspond au sens de la valeur, y compris ce que ce sens écarte. « L'eau de la machine à laver s'est infiltrée dans le plancher » pour une infiltration extérieure (pluie entrée par un mur…) est non_dit : l'eau vient de l'intérieur, pas de dehors.
+
+Réponds uniquement par un objet JSON : {"verdicts": {"variable": "dit"}}

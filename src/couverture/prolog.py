@@ -395,7 +395,9 @@ Pour chaque affirmation, réponds :
 
 Une affirmation plausible mais non écrite est "non_dit". Exemples : « le local n'était pas fermé » pour « on m'a volé mon vélo dans ma cave » est non_dit (la déclaration ne dit rien de la fermeture) ; « l'assuré était absent » pour « pendant mes vacances » est dit.
 
-Une négation compte comme le reste : elle est "dit" quand elle est écrite en toutes lettres (« aucune effraction », « personne n'a été menacé »), ou quand un détail écrit correspond au sens donné entre parenthèses pour cette valeur. Exemples : « fermée par un simple cadenas » pour une serrure de sûreté → non (cadenas…) est dit ; « on me l'a pris sans que je m'en rende compte » pour des violences → non (aucun contact ni menace…) est dit.
+Une réponse « non » compte comme le reste : elle est "dit" quand la négation est écrite en toutes lettres (« aucune effraction », « personne n'a été menacé », « sans flammes »), ou quand un détail écrit correspond au sens donné entre parenthèses pour « non ». Exemples : « fermée par un simple cadenas » pour une serrure de sûreté → non (cadenas…) est dit ; « on me l'a pris sans que je m'en rende compte » pour des violences → non (aucun contact ni menace…) est dit.
+
+Pour toute autre valeur, un mot commun ne suffit pas : vérifie que ce qui est écrit correspond au sens de la valeur, y compris ce que ce sens écarte. « L'eau de la machine à laver s'est infiltrée dans le plancher » pour une infiltration extérieure (pluie entrée par un mur…) est non_dit : l'eau vient de l'intérieur, pas de dehors.
 
 Réponds uniquement par un objet JSON : {"verdicts": {"variable": "dit"}}"""
 
@@ -477,10 +479,12 @@ def variables_du_contrat(contrat_id: str) -> set[str] | None:
 
 
 def extraire_faits_regles(sinistre: str, llm: LLM, decideur=None,
-                          variables: set[str] | None = None) -> tuple[dict, list[str]]:
+                          variables: set[str] | None = None, recours=None) -> tuple[dict, list[str]]:
     """Les faits lus par le modèle, et les écarts au vocabulaire (retirés).
     `decideur(faits) -> dict` (le moteur) arbitre la vérification, en mode « verifiee » (7.44).
-    `variables` : celles du contrat (le socle est toujours lu) ; None : tout le vocabulaire."""
+    `variables` : celles du contrat (le socle est toujours lu) ; None : tout le vocabulaire.
+    `recours(faits) -> {variable: "dit" | "non_dit"}` : un second avis (un modèle plus fort) sur les faits que la
+    vérification a retirés et qui, rétablis, trancheraient (7.78). None : pas de recours."""
     voc = vocabulaire()
     if variables is not None:
         # Les règles d'Assureur B ne doivent pas changer ce qu'on lit pour Assureur A : la plainte ou la formule
@@ -521,7 +525,38 @@ def extraire_faits_regles(sinistre: str, llm: LLM, decideur=None,
         if decideur(faits)["decision"] == "COUVERT" and decideur(faits_lus)["decision"] != "COUVERT":
             return faits_lus, ecarts_lus + ["vérification écartée : retirer ces faits aurait fait couvrir ("
                                             + "; ".join(r.split(" : ")[0] for r in retraits) + ")"]
+    if recours is not None and decideur is not None:
+        faits, rappels = rappeler(faits, {v: x for v, x in lus.items() if v not in lus_verifies}, voc, decideur, recours)
+        retraits = [r for r in retraits if r.split(" = ")[0] not in rappels] + [f"{v} : rétabli par le recours" for v in rappels]
     return faits, retraits + ecarts
+
+
+def rappeler(faits: dict, retires: dict, voc: dict, decideur, recours) -> tuple[dict, list[str]]:
+    """Le recours (7.78) : la vérification par le petit modèle retire des « non » écrits en toutes lettres
+    (« un simple cadenas », « sans que je m'en rende compte ») et la réponse reste « incertain ». Seuls les faits
+    retirés qui, rétablis, changeraient la décision sont soumis à un modèle plus fort ; ceux qu'il trouve écrits
+    sont rétablis. Un recours illisible ne rétablit rien."""
+    if not retires:
+        return faits, []
+    avant = decideur(faits)["decision"]
+    candidats = {}
+    for v, x in retires.items():
+        f1, _ = au_vocabulaire(faits | {v: x}, voc)
+        if v in f1 and decideur(f1)["decision"] != avant:
+            candidats[v] = x
+    if not candidats:
+        return faits, []
+    try:
+        verdicts = recours(candidats)
+    except ErreurLLM:
+        raise
+    except Exception:  # noqa: BLE001
+        return faits, []
+    rappels = [v for v in candidats if verdicts.get(v) == "dit"]
+    if not rappels:
+        return faits, []
+    f2, _ = au_vocabulaire(faits | {v: candidats[v] for v in rappels}, voc)
+    return f2, rappels
 
 
 def au_vocabulaire(lus: dict, voc: dict) -> tuple[dict, list[str]]:
@@ -578,7 +613,7 @@ class PipelineRegles:
     def analyser(self, sinistre: str) -> Resultat:
         debut = time.perf_counter()
         try:
-            faits, ecarts = extraire_faits_regles(sinistre, self.llm, self.decideur, self.variables)
+            faits, ecarts = extraire_faits_regles(sinistre, self.llm, self.decideur, self.variables, self.recours(sinistre))
         except ErreurLLM:
             raise
         except Exception as e:  # noqa: BLE001
@@ -610,6 +645,13 @@ class PipelineRegles:
         return Resultat(sinistre=sinistre, contrat_id=self.contrat_id, methode=self.methode,
                         faits=faits_lisibles(faits), clauses_consultees=consultees, verdict=verdict,
                         durees_ms={"lecture": int((lu - debut) * 1000), "decision": int((decide - lu) * 1000)})
+
+    def recours(self, sinistre: str):
+        """Le second avis sur les faits retirés (7.78), seulement si un modèle de confirmation distinct est
+        configuré : le même petit modèle redirait la même chose."""
+        if not os.environ.get("COUVERTURE_MODELE_CONFIRMATION", "").strip():
+            return None
+        return lambda faits: juger_affirmations(sinistre, faits, self.modele_confirmation(), vocabulaire())
 
     def modele_confirmation(self) -> LLM:
         """Le modèle qui confirme les faits décisifs. Le petit modèle confirmait ses propres erreurs de lecture

@@ -721,6 +721,28 @@ def test_lecture_verifiee(monkeypatch):
     assert sum("non dit" in e for e in ecarts) == 2
 
 
+def test_recours_retablit_un_fait_retire_qui_tranche():
+    """7.78 : la vérification retire « serrure de sûreté : non » (un cadenas écrit) et la réponse reste
+    « incertain ». Seul un fait retiré qui changerait la décision est soumis au recours ; rétabli s'il est dit."""
+    def decideur(f):
+        return {"decision": "NON_COUVERT" if f.get("serrure_surete") == "non" else "INCERTAIN"}
+
+    soumis = []
+
+    def recours(faits):
+        soumis.append(dict(faits))
+        return {v: "dit" for v in faits}
+
+    voc = prolog.vocabulaire()
+    faits = {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}
+    retires = {"serrure_surete": "non", "absence": "oui"}
+    f2, rappels = prolog.rappeler(faits, retires, voc, decideur, recours)
+    assert rappels == ["serrure_surete"] and f2["serrure_surete"] == "non"
+    assert soumis == [{"serrure_surete": "non"}], "l'absence ne change rien : elle n'est pas soumise"
+    f3, rappels = prolog.rappeler(faits, retires, voc, decideur, lambda fs: {v: "non_dit" for v in fs})
+    assert f3 == faits and rappels == []
+
+
 def test_verification_illisible_ne_retire_rien():
     class Modele:
         nom = "illisible"

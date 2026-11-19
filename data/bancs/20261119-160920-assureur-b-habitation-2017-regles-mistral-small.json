@@ -1,0 +1,1862 @@
+{
+ "date": "2026-11-19T16:07:07",
+ "contrat": "assureur-b-habitation-2017",
+ "methode": "regles",
+ "golden": {
+  "version": 12,
+  "empreinte": "60454afe2fa4e1ae",
+  "fige": true,
+  "n": 15,
+  "valides": 0,
+  "auteurs": {
+   "claude": 15
+  }
+ },
+ "couches": {
+  "regles": {
+   "metriques": {
+    "n": 15,
+    "exactitude": 1.0,
+    "exactitude_stricte": 0.867,
+    "faux_couverts": 0,
+    "faux_refus": 0,
+    "taux_incertain": 0.133,
+    "rappel_questions": 1.0,
+    "questions_par_incertain": 1.5,
+    "incertains_tranchables": 0.5,
+    "questions_inutiles_retirees": 16
+   },
+   "groupes": {
+    "auteur : claude": {
+     "n": 15,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.867,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.133
+    },
+    "garantie : 3.1.6": {
+     "n": 15,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.867,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.133
+    },
+    "thème : base": {
+     "n": 6,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "thème : incertain": {
+     "n": 2,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.5,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.5
+    },
+    "thème : piege": {
+     "n": 7,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.857,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.143
+    }
+   },
+   "cas": [
+    {
+     "id": "b-v01",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 1,
+     "questions": [
+      "abus_confiance",
+      "occupation_irreguliere",
+      "travaux_construction"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v02",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v03",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v04",
+     "attendu": "INCERTAIN",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 3,
+     "questions": [
+      "plainte_deposee"
+     ],
+     "rappel_questions": 1.0,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v05",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 1,
+     "questions": [
+      "abus_confiance",
+      "occupation_irreguliere",
+      "travaux_construction"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v06",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v07",
+     "attendu": "INCERTAIN",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": false,
+     "tranchable": true,
+     "inutiles": 0,
+     "questions": [
+      "option_materiel_multimedia",
+      "option_vol"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 0.5,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v08",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v09",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v10",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 1,
+     "questions": [
+      "abus_confiance",
+      "occupation_irreguliere",
+      "travaux_construction"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v11",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v12",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v13",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 2,
+     "questions": [
+      "abus_confiance",
+      "occupation_irreguliere",
+      "travaux_construction"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v14",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 5,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v15",
+     "attendu": "NON_COUVERT",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": false,
+     "tranchable": true,
+     "inutiles": 3,
+     "questions": [
+      "lien_causal_travaux",
+      "sejour_temporaire"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    }
+   ]
+  },
+  "chaine": {
+   "metriques": {
+    "exactitude": {
+     "moyenne": 0.755,
+     "min": 0.733,
+     "max": 0.8
+    },
+    "exactitude_stricte": {
+     "moyenne": 0.489,
+     "min": 0.467,
+     "max": 0.533
+    },
+    "faux_couverts": {
+     "moyenne": 0.0,
+     "min": 0,
+     "max": 0
+    },
+    "faux_refus": {
+     "moyenne": 0.0,
+     "min": 0,
+     "max": 0
+    },
+    "taux_incertain": {
+     "moyenne": 0.511,
+     "min": 0.467,
+     "max": 0.533
+    },
+    "n": 15,
+    "executions": 3,
+    "instables": 1,
+    "rappel_clauses": 0.767,
+    "rappel_questions": 1.0,
+    "erreurs_fournisseur": 0,
+    "duree_moyenne_s": 29.3,
+    "latence_mediane_s": 4.15,
+    "latence_p95_s": 37.09,
+    "latence_lecture_mediane_s": 3.46,
+    "latence_lecture_p95_s": 35.92,
+    "latence_decision_mediane_s": 0.03,
+    "latence_decision_p95_s": 0.12,
+    "latence_seule_mediane_s": 3.94,
+    "latence_seule_p95_s": 5.89,
+    "latence_seule_lecture_mediane_s": 3.83,
+    "latence_seule_lecture_p95_s": 5.26,
+    "latence_seule_decision_mediane_s": 0.02,
+    "latence_seule_decision_p95_s": 0.06,
+    "latence_seule_nb": 10
+   },
+   "groupes": {
+    "auteur : claude": {
+     "n": 15,
+     "exactitude": 0.8,
+     "exactitude_stricte": 0.533,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.467
+    },
+    "garantie : 3.1.6": {
+     "n": 15,
+     "exactitude": 0.8,
+     "exactitude_stricte": 0.533,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.467
+    },
+    "thème : base": {
+     "n": 6,
+     "exactitude": 0.833,
+     "exactitude_stricte": 0.833,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.167
+    },
+    "thème : incertain": {
+     "n": 2,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.5,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.5
+    },
+    "thème : piege": {
+     "n": 7,
+     "exactitude": 0.714,
+     "exactitude_stricte": 0.286,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.714
+    }
+   },
+   "reponses": {
+    "b-v01": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "b-v02": [
+     "NON_COUVERT",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "b-v03": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "b-v04": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "b-v05": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "b-v06": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "b-v07": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "b-v08": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "b-v09": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "b-v10": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "b-v11": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "b-v12": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "b-v13": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "b-v14": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "b-v15": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ]
+   },
+   "instables": [
+    "b-v02"
+   ],
+   "executions": [
+    [
+     {
+      "id": "b-v01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Abus de confiance ?",
+       "Occupation irrégulière des locaux ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3754,
+       "decision": 37,
+       "total": 4841
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3354,
+       "decision": 5,
+       "total": 4161
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Occupation irrégulière des locaux ?",
+       "Vos conditions particulières mentionnent-elles la garantie « incendie et périls assimilés » ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2782,
+       "decision": 24,
+       "total": 3686
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v04",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Une plainte a-t-elle été déposée auprès des autorités ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3733,
+       "decision": 35,
+       "total": 3771
+      },
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "b-v05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1958,
+       "decision": 40,
+       "total": 3085
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3052,
+       "decision": 18,
+       "total": 3076
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v07",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Vos conditions particulières mentionnent-elles la garantie « matériel multimédia » ? (oui → couvert ; non → non couvert)",
+       "Vos conditions particulières mentionnent-elles la garantie « vol » ? (oui → couvert ; non → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3758,
+       "decision": 26,
+       "total": 4921
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v08",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3528,
+       "decision": 39,
+       "total": 3570
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v09",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3463,
+       "decision": 15,
+       "total": 3481
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v10",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3889,
+       "decision": 31,
+       "total": 5208
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3225,
+       "decision": 10,
+       "total": 4147
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v12",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Qui est l'auteur ?",
+       "Y a-t-il eu violences physiques ou menaces ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3306,
+       "decision": 115,
+       "total": 3424
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v13",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1742,
+       "decision": 42,
+       "total": 3263
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v14",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 4134,
+       "decision": 52,
+       "total": 5394
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v15",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Les travaux ont-ils contribué au vol ou à l'aggravation de ses conséquences ?",
+       "Les biens se trouvaient-ils hors de chez vous, lors d'un séjour temporaire (vacances, hôtel, location) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3955,
+       "decision": 145,
+       "total": 4105
+      },
+      "rappel_questions": null
+     }
+    ],
+    [
+     {
+      "id": "b-v01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Abus de confiance ?",
+       "Occupation irrégulière des locaux ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2032,
+       "decision": 19,
+       "total": 3418
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ?",
+       "Y a-t-il eu violences physiques ou menaces ?",
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?",
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2667,
+       "decision": 120,
+       "total": 3759
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Occupation irrégulière des locaux ?",
+       "Vos conditions particulières mentionnent-elles la garantie « incendie et périls assimilés » ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2474,
+       "decision": 43,
+       "total": 3651
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v04",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Une plainte a-t-elle été déposée auprès des autorités ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3419,
+       "decision": 18,
+       "total": 3439
+      },
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "b-v05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2157,
+       "decision": 41,
+       "total": 3442
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3295,
+       "decision": 18,
+       "total": 3318
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v07",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Vos conditions particulières mentionnent-elles la garantie « matériel multimédia » ? (oui → couvert ; non → non couvert)",
+       "Vos conditions particulières mentionnent-elles la garantie « vol » ? (oui → couvert ; non → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3606,
+       "decision": 26,
+       "total": 4922
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v08",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ?",
+       "Y a-t-il eu violences physiques ou menaces ?",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3844,
+       "decision": 113,
+       "total": 5121
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v09",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3213,
+       "decision": 16,
+       "total": 3231
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v10",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3488,
+       "decision": 34,
+       "total": 38237
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 36262,
+       "decision": 6,
+       "total": 37085
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v12",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Qui est l'auteur ?",
+       "Y a-t-il eu violences physiques ou menaces ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 36703,
+       "decision": 34,
+       "total": 36740
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v13",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 35925,
+       "decision": 36,
+       "total": 37251
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v14",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3816,
+       "decision": 22,
+       "total": 5102
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v15",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Les travaux ont-ils contribué au vol ou à l'aggravation de ses conséquences ?",
+       "Les biens se trouvaient-ils hors de chez vous, lors d'un séjour temporaire (vacances, hôtel, location) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3562,
+       "decision": 71,
+       "total": 3637
+      },
+      "rappel_questions": null
+     }
+    ],
+    [
+     {
+      "id": "b-v01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ?",
+       "Occupation irrégulière des locaux ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2873,
+       "decision": 25,
+       "total": 4158
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ?",
+       "Y a-t-il eu violences physiques ou menaces ?",
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?",
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3404,
+       "decision": 27,
+       "total": 4255
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "Vos conditions particulières mentionnent-elles la garantie « incendie et périls assimilés » ? (oui → couvert ; non → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3814,
+       "decision": 17,
+       "total": 5040
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v04",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Une plainte a-t-elle été déposée auprès des autorités ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 4086,
+       "decision": 22,
+       "total": 4112
+      },
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "b-v05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3105,
+       "decision": 44,
+       "total": 4720
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ?",
+       "Y a-t-il eu violences physiques ou menaces ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3418,
+       "decision": 36,
+       "total": 4980
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v07",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Vos conditions particulières mentionnent-elles la garantie « matériel multimédia » ? (oui → couvert ; non → non couvert)",
+       "Vos conditions particulières mentionnent-elles la garantie « vol » ? (oui → couvert ; non → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3331,
+       "decision": 52,
+       "total": 4701
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v08",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3662,
+       "decision": 9,
+       "total": 3675
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v09",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3434,
+       "decision": 21,
+       "total": 3458
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v10",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 4811,
+       "decision": 30,
+       "total": 5979
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3795,
+       "decision": 6,
+       "total": 4912
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v12",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Qui est l'auteur ?",
+       "Y a-t-il eu violences physiques ou menaces ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3256,
+       "decision": 34,
+       "total": 3294
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v13",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 6737,
+       "decision": 34,
+       "total": 7976
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v14",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3515,
+       "decision": 21,
+       "total": 4604
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v15",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Les travaux ont-ils contribué au vol ou à l'aggravation de ses conséquences ?",
+       "Les biens se trouvaient-ils hors de chez vous, lors d'un séjour temporaire (vacances, hôtel, location) ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3417,
+       "decision": 25,
+       "total": 3446
+      },
+      "rappel_questions": null
+     }
+    ]
+   ]
+  },
+  "lecture": {
+   "metriques": {
+    "rappel_faits": 0.787,
+    "cas_avec_contradiction": 1,
+    "cas_avec_fait_vague": 0,
+    "cas_avec_fait_en_trop": 6,
+    "cas_avec_fait_sans_appui": 14,
+    "decisions_changees": 4.33,
+    "decisions_changees_vers_couvert": 1
+   },
+   "cas": [
+    {
+     "id": "b-v01",
+     "rappel": 0.815,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "proprietaire = assure",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [
+      "violence = non"
+     ],
+     "sans_appui": [
+      "violence = non",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "b-v02",
+     "rappel": 0.889,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "sejour_temporaire = non",
+      "serrure_surete = non"
+     ],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "b-v03",
+     "rappel": 0.708,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "proprietaire = assure",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [
+      "type_dommage = bris"
+     ],
+     "sans_appui": [
+      "sejour_temporaire = non",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 1.0,
+     "grave": true
+    },
+    {
+     "id": "b-v04",
+     "rappel": 0.708,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "sejour_temporaire = non",
+      "vehicule_vole = non",
+      "violence = non",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "b-v05",
+     "rappel": 0.778,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "proprietaire = assure"
+     ],
+     "en_trop": [],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "b-v06",
+     "rappel": 0.733,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "effraction = non",
+      "violence = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "auteur = tiers",
+      "effraction = non",
+      "violence = non"
+     ],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "NON_COUVERT"
+     ],
+     "change": 0.6666666666666666,
+     "grave": false
+    },
+    {
+     "id": "b-v07",
+     "rappel": 0.875,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "auteur = tiers",
+      "effraction = non",
+      "sejour_temporaire = non"
+     ],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "b-v08",
+     "rappel": 0.833,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "effraction = non",
+      "violence = non"
+     ],
+     "en_trop": [
+      "abus_confiance = non",
+      "sejour_temporaire = non"
+     ],
+     "sans_appui": [
+      "effraction = non",
+      "sejour_temporaire = non"
+     ],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "INCERTAIN",
+      "NON_COUVERT",
+      "INCERTAIN"
+     ],
+     "change": 0.6666666666666666,
+     "grave": false
+    },
+    {
+     "id": "b-v09",
+     "rappel": 0.733,
+     "contradictions": [
+      "bien : objet_divers lu mobilier"
+     ],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "serrure_surete = non",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "sejour_temporaire = non",
+      "serrure_surete = non",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "b-v10",
+     "rappel": 0.8,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers"
+     ],
+     "en_trop": [
+      "serrure_surete = oui",
+      "vehicule_vole = non",
+      "violence = non"
+     ],
+     "sans_appui": [
+      "sejour_temporaire = non"
+     ],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "b-v11",
+     "rappel": 0.75,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "proprietaire = assure",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [
+      "vehicule_vole = oui"
+     ],
+     "sans_appui": [
+      "proprietaire = assure",
+      "sejour_temporaire = non",
+      "violence = non",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "b-v12",
+     "rappel": 0.733,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = personnel_prive",
+      "violence = non",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "auteur = personnel_prive",
+      "confiance_assure = non",
+      "sejour_temporaire = non",
+      "violence = non",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "b-v13",
+     "rappel": 0.667,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "proprietaire = assure",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "auteur = tiers",
+      "violence = non",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "b-v14",
+     "rappel": 0.963,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "violence = non"
+     ],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "b-v15",
+     "rappel": 0.815,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [
+      "occupation_partielle = non"
+     ],
+     "sans_appui": [
+      "occupation_partielle = non",
+      "sejour_temporaire = non",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.0,
+     "grave": false
+    }
+   ]
+  }
+ },
+ "avertissements": [],
+ "modele": "mistral:mistral-small-latest",
+ "lecture": "verifiee",
+ "portes": [
+  {
+   "couche": "regles",
+   "critere": "faux_couverts",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 0,
+   "ok": true
+  },
+  {
+   "couche": "regles",
+   "critere": "faux_refus",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 0,
+   "ok": true
+  },
+  {
+   "couche": "regles",
+   "critere": "exactitude",
+   "sens": "min",
+   "seuil": 0.95,
+   "valeur": 1.0,
+   "ok": true
+  },
+  {
+   "couche": "regles",
+   "critere": "rappel_questions",
+   "sens": "min",
+   "seuil": 0.9,
+   "valeur": 1.0,
+   "ok": true
+  },
+  {
+   "couche": "regles",
+   "critere": "questions_par_incertain",
+   "sens": "max",
+   "seuil": 3,
+   "valeur": 1.5,
+   "ok": true
+  },
+  {
+   "couche": "lecture",
+   "critere": "decisions_changees",
+   "sens": "max",
+   "seuil": 2,
+   "valeur": 4.33,
+   "ok": false
+  },
+  {
+   "couche": "lecture",
+   "critere": "decisions_changees_vers_couvert",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 1,
+   "ok": false
+  },
+  {
+   "couche": "lecture",
+   "critere": "cas_avec_contradiction",
+   "sens": "max",
+   "seuil": 5,
+   "valeur": 1,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "faux_couverts",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 0.0,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "faux_refus",
+   "sens": "max",
+   "seuil": 1,
+   "valeur": 0.0,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "exactitude",
+   "sens": "min",
+   "seuil": 0.85,
+   "valeur": 0.755,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "instables",
+   "sens": "max",
+   "seuil": 3,
+   "valeur": 1,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "rappel_questions",
+   "sens": "min",
+   "seuil": 0.8,
+   "valeur": 1.0,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "latence_seule_p95_s",
+   "sens": "max",
+   "seuil": 10,
+   "valeur": 5.89,
+   "ok": true
+  }
+ ],
+ "passe": false
+}

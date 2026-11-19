@@ -109,6 +109,14 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 
 ## 5. Dernières mesures
 
+**19 nov. 2026, 16 h 10, vérification v3** (souplesse limitée aux « non »), golden v12 : **Assureur A 90 % justes**,
+76 % exactes, 4,33 couverts à tort, **0,67 refus à tort** (le plus bas mesuré), 11 instables ; un cas à la fois :
+médiane 4,1 s, 95e centile 5,4 s. **Assureur B 76 % justes**, 49 % exactes, 0 couvert à tort, 0 refus à tort.
+DEMARCHE 7.78.
+
+**19 nov. 2026, 15 h 51, Assureur A, vérification v2 et aide de `cause_eau`** : chaîne 86 % justes, 74 % exactes,
+4 couverts à tort, 2 refus à tort, 11 instables ; médiane 3,7 s, 95e centile 21 s (un appel lent). DEMARCHE 7.77.
+
 **19 nov. 2026, 15 h 30, vérification v2 (les négations écrites) et exclusion du personnel corrigée**, golden
 v12 : **Assureur B 78 % justes** (73 % avant), 51 % exactes, 0 couvert à tort, 0 refus à tort, 2 instables ;
 **Assureur A 87 % justes**, 73 % exactes, **3,67 couverts à tort** (4 avant), **3 refus à tort** (1,67 avant),
