@@ -647,8 +647,17 @@
       ],
       "question": "Les biens se trouvaient-ils hors de chez vous, lors d'un séjour temporaire (vacances, hôtel, location) ?",
       "aide": {
-        "oui": "en vacances, à l'hôtel, en location, chez quelqu'un, pour un temps",
-        "non": "chez vous, ou ailleurs sans séjour"
+        "oui": "les biens étaient avec vous, hors de chez vous, le temps d'un séjour : à l'hôtel, dans une location de vacances, chez quelqu'un",
+        "non": "les biens étaient chez vous, même si vous étiez absent ou en vacances"
+      },
+      "pour": [
+        "vol",
+        "vandalisme"
+      ],
+      "si": {
+        "lieu": [
+          "autre_batiment"
+        ]
       }
     },
     "travaux_construction": {
@@ -1091,6 +1100,14 @@
       "aide": {
         "oui": "en déménageant, en transportant les meubles",
         "non": "hors de tout déménagement"
+      },
+      "pour": [
+        "heurt"
+      ],
+      "si": {
+        "lieu": [
+          "vehicule"
+        ]
       }
     },
     "choc_deux_corps_durs": {
@@ -1659,7 +1676,10 @@
       "aide": {
         "oui": "le contrat couvre la responsabilité locative",
         "non": "le contrat ne couvre pas la RC locative"
-      }
+      },
+      "pour": [
+        "accessoire"
+      ]
     },
     "detenteur_vehicule": {
       "valeurs": [
@@ -1670,6 +1690,14 @@
       "aide": {
         "oui": "l'assuré est le détenteur du véhicule (propriétaire, locataire, emprunteur...)",
         "non": "l'assuré n'est pas le détenteur du véhicule"
+      },
+      "pour": [
+        "extension"
+      ],
+      "si": {
+        "lieu": [
+          "vehicule"
+        ]
       }
     },
     "residence_principale_inhabitable": {
@@ -1681,7 +1709,10 @@
       "aide": {
         "oui": "la résidence principale est inhabitable (dégâts importants, incendie, inondation...)",
         "non": "la résidence principale est habitable"
-      }
+      },
+      "pour": [
+        "accessoire"
+      ]
     },
     "occasion_fete_familiale": {
       "valeurs": [
@@ -1692,7 +1723,10 @@
       "aide": {
         "oui": "l'assuré occupe un local pour une fête de famille (mariage, anniversaire familial, réception familiale...)",
         "non": "ce n'est pas une fête de famille"
-      }
+      },
+      "pour": [
+        "accessoire"
+      ]
     },
     "pret_ou_location_habitation": {
       "valeurs": [
@@ -1703,7 +1737,10 @@
       "aide": {
         "oui": "l'assuré a prêté ou loué son habitation à ce membre de la famille",
         "non": "l'assuré n'a pas prêté ou loué son habitation à cette personne"
-      }
+      },
+      "pour": [
+        "accessoire"
+      ]
     },
     "malveillance_auteur": {
       "valeurs": [
@@ -1714,7 +1751,10 @@
       "aide": {
         "oui": "le parent/allié a causé le dommage volontairement, avec malveillance",
         "non": "le dommage n'est pas dû à une malveillance volontaire"
-      }
+      },
+      "pour": [
+        "accessoire"
+      ]
     },
     "assurance_responsabilite_tiers": {
       "valeurs": [
@@ -1725,7 +1765,10 @@
       "aide": {
         "oui": "le parent/allié dispose d'une assurance responsabilité civile",
         "non": "le parent/allié ne dispose pas d'assurance responsabilité civile"
-      }
+      },
+      "pour": [
+        "accessoire"
+      ]
     }
   }
 }

@@ -1,0 +1,150 @@
+# Banc d'essai — assureur-a-habitation-2025, méthode `regles`
+
+2026-11-17T16:52:25 · golden set v3 (68 cas, empreinte `6aa85917e50d9c68`) · cas validés par l'auteur : 0 sur 68
+
+
+## Portes : **ÉCHOUE**
+
+| Couche | Critère | Seuil | Valeur | |
+|---|---|---|---|---|
+| regles | faux_couverts | ≤ 0 | 2 | ✗ |
+| regles | faux_refus | ≤ 0 | 0 | ✓ |
+| regles | exactitude | ≥ 0.95 | 0.956 | ✓ |
+| regles | rappel_questions | ≥ 0.9 | 1 | ✓ |
+| regles | questions_par_incertain | ≤ 3 | 0.9 | ✓ |
+| lecture | decisions_changees | ≤ 2 | 14.33 | ✗ |
+| lecture | decisions_changees_vers_couvert | ≤ 0 | 8 | ✗ |
+| lecture | cas_avec_contradiction | ≤ 5 | 11 | ✗ |
+| chaine | faux_couverts | ≤ 0 | 6 | ✗ |
+| chaine | faux_refus | ≤ 1 | 0 | ✓ |
+| chaine | exactitude | ≥ 0.85 | 0.863 | ✓ |
+| chaine | instables | ≤ 3 | 7 | ✗ |
+| chaine | rappel_questions | ≥ 0.8 | 0.667 | ✗ |
+
+## Depuis le banc précédent (2026-11-17T16:45:10)
+
+- lecture · rappel_faits : 0.732 → 0.772
+- chaine · exactitude : 0.804 → 0.863
+- chaine · exactitude_stricte : 0.569 → 0.623
+- chaine · faux_couverts : 4.667 → 6
+- chaine · faux_refus : 1.333 → 0
+
+## Couche 1 — règles seules (faits idéaux, sans modèle)
+
+| Justes ou acceptables | Exactes | Couverts à tort | Refus à tort | Incertains |
+|---|---|---|---|---|
+| 96% | 76% | **2** | **0** | 25% |
+
+Rappel des questions attendues : 100% · questions posées par réponse « incertain » : 0.9
+
+| Groupe | Cas | Justes ou acceptables | Couverts à tort | Refus à tort |
+|---|---|---|---|---|
+| auteur : claude | 68 | 96% | 2 ⚠ | 0 |
+| garantie : 2.1 | 11 | 100% | 0 | 0 |
+| garantie : 2.10 | 28 | 93% | 1 ⚠ | 0 |
+| garantie : 2.2 | 5 | 100% | 0 | 0 |
+| garantie : 2.3 | 2 | 100% | 0 | 0 |
+| garantie : 2.4 | 1 | 100% | 0 | 0 |
+| garantie : 2.6 | 3 | 100% | 0 | 0 |
+| garantie : 2.7 | 9 | 89% | 1 ⚠ | 0 |
+| garantie : 2.8 | 1 | 100% | 0 | 0 |
+| garantie : 2.9 | 6 | 100% | 0 | 0 |
+| garantie : aucune | 2 | 100% | 0 | 0 |
+| thème : base | 2 | 100% | 0 | 0 |
+| thème : hors_regles | 19 | 100% | 0 | 0 |
+| thème : info_manquante | 6 | 100% | 0 | 0 |
+| thème : langue | 7 | 100% | 0 | 0 |
+| thème : multi | 6 | 100% | 0 | 0 |
+| thème : piege | 41 | 93% | 2 ⚠ | 0 |
+| thème : variante | 13 | 100% | 0 | 0 |
+
+### Erreurs des règles
+
+- **⚠ couvert à tort** `g-p03` attendu NC, obtenu C — Pendant mes vacances, des cambrioleurs sont entrés avec la clé que j'avais laissée sous le paillasson ; aucune… *(Obligation 2.10 : ne pas laisser les clés d'accès à proximité des locaux ; lien causal direct.)*
+- **⚠ couvert à tort** `g-p06` attendu NC, obtenu C — J'ai renversé le seau d'eau du ménage et l'eau a abîmé le parquet. *(Exclusion 2.7 : le renversement d'un récipient non relié à l'installation hydraulique.)*
+- `g-p09` attendu NC, obtenu ? — Mon vélo a été volé dans mon casier du club de sport. *(Exclusion 2.10 : le vol du contenu entreposé dans un casier d'une association sportive (et hors du bâtiment).)*
+
+## Couche 2 — lecture des faits par le modèle
+
+**Décisions changées par la lecture** (faits lus ou idéaux dans les mêmes règles) : **14.33** par exécution, dont **8** cas vers un couvert à tort.
+
+Rappel des faits idéaux : 77% (les faits négatifs non dits, comme « pas de violence », comptent comme manquants : la consigne interdit de les inventer) · contradictions : 11 cas · faits vagues : 1 cas · faits en trop : 19 cas
+
+### La lecture change la décision
+
+- **⚠ vers couvert** `bougie-04` idéal NC, lu C NC NC · manque : absence = oui; embrasement = oui; flammes = oui
+- **⚠ vers couvert** `val-01` idéal ?, lu ? ? C · manque : absence = oui; effraction = non; portes_fermees = oui; vol_sur_personne = non · en trop : fermeture = cle
+- **⚠ vers couvert** `val-03` idéal NC, lu C C C · manque : proprietaire = hote; vol_sur_personne = non · en trop : absence = oui
+- **⚠ vers couvert** `val-13` idéal ?, lu C C C · manque : cause_eau = infiltration_exterieure
+- **⚠ vers couvert** `red-b05` idéal NC, lu NC C NC · **contredit** : evenement : bris lu autre · manque : vitre_placee = non
+- **⚠ vers couvert** `red-b06` idéal NC, lu C NC NC · manque : type_dommage = rayure_ou_ecaillement
+- **⚠ vers couvert** `g-q02` idéal ?, lu C C C · en trop : evenement = vol
+- **⚠ vers couvert** `g-q03` idéal ?, lu C C C · en trop : lieu = logement
+- `velo-03` idéal NC, lu ? ? ? · **contredit** : fermeture : cadenas lu cle · manque : vol_sur_personne = non
+- `velo-06` idéal NC, lu ? ? ? · manque : fermeture = cadenas; violence = non; vol_sur_personne = non · en trop : effraction = oui
+- `bougie-01` idéal NC, lu ? ? ? · manque : absence = oui; embrasement = non; evenement = autre; flammes = non
+- `autre-01` idéal C, lu ? ? ? · manque : violence = oui
+- `val-06` idéal C, lu ? ? ? · manque : depot_moins_30j = oui; effraction = oui; vol_sur_personne = non
+- `val-11` idéal NC, lu ? NC NC
+- `g-l06` idéal C, lu C ? C · manque : violence = oui
+- `g-p04` idéal C, lu ? ? ? · manque : lieu = logement
+- `g-p06` idéal C, lu C ? C · manque : lieu = logement
+- `g-p09` idéal ?, lu NC NC NC · **contredit** : lieu : autre_batiment lu parties_communes · en trop : absence = oui; effraction = oui; fermeture = cle
+- `g-h06` idéal C, lu ? ? ? · en trop : effraction = oui
+
+### Contradictions sans effet sur la décision
+
+- `val-09` : bien : objet_divers lu electronique
+- `val-12` : cause_eau : fuite_installation lu debordement_recipient
+- `red-t03` : lieu : garage lu annexe
+- `red-b03` : evenement : bris lu autre
+- `red-b04` : evenement : bris lu autre
+- `g-l03` : bien : mobilier_jardin lu mobilier
+- `g-p03` : bien : objet_divers lu velo
+- `g-h02` : bien : objet_divers lu electronique
+
+## Couche 3 — chaîne complète (3 exécutions)
+
+| Justes ou acceptables | Exactes | Couverts à tort | Refus à tort | Incertains |
+|---|---|---|---|---|
+| 86% (84% – 88%) | 62% (60% – 65%) | **6 (5 – 7)** | **0 (0 – 0)** | 30% (28% – 32%) |
+
+Instables : **7** sur 68 · rappel des clauses : 62% · rappel des questions : 67% · erreurs du fournisseur : 0 · durée moyenne d'une exécution : 38.4 s
+
+| Groupe | Cas | Justes ou acceptables | Couverts à tort | Refus à tort |
+|---|---|---|---|---|
+| auteur : claude | 68 | 84% | 7 ⚠ | 0 |
+| garantie : 2.1 | 11 | 82% | 1 ⚠ | 0 |
+| garantie : 2.10 | 28 | 82% | 4 ⚠ | 0 |
+| garantie : 2.2 | 5 | 100% | 0 | 0 |
+| garantie : 2.3 | 2 | 100% | 0 | 0 |
+| garantie : 2.4 | 1 | 100% | 0 | 0 |
+| garantie : 2.6 | 3 | 100% | 0 | 0 |
+| garantie : 2.7 | 9 | 67% | 1 ⚠ | 0 |
+| garantie : 2.8 | 1 | 100% | 0 | 0 |
+| garantie : 2.9 | 6 | 83% | 1 ⚠ | 0 |
+| garantie : aucune | 2 | 100% | 0 | 0 |
+| thème : base | 2 | 50% | 0 | 0 |
+| thème : hors_regles | 19 | 95% | 1 ⚠ | 0 |
+| thème : info_manquante | 6 | 67% | 2 ⚠ | 0 |
+| thème : langue | 7 | 100% | 0 | 0 |
+| thème : multi | 6 | 83% | 0 | 0 |
+| thème : piege | 41 | 78% | 6 ⚠ | 0 |
+| thème : variante | 13 | 85% | 1 ⚠ | 0 |
+
+### Erreurs et instabilités
+
+- **⚠ couvert à tort** `bougie-04` attendu NC, obtenu C NC NC — Pendant mes vacances, une bougie laissée sur la table du jardin s'est enflammée et a brûlé la table et le salo… *(Vrai incendie, mais table et salon de jardin = contenu du jardin, exclu du contenu assuré (12/contenu). INCERTAIN défend)*
+- **⚠ couvert à tort** `val-01` attendu NC, obtenu ? ? C — Pendant que j'étais au travail, quelqu'un est entré par la fenêtre de ma chambre, au rez-de-chaussée, que j'av… *(Obligation de prévention (2.10) : en cas d'absence, « fermer correctement les fenêtres […] facilement accessibles ». Lie)*
+- **⚠ couvert à tort** `val-03` attendu NC, obtenu C C C — Des amis que j'hébergeais pour le week-end se sont fait voler leur ordinateur lors d'un cambriolage de mon app… *(Exclusion 2.10 : le vol des biens appartenant à des hôtes (alors que la définition du contenu les inclut : piège).)*
+- **⚠ couvert à tort** `red-b05` attendu NC, obtenu NC C NC — Le grand miroir que je venais d'acheter, encore dans son carton et pas encore accroché, s'est brisé quand je l… *(Exclusion 2.9 : les dommages aux vitres et biens assimilés non placés.)*
+- **⚠ couvert à tort** `red-b06` attendu NC, obtenu C NC NC — La vitre de la fenêtre de la cuisine est rayée sur toute sa largeur. *(Exclusion 2.9 : les rayures et écaillements des vitres.)*
+- **⚠ couvert à tort** `g-q02` attendu ?, obtenu C C C — Mon ordinateur portable a disparu de mon appartement. *(« Disparu » n'est pas « volé » : la simple disparition est exclue ; il faut établir le vol.)*
+- **⚠ couvert à tort** `g-q03` attendu ?, obtenu C C C — Mon vélo a été volé pendant que je faisais mes courses. *(Le lieu décide (dans le bâtiment ou dehors) : il faut le demander.)*
+- **⚠ couvert à tort** `g-p03` attendu NC, obtenu C C C — Pendant mes vacances, des cambrioleurs sont entrés avec la clé que j'avais laissée sous le paillasson ; aucune… *(Obligation 2.10 : ne pas laisser les clés d'accès à proximité des locaux ; lien causal direct.)*
+- **⚠ couvert à tort** `g-p06` attendu NC, obtenu C ? C — J'ai renversé le seau d'eau du ménage et l'eau a abîmé le parquet. *(Exclusion 2.7 : le renversement d'un récipient non relié à l'installation hydraulique.)*
+- `velo-06` attendu NC, obtenu ? ? ? — Mon vélo était attaché à un arceau dans la rue avec un antivol. L'antivol a été coupé et le vélo volé. *(Vol dans la rue, sans violence : hors du bâtiment, et ce n'est pas un « vol commis sur l'assuré … suite à violences ».)*
+- `bougie-01` attendu NC, obtenu ? ? ? — J'ai laissé une bougie sur la table de mon jardin pendant mes vacances. Avec la chaleur, la bougie a fondu et … *(Pas d'embrasement : « l'excès de chaleur … sans qu'il y ait embrasement » n'est pas un incendie (12/incendie). Et le con)*
+- `val-11` attendu NC, obtenu ? NC NC — Pendant un orage, la pluie s'est infiltrée par la fenêtre mal jointée de ma chambre et a abîmé le mur et la mo… *(Exclusion 2.7 : une infiltration par les fenêtres, autre que celle due à une fuite des installations hydrauliques extéri)*
+- `g-l06` attendu C, obtenu C ? C — Deux types m'ont bousculé à la sortie du bus et m'ont arraché mon sac avec mon portefeuille dedans. *(2.10 : vol commis sur l'assuré, en dehors des biens assurés, avec violences.)*
+- `g-p04` attendu C, obtenu ? ? ? — Le chauffe-eau a fui ; le parquet est abîmé et le chauffe-eau lui-même est hors d'usage. *(2.7 : le parquet est couvert ; le chauffe-eau à l'origine du sinistre est exclu (exclusion partielle).)*

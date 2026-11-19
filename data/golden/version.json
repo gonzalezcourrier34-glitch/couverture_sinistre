@@ -2,8 +2,8 @@
   "version": 10,
   "date": "2026-11-19",
   "empreintes": {
-    "foyer-appart123-2025": "68cb3c13ea714708",
-    "axa-lu-optihome-2017": "dcc3acbb5d2886e9"
+    "assureur-a-habitation-2025": "68cb3c13ea714708",
+    "assureur-b-habitation-2017": "f08ec5c7d5a5fbe0"
   },
   "historique": [
     "v1 (2026-11-17) : 68 cas : 39 existants étiquetés, 29 nouveaux",
@@ -12,9 +12,10 @@
     "v4 (2026-11-17) : règles clé, récipient, fumée, casier : faits idéaux de g-p03, g-p05, g-p09 dans le vocabulaire étendu",
     "v5 (2026-11-18) : 29 cas nouveaux : 10 où la bonne réponse est « incertain », garanties 2.5, 2.11, 2.12 et exclusions générales 1.4, pièges (effraction, toiture, clés, bain à bulles…), langue, sinistres multiples",
     "v6 (2026-11-18) : faits idéaux précisés avec le vocabulaire étendu (mérule, vandalisme, plantation, mazout, clés, toiture, piscine, entretien, intention, corrosion) ; cas et réponses attendues inchangés",
-    "v7 (2026-11-18) : 15 cas vol AXA (3.1.6)",
+    "v7 (2026-11-18) : 15 cas vol Assureur B (3.1.6)",
     "v8 (2026-11-19) : faits idéaux à jour pour les garanties traduites du lot A (g2-p10, g2-i11, red-t03)",
-    "v9 (2026-11-19) : axa-v07 : COUVERT accepté, le vol du téléphone dans la rue relève aussi de 3.1.7 (matériel multimédia), traduit le 19 nov.",
-    "v10 (2026-11-19) : axa-v07 : question formule retirée des attendues (réponse couverte sous réserve des options)"
+    "v9 (2026-11-19) : b-v07 : COUVERT accepté, le vol du téléphone dans la rue relève aussi de 3.1.7 (matériel multimédia), traduit le 19 nov.",
+    "v10 (2026-11-19) : b-v07 : question formule retirée des attendues (réponse couverte sous réserve des options)",
+    "v10 (anonymisation) : identifiants de contrats et de cas renommés ; cas, faits et réponses attendues inchangés"
   ]
 }

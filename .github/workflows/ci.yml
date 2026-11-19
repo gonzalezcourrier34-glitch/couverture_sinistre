@@ -5,9 +5,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      # SWI-Prolog : sans lui, les tests qui comparent le moteur Prolog à l'oracle Python sont sautés.
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends swi-prolog-nox
+      - uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.12"
-      - run: pip install -e ".[dev]"
-      - run: couverture versions
-      - run: pytest -q
+      - run: uv sync --extra dev --locked
+      - run: uv run couverture versions
+      - run: uv run pytest -q

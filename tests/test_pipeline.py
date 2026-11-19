@@ -173,12 +173,12 @@ def test_jeu_de_test_coherent():
 
 # --- Contrat réel (si le PDF est présent dans data/contrats) -------------------
 
-FOYER = DONNEES / "contrats" / "foyer_appart123_2025.pdf"
+PDF_ASSUREUR_A = DONNEES / "contrats" / "assureur_a_habitation_2025.pdf"
 
 
-@pytest.mark.skipif(not FOYER.exists(), reason="PDF Foyer appart 123 absent de data/contrats")
-def test_contrat_foyer_lu_et_exclusion_parties_communes_trouvee():
-    clauses = segmenter_lignes(charger_lignes(FOYER))
+@pytest.mark.skipif(not PDF_ASSUREUR_A.exists(), reason="PDF Assureur A Habitation A absent de data/contrats")
+def test_contrat_assureur_a_lu_et_exclusion_parties_communes_trouvee():
+    clauses = segmenter_lignes(charger_lignes(PDF_ASSUREUR_A))
     rapport = controler(clauses)
     assert rapport["statut"] == "OK", rapport["alertes"]
     par_id = {c.id: c for c in clauses}
@@ -323,7 +323,7 @@ from couverture.models import Citation, Faits, Resultat, Verdict  # noqa: E402
 MAINTENANT = datetime(2026, 11, 17, 8, 0, tzinfo=timezone.utc)
 
 
-def resultat(decision="NON_COUVERT", evenement="vol", contrat="foyer", questions=()):
+def resultat(decision="NON_COUVERT", evenement="vol", contrat="assureur-a", questions=()):
     v = Verdict(decision=Decision(decision), justification="…", confiance=0.9 if decision != "INCERTAIN" else 0.5,
                 citations=[Citation(clause_id="4.4", extrait="x")], informations_manquantes=list(questions))
     return Resultat(sinistre="Un sinistre décrit en une phrase.", contrat_id=contrat, methode="conditions",
@@ -566,7 +566,7 @@ def test_ingestion_ignore_la_documentation_et_retire_les_contrats_disparus(tmp_p
 
 
 def test_profil_reconnait_un_titre_numerote():
-    """« 3.1.6.1 Etendue de la garantie » (AXA) : le profil parle du titre sans son numéro."""
+    """« 3.1.6.1 Etendue de la garantie » (Assureur B) : le profil parle du titre sans son numéro."""
     from couverture.segmentation import type_du_profil
 
     assert type_du_profil("3.1.6.1 Etendue de la garantie", {"etendue de la garantie": "garantie"}).value == "garantie"

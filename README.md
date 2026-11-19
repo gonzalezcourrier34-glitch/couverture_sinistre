@@ -62,10 +62,10 @@ COUVERTURE_MODELE_CONTRAT=mistral-large-latest    # rédaction des règles : une
 
 ```bash
 uv run couverture ingerer                                   # lit data/contrats/ et remplit la base
-uv run couverture analyser --contrat foyer-appart123-2025 "Mon vélo a été volé dans ma cave fermée par un cadenas."
-uv run couverture regles   --contrat foyer-appart123-2025   # vérifie les règles (sans modèle) ; --faits pour un cas
-uv run couverture rediger  --contrat foyer-appart123-2025 --article 2.2   # Mistral Large rédige, le code contrôle
-uv run couverture banc     --contrat foyer-appart123-2025   # golden set (97 cas) : règles, lecture, chaîne, portes
+uv run couverture analyser --contrat assureur-a-habitation-2025 "Mon vélo a été volé dans ma cave fermée par un cadenas."
+uv run couverture regles   --contrat assureur-a-habitation-2025   # vérifie les règles (sans modèle) ; --faits pour un cas
+uv run couverture rediger  --contrat assureur-a-habitation-2025 --article 2.2   # Mistral Large rédige, le code contrôle
+uv run couverture banc     --contrat assureur-a-habitation-2025   # golden set (97 cas) : règles, lecture, chaîne, portes
 uv run couverture legalbench --telecharger                  # second banc, externe (Stanford, CC BY 4.0)
 uv run couverture legalbench
 uv run couverture serveur                                   # interface sur http://127.0.0.1:8000
@@ -93,7 +93,7 @@ tests/               tests (pytest), sans clé ni réseau ; un second moteur en 
 
 ## Résultats à ce stade
 
-Contrat Foyer « appart 123 » (48 pages, 147 clauses). Golden set de 97 cas (dont 13 où la bonne réponse est « incertain »), écrit par Claude et à valider par l'auteur :
+Contrat Assureur A « Habitation A » (48 pages, 147 clauses). Golden set de 97 cas (dont 13 où la bonne réponse est « incertain »), écrit par Claude et à valider par l'auteur :
 
 | Mesure | Justes | Couverts à tort | Refus à tort |
 |---|---|---|---|
@@ -101,14 +101,14 @@ Contrat Foyer « appart 123 » (48 pages, 147 clauses). Golden set de 97 cas (do
 | Chaîne complète, lecture Mistral Small vérifiée et confirmée (3 exécutions) | 90 % | 1,3 | 1 |
 | Chaîne complète, lecture Mistral Large (3 exécutions) | 91 % | 0 | 0,3 |
 
-Deuxième contrat, **AXA Luxembourg OptiHome**, garantie vol (8 sous-garanties, 11 exclusions) : règles **rédigées par Mistral Large**, contrôlées par le code, relues, puis testées sur 15 cas.
+Deuxième contrat, **Assureur B Habitation**, garantie vol (8 sous-garanties, 11 exclusions) : règles **rédigées par Mistral Large**, contrôlées par le code, relues, puis testées sur 15 cas.
 
-| Mesure (AXA, 15 cas) | Justes | Couverts à tort | Refus à tort |
+| Mesure (Assureur B, 15 cas) | Justes | Couverts à tort | Refus à tort |
 |---|---|---|---|
 | **Règles seules** | **100 %** | **0** | **0** |
 | Chaîne complète, Mistral Small (3 exécutions) | 76 % (62 % au premier banc) | **0** | **0** |
 
-Les erreurs trouvées sur AXA ont été corrigées dans la méthode (consigne de rédaction, contrôles, moteur), ce qui a aussi amélioré Foyer. Détail et progression : `docs/DEMARCHE.md`, sections 7.52 à 7.61.
+Les erreurs trouvées sur Assureur B ont été corrigées dans la méthode (consigne de rédaction, contrôles, moteur), ce qui a aussi amélioré Assureur A. Détail et progression : `docs/DEMARCHE.md`, sections 7.52 à 7.61.
 
 Les règles sont justes ; **toutes les erreurs restantes viennent de la lecture des faits**. La lecture par Small se fait en deux temps (l'événement, puis les questions qui le concernent), puis chaque fait est vérifié ; le moteur empêche qu'un doute fasse couvrir, et avant toute réponse ferme il fait confirmer les faits qui la portent : sinon, la réponse est « je ne sais pas », avec la question. Un cas prend 2,9 s (médiane, un cas à la fois). Mistral Large lit encore mieux, mais 15 minutes par passage du banc contre 2 à 3 avec Small. Le chantier en cours : la vitesse (Prolog chargé une fois) et le recours à Mistral Large pour les cas qui le demandent (DEMARCHE 7.35 à 7.45). Sur LegalBench (133 clauses externes, Mistral Small sans règles), le modèle cite juste mais tranche 90 % des cas que des lecteurs jugent ambigus : c'est ce que les règles évitent. La seule vraie mesure reste à faire : un jeu fermé écrit par l'auteur, sans voir les règles.
 

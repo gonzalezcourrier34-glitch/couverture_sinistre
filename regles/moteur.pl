@@ -85,8 +85,14 @@ condition_concept(N, C) :-
     findall(X, ( regle(extension(N, X, _, _)), extension_active(X) ), Xs),
     (   Xs == [] -> C = C0 ; C = ou([C0|Xs]) ).
 
-extension_active(X) :- eval(X, oui), !.
-extension_active(X) :- eval(X, inconnu), propres(X, Fs), member(F, Fs), eval(F, oui), !.
+%  eval/2 se demande avec une valeur libre, puis on la compare : appelé avec « oui » déjà lié, et/2 réussit
+%  par sa dernière clause (et3(_, oui)) quelle que soit la condition (DEMARCHE 7.70, trouvé par l'oracle).
+extension_active(X) :-
+    eval(X, E),
+    (   E == oui -> true
+    ;   E == inconnu, propres(X, Fs), member(F, Fs), eval(F, E1), E1 == oui
+    ),
+    !.
 
 %  Les faits positifs propres à une extension, hors des concepts qu'elle emploie : « contenu » est établi par
 %  presque toute déclaration (un meuble), il ne dit rien d'un séjour ou d'un déménagement.
@@ -168,7 +174,7 @@ concepts(_, []).
 
 preuve_concept(N, _{article:A, texte:T, role:"définition"}) :- regle(definition(N, _, A, T)).
 preuve_concept(N, _{article:A, texte:T, role:"définition"}) :- regle(precision(N, A, T)).
-preuve_concept(N, _{article:A, texte:T, role:"extension"}) :- regle(extension(N, X, A, T)), eval(X, oui).
+preuve_concept(N, _{article:A, texte:T, role:"extension"}) :- regle(extension(N, X, A, T)), eval(X, E), E == oui.
 
 %!  preuves_conditions(+Conditions, -Preuves) : les définitions citées par ces conditions.
 preuves_conditions(Cs, Preuves) :-
@@ -337,8 +343,8 @@ decider(D) :-
 %   ne joue qu'après un sinistre couvert par une garantie de base. Elle ne change jamais la décision : si la
 %   décision est COUVERT, on liste celles dont le périmètre est établi (le séjour, le déménagement : faits
 %   déclarés), avec leurs questions et réserves ; sinon, aucune. Une accessoire au périmètre seulement
-%   possible n'est pas listée : sans cela, chaque incendie couvert énumérait toutes les extensions de Foyer 3.1. Traduites comme des garanties ordinaires, elles faisaient passer des refus justes à
-%   « incertain » (25 cas au contrôle de non-régression du lot B de Foyer).
+%   possible n'est pas listée : sans cela, chaque incendie couvert énumérait toutes les extensions d'Assureur A 3.1. Traduites comme des garanties ordinaires, elles faisaient passer des refus justes à
+%   « incertain » (25 cas au contrôle de non-régression du lot B d'Assureur A).
 accessoires(D, Acc) :-
     get_dict(decision, D, "COUVERT"), !,
     findall(R, ( regle(accessoire(G)), evaluer_garantie(G, R),

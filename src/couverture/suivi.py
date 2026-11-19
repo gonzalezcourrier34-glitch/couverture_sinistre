@@ -41,7 +41,7 @@ CLE_RE = re.compile(r"[^A-Za-z0-9_\-./ ]")
 
 
 def cle(*parties) -> str:
-    """Nom de métrique accepté par MLflow : « contrat/foyer-appart123-2025/clauses/exclusion »."""
+    """Nom de métrique accepté par MLflow : « contrat/assureur-a-habitation-2025/clauses/exclusion »."""
     return "/".join(CLE_RE.sub("_", str(p)) for p in parties if str(p))
 
 

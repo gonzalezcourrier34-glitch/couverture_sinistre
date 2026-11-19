@@ -45,7 +45,7 @@ def fichiers(donnees: Path, contrat_id: str) -> list[Path]:
 
 def empreinte(donnees: Path, contrat_id: str) -> str:
     """L'empreinte des cas d'un contrat : ses annotations, ses faits idéaux, et ses seules lignes du fichier de
-    sinistres, commun à tous les contrats. Ajouter les cas d'AXA ne « modifie » pas le golden set de Foyer (7.58)."""
+    sinistres, commun à tous les contrats. Ajouter les cas d'Assureur B ne « modifie » pas le golden set d'Assureur A (7.58)."""
     sinistres, annotations, faits = fichiers(donnees, contrat_id)
     ids = {d["sinistre_id"] for d in lire_jsonl(annotations)}
     h = hashlib.sha256()

@@ -1,7 +1,7 @@
 # Fiche métriques — comment on évalue le projet
 
 Ce qu'on mesure, sur quels cas, avec quels seuils, et ce que valent les chiffres.
-Commande unique : `uv run couverture banc --contrat foyer-appart123-2025` (rapports dans `data/bancs/`).
+Commande unique : `uv run couverture banc --contrat assureur-a-habitation-2025` (rapports dans `data/bancs/`).
 Démarche et historique des mesures : [DEMARCHE.md](DEMARCHE.md), parties 7.21 et suivantes.
 
 ---
@@ -109,13 +109,13 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 
 ## 5. Dernières mesures
 
-**18 nov. 2026, 22 h 37, AXA Luxembourg OptiHome, garantie vol (15 cas, golden v7), règles rédigées par
+**18 nov. 2026, 22 h 37, Assureur B Habitation, garantie vol (15 cas, golden v7), règles rédigées par
 Mistral Large puis relues** : règles seules 100 % ; **chaîne 76 % justes, 0 couvert à tort, 0 refus à tort**,
 1 instable ; rappel des faits 82 % ; un cas à la fois : médiane 3,3 s, 95e centile 4,7 s. Progression depuis le
 premier banc (62 %) et détail : DEMARCHE 7.59 à 7.61. Cas écrits par Claude après relecture des règles : à
 confirmer par un jeu indépendant.
 
-**18 nov. 2026, 22 h 31, Foyer, après les corrections générales de la soirée** (lecture limitée aux variables
+**18 nov. 2026, 22 h 31, Assureur A, après les corrections générales de la soirée** (lecture limitée aux variables
 du contrat, aides de lecture, moteur « exclusion entamée ») : **90 % justes, 1,33 couvert à tort** (meilleur
 mesuré), 1 refus à tort, 12 instables ; 95e centile 4,1 s. DEMARCHE 7.57 à 7.61.
 
@@ -179,7 +179,7 @@ poste) : 2 incertains sur 16 tranchables par une ou deux questions, 8 questions 
 
 ## 7. Sources externes possibles
 
-Aucun jeu public ne donne la réponse selon les conditions générales de Foyer : la réponse dépend du contrat.
+Aucun jeu public ne donne la réponse selon les conditions générales d'Assureur A : la réponse dépend du contrat.
 Sources utiles :
 
 - **LegalBench, `insurance_policy_interpretation`** : 138 couples (déclaration, police), réponse
@@ -195,7 +195,7 @@ Sources utiles :
   d'appel, tribunaux ; API gratuite, https://www.data.gouv.fr/fr/datasets/api-judilibre/).
 
 Usage prévu : s'inspirer de situations réelles pour le **jeu fermé** (réécrites en déclarations et
-annotées selon les CG de Foyer par l'auteur), et LegalBench comme **second banc** de généralisation.
+annotées selon les CG d'Assureur A par l'auteur), et LegalBench comme **second banc** de généralisation.
 
 ### Le second banc : LegalBench (`couverture legalbench`)
 
@@ -220,7 +220,7 @@ avec leur attribution (CC BY 4.0). Rapports : `data/bancs/<date>-legalbench-<mod
 
 ## 8. À faire
 
-0. AXA : un jeu de cas écrit par l'auteur sans voir les règles ; les faits idéaux sans valeurs par défaut.
+0. Assureur B : un jeu de cas écrit par l'auteur sans voir les règles ; les faits idéaux sans valeurs par défaut.
 
 1. Créer le jeu fermé (`data/ferme/`, ≥ 20 cas, auteur), avec plus de cas dont la bonne réponse est « incertain ».
 2. Valider le golden set (`couverture banc --fiche`, puis `--figer "validation"`).

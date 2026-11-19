@@ -17,7 +17,7 @@ from couverture.models import Decision
 from moteur_reference import Explorateur, Contrat, Moteur, Terme
 
 RACINE = Path(__file__).resolve().parents[1]
-CONTRAT = "foyer-appart123-2025"
+CONTRAT = "assureur-a-habitation-2025"
 REGLES = RACINE / "regles" / f"{CONTRAT}.pl"
 CAS = RACINE / "regles" / "cas" / f"{CONTRAT}.jsonl"
 ANNOTATIONS = RACINE / "data" / "annotations" / f"{CONTRAT}.jsonl"
@@ -82,7 +82,7 @@ def test_exclusion_partielle(contrat):
 
 
 def contrat_sans(tmp_path, *articles):
-    """Le contrat Foyer sans les articles donnés : un test qui a besoin d'une garantie non traduite la retire
+    """Le contrat Assureur A sans les articles donnés : un test qui a besoin d'une garantie non traduite la retire
     lui-même, au lieu de dépendre de l'avancement des traductions (7.63)."""
     from couverture import redaction
     texte = prolog.fichier_regles(CONTRAT).read_text(encoding="utf-8")
@@ -414,10 +414,10 @@ def test_lecture_recoit_le_sens_des_valeurs():
 
 
 def test_un_contrat_ne_lit_que_ses_variables(tmp_path, monkeypatch):
-    """Étanchéité entre assureurs (7.57) : une variable ajoutée pour AXA (« plainte déposée ») n'entre pas dans
-    la lecture d'un vol chez Foyer, dont les règles ne l'emploient pas."""
-    foyer = prolog.variables_du_contrat("foyer-appart123-2025")
-    assert {"effraction", "cles_a_proximite", "serrure_surete"} <= foyer
+    """Étanchéité entre assureurs (7.57) : une variable ajoutée pour Assureur B (« plainte déposée ») n'entre pas dans
+    la lecture d'un vol chez Assureur A, dont les règles ne l'emploient pas."""
+    contrat_a = prolog.variables_du_contrat("assureur-a-habitation-2025")
+    assert {"effraction", "cles_a_proximite", "serrure_surete"} <= contrat_a
     regles = tmp_path / "x.pl"
     regles.write_text("% f(commentaire, oui)\n/* f(bloc, oui) */\nperimetre(g, f(effraction, oui)).\n", encoding="utf-8")
     monkeypatch.setattr(prolog, "fichier_regles", lambda c: regles)

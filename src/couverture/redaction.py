@@ -235,7 +235,7 @@ CHAMPS = {
 
 def envelopper_conditions_nues(prop: dict) -> list[str]:
     """Une circonstance, obligation ou exclusion rendue comme une condition nue ({"f": …} au lieu de
-    {"condition", "article", "texte"}) : Mistral Large l'a fait sur AXA 3.1.6 (7.54), et la reprise demandée ne
+    {"condition", "article", "texte"}) : Mistral Large l'a fait sur Assureur B 3.1.6 (7.54), et la reprise demandée ne
     l'a pas corrigé. On l'enveloppe avec l'article et la citation de sa garantie, qui sont dans la même clause,
     plutôt que de payer une nouvelle rédaction ; la citation reste à préciser par le relecteur."""
     notes = []
@@ -272,13 +272,13 @@ def conditions_particulieres_en_reserve(prop: dict) -> list[str]:
     """« En fonction des couvertures mentionnées dans vos conditions particulières » : le déclarant ne les a pas
     sous les yeux, et le moteur ne les lit pas. Une telle condition est une RÉSERVE (« sous réserve que vos
     conditions particulières… »), pas une question posée à chaque sinistre (7.62, 7.69). Le relecteur le faisait
-    à la main pour chaque garantie optionnelle d'AXA ; le code le fait désormais pour tout contrat : la
+    à la main pour chaque garantie optionnelle d'Assureur B ; le code le fait désormais pour tout contrat : la
     circonstance (ou le terme de périmètre) devient une exclusion « non condition », à demander, sur la même
     garantie. Inconnue et non évoquée, elle reste une réserve (règle 6 bis du moteur)."""
     qs, notes = questions_connues(prop), []
 
     def vise_les_cp(texte, condition):
-        # Seulement « la couverture X est-elle mentionnée » (oui/non) : une formule à plusieurs valeurs (Foyer,
+        # Seulement « la couverture X est-elle mentionnée » (oui/non) : une formule à plusieurs valeurs (Assureur A,
         # Privilège ou Active) décide de ce qui est couvert, et la question reste posée.
         if not (isinstance(condition, dict) and isinstance(condition.get("f"), list)
                 and len(condition["f"]) == 2 and condition["f"][1] == "oui"):
@@ -316,7 +316,7 @@ def conditions_particulieres_en_reserve(prop: dict) -> list[str]:
 
 def non_traduits(prop: dict) -> list[dict]:
     """Les passages déclarés non traduits. Le modèle renvoie parfois une simple phrase au lieu de l'objet
-    {"article", "texte", "pourquoi"} (AXA 3.1.6, 7.53) : on la garde, sans article, plutôt que de planter."""
+    {"article", "texte", "pourquoi"} (Assureur B 3.1.6, 7.53) : on la garde, sans article, plutôt que de planter."""
     return [n if isinstance(n, dict) else {"article": None, "texte": str(n), "pourquoi": "rendu sans article ni raison"}
             for n in prop.get("non_traduit") or []]
 
@@ -432,7 +432,7 @@ def conditions(prop: dict):
 def items_exclusion(texte: str) -> list[str]:
     """Les éléments d'une liste d'exclusions (puces « • » ou « - », ou sous-points numérotés « 3.1.6.2.4 »), sans
     la phrase d'introduction. Un tiret au milieu d'une phrase (« automoteurs – à l'exception des engins – ») est une
-    incise, pas une puce : le tiret long ne coupe qu'en début de ligne ou après « : ; . » (AXA, 7.54)."""
+    incise, pas une puce : le tiret long ne coupe qu'en début de ligne ou après « : ; . » (Assureur B, 7.54)."""
     morceaux = re.split(r"(?:^|\s)[•\-]\s|(?:^|[:;.]\s*|\n\s*)–\s|(?:^|\s)\d+(?:\.\d+){2,}\s+", texte)
     return [m.strip(" .;") for m in morceaux if len(_compact(m).split()) >= 3 and not m.strip().endswith(":")]
 
@@ -510,7 +510,7 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
             # s'il figure dans une seule clause, on la rattache, comme la compilation des fiches le faisait.
             ailleurs = [c.id for c in clauses if texte and extrait_present(texte, c.texte)]
             # Les sous-points numérotés d'une liste (« 3.1.6.2.4 ») ne sont pas des clauses : leur clause est le
-            # parent (3.1.6.2), à préférer à un texte identique ailleurs dans le contrat (AXA, 7.54).
+            # parent (3.1.6.2), à préférer à un texte identique ailleurs dans le contrat (Assureur B, 7.54).
             prefixees = [i for i in ailleurs if art and (i.startswith(str(art) + "/") or i.startswith(str(art) + "-")
                                                         or str(art).startswith(i + "."))]
             choix = prefixees if len(prefixees) == 1 else ailleurs
@@ -536,7 +536,7 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
             noter(A_RELIRE, "portée", f"exclusion « {str(x.get('texte'))[:60]} » : ne vise que {biens}, mais exclut "
                   f"tout le sinistre ; portée {{\"bien\": …}} ?")
 
-    # 3 ter. Les exclusions de l'article valent pour toutes ses garanties (AXA 3.1.6, 7.53 : les extensions
+    # 3 ter. Les exclusions de l'article valent pour toutes ses garanties (Assureur B 3.1.6, 7.53 : les extensions
     # « Privilège » et « Active » couvraient un vol sans aucune exclusion). Une garantie sans exclusion, à côté
     # d'une liste d'exclusions de l'article non mise en commun, est bloquante.
     if any(c.type == TypeClause.EXCLUSION for c in clauses_article(clauses, article)) and not prop.get("exclusions_communes"):
@@ -732,6 +732,7 @@ def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
     chemin = chemin or prolog.DOSSIER / "vocabulaire.json"
     doc = json.loads(chemin.read_text(encoding="utf-8"))
     voc, ajouts = doc["variables"], []
+    nouvelles_variables = {m.get("variable") for m in prop.get("vocabulaire_manquant", []) if m.get("variable") not in voc}
     for m in prop.get("vocabulaire_manquant", []):
         v, valeurs = m.get("variable"), [str(x) for x in m.get("valeurs", [])]
         if not (v and IDENT.match(v) and valeurs and all(IDENT.match(x) for x in valeurs)):
@@ -755,7 +756,7 @@ def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
             ajouts += [f"{v} = {x}" for x in nouvelles]
         else:
             voc[v] = {"valeurs": valeurs, "question": m.get("question") or f"Préciser : {v}"}
-            # Une variable nouvelle doit apprendre à être lue : sans aide, le premier banc AXA a lu « hôte »
+            # Une variable nouvelle doit apprendre à être lue : sans aide, le premier banc Assureur B a lu « hôte »
             # comme « hôtel » (7.59). La rédaction propose l'aide, le relecteur l'accepte avec la variable.
             aide = {str(k): str(x) for k, x in (m.get("aide") or {}).items() if str(k) in valeurs}
             if aide:
@@ -768,19 +769,39 @@ def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
             ajouts.append(f"{v} ({', '.join(valeurs)}) : « {voc[v]['question']} »")
     ajouts += etendre_pour(prop, voc)
     # Une variable d'extension (le séjour temporaire élargit le bâtiment) vaut pour toutes les garanties qui
-    # emploient le concept : elle est lue pour tout sinistre (7.69).
+    # emploient le concept, mais seulement quand la déclaration l'entame : elle est lue si le temps 1 a lu le
+    # lieu que l'extension demande (« si »), pas pour chaque sinistre (7.70 : lue partout, elle allongeait la
+    # lecture de tous). Une variable nouvelle, née de l'extension, n'est lue que là.
     for x in prop.get("extensions") or []:
-        for v, _ in feuilles(x.get("condition")):
-            if v in voc and voc[v].pop("pour", None):
-                ajouts.append(f"{v} : lue pour tous les sinistres (extension de « {x.get('concept')} »)")
+        feuilles_x = feuilles(x.get("condition"))
+        declencheurs = {}
+        for v, val in feuilles_x:
+            if v in prolog.SOCLE:
+                declencheurs.setdefault(v, [])
+                if val not in declencheurs[v]:
+                    declencheurs[v].append(val)
+        for v, _ in feuilles_x:
+            if v in prolog.SOCLE or v not in voc or not declencheurs:
+                continue
+            si = voc[v].setdefault("si", {})
+            for var, vals in declencheurs.items():
+                si[var] = si.get(var, []) + [y for y in vals if y not in si.get(var, [])]
+            if v in nouvelles_variables:
+                voc[v]["pour"] = [EXTENSION]
+            ajouts.append(f"{v} : lue aussi si " + " ; ".join(f"{var} = {'/'.join(vals)}" for var, vals in declencheurs.items())
+                          + f" (extension de « {x.get('concept')} »)")
     if ajouts:
         chemin.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return ajouts
 
 
+ACCESSOIRE = "accessoire"      # « pour » d'une variable que seules des garanties accessoires emploient : pas lue
+EXTENSION = "extension"        # « pour » d'une variable née d'une extension : lue seulement si son lieu est lu
+
+
 def evenements_par_variable(prop: dict) -> dict[str, list[str]]:
     """Pour chaque variable employée, les événements des garanties qui l'emploient. Un article peut réunir des
-    garanties d'événements différents (AXA 3.1.1 : incendie, heurt, vol, vandalisme…) : les flammes ne sont
+    garanties d'événements différents (Assureur B 3.1.1 : incendie, heurt, vol, vandalisme…) : les flammes ne sont
     pas à lire pour un vol (7.65). Une exclusion commune vaut pour les événements de toutes les garanties."""
     defs = {d.get("concept"): d.get("condition") for d in prop.get("definitions", []) if d.get("concept")}
 
@@ -802,6 +823,10 @@ def evenements_par_variable(prop: dict) -> dict[str, list[str]]:
     union = []
     for g in prop.get("garanties", []):
         evs = [x for c in g.get("perimetre", []) for v, x in feuilles(c) if v == "evenement"] or tous
+        if g.get("accessoire"):
+            # Une accessoire ne décide rien (7.68) : ses faits ne sont pas lus à chaque déclaration, ils allongeaient
+            # la lecture de toutes (« malveillance », « RC locative » cherchées dans une simple perte, 7.70).
+            evs = [ACCESSOIRE]
         union += [e for e in evs if e not in union]
         for c in g.get("perimetre", []):
             noter(c, evs)
@@ -862,7 +887,9 @@ def resumer(doc: dict) -> str:
                                                            if cle == "exclusions" else 0)
     lignes = [f"Art. {doc.get('meta', {}).get('article', '?')} : {len(g)} garantie(s) "
               f"({', '.join(x.get('id', '?') for x in g)}), {n('exclusions')} exclusion(s), "
-              f"{n('circonstances')} circonstance(s), {n('obligations')} obligation(s), {n('limites')} limite(s) ; "
+              f"{n('circonstances')} circonstance(s), {n('obligations')} obligation(s), {n('limites')} limite(s)"
+              + (f", {len(prop['extensions'])} extension(s) ({', '.join(sorted({x.get('concept', '?') for x in prop['extensions']}))})"
+                 if prop.get("extensions") else "") + " ; "
               f"événements : {', '.join(prop.get('evenements', [])) or 'aucun'}"]
     for m in prop.get("vocabulaire_manquant", []):
         lignes.append(f"  + vocabulaire proposé : {m.get('variable')} = {', '.join(map(str, m.get('valeurs', [])))} "

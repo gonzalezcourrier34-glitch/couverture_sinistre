@@ -13,3 +13,5 @@ data/mlflow/
 perso/
 garde/.venv/
 data/debug/
+# Les vrais noms et liens des CG (anonymisation, DEMARCHE 7.70)
+data/contrats/SOURCES.prive.md

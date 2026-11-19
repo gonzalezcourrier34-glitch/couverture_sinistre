@@ -1,7 +1,7 @@
 # Golden set — le banc d'essai de référence
 
 Un jeu de sinistres **figé, étiqueté et versionné**, sur lequel on rejoue tout le système à chaque
-changement : `uv run couverture banc --contrat foyer-appart123-2025`.
+changement : `uv run couverture banc --contrat assureur-a-habitation-2025`.
 
 ## Ce qu'il contient (version 6, 97 cas)
 

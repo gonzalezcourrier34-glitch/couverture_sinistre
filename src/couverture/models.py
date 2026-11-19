@@ -76,7 +76,7 @@ class Condition(BaseModel):
     """Une vérification élémentaire : un fait du sinistre confronté à un passage du contrat."""
 
     nature: str  # "garantie" (doit être remplie pour être couvert), "exclusion" (si remplie, pas couvert), "limite", "obligation"
-    role: str = ""  # méthode « fiches » : "evenement", "bien", "lieu", "circonstance"
+    role: str = ""  # rôle dans la règle : périmètre, circonstance, obligation, exclusion
     lien_causal: bool = True  # obligation de prévention : refus seulement s'il y a un lien causal
     groupe: str = ""  # nom de la garantie examinée, pour les conditions de garantie
     clause_id: str

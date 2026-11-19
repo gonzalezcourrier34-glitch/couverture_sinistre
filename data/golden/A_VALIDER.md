@@ -1,9 +1,9 @@
-# Golden set — fiche de validation (foyer-appart123-2025, v6, 97 cas)
+# Golden set — fiche de validation (assureur-a-habitation-2025, v6, 97 cas)
 
 Pour chaque cas : la réponse attendue est-elle celle d'un gestionnaire qui lit les conditions générales ? C = couvert, NC = non couvert, ? = incertain (il manque une information, ou la garantie n'est pas traduite).
 Une réponse « acceptable » est tolérée sans être exacte.
 
-Pour valider ou corriger : `data/golden/annotations/foyer-appart123-2025.jsonl` (champs `attendu`, `acceptables`, `statut` → « validé par … »), puis `uv run couverture banc --contrat foyer-appart123-2025 --figer "validation"`.
+Pour valider ou corriger : `data/golden/annotations/assureur-a-habitation-2025.jsonl` (champs `attendu`, `acceptables`, `statut` → « validé par … »), puis `uv run couverture banc --contrat assureur-a-habitation-2025 --figer "validation"`.
 
 ## Garantie 1.4
 

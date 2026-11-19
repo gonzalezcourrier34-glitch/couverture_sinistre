@@ -98,7 +98,3 @@ def nettoyer(pages: list[str]) -> list[Ligne]:
 def charger_lignes(chemin: str | Path) -> list[Ligne]:
     return nettoyer(lire_pages(chemin))
 
-
-def charger_texte(chemin: str | Path) -> str:
-    """Texte nettoyé d'un seul tenant (sert à la méthode « document brut »)."""
-    return "\n".join(l.texte for l in charger_lignes(chemin))

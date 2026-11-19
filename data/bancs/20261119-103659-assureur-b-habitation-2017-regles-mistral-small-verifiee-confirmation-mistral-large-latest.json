@@ -1,0 +1,1871 @@
+{
+ "date": "2026-11-19T10:30:40",
+ "contrat": "assureur-b-habitation-2017",
+ "methode": "regles",
+ "golden": {
+  "version": 9,
+  "empreinte": "6e6521c0eaa83be7",
+  "fige": true,
+  "n": 15,
+  "valides": 0,
+  "auteurs": {
+   "claude": 15
+  }
+ },
+ "couches": {
+  "regles": {
+   "metriques": {
+    "n": 15,
+    "exactitude": 1.0,
+    "exactitude_stricte": 0.867,
+    "faux_couverts": 0,
+    "faux_refus": 0,
+    "taux_incertain": 0.133,
+    "rappel_questions": 0.5,
+    "questions_par_incertain": 1.5,
+    "incertains_tranchables": 0.5,
+    "questions_inutiles_retirees": 15
+   },
+   "groupes": {
+    "auteur : claude": {
+     "n": 15,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.867,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.133
+    },
+    "garantie : 3.1.6": {
+     "n": 15,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.867,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.133
+    },
+    "thème : base": {
+     "n": 6,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "thème : incertain": {
+     "n": 2,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.5,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.5
+    },
+    "thème : piege": {
+     "n": 7,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.857,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.143
+    }
+   },
+   "cas": [
+    {
+     "id": "b-v01",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 1,
+     "questions": [
+      "abus_confiance",
+      "occupation_irreguliere",
+      "travaux_construction"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v02",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 0,
+     "questions": [
+      "chaleur_sans_feu"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v03",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 0,
+     "questions": [
+      "chaleur_sans_feu"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v04",
+     "attendu": "INCERTAIN",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 3,
+     "questions": [
+      "plainte_deposee"
+     ],
+     "rappel_questions": 1.0,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v05",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 1,
+     "questions": [
+      "abus_confiance",
+      "occupation_irreguliere",
+      "travaux_construction"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v06",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v07",
+     "attendu": "INCERTAIN",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": false,
+     "tranchable": true,
+     "inutiles": 0,
+     "questions": [
+      "option_materiel_multimedia",
+      "option_vol"
+     ],
+     "rappel_questions": 0.0,
+     "rappel_clauses": 0.5,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v08",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v09",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 0,
+     "questions": [
+      "chaleur_sans_feu"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v10",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 1,
+     "questions": [
+      "abus_confiance",
+      "occupation_irreguliere",
+      "travaux_construction"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v11",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 0,
+     "questions": [
+      "chaleur_sans_feu"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v12",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 0,
+     "questions": [
+      "chaleur_sans_feu"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v13",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 2,
+     "questions": [
+      "abus_confiance",
+      "occupation_irreguliere",
+      "travaux_construction"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v14",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 4,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v15",
+     "attendu": "NON_COUVERT",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": false,
+     "tranchable": true,
+     "inutiles": 3,
+     "questions": [
+      "lien_causal_travaux",
+      "sejour_temporaire"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    }
+   ]
+  },
+  "chaine": {
+   "metriques": {
+    "exactitude": {
+     "moyenne": 0.822,
+     "min": 0.8,
+     "max": 0.867
+    },
+    "exactitude_stricte": {
+     "moyenne": 0.622,
+     "min": 0.6,
+     "max": 0.667
+    },
+    "faux_couverts": {
+     "moyenne": 0.0,
+     "min": 0,
+     "max": 0
+    },
+    "faux_refus": {
+     "moyenne": 0.0,
+     "min": 0,
+     "max": 0
+    },
+    "taux_incertain": {
+     "moyenne": 0.511,
+     "min": 0.467,
+     "max": 0.533
+    },
+    "n": 15,
+    "executions": 3,
+    "instables": 1,
+    "rappel_clauses": 0.767,
+    "rappel_questions": 1.0,
+    "erreurs_fournisseur": 0,
+    "duree_moyenne_s": 72.4,
+    "latence_mediane_s": 8.64,
+    "latence_p95_s": 46.49,
+    "latence_lecture_mediane_s": 3.51,
+    "latence_lecture_p95_s": 5.06,
+    "latence_decision_mediane_s": 0.02,
+    "latence_decision_p95_s": 0.05,
+    "latence_seule_mediane_s": 7.75,
+    "latence_seule_p95_s": 53.12,
+    "latence_seule_lecture_mediane_s": 3.4,
+    "latence_seule_lecture_p95_s": 4.46,
+    "latence_seule_decision_mediane_s": 0.02,
+    "latence_seule_decision_p95_s": 0.03,
+    "latence_seule_nb": 10
+   },
+   "groupes": {
+    "auteur : claude": {
+     "n": 15,
+     "exactitude": 0.867,
+     "exactitude_stricte": 0.667,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.467
+    },
+    "garantie : 3.1.6": {
+     "n": 15,
+     "exactitude": 0.867,
+     "exactitude_stricte": 0.667,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.467
+    },
+    "thème : base": {
+     "n": 6,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "thème : incertain": {
+     "n": 2,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 1.0
+    },
+    "thème : piege": {
+     "n": 7,
+     "exactitude": 0.714,
+     "exactitude_stricte": 0.286,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.714
+    }
+   },
+   "reponses": {
+    "b-v01": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "b-v02": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "b-v03": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "b-v04": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "b-v05": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "b-v06": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "b-v07": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "b-v08": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "b-v09": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "b-v10": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "b-v11": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "b-v12": [
+     "NON_COUVERT",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "b-v13": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "b-v14": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "b-v15": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ]
+   },
+   "instables": [
+    "b-v12"
+   ],
+   "executions": [
+    [
+     {
+      "id": "b-v01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ?",
+       "Occupation irrégulière des locaux ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3012,
+       "decision": 17,
+       "total": 12852
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3460,
+       "decision": 8,
+       "total": 44684
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3950,
+       "decision": 10,
+       "total": 10590
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v04",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Une plainte a-t-elle été déposée auprès des autorités ?",
+       "À qui appartiennent les biens ?",
+       "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3626,
+       "decision": 55,
+       "total": 3685
+      },
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "b-v05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ? (locataire/personnel_prive/tiers → couvert ; assure/famille → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2251,
+       "decision": 27,
+       "total": 8345
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 4326,
+       "decision": 13,
+       "total": 4343
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v07",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Quels biens sont endommagés ou volés ?",
+       "Où se trouvaient les biens ?",
+       "Quelle formule les conditions particulières mentionnent-elles (Privilège, Active, standard) ? (active/privilege → couvert ; standard → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2145,
+       "decision": 16,
+       "total": 65114
+      },
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "b-v08",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ?",
+       "Y a-t-il eu violences physiques ou menaces ?",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 4629,
+       "decision": 4,
+       "total": 16604
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v09",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ? (oui → couvert ; non → non couvert)",
+       "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3203,
+       "decision": 19,
+       "total": 3225
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v10",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ? (locataire/personnel_prive/tiers → couvert ; assure/famille → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 4816,
+       "decision": 21,
+       "total": 8826
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 5053,
+       "decision": 13,
+       "total": 16984
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v12",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2819,
+       "decision": 32,
+       "total": 44930
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v13",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ? (locataire/personnel_prive/tiers → couvert ; assure/famille → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3274,
+       "decision": 23,
+       "total": 25824
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v14",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Qui est l'auteur ? (locataire/personnel_prive/tiers → couvert ; assure/famille → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3604,
+       "decision": 19,
+       "total": 24185
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v15",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Les travaux ont-ils contribué au vol ou à l'aggravation de ses conséquences ?",
+       "Les objets volés avaient-ils été emportés lors d'un séjour temporaire hors du domicile ?",
+       "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3776,
+       "decision": 26,
+       "total": 3806
+      },
+      "rappel_questions": null
+     }
+    ],
+    [
+     {
+      "id": "b-v01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ?",
+       "Occupation irrégulière des locaux ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2903,
+       "decision": 17,
+       "total": 9317
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3317,
+       "decision": 5,
+       "total": 46495
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3938,
+       "decision": 15,
+       "total": 7984
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v04",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Une plainte a-t-elle été déposée auprès des autorités ?",
+       "À qui appartiennent les biens ?",
+       "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3562,
+       "decision": 38,
+       "total": 3603
+      },
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "b-v05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3350,
+       "decision": 14,
+       "total": 21489
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3501,
+       "decision": 29,
+       "total": 3535
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v07",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Quels biens sont endommagés ou volés ?",
+       "Quelle formule les conditions particulières mentionnent-elles (Privilège, Active, standard) ? (active/privilege → couvert ; standard → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1826,
+       "decision": 18,
+       "total": 42356
+      },
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "b-v08",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3963,
+       "decision": 7,
+       "total": 3973
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v09",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ? (oui → couvert ; non → non couvert)",
+       "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3703,
+       "decision": 15,
+       "total": 3720
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v10",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ? (locataire/personnel_prive/tiers → couvert ; assure/famille → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3509,
+       "decision": 26,
+       "total": 8432
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3521,
+       "decision": 12,
+       "total": 5781
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v12",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ?",
+       "Y a-t-il eu violences physiques ou menaces ?",
+       "À qui appartiennent les biens ?",
+       "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2847,
+       "decision": 26,
+       "total": 2877
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v13",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ? (locataire/personnel_prive/tiers → couvert ; assure/famille → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3225,
+       "decision": 23,
+       "total": 7362
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v14",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3755,
+       "decision": 12,
+       "total": 8862
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v15",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Les travaux ont-ils contribué au vol ou à l'aggravation de ses conséquences ?",
+       "Les objets volés avaient-ils été emportés lors d'un séjour temporaire hors du domicile ?",
+       "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3695,
+       "decision": 21,
+       "total": 3720
+      },
+      "rappel_questions": null
+     }
+    ],
+    [
+     {
+      "id": "b-v01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Abus de confiance ?",
+       "Occupation irrégulière des locaux ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2363,
+       "decision": 13,
+       "total": 9871
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3348,
+       "decision": 11,
+       "total": 88498
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Occupation irrégulière des locaux ?",
+       "Vos conditions particulières mentionnent-elles la garantie « incendie et périls assimilés » ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3000,
+       "decision": 15,
+       "total": 8090
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v04",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Une plainte a-t-elle été déposée auprès des autorités ?",
+       "À qui appartiennent les biens ?",
+       "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3131,
+       "decision": 50,
+       "total": 3184
+      },
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "b-v05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ? (locataire/personnel_prive/tiers → couvert ; assure/famille → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2002,
+       "decision": 24,
+       "total": 8636
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3468,
+       "decision": 15,
+       "total": 3487
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v07",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Où se trouvaient les biens ?",
+       "Les objets volés avaient-ils été emportés lors d'un séjour temporaire hors du domicile ?",
+       "Quelle formule les conditions particulières mentionnent-elles (Privilège, Active, standard) ?"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 5060,
+       "decision": 7,
+       "total": 32033
+      },
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "b-v08",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ?",
+       "Y a-t-il eu violences physiques ou menaces ?",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3742,
+       "decision": 4,
+       "total": 27797
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v09",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ? (oui → couvert ; non → non couvert)",
+       "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3255,
+       "decision": 70,
+       "total": 3328
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v10",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ? (locataire/personnel_prive/tiers → couvert ; assure/famille → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 5553,
+       "decision": 26,
+       "total": 20313
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3884,
+       "decision": 8,
+       "total": 6981
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v12",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ? (oui → couvert ; non → non couvert)",
+       "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3873,
+       "decision": 13,
+       "total": 3889
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v13",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ? (locataire/personnel_prive/tiers → couvert ; assure/famille → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2948,
+       "decision": 23,
+       "total": 16603
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v14",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Qui est l'auteur ? (locataire/personnel_prive/tiers → couvert ; assure/famille → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 5223,
+       "decision": 19,
+       "total": 16057
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v15",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Les travaux ont-ils contribué au vol ou à l'aggravation de ses conséquences ?",
+       "Les objets volés avaient-ils été emportés lors d'un séjour temporaire hors du domicile ?",
+       "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 4299,
+       "decision": 26,
+       "total": 4329
+      },
+      "rappel_questions": null
+     }
+    ]
+   ]
+  },
+  "lecture": {
+   "metriques": {
+    "rappel_faits": 0.754,
+    "cas_avec_contradiction": 2,
+    "cas_avec_fait_vague": 0,
+    "cas_avec_fait_en_trop": 7,
+    "cas_avec_fait_sans_appui": 13,
+    "decisions_changees": 4.0,
+    "decisions_changees_vers_couvert": 1
+   },
+   "cas": [
+    {
+     "id": "b-v01",
+     "rappel": 0.852,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "proprietaire = assure",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [
+      "violence = non"
+     ],
+     "sans_appui": [
+      "violence = non",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "b-v02",
+     "rappel": 0.889,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers"
+     ],
+     "en_trop": [
+      "serrure_surete = non"
+     ],
+     "sans_appui": [
+      "serrure_surete = non"
+     ],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "b-v03",
+     "rappel": 0.75,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "proprietaire = assure",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [
+      "type_dommage = bris",
+      "vitre_placee = oui"
+     ],
+     "sans_appui": [
+      "travaux_batiment = aucun",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 1.0,
+     "grave": true
+    },
+    {
+     "id": "b-v04",
+     "rappel": 0.5,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "proprietaire = assure",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "sejour_temporaire = non",
+      "vehicule_vole = non",
+      "violence = non",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "b-v05",
+     "rappel": 0.815,
+     "contradictions": [
+      "bien : valeurs lu objet_divers"
+     ],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "proprietaire = assure"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "effraction = non"
+     ],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "b-v06",
+     "rappel": 0.7,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "effraction = non",
+      "violence = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "effraction = non",
+      "violence = non"
+     ],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "b-v07",
+     "rappel": 0.833,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "proprietaire = assure"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "effraction = non"
+     ],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "b-v08",
+     "rappel": 0.9,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "violence = non"
+     ],
+     "en_trop": [
+      "abus_confiance = non",
+      "sejour_temporaire = non"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "INCERTAIN",
+      "NON_COUVERT"
+     ],
+     "change": 0.3333333333333333,
+     "grave": false
+    },
+    {
+     "id": "b-v09",
+     "rappel": 0.7,
+     "contradictions": [
+      "bien : objet_divers lu mobilier"
+     ],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "serrure_surete = non",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "serrure_surete = non"
+     ],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 1.0,
+     "grave": false
+    },
+    {
+     "id": "b-v10",
+     "rappel": 0.667,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "proprietaire = assure",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [
+      "serrure_surete = oui",
+      "violence = non"
+     ],
+     "sans_appui": [],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "b-v11",
+     "rappel": 0.667,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "proprietaire = assure",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [
+      "vehicule_vole = oui"
+     ],
+     "sans_appui": [
+      "violence = non",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "NON_COUVERT",
+      "NON_COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "b-v12",
+     "rappel": 0.667,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "effraction = non",
+      "proprietaire = assure",
+      "violence = non",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [
+      "abus_confiance = oui"
+     ],
+     "sans_appui": [
+      "effraction = non",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "NON_COUVERT",
+     "decisions_lues": [
+      "NON_COUVERT",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.6666666666666666,
+     "grave": false
+    },
+    {
+     "id": "b-v13",
+     "rappel": 0.625,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "proprietaire = assure",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "auteur = tiers",
+      "violence = non",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "b-v14",
+     "rappel": 0.926,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "auteur = tiers",
+      "violence = non"
+     ],
+     "decision_ideale": "COUVERT",
+     "decisions_lues": [
+      "COUVERT",
+      "COUVERT",
+      "COUVERT"
+     ],
+     "change": 0.0,
+     "grave": false
+    },
+    {
+     "id": "b-v15",
+     "rappel": 0.815,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "abus_confiance = non",
+      "auteur = tiers",
+      "confiance_assure = non",
+      "materiel_laisse_en_vue = inapplicable",
+      "materiel_laisse_en_vue = non",
+      "occupation_partielle = non",
+      "sejour_temporaire = non",
+      "vehicule_ferme_cle = inapplicable",
+      "vehicule_ferme_cle = non",
+      "vehicule_vole = inapplicable",
+      "vehicule_vole = non",
+      "vol_sur_personne = non"
+     ],
+     "decision_ideale": "INCERTAIN",
+     "decisions_lues": [
+      "INCERTAIN",
+      "INCERTAIN",
+      "INCERTAIN"
+     ],
+     "change": 0.0,
+     "grave": false
+    }
+   ]
+  }
+ },
+ "avertissements": [],
+ "modele": "mistral:mistral-small-latest",
+ "lecture": "verifiee, confirmation mistral-large-latest",
+ "portes": [
+  {
+   "couche": "regles",
+   "critere": "faux_couverts",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 0,
+   "ok": true
+  },
+  {
+   "couche": "regles",
+   "critere": "faux_refus",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 0,
+   "ok": true
+  },
+  {
+   "couche": "regles",
+   "critere": "exactitude",
+   "sens": "min",
+   "seuil": 0.95,
+   "valeur": 1.0,
+   "ok": true
+  },
+  {
+   "couche": "regles",
+   "critere": "rappel_questions",
+   "sens": "min",
+   "seuil": 0.9,
+   "valeur": 0.5,
+   "ok": false
+  },
+  {
+   "couche": "regles",
+   "critere": "questions_par_incertain",
+   "sens": "max",
+   "seuil": 3,
+   "valeur": 1.5,
+   "ok": true
+  },
+  {
+   "couche": "lecture",
+   "critere": "decisions_changees",
+   "sens": "max",
+   "seuil": 2,
+   "valeur": 4.0,
+   "ok": false
+  },
+  {
+   "couche": "lecture",
+   "critere": "decisions_changees_vers_couvert",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 1,
+   "ok": false
+  },
+  {
+   "couche": "lecture",
+   "critere": "cas_avec_contradiction",
+   "sens": "max",
+   "seuil": 5,
+   "valeur": 2,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "faux_couverts",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 0.0,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "faux_refus",
+   "sens": "max",
+   "seuil": 1,
+   "valeur": 0.0,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "exactitude",
+   "sens": "min",
+   "seuil": 0.85,
+   "valeur": 0.822,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "instables",
+   "sens": "max",
+   "seuil": 3,
+   "valeur": 1,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "rappel_questions",
+   "sens": "min",
+   "seuil": 0.8,
+   "valeur": 1.0,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "latence_seule_p95_s",
+   "sens": "max",
+   "seuil": 10,
+   "valeur": 53.12,
+   "ok": false
+  }
+ ],
+ "passe": false
+}

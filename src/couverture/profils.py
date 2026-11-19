@@ -7,12 +7,12 @@ au code : on écrit un profil, réutilisé pour toutes les versions de ses contr
 
 Un profil est un fichier JSON dans `<donnees>/profils/<nom>.json` :
 {
-  "nom": "foyer",
+  "nom": "assureur-a",
   "intertitres": {"les cas non couverts": "exclusion", "ce que signifient les mots": "definition"},
-  "lignes_ignorees": ["^Foyer Assurances S\\.A\\. .*$"],
+  "lignes_ignorees": ["^Assureur A S\\.A\\. .*$"],
   "lexique": "auto"              // "auto", "deux_points" (Terme : définition) ou "terme_seul"
 }
-Le catalogue des contrats désigne le profil : "profil": "foyer".
+Le catalogue des contrats désigne le profil : "profil": "assureur-a".
 
 Un profil s'écrit à la main quand le découpage d'un contrat est signalé à vérifier
 (l'agent de réparation qui en proposait a été retiré le 18 nov. 2026, voir DEMARCHE 7.36).
@@ -68,10 +68,3 @@ def charger_profil(dossier: str | Path, nom: str) -> dict:
         raise ProfilInvalide(f"Profil introuvable : {chemin}")
     return valider_profil(json.loads(chemin.read_text(encoding="utf-8")))
 
-
-def ecrire_profil(dossier: str | Path, profil: dict) -> Path:
-    profil = valider_profil(profil)
-    chemin = Path(dossier) / f"{profil['nom']}.json"
-    chemin.parent.mkdir(parents=True, exist_ok=True)
-    chemin.write_text(json.dumps(profil, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    return chemin

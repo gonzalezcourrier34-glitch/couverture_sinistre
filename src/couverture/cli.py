@@ -2,11 +2,11 @@
 
   couverture ingerer                               # lit data/contrats/ et remplit la base
   couverture contrats                              # liste les contrats et leur statut
-  couverture clauses  --contrat foyer-appart123-2025
-  couverture regles   --contrat foyer-appart123-2025 [--faits '{"evenement": "vol"}']   # sans modèle
-  couverture rediger  --contrat foyer-appart123-2025 --article 2.2                     # Mistral Large rédige
-  couverture analyser --contrat foyer-appart123-2025 "Mon vélo a été volé dans le local commun…"
-  couverture banc     --contrat foyer-appart123-2025 [--methode brut]                  # golden set, portes
+  couverture clauses  --contrat assureur-a-habitation-2025
+  couverture regles   --contrat assureur-a-habitation-2025 [--faits '{"evenement": "vol"}']   # sans modèle
+  couverture rediger  --contrat assureur-a-habitation-2025 --article 2.2                     # Mistral Large rédige
+  couverture analyser --contrat assureur-a-habitation-2025 "Mon vélo a été volé dans le local commun…"
+  couverture banc     --contrat assureur-a-habitation-2025 [--methode brut]                  # golden set, portes
   couverture legalbench [--telecharger]                                                # second banc, externe
   couverture serveur  --port 8000
   couverture versions [--manifeste | --enregistrer] # consignes versionnées (manifeste, MLflow)

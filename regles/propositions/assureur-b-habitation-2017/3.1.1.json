@@ -1,0 +1,691 @@
+{
+  "meta": {
+    "article": "3.1.1",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-19",
+    "consigne": "redaction-regles v6",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-19",
+      "modifications": [
+        "« applicables si les conditions particulières mentionnent la garantie » : réserve (option_incendie), retirée du périmètre où elle faisait poser une question à chaque incendie",
+        "la définition de l'incendie (flammes qui se propagent) ne vaut que pour l'incendie : circonstance si(incendie, …) ; l'explosion, la foudre, la fumée n'en dépendent pas",
+        "électrocution : seulement des animaux (3.1.1.1.4) ; « action subite de la chaleur » : pour un incendie ou un autre événement, pas pour un vol (le banc posait la question pour un cambriolage, b-v04)",
+        "dégradations immobilières à l'occasion d'un vol : limitées aux éléments du bâtiment ; sans cela, tout vol de contenu était couvert par l'article incendie",
+        "« à l'extérieur du bâtiment » = jardin ou terrasse, objets et non le bâtiment (règle 3 quater) ; la voie publique tuait le vol par agression de 3.1.6 (b-v07)",
+        "vandalisme : « l'assuré est propriétaire » n'est pas `proprietaire = assure` (à qui sont les biens) : variable statut_logement ; les trois conditions en réserves",
+        "occupation régulière, choc entre corps durs, déménagement : des faits que l'assureur établit, pas des questions à chaque sinistre",
+        "attentat : « auteur = tiers » retiré du périmètre (inconnu, il faisait demander qui sont les terroristes)"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "incendie",
+      "explosion",
+      "foudre",
+      "electricite",
+      "fumee",
+      "heurt",
+      "vol",
+      "vandalisme",
+      "attentat",
+      "conflit_du_travail"
+    ],
+    "definitions": [
+      {
+        "concept": "incendie",
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "flammes",
+                "oui"
+              ]
+            },
+            {
+              "ou": [
+                {
+                  "f": [
+                    "embrasement",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "chaleur_sans_feu",
+                    "non"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "article": "3.1.1.1",
+        "texte": "L'incendie, c'est-à-dire la destruction par des flammes se propageant ou susceptibles de se propager en dehors de leur domaine normal ou d'objets dont la destination n'est pas, à ce moment, de brûler"
+      }
+    ],
+    "garanties": [
+      {
+        "id": "incendie_base",
+        "nom": "Incendie et périls de base",
+        "article": "3.1.1.1",
+        "texte": "La Compagnie assure les biens désignés, contre les périls suivants : 3.1.1.1.1 L'incendie, c'est-à-dire la destruction par des flammes se propageant ou susceptibles de se propager en dehors de leur domaine normal ou d'objets dont la destination n'est pas, à ce moment, de brûler ; 3.1.1.1.2 L'explosion ou l'implosion ; 3.1.1.1.3 La chute de la foudre ; 3.1.1.1.4 L'électrocution d'animaux ; 3.1.1.1.5 Les fumées et les suies ; 3.1.1.1.6 Les dégâts occasionnés au mobilier assuré et au bâtiment désigné par un événement soudain, résultant de l'action subite de la chaleur ou par le contact direct et immédiat avec un foyer ou une substance incandescente, même lorsqu'il n'y a pas eu embrasement, ni commencement d'incendie.",
+        "perimetre": [
+          {
+            "ou": [
+              {
+                "f": [
+                  "evenement",
+                  "incendie"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "explosion"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "foudre"
+                ]
+              },
+              {
+                "et": [
+                  {
+                    "f": [
+                      "evenement",
+                      "electricite"
+                    ]
+                  },
+                  {
+                    "f": [
+                      "bien",
+                      "animal"
+                    ]
+                  }
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "fumee"
+                ]
+              },
+              {
+                "et": [
+                  {
+                    "ou": [
+                      {
+                        "f": [
+                          "evenement",
+                          "incendie"
+                        ]
+                      },
+                      {
+                        "f": [
+                          "evenement",
+                          "autre"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "f": [
+                      "chaleur_sans_feu",
+                      "oui"
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "concept": "batiment_designe"
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "si": [
+                {
+                  "f": [
+                    "evenement",
+                    "incendie"
+                  ]
+                },
+                {
+                  "concept": "incendie"
+                }
+              ]
+            },
+            "article": "3.1.1.1",
+            "texte": "L'incendie, c'est-à-dire la destruction par des flammes se propageant ou susceptibles de se propager en dehors de leur domaine normal ou d'objets dont la destination n'est pas, à ce moment, de brûler"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      },
+      {
+        "id": "decongelation",
+        "nom": "Décongélation denrées",
+        "article": "3.1.1.2",
+        "texte": "à la décongélation de denrées alimentaires périssables contenues dans un surgélateur, congélateur ou réfrigérateur à usage domestique suite à un changement de température résultant d'un arrêt dans la production du froid imputable à la survenance d'un sinistre couvert par les présentes conditions spéciales ou par les conditions spéciales de la garantie \"dégâts électriques\"",
+        "perimetre": [
+          {
+            "f": [
+              "bien",
+              "denrees_alimentaires"
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "evenement",
+                    "incendie"
+                  ]
+                },
+                {
+                  "f": [
+                    "evenement",
+                    "explosion"
+                  ]
+                },
+                {
+                  "f": [
+                    "evenement",
+                    "foudre"
+                  ]
+                },
+                {
+                  "f": [
+                    "evenement",
+                    "electricite"
+                  ]
+                }
+              ]
+            },
+            "article": "3.1.1.2",
+            "texte": "imputable à la survenance d'un sinistre couvert par les présentes conditions spéciales ou par les conditions spéciales de la garantie \"dégâts électriques\""
+          }
+        ],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      },
+      {
+        "id": "linge",
+        "nom": "Dégradation linge",
+        "article": "3.1.1.2",
+        "texte": "à la dégradation du contenu des sèche-linge ou lave-linge à la suite d'un sinistre relevant de l'un des périls prévus aux présentes conditions spéciales de la garantie \"incendie et périls assimilés\" et aux conditions spéciales de la garantie \"dégâts électriques\"",
+        "perimetre": [
+          {
+            "f": [
+              "bien",
+              "objet_divers"
+            ]
+          },
+          {
+            "f": [
+              "lieu",
+              "logement"
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "evenement",
+                    "incendie"
+                  ]
+                },
+                {
+                  "f": [
+                    "evenement",
+                    "explosion"
+                  ]
+                },
+                {
+                  "f": [
+                    "evenement",
+                    "foudre"
+                  ]
+                },
+                {
+                  "f": [
+                    "evenement",
+                    "electricite"
+                  ]
+                }
+              ]
+            },
+            "article": "3.1.1.2",
+            "texte": "à la suite d'un sinistre relevant de l'un des périls prévus aux présentes conditions spéciales de la garantie \"incendie et périls assimilés\" et aux conditions spéciales de la garantie \"dégâts électriques\""
+          }
+        ],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      },
+      {
+        "id": "heurt",
+        "nom": "Heurt",
+        "article": "3.1.1.2",
+        "texte": "au heurt, sauf : n les dégâts causés au contenu par un Assuré ou par un animal lui appartenant ou lui ayant été confié ; n les dégâts causés au bâtiment désigné en cas de déménagement du mobilier ; n les dégâts au bien ou à l'animal ayant causé le heurt ; n les dégâts ne résultant pas directement d'un choc entre deux corps durs ; n les dégâts causés par la grêle.",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "heurt"
+            ]
+          },
+          {
+            "concept": "batiment_designe"
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "auteur",
+                    "assure"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "animal"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.1.2",
+            "texte": "les dégâts causés au contenu par un Assuré ou par un animal lui appartenant ou lui ayant été confié"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "bien",
+                    "element_batiment"
+                  ]
+                },
+                {
+                  "f": [
+                    "demenagement",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.1.1.2",
+            "texte": "les dégâts causés au bâtiment désigné en cas de déménagement du mobilier"
+          },
+          {
+            "condition": {
+              "f": [
+                "bien_a_l_origine_sinistre",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.1.2",
+            "texte": "les dégâts au bien ou à l'animal ayant causé le heurt"
+          },
+          {
+            "condition": {
+              "f": [
+                "choc_deux_corps_durs",
+                "non"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.1.1.2",
+            "texte": "les dégâts ne résultant pas directement d'un choc entre deux corps durs"
+          },
+          {
+            "condition": {
+              "f": [
+                "alea_tempete",
+                "grele"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.1.1.2",
+            "texte": "les dégâts causés par la grêle"
+          }
+        ],
+        "limites": []
+      },
+      {
+        "id": "degradations_vol",
+        "nom": "Dégradations lors de vol",
+        "article": "3.1.1.2",
+        "texte": "aux dégradations immobilières causées à l'occasion d'un vol ou d'une tentative de vol dans les locaux à occupation régulière ainsi que le vol de parties de bâtiment sauf : n les dommages ou le vol des biens se trouvant à l'extérieur du bâtiment ; n lorsque le bâtiment est en cours de construction, transformation ou rénovation, à moins que l'Assuré démontre que cette circonstance n'a pas contribué à la survenance ou à l'aggravation des conséquences du sinistre.",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "vol"
+            ]
+          },
+          {
+            "f": [
+              "bien",
+              "element_batiment"
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "et": [
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "lieu",
+                        "jardin"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "lieu",
+                        "terrasse"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "non": {
+                    "f": [
+                      "bien",
+                      "element_batiment"
+                    ]
+                  }
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.1.2",
+            "texte": "les dommages ou le vol des biens se trouvant à l'extérieur du bâtiment"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "travaux_construction",
+                    "oui"
+                  ]
+                },
+                {
+                  "non": {
+                    "f": [
+                      "lien_causal_travaux",
+                      "non"
+                    ]
+                  }
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.1.2",
+            "texte": "lorsque le bâtiment est en cours de construction, transformation ou rénovation, à moins que l'Assuré démontre que cette circonstance n'a pas contribué à la survenance ou à l'aggravation des conséquences du sinistre"
+          },
+          {
+            "condition": {
+              "f": [
+                "occupation_irreguliere",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.1.2",
+            "texte": "aux dégradations immobilières causées à l’occasion d’un vol ou d’une tentative de vol dans les locaux à occupation régulière"
+          }
+        ],
+        "limites": []
+      },
+      {
+        "id": "vandalisme",
+        "nom": "Vandalisme",
+        "article": "3.1.1.2",
+        "texte": "aux dommages causés par un acte de vandalisme ou de malveillance au bâtiment désigné pour autant que les conditions suivantes soient remplies simultanément : n l'Assuré est propriétaire du bâtiment ; n le bâtiment fait l'objet d'une occupation régulière ; n le bâtiment n'est pas en cours de construction, ni de transformation, ni de rénovation. L'indemnisation des dégâts matériels causés par vandalisme ou malveillance est consentie sans application de la règle proportionnelle à concurrence de 2.500 € par sinistre.",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "vandalisme"
+            ]
+          },
+          {
+            "f": [
+              "bien",
+              "element_batiment"
+            ]
+          },
+          {
+            "concept": "batiment_designe"
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "statut_logement",
+                "locataire"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.1.2",
+            "texte": "l’Assuré est propriétaire du bâtiment"
+          },
+          {
+            "condition": {
+              "f": [
+                "occupation_irreguliere",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.1.2",
+            "texte": "le bâtiment fait l’objet d’une occupation régulière"
+          },
+          {
+            "condition": {
+              "f": [
+                "travaux_construction",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.1.2",
+            "texte": "le bâtiment n’est pas en cours de construction, ni de transformation, ni de rénovation"
+          }
+        ],
+        "limites": [
+          {
+            "article": "3.1.1.2",
+            "texte": "L'indemnisation des dégâts matériels causés par vandalisme ou malveillance est consentie sans application de la règle proportionnelle à concurrence de 2.500 € par sinistre.",
+            "montant": "2500 EUR"
+          }
+        ]
+      },
+      {
+        "id": "attentats",
+        "nom": "Attentats et conflits du travail",
+        "article": "3.1.1.2",
+        "texte": "aux attentats et conflits du travail : La Compagnie prend en charge à concurrence de 745.000 € par sinistre les dégâts causés directement aux biens désignés : n par des personnes tierces prenant part à de tels événements ; n qui résulteraient de mesures prises dans les cas précités par une autorité légalement constituée pour la sauvegarde et la protection des biens désignés. En cas de sinistre, l'Assuré s'engage à accomplir, dans les plus brefs délais, toutes les démarches en vue de l'indemnisation des dégâts matériels subis. L'Assuré s'engage à ne pas réclamer à la Compagnie, les indemnités relatives aux dégâts matériels à concurrence desquels il a été ou pourra être indemnisé par tout tiers. En cas de double paiement, l'Assuré doit rembourser à la Compagnie les indemnités que celle-ci lui a versées. Sur base de l'autorisation délivrée par les autorités publiques, la Compagnie se réserve le droit de suspendre cette garantie moyennant l'envoi d'une lettre recommandée. La suspension prend cours 7 jours après la notification faite au Preneur d'assurance.",
+        "perimetre": [
+          {
+            "ou": [
+              {
+                "f": [
+                  "evenement",
+                  "attentat"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "conflit_du_travail"
+                ]
+              }
+            ]
+          },
+          {
+            "concept": "batiment_designe"
+          }
+        ],
+        "circonstances": [],
+        "obligations": [
+          {
+            "condition": {
+              "f": [
+                "plainte_deposee",
+                "oui"
+              ]
+            },
+            "article": "3.1.1.2",
+            "texte": "En cas de sinistre, l'Assuré s'engage à accomplir, dans les plus brefs délais, toutes les démarches en vue de l'indemnisation des dégâts matériels subis.",
+            "lien_causal": false
+          }
+        ],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "3.1.1.2",
+            "texte": "La Compagnie prend en charge à concurrence de 745.000 € par sinistre les dégâts causés directement aux biens désignés",
+            "montant": "745000 EUR"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "f": [
+            "option_incendie",
+            "non"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "3.1.1",
+        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ incendie et périls assimilés ” est accordée."
+      }
+    ],
+    "vocabulaire_manquant": [
+      {
+        "variable": "option_incendie",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Vos conditions particulières mentionnent-elles la garantie « incendie et périls assimilés » ?",
+        "aide": {
+          "oui": "la garantie figure aux conditions particulières",
+          "non": "elle n'y figure pas"
+        },
+        "pourquoi": "garantie optionnelle : réserve tant que les conditions particulières ne sont pas lues",
+        "plus_proche": "aucune ; fait des conditions particulières"
+      },
+      {
+        "variable": "evenement",
+        "valeurs": [
+          "heurt"
+        ],
+        "question": "Que s'est-il passé ?",
+        "aide": {
+          "heurt": "un véhicule, un arbre ou un objet a percuté le bâtiment ou les biens"
+        },
+        "pourquoi": "3.1.1.2.3",
+        "plus_proche": "bris : la casse, pas le choc",
+        "parent": null
+      },
+      {
+        "variable": "demenagement",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Les dégâts sont-ils survenus pendant un déménagement ?",
+        "aide": {
+          "oui": "en déménageant, en transportant les meubles",
+          "non": "hors de tout déménagement"
+        },
+        "pourquoi": "3.1.1.2.3",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "choc_deux_corps_durs",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Les dégâts viennent-ils directement d'un choc entre deux objets durs ?",
+        "aide": {
+          "oui": "percuté, cogné par un objet dur",
+          "non": "rayé, frotté, mouillé, sans choc"
+        },
+        "pourquoi": "3.1.1.2.3",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "statut_logement",
+        "valeurs": [
+          "proprietaire",
+          "locataire"
+        ],
+        "question": "Êtes-vous propriétaire ou locataire du bâtiment ?",
+        "aide": {
+          "proprietaire": "vous êtes propriétaire du logement ou de la maison",
+          "locataire": "vous louez le logement"
+        },
+        "pourquoi": "3.1.1.2.5 (vandalisme : l'assuré est propriétaire), 3.1.5 (vitrages isolants : sauf si l'assuré est locataire)",
+        "plus_proche": "proprietaire : dit à qui sont les biens, pas qui possède le bâtiment"
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "à relire",
+      "controle": "prolog",
+      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
+    }
+  ]
+}

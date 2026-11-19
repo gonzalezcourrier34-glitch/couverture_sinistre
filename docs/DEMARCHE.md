@@ -52,7 +52,7 @@ condition dont l'état est inconnu, et on sait laquelle.
 
 - Un **contrat fictif** (« Habitat Serein »), écrit pour couvrir les pièges de la consigne,
   avec **14 sinistres** et leurs réponses attendues (`data/annotations/`).
-- Les **CG réelles de Foyer** (appart 123, 48 pages). Elles ne sont pas versionnées : un
+- Les **CG réelles d'Assureur A** (Habitation A, 48 pages). Elles ne sont pas versionnées : un
   document d'assureur ne se redistribue pas.
 
 Le PDF réel a cassé le premier découpage : sommaire pris pour des clauses, lexique au
@@ -80,7 +80,7 @@ recherche **hybride** (BM25 + embeddings, fusion RRF), **deux juges** (qualité 
 
 ### 7.1 Grille v1 : réponse coupée
 
-Premiers essais sur Foyer : `INCERTAIN`, « réponse coupée à 8000 tokens », environ 4 minutes
+Premiers essais sur Assureur A : `INCERTAIN`, « réponse coupée à 8000 tokens », environ 4 minutes
 par sinistre (2 tentatives de 2 minutes).
 
 Diagnostic : la consigne v1 demandait de lister **toutes** les exclusions, « même si tu
@@ -181,7 +181,7 @@ Deux décisions de conception qui comptent :
 
 La méthode `conditions` est gardée : `couverture comparer` mesure l'écart entre les deux.
 
-### 7.8 Première compilation de Foyer : la réflexion du modèle, encore
+### 7.8 Première compilation d'Assureur A : la réflexion du modèle, encore
 
 Résultat : 17 fiches, 126 questions, 7 citations écartées, 15 exclusions générales. Les fiches
 réussies sont de bonne qualité (conditions dans le bon sens, définitions citées, exclusions
@@ -280,8 +280,8 @@ couvert, écartée faute de réponse). C'est la définition du surapprentissage,
 
 Deux décisions :
 
-**1. Mesurer avant de corriger.** Un jeu d'évaluation sur Foyer
-(`data/annotations/foyer-appart123-2025.jsonl`) : 14 sinistres, dont 6 qui doivent sortir
+**1. Mesurer avant de corriger.** Un jeu d'évaluation sur Assureur A
+(`data/annotations/assureur-a-habitation-2025.jsonl`) : 14 sinistres, dont 6 qui doivent sortir
 COUVERT (vol avec effraction dans l'appartement, vrai incendie, dégât des eaux, vol à l'arraché),
 pour voir les refus à tort. Chaque réponse attendue cite les clauses qui la fondent. Certains cas
 sont réellement ambigus sans les conditions particulières (cave fermée par un cadenas, alors que
@@ -292,12 +292,12 @@ indicateurs : `faux_refus` et `exactitude_stricte`. Les réponses sont proposée
 
 **2. Refaire la structure des fiches avec les rôles du droit des assurances.** Les quatre
 règles étaient des approximations d'une distinction que le contrat fait lui-même. L'art. 2.10
-de Foyer a une section « Obligation de prévention » séparée, avec « nous refuserons notre
+d'Assureur A a une section « Obligation de prévention » séparée, avec « nous refuserons notre
 intervention s'il existe un **lien causal direct** » et « en cas d'effraction, le non-respect
 de ces obligations est **sans incidence** ». Une liste plate de « conditions » ne peut pas
 exprimer ça.
 
-| Rôle | Exemple (Foyer, vol) | Effet sur la décision |
+| Rôle | Exemple (Assureur A, vol) | Effet sur la décision |
 |---|---|---|
 | Périmètre : événement, bien, lieu | vol ; contenu ; dans le bâtiment | « non » : la garantie est hors sujet ; tout « oui » : elle est rattachée au sinistre |
 | Circonstance | avec violences ; avec effraction | « non » : elle ne joue pas ; « inconnu » : on pose la question |
@@ -327,7 +327,7 @@ la v1 est refusée par l'analyse, avec le message qui dit de recompiler.
 
 ### 7.12 Première mesure : 93 % d'incertains, et pourquoi
 
-Compilation v2 de Foyer : 36 fiches, 350 questions, 9 écartées. Évaluation `fiches` sur les
+Compilation v2 d'Assureur A : 36 fiches, 350 questions, 9 écartées. Évaluation `fiches` sur les
 14 cas : **0 couvert à tort, 0 refus à tort**, mais 13 INCERTAIN sur 14 (exactitude 0,43 en
 comptant les incertains acceptables, 0,07 en stricte). Prudent, donc, mais inutile.
 
@@ -337,7 +337,7 @@ exclusions générales, environ 80 questions dans un seul appel, coupé ou hors 
 - les deux vrais incendies restent INCERTAIN à cause d'exclusions « inconnues » (« vice de
   construction connu de vous ») ;
 - la bougie au jardin ne trouve aucune garantie : le modèle a classé l'événement en « dommage
-  accidentel », catégorie sans fiche chez Foyer, alors que le lexique aurait reconnu « bougie ».
+  accidentel », catégorie sans fiche chez Assureur A, alors que le lexique aurait reconnu « bougie ».
 
 Trois corrections :
 1. **Un appel par fiche, en parallèle**, plus un pour les exclusions générales. Chaque appel est
@@ -381,7 +381,7 @@ des décisions justes, on le saura.
 
 ### 7.14 bis Deuxième mesure : 79 %, zéro couvert à tort, en 27 secondes
 
-Recompilation de Foyer (Mistral Large) : 38 fiches, 315 questions, **4 écartées seulement**
+Recompilation d'Assureur A (Mistral Large) : 38 fiches, 315 questions, **4 écartées seulement**
 (contre 9 : la réparation des citations fait son effet), en 11 min 22 s. Évaluation `fiches`
 avec Mistral Small sans réflexion, quatre cas à la fois :
 
@@ -530,7 +530,7 @@ Après ces corrections successives, retour à la question de fond : comment se p
 et comment la traiter ? Une remarque de l'auteur a recadré la discussion : **la structure doit se
 tirer du contrat lui-même, pas des sinistres**. Les sinistres ne servent qu'à tester.
 
-**Anatomie d'une clause réelle** (Foyer, art. 2.10 « Garantie vol » et 2.10-a, p. 11-12) :
+**Anatomie d'une clause réelle** (Assureur A, art. 2.10 « Garantie vol » et 2.10-a, p. 11-12) :
 - une seule clause numérotée contient **cinq garanties** (dans le bâtiment, chez le réparateur,
   sur la personne avec violence, contenu déplacé, vandalisme lors d'un vol) ;
 - des **obligations de prévention**, leur **sanction** (« refus s'il existe un lien causal
@@ -553,7 +553,7 @@ logique « règle générale, puis exceptions par priorité », celle de Catala 
 Research). Partout, un expert relit les règles.
 
 **Ce que ça révèle du projet.** Les fiches ont le bon squelette, mais pas de **vocabulaire de
-faits commun** : chaque fiche pose ses propres questions en texte libre (350 pour Foyer).
+faits commun** : chaque fiche pose ses propres questions en texte libre (350 pour Assureur A).
 
 **Choix pour plusieurs contrats** : les contrats deviennent des **données**, pas du code.
 - un **vocabulaire commun** de variables (événement, bien, lieu, effraction, violence, absence,
@@ -602,12 +602,12 @@ argumenté sur les cas ambigus, et **zéro couvert à tort**.
 ### 7.16 Prolog : le contrat en règles, un moteur qui décide
 
 Mise en œuvre de l'orientation 7.15, sur le vol (2.10), l'incendie (2.1) et les dégâts des eaux
-(2.7) de Foyer :
+(2.7) d'Assureur A :
 
 ```
 regles/vocabulaire.json        les variables communes à tous les contrats, et leurs valeurs
 regles/moteur.pl               le moteur unique : logique à trois valeurs, règles de gestionnaire
-regles/foyer-appart123-2025.pl les règles du contrat, chacune avec sa phrase du contrat
+regles/assureur-a-habitation-2025.pl les règles du contrat, chacune avec sa phrase du contrat
 regles/cas/<contrat>.jsonl     les faits « idéaux » des 14 sinistres, pour tester les règles seules
 ```
 
@@ -808,11 +808,11 @@ ces corrections.
 | Changement | Où | Justification |
 |---|---|---|
 | `evenement` prend plusieurs valeurs : la cause **et** le dommage | vocabulaire, consigne faits-regles v2 | Une tempête qui fait entrer la pluie a deux natures ; la lecture gardait le dommage et perdait la cause (val-13) |
-| `evenement_traduit(...)` dans chaque contrat ; un événement déclaré non traduit plafonne la décision à INCERTAIN | moteur (règle 8), règles Foyer | Un refus ne vaut que si toutes les garanties en jeu ont été examinées. Sans déclaration, tout événement est « non traduit » : le défaut est prudent |
-| « vol commis sur l'assuré » : périmètre `non(concept(batiment))` | règles Foyer | Le texte dit « en dehors des biens assurés » ; la règle l'avait omis, d'où la question absurde pour un scooter volé au garage (val-04, val-15) |
-| incendie : périmètre lié aux événements incendie, explosion, foudre | règles Foyer | Une garantie ne pose de questions que sur ce qu'elle couvre (pas de « flammes ? » pour une tempête) |
-| obligation de fermer les fenêtres en cas d'absence | vocabulaire `fenetres_fermees`, règles Foyer | Citée mot pour mot au 2.10 ; seules les portes étaient traduites (val-01) |
-| exclusion du gel sauf mesures de prévention | vocabulaire `prevention_gel`, règles Foyer | Citée mot pour mot au 2.7 ; absente des règles (val-10). Mesures inconnues : réserve, pas refus (l'assureur prouve l'exclusion) |
+| `evenement_traduit(...)` dans chaque contrat ; un événement déclaré non traduit plafonne la décision à INCERTAIN | moteur (règle 8), règles Assureur A | Un refus ne vaut que si toutes les garanties en jeu ont été examinées. Sans déclaration, tout événement est « non traduit » : le défaut est prudent |
+| « vol commis sur l'assuré » : périmètre `non(concept(batiment))` | règles Assureur A | Le texte dit « en dehors des biens assurés » ; la règle l'avait omis, d'où la question absurde pour un scooter volé au garage (val-04, val-15) |
+| incendie : périmètre lié aux événements incendie, explosion, foudre | règles Assureur A | Une garantie ne pose de questions que sur ce qu'elle couvre (pas de « flammes ? » pour une tempête) |
+| obligation de fermer les fenêtres en cas d'absence | vocabulaire `fenetres_fermees`, règles Assureur A | Citée mot pour mot au 2.10 ; seules les portes étaient traduites (val-01) |
+| exclusion du gel sauf mesures de prévention | vocabulaire `prevention_gel`, règles Assureur A | Citée mot pour mot au 2.7 ; absente des règles (val-10). Mesures inconnues : réserve, pas refus (l'assureur prouve l'exclusion) |
 | durées traduites (« il y a deux semaines » → moins de 30 jours) | consigne faits-regles v2 | La lecture ne faisait pas la conversion (val-06) |
 
 Ce qui n'a **pas** été changé, et pourquoi : la règle de combinaison. Elle donnait déjà la priorité
@@ -1379,11 +1379,11 @@ déséquilibre est apparu : le golden set ne compte que **3 cas dont la bonne r�
 sur 68, alors que savoir dire « je ne sais pas » est au cœur de la demande du recruteur ; le jeu fermé
 devra en contenir davantage.
 
-**Recherche de jeux publics** : aucun ne donne la réponse selon les CG de Foyer (elle dépend du contrat).
+**Recherche de jeux publics** : aucun ne donne la réponse selon les CG d'Assureur A (elle dépend du contrat).
 Sources retenues : LegalBench `insurance_policy_interpretation` (138 couples déclaration-police, réponse
 couvert / non couvert / ambigu, CC BY 4.0) comme second banc de généralisation ; les décisions des
 médiateurs (FSPO irlandais, Financial Ombudsman britannique), la Médiation de l'Assurance et Judilibre
-comme sources de situations réelles pour le jeu fermé, à réécrire et à annoter selon les CG de Foyer.
+comme sources de situations réelles pour le jeu fermé, à réécrire et à annoter selon les CG d'Assureur A.
 
 ### 7.30 Le golden set complété (v5)
 
@@ -1825,51 +1825,51 @@ des réponses fausses, et les cas « incertain » attendus le deviennent plus so
 Pistes : une règle de cohérence (une clé laissée à proximité n'est pas une clé volée), et, avant de
 couvrir, demander au modèle si la déclaration évoque l'une des exclusions que le moteur présume absentes.
 
-### 7.51 Trois contrats de plus : AXA Luxembourg, Société Générale, MACSF
+### 7.51 Trois contrats de plus : Assureur B, Assureur C, Assureur D
 
 Pour montrer que la méthode se généralise, trois conditions générales réelles sont téléchargées par
-l'auteur (liens dans `data/contrats/SOURCES.md` ; le lien MACSF sert désormais la version d'avril 2026,
+l'auteur (liens dans `data/contrats/SOURCES.md` ; le lien Assureur D sert désormais la version d'avril 2026,
 ajoutée au catalogue). Première ingestion, sans rien changer :
 
 | Contrat | Clauses | Statut | Alertes |
 |---|---|---|---|
-| MACSF Multirisque Habitation (2026) | 207 | OK | — |
-| Société Générale Habitation (2025) | 157 | À vérifier | aucune définition reconnue |
-| **AXA Luxembourg OptiHome (2017)** | 292 | À vérifier | 118 clauses sans type ; 25 renvois introuvables |
+| Assureur D Multirisque Habitation (2026) | 207 | OK | — |
+| Assureur C Habitation (2025) | 157 | À vérifier | aucune définition reconnue |
+| **Assureur B Habitation (2017)** | 292 | À vérifier | 118 clauses sans type ; 25 renvois introuvables |
 
-**AXA, le second contrat visé** (luxembourgeois, comme le recruteur). Deux causes, deux corrections
+**Assureur B, le second contrat visé** (luxembourgeois, comme le recruteur). Deux causes, deux corrections
 générales, plus un profil d'assureur :
-- **Le profil ne reconnaissait pas les titres numérotés.** AXA titre ses sections « 3.1.6.1 Etendue de la
+- **Le profil ne reconnaissait pas les titres numérotés.** Assureur B titre ses sections « 3.1.6.1 Etendue de la
   garantie », « 3.1.6.2 Vols exclus » ; le profil comparait le titre avec son numéro. Il le compare
-  désormais sans. Profil `data/profils/axa-lu.json` : « étendue de la garantie », « objet de la
+  désormais sans. Profil `data/profils/assureur-b.json` : « étendue de la garantie », « objet de la
   garantie » → garantie ; « montant des garanties », « estimation des dommages » → limite ; « délai de
   carence », « étendue territoriale » → condition.
 - **Les renvois vers des sous-points énumérés dans le texte** (« 3.1.7.2.9 les pertes… » écrit dans la clause
   3.1.7.2) n'avaient pas de clause à eux. Un tel renvoi mène maintenant à la clause qui le contient (au plus
   deux niveaux au-dessus).
 
-Résultat : **AXA passe à OK** (293 clauses : 34 garanties, 25 exclusions, 51 conditions, 18 limites, 71
+Résultat : **Assureur B passe à OK** (293 clauses : 34 garanties, 25 exclusions, 51 conditions, 18 limites, 71
 définitions ; 94 « autre », surtout les dispositions administratives : résiliation, prime, prescription).
 Pour la garantie vol, par exemple : 3.1.6.1 étendue (garantie), 3.1.6.2 vols exclus (exclusion), 3.1.6.3
-limites d'indemnité (limite), 3.1.6.4 mesures de sécurité (condition). Foyer est inchangé.
+limites d'indemnité (limite), 3.1.6.4 mesures de sécurité (condition). Assureur A est inchangé.
 
-**Société Générale** reste à vérifier : sa mise en page (numéros de page pris pour des numéros d'article,
-titres aux lettres espacées) demanderait un profil plus lourd ; contrat français, il passe après AXA.
+**Assureur C** reste à vérifier : sa mise en page (numéros de page pris pour des numéros d'article,
+titres aux lettres espacées) demanderait un profil plus lourd ; contrat français, il passe après Assureur B.
 
-### 7.52 AXA : des règles qui partent de zéro
+### 7.52 Assureur B : des règles qui partent de zéro
 
-Pour Foyer, les premières garanties ont été écrites à la main pour servir de modèle. **Pour AXA, aucune
+Pour Assureur A, les premières garanties ont été écrites à la main pour servir de modèle. **Pour Assureur B, aucune
 règle n'est écrite à la main** : c'est le vrai test de la généralisation. Le fichier
-`regles/axa-lu-optihome-2017.pl` part vide (en-tête seulement) ; tant qu'il l'est, aucun événement n'est
+`regles/assureur-b-habitation-2017.pl` part vide (en-tête seulement) ; tant qu'il l'est, aucun événement n'est
 traduit et le moteur répond « à examiner par un gestionnaire », jamais « non couvert ». Chaque garantie
-passe ensuite par la même chaîne que la 2.9 de Foyer : Mistral Large rédige à partir des clauses de
-l'article et des définitions du lexique AXA qu'elles emploient, le code contrôle (citations mot pour mot,
+passe ensuite par la même chaîne que la 2.9 d'Assureur A : Mistral Large rédige à partir des clauses de
+l'article et des définitions du lexique Assureur B qu'elles emploient, le code contrôle (citations mot pour mot,
 vocabulaire, concepts, chargement Prolog), l'auteur relit, puis accepte. Première garantie : **le vol
 (3.1.6)**, découpé en étendue (3.1.6.1), vols exclus (3.1.6.2), limites d'indemnité (3.1.6.3) et mesures de
 sécurité (3.1.6.4). À mesurer : ce que la rédaction réussit seule, ce qu'il faut ajouter au vocabulaire
 commun, et le temps humain de relecture.
 
-### 7.53 Première rédaction AXA (vol, 3.1.6) : un plantage, puis ce que les contrôles voient et ne voient pas
+### 7.53 Première rédaction Assureur B (vol, 3.1.6) : un plantage, puis ce que les contrôles voient et ne voient pas
 
 **Le plantage.** Mistral Large a rendu « non_traduit » comme une liste de phrases au lieu d'objets
 {"article", "texte", "pourquoi"}. Le contrôle des listes d'exclusions appelait `.get` sur une chaîne et
@@ -1895,7 +1895,7 @@ citation rattachée à un article qui n'existe pas (3.1.6.2.4) ; une partie de l
 - « Perte ou vol des clés » réduit au vol ; « biens dont l'Assuré n'est pas propriétaire » réduit à `hote`.
 
 **Leçon 69.** Les contrôles mécaniques attrapaient la forme (citations, schéma, faits inconnus, exclusions
-omises), pas une traduction plausible mais fausse. Corriger la proposition à la main aurait réglé AXA 3.1.6,
+omises), pas une traduction plausible mais fausse. Corriger la proposition à la main aurait réglé Assureur B 3.1.6,
 et rien d'autre : il aurait fallu recommencer pour chaque contrat. On a donc corrigé les causes, dans la
 chaîne de rédaction elle-même (consigne `redaction-regles` v3) :
 
@@ -1907,14 +1907,14 @@ chaîne de rédaction elle-même (consigne `redaction-regles` v3) :
 | Conditions glissées dans les limites | idem | règle 4 précisée ; **à relire** si une limite porte « si », « s'ils », « lorsque » |
 | `non_traduit` en phrases | format non vérifié | écart de schéma (reprise demandée au modèle) |
 
-Rejoués sur la proposition AXA déjà rédigée, sans relancer le modèle, ces contrôles signalent seuls les cinq
+Rejoués sur la proposition Assureur B déjà rédigée, sans relancer le modèle, ces contrôles signalent seuls les cinq
 extensions sans exclusions (bloquant), les deux réserves perdues et les quatre plafonds conditionnels (à
 relire), et les quatorze variables nouvelles sans justification. La relecture humaine reste, mais elle part
 d'une liste, pas d'une lecture ligne à ligne. Ce qui n'est pas automatisé : juger qu'une justification
 `plus_proche` est bonne. La mesure suivante : relancer la rédaction avec la consigne v3 et compter ce qui
 reste.
 
-### 7.54 Deuxième rédaction AXA (consigne v3) : le fond suit, la forme casse, le code répare
+### 7.54 Deuxième rédaction Assureur B (consigne v3) : le fond suit, la forme casse, le code répare
 
 **Mesure.** 27 minutes : la première réponse avait un défaut de forme, la reprise (une seconde rédaction
 complète) l'a répété. Les neuf circonstances étaient rendues comme des conditions nues (`{"f": …}`) au lieu
@@ -1944,10 +1944,10 @@ décisions humaines : 18 faits nouveaux à accepter ou à remplacer, et deux pas
 (les plafonds par formule, la procédure des objets retrouvés). Plus aucun défaut de forme ni d'omission.
 La relecture porte maintenant sur le vocabulaire, c'est-à-dire sur ce qu'aucun contrôle ne peut trancher.
 
-### 7.55 La relecture humaine d'AXA 3.1.6 : ce qu'elle a changé, et combien de temps
+### 7.55 La relecture humaine d'Assureur B 3.1.6 : ce qu'elle a changé, et combien de temps
 
 La relecture a porté sur le JSON de la proposition, pas sur le PDF. Chaque modification est tracée dans
-`meta.relecture` du fichier (`regles/propositions/axa-lu-optihome-2017/3.1.6.json`). Environ vingt minutes
+`meta.relecture` du fichier (`regles/propositions/assureur-b-habitation-2017/3.1.6.json`). Environ vingt minutes
 à deux, pour une garantie de huit sous-garanties et onze exclusions.
 
 **Vocabulaire : 18 faits proposés, 11 gardés.**
@@ -1983,29 +1983,29 @@ de la garantie). C'est vérifiable par le moteur lui-même, en lui donnant le p�
 
 `--accepter-vocabulaire` a ajouté dix variables et une valeur (`bien = remorque`), puis `--controler`, avec
 SWI-Prolog sur le poste, n'a plus rien trouvé de bloquant : les règles fusionnées se chargent sans
-avertissement. Il n'y a pas encore de cas annotés AXA : la non-régression est vide, et c'est la prochaine
+avertissement. Il n'y a pas encore de cas annotés Assureur B : la non-régression est vide, et c'est la prochaine
 étape.
 
 **L'effet de bord.** Les variables acceptées n'avaient pas de champ « pour ». Or la lecture ne filtre que les
 variables qui le déclarent : une variable sans « pour » est lue pour tous les sinistres. La formule
-« Privilège » ou la plainte déposée auraient été demandées pour un dégât des eaux chez Foyer, et le banc
-Foyer aurait bougé pour une raison sans rapport. Correction générale : une variable acceptée vaut pour les
+« Privilège » ou la plainte déposée auraient été demandées pour un dégât des eaux chez Assureur A, et le banc
+Assureur A aurait bougé pour une raison sans rapport. Correction générale : une variable acceptée vaut pour les
 événements de la garantie qui l'a fait naître (ici vol et vandalisme). Les dix variables déjà ajoutées ont
 été complétées, et cinq questions réécrites pour être posables à un assuré (« Serrure à cylindre ? » devient
 « Les annexes ou dépendances étaient-elles fermées par une serrure à cylindre ? » ; le séjour temporaire n'est
 pas « à l'étranger » : le contrat dit « partout dans le monde »).
 
-**Leçon 71.** Ajouter des règles pour un assureur ne doit pas changer les réponses d'un autre. Le banc Foyer
+**Leçon 71.** Ajouter des règles pour un assureur ne doit pas changer les réponses d'un autre. Le banc Assureur A
 est le test de cette étanchéité : à relancer après chaque vocabulaire accepté.
 
-### 7.57 AXA accepté ; le banc Foyer bouge à peine, et on ferme quand même la porte
+### 7.57 Assureur B accepté ; le banc Assureur A bouge à peine, et on ferme quand même la porte
 
-**Acceptation.** Les règles de l'art. 3.1.6 sont ajoutées à `regles/axa-lu-optihome-2017.pl` ; 125 tests
+**Acceptation.** Les règles de l'art. 3.1.6 sont ajoutées à `regles/assureur-b-habitation-2017.pl` ; 125 tests
 passent sur le poste.
 
-**Banc Foyer après l'ajout d'AXA** (même golden v6, Mistral Small, lecture vérifiée) :
+**Banc Assureur A après l'ajout d'Assureur B** (même golden v6, Mistral Small, lecture vérifiée) :
 
-| | Avant AXA (7.50) | Après AXA |
+| | Avant Assureur B (7.50) | Après Assureur B |
 |---|---|---|
 | Règles seules | 100 % | 100 % |
 | Chaîne : justes | 90 % | 89 % |
@@ -2014,32 +2014,32 @@ passent sur le poste.
 | Instables | 10 | 9 |
 | Un cas à la fois, médiane / 95e centile | 2,9 s / 4,7 s | 2,9 s / 20,3 s |
 
-Les règles Foyer n'ont pas changé (règles seules : 100 %). L'écart de la chaîne est de l'ordre de la
+Les règles Assureur A n'ont pas changé (règles seules : 100 %). L'écart de la chaîne est de l'ordre de la
 variation entre deux exécutions de Mistral Small (deux cas-exécutions sur 291 pour les couverts à tort). Le
 95e centile sur dix cas est une seule question lente : la médiane n'a pas bougé.
 
-**Mais la cause possible était réelle.** Le vocabulaire est commun ; la lecture d'un vol chez Foyer recevait
-donc les dix variables d'AXA (plainte, formule « Privilège »…), qu'aucune règle Foyer n'emploie : un prompt
+**Mais la cause possible était réelle.** Le vocabulaire est commun ; la lecture d'un vol chez Assureur A recevait
+donc les dix variables d'Assureur B (plainte, formule « Privilège »…), qu'aucune règle Assureur A n'emploie : un prompt
 plus long, et des faits à inventer en plus. Correction : chaque contrat ne lit que les variables que ses
-règles emploient (`f(variable, …)` relevées dans son fichier, plus le socle événement / bien / lieu). Foyer
-lit 29 variables sur 39, AXA 19. C'est aussi ce qui rend le vocabulaire commun extensible sans limite : il
+règles emploient (`f(variable, …)` relevées dans son fichier, plus le socle événement / bien / lieu). Assureur A
+lit 29 variables sur 39, Assureur B 19. C'est aussi ce qui rend le vocabulaire commun extensible sans limite : il
 peut grossir avec chaque assureur sans alourdir la lecture des autres.
 
 **Mesure après la correction** (chaque contrat ne lit que ses variables ; moteur encore sans la règle 7.58) :
-89 % justes, couverts à tort 2,33 (le niveau d'avant AXA), refus à tort 1, instables 13 ; un cas à la fois,
+89 % justes, couverts à tort 2,33 (le niveau d'avant Assureur B), refus à tort 1, instables 13 ; un cas à la fois,
 médiane 3,2 s et 95e centile 4,5 s : la porte de latence passe de nouveau, le 20 s était bien une question lente
-isolée. Rien de mesurable n'a donc été cassé par AXA ; la lecture reste la limite (20 décisions changées par
+isolée. Rien de mesurable n'a donc été cassé par Assureur B ; la lecture reste la limite (20 décisions changées par
 exécution, 13 cas instables), pas les règles.
 
 **Leçon 72.** Un vocabulaire commun pour comparer, une lecture propre à chaque contrat pour décider.
 
-### 7.58 Les cas de test AXA trouvent ce que la relecture n'a pas vu
+### 7.58 Les cas de test Assureur B trouvent ce que la relecture n'a pas vu
 
-**Quinze cas de vol AXA**, écrits d'après le texte du contrat (`data/golden/annotations/axa-lu-optihome-2017.jsonl`,
+**Quinze cas de vol Assureur B**, écrits d'après le texte du contrat (`data/golden/annotations/assureur-b-habitation-2017.jsonl`,
 faits idéaux dans `regles/cas/golden/`) : cambriolage, vol simple, plainte absente ou inconnue, agression avec
 et sans formule, vol à la tire, mobilier de jardin, cave à cadenas en immeuble, annexe à serrure à cylindre,
 voiture, femme de ménage, clés, hôtel à l'étranger, travaux. Limite assumée : je les ai écrits après avoir relu
-les règles ; ils ne sont pas indépendants, et restent « à valider par l'auteur » comme ceux de Foyer.
+les règles ; ils ne sont pas indépendants, et restent « à valider par l'auteur » comme ceux d'Assureur A.
 
 **Premier passage, règles seules : 11 sur 15.** Deux erreurs de traduction, qu'aucun contrôle ni la relecture
 n'avaient vues :
@@ -2054,7 +2054,7 @@ n'avaient vues :
   fait poser la question ; une exclusion que rien n'évoque reste une réserve. Essayée d'abord autrement
   (une circonstance par garantie) : chaque cambriolage demandait alors « y a-t-il des travaux ? », pire.
 
-**Effet sur Foyer**, mesuré par l'oracle sur les 126 cas Foyer (golden, mise au point, validation) : un seul
+**Effet sur Assureur A**, mesuré par l'oracle sur les 126 cas Assureur A (golden, mise au point, validation) : un seul
 change, g2-i06 (gel pendant une absence), de « couvert sous réserve » à « incertain : les mesures contre le gel
 étaient-elles prises ? », exactement la réponse attendue par son annotation. Un test unitaire qui figeait
 l'ancien comportement est mis à jour, avec la raison.
@@ -2066,16 +2066,16 @@ seules donnent la réponse attendue sur les faits idéaux.
 - `--accepter` remplace le bloc d'un article déjà accepté au lieu de l'ajouter une seconde fois ; les
   contrôles d'une proposition ignorent ce bloc (sinon « la garantie existe déjà »).
 - L'empreinte du golden set est calculée par contrat, sur ses seules lignes du fichier de sinistres commun :
-  ajouter AXA ne « modifie » pas le golden de Foyer, qui reste en v6.
+  ajouter Assureur B ne « modifie » pas le golden d'Assureur A, qui reste en v6.
 
 **Leçon 73.** Trois filets, trois sortes d'erreurs : les contrôles attrapent la forme, la relecture attrape le
 sens visible, les cas attrapent le sens en action, une exclusion qui en tue une autre. Aucun ne suffit seul.
 
-### 7.59 Premier banc AXA : les règles sont justes, la lecture des nouvelles variables ne l'est pas encore
+### 7.59 Premier banc Assureur B : les règles sont justes, la lecture des nouvelles variables ne l'est pas encore
 
-Golden AXA figé en v7 (15 cas). Banc, Mistral Small, lecture vérifiée, trois exécutions :
+Golden Assureur B figé en v7 (15 cas). Banc, Mistral Small, lecture vérifiée, trois exécutions :
 
-| | AXA (15 cas) | Foyer (97 cas, 7.57) |
+| | Assureur B (15 cas) | Assureur A (97 cas, 7.57) |
 |---|---|---|
 | Règles seules | 100 % justes | 100 % |
 | Chaîne : justes | 62 % | 89 % |
@@ -2087,7 +2087,7 @@ Golden AXA figé en v7 (15 cas). Banc, Mistral Small, lecture vérifiée, trois 
 Le test différentiel Prolog / oracle passe avec la règle « exclusion entamée » (128 tests sur le poste).
 
 **Où la chaîne perd.** Pas dans les règles : dans la lecture des variables nouvelles, qui n'ont pas encore les
-aides par valeur que celles de Foyer ont reçues en trente itérations.
+aides par valeur que celles d'Assureur A ont reçues en trente itérations.
 - v14 (hôtel) : `proprietaire = hote` ; le modèle a lu « hôte » comme « hôtel ».
 - v10 : « garage séparé de la maison » lu `garage` et non `annexe` ; la tondeuse lue comme véhicule à moteur.
 - v09 : « j'habite un appartement » n'est pas compris comme une occupation partielle.
@@ -2096,17 +2096,17 @@ aides par valeur que celles de Foyer ont reçues en trente itérations.
 
 **Correction : des aides par valeur** pour `proprietaire` (« un hôte, pas un hôtel »), `occupation_partielle`,
 `lieu` (garage attenant / annexe séparée), `bien = vehicule_moteur` (pas une tondeuse), `violence` (bousculade,
-arrachage / pickpocket). Elles servent aussi à Foyer, dont le banc est à relancer.
+arrachage / pickpocket). Elles servent aussi à Assureur A, dont le banc est à relancer.
 
-**Biais de mesure à corriger plus tard.** Les faits idéaux AXA contiennent des valeurs par défaut que la
+**Biais de mesure à corriger plus tard.** Les faits idéaux Assureur B contiennent des valeurs par défaut que la
 déclaration ne dit pas (`auteur = tiers`, `proprietaire = assure`) : le rappel des faits (69 %) est sous-estimé.
 
 **Leçon 74.** Le coût d'un nouvel assureur n'est pas seulement la rédaction des règles : chaque variable nouvelle
 doit apprendre à être lue. La rédaction devrait proposer les aides par valeur en même temps que la variable.
 
-### 7.60 Après les aides : Foyer au meilleur niveau mesuré, AXA lit mieux mais suspend encore
+### 7.60 Après les aides : Assureur A au meilleur niveau mesuré, Assureur B lit mieux mais suspend encore
 
-| | AXA avant aides | AXA après | Foyer (7.57) | Foyer après |
+| | Assureur B avant aides | Assureur B après | Assureur A (7.57) | Assureur A après |
 |---|---|---|---|---|
 | Rappel des faits | 69 % | **81 %** | 87 % | 87 % |
 | Cas avec contradiction | 4 | 2 | 15 | 17 |
@@ -2116,9 +2116,9 @@ doit apprendre à être lue. La rédaction devrait proposer les aides par valeur
 | Refus à tort | 1,33 | 1 | 1 | 1 |
 | 95e centile, un cas à la fois | 5,2 s | 5,3 s | 4,5 s | **4,1 s** |
 
-Foyer atteint son meilleur niveau de couverts à tort : les aides servent aux deux contrats.
+Assureur A atteint son meilleur niveau de couverts à tort : les aides servent aux deux contrats.
 
-**Ce qui reste sur AXA, cas par cas.**
+**Ce qui reste sur Assureur B, cas par cas.**
 - v10 : la tondeuse est encore lue comme véhicule à moteur, et l'exclusion « les vols de véhicules
   automoteurs » écartait **tout le sinistre**, vélos compris. Erreur de traduction : elle vise le bien, comme
   « le vol des animaux ». Scindée en deux exclusions de portée bien (véhicule ; remorque hors du bâtiment).
@@ -2126,17 +2126,17 @@ Foyer atteint son meilleur niveau de couverts à tort : les aides servent aux de
 - v06 (pickpocket) : `vol_sur_personne` lu « non » ; v09 (cadenas) : `serrure_surete = non` non lu. Aides
   ajoutées (« pris dans une poche ou un sac que vous portiez » ; « cadenas, simple loquet »).
 - v02, v08 : la lecture donne la bonne décision, la confirmation suspend (« je ne sais pas »). C'est le prix
-  de zéro couvert à tort ; sur AXA, avec 15 cas, il pèse lourd (2 cas = 13 points).
+  de zéro couvert à tort ; sur Assureur B, avec 15 cas, il pèse lourd (2 cas = 13 points).
 - v12 : la femme de ménage lue comme `abus_confiance = oui`. Juridiquement défendable ; la réponse reste un
   refus.
 
 **Mesure après la troisième passe** (128 tests sur le poste ; `--controler` avec SWI-Prolog : rien de
-bloquant) : AXA **76 % justes** (62 % avant), 56 % exactes, **couverts à tort 0, refus à tort 0**, 1 cas
+bloquant) : Assureur B **76 % justes** (62 % avant), 56 % exactes, **couverts à tort 0, refus à tort 0**, 1 cas
 instable sur 15, une seule contradiction de lecture ; un cas à la fois, médiane 3,3 s et 95e centile 4,7 s.
 Deux portes échouent encore : les décisions changées par la lecture (3,67 par exécution, seuil 2) et
 l'exactitude de la chaîne (75,5 %, seuil 85 %), l'écart venant surtout des réponses suspendues par la
 confirmation. Ces 15 cas ont été écrits par celui qui a relu les règles : la prochaine mesure honnête est
-un jeu AXA écrit sans voir les règles.
+un jeu Assureur B écrit sans voir les règles.
 
 **Leçon 75.** Sur un contrat neuf, le banc trouve d'abord des erreurs de traduction (portée d'une exclusion),
 puis des erreurs de lecture ; les premières se corrigent une fois, les secondes demandent des aides qui
@@ -2145,12 +2145,12 @@ profitent à tous les contrats.
 ### 7.61 Synthèse du 18 novembre au soir : un deuxième assureur, de zéro règle à 76 %
 
 Ce que la soirée devait montrer : que la méthode tient sur un contrat qu'on n'a pas écrit à la main. La garantie
-vol d'AXA Luxembourg (art. 3.1.6 : 8 sous-garanties, 11 exclusions) a été rédigée par Mistral Large, contrôlée par
+vol d'Assureur B (art. 3.1.6 : 8 sous-garanties, 11 exclusions) a été rédigée par Mistral Large, contrôlée par
 le code, relue, testée, mesurée. Chaque erreur trouvée a été corrigée **dans la méthode** (consigne, contrôles,
 moteur, outils) et pas seulement dans le contrat : la question de l'auteur à mi-parcours, « il faut que ce soit
 généralisable, non ? », a fixé la règle.
 
-**La progression d'AXA 3.1.6, étape par étape**
+**La progression d'Assureur B 3.1.6, étape par étape**
 
 | Étape | Section | Résultat | Correction générale qui en sort |
 |---|---|---|---|
@@ -2159,13 +2159,13 @@ généralisable, non ? », a fixé la règle.
 | Contrôles rejoués (v4), sans modèle | 7.54 | 20 bloquants, tous des décisions humaines (18 faits nouveaux, 2 non traduits) | — |
 | Relecture humaine, ~20 min à deux | 7.55 | 18 faits proposés → 11 gardés ; conflit tire / agression corrigé ; question métier posée (jardin) | champ `hors_decision` |
 | Vocabulaire accepté | 7.56 | 0 bloquant ; règles chargées par SWI-Prolog | une variable acceptée ne vaut que pour les événements de sa garantie (« pour ») |
-| Règles acceptées ; banc Foyer | 7.57 | Foyer inchangé dans la marge | chaque contrat ne lit que les variables de ses règles |
-| 15 cas AXA, règles seules | 7.58 | **11 / 15**, puis **15 / 15** | consigne v5 (« à l'extérieur ») ; moteur : exclusion **entamée** = question (améliore aussi Foyer, g2-i06) ; `--accepter` remplace ; golden par contrat |
-| Premier banc AXA | 7.59 | 62 % justes, 0 couvert à tort | aides par valeur des variables nouvelles |
+| Règles acceptées ; banc Assureur A | 7.57 | Assureur A inchangé dans la marge | chaque contrat ne lit que les variables de ses règles |
+| 15 cas Assureur B, règles seules | 7.58 | **11 / 15**, puis **15 / 15** | consigne v5 (« à l'extérieur ») ; moteur : exclusion **entamée** = question (améliore aussi Assureur A, g2-i06) ; `--accepter` remplace ; golden par contrat |
+| Premier banc Assureur B | 7.59 | 62 % justes, 0 couvert à tort | aides par valeur des variables nouvelles |
 | Banc après les aides | 7.60 | 62 % (lecture 69 → 81 %) | exclusion « véhicules » limitée au bien ; aides vol sur la personne, serrure de sûreté |
 | Banc final | 7.60 | **76 % justes, 0 couvert à tort, 0 refus à tort**, 1 instable ; 95e centile 4,7 s | — |
 
-**Le banc AXA, dans le temps** (15 cas, Mistral Small, lecture vérifiée, 3 exécutions)
+**Le banc Assureur B, dans le temps** (15 cas, Mistral Small, lecture vérifiée, 3 exécutions)
 
 | | 22 h 17 | 22 h 20 | 22 h 37 |
 |---|---|---|---|
@@ -2180,9 +2180,9 @@ généralisable, non ? », a fixé la règle.
 | Instables | 3 | 4 | 1 |
 | 95e centile, un cas à la fois | 5,2 s | 5,3 s | 4,7 s |
 
-**Foyer pendant ce temps** (97 cas) : rien n'a été cassé, et les corrections générales l'ont amélioré.
+**Assureur A pendant ce temps** (97 cas) : rien n'a été cassé, et les corrections générales l'ont amélioré.
 
-| | Avant AXA (17 h 10) | AXA accepté (21 h 59) | Lecture par contrat (22 h 13) | Aides (22 h 31) |
+| | Avant Assureur B (17 h 10) | Assureur B accepté (21 h 59) | Lecture par contrat (22 h 13) | Aides (22 h 31) |
 |---|---|---|---|---|
 | Règles seules | 100 % | 100 % | 100 % | 100 % (81 % exactes) |
 | Chaîne : justes | 90 % | 89 % | 89 % | **90 %** |
@@ -2196,15 +2196,15 @@ Large (6 puis 27 minutes) ; environ 20 minutes de relecture à deux, puis deux p
 cas et le banc ; 11 variables et 1 valeur ajoutées au vocabulaire commun, avec leurs aides de lecture ; 15 cas
 écrits. Le prochain assureur bénéficie de tout ce qui a été rendu générique ce soir.
 
-**Ce que ces chiffres ne disent pas.** Les 15 cas AXA ont été écrits par Claude après avoir relu les règles :
+**Ce que ces chiffres ne disent pas.** Les 15 cas Assureur B ont été écrits par Claude après avoir relu les règles :
 ils mesurent la cohérence, pas la justesse face à un sinistre réel. Sur 15 cas, un cas pèse 6,7 points.
 
-### 7.62 Toutes les garanties : Foyer d'abord, AXA ensuite, et deux outils avant de commencer
+### 7.62 Toutes les garanties : Assureur A d'abord, Assureur B ensuite, et deux outils avant de commencer
 
-Objectif fixé par l'auteur le 18 au soir : traduire **toutes** les garanties de Foyer, puis toutes celles d'AXA,
-avec la chaîne mise au point sur AXA 3.1.6 (rédaction, contrôles, relecture, cas, banc).
+Objectif fixé par l'auteur le 18 au soir : traduire **toutes** les garanties d'Assureur A, puis toutes celles d'Assureur B,
+avec la chaîne mise au point sur Assureur B 3.1.6 (rédaction, contrôles, relecture, cas, banc).
 
-**L'inventaire Foyer.** Déjà traduits : incendie (2.1), dégâts des eaux (2.7), bris de vitrages (2.9, rédigé par
+**L'inventaire Assureur A.** Déjà traduits : incendie (2.1), dégâts des eaux (2.7), bris de vitrages (2.9, rédigé par
 le modèle), vol (2.10), exclusions générales (1.4). Restent, en trois lots :
 - **Lot A, dommages aux biens** : tempête (2.2), catastrophes naturelles (2.3), attentat et conflit du travail
   (2.4), électricité (2.6), mazout (2.8), dégradations immobilières (2.11), mérule (2.12).
@@ -2220,19 +2220,19 @@ le modèle), vol (2.10), exclusions générales (1.4). Restent, en trois lots :
   doublons entre propositions (un concept défini deux fois) sont vus au contrôle qui suit chaque acceptation.
 - *Les aides de lecture proposées par la rédaction* (consigne v6, leçon 74) : chaque variable nouvelle vient avec,
   pour chaque valeur, ce qu'un assuré dirait pour qu'on la retienne ; `--accepter-vocabulaire` les reprend. Sans
-  elles, le premier banc AXA avait perdu 14 points de lecture. Une variable nouvelle sans aide est « à relire ».
+  elles, le premier banc Assureur B avait perdu 14 points de lecture. Une variable nouvelle sans aide est « à relire ».
 
-### 7.63 Foyer, lot A : sept garanties rédigées en 19 minutes, relues, acceptées
+### 7.63 Assureur A, lot A : sept garanties rédigées en 19 minutes, relues, acceptées
 
 **La rédaction.** Onze articles (lots A et B) rédigés par Mistral Large, trois à la fois : **19 minutes** en tout
-(une seule garantie AXA en avait pris 27 la veille, seule). Aucun plantage, aucune condition nue. La consigne v6
+(une seule garantie Assureur B en avait pris 27 la veille, seule). Aucun plantage, aucune condition nue. La consigne v6
 a tenu : chaque variable nouvelle est venue avec ses aides de lecture et sa voisine la plus proche.
 
 **Le défaut de la rédaction en parallèle : le vocabulaire.** Chaque proposition ignore les autres. Le même fait
 est arrivé sous plusieurs noms : « à l'extérieur » trois fois (`a_l_exterieur`, `situe_exterieur`,
 `lieu = exterieur`), les constructions délabrées et le logement principal deux fois (2.2 et 2.3), le contrôle des
 citernes deux fois (2.5 et 2.8), les matériaux à pied d'œuvre en variable (2.2) et en bien (2.11). Harmonisé à la
-relecture (`relecture/foyer_lot_a.py`, tracé dans `meta.relecture` de chaque proposition) : 95 faits proposés pour
+relecture (`relecture/assureur_a_lot_a.py`, tracé dans `meta.relecture` de chaque proposition) : 95 faits proposés pour
 les onze articles ; pour les sept du lot A, 50 proposés, **24 gardés** sous un nom commun.
 
 **Les corrections de fond, article par article.**
@@ -2266,9 +2266,9 @@ les onze articles ; pour les sept du lot A, 50 proposés, **24 gardés** sous un
 **Golden v8** : les faits idéaux de trois cas écrits quand ces garanties n'étaient pas traduites ont été complétés
 (g2-p10 : l'usage professionnel ; g2-i11 : le vent ; red-t03 : neige, annexe sans ancrage, non close).
 
-**Règles seules (oracle), Foyer, 97 cas : 100 % justes, 0 couvert à tort, 0 refus à tort, 92 % exactes (87 %
+**Règles seules (oracle), Assureur A, 97 cas : 100 % justes, 0 couvert à tort, 0 refus à tort, 92 % exactes (87 %
 avant le lot A)** : des « incertain » de cas hors règles deviennent des réponses fermes justes (denrées décongelées,
-fioul, tags sur la porte). AXA inchangé (100 %).
+fioul, tags sur la porte). Assureur B inchangé (100 %).
 
 **Le lot B attend.** Les extensions (3.1) et les garanties complémentaires (4) ne s'appliquent qu'**après** un
 sinistre couvert (frais de sauvetage, logement provisoire, séjour temporaire) ; traduites comme des garanties
@@ -2283,7 +2283,7 @@ relecture commence par harmoniser les noms, avant de juger le fond.
 
 ### 7.64 Le banc après le lot A : la chaîne recule, et la cause est dans le vocabulaire
 
-Banc Foyer, golden v8, Mistral Small (sur le poste, 128 tests et `--controler` sans rien de bloquant) :
+Banc Assureur A, golden v8, Mistral Small (sur le poste, 128 tests et `--controler` sans rien de bloquant) :
 
 | | Avant le lot A (7.60) | Après |
 |---|---|---|
@@ -2312,12 +2312,12 @@ nouveaux deviennent couverts à tort. Lecture cas par cas :
 ne menait nulle part peut désormais aboutir. Les aides de lecture et la hiérarchie des valeurs sont aussi
 importantes que les règles.
 
-### 7.65 AXA, lot A : huit garanties rédigées en 21 minutes, relues, acceptées
+### 7.65 Assureur B, lot A : huit garanties rédigées en 21 minutes, relues, acceptées
 
 Incendie et périls assimilés (3.1.1, sept garanties : incendie, décongélation, linge, heurt, dégradations
 immobilières à l'occasion d'un vol, vandalisme, attentats), tempête et grêle (3.1.2), dégâts électriques (3.1.3),
 dégâts des eaux (3.1.4), bris de vitrages (3.1.5), matériel multimédia (3.1.7, bris et vol), tremblement de terre
-(3.2.1), pluies et inondations (3.2.2). Relecture : `relecture/axa_lot_a.py`, tracée dans chaque proposition.
+(3.2.1), pluies et inondations (3.2.2). Relecture : `relecture/assureur_b_lot_a.py`, tracée dans chaque proposition.
 
 **Trois défauts qui reviennent dans presque toutes les propositions, traités de la même façon partout.**
 - *« Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent la garantie
@@ -2342,7 +2342,7 @@ dégâts des eaux (3.1.4), bris de vitrages (3.1.5), matériel multimédia (3.1.
   sont rattachées. La condition propre à l'alarme s'appliquait à tout appareil ; l'obligation du véhicule à tout
   sinistre.
 - 3.2.1 et 3.2.2 : `evenement = tremblement_terre`, `inondation`, `ruissellement`, `glissement_terrain` →
-  `catastrophe_naturelle` (comme Foyer) et une variable `catastrophe`. Les dommages dans les 72 heures : à
+  `catastrophe_naturelle` (comme Assureur A) et une variable `catastrophe`. Les dommages dans les 72 heures : à
   l'assureur de l'établir.
 
 **Deux corrections générales.**
@@ -2352,7 +2352,7 @@ dégâts des eaux (3.1.4), bris de vitrages (3.1.5), matériel multimédia (3.1.
   est établi (règle 7.58) et pose la question : la réserve se pose sur la seule garantie concernée, sans
   l'événement.
 
-**Vérifications.** Golden AXA (oracle) : 100 % justes, 0 couvert ni refus à tort. axa-v07 (téléphone arraché
+**Vérifications.** Golden Assureur B (oracle) : 100 % justes, 0 couvert ni refus à tort. b-v07 (téléphone arraché
 dans la rue, formule inconnue) devient « couvert » par 3.1.7 : conforme au contrat, sous réserve des options
 multimédia et vol ; annotation complétée, golden **v9**. Seize cas de contrôle sur les nouvelles garanties
 (incendie, explosion, tempête à 100 km/h, grêle, vent de force inconnue, fuite, pluie par une fenêtre ouverte,
@@ -2363,11 +2363,11 @@ réponses conformes au texte, les options en réserve.
 mentionnent ») ne se lit pas comme un contrat tout compris : l'option est une réserve, jamais une question posée
 au déclarant, qui ne la connaît pas.
 
-### 7.66 Foyer après les rattachements : 5 couverts à tort, tous des erreurs de lecture confirmées
+### 7.66 Assureur A après les rattachements : 5 couverts à tort, tous des erreurs de lecture confirmées
 
-Banc Foyer (golden v8, sur le poste, 128 tests) : règles seules 100 % (91 % exactes) ; chaîne 89 % justes,
+Banc Assureur A (golden v8, sur le poste, 128 tests) : règles seules 100 % (91 % exactes) ; chaîne 89 % justes,
 73 % exactes, **5 couverts à tort**, 0,67 refus à tort, 14 instables ; un cas à la fois, 95e centile 4,2 s.
-(Le vocabulaire d'AXA a été déposé pendant ce banc : la mesure est à refaire, mais les cas parlent.)
+(Le vocabulaire d'Assureur B a été déposé pendant ce banc : la mesure est à refaire, mais les cas parlent.)
 
 Les sept cas couverts à tort, un par un : le jardin lu « terrasse » (bougie-04, 3 sur 3), la vitre rayée lue
 « vandalisme » (red-b06, 3 sur 3 malgré l'aide de 7.64), les clés sous le paillasson lues « clés volées » (g-p03,
@@ -2388,7 +2388,7 @@ rapport. Un test vérifie que c'est ce modèle, et non le lecteur, qui tranche.
 
 Même vocabulaire, même golden (v9), Mistral Small pour la lecture, trois exécutions :
 
-| Foyer, 97 cas | Confirmation par Small | Confirmation par Large |
+| Assureur A, 97 cas | Confirmation par Small | Confirmation par Large |
 |---|---|---|
 | Chaîne : justes / exactes | 89 % / 75 % | 86 % / 67 % |
 | **Couverts à tort** (par exécution) | **4** | **1,67** |
@@ -2396,7 +2396,7 @@ Même vocabulaire, même golden (v9), Mistral Small pour la lecture, trois exéc
 | Réponses « couvert / non couvert / incertain » (sur 291) | 130 / 94 / 67 | 89 / 81 / 121 |
 | Un cas à la fois, médiane / 95e centile | 3,2 s / 19 s | **8,6 s / 40 s** |
 
-AXA (15 cas), confirmation par Large : 82 % justes (76 % avec Small), 0 couvert et 0 refus à tort, 1 instable ;
+Assureur B (15 cas), confirmation par Large : 82 % justes (76 % avec Small), 0 couvert et 0 refus à tort, 1 instable ;
 médiane 7,8 s.
 
 **Ce que fait Large.** Il refuse la vitre rayée lue « vandalisme », le jardin lu « terrasse », les clés sous le
@@ -2410,8 +2410,8 @@ simple…) deviennent « incertains », parce qu'il juge « non dit » ce que la
 ≤ 10 s » échoue). Pour un gestionnaire qui préfère un « je ne sais pas » à une erreur, elle se justifie ; pour un
 traitement de masse, non. C'est un réglage d'exploitation (`COUVERTURE_MODELE_CONFIRMATION`), pas un choix de code.
 
-**Deux réglages AXA au passage.** « L'action subite de la chaleur » (3.1.1.1.6) faisait poser la question pour un
-cambriolage : limitée à l'incendie et aux autres événements. axa-v07 n'attend plus la question de la formule
+**Deux réglages Assureur B au passage.** « L'action subite de la chaleur » (3.1.1.1.6) faisait poser la question pour un
+cambriolage : limitée à l'incendie et aux autres événements. b-v07 n'attend plus la question de la formule
 (la réponse couverte sous réserve des options ne la pose plus) : golden v10.
 
 **Leçon 80.** Un juge plus fort corrige les erreurs de fait, pas les erreurs de choix ; et un juge plus strict
@@ -2419,13 +2419,13 @@ coûte des réponses justes. Le bon réglage dépend de qui lit la réponse.
 
 ### 7.68 Les garanties accessoires : ce qui s'ajoute à un sinistre couvert, sans décider s'il l'est
 
-**Le problème.** Le lot B de Foyer (art. 3.1, extensions ; art. 4, garanties complémentaires) et celui d'AXA
+**Le problème.** Le lot B d'Assureur A (art. 3.1, extensions ; art. 4, garanties complémentaires) et celui d'Assureur B
 (3.1.8, 3.1.9, 3.2.3) décrivent des garanties qui ne jouent qu'**après** un sinistre couvert : frais de sauvetage,
 de déblai, de logement provisoire, extension à un séjour temporaire, pertes indirectes. Traduites comme des
 garanties ordinaires, elles entraient dans la décision : leur périmètre (« tout sinistre couvert ») rattachait
 chaque déclaration, leurs conditions inconnues (« le logement est-il inhabitable ? ») faisaient passer des refus
 justes à « incertain », et leur seule présence marquait les événements comme « traduits ». Le contrôle de
-non-régression du lot B de Foyer refusait les propositions pour cette raison (25 cas).
+non-régression du lot B d'Assureur A refusait les propositions pour cette raison (25 cas).
 
 **Ce qui change, dans le moteur et non dans un contrat.**
 - Un fait `accessoire(Garantie)`. Une garantie accessoire **n'entre pas dans la décision** : COUVERT, INCERTAIN
@@ -2449,7 +2449,7 @@ proposition d'accessoires.
 qu'est-ce qui s'y ajoute ? ». Les mettre au même niveau dans le moteur dégrade les décisions qu'elles ne
 concernent pas ; la distinction se fait une fois, dans le moteur, et vaut pour tous les contrats.
 
-### 7.69 Le lot B de Foyer : trois façons d'« étendre » une garantie, et une seule était accessoire
+### 7.69 Le lot B d'Assureur A : trois façons d'« étendre » une garantie, et une seule était accessoire
 
 **Rédaction (consigne v8, Mistral Large, 12 min).** Art. 3.1 : sept « extensions », toutes marquées accessoires
 par le modèle ; art. 4 : une garantie complémentaire (frais de sauvetage, déblai, logement provisoire, expertise…),
@@ -2472,21 +2472,21 @@ l'extension ne jouait jamais.
    inconnu » ; à l'acceptation, une variable d'extension est lue pour tous les sinistres (plus de « pour »).
 2. **Conditions particulières en réserve, pour tout contrat** : « en fonction des couvertures mentionnées dans vos
    conditions particulières » devient une exclusion « non condition » à demander, c'est-à-dire une réserve, et non
-   une question posée à chaque sinistre. Le relecteur le faisait à la main pour huit garanties optionnelles d'AXA
+   une question posée à chaque sinistre. Le relecteur le faisait à la main pour huit garanties optionnelles d'Assureur B
    (7.62) ; le contrôle le fait désormais (`conditions_particulieres_en_reserve`), pour une condition oui/non
-   seulement : une formule à plusieurs valeurs (Foyer : Privilège, Active) reste demandée. Sur les propositions
+   seulement : une formule à plusieurs valeurs (Assureur A : Privilège, Active) reste demandée. Sur les propositions
    existantes, seules 3.1 et 6.1 (non acceptées) changent.
 3. **Accessoires** : seules celles dont le périmètre est établi sont listées (sans cela, chaque incendie couvert
    énumérait les sept extensions) ; un passage non traduit d'un article fait seulement d'accessoires ne bloque
    plus (il ne peut pas changer une décision) ; le périmètre d'une accessoire ne dit pas « sinistre » (consigne v9).
 
-**Relecture** (`relecture/foyer_lot_b.py`). 3.1 : séjour temporaire et transport pendant le déménagement deviennent
+**Relecture** (`relecture/assureur_a_lot_b.py`). 3.1 : séjour temporaire et transport pendant le déménagement deviennent
 deux extensions du bâtiment (pour le contenu) ; la nouvelle adresse est hors décision (le logement est déjà le
 bâtiment) ; les quatre extensions de responsabilité locative restent accessoires, à revoir avec la section 5.
-4 : périmètre vidé. La question `sejour_temporaire`, écrite pour le vol d'AXA, devient générale (« hors de chez
+4 : périmètre vidé. La question `sejour_temporaire`, écrite pour le vol d'Assureur B, devient générale (« hors de chez
 vous, lors d'un séjour temporaire »).
 
-**Simulation (oracle, 97 cas Foyer).** Aucune décision ne change. Une question s'ajoute pour g2-i08 (« vol de mon
+**Simulation (oracle, 97 cas Assureur A).** Aucune décision ne change. Une question s'ajoute pour g2-i08 (« vol de mon
 sac au restaurant ») : le séjour temporaire, que l'« autre bâtiment » entame ; la question attendue (violence)
 reste posée. Incendie à l'hôtel en séjour : COUVERT par la garantie incendie, avec la citation de l'extension.
 Tests : 131 réussis.
@@ -2495,9 +2495,61 @@ Tests : 131 réussis.
 lieu ou un bien assuré (extension de définition), et couvrir une autre responsabilité (une garantie à part). Le mot
 du contrat ne dit pas laquelle ; la simulation sur le golden l'a montré en une minute.
 
+### 7.70 Le lot B accepté, les noms anonymisés, et un tour du code
+
+**Banc après le lot B** (golden v10, Mistral Small, trois exécutions, assureur A) :
+
+| | Avant le lot B (7.67) | Après |
+|---|---|---|
+| Règles seules : justes / exactes | 100 % / 91 % | 100 % / 91 % |
+| Chaîne : justes / exactes | 89 % / 75 % | 88 % / 76 % |
+| Couverts à tort (par exécution) | 4 | 5,33 |
+| Un cas à la fois : médiane / 95e centile | 3,2 s / 19 s | 3,4 s / 39 s |
+
+Les couverts à tort sont les mêmes cas, tous des erreurs de lecture (lieu, clé, cause de l'eau), plus g2-i04 une
+fois sur trois ; aucun ne passe par une extension ou une accessoire. L'écart de 4 à 5,33 est dans la variance déjà
+vue (4 à 5). Deux effets de lecture à corriger : « pendant mes vacances » est lu `sejour_temporaire = oui`
+(l'aide écrite en 7.69 le suggérait), et les variables des quatre extensions de responsabilité locative, sans
+événement, sont lues pour tout sinistre.
+
+**Les deux effets de lecture, corrigés dans la méthode.** Une variable que seules des garanties accessoires
+emploient n'est plus lue (`"pour": ["accessoire"]`) : elle ne peut rien décider. Une variable d'extension est lue
+pour ses événements d'origine, et aussi quand le temps 1 a lu le lieu qui entame l'extension (`"si": {"lieu":
+["autre_batiment"]}`) ; `--accepter-vocabulaire` l'écrit seul. Le séjour temporaire n'est donc plus cherché dans
+chaque incendie au logement, et son aide dit ce qui compte : les biens hors de chez soi, pas le déclarant en
+vacances. Le test « la consigne du temps 2 est courte » l'avait signalé (8 193 caractères pour un vol) ; il
+repasse.
+
+**Un défaut du moteur, trouvé par l'oracle.** Avec les règles du lot B, Prolog et l'oracle Python donnaient la
+même décision mais deux arbres de preuve différents pour velo-01 : Prolog montrait les deux extensions du bâtiment
+comme actives. Cause : `extension_active` demandait `eval(X, oui)` avec la valeur déjà liée, et pour une condition
+« et », la dernière clause de `et3` (`et3(_, oui)`) réussit toujours. La décision restait juste (la condition
+élargie est réévaluée), mais les faits des extensions pouvaient devenir des questions. Corrigé : on évalue, puis
+on compare. Le test différentiel a fait exactement son travail.
+
+**Anonymisation.** Les assureurs deviennent Assureur A, B, C et D, partout dans le dépôt : identifiants
+(`assureur-a-habitation-2025`…), fichiers, cas (`b-v07`), documentation. Un script hors dépôt (`perso/`) fait
+la correspondance, renomme les PDF locaux et met à jour la base ; les liens de téléchargement restent dans
+`data/contrats/SOURCES.prive.md`, non versionné. Les empreintes du golden suivent, sa version ne change pas (mêmes
+cas). Le nom commun « foyer » (le foyer d'un incendie) reste. L'historique git n'est pas réécrit, et les
+citations des conditions générales restent mot pour mot : elles ne contiennent pas les noms, mais un lecteur
+pourrait retrouver le texte.
+
+**Tour du code.** Retirés : trois fonctions jamais appelées (`charger_texte`, `ecrire_profil`, `segmenter`) et
+la racinisation de `texte.py`, restes de la recherche retirée en 7.36 ; une fixture de test inutilisée.
+`__version__` suit `pyproject.toml` (0.4.0). `EXPLICATIONS.md` décrivait encore la grille, les fiches, la recherche
+hybride et l'agent de réparation comme en service : réécrit sur l'état actuel (lexique, données, tests, choix,
+questions, limites). L'archive des consignes liste toutes les versions en service. La CI installe SWI-Prolog et
+passe à uv : le test qui compare Prolog et l'oracle y tournait sauté. Gardés, et pourquoi : les consignes des
+méthodes retirées (leur histoire), les scripts `relecture/` (la trace de chaque relecture humaine), les rapports de
+`data/bancs/` (la progression), les colonnes héritées du journal (bases existantes et tableaux Grafana).
+
+**Leçon 83.** Une documentation qui décrit un système retiré est pire qu'une absence : elle se relit à chaque
+simplification, comme le code.
+
 ## 8. Ce qui reste à faire
 
-Tenu à jour le 19 nov. 2026 ; ce qui est fait est dans les sections 7.
+Tenu à jour le 19 nov. 2026, midi ; ce qui est fait est dans les sections 7.
 
 **Le plan de lecture (7.35)**
 - La lecture vérifiée est la lecture par défaut (7.45). Mesurer Mistral Large avec elle, pour le recours dans la cascade.
@@ -2512,12 +2564,12 @@ Tenu à jour le 19 nov. 2026 ; ce qui est fait est dans les sections 7.
 - LegalBench avec Mistral Large ; et, plus tard, des règles rédigées pour quelques clauses.
 
 **Le passage à l'échelle**
-- Traduire les garanties restantes de Foyer (tempête 2.2, électricité 2.6, mazout 2.8, responsabilité de l'immeuble 2.5, dégradations 2.11, mérule 2.12) avec la rédaction par Mistral Large, consigne v5.
-- AXA : la garantie vol est faite (7.53 à 7.61). Suite : un **jeu AXA écrit par l'auteur sans voir les règles** ; puis les autres garanties (incendie, dégâts des eaux…) ; la **question métier** du vol simple au jardin (7.55) à poser à un souscripteur.
-- Faire **proposer les aides par valeur** par la rédaction, en même temps que chaque variable nouvelle (leçon 74).
+- Assureur A : lots A et B faits (7.63, 7.69). Reste : le pack multimédia (6.1), la responsabilité civile (2.5, section 5), l'assistance (2.13), la défense en justice (2.14).
+- Assureur B : vol et lot A faits (7.53 à 7.65). Reste : les extensions et frais (3.1.8, 3.1.9, 3.2.3, en accessoires ou extensions), la responsabilité de l'immeuble (3.1.10), la protection juridique (3.1.11), l'assistance (3.1.12), les sections 3.3 et 4. Puis un **jeu Assureur B écrit par l'auteur sans voir les règles**, et la **question métier** du vol simple au jardin (7.55).
+- Lecture : l'aide de `sejour_temporaire` (les biens hors de chez soi, pas le déclarant en vacances) ; ne lire les variables d'une accessoire que pour son domaine (7.70).
 - Contrôle mécanique à écrire : aucune exclusion commune ne doit rendre une extension impossible (leçon 70) ; le moteur peut le vérifier en prenant le périmètre de chaque garantie comme faits.
-- Le coût de la confirmation sur AXA (deux réponses justes suspendues sur 15) : mesurer si la confirmation peut épargner les faits que la lecture et la vérification donnent tous deux.
-- Faits idéaux AXA : retirer les valeurs par défaut que la déclaration ne dit pas (`auteur = tiers`, `proprietaire = assure`), qui sous-estiment le rappel.
+- Le coût de la confirmation sur Assureur B (deux réponses justes suspendues sur 15) : mesurer si la confirmation peut épargner les faits que la lecture et la vérification donnent tous deux.
+- Faits idéaux Assureur B : retirer les valeurs par défaut que la déclaration ne dit pas (`auteur = tiers`, `proprietaire = assure`), qui sous-estiment le rappel.
 
 **Le reste**
 - Les 43 vulnérabilités signalées par GitHub (la mise à jour du verrou n'en a pas réduit le nombre : lire la liste).
@@ -2592,7 +2644,7 @@ Tenu à jour le 19 nov. 2026 ; ce qui est fait est dans les sections 7.
 65. Un contrôle qui retire des faits doit être asymétrique : il peut rendre une réponse plus prudente, jamais plus généreuse, et c'est le moteur qui dit laquelle des deux il produit.
 66. Avant de répondre ferme, demander au moteur sur quels faits la réponse repose, et les faire confirmer : c'est là que se décide un « je ne sais pas » honnête.
 67. Confirmer qu'un fait est écrit n'attrape ni un fait mal rangé ni un fait oublié : chaque erreur de lecture a son contrôle.
-68. Un « à vérifier » se lit avant de se corriger : la moitié des alertes d'AXA venaient de deux limites générales du découpage, pas du contrat.
+68. Un « à vérifier » se lit avant de se corriger : la moitié des alertes d'Assureur B venaient de deux limites générales du découpage, pas du contrat.
 69. Les contrôles mécaniques attrapent la forme, pas une traduction plausible mais fausse : corriger la chaîne, pas le contrat.
 70. Une exclusion commune doit être compatible avec chaque extension : le vol à la tire excluait le vol par agression.
 71. Ajouter des règles pour un assureur ne doit pas changer les réponses d'un autre : le banc du premier est le test d'étanchéité.
@@ -2605,3 +2657,7 @@ Tenu à jour le 19 nov. 2026 ; ce qui est fait est dans les sections 7.
 78. Chaque garantie traduite ouvre une route de plus vers « couvert » : une valeur nouvelle doit être rattachée à celles que les règles connaissent déjà.
 79. Une garantie optionnelle (« si les conditions particulières le mentionnent ») est une réserve, jamais une question au déclarant.
 80. Un juge plus fort corrige les erreurs de fait, pas les erreurs de choix ; un juge plus strict coûte des réponses justes.
+81. Une garantie ne répond pas toujours à « est-ce couvert ? » : certaines disent ce qui s'y ajoute, et ne doivent pas entrer dans la décision.
+82. « Étendre » recouvre trois choses (ajouter des frais, élargir un lieu, couvrir une autre responsabilité) ; la simulation sur le golden les distingue en une minute.
+83. Une documentation qui décrit un système retiré est pire qu'une absence : elle se relit à chaque simplification, comme le code.
+84. En Prolog, une relation pensée pour calculer une valeur ne sert pas forcément à la vérifier : on calcule, puis on compare.

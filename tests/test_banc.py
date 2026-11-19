@@ -17,7 +17,7 @@ from moteur_reference import Contrat, Moteur
 
 RACINE = Path(__file__).resolve().parents[1]
 DONNEES = RACINE / "data"
-CONTRAT = "foyer-appart123-2025"
+CONTRAT = "assureur-a-habitation-2025"
 DECISIONS = {"COUVERT", "NON_COUVERT", "INCERTAIN"}
 
 
@@ -82,7 +82,7 @@ def test_figer_cree_une_version(tmp_path):
 @pytest.mark.parametrize("contrat_id", sorted(p.stem for p in (DONNEES / "golden" / "annotations").glob("*.jsonl")))
 def test_regles_seules_justes_pour_chaque_contrat(contrat_id):
     """Pour chaque contrat du golden set, les règles seules, sur les faits idéaux, donnent une réponse attendue
-    ou tolérée. AXA (7.58) : les cas ont trouvé deux erreurs de traduction que la relecture n'avait pas vues."""
+    ou tolérée. Assureur B (7.58) : les cas ont trouvé deux erreurs de traduction que la relecture n'avait pas vues."""
     cas, etat = banc.charger(DONNEES, contrat_id)
     assert etat["n"] >= 10 and all(c["faits"] for c in cas), "chaque cas a ses faits idéaux"
     contrat = Contrat(prolog.fichier_regles(contrat_id))

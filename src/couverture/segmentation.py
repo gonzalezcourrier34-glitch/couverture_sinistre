@@ -343,7 +343,3 @@ def segmenter_lignes(lignes: list[Ligne], profil: dict | None = None) -> list[Cl
         c.renvois = list(dict.fromkeys(cibles))
     return clauses
 
-
-def segmenter(texte: str) -> list[Clause]:
-    """Compatibilité : découpe un texte déjà extrait (une seule « page »)."""
-    return segmenter_lignes([Ligne(page=1, texte=l) for l in texte.splitlines() if l.strip()])

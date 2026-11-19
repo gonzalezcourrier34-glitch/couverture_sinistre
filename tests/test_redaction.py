@@ -16,7 +16,7 @@ from couverture import prolog, redaction
 from couverture.models import Clause, TypeClause
 from moteur_reference import Contrat, Moteur
 
-CONTRAT = "foyer-appart123-2025"
+CONTRAT = "assureur-a-habitation-2025"
 CHEMIN = ["2 Les garanties de base de l’assurance habitation", "2.2 Tempête, la grêle, la pression de la neige ou de la glace"]
 CLAUSES = [
     Clause(id="2.2", article="2.2", titre="Tempête", chemin=CHEMIN, type=TypeClause.GARANTIE, groupe="2",
@@ -166,7 +166,7 @@ def test_citation_reparee_ou_refusee():
 
 
 def test_non_traduit_en_simple_phrase():
-    """AXA 3.1.6 : Mistral Large a rendu « non_traduit » comme une liste de phrases. Le schéma le signale
+    """Assureur B 3.1.6 : Mistral Large a rendu « non_traduit » comme une liste de phrases. Le schéma le signale
     (une reprise est demandée au modèle) et les contrôles ne plantent pas : le passage reste bloquant."""
     prop = copy.deepcopy(BONNE)
     prop["non_traduit"] = ["aux matériaux à pied d’œuvre : pas de fait pour cela"]
@@ -187,7 +187,7 @@ def _deux_garanties(communes: bool) -> dict:
 
 
 def test_exclusions_de_l_article_pour_toutes_ses_garanties():
-    """AXA 3.1.6 (7.53) : une extension sans les exclusions de l'article couvrirait sans elles."""
+    """Assureur B 3.1.6 (7.53) : une extension sans les exclusions de l'article couvrirait sans elles."""
     assert any("tempete_extension" in p["message"] for p in bloquants(controles(_deux_garanties(False)), "exclusions"))
     prop = _deux_garanties(True)
     assert not bloquants(controles(prop), "exclusions")
@@ -220,7 +220,7 @@ def test_le_vocabulaire_donne_au_modele_porte_les_questions():
 
 
 def test_condition_nue_enveloppee_et_signalee():
-    """AXA 3.1.6 v3 (7.54) : les circonstances rendues comme {"f": …}, deux fois de suite. Elles sont enveloppées
+    """Assureur B 3.1.6 v3 (7.54) : les circonstances rendues comme {"f": …}, deux fois de suite. Elles sont enveloppées
     avec la citation de leur garantie, et l'avertissement revient tant qu'elles ne sont pas précisées."""
     prop = copy.deepcopy(BONNE)
     prop["garanties"][0]["circonstances"].append({"f": ["vent_fort", "oui"]})
@@ -290,11 +290,27 @@ def test_extension_de_definition_en_prolog_et_controles(voc_etendu):
     prop["extensions"][0]["concept"] = "piscine_couverte"
     assert any("extension d'un concept inconnu" in p["message"] for p in bloquants(controles(prop), "concept"))
     prop["extensions"][0]["concept"] = "batiment"
-    voc = json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]
-    assert voc["sejour_temporaire"].get("pour")
+    doc = json.loads(voc_etendu.read_text(encoding="utf-8"))
+    doc["variables"]["sejour_temporaire"]["pour"] = ["vol"]
+    doc["variables"]["sejour_temporaire"].pop("si", None)
+    voc_etendu.write_text(json.dumps(doc, ensure_ascii=False), encoding="utf-8")
     ajouts = redaction.accepter_vocabulaire(prop, voc_etendu)
-    assert "pour" not in json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]["sejour_temporaire"]
-    assert any("sejour_temporaire : lue pour tous les sinistres" in a for a in ajouts)
+    sejour = json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]["sejour_temporaire"]
+    assert sejour["pour"] == ["vol"] and sejour["si"] == {"lieu": ["autre_batiment"]}, \
+        "lue pour le vol comme avant, et aussi quand le lieu lu est un autre bâtiment (7.70)"
+    assert any("sejour_temporaire : lue aussi si lieu = autre_batiment" in a for a in ajouts)
+
+
+def test_variable_d_extension_lue_si_son_lieu_est_lu():
+    """7.70 : une variable d'extension n'allonge pas la lecture de chaque sinistre ; elle est demandée quand le
+    temps 1 a lu le lieu qui l'entame. Une variable d'accessoire n'est pas lue."""
+    voc = {"evenement": {"valeurs": ["incendie"]}, "bien": {"valeurs": []}, "lieu": {"valeurs": []},
+           "flammes": {"valeurs": ["oui", "non"], "pour": ["incendie"]},
+           "sejour_temporaire": {"valeurs": ["oui", "non"], "pour": ["vol"], "si": {"lieu": ["autre_batiment"]}},
+           "malveillance_auteur": {"valeurs": ["oui", "non"], "pour": [redaction.ACCESSOIRE]}}
+    au_logement = prolog.variables_du_temps_2(voc, ["incendie"], {"lieu": ["logement"]})
+    a_l_hotel = prolog.variables_du_temps_2(voc, ["incendie"], {"lieu": ["autre_batiment"]})
+    assert set(au_logement) == {"flammes"} and set(a_l_hotel) == {"flammes", "sejour_temporaire"}
 
 
 def test_garantie_accessoire_en_prolog():

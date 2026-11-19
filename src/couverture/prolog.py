@@ -442,11 +442,19 @@ def verifier_details(sinistre: str, lus: dict, llm: LLM, voc: dict) -> tuple[dic
     return gardes, retires
 
 
-def variables_du_temps_2(voc: dict, evenements: list[str]) -> dict:
+def variables_du_temps_2(voc: dict, evenements: list[str], socle: dict | None = None) -> dict:
     """Les variables à demander une fois l'événement connu : celles qui s'y appliquent (« pour »), et celles
-    qui s'appliquent à tout. Sans événement lu, toutes."""
+    qui s'appliquent à tout. Sans événement lu, toutes. Une variable d'extension (« si » : le lieu qui
+    l'entame, 7.70) est demandée aussi quand le temps 1 a lu ce lieu : le séjour temporaire pour un « autre
+    bâtiment », pas pour chaque sinistre au logement."""
     ev = set(evenements)
-    return {v: d for v, d in voc.items() if v not in SOCLE and (not ev or not d.get("pour") or ev & set(d["pour"]))}
+
+    def entamee(d):
+        return any(set(x if isinstance(x, list) else [x]) & set(vals)
+                   for var, vals in (d.get("si") or {}).items() for x in [(socle or {}).get(var) or []])
+
+    return {v: d for v, d in voc.items() if v not in SOCLE
+            and (not ev or not d.get("pour") or ev & set(d["pour"]) or entamee(d))}
 
 
 def variables_du_contrat(contrat_id: str) -> set[str] | None:
@@ -467,8 +475,8 @@ def extraire_faits_regles(sinistre: str, llm: LLM, decideur=None,
     `variables` : celles du contrat (le socle est toujours lu) ; None : tout le vocabulaire."""
     voc = vocabulaire()
     if variables is not None:
-        # Les règles d'AXA ne doivent pas changer ce qu'on lit pour Foyer : la plainte ou la formule
-        # « Privilège » n'ont rien à faire dans la lecture d'un vol chez Foyer (7.57).
+        # Les règles d'Assureur B ne doivent pas changer ce qu'on lit pour Assureur A : la plainte ou la formule
+        # « Privilège » n'ont rien à faire dans la lecture d'un vol chez Assureur A (7.57).
         voc = {v: d for v, d in voc.items() if v in SOCLE or v in variables}
     declaration = f"## Déclaration\n{sinistre}"
     mode = mode_lecture()
@@ -486,7 +494,7 @@ def extraire_faits_regles(sinistre: str, llm: LLM, decideur=None,
     else:
         lus = _lire(llm, SYSTEME_LECTURE_SOCLE, {v: voc[v] for v in SOCLE}, declaration)
         evenements = [str(e) for e in (lus.get("evenement") or []) if str(e) in voc["evenement"]["valeurs"]]
-        details = variables_du_temps_2(voc, evenements)
+        details = variables_du_temps_2(voc, evenements, lus)
         if details:
             etabli = "; ".join(f"{v} = {'/'.join(map(str, x)) if isinstance(x, list) else x}"
                                for v, x in lus.items() if x not in (None, "", []))

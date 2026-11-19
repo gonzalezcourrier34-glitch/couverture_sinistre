@@ -1,0 +1,379 @@
+{
+  "meta": {
+    "article": "3.2.2",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-19",
+    "consigne": "redaction-regles v6",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-19",
+      "modifications": [
+        "événements inondation, ruissellement, glissement → evenement = catastrophe_naturelle et catastrophe = … (partagé avec 3.2.1)",
+        "« applicables si… » : réserve (option_pluies_inondations)",
+        "dommages dans les 72 heures : exclusion à établir par l'assureur, pas une question à chaque inondation",
+        "hygrométrie, champignons, humidité, condensation : cause_eau = condensation ; défaut d'étanchéité → manque_entretien ; « à l'extérieur des locaux » : règle 3 quater"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "catastrophe_naturelle"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "pluies_inondations",
+        "nom": "Pluies & inondations",
+        "article": "3.2.2",
+        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “Pluies & inondations” est accordée.",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "catastrophe_naturelle"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "catastrophe",
+                  "inondation"
+                ]
+              },
+              {
+                "f": [
+                  "catastrophe",
+                  "ruissellement"
+                ]
+              },
+              {
+                "f": [
+                  "catastrophe",
+                  "glissement_terrain"
+                ]
+              }
+            ]
+          },
+          {
+            "concept": "batiment_designe"
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "et": [
+                {
+                  "et": [
+                    {
+                      "ou": [
+                        {
+                          "f": [
+                            "lieu",
+                            "jardin"
+                          ]
+                        },
+                        {
+                          "f": [
+                            "lieu",
+                            "terrasse"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "non": {
+                        "f": [
+                          "bien",
+                          "element_batiment"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "non": {
+                    "f": [
+                      "bien",
+                      "mobilier_jardin"
+                    ]
+                  }
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.2.2.4",
+            "texte": "au contenu se trouvant à l’extérieur des locaux, à l’exception du mobilier de jardin"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "travaux_construction",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "lien_causal_travaux",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.2.2.4",
+            "texte": "lorsque le bâtiment est en cours de construction, transformation ou rénovation et qu’il existe un lien causal entre les dommages et les travaux en cours"
+          },
+          {
+            "condition": {
+              "f": [
+                "ouvertures_non_fermees",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.2.2.4",
+            "texte": "par des entrées d’eaux pluviales, de neige ou de glace par des ouvertures non fermées, tels que portes, fenêtres, soupiraux, lucarnes"
+          },
+          {
+            "condition": {
+              "f": [
+                "cause_eau",
+                "eau_souterraine"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.2.2.4",
+            "texte": "par les infiltrations d’eaux souterraines"
+          },
+          {
+            "condition": {
+              "f": [
+                "cause_eau",
+                "condensation"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.2.2.4",
+            "texte": "par l’hygrométrie ambiante, même consécutivement à un sinistre couvert"
+          },
+          {
+            "condition": {
+              "f": [
+                "cause_eau",
+                "condensation"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.2.2.4",
+            "texte": "par des champignons ou des moisissures, même consécutivement à un sinistre couvert"
+          },
+          {
+            "condition": {
+              "f": [
+                "manque_entretien",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.2.2.4",
+            "texte": "par un défaut de réparation ou d’entretien, ou dus à une étanchéité absente, mal conçue ou mal réalisée"
+          },
+          {
+            "condition": {
+              "f": [
+                "cause_eau",
+                "condensation"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.2.2.4",
+            "texte": "par l’humidité, la porosité, la condensation, les phénomènes de capillarité"
+          },
+          {
+            "condition": {
+              "f": [
+                "terrain_non_constructible",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.2.2.4",
+            "texte": "aux bâtiments situés sur un terrain non constructible"
+          },
+          {
+            "condition": {
+              "f": [
+                "autorisation_gestion_eau_non_respectee",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.2.2.4",
+            "texte": "aux bâtiments soumis à l’autorisation de l’Administration de la gestion de l’eau et qui ne respectent pas les conditions afférentes à cette autorisation"
+          },
+          {
+            "condition": {
+              "f": [
+                "dommages_dans_72h",
+                "non"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.2.2.1",
+            "texte": "Les dommages qui résultent des événements climatiques cités ci-dessus seront pris en charge par la Compagnie à conditions qu’ils se soient réalisés dans les 72 heures suivant l’événement."
+          }
+        ],
+        "limites": [
+          {
+            "article": "3.2.2.2",
+            "texte": "Lorsque les conditions particulières mentionnent que les biens désignés ne sont pas situés en zone inondable, l’Assuré bénéficie en cas de sinistre d’une intervention de la Compagnie à concurrence de 250.000€ maximum par sinistre.",
+            "montant": "250000"
+          },
+          {
+            "article": "3.2.2.3",
+            "texte": "Lorsque les conditions particulières mentionnent que les biens désignés sont situés en zone inondable, l’Assuré bénéficie en cas de sinistre d’une intervention de la Compagnie à concurrence de 20.000€ maximum par sinistre. En cas de sinistre, la garantie sera accordée dans la limite du plafond indiqué ci-avant soit 20.000€ et après déduction de la franchise de 1.500€ prévue dans le cadre de la présente garantie.",
+            "montant": "20000"
+          },
+          {
+            "article": "3.2.2.4",
+            "texte": "Dans ce cas, la prise en charge des dommages se fait sans application de la règle proportionnelle à concurrence de 5.000€ par sinistre",
+            "montant": "5000"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "f": [
+            "option_pluies_inondations",
+            "non"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "3.2.2",
+        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “Pluies & inondations” est accordée."
+      }
+    ],
+    "vocabulaire_manquant": [
+      {
+        "variable": "catastrophe",
+        "valeurs": [
+          "tremblement_terre",
+          "inondation",
+          "ruissellement",
+          "glissement_terrain"
+        ],
+        "question": "Quel phénomène naturel a causé les dégâts ?",
+        "aide": {
+          "tremblement_terre": "séisme, tremblement de terre et ses répliques",
+          "inondation": "crue, débordement d'un cours d'eau, refoulement d'égouts",
+          "ruissellement": "eau de pluies torrentielles qui ruisselle faute d'absorption du sol",
+          "glissement_terrain": "glissement ou affaissement de terrain"
+        },
+        "pourquoi": "Assureur B distingue deux garanties optionnelles : tremblement de terre (3.2.1) et pluies et inondations (3.2.2)",
+        "plus_proche": "cause_eau = inondation : ne dit ni le séisme ni le glissement"
+      },
+      {
+        "variable": "option_pluies_inondations",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Vos conditions particulières mentionnent-elles la garantie « pluies et inondations » ?",
+        "aide": {
+          "oui": "la garantie figure aux conditions particulières",
+          "non": "elle n'y figure pas"
+        },
+        "pourquoi": "garantie optionnelle : réserve tant que les conditions particulières ne sont pas lues",
+        "plus_proche": "aucune ; fait des conditions particulières"
+      },
+      {
+        "variable": "dommages_dans_72h",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Les dommages se sont-ils réalisés dans les 72 heures suivant l'événement climatique ?",
+        "pourquoi": "la clause 3.2.2.1 exige que les dommages se réalisent dans les 72 heures suivant l'événement",
+        "plus_proche": "aucune variable existante ne mesure ce délai",
+        "aide": {
+          "oui": "les dégâts sont apparus dans les 3 jours après l'événement",
+          "non": "les dégâts sont apparus plus de 72 heures après l'événement"
+        }
+      },
+      {
+        "variable": "ouvertures_non_fermees",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "L'eau est-elle entrée par des ouvertures non fermées (portes, fenêtres, soupiraux, lucarnes) ?",
+        "pourquoi": "l'exclusion 3.2.2.4.3 vise les entrées d'eau par des ouvertures non fermées",
+        "plus_proche": "portes_fermees / fenetres_fermees : ne couvrent pas les soupiraux et lucarnes, et ne concernent pas spécifiquement l'entrée d'eau",
+        "aide": {
+          "oui": "l'eau est passée par une porte, fenêtre, soupirail ou lucarne laissée ouverte",
+          "non": "toutes les ouvertures étaient fermées"
+        }
+      },
+      {
+        "variable": "terrain_non_constructible",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le bâtiment est-il situé sur un terrain non constructible ?",
+        "pourquoi": "l'exclusion 3.2.2.4.9 vise les bâtiments sur terrain non constructible",
+        "plus_proche": "aucune variable existante ne décrit la constructibilité du terrain",
+        "aide": {
+          "oui": "le terrain est classé non constructible (zone inondable interdite, zone naturelle protégée, etc.)",
+          "non": "le terrain est constructible"
+        }
+      },
+      {
+        "variable": "autorisation_gestion_eau_non_respectee",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le bâtiment respecte-t-il les conditions de l'autorisation de l'Administration de la gestion de l'eau ?",
+        "pourquoi": "l'exclusion 3.2.2.4.10 vise les bâtiments soumis à autorisation qui ne respectent pas les conditions",
+        "plus_proche": "aucune variable existante ne concerne l'autorisation de gestion de l'eau",
+        "aide": {
+          "oui": "le bâtiment a une autorisation de l'Administration de la gestion de l'eau mais ne respecte pas ses conditions",
+          "non": "pas d'autorisation requise ou conditions respectées"
+        }
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "à relire",
+      "controle": "limite",
+      "message": "limite « Lorsque les conditions particulières mentionnent que les bie » (pluies_inondations) : elle pose une condition ; circonstance ou garantie à part ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "limite",
+      "message": "limite « Lorsque les conditions particulières mentionnent que les bie » (pluies_inondations) : elle pose une condition ; circonstance ou garantie à part ?"
+    }
+  ]
+}

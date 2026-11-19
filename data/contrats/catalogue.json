@@ -5,34 +5,34 @@
     "produit": "Habitat Serein (contrat de test)",
     "version": "2026"
   },
-  "CG-APPART123-0518F.pdf": {
-    "id": "foyer-appart123-2025",
-    "assureur": "Foyer Assurances",
-    "produit": "appart 123",
+  "assureur_a_habitation_2025_web.pdf": {
+    "id": "assureur-a-habitation-2025",
+    "assureur": "Assureur A",
+    "produit": "Habitation A",
     "version": "01/01/2025"
   },
-  "WUtrpw8AAEOX2zKr.pdf": {
-    "id": "axa-lu-optihome-2017",
-    "assureur": "AXA Luxembourg",
-    "produit": "OptiHome",
+  "assureur_b_habitation_2017.pdf": {
+    "id": "assureur-b-habitation-2017",
+    "assureur": "Assureur B",
+    "produit": "Habitation B",
     "version": "06/2017",
-    "profil": "axa-lu"
+    "profil": "assureur-b"
   },
-  "CG_MRH_DEMAT_24032025_PDFA.pdf": {
-    "id": "sg-habitation-2025",
-    "assureur": "Société Générale (Sogessur)",
+  "assureur_c_habitation_2025.pdf": {
+    "id": "assureur-c-habitation-2025",
+    "assureur": "Assureur C",
     "produit": "Assurance Habitation",
     "version": "04/2025"
   },
-  "foyer_appart123_2025.pdf": {
-    "id": "foyer-appart123-2025",
-    "assureur": "Foyer Assurances",
-    "produit": "appart 123",
+  "assureur_a_habitation_2025.pdf": {
+    "id": "assureur-a-habitation-2025",
+    "assureur": "Assureur A",
+    "produit": "Habitation A",
     "version": "01/01/2025"
   },
-  "0103200AB_CG_ASSURANCE_MH_VF_042026.pdf": {
-    "id": "macsf-mrh-2026",
-    "assureur": "MACSF",
+  "assureur_d_habitation_2026.pdf": {
+    "id": "assureur-d-habitation-2026",
+    "assureur": "Assureur D",
     "produit": "Multirisque Habitation",
     "version": "04/2026"
   }
