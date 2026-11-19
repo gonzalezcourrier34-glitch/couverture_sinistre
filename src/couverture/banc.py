@@ -76,8 +76,15 @@ def figer(donnees: Path, contrat_id: str, note: str = "") -> dict:
     return v
 
 
-def charger(donnees: Path, contrat_id: str) -> tuple[list[dict], dict]:
-    """Les cas avec leurs faits idéaux, et l'état du banc (version, empreinte, cohérence)."""
+def charger(donnees: Path, contrat_id: str, jeu: str = JEU) -> tuple[list[dict], dict]:
+    """Les cas avec leurs faits idéaux, et l'état du banc (version, empreinte, cohérence). Le jeu fermé n'a pas
+    de faits idéaux (ils mettraient le vocabulaire des règles dans le jeu, 7.79) : la chaîne seule."""
+    if jeu != JEU:
+        cas = charger_cas(*fichiers_jeu(donnees, contrat_id, jeu))
+        h = hashlib.sha256(json.dumps([[c["id"], c["sinistre"], c["attendu"], c.get("acceptables", [])] for c in cas],
+                                      ensure_ascii=False).encode("utf-8")).hexdigest()[:16]
+        return cas, {"jeu": jeu, "version": None, "empreinte": h, "fige": True, "n": len(cas), "valides": 0,
+                     "auteurs": dict(Counter(c.get("auteur", "?") for c in cas))}
     cas = charger_cas(*fichiers_jeu(donnees, contrat_id, JEU))
     faits = {d["sinistre_id"]: d["faits"] for d in lire_jsonl(fichiers(donnees, contrat_id)[2])}
     for c in cas:
@@ -387,14 +394,17 @@ def mesurer_latence(pipeline, cas: list[dict], n: int = CAS_LATENCE) -> dict:
 
 
 def passer(donnees: Path, contrat_id: str, methode: str, couches: list[str], repetitions: int = 3,
-           paralleles: int = 4, pipeline_fabrique=None, decideur=None, evaluer_fn=None) -> dict:
+           paralleles: int = 4, pipeline_fabrique=None, decideur=None, evaluer_fn=None, jeu: str = JEU) -> dict:
     """Rejoue le golden set. `pipeline_fabrique()` donne une méthode neuve par exécution ; `decideur`
     remplace SWI-Prolog dans les tests ; `evaluer_fn` remplace evaluation.evaluer."""
     from .evaluation import evaluer
 
-    cas, etat = charger(donnees, contrat_id)
+    cas, etat = charger(donnees, contrat_id, jeu)
     resultat = {"date": datetime.now().isoformat(timespec="seconds"), "contrat": contrat_id, "methode": methode,
-                "golden": etat, "couches": {}, "avertissements": []}
+                "jeu": jeu, "golden": etat, "couches": {}, "avertissements": []}
+    if jeu != JEU:
+        couches = [c for c in couches if c == "chaine"]
+        resultat["avertissements"].append(f"jeu « {jeu} » : sans faits idéaux, la chaîne complète seule")
     if not etat["fige"]:
         resultat["avertissements"].append("golden set modifié depuis sa dernière version : `couverture banc --figer`")
     if "regles" in couches:
@@ -419,7 +429,7 @@ def passer(donnees: Path, contrat_id: str, methode: str, couches: list[str], rep
         if evaluer_fn is None:  # pas dans les tests qui simulent l'évaluation
             print(f"Latence : {min(CAS_LATENCE, len(cas))} cas, un à la fois…", flush=True)
             resultat["couches"]["chaine"]["metriques"].update(mesurer_latence(pipeline_fabrique(), cas))
-        if methode == "regles":
+        if methode == "regles" and jeu == JEU:
             lecteur = None
             if "regles" in resultat["couches"]:
                 lecteur = decideur or (lambda f: prolog.decider(contrat_id, f))
@@ -435,9 +445,11 @@ def enregistrer(donnees: Path, resultat: dict, dossier: Path | None = None) -> t
     dossier.mkdir(parents=True, exist_ok=True)
     modele = (resultat.get("modele") or "").split(":")[-1].replace("-latest", "")
     nom = f"{datetime.now():%Y%m%d-%H%M%S}-{resultat['contrat']}-{resultat['methode']}" + (f"-{modele}" if modele else "") \
+        + (f"-{resultat['jeu']}" if resultat.get("jeu", JEU) != JEU else "") \
         + (f"-{re.sub(r'[^a-z0-9-]+', '-', resultat['lecture'])}" if resultat.get("lecture") not in (None, "verifiee") else "")
     js, md = dossier / f"{nom}.json", dossier / f"{nom}.md"
-    precedent = dernier(dossier, resultat["contrat"], resultat["methode"], resultat.get("modele"), resultat.get("lecture"))
+    precedent = dernier(dossier, resultat["contrat"], resultat["methode"], resultat.get("modele"), resultat.get("lecture"),
+                        resultat.get("jeu", JEU))
     texte = markdown(resultat, precedent)
     sans_cas = {k: v for k, v in resultat.items() if k != "_cas"}
     js.write_text(json.dumps(sans_cas, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
@@ -446,13 +458,13 @@ def enregistrer(donnees: Path, resultat: dict, dossier: Path | None = None) -> t
 
 
 def dernier(dossier: Path, contrat_id: str, methode: str, modele: str | None = None,
-            lecture: str | None = None) -> dict | None:
+            lecture: str | None = None, jeu: str = JEU) -> dict | None:
     """Le dernier banc de même configuration (modèle et mode de lecture) : comparé à un banc avec confirmation
     par Mistral Large, un banc sans confirmation semblait perdre neuf points sans qu'aucune décision ait changé
     (7.74)."""
     for f in sorted(Path(dossier).glob(f"*-{contrat_id}-{methode}*.json"), reverse=True):
         r = json.loads(f.read_text(encoding="utf-8"))
-        if r.get("modele") == modele and r.get("lecture") == lecture:
+        if r.get("modele") == modele and r.get("lecture") == lecture and r.get("jeu", JEU) == jeu:
             return r
     return None
 
@@ -495,7 +507,8 @@ def markdown(r: dict, precedent: dict | None = None) -> str:
     L = [f"# Banc d'essai — {r['contrat']}, méthode `{r['methode']}`"
          + (f", lecture par `{r['modele']}`" if r.get("modele") else "")
          + (f" ({r['lecture']})" if r.get("lecture") else ""), "",
-         f"{r['date']} · golden set v{g.get('version') or '?'} ({g['n']} cas, empreinte `{g['empreinte']}`"
+         f"{r['date']} · " + (f"jeu {r['jeu']}" if r.get("jeu", JEU) != JEU else f"golden set v{g.get('version') or '?'}")
+         + f" ({g['n']} cas, empreinte `{g['empreinte']}`"
          f"{'' if g['fige'] else ', **modifié depuis sa version**'}) · cas validés par l'auteur : {g['valides']} sur {g['n']}",
          ""]
     for a in r.get("avertissements", []):
@@ -597,7 +610,9 @@ def erreurs(lignes: list[dict], cas: dict) -> list[str]:
 
 
 def resume_console(r: dict, md: Path | None = None) -> str:
-    L = [f"Banc {r['contrat']} · {r['methode']} · golden v{r['golden'].get('version') or '?'} ({r['golden']['n']} cas)"
+    L = [f"Banc {r['contrat']} · {r['methode']} · "
+         + (f"jeu {r['jeu']}" if r.get("jeu", JEU) != JEU else f"golden v{r['golden'].get('version') or '?'}")
+         + f" ({r['golden']['n']} cas)"
          + (f" · lecture : {r['modele']}" if r.get("modele") else "")
          + (f" ({r['lecture']})" if r.get("lecture") else "")]
     for a in r.get("avertissements", []):

@@ -109,6 +109,11 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 
 ## 5. Dernières mesures
 
+**19 nov. 2026, 16 h 27 et 16 h 59, vérification v3 + confirmation et recours par Mistral Large** (golden v12) :
+**Assureur B 100 % justes**, 82 % exactes, 0 couvert à tort, 0 refus à tort, médiane **22,6 s** (95e centile 38 s) ;
+**Assureur A 89 % justes**, 75 % exactes, **1,33 couvert à tort**, 1,33 refus à tort, 15 instables, médiane 8,1 s
+(95e centile 106 s, limites de débit de l'API). Meilleure justesse mesurée, au prix du temps. DEMARCHE 7.80.
+
 **19 nov. 2026, 16 h 10, vérification v3** (souplesse limitée aux « non »), golden v12 : **Assureur A 90 % justes**,
 76 % exactes, 4,33 couverts à tort, **0,67 refus à tort** (le plus bas mesuré), 11 instables ; un cas à la fois :
 médiane 4,1 s, 95e centile 5,4 s. **Assureur B 76 % justes**, 49 % exactes, 0 couvert à tort, 0 refus à tort.

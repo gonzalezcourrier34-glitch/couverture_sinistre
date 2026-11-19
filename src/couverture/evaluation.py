@@ -24,7 +24,7 @@ def lire_jsonl(chemin: str | Path) -> list[dict]:
         return [json.loads(l) for l in f if l.strip()]
 
 
-JEUX = ("mise_au_point", "validation", "redaction", "golden")
+JEUX = ("mise_au_point", "validation", "redaction", "golden", "ferme")
 
 
 def fichiers_jeu(donnees: str | Path, contrat_id: str, jeu: str = "mise_au_point") -> tuple[Path, Path]:
@@ -35,7 +35,9 @@ def fichiers_jeu(donnees: str | Path, contrat_id: str, jeu: str = "mise_au_point
       (sinon ils deviennent des cas de mise au point et il en faut de nouveaux) ;
     - redaction : data/redaction/…, des cas des garanties dont les règles sont rédigées par le modèle,
       écrits d'après le texte du contrat avant la rédaction ;
-    - golden : data/golden/…, le banc d'essai figé (tous les cas, étiquetés), voir `couverture banc`."""
+    - golden : data/golden/…, le banc d'essai figé (tous les cas, étiquetés), voir `couverture banc` ;
+    - ferme : data/ferme/…, des cas écrits sans voir les règles, par deux annotateurs à l'aveugle (7.79),
+      sans faits idéaux : `couverture banc --jeu ferme`."""
     if jeu not in JEUX:
         raise ValueError(f"jeu inconnu : {jeu}")
     racine = Path(donnees) / ("" if jeu == "mise_au_point" else jeu)

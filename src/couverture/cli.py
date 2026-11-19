@@ -237,7 +237,7 @@ def rediger_cli(base: Base, contrat_id: str, articles: list[str], controler: boo
 
 
 def banc_cli(base: Base, donnees: Path, contrat_id: str, methode: str, couches: str, repetitions: int,
-             paralleles: int, a_figer: str | None, fiche: bool = False) -> int:
+             paralleles: int, a_figer: str | None, fiche: bool = False, jeu: str = "golden") -> int:
     """Le golden set rejoué couche par couche ; sort en erreur si une porte échoue (pour la CI)."""
     from . import banc
 
@@ -256,7 +256,7 @@ def banc_cli(base: Base, donnees: Path, contrat_id: str, methode: str, couches: 
     from .suivi import EXPERIENCE_EVALUATION, execution, metriques_banc, parametres_communs
 
     with execution(EXPERIENCE_EVALUATION, f"banc {contrat_id} · {methode}") as suivi:
-        r = banc.passer(donnees, contrat_id, methode, voulues, repetitions, paralleles, pipeline_fabrique=fabrique)
+        r = banc.passer(donnees, contrat_id, methode, voulues, repetitions, paralleles, pipeline_fabrique=fabrique, jeu=jeu)
         suivi.parametres(parametres_communs(str(r.get("modele", "aucun"))) | {
             "contrat": contrat_id, "methode": methode, "couches": ",".join(voulues), "lecture": str(r.get("lecture", "")),
             "golden": str(r.get("golden", {}).get("version") if isinstance(r.get("golden"), dict) else r.get("golden"))})
@@ -423,7 +423,7 @@ def main(argv: list[str] | None = None) -> int:
     pg = sous.add_parser("regles", help="Vérifier les règles Prolog d'un contrat (chargement, vocabulaire, citations, cas)")
     pg.add_argument("--contrat", required=True)
     pg.add_argument("--faits", help="Décider un cas : JSON des faits, ex. '{\"evenement\": \"vol\", \"lieu\": [\"cave\"]}'")
-    pg.add_argument("--jeu", choices=["mise_au_point", "validation", "redaction", "golden"], default="mise_au_point",
+    pg.add_argument("--jeu", choices=["mise_au_point", "validation", "redaction", "golden", "ferme"], default="mise_au_point",
                     help="Cas de mise au point (défaut), de validation (data/validation) ou des garanties rédigées par le modèle (data/redaction)")
 
     pb_ = sous.add_parser("banc", help="Banc d'essai : le golden set rejoué (règles, lecture, chaîne), avec des portes")
@@ -436,6 +436,8 @@ def main(argv: list[str] | None = None) -> int:
     pb_.add_argument("--figer", nargs="?", const="", metavar="NOTE",
                      help="Enregistrer la version du golden set (après l'avoir modifié ou validé)")
     pb_.add_argument("--fiche", action="store_true", help="Écrire data/golden/A_VALIDER.md, la fiche de relecture des cas")
+    pb_.add_argument("--jeu", choices=["golden", "ferme"], default="golden",
+                     help="ferme : les cas écrits sans voir les règles (data/ferme), chaîne complète seule")
 
     pl_ = sous.add_parser("legalbench", help="Second banc, externe : LegalBench insurance_policy_interpretation (Stanford, CC BY 4.0)")
     pl_.add_argument("--telecharger", action="store_true", help="Télécharger les données (Hugging Face) dans data/externes/legalbench/")
@@ -486,7 +488,7 @@ def main(argv: list[str] | None = None) -> int:
         return regles_cli(base, donnees, a.contrat, a.faits, a.jeu)
 
     if a.commande == "banc":
-        return banc_cli(base, donnees, a.contrat, a.methode, a.couches, a.repetitions, a.paralleles, a.figer, a.fiche)
+        return banc_cli(base, donnees, a.contrat, a.methode, a.couches, a.repetitions, a.paralleles, a.figer, a.fiche, a.jeu)
 
     if a.commande == "legalbench":
         return legalbench_cli(donnees, a.telecharger, a.fichier, a.split, a.limite, a.paralleles)

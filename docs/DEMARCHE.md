@@ -2801,6 +2801,69 @@ confirmation distinct, pas de recours : le même petit modèle redirait la même
 **Leçon 92.** Quand trois versions d'une consigne ne changent plus le comportement d'un petit modèle, ce n'est
 plus la consigne qu'il faut changer, c'est qui décide : un second avis plus fort, réservé aux faits qui comptent.
 
+### 7.79 Un jeu fermé, écrit sans voir les règles, par deux annotateurs à l'aveugle
+
+**Le problème.** Le golden set a été écrit par Claude après avoir lu les règles, et ses faits idéaux sont dans
+le vocabulaire des règles : « règles seules 100 % » dit que le moteur applique les règles, pas que les règles
+disent le contrat. L'exclusion du personnel mal traduite (7.75) passait à 100 %. Il faut des cas dont la réponse
+vient du seul texte du contrat. L'auteur du projet n'est pas du métier : écrire ces cas lui-même n'aurait pas
+donné une meilleure référence.
+
+**La méthode** (`src/couverture/ferme.py`, `data/ferme/`).
+1. *Premier annotateur* : un agent Claude neuf, qui n'a lu que le texte des deux CG (extrait des PDF, noms
+   d'assureurs remplacés) ; ni règles, ni golden set, ni cette conversation. 40 cas (20 par assureur, environ
+   7 couverts, 7 refusés, 6 incertains chacun), plusieurs garanties, des pièges, 6 cas de responsabilité civile,
+   d'assistance ou de protection juridique (non traduites : le système doit dire « incertain »). Chaque réponse
+   avec l'article et une citation mot pour mot, vérifiée.
+2. *Second annotateur* : Mistral Large, les mêmes déclarations et le texte entier du contrat, sans la première
+   réponse (`python -m couverture.ferme annoter`).
+3. *Accords et arbitrage* : une réponse identique, ou acceptée par l'autre, entre dans le jeu ; un désaccord va
+   dans `arbitrage.csv`, avec les deux citations, pour un arbitrage sur le texte (`comparer`, `exporter`).
+4. *Banc* : `couverture banc --jeu ferme`, chaîne complète seule (pas de faits idéaux, qui remettraient le
+   vocabulaire des règles dans le jeu) ; comparé aux bancs de même jeu.
+
+**Convention** (posée par le premier annotateur, reprise dans la consigne du second) : garanties de base
+souscrites, options et formules inconnues. Chez l'assureur B, chaque garantie n'existe que si les conditions
+particulières la mentionnent : sans cette convention, presque tout serait « incertain ».
+
+**Doutes signalés par l'annotateur** : le gel avec chauffage coupé (indemnité réduite ou refus ?), la fuite
+chez le voisin (recours des tiers ou exclusion de l'eau en RC ?), quatre mois d'absence contre 110 nuits, le
+serrurier (assistance supposée appelée ?). Le second avis dira lesquels sont vraiment ambigus. Un cas
+(`f-b12`, la machine à laver qui abîme le plafond du voisin) ressemble à l'exemple de la consigne de
+vérification v3 (7.77) : coïncidence (l'agent n'a pas vu la consigne), à garder en tête en lisant son résultat.
+
+**Ce que ce jeu vaut** : deux lectures indépendantes du texte, désaccords arbitrés sur citations ; ce n'est pas
+l'avis d'un gestionnaire de sinistres. Une relecture des cas litigieux par quelqu'un du métier le renforcerait.
+
+**Leçon 93.** Pour mesurer la fidélité des règles au contrat, la référence ne doit rien devoir aux règles :
+ni l'auteur des cas, ni leur vocabulaire.
+
+### 7.80 Confirmation et recours par Mistral Large : la meilleure justesse, le temps en plus
+
+**Banc** (golden v12, `COUVERTURE_MODELE_CONFIRMATION=mistral-large-latest`, vérification v3, recours 7.78).
+
+| | sans Large (16 h 10) | confirmation seule (10 h 30, 7.67) | confirmation + recours |
+|---|---|---|---|
+| A : justes | 90 % | 86 % | 89 % |
+| A : couverts à tort | 4,33 | 1,67 | **1,33** |
+| A : refus à tort | 0,67 | — | 1,33 |
+| A : médiane, 95e centile | 4,1 s, 5,4 s | 8,6 s | 8,1 s, 106 s |
+| B : justes | 76 % | 82 % | **100 %** |
+| B : médiane, 95e centile | 3,9 s, 5,9 s | — | 22,6 s, 38 s |
+
+Chez B, le recours fait ce pour quoi il est fait : les « non » retirés par Mistral Small (le cadenas, le vol à
+l'insu, la femme de ménage) sont rétablis par Mistral Large, et les quatre « incertain » deviennent des refus
+justes. Chez A, la confirmation ramène les couverts à tort de 4,33 à 1,33 ; les refus à tort restent bas.
+
+**Le prix** : un ou deux appels à Mistral Large par cas qui tranche, chacun de plusieurs secondes (le modèle
+réfléchit) ; la médiane passe de 4 à 8 s (A) et à 23 s (B, où presque chaque cas appelle le recours puis la
+confirmation, l'un après l'autre). Le 95e centile de A (106 s) vient des limites de débit de l'API quand quatre
+cas tournent à la fois. La porte de latence (≤ 10 s) échoue.
+
+**Lecture** : le petit modèle lit, le grand tranche sur les seuls faits qui comptent ; la justesse vient du grand.
+Prochaines pistes, pour le temps : appeler le recours et la confirmation ensemble, en un seul appel, quand le
+moteur peut dire d'avance quels faits seront décisifs ; un modèle intermédiaire (Mistral Medium) pour ce rôle.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.
@@ -2923,3 +2986,4 @@ Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les section
 90. Assouplir un vérificateur laisse passer les bons « non » et les mauvaises lectures : mesurer les refus à tort.
 91. Un exemple de consigne tiré du jeu d'essai rend ce cas inutile pour la mesure : prendre un exemple voisin.
 92. Quand une consigne ne change plus un petit modèle, changer qui décide : un second avis plus fort, sur les seuls faits qui comptent.
+93. Pour mesurer la fidélité des règles au contrat, la référence ne doit rien devoir aux règles : ni l'auteur des cas, ni leur vocabulaire.
