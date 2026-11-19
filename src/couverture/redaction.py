@@ -38,7 +38,7 @@ from .texte import normaliser
 from .validation import _compact, extrait_present, passage_exact
 
 PROPOSITIONS = prolog.DOSSIER / "propositions"
-VERSION = "v10"
+VERSION = "v11"
 IDENT = re.compile(r"^[a-z][a-z0-9_]*$")
 BLOQUANT, A_RELIRE, INFO = "bloquant", "à relire", "info"
 
@@ -51,6 +51,7 @@ Une garantie a :
 - des obligations de prévention : ce que l'assuré doit faire ; « exception » est ce qui l'excuse (ou null) ; « lien_causal » vaut true si le contrat ne refuse que s'il y a un lien causal avec le sinistre ;
 - des exclusions : « portee » vaut "tout", ou {"bien": "valeur"} si elle n'exclut qu'un bien ; « a_demander » vaut true si l'on doit poser la question quand le fait est inconnu (circonstance que le déclarant ne mentionnerait pas de lui-même), false sinon ;
 - des limites : un plafond, sans condition.
+Une sanction qui RÉDUIT l'indemnité (« l'indemnité sera réduite de moitié », « réduite à concurrence de l'aggravation », « proportionnellement ») ne refuse pas le sinistre : ce n'est pas une obligation, c'est une limite (le devoir et sa réduction, cités dans "texte"). N'écris une obligation que si le contrat refuse (« pas de garantie », « refuser son intervention », « exclu »).
 Une garantie qui ne joue qu'après un sinistre couvert par une autre (frais de sauvetage, de déblai, de logement provisoire, pertes indirectes) porte "accessoire": true : elle ne décide pas si le sinistre est couvert, elle dit ce qui s'y ajoute. Ne mets pas dans son périmètre tous les événements du contrat, ni un concept « sinistre » : « après un sinistre couvert » est implicite. Son périmètre ne dit que ce qui la restreint (une fête de famille, un déménagement) ; s'il n'y a rien, laisse-le vide ([]).
 Une extension qui élargit un LIEU ou un BIEN assuré (« le contenu lors d'un séjour temporaire », « pendant son transport lors d'un déménagement ») n'est pas une garantie : elle élargit la définition du contrat que les garanties emploient déjà : prends son nom dans « Concepts déjà définis dans les règles du contrat » (le lieu assuré, le contenu), jamais un nom d'un autre contrat. Mets-la dans "extensions" : {"concept": "<un concept du contrat>", "condition": …, "article", "texte"} ; elle vaut alors pour toutes les garanties du contrat.
 Des dégâts causés PAR un assuré au bien d'un autre (l'hôtel, la chambre louée, la salle de fête) relèvent de sa responsabilité, pas d'une extension : une garantie accessoire tant que la responsabilité civile n'est pas traduite. Une restriction à un pays s'écrit avec une variable pays, une valeur par pays (jamais une valeur « liste de pays »).
@@ -557,6 +558,18 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
 
     # 3. Citations
     index = {c.id: c for c in clauses}
+    # 2 bis. Une réduction n'est pas un refus (7.81) : le gel sans vidange chez l'assureur B réduit l'indemnité de
+    # moitié, et la règle refusait ; le jeu fermé l'a montré (f-b02).
+    for g in prop.get("garanties", []):
+        for o in g.get("obligations") or []:
+            c = index.get(o.get("article"))
+            if c is not None and re.search(r"\br[ée]dui|proportionnel", normaliser(c.texte)) \
+                    and not re.search(r"refuser|pas de garantie|n.?est pas garanti", normaliser(c.texte)):
+                noter(BLOQUANT, "couverture", f"garantie {g.get('id')} : l'obligation « {str(o.get('texte'))[:60]} » : "
+                      f"sa clause ({o.get('article')}) réduit l'indemnité sans refuser ; une limite, pas une obligation")
+            elif c is not None and re.search(r"\br[ée]dui|proportionnel", normaliser(c.texte)):
+                noter(A_RELIRE, "couverture", f"garantie {g.get('id')} : l'obligation « {str(o.get('texte'))[:60]} » : "
+                      f"sa clause ({o.get('article')}) parle d'une réduction ; vérifier que ce devoir-ci refuse")
     for role, x in elements_cites(prop):
         art, texte = x.get("article"), x.get("texte", "")
         clause = index.get(art)

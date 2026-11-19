@@ -312,7 +312,8 @@
         "« aux conduites… à l'origine du sinistre » : citation exacte, portée canalisation",
         "objet non relié à l'installation : cause_eau = debordement_recipient (l'aquarium est une autre valeur)",
         "lien_causal_travaux_eaux → lien_causal_travaux (variable acceptée avec 3.1.6)",
-        "« applicables si… » : réserve (option_degats_eaux) ; frais de recherche et huile minérale : hors décision"
+        "« applicables si… » : réserve (option_degats_eaux) ; frais de recherche et huile minérale : hors décision",
+        "3.1.4.3 : la sanction réduit l'indemnité, elle ne refuse pas ; obligation remplacée par une limite (7.81)"
       ]
     }
   },
@@ -366,36 +367,7 @@
             "texte": "La Compagnie assure les biens désignés contre les dégâts des eaux c’est-à-dire : n l’écoulement de l’eau des installations hydrauliques se trouvant à l’intérieur du bâtiment désigné et des bâtiments voisins, par suite de rupture, fissure ou débordement de ces installations ; n la pénétration ou l’infiltration dans le bâtiment désigné d’eau provenant de précipitations atmosphériques par suite de rupture, fissure ou débordement dans les tuyaux extérieurs destinés à l’évacuation de cette eau ; n l’infiltration accidentelle d’eau par les toitures, ciels vitrés, terrasses, balcons et balcons formant terrasse, loggias."
           }
         ],
-        "obligations": [
-          {
-            "condition": {
-              "si": [
-                {
-                  "f": [
-                    "periode_gel",
-                    "oui"
-                  ]
-                },
-                {
-                  "f": [
-                    "prevention_gel",
-                    "oui"
-                  ]
-                }
-              ]
-            },
-            "obligation": {
-              "f": [
-                "prevention_gel",
-                "oui"
-              ]
-            },
-            "exception": null,
-            "lien_causal": true,
-            "article": "3.1.4.3",
-            "texte": "Pendant la période de gel, l’Assuré doit, si les locaux ne sont pas chauffés ou si les installations se trouvent à l’extérieur, vidanger ou protéger les conduites et réservoirs ainsi que les installations de chauffage non pourvues d’antigel en quantité suffisante : n dans les résidences principales en cas d’inoccupation des locaux de plus de 15 jours consécutifs ; n dans les résidences secondaires, en cas d’inoccupation des locaux supérieure à 3 jours consécutifs. Si l’Assuré ne respecte pas ces prescriptions, sauf cas de force majeure, et si un sinistre survient ou est aggravé de ce fait, l’indemnité due sera réduite de moitié."
-          }
-        ],
+        "obligations": [],
         "exclusions": [
           {
             "condition": {
@@ -609,6 +581,11 @@
             "article": "3.1.4.1",
             "texte": "La perte d’eau subie à l’occasion d’un sinistre couvert est prise en charge à concurrence de 1.000 €.",
             "montant": "1000"
+          },
+          {
+            "article": "3.1.4.3",
+            "texte": "Si l’Assuré ne respecte pas ces prescriptions, sauf cas de force majeure, et si un sinistre survient ou est aggravé de ce fait, l’indemnité due sera réduite de moitié.",
+            "montant": "indemnité réduite de moitié si les conduites n'ont pas été vidangées ou protégées"
           }
         ]
       }
@@ -698,6 +675,11 @@
       "gravite": "à relire",
       "controle": "réserve",
       "message": "exclusion « par les dommages causés par un objet non relié à l’installat » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "limite",
+      "message": "limite « Si l’Assuré ne respecte pas ces prescriptions, sauf cas de f » (degats_eaux_3_1_4) : elle pose une condition ; circonstance ou garantie à part ?"
     },
     {
       "gravite": "info",

@@ -2864,6 +2864,54 @@ cas tournent à la fois. La porte de latence (≤ 10 s) échoue.
 Prochaines pistes, pour le temps : appeler le recours et la confirmation ensemble, en un seul appel, quand le
 moteur peut dire d'avance quels faits seront décisifs ; un modèle intermédiaire (Mistral Medium) pour ce rôle.
 
+### 7.81 Le jeu fermé : la première mesure de la fidélité au contrat
+
+**Arbitrage** (7.79). 36 accords sur 40 entre les deux annotateurs ; les 4 désaccords ont la même forme :
+Mistral Large lit la garantie et oublie la condition qui l'accompagne (une serrure de sûreté, un délai de 30 jours
+après un déménagement, une assistance à appeler, une option). Arbitrés par Claude sur les citations, en faveur
+de l'agent (« incertain »), validés par l'auteur.
+
+**Banc** (chaîne complète, sans Mistral Large). **Assureur A : 70 % justes**, 3 couverts à tort, 0,33 refus à
+tort. **Assureur B : 57 % justes**, 0 couvert à tort, 1,33 refus à tort. À comparer aux 90 % et 76 % du golden
+set : l'écart est la mesure de ce que le golden set ne voyait pas.
+
+**Les erreurs, classées** (les 6 et 13 cas en erreur au moins une fois sur trois) :
+
+| Cause | Cas | Effet |
+|---|---|---|
+| **Garantie non traduite, répondue « refusé »** | f-a18 (vélo contre piéton), f-a20 (serrurier), f-b16 (morsure de chien), f-b19 (violon, option Confort) | refus au lieu d'« incertain » |
+| **Règle fausse : une réduction traduite en refus** | f-b02 (gel, chauffage coupé : indemnité réduite de moitié) ; même forme en 3.1.6.4 (protections antivol) | refus à tort |
+| **Règle incomplète : le gel n'est pas une fuite pour B** | f-b02 (« conduite gelée et éclatée » lue `cause_eau = gel`, absente de la garantie de B) | refus à tort |
+| Clause de vie du contrat non traduite | f-a17 (déménagement non déclaré dans les 30 jours) | couvert au lieu d'« incertain » |
+| Lecture | f-a11 (vase lu vitre), f-a13 (ordinateur de l'employeur non lu professionnel), f-a14 (store banne), f-b05, f-b17 (remise lue jardin) | couverts à tort (A), refus |
+| Faits négatifs retirés (sans recours) | f-b06 (porte ouverte) | « incertain » |
+| Garantie mal rattachée, à examiner | f-b01 (braise sur le tapis, « substance incandescente » 3.1.1.1.6), f-b03 (pluie par une fenêtre de toit), f-b04 (moisissure) | « incertain » au lieu d'une réponse |
+
+**Le plus important** : quand un sinistre relève d'une garantie non traduite (responsabilité civile, assistance,
+option), le moteur concluait « aucune garantie ne s'applique » et **refusait**. Le système n'était donc pas
+honnête là où on le croyait ; le golden set ne le montrait pas, parce que ses cas de responsabilité civile y
+étaient rares. Le mécanisme existait pourtant (règle 8 du moteur : un événement non traduit plafonne la réponse à
+« incertain ») ; il manquait les événements. Deux valeurs ajoutées à `evenement` : `responsabilite` (un dommage
+causé à quelqu'un d'autre, qui en demande réparation) et `assistance` (un dépannage, sans dommage à
+indemniser). Aucun contrat ne les traduit encore : la réponse est « incertain », et deviendra une vraie réponse le
+jour où la responsabilité civile sera traduite.
+
+**Corrections générales** :
+- *Rédaction v11* : une sanction qui réduit l'indemnité est une limite, pas une obligation ; contrôle bloquant
+  quand la clause d'une obligation réduit sans refuser (`test_une_reduction_d_indemnite_n_est_pas_une_obligation`).
+- *Assureur B* (`relecture/assureur_b_reductions.py`) : 3.1.4.3 (gel) et 3.1.6.4 (protections antivol) passent
+  d'obligation à limite.
+- *Vocabulaire* : `cause_eau = gel` a pour parent `fuite_installation` (une conduite qui gèle et éclate est une
+  rupture d'installation), ce qui la fait entrer dans la garantie dégâts des eaux de B ; sans effet sur A, qui ne
+  nomme le gel que pour l'exclure sans prévention.
+- Oracle : aucune décision du golden set ne change (règles seules, A et B) ; le gel de f-b02 devient couvert.
+
+**Règle de méthode.** Les cas f-b02, f-a18, f-a20, f-b16, f-b19 ont servi à corriger : ils deviennent des cas
+de mise au point. La prochaine mesure honnête demandera un second jeu fermé, écrit de la même façon.
+
+**Leçon 94.** Un jeu de cas écrit en voyant les règles ne trouve pas les trous des règles : le moteur refusait
+la responsabilité civile, non traduite, depuis le début, et seul un jeu écrit sans les règles l'a montré.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.
@@ -2987,3 +3035,4 @@ Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les section
 91. Un exemple de consigne tiré du jeu d'essai rend ce cas inutile pour la mesure : prendre un exemple voisin.
 92. Quand une consigne ne change plus un petit modèle, changer qui décide : un second avis plus fort, sur les seuls faits qui comptent.
 93. Pour mesurer la fidélité des règles au contrat, la référence ne doit rien devoir aux règles : ni l'auteur des cas, ni leur vocabulaire.
+94. Un jeu écrit en voyant les règles ne trouve pas leurs trous : seul un jeu écrit sans elles a montré la responsabilité civile refusée.

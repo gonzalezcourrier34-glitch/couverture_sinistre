@@ -20,7 +20,9 @@
         "vandalisme",
         "merule",
         "conflit_du_travail",
-        "heurt"
+        "heurt",
+        "responsabilite",
+        "assistance"
       ],
       "question": "Que s'est-il passé (la cause, et le dommage s'il est d'une autre nature) ?",
       "aide": {
@@ -36,7 +38,9 @@
         "vandalisme": "quelqu'un a abîmé exprès : tags, vitres cassées, portes rayées par un tiers ; pas une simple rayure dont on ignore la cause",
         "merule": "champignon (mérule) qui attaque le bois du bâtiment",
         "conflit_du_travail": "grève, lock-out, manifestation de travailleurs",
-        "heurt": "un véhicule, un arbre ou un objet a percuté le bâtiment ou les biens"
+        "heurt": "un véhicule, un arbre ou un objet a percuté le bâtiment ou les biens",
+        "responsabilite": "un dommage causé par l'assuré, un proche ou son animal à quelqu'un d'autre, qui en demande réparation : un passant blessé, un objet emprunté cassé, des dégâts chez un voisin",
+        "assistance": "un besoin d'aide ou de dépannage sans dommage à indemniser : serrurier après des clés oubliées, intervention d'urgence demandée"
       }
     },
     "bien": {
@@ -482,7 +486,12 @@
       "pour": [
         "degat_eaux",
         "catastrophe_naturelle"
-      ]
+      ],
+      "parents": {
+        "gel": [
+          "fuite_installation"
+        ]
+      }
     },
     "travaux_batiment": {
       "valeurs": [

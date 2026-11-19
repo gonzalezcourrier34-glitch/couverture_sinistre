@@ -395,6 +395,20 @@ def test_accessoire_sans_exclusion_ne_bloque_pas():
     assert not any(c["controle"] == "exclusions" and c["gravite"] == redaction.BLOQUANT for c in controles(prop))
 
 
+def test_une_reduction_d_indemnite_n_est_pas_une_obligation():
+    """7.81 : « l'indemnité due sera réduite de moitié » ne refuse pas ; une obligation tirée d'une telle clause
+    bloque (le jeu fermé, f-b02 : le gel sans vidange était refusé)."""
+    devoir = "vidanger ou protéger les conduites"
+    clauses = CLAUSES + [Clause(id="9.9", article="9.9", titre="Prévention", chemin=["9", "9.9"], type=TypeClause.CONDITION,
+                                texte=f"L'assuré doit {devoir}. Sinon, l'indemnité due sera réduite de moitié.")]
+    prop = copy.deepcopy(BONNE)
+    prop["garanties"][0]["obligations"] = [{"condition": {"f": ["prevention_gel", "oui"]}, "exception": None,
+                                            "lien_causal": True, "article": "9.9", "texte": devoir}]
+    pl = redaction.retirer_article(prolog.fichier_regles(CONTRAT).read_text(encoding="utf-8"), "2.2")
+    ctl = redaction.controler(copy.deepcopy(prop), clauses, pl, "2.2")
+    assert any(c["gravite"] == redaction.BLOQUANT and "réduit l'indemnité" in c["message"] for c in ctl)
+
+
 def test_garantie_accessoire_en_prolog():
     prop = copy.deepcopy(BONNE)
     prop["garanties"][0]["accessoire"] = True
@@ -489,7 +503,7 @@ def test_jeu_redaction_coherent():
 def test_consigne_de_redaction_versionnee():
     from couverture.consignes import CONSIGNES
 
-    assert CONSIGNES["couverture-redaction-regles"][2] == "v10"
+    assert CONSIGNES["couverture-redaction-regles"][2] == "v11"
 
 
 # --- Après la première rédaction réelle (Mistral Large, 17 nov. 2026, docs/DEMARCHE.md 7.20) ---------------

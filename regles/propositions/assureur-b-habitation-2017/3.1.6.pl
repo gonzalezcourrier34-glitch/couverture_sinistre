@@ -11,11 +11,10 @@ perimetre(vol_batiment, f(evenement, vol)).
 perimetre(vol_batiment, concept(batiment_designe)).
 circonstance(vol_batiment, f(plainte_deposee, oui), '3.1.6.1',
     "pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes").
-obligation(vol_batiment, f(serrure_surete, oui), faux, oui, '3.1.6.4',
-    "portes donnant sur l’extérieur ou sur les parties communes de l’immeuble : au moins une serrure de sûreté ou un verrou de sûreté").
 limite(vol_batiment, '3.1.6.3', "à concurrence de 40% du montant indiqué aux conditions particulières au titre du contenu, pour les objets tels que meubles d’époque et objets de valeur", "40 % du contenu").
 limite(vol_batiment, '3.1.6.3', "concernant les timbres de collection, l’indemnité par timbre ne pourra être supérieure à 500 €", "500 € par timbre").
 limite(vol_batiment, '3.1.6.3', "à concurrence de 1500 € par sinistre pour l’ensemble constitué de l’argent comptant", "1 500 € (750 € hors clefs)").
+limite(vol_batiment, '3.1.6.4', "En cas de sinistre dont la charge est aggravée en raison de la non-utilisation de ces systèmes de protection, la Compagnie se réserve le droit de réduire l’indemnité à concurrence de l’aggravation de son préjudice.", "indemnité réduite à concurrence de l'aggravation si les protections n'étaient pas utilisées").
 garantie(vandalisme_vol, "Vandalisme lors vol", '3.1.6.1',
     "Les dégâts causés par vandalisme au contenu à l'occasion d'un vol ou d'une tentative de vol.").
 perimetre(vandalisme_vol, f(evenement, vandalisme)).

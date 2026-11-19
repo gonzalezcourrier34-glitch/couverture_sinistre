@@ -109,6 +109,11 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 
 ## 5. Dernières mesures
 
+**19 nov. 2026, 17 h 45, jeu fermé** (40 cas écrits sans voir les règles, 7.79 ; chaîne complète, configuration
+par défaut, sans Mistral Large) : **Assureur A 70 % justes**, 60 % exactes, 3 couverts à tort, 0,33 refus à tort,
+5 instables ; **Assureur B 57 % justes**, 52 % exactes, 0 couvert à tort, 1,33 refus à tort ; médiane 4,1 à 4,2 s.
+Première mesure de la fidélité des règles au contrat ; classement des erreurs : DEMARCHE 7.81.
+
 **19 nov. 2026, 16 h 27 et 16 h 59, vérification v3 + confirmation et recours par Mistral Large** (golden v12) :
 **Assureur B 100 % justes**, 82 % exactes, 0 couvert à tort, 0 refus à tort, médiane **22,6 s** (95e centile 38 s) ;
 **Assureur A 89 % justes**, 75 % exactes, **1,33 couvert à tort**, 1,33 refus à tort, 15 instables, médiane 8,1 s

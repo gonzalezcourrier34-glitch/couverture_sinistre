@@ -935,7 +935,8 @@
         "3.1.6.2.6 : « à l'extérieur » = cours, jardins, terrasse, couloirs et dépendances sans serrure à cylindre, à l'adresse du risque ; ni la voie publique ni un autre bâtiment (b-v05, v07, v14)",
         "3.1.6.2.9 inchangé : avec la règle « exclusion entamée » du moteur (7.58), travaux établis et lien causal inconnu font poser la question ; travaux non évoqués restent une réserve (b-v15)",
         "3.1.6.2.5 : « le vol de véhicules… » vise le bien, pas le sinistre ; scindé en deux exclusions de portée bien (véhicule, remorque hors du bâtiment) ; a_demander false : le bien est connu (b-v10 : vélos volés avec une tondeuse)",
-        "personnel au service de l'Assuré : exclu pendant les heures de service, et en dehors sauf effraction ou violence (variable heures_service) ; 7.75"
+        "personnel au service de l'Assuré : exclu pendant les heures de service, et en dehors sauf effraction ou violence (variable heures_service) ; 7.75",
+        "3.1.6.4 : la sanction réduit l'indemnité, elle ne refuse pas ; obligation remplacée par une limite (7.81)"
       ],
       "question_metier": "le vol simple (ni effraction ni violence) est exclu pour toutes les garanties : il vide l'extension « mobilier de jardin » (Privilège) de presque tout son sens. Lecture à confirmer par un souscripteur.",
       "seconde_passe": "après les 15 cas de test Assureur B (regles/cas/golden/assureur-b-habitation-2017.jsonl)",
@@ -1032,20 +1033,7 @@
             "texte": "pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes"
           }
         ],
-        "obligations": [
-          {
-            "condition": {
-              "f": [
-                "serrure_surete",
-                "oui"
-              ]
-            },
-            "exception": null,
-            "lien_causal": true,
-            "article": "3.1.6.4",
-            "texte": "portes donnant sur l’extérieur ou sur les parties communes de l’immeuble : au moins une serrure de sûreté ou un verrou de sûreté"
-          }
-        ],
+        "obligations": [],
         "exclusions": [],
         "limites": [
           {
@@ -1062,6 +1050,11 @@
             "article": "3.1.6.3",
             "texte": "à concurrence de 1500 € par sinistre pour l’ensemble constitué de l’argent comptant",
             "montant": "1 500 € (750 € hors clefs)"
+          },
+          {
+            "article": "3.1.6.4",
+            "texte": "En cas de sinistre dont la charge est aggravée en raison de la non-utilisation de ces systèmes de protection, la Compagnie se réserve le droit de réduire l’indemnité à concurrence de l’aggravation de son préjudice.",
+            "montant": "indemnité réduite à concurrence de l'aggravation si les protections n'étaient pas utilisées"
           }
         ]
       },
