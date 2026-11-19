@@ -2544,6 +2544,13 @@ passe à uv : le test qui compare Prolog et l'oracle y tournait sauté. Gardés,
 méthodes retirées (leur histoire), les scripts `relecture/` (la trace de chaque relecture humaine), les rapports de
 `data/bancs/` (la progression), les colonnes héritées du journal (bases existantes et tableaux Grafana).
 
+**Banc après les corrections de lecture** (même golden v10, 13 h) : règles seules inchangées (100 % / 91 %) ;
+chaîne **88 % justes, 76 % exactes, 4,67 couverts à tort** (5,33 avant), 0,67 refus à tort, 13 instables. La
+lecture d'un vol est plus courte : médiane un cas à la fois **2,8 s** (3,4 s avant). Le 95e centile (68 s) vient
+d'un seul cas sur dix, ralenti par l'API (la lecture en masse a son 95e centile à 36 s) : à surveiller, ce n'est
+pas un coût de la méthode. Les couverts à tort restent des erreurs de lecture du lieu, de la clé ou de la cause
+(g2-p04, le fioul siphonné à la cave, s'ajoute une fois sur trois).
+
 **Leçon 83.** Une documentation qui décrit un système retiré est pire qu'une absence : elle se relit à chaque
 simplification, comme le code.
 

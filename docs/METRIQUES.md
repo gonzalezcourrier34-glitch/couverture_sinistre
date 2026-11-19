@@ -10,7 +10,7 @@ Démarche et historique des mesures : [DEMARCHE.md](DEMARCHE.md), parties 7.21 e
 
 | Jeu | Où | Cas | Rôle | Limite |
 |---|---|---|---|---|
-| **Golden set** (référence) | `data/golden/` (v6, figé par empreinte) | 97 | Rejoué à chaque changement ; toutes les métriques ci-dessous | Écrit par Claude, ayant servi à corriger le système : mesure la **mise au point** |
+| **Golden set** (référence) | `data/golden/` (v10, figé par empreinte, par contrat) | 97 (A) + 15 (B) | Rejoué à chaque changement ; toutes les métriques ci-dessous | Écrit par Claude, ayant servi à corriger le système : mesure la **mise au point** |
 | Mise au point d'origine | `data/sinistres.jsonl` | 14 | Les 2 cas du recruteur et 12 variations | Inclus dans le golden set |
 | Ancienne validation | `data/validation/` | 15 | Historique (7.17) | Inclus dans le golden set |
 | Rédaction | `data/redaction/` | 10 | Tempête et bris, écrits avant les règles | Inclus dans le golden set |
@@ -108,6 +108,19 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 ---
 
 ## 5. Dernières mesures
+
+**19 nov. 2026, 13 h, Assureur A, golden v10, après le lot B et les corrections de lecture** (toutes les garanties
+de dommages traduites, extensions et garanties accessoires) : règles seules 100 % justes, 91 % exactes ; **chaîne
+88 % justes, 76 % exactes, 4,67 couverts à tort**, 0,67 refus à tort, 13 instables ; un cas à la fois : médiane
+2,8 s (95e centile 68 s, un appel lent à l'API). DEMARCHE 7.70.
+
+**19 nov. 2026, 10 h 30, confirmation des faits décisifs par Mistral Large (option)** : Assureur A 86 % justes,
+**1,67 couvert à tort** (4 avec Small), médiane 8,6 s ; Assureur B 82 % justes, 0 couvert à tort. L'option reste
+désactivée par défaut (DEMARCHE 7.67).
+
+**19 nov. 2026, matin, lot A des deux contrats** (7 garanties pour A, 8 pour B, rédigées par Mistral Large en
+une vingtaine de minutes, relues) : règles seules 100 % sur les deux contrats ; Assureur A 89 % justes et 4 à 5
+couverts à tort selon les passages ; Assureur B 76 % justes, 0 couvert à tort (DEMARCHE 7.63 à 7.66).
 
 **18 nov. 2026, 22 h 37, Assureur B Habitation, garantie vol (15 cas, golden v7), règles rédigées par
 Mistral Large puis relues** : règles seules 100 % ; **chaîne 76 % justes, 0 couvert à tort, 0 refus à tort**,
