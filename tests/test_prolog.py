@@ -112,8 +112,10 @@ perimetre(incendie, concept(batiment)).
     assert d(lieu="logement")["decision"] == "COUVERT"
     assert d(lieu="autre_batiment", sejour_temporaire="oui")["decision"] == "COUVERT"
     assert d(lieu="autre_batiment", sejour_temporaire="non")["decision"] == "NON_COUVERT"
-    entamee = d(lieu="autre_batiment")
-    assert entamee["decision"] == "INCERTAIN" and entamee["retenues"][0]["questions"] == ["sejour_temporaire"]
+    assert d(lieu="autre_batiment")["decision"] == "NON_COUVERT", \
+        "un autre bâtiment ne dit pas qu'on y séjourne : l'extension n'est entamée que par ses propres faits (7.71)"
+    entamee = d(sejour_temporaire="oui")
+    assert entamee["decision"] == "INCERTAIN" and entamee["retenues"][0]["questions"] == ["lieu"]
     inconnu = d()
     assert inconnu["retenues"][0]["questions"] == ["lieu"], "le séjour n'est pas demandé quand rien ne l'évoque"
 

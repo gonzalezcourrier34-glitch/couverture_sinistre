@@ -1462,7 +1462,12 @@
       "pour": [
         "bris",
         "vol"
-      ]
+      ],
+      "seulement_si": {
+        "lieu": [
+          "vehicule"
+        ]
+      }
     },
     "materiel_laisse_en_vue": {
       "valeurs": [
@@ -1477,7 +1482,12 @@
       "pour": [
         "bris",
         "vol"
-      ]
+      ],
+      "seulement_si": {
+        "lieu": [
+          "vehicule"
+        ]
+      }
     },
     "mise_en_exploitation_satisfaction": {
       "valeurs": [
@@ -1520,7 +1530,8 @@
       },
       "pour": [
         "bris",
-        "vol"
+        "vol",
+        "heurt"
       ]
     },
     "option_vol": {
@@ -1769,6 +1780,79 @@
       "pour": [
         "accessoire"
       ]
+    },
+    "laisse_sans_surveillance": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'objet avait-il été laissé sans surveillance dans un lieu public (gare, café, rue…) ?",
+      "aide": {
+        "oui": "personne ne surveillait l'objet, il était laissé seul",
+        "non": "l'objet était avec vous ou sous surveillance"
+      },
+      "pour": [
+        "vol"
+      ]
+    },
+    "habitacle_ferme": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'habitacle du véhicule était-il entièrement fermé ?",
+      "aide": {
+        "oui": "toutes les portières et le coffre étaient fermés",
+        "non": "une portière, le coffre ou une fenêtre était ouvert"
+      },
+      "pour": [
+        "vol"
+      ],
+      "seulement_si": {
+        "lieu": [
+          "vehicule"
+        ]
+      }
+    },
+    "vehicule_voie_publique": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le véhicule était-il stationné sur la voie publique ?",
+      "aide": {
+        "oui": "la voiture était garée dans la rue, sur la voie publique",
+        "non": "la voiture était dans un garage, une allée privée ou un parking privé"
+      },
+      "pour": [
+        "vol"
+      ],
+      "seulement_si": {
+        "lieu": [
+          "vehicule"
+        ]
+      }
+    },
+    "periode_horaire": {
+      "valeurs": [
+        "nuit_22h_7h",
+        "jour_7h_22h",
+        "autre"
+      ],
+      "question": "À quelle période horaire le véhicule était-il stationné sur la voie publique ?",
+      "aide": {
+        "nuit_22h_7h": "entre 22 heures et 7 heures du matin",
+        "jour_7h_22h": "entre 7 heures et 22 heures",
+        "autre": "en dehors de ces plages horaires"
+      },
+      "pour": [
+        "vol"
+      ],
+      "seulement_si": {
+        "lieu": [
+          "vehicule"
+        ]
+      }
     }
   }
 }

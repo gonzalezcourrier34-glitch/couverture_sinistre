@@ -453,8 +453,14 @@ def variables_du_temps_2(voc: dict, evenements: list[str], socle: dict | None = 
         return any(set(x if isinstance(x, list) else [x]) & set(vals)
                    for var, vals in (d.get("si") or {}).items() for x in [(socle or {}).get(var) or []])
 
+    def hors_lieu(d):
+        # « seulement_si » (7.71) : une variable du véhicule ne se lit pas quand le lieu lu est la cave. Lieu non lu :
+        # on la garde, faute de savoir.
+        lus = {var: set(x if isinstance(x, list) else [x]) for var, x in (socle or {}).items() if x}
+        return any(var in lus and not lus[var] & set(vals) for var, vals in (d.get("seulement_si") or {}).items())
+
     return {v: d for v, d in voc.items() if v not in SOCLE
-            and (not ev or not d.get("pour") or ev & set(d["pour"]) or entamee(d))}
+            and (not ev or not d.get("pour") or ev & set(d["pour"]) or entamee(d)) and not hors_lieu(d)}
 
 
 def variables_du_contrat(contrat_id: str) -> set[str] | None:

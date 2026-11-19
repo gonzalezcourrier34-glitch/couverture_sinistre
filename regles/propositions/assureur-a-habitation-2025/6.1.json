@@ -2,14 +2,25 @@
   "meta": {
     "article": "6.1",
     "modele": "mistral:mistral-large-latest",
-    "date": "2026-11-18",
-    "consigne": "redaction-regles v6"
+    "date": "2026-11-19",
+    "consigne": "redaction-regles v9",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-19",
+      "modifications": [
+        "circonstance du vol (plainte, hors du bâtiment) limitée au vol : écrite « vol et plainte », elle interdisait la chute et le heurt",
+        "hors_batiment → non(concept(batiment)) : le bâtiment est un concept du contrat, extensions comprises",
+        "périmètre : bris ajouté (un ordinateur tombé se lit souvent « bris »)",
+        "obligations du véhicule retirées : écrites comme une situation, elles faisaient refuser tout heurt à la maison ; les exclusions disent déjà la même chose",
+        "« laissé sans surveillance dans un lieu public » et « simple perte dans un lieu public » : pas limités à la voie publique (une gare, un café) ; la simple perte réservée au vol (une chute n'en est pas une)",
+        "periode_horaire : valeurs nuit_22h_7h et jour_7h_22h (un identifiant commence par une lettre)"
+      ]
+    }
   },
   "proposition": {
     "evenements": [
-      "chute",
       "heurt",
-      "introduction_corps_etranger",
+      "bris",
       "vol"
     ],
     "definitions": [
@@ -18,7 +29,7 @@
         "condition": {
           "f": [
             "bien",
-            "materiel_informatique"
+            "appareil_informatique"
           ]
         },
         "article": "12/materiel-informatique",
@@ -30,25 +41,13 @@
         "id": "pack_multimedia",
         "nom": "Pack multimédia",
         "article": "6.1",
-        "texte": "Pour autant que vos conditions particulières en fassent mention, vos garanties sont étendues au matériel informatique.",
+        "texte": "Pour autant que vos conditions particulières en fassent mention, vos garanties sont étendues au matériel informatique. Dans ce cadre, nous prenons en charge les dommages causés par : • la chute, le heurt et l’introduction d’un corps étrangers • le vol survenu à l’extérieur du bâtiment assuré, pour autant qu’une plainte soit déposée auprès des autorités judiciaires ou de polices compétentes. Il faut noter que ces couvertures sont acquises dans le monde entier.",
         "perimetre": [
-          {
-            "f": [
-              "pack_multimedia_souscrit",
-              "oui"
-            ]
-          },
           {
             "concept": "materiel_informatique"
           },
           {
             "ou": [
-              {
-                "f": [
-                  "evenement",
-                  "chute"
-                ]
-              },
               {
                 "f": [
                   "evenement",
@@ -58,7 +57,7 @@
               {
                 "f": [
                   "evenement",
-                  "introduction_corps_etranger"
+                  "bris"
                 ]
               },
               {
@@ -84,50 +83,7 @@
                   "et": [
                     {
                       "non": {
-                        "ou": [
-                          {
-                            "f": [
-                              "lieu",
-                              "logement"
-                            ]
-                          },
-                          {
-                            "f": [
-                              "lieu",
-                              "cave"
-                            ]
-                          },
-                          {
-                            "f": [
-                              "lieu",
-                              "grenier"
-                            ]
-                          },
-                          {
-                            "f": [
-                              "lieu",
-                              "garage"
-                            ]
-                          },
-                          {
-                            "f": [
-                              "lieu",
-                              "annexe"
-                            ]
-                          },
-                          {
-                            "f": [
-                              "lieu",
-                              "parties_communes"
-                            ]
-                          },
-                          {
-                            "f": [
-                              "lieu",
-                              "casier"
-                            ]
-                          }
-                        ]
+                        "concept": "batiment"
                       }
                     },
                     {
@@ -144,98 +100,7 @@
             "texte": "le vol survenu à l’extérieur du bâtiment assuré, pour autant qu’une plainte soit déposée auprès des autorités judiciaires ou de polices compétentes"
           }
         ],
-        "obligations": [
-          {
-            "condition": {
-              "et": [
-                {
-                  "f": [
-                    "transport_vehicule",
-                    "oui"
-                  ]
-                },
-                {
-                  "f": [
-                    "lieu",
-                    "voie_publique"
-                  ]
-                },
-                {
-                  "f": [
-                    "heure_sinistre",
-                    "entre_22h_7h"
-                  ]
-                },
-                {
-                  "f": [
-                    "absence",
-                    "oui"
-                  ]
-                }
-              ]
-            },
-            "obligation": {
-              "f": [
-                "objets_lieu_sur",
-                "oui"
-              ]
-            },
-            "exception": null,
-            "lien_causal": true,
-            "article": "6.1-a",
-            "texte": "les retirer et les mettre en lieu sûr, lorsque le véhicule, en l’absence des occupants, stationne entre 22 heures et 7 heures sur la voie publique"
-          },
-          {
-            "condition": {
-              "et": [
-                {
-                  "f": [
-                    "transport_vehicule",
-                    "oui"
-                  ]
-                },
-                {
-                  "f": [
-                    "lieu",
-                    "voie_publique"
-                  ]
-                },
-                {
-                  "f": [
-                    "heure_sinistre",
-                    "entre_7h_22h"
-                  ]
-                }
-              ]
-            },
-            "obligation": {
-              "et": [
-                {
-                  "f": [
-                    "vehicule_ferme_cle",
-                    "oui"
-                  ]
-                },
-                {
-                  "f": [
-                    "habitacle_ferme",
-                    "oui"
-                  ]
-                },
-                {
-                  "f": [
-                    "objets_visibles_exterieur",
-                    "non"
-                  ]
-                }
-              ]
-            },
-            "exception": null,
-            "lien_causal": true,
-            "article": "6.1-a",
-            "texte": "veiller à ce que le véhicule, en stationnement sur la voie public entre 7 heures et 22 heures, soit fermé à clé, que l’habitacle soit fermé et que les objets ne soient pas visibles de l’extérieur"
-          }
-        ],
+        "obligations": [],
         "exclusions": [
           {
             "condition": {
@@ -248,14 +113,8 @@
                 },
                 {
                   "f": [
-                    "lieu_public",
+                    "laisse_sans_surveillance",
                     "oui"
-                  ]
-                },
-                {
-                  "f": [
-                    "surveillance",
-                    "non"
                   ]
                 }
               ]
@@ -276,20 +135,20 @@
                 },
                 {
                   "f": [
-                    "transport_vehicule",
+                    "lieu",
+                    "vehicule"
+                  ]
+                },
+                {
+                  "f": [
+                    "vehicule_voie_publique",
                     "oui"
                   ]
                 },
                 {
                   "f": [
-                    "lieu",
-                    "voie_publique"
-                  ]
-                },
-                {
-                  "f": [
-                    "heure_sinistre",
-                    "entre_22h_7h"
+                    "periode_horaire",
+                    "nuit_22h_7h"
                   ]
                 }
               ]
@@ -310,27 +169,27 @@
                 },
                 {
                   "f": [
-                    "transport_vehicule",
+                    "lieu",
+                    "vehicule"
+                  ]
+                },
+                {
+                  "f": [
+                    "vehicule_voie_publique",
                     "oui"
                   ]
                 },
                 {
                   "f": [
-                    "lieu",
-                    "voie_publique"
-                  ]
-                },
-                {
-                  "f": [
-                    "heure_sinistre",
-                    "entre_7h_22h"
+                    "periode_horaire",
+                    "jour_7h_22h"
                   ]
                 },
                 {
                   "ou": [
                     {
                       "f": [
-                        "objets_visibles_exterieur",
+                        "materiel_laisse_en_vue",
                         "oui"
                       ]
                     },
@@ -360,30 +219,14 @@
               "et": [
                 {
                   "f": [
-                    "lieu_public",
-                    "oui"
+                    "evenement",
+                    "vol"
                   ]
                 },
                 {
-                  "ou": [
-                    {
-                      "f": [
-                        "nature_perte",
-                        "perte"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "nature_perte",
-                        "disparition"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "nature_perte",
-                        "oubli"
-                      ]
-                    }
+                  "f": [
+                    "simple_disparition",
+                    "oui"
                   ]
                 }
               ]
@@ -392,145 +235,62 @@
             "a_demander": true,
             "article": "6.1",
             "texte": "la simple perte, disparition ou l’oubli d’un objet dans un lieu public"
+          },
+          {
+            "condition": {
+              "non": {
+                "f": [
+                  "option_materiel_multimedia",
+                  "oui"
+                ]
+              }
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "6.1",
+            "texte": "Pour autant que vos conditions particulières en fassent mention, vos garanties sont étendues au matériel informatique. Dans ce cadre, nous prenons en charge les dommages causés par : • la chute, le heurt et l’introduction d’un corps étrangers • le vol survenu à l’extérieur du bâtiment assuré, pour autant qu’une plainte soit déposée auprès des autorités judiciaires ou de polices compétentes. Il faut noter que ces couvertures sont acquises dans le monde entier."
           }
         ],
         "limites": [
           {
             "article": "6.1-a",
             "texte": "Limite par sinistre (à l’indice ABEX 775) 5.750 EUR",
-            "montant": "5750 EUR"
+            "montant": "5750 EUR à l'indice ABEX 775"
           }
         ]
       }
     ],
     "exclusions_communes": [],
+    "extensions": [],
     "vocabulaire_manquant": [
       {
-        "variable": "pack_multimedia_souscrit",
+        "variable": "periode_horaire",
         "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Le pack multimédia est-il mentionné dans vos conditions particulières ?",
-        "pourquoi": "condition d'activation de la garantie 6.1",
-        "plus_proche": "formule : ne couvre pas spécifiquement l'option pack multimédia",
-        "aide": {
-          "oui": "les conditions particulières mentionnent le pack multimédia",
-          "non": "pas de mention du pack multimédia"
-        }
-      },
-      {
-        "variable": "bien",
-        "valeurs": [
-          "materiel_informatique"
-        ],
-        "question": "S'agit-il de matériel informatique (ordinateur, laptop, tablette > 7 pouces) ?",
-        "pourquoi": "bien couvert par le pack multimédia, distinct de l'électronique générale",
-        "plus_proche": "electronique : trop large (inclut TV, hi-fi, etc.)",
-        "aide": {
-          "materiel_informatique": "ordinateur de bureau, laptop, notebook, tablette avec écran > 7 pouces, périphériques"
-        }
-      },
-      {
-        "variable": "evenement",
-        "valeurs": [
-          "chute",
-          "heurt",
-          "introduction_corps_etranger"
-        ],
-        "question": "S'agit-il d'une chute, d'un heurt ou de l'introduction d'un corps étranger ?",
-        "pourquoi": "événements couverts par le pack multimédia non présents dans le vocabulaire existant",
-        "plus_proche": "bris : ne couvre pas spécifiquement la chute ou le heurt",
-        "aide": {
-          "chute": "l'objet est tombé",
-          "heurt": "l'objet a été heurté",
-          "introduction_corps_etranger": "un corps étranger a pénétré dans l'appareil"
-        }
-      },
-      {
-        "variable": "heure_sinistre",
-        "valeurs": [
-          "entre_22h_7h",
-          "entre_7h_22h",
+          "nuit_22h_7h",
+          "jour_7h_22h",
           "autre"
         ],
-        "question": "À quelle heure le sinistre s'est-il produit ?",
-        "pourquoi": "distinction des exclusions et obligations selon l'horaire (22h-7h vs 7h-22h)",
-        "plus_proche": "aucune variable horaire n'existe",
+        "question": "À quelle période horaire le véhicule était-il stationné sur la voie publique ?",
+        "pourquoi": "exclusions et obligations liées aux horaires de stationnement (22h-7h et 7h-22h)",
+        "plus_proche": "aucune variable horaire n'existe dans le vocabulaire",
         "aide": {
-          "entre_22h_7h": "entre 22h et 7h du matin",
-          "entre_7h_22h": "entre 7h et 22h",
-          "autre": "autre horaire"
+          "nuit_22h_7h": "entre 22 heures et 7 heures du matin",
+          "jour_7h_22h": "entre 7 heures et 22 heures",
+          "autre": "en dehors de ces plages horaires"
         }
       },
       {
-        "variable": "lieu_public",
+        "variable": "laisse_sans_surveillance",
         "valeurs": [
           "oui",
           "non"
         ],
-        "question": "Le sinistre s'est-il produit dans un lieu public (magasin, restaurant, gare, etc.) ?",
-        "pourquoi": "exclusion pour vol sans surveillance et perte dans un lieu public, distinct de la voie publique",
-        "plus_proche": "lieu : voie_publique ne couvre que la rue, pas les autres lieux publics",
+        "question": "L'objet avait-il été laissé sans surveillance dans un lieu public (gare, café, rue…) ?",
+        "pourquoi": "exclusion du vol d'objets laissés sans surveillance dans un lieu public",
+        "plus_proche": "materiel_laisse_en_vue : concerne la visibilité depuis l'extérieur d'un véhicule, pas la surveillance en lieu public",
         "aide": {
-          "oui": "dans un magasin, restaurant, transport en commun, gare, aéroport, etc.",
-          "non": "dans un lieu privé ou la voie publique"
-        }
-      },
-      {
-        "variable": "surveillance",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "L'objet était-il laissé sans surveillance ?",
-        "pourquoi": "exclusion du vol d'objets sans surveillance dans un lieu public",
-        "plus_proche": "aucune variable ne décrit la surveillance de l'objet",
-        "aide": {
-          "oui": "l'objet était laissé seul, sans personne pour le surveiller",
-          "non": "l'objet était sous surveillance"
-        }
-      },
-      {
-        "variable": "transport_vehicule",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Les objets étaient-ils transportés dans un véhicule automoteur ?",
-        "pourquoi": "condition des obligations de prévention et exclusions spécifiques au véhicule",
-        "plus_proche": "aucune variable n'indique le transport dans un véhicule",
-        "aide": {
-          "oui": "les objets se trouvaient dans une voiture, camionnette, etc.",
-          "non": "les objets n'étaient pas dans un véhicule"
-        }
-      },
-      {
-        "variable": "objets_lieu_sur",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Les objets ont-ils été retirés du véhicule et mis en lieu sûr ?",
-        "pourquoi": "obligation de prévention entre 22h et 7h",
-        "plus_proche": "aucune variable ne décrit le retrait des objets du véhicule",
-        "aide": {
-          "oui": "les objets ont été emportés et déposés dans un endroit sûr (domicile, coffre, etc.)",
-          "non": "les objets sont restés dans le véhicule"
-        }
-      },
-      {
-        "variable": "vehicule_ferme_cle",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Le véhicule était-il fermé à clé ?",
-        "pourquoi": "obligation et exclusion concernant le véhicule entre 7h et 22h",
-        "plus_proche": "fermeture : concerne le local assuré, pas le véhicule",
-        "aide": {
-          "oui": "les portières du véhicule étaient verrouillées à clé",
-          "non": "le véhicule n'était pas fermé à clé"
+          "oui": "personne ne surveillait l'objet, il était laissé seul",
+          "non": "l'objet était avec vous ou sous surveillance"
         }
       },
       {
@@ -539,44 +299,26 @@
           "oui",
           "non"
         ],
-        "question": "L'habitacle du véhicule était-il entièrement fermé (vitres, toit ouvrant, coffre) ?",
-        "pourquoi": "obligation et exclusion concernant le véhicule entre 7h et 22h",
-        "plus_proche": "fenetres_fermees : concerne les fenêtres du logement",
+        "question": "L'habitacle du véhicule était-il entièrement fermé ?",
+        "pourquoi": "exclusion du vol dans un véhicule entre 7h et 22h si l'habitacle n'est pas entièrement fermé",
+        "plus_proche": "vehicule_ferme_cle : ne concerne que la fermeture à clé du véhicule, pas l'état de l'habitacle",
         "aide": {
-          "oui": "toutes les ouvertures du véhicule étaient fermées",
-          "non": "une vitre, le toit ouvrant ou le coffre était ouvert"
+          "oui": "toutes les portières et le coffre étaient fermés",
+          "non": "une portière, le coffre ou une fenêtre était ouvert"
         }
       },
       {
-        "variable": "objets_visibles_exterieur",
+        "variable": "vehicule_voie_publique",
         "valeurs": [
           "oui",
           "non"
         ],
-        "question": "Les objets étaient-ils visibles de l'extérieur du véhicule ?",
-        "pourquoi": "obligation et exclusion concernant le véhicule entre 7h et 22h",
-        "plus_proche": "aucune variable ne décrit la visibilité des objets dans le véhicule",
+        "question": "Le véhicule était-il stationné sur la voie publique ?",
+        "pourquoi": "exclusions et obligations concernant le stationnement du véhicule sur la voie publique",
+        "plus_proche": "lieu=vehicule : indique seulement que le bien se trouve dans un véhicule, pas l'emplacement du véhicule",
         "aide": {
-          "oui": "on pouvait voir les objets depuis l'extérieur (sur le siège, etc.)",
-          "non": "les objets étaient cachés (dans la boîte à gants, le coffre, sous un vêtement)"
-        }
-      },
-      {
-        "variable": "nature_perte",
-        "valeurs": [
-          "perte",
-          "disparition",
-          "oubli",
-          "autre"
-        ],
-        "question": "S'agit-il d'une perte, d'une disparition ou d'un oubli de l'objet ?",
-        "pourquoi": "exclusion de la simple perte, disparition ou oubli dans un lieu public",
-        "plus_proche": "simple_disparition : ne concerne que le vol sans trace, pas la perte ou l'oubli",
-        "aide": {
-          "perte": "l'objet a été perdu (on ne sait pas où)",
-          "disparition": "l'objet a disparu sans trace de vol",
-          "oubli": "l'objet a été oublié quelque part",
-          "autre": "autre cause"
+          "oui": "la voiture était garée dans la rue, sur la voie publique",
+          "non": "la voiture était dans un garage, une allée privée ou un parking privé"
         }
       }
     ],
@@ -584,89 +326,9 @@
   },
   "controles": [
     {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "bien = materiel_informatique : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 6.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "pack_multimedia_souscrit = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 6.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "evenement = chute : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 6.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "evenement = heurt : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 6.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "evenement = introduction_corps_etranger : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 6.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "transport_vehicule = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 6.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "heure_sinistre = entre_22h_7h : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 6.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "heure_sinistre = entre_7h_22h : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 6.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "lieu_public = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 6.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "surveillance = non : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 6.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "objets_visibles_exterieur = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 6.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "vehicule_ferme_cle = non : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 6.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "habitacle_ferme = non : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 6.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "nature_perte = perte : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 6.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "nature_perte = disparition : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 6.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "nature_perte = oubli : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 6.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (6.1) : « la chute, le heurt et l’introduction d’un corps étrangers »"
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "g2-i07 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
     }
   ]
 }

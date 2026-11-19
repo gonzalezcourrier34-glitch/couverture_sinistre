@@ -94,9 +94,16 @@ extension_active(X) :-
     ),
     !.
 
-%  Les faits positifs propres à une extension, hors des concepts qu'elle emploie : « contenu » est établi par
-%  presque toute déclaration (un meuble), il ne dit rien d'un séjour ou d'un déménagement.
+%  Les faits positifs propres à une extension, hors des concepts qu'elle emploie et du socle (événement, bien,
+%  lieu) : « contenu » est établi par presque toute déclaration, et un vol dans une voiture ne dit rien d'un
+%  déménagement. L'extension est entamée quand la déclaration parle du séjour ou du déménagement lui-même ;
+%  la lecture va chercher ces faits quand le lieu s'y prête (« si » du vocabulaire).
+socle(evenement).
+socle(bien).
+socle(lieu).
+
 propres(concept(_), []) :- !.
+propres(f(V, _), []) :- socle(V), !.      % un lieu ne dit pas qu'on déménage (7.71)
 propres(f(V, X), [f(V, X)]) :- !.
 propres(et(L), Fs) :- !, maplist(propres, L, Fss), append(Fss, Fs).
 propres(ou(L), Fs) :- !, maplist(propres, L, Fss), append(Fss, Fs).

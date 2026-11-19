@@ -226,7 +226,7 @@ class Moteur:
             if not isinstance(t, Terme) or t.nom == "concept":
                 return []
             if t.nom == "f":
-                return [t]
+                return [] if t.args[0] in ("evenement", "bien", "lieu") else [t]
             if t.nom in ("et", "ou"):
                 return [f for c in t.args[0] for f in propres(c)]
             if t.nom == "si":

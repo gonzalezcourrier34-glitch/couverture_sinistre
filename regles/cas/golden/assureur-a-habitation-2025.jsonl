@@ -82,7 +82,7 @@
 {"sinistre_id": "g2-i14", "faits": {"evenement": ["degat_eaux"], "bien": ["canalisation", "objet_divers"], "lieu": ["cave"], "cause_eau": "fuite_installation", "corrosion_visible": "oui"}}
 {"sinistre_id": "g2-p12", "faits": {"evenement": ["bris"], "bien": ["vitre"], "lieu": ["logement"], "auteur": "assure", "intentionnel": "oui"}}
 {"sinistre_id": "g2-p01", "faits": {"evenement": ["vol"], "bien": ["objet_divers"], "lieu": ["logement"], "absence": "oui", "portes_fermees": "oui", "effraction": "non"}}
-{"sinistre_id": "g2-i07", "faits": {"evenement": ["vol"], "bien": ["electronique"], "lieu": ["voie_publique"], "vol_sur_personne": "non"}}
+{"sinistre_id": "g2-i07", "faits": {"evenement": ["vol"], "bien": ["appareil_informatique"], "lieu": ["vehicule"], "vehicule_voie_publique": "oui", "vol_sur_personne": "non"}}
 {"sinistre_id": "g2-p03", "faits": {"evenement": ["vol"], "bien": ["plantation"], "lieu": ["jardin"]}}
 {"sinistre_id": "g2-p04", "faits": {"evenement": ["vol"], "bien": ["mazout"], "lieu": ["cave"]}}
 {"sinistre_id": "g2-p06", "faits": {"evenement": ["vol"], "bien": ["cles"], "lieu": ["voie_publique"], "vol_sur_personne": "oui", "violence": "non"}}

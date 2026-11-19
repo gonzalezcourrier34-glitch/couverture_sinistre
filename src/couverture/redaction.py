@@ -314,6 +314,56 @@ def conditions_particulieres_en_reserve(prop: dict) -> list[str]:
     return notes
 
 
+def circonstances_par_evenement(prop: dict) -> list[str]:
+    """Une garantie qui couvre plusieurs événements (« la chute, le heurt… ; le vol hors du bâtiment, pour autant
+    qu'une plainte soit déposée ») pose parfois une condition propre à l'un d'eux. Rendue comme une circonstance
+    « vol et plainte », elle interdit tous les autres événements : un ordinateur tombé ne serait jamais couvert
+    (6.1, 7.71). Le code la réécrit « si vol, alors plainte », pour tout contrat."""
+    notes = []
+    for g in prop.get("garanties") or []:
+        if not isinstance(g, dict):
+            continue
+        evs = {x for c in g.get("perimetre") or [] for v, x in feuilles(c) if v == "evenement"}
+        for c in g.get("circonstances") or []:
+            cond = c.get("condition") if isinstance(c, dict) else None
+            if not (isinstance(cond, dict) and isinstance(cond.get("et"), list)):
+                continue
+            propres = [x for x in cond["et"] if isinstance(x, dict) and isinstance(x.get("f"), list)
+                       and len(x["f"]) == 2 and x["f"][0] == "evenement"]
+            if len(propres) == 1 and len(evs) > 1 and propres[0]["f"][1] in evs:
+                reste = [x for x in cond["et"] if x is not propres[0]]
+                c["condition"] = {"si": [propres[0], reste[0] if len(reste) == 1 else {"et": reste}]}
+                notes.append(f"garantie {g.get('id')} : la circonstance propre à « {propres[0]['f'][1]} » "
+                             f"réécrite « si {propres[0]['f'][1]}, alors… » (les autres événements restent couverts)")
+    return notes
+
+
+def obligations_mal_formees(prop: dict) -> list[str]:
+    """Une obligation dit un devoir (fermer, retirer, prévenir) ; la situation où il s'applique (un véhicule, une
+    absence) va dans « si situation alors devoir ». Écrite comme une situation (« véhicule et voie publique et
+    nuit »), elle serait « violée » par tout sinistre hors de cette situation : un refus pour chaque heurt à la
+    maison (6.1, 7.71)."""
+    def hors_si(c):
+        if not isinstance(c, dict) or len(c) != 1:
+            return []
+        (cle, v), = c.items()
+        if cle == "f":
+            return [str(v[0])]
+        if cle == "si":
+            return hors_si(v[1])
+        if cle in ("et", "ou"):
+            return [x for y in v for x in hors_si(y)]
+        if cle == "non":
+            return hors_si(v)
+        return []
+    return [f"garantie {g.get('id')} : l'obligation « {str(o.get('texte'))[:70]} » décrit une situation "
+            f"({', '.join(sorted(set(hors_si(o.get('condition'))) & set(prolog.SOCLE)))}) au lieu d'un devoir : "
+            f"l'écrire « si situation, alors devoir », ou en faire une exclusion"
+            for g in prop.get("garanties") or [] if isinstance(g, dict)
+            for o in g.get("obligations") or [] if isinstance(o, dict)
+            and set(hors_si(o.get("condition"))) & set(prolog.SOCLE)]
+
+
 def non_traduits(prop: dict) -> list[dict]:
     """Les passages déclarés non traduits. Le modèle renvoie parfois une simple phrase au lieu de l'objet
     {"article", "texte", "pourquoi"} (Assureur B 3.1.6, 7.53) : on la garde, sans article, plutôt que de planter."""
@@ -457,6 +507,10 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
         noter(A_RELIRE, "structure", note)
     for note in conditions_particulieres_en_reserve(prop) if isinstance(prop, dict) and not erreurs_schema(prop) else []:
         noter(INFO, "couverture", note)
+    for note in circonstances_par_evenement(prop) if isinstance(prop, dict) and not erreurs_schema(prop) else []:
+        noter(INFO, "couverture", note)
+    for note in obligations_mal_formees(prop) if isinstance(prop, dict) and not erreurs_schema(prop) else []:
+        noter(BLOQUANT, "couverture", note)
     schema = erreurs_schema(prop)
     if not schema:
         try:
@@ -733,9 +787,13 @@ def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
     doc = json.loads(chemin.read_text(encoding="utf-8"))
     voc, ajouts = doc["variables"], []
     nouvelles_variables = {m.get("variable") for m in prop.get("vocabulaire_manquant", []) if m.get("variable") not in voc}
+    lieux = lieux_par_variable(prop)
     for m in prop.get("vocabulaire_manquant", []):
         v, valeurs = m.get("variable"), [str(x) for x in m.get("valeurs", [])]
         if not (v and IDENT.match(v) and valeurs and all(IDENT.match(x) for x in valeurs)):
+            # Refusée en clair : en silence, elle restait « à accepter » à chaque contrôle (6.1, « 22h_7h »).
+            ajouts.append(f"! {v} refusée : nom ou valeur hors des identifiants permis (minuscule d'abord) : "
+                          f"{', '.join(x for x in [v, *valeurs] if not (x and IDENT.match(x)))} — à renommer dans la proposition")
             continue
         if v in voc:
             nouvelles = [x for x in valeurs if x not in voc[v]["valeurs"]]
@@ -766,6 +824,8 @@ def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
             evs = evenements_par_variable(prop).get(v) or list(prop.get("evenements") or [])
             if evs:
                 voc[v]["pour"] = evs
+            if lieux.get(v):
+                voc[v]["seulement_si"] = {"lieu": lieux[v]}
             ajouts.append(f"{v} ({', '.join(valeurs)}) : « {voc[v]['question']} »")
     ajouts += etendre_pour(prop, voc)
     # Une variable d'extension (le séjour temporaire élargit le bâtiment) vaut pour toutes les garanties qui
@@ -805,20 +865,15 @@ def evenements_par_variable(prop: dict) -> dict[str, list[str]]:
     pas à lire pour un vol (7.65). Une exclusion commune vaut pour les événements de toutes les garanties."""
     defs = {d.get("concept"): d.get("condition") for d in prop.get("definitions", []) if d.get("concept")}
 
-    def variables(c, vus=()):
-        out = {v for v, _ in feuilles(c)}
-        for n in concepts_employes(c):
-            if n in defs and n not in vus:
-                out |= variables(defs[n], vus + (n,))
-        return out
-
     tous = list(prop.get("evenements") or [])
     res: dict[str, list[str]] = {}
 
     def noter(c, evs):
-        for v in variables(c):
+        # Une variable posée dans un « et » ou un « si » qui nomme l'événement (« vol et laissé sans surveillance »)
+        # ne se lit que pour cet événement, même si la garantie en couvre d'autres (6.1, 7.71).
+        for v, evs_v, _ in occurrences(c, defs, evs):
             res.setdefault(v, [])
-            res[v] += [e for e in evs if e not in res[v]]
+            res[v] += [e for e in evs_v if e not in res[v]]
 
     union = []
     for g in prop.get("garanties", []):
@@ -838,6 +893,60 @@ def evenements_par_variable(prop: dict) -> dict[str, list[str]]:
     for x in prop.get("exclusions_communes") or []:
         noter(x.get("condition"), union or tous)
     return res
+
+
+def occurrences(c, defs: dict, evs, lieux=None, vus=()):
+    """(variable, événements, lieux) pour chaque fait employé par la condition : les événements et les lieux que
+    le « et » ou le « si » qui l'entoure exige. `lieux` vaut None quand rien n'en exige."""
+    if not isinstance(c, dict) or len(c) != 1:
+        return []
+    (cle, v), = c.items()
+    if cle == "f":
+        return [] if str(v[0]) in prolog.SOCLE else [(str(v[0]), list(evs), lieux)]
+    if cle == "concept":
+        return occurrences(defs[v], defs, evs, lieux, vus + (v,)) if v in defs and v not in vus else []
+
+    def restreint(conds, evs, lieux):
+        dits = [x["f"] for x in conds if isinstance(x, dict) and isinstance(x.get("f"), list) and len(x["f"]) == 2]
+        e = [x for _, x in (d for d in dits if d[0] == "evenement")]
+        l = [x for _, x in (d for d in dits if d[0] == "lieu")]
+        evs = [x for x in evs if x in e] or (list(evs) if not e else e)
+        if l:
+            lieux = sorted(set(l) & set(lieux)) if lieux is not None else sorted(set(l))
+        return evs, lieux
+
+    if cle == "et":
+        evs2, lieux2 = restreint(v, evs, lieux)
+        return [o for x in v for o in occurrences(x, defs, evs2, lieux2, vus)]
+    if cle == "si":
+        evs2, lieux2 = restreint([v[0]] + (v[0].get("et", []) if isinstance(v[0], dict) else []), evs, lieux)
+        return occurrences(v[0], defs, evs, lieux, vus) + occurrences(v[1], defs, evs2, lieux2, vus)
+    if cle == "ou":
+        return [o for x in v for o in occurrences(x, defs, evs, lieux, vus)]
+    if cle == "non":
+        return occurrences(v, defs, evs, lieux, vus)
+    return []
+
+
+def lieux_par_variable(prop: dict) -> dict[str, list[str]]:
+    """Les variables que la proposition n'emploie que dans un lieu donné (« véhicule sur la voie publique,
+    habitacle fermé ») : elles ne se lisent que si le lieu lu est celui-là (7.71). Une seule occurrence sans lieu
+    exigé, et la variable se lit partout."""
+    defs = {d.get("concept"): d.get("condition") for d in prop.get("definitions", []) if d.get("concept")}
+    vus: dict[str, set | None] = {}
+    conds = [c for g in prop.get("garanties", []) for c in g.get("perimetre", [])]
+    conds += [x.get(k) for g in prop.get("garanties", []) for cle in ("circonstances", "obligations", "exclusions")
+              for x in g.get(cle, []) for k in ("condition", "exception") if x.get(k) is not None]
+    conds += [x.get("condition") for x in prop.get("exclusions_communes") or []]
+    for c in conds:
+        for v, _, lieux in occurrences(c, defs, []):
+            if lieux is None:
+                vus[v] = None
+            elif v not in vus:
+                vus[v] = set(lieux)
+            elif vus[v] is not None:
+                vus[v] |= set(lieux)
+    return {v: sorted(l) for v, l in vus.items() if l}
 
 
 def etendre_pour(prop: dict, voc: dict) -> list[str]:

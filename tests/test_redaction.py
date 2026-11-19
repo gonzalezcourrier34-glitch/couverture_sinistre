@@ -313,6 +313,50 @@ def test_variable_d_extension_lue_si_son_lieu_est_lu():
     assert set(au_logement) == {"flammes"} and set(a_l_hotel) == {"flammes", "sejour_temporaire"}
 
 
+def test_circonstance_propre_a_un_evenement_et_obligation_situation():
+    """7.71 : « la chute ; le vol hors du bâtiment, pour autant qu'une plainte soit déposée » : la plainte ne vaut
+    que pour le vol. Et une obligation écrite comme une situation ferait refuser tout autre sinistre."""
+    prop = copy.deepcopy(BONNE)
+    g = prop["garanties"][0]
+    g["perimetre"] = [{"ou": [{"f": ["evenement", "heurt"]}, {"f": ["evenement", "vol"]}]}]
+    g["circonstances"] = [{"condition": {"et": [{"f": ["evenement", "vol"]}, {"f": ["plainte_deposee", "oui"]}]},
+                           "article": "2.2", "texte": "pour autant qu'une plainte soit déposée"}]
+    assert redaction.circonstances_par_evenement(prop)
+    assert g["circonstances"][0]["condition"] == {"si": [{"f": ["evenement", "vol"]}, {"f": ["plainte_deposee", "oui"]}]}
+    assert redaction.circonstances_par_evenement(prop) == [], "une seconde passe ne change rien"
+    g["obligations"] = [{"condition": {"et": [{"f": ["lieu", "vehicule"]}, {"f": ["vehicule_ferme_cle", "oui"]}]},
+                         "exception": None, "lien_causal": False, "article": "2.2", "texte": "fermer le véhicule à clé"}]
+    assert redaction.obligations_mal_formees(prop)
+    g["obligations"][0]["condition"] = {"si": [{"f": ["lieu", "vehicule"]}, {"f": ["vehicule_ferme_cle", "oui"]}]}
+    assert redaction.obligations_mal_formees(prop) == []
+
+
+def test_variables_lues_selon_l_evenement_et_le_lieu_qui_les_entourent(voc_etendu):
+    """7.71 : « vol et laissé sans surveillance » ne se lit que pour le vol ; « véhicule et habitacle fermé » ne se
+    lit que si le lieu lu est un véhicule. Une valeur hors identifiant est refusée en clair."""
+    prop = copy.deepcopy(BONNE)
+    g = prop["garanties"][0]
+    g["perimetre"] = [{"ou": [{"f": ["evenement", "heurt"]}, {"f": ["evenement", "vol"]}]}]
+    g["exclusions"] = [
+        {"condition": {"et": [{"f": ["evenement", "vol"]}, {"f": ["sans_surveillance_x", "oui"]}]}, "portee": "tout",
+         "a_demander": True, "article": "2.2", "texte": "t"},
+        {"condition": {"et": [{"f": ["evenement", "vol"]}, {"f": ["lieu", "vehicule"]}, {"f": ["habitacle_x", "non"]}]},
+         "portee": "tout", "a_demander": True, "article": "2.2", "texte": "t"}]
+    prop["vocabulaire_manquant"] = [
+        {"variable": "sans_surveillance_x", "valeurs": ["oui", "non"], "question": "?"},
+        {"variable": "habitacle_x", "valeurs": ["oui", "non"], "question": "?"},
+        {"variable": "periode_x", "valeurs": ["22h_7h", "jour"], "question": "?"}]
+    assert redaction.evenements_par_variable(prop)["sans_surveillance_x"] == ["vol"]
+    assert redaction.lieux_par_variable(prop) == {"habitacle_x": ["vehicule"]}
+    ajouts = redaction.accepter_vocabulaire(prop, voc_etendu)
+    voc = json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]
+    assert voc["habitacle_x"]["seulement_si"] == {"lieu": ["vehicule"]} and "seulement_si" not in voc["sans_surveillance_x"]
+    assert "periode_x" not in voc and any(a.startswith("! periode_x refusée") and "22h_7h" in a for a in ajouts)
+    a_la_cave = prolog.variables_du_temps_2(voc, ["vol"], {"lieu": ["cave"]})
+    dans_la_voiture = prolog.variables_du_temps_2(voc, ["vol"], {"lieu": ["vehicule"]})
+    assert "habitacle_x" not in a_la_cave and "habitacle_x" in dans_la_voiture and "sans_surveillance_x" in a_la_cave
+
+
 def test_garantie_accessoire_en_prolog():
     prop = copy.deepcopy(BONNE)
     prop["garanties"][0]["accessoire"] = True

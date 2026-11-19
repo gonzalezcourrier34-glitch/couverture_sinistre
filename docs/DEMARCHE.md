@@ -2554,6 +2554,55 @@ pas un coût de la méthode. Les couverts à tort restent des erreurs de lecture
 **Leçon 83.** Une documentation qui décrit un système retiré est pire qu'une absence : elle se relit à chaque
 simplification, comme le code.
 
+### 7.71 Le pack multimédia (6.1) : deux défauts de forme qui auraient refusé à tort, et une extension trop curieuse
+
+**Rédaction** (consigne v9, Mistral Large, 4 min) : une garantie optionnelle (« pour autant que vos conditions
+particulières en fassent mention », mise en réserve par le code), qui couvre le matériel informatique contre la
+chute, le heurt, le corps étranger, et le vol hors du bâtiment avec plainte ; cinq exclusions (lieu public, véhicule
+la nuit, véhicule le jour visible ou mal fermé, simple perte). Contrôles : le vocabulaire nouveau, et un cas changé
+(g2-i07, l'ordinateur volé dans la voiture).
+
+**Ce que la relecture a trouvé, en simulant le golden avec l'oracle.**
+1. *La circonstance du vol valait pour tout.* « Vol et hors du bâtiment et plainte », écrit comme circonstance de la
+   garantie, interdisait la chute et le heurt : un ordinateur tombé n'aurait jamais été couvert. **Dans le code**
+   (`circonstances_par_evenement`, pour tout contrat) : une circonstance qui nomme un seul des événements de la
+   garantie est réécrite « si vol, alors… ».
+2. *Deux obligations écrites comme des situations.* « Véhicule, voie publique, entre 22 h et 7 h » à la place d'un
+   devoir : le moteur les aurait jugées violées par tout heurt à la maison, donc refusé. **Contrôle bloquant**
+   (`obligations_mal_formees`) : une obligation dont l'événement, le bien ou le lieu est hors d'un « si » décrit une
+   situation, pas un devoir. Ici elles redisaient les exclusions du véhicule : retirées.
+3. *Une extension entamée par un simple lieu.* Avec « hors du bâtiment » traduit par le concept du contrat, un vol
+   dans une voiture demandait « étiez-vous en train de déménager ? », parce que l'extension « transport pendant un
+   déménagement » était entamée par `lieu = vehicule`. **Moteur et oracle** : une extension n'est entamée que par ses
+   propres faits (le séjour, le déménagement), jamais par l'événement, le bien ou le lieu ; la lecture va chercher
+   ces faits quand le lieu s'y prête (le « si » de 7.70). Le vol au restaurant (g2-i08) ne demande plus le séjour.
+
+**Relecture** (`relecture/assureur_a_6_1.py`) : « hors du bâtiment » devient `non(concept(batiment))` au lieu d'une
+variable nouvelle ; le bris entre dans le périmètre (un ordinateur tombé se lit souvent « bris ») ; les exclusions
+« dans un lieu public » ne sont plus limitées à la voie publique ; la simple perte ne vaut que pour le vol.
+
+**Golden v11** : g2-i07 (ordinateur volé dans la voiture) passe de NON_COUVERT à **INCERTAIN** (NON_COUVERT
+acceptable) : sans le pack multimédia, rien ne joue ; avec, tout dépend de la plainte, de l'heure et de la
+fermeture. Faits idéaux précisés (`appareil_informatique`, `vehicule`, voie publique). C'était une réponse du
+golden écrite avant que l'option soit traduite : le golden suit le contrat, et la fiche de validation le dit.
+
+**Simulation** (oracle, 97 cas) : seule g2-i07 change. Ordinateur tombé à la maison : COUVERT sous réserve de
+l'option ; volé dans la voiture la nuit, option et plainte connues : NON_COUVERT ; le jour : INCERTAIN, avec les
+questions des exclusions du véhicule. Tests : 133.
+
+**Acceptation : deux accrocs, deux corrections dans le code.** `periode_horaire` valait « 22h_7h » : une valeur
+doit commencer par une lettre, et `--accepter-vocabulaire` la refusait **en silence** (elle restait « à
+accepter »). Elle est maintenant refusée en clair, et renommée `nuit_22h_7h` / `jour_7h_22h`. Puis le test « la
+consigne du temps 2 est courte » a de nouveau cassé (6 978 caractères pour un vol) : les variables du véhicule se
+lisaient pour tout vol, et celles du vol pour toute chute. Désormais une variable posée dans un « et » ou un
+« si » qui nomme l'événement ne se lit que pour lui, et une variable qu'on n'emploie que dans un lieu
+(`habitacle_ferme` : dans un véhicule) porte `"seulement_si": {"lieu": ["vehicule"]}` et ne se lit pas quand le
+lieu lu est une cave. Le vocabulaire déjà accepté est corrigé à la main pour les sept variables touchées.
+
+**Leçon 85.** Une condition écrite au mauvais niveau (toute la garantie au lieu d'un de ses événements, une
+situation au lieu d'un devoir) ne se voit pas à la lecture du texte ; elle se voit sur un cas que la garantie doit
+couvrir. Le code la reconnaît désormais à sa forme.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 19 nov. 2026, midi ; ce qui est fait est dans les sections 7.
@@ -2571,7 +2620,7 @@ Tenu à jour le 19 nov. 2026, midi ; ce qui est fait est dans les sections 7.
 - LegalBench avec Mistral Large ; et, plus tard, des règles rédigées pour quelques clauses.
 
 **Le passage à l'échelle**
-- Assureur A : lots A et B faits (7.63, 7.69). Reste : le pack multimédia (6.1), la responsabilité civile (2.5, section 5), l'assistance (2.13), la défense en justice (2.14).
+- Assureur A : lots A et B et pack multimédia faits (7.63, 7.69, 7.71). Reste : la responsabilité civile (2.5, section 5), l'assistance (2.13), la défense en justice (2.14).
 - Assureur B : vol et lot A faits (7.53 à 7.65). Reste : les extensions et frais (3.1.8, 3.1.9, 3.2.3, en accessoires ou extensions), la responsabilité de l'immeuble (3.1.10), la protection juridique (3.1.11), l'assistance (3.1.12), les sections 3.3 et 4. Puis un **jeu Assureur B écrit par l'auteur sans voir les règles**, et la **question métier** du vol simple au jardin (7.55).
 - Lecture : l'aide de `sejour_temporaire` (les biens hors de chez soi, pas le déclarant en vacances) ; ne lire les variables d'une accessoire que pour son domaine (7.70).
 - Contrôle mécanique à écrire : aucune exclusion commune ne doit rendre une extension impossible (leçon 70) ; le moteur peut le vérifier en prenant le périmètre de chaque garantie comme faits.
@@ -2668,3 +2717,4 @@ Tenu à jour le 19 nov. 2026, midi ; ce qui est fait est dans les sections 7.
 82. « Étendre » recouvre trois choses (ajouter des frais, élargir un lieu, couvrir une autre responsabilité) ; la simulation sur le golden les distingue en une minute.
 83. Une documentation qui décrit un système retiré est pire qu'une absence : elle se relit à chaque simplification, comme le code.
 84. En Prolog, une relation pensée pour calculer une valeur ne sert pas forcément à la vérifier : on calcule, puis on compare.
+85. Une condition écrite au mauvais niveau ne se voit pas à la lecture du texte ; elle se voit sur un cas que la garantie doit couvrir.

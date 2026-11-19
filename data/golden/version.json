@@ -1,8 +1,8 @@
 {
-  "version": 10,
+  "version": 11,
   "date": "2026-11-19",
   "empreintes": {
-    "assureur-a-habitation-2025": "68cb3c13ea714708",
+    "assureur-a-habitation-2025": "0534a0545f66a07d",
     "assureur-b-habitation-2017": "f08ec5c7d5a5fbe0"
   },
   "historique": [
@@ -16,6 +16,7 @@
     "v8 (2026-11-19) : faits idéaux à jour pour les garanties traduites du lot A (g2-p10, g2-i11, red-t03)",
     "v9 (2026-11-19) : b-v07 : COUVERT accepté, le vol du téléphone dans la rue relève aussi de 3.1.7 (matériel multimédia), traduit le 19 nov.",
     "v10 (2026-11-19) : b-v07 : question formule retirée des attendues (réponse couverte sous réserve des options)",
-    "v10 (anonymisation) : identifiants de contrats et de cas renommés ; cas, faits et réponses attendues inchangés"
+    "v10 (anonymisation) : identifiants de contrats et de cas renommés ; cas, faits et réponses attendues inchangés",
+    "v11 (2026-11-19) : v11 : g2-i07 INCERTAIN (pack multimédia 6.1 traduit)"
   ]
 }
