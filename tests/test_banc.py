@@ -267,3 +267,15 @@ def test_latence_un_cas_a_la_fois():
     m = banc.mesurer_latence(Pipeline(), cas)
     assert m["latence_seule_nb"] == 10 and len(vus) == 10 and vus[0] == "cas 0" and vus[1] == "cas 9"
     assert m["latence_seule_decision_mediane_s"] == 0.0 and m["latence_seule_mediane_s"] >= 0
+
+
+def test_banc_precedent_de_meme_configuration(tmp_path):
+    """7.74 : le rapport se compare au dernier banc de même modèle et même lecture, pas au dernier tout court."""
+    import json as _json
+    from couverture import banc as _banc
+    base = {"contrat": "c", "methode": "regles", "modele": "mistral:small"}
+    for nom, lecture in (("20260101-000000", "verifiee"), ("20260102-000000", "verifiee, confirmation large")):
+        (tmp_path / f"{nom}-c-regles-small.json").write_text(_json.dumps({**base, "lecture": lecture, "date": nom}),
+                                                            encoding="utf-8")
+    assert _banc.dernier(tmp_path, "c", "regles", "mistral:small", "verifiee")["date"] == "20260101-000000"
+    assert _banc.dernier(tmp_path, "c", "regles", "mistral:large", "verifiee") is None

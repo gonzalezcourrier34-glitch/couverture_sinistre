@@ -437,7 +437,7 @@ def enregistrer(donnees: Path, resultat: dict, dossier: Path | None = None) -> t
     nom = f"{datetime.now():%Y%m%d-%H%M%S}-{resultat['contrat']}-{resultat['methode']}" + (f"-{modele}" if modele else "") \
         + (f"-{re.sub(r'[^a-z0-9-]+', '-', resultat['lecture'])}" if resultat.get("lecture") not in (None, "verifiee") else "")
     js, md = dossier / f"{nom}.json", dossier / f"{nom}.md"
-    precedent = dernier(dossier, resultat["contrat"], resultat["methode"])
+    precedent = dernier(dossier, resultat["contrat"], resultat["methode"], resultat.get("modele"), resultat.get("lecture"))
     texte = markdown(resultat, precedent)
     sans_cas = {k: v for k, v in resultat.items() if k != "_cas"}
     js.write_text(json.dumps(sans_cas, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
@@ -445,9 +445,16 @@ def enregistrer(donnees: Path, resultat: dict, dossier: Path | None = None) -> t
     return js, md
 
 
-def dernier(dossier: Path, contrat_id: str, methode: str) -> dict | None:
-    fichiers_ = sorted(Path(dossier).glob(f"*-{contrat_id}-{methode}*.json"))
-    return json.loads(fichiers_[-1].read_text(encoding="utf-8")) if fichiers_ else None
+def dernier(dossier: Path, contrat_id: str, methode: str, modele: str | None = None,
+            lecture: str | None = None) -> dict | None:
+    """Le dernier banc de même configuration (modèle et mode de lecture) : comparé à un banc avec confirmation
+    par Mistral Large, un banc sans confirmation semblait perdre neuf points sans qu'aucune décision ait changé
+    (7.74)."""
+    for f in sorted(Path(dossier).glob(f"*-{contrat_id}-{methode}*.json"), reverse=True):
+        r = json.loads(f.read_text(encoding="utf-8"))
+        if r.get("modele") == modele and r.get("lecture") == lecture:
+            return r
+    return None
 
 
 # --- Le rapport -------------------------------------------------------------------------------------------------
@@ -500,7 +507,9 @@ def markdown(r: dict, precedent: dict | None = None) -> str:
                  f"{p['valeur']:g} | {'✓' if p['ok'] else '✗'} |")
 
     if precedent:
-        L += ["", f"## Depuis le banc précédent ({precedent.get('date', '?')})", ""]
+        config = " · ".join(str(x) for x in (precedent.get("modele"), precedent.get("lecture")) if x)
+        L += ["", f"## Depuis le banc précédent de même configuration ({precedent.get('date', '?')}"
+              + (f", {config}" if config else "") + ")", ""]
         for couche in ("regles", "lecture", "chaine"):
             for k in ("exactitude", "exactitude_stricte", "faux_couverts", "faux_refus", "rappel_faits"):
                 a, b = valeur(precedent, couche, k), valeur(r, couche, k)

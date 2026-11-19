@@ -1,0 +1,448 @@
+{
+  "meta": {
+    "article": "3.1.9",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-19",
+    "consigne": "redaction-regles v9",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-19",
+      "modifications": [
+        "frais de dépollution : la condition « garanties de base souscrites » retirée (citation introuvable, et implicite pour une accessoire)"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "incendie",
+      "electricite",
+      "tempete",
+      "degat_eaux",
+      "bris",
+      "catastrophe_naturelle",
+      "vol"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "frais_sauvetage",
+        "nom": "Frais de sauvetage",
+        "article": "3.1.9.1",
+        "texte": "La Compagnie prend en charge les frais engagés pour arrêter ou limiter le sinistre, mais aussi pour soustraire les biens désignés aux effets d'un péril assuré.",
+        "accessoire": true,
+        "perimetre": [],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "non": {
+                "f": [
+                  "option_incendie",
+                  "oui"
+                ]
+              }
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.9",
+            "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ incendie et périls assimilés ” est souscrite."
+          }
+        ],
+        "limites": [
+          {
+            "article": "3.1.9",
+            "texte": "Les frais de sauvetage sont pris en charge à concurrence des frais exposés.",
+            "montant": "frais exposés"
+          }
+        ]
+      },
+      {
+        "id": "frais_deblai_demolition",
+        "nom": "Frais de déblai et démolition",
+        "article": "3.1.9.2",
+        "texte": "La Compagnie prend en charge les frais nécessaires à la reconstruction ou à la reconstitution des biens assurés et sinistrés.",
+        "accessoire": true,
+        "perimetre": [],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "non": {
+                "f": [
+                  "option_incendie",
+                  "oui"
+                ]
+              }
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.9",
+            "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ incendie et périls assimilés ” est souscrite."
+          }
+        ],
+        "limites": [
+          {
+            "article": "3.1.9",
+            "texte": "Ces frais, à l'exception des frais de sauvetage, sont pris en charge à concurrence de 1.000.000 € maximum par sinistre",
+            "montant": "1000000"
+          }
+        ]
+      },
+      {
+        "id": "frais_conservation_entreposage",
+        "nom": "Frais de conservation et d'entreposage",
+        "article": "3.1.9.3",
+        "texte": "La Compagnie prend en charge les frais nécessaires à la conservation ou à l'entreposage des biens sauvés.",
+        "accessoire": true,
+        "perimetre": [],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "non": {
+                "f": [
+                  "option_incendie",
+                  "oui"
+                ]
+              }
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.9",
+            "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ incendie et périls assimilés ” est souscrite."
+          }
+        ],
+        "limites": [
+          {
+            "article": "3.1.9",
+            "texte": "Ces frais, à l'exception des frais de sauvetage, sont pris en charge à concurrence de 1.000.000 € maximum par sinistre",
+            "montant": "1000000"
+          }
+        ]
+      },
+      {
+        "id": "frais_logement_provisoire",
+        "nom": "Frais de logement provisoire",
+        "article": "3.1.9.4",
+        "texte": "Lorsque les locaux à usage privé sont devenus inutilisables, la Compagnie prend en charge les frais nécessaires au logement provisoire dans un hôtel ou ailleurs pendant une durée maximale de quatre-vingt-dix jours à concurrence d'un montant maximum de 80 € par nuit par personne vivant habituellement au domicile de l'Assuré.",
+        "accessoire": true,
+        "perimetre": [
+          {
+            "f": [
+              "residence_principale_inhabitable",
+              "oui"
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "non": {
+                "f": [
+                  "option_incendie",
+                  "oui"
+                ]
+              }
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.9",
+            "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ incendie et périls assimilés ” est souscrite."
+          }
+        ],
+        "limites": [
+          {
+            "article": "3.1.9.4",
+            "texte": "pendant une durée maximale de quatre-vingt-dix jours à concurrence d'un montant maximum de 80 € par nuit par personne vivant habituellement au domicile de l'Assuré",
+            "montant": "80€/nuit/personne, max 90 jours"
+          }
+        ]
+      },
+      {
+        "id": "chomage_immobilier",
+        "nom": "Chômage immobilier",
+        "article": "3.1.9.5",
+        "texte": "L'intervention de la Compagnie est limitée à la durée normale de reconstruction du bâtiment, avec un maximum de 24 mois. Cette indemnisation ne peut se cumuler, pour une même période, avec les frais de logement précités.",
+        "accessoire": true,
+        "perimetre": [],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "non": {
+                "f": [
+                  "option_incendie",
+                  "oui"
+                ]
+              }
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.9",
+            "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ incendie et périls assimilés ” est souscrite."
+          }
+        ],
+        "limites": [
+          {
+            "article": "3.1.9.5",
+            "texte": "avec un maximum de 24 mois",
+            "montant": "24 mois"
+          }
+        ]
+      },
+      {
+        "id": "frais_depollution",
+        "nom": "Frais de dépollution",
+        "article": "3.1.9.6",
+        "texte": "La Compagnie prend en charge les frais d'assainissement des terrains pollués par l'écoulement d'huile minérale et frais de transport et de déblaiement des terres polluées par l'écoulement d'huile minérale suite à un sinistre couvert à concurrence de 25.000 €",
+        "accessoire": true,
+        "perimetre": [
+          {
+            "f": [
+              "cause_pollution",
+              "huile_minerale"
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "reglementation_pollution_respectee",
+                "oui"
+              ]
+            },
+            "article": "3.1.9.6",
+            "texte": "que la règlementation en la matière ait été respectée"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "travaux_construction",
+                    "oui"
+                  ]
+                },
+                {
+                  "non": {
+                    "f": [
+                      "lien_causal_travaux",
+                      "oui"
+                    ]
+                  }
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.9.6",
+            "texte": "Si le bâtiment est en cours de transformation, construction ou reconstruction, l'extension de garantie est inopérante à moins que l'Assuré ne démontre que cette circonstance n'a pas contribué à la survenance ou à l'aggravation des conséquences du sinistre."
+          },
+          {
+            "condition": {
+              "non": {
+                "f": [
+                  "option_incendie",
+                  "oui"
+                ]
+              }
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.9",
+            "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ incendie et périls assimilés ” est souscrite."
+          }
+        ],
+        "limites": [
+          {
+            "article": "3.1.9.6",
+            "texte": "à concurrence de 25.000 €",
+            "montant": "25000"
+          }
+        ]
+      },
+      {
+        "id": "frais_remise_etat_jardins",
+        "nom": "Frais de remise en état des jardins",
+        "article": "3.1.9.7",
+        "texte": "La Compagnie prend en charge les frais nécessaires à la remise en état des jardins et des plantations endommagées par un péril couvert.",
+        "accessoire": true,
+        "perimetre": [],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "non": {
+                "f": [
+                  "option_incendie",
+                  "oui"
+                ]
+              }
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.9",
+            "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ incendie et périls assimilés ” est souscrite."
+          }
+        ],
+        "limites": [
+          {
+            "article": "3.1.9.7",
+            "texte": "Si les biens désignés n'ont pas été endommagés, l'intervention de la Compagnie se limitera à 3.000€ sur base des justificatifs fournis par l'Assuré.",
+            "montant": "3000"
+          }
+        ]
+      },
+      {
+        "id": "frais_expertise",
+        "nom": "Frais d'expertise",
+        "article": "3.1.9.8",
+        "texte": "La Compagnie prend en charge le remboursement à l'Assuré des honoraires (toutes taxes éventuelles comprises) qu'il a effectivement payés à l'expert qu'il a désigné pour l'évaluation des dégâts aux biens désignés",
+        "accessoire": true,
+        "perimetre": [],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "non": {
+                "f": [
+                  "option_incendie",
+                  "oui"
+                ]
+              }
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.9",
+            "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ incendie et périls assimilés ” est souscrite."
+          }
+        ],
+        "limites": [
+          {
+            "article": "3.1.9.8",
+            "texte": "sans que cette indemnisation ne puisse dépasser les montants résultant de l'application du barème repris ci-dessous",
+            "montant": "selon barème (max 21.617 €)"
+          }
+        ]
+      },
+      {
+        "id": "recours_locataires_occupants",
+        "nom": "Recours des locataires ou occupants",
+        "article": "3.1.9.9",
+        "texte": "La Compagnie couvre les frais que l'Assuré pourrait être amené à supporter en qualité soit de bailleur, en vertu de l'article 1721, deuxième alinéa du Code civil, à l'égard des locataires, soit de propriétaire à l'égard des occupants autres que locataires.",
+        "accessoire": true,
+        "perimetre": [],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "non": {
+                "f": [
+                  "option_incendie",
+                  "oui"
+                ]
+              }
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.9",
+            "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ incendie et périls assimilés ” est souscrite."
+          }
+        ],
+        "limites": [
+          {
+            "article": "3.1.9",
+            "texte": "Ces frais, à l'exception des frais de sauvetage, sont pris en charge à concurrence de 1.000.000 € maximum par sinistre",
+            "montant": "1000000"
+          }
+        ]
+      },
+      {
+        "id": "recours_tiers",
+        "nom": "Recours des tiers",
+        "article": "3.1.9.10",
+        "texte": "La Compagnie couvre les frais que l'Assuré peut encourir en vertu des articles 1382 à 1386 du Code civil pour les dommages matériels causés par un sinistre garanti se communiquant à des biens qui sont la propriété de tiers.",
+        "accessoire": true,
+        "perimetre": [],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "non": {
+                "f": [
+                  "option_incendie",
+                  "oui"
+                ]
+              }
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.9",
+            "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ incendie et périls assimilés ” est souscrite."
+          }
+        ],
+        "limites": [
+          {
+            "article": "3.1.9",
+            "texte": "Ces frais, à l'exception des frais de sauvetage, sont pris en charge à concurrence de 1.000.000 € maximum par sinistre",
+            "montant": "1000000"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "cause_pollution",
+        "valeurs": [
+          "huile_minerale",
+          "autre"
+        ],
+        "question": "La pollution provient-elle d'un écoulement d'huile minérale ?",
+        "pourquoi": "périmètre de la garantie frais de dépollution",
+        "plus_proche": "cause_eau : ne couvre pas les polluants huileux",
+        "aide": {
+          "huile_minerale": "l'écoulement vient d'huile minérale, de mazout, de carburant",
+          "autre": "autre polluant"
+        }
+      },
+      {
+        "variable": "reglementation_pollution_respectee",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La réglementation en matière de dépollution a-t-elle été respectée ?",
+        "pourquoi": "condition de la garantie frais de dépollution",
+        "plus_proche": "aucune",
+        "aide": {
+          "oui": "les règles légales de dépollution ont été suivies",
+          "non": "non respectées"
+        }
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "à relire",
+      "controle": "limite",
+      "message": "limite « Si les biens désignés n'ont pas été endommagés, l'interventi » (frais_remise_etat_jardins) : elle pose une condition ; circonstance ou garantie à part ?"
+    }
+  ]
+}

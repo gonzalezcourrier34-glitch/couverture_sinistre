@@ -1,0 +1,168 @@
+{
+  "meta": {
+    "article": "3.2.3",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-19",
+    "consigne": "redaction-regles v9",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-19",
+      "modifications": [
+        "les garanties dont l'indemnité n'est pas majorée : hors décision (un calcul de montant)",
+        "« «voyage» » : citation introuvable, couverte par la ligne des options"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "pertes_indirectes",
+        "nom": "Pertes indirectes",
+        "article": "3.2.3",
+        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ pertes indirectes ” est accordée. La Compagnie garantit la majoration de 10% des indemnités contractuellement dues, en vue de dédommager l’Assuré à la suite d’un sinistre couvert.",
+        "accessoire": true,
+        "perimetre": [],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "non": {
+                "f": [
+                  "option_pertes_indirectes",
+                  "oui"
+                ]
+              }
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.2.3",
+            "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ pertes indirectes ” est accordée."
+          }
+        ],
+        "limites": [
+          {
+            "article": "3.2.3",
+            "texte": "La Compagnie garantit la majoration de 10% des indemnités contractuellement dues, en vue de dédommager l’Assuré à la suite d’un sinistre couvert.",
+            "montant": "majoration de 10% des indemnités contractuellement dues"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "option_pertes_indirectes",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Vos conditions particulières mentionnent-elles la garantie « pertes indirectes » ?",
+        "pourquoi": "La clause 3.2.3 conditionne l'application de la garantie à la mention de cette option dans les conditions particulières",
+        "plus_proche": "option_vol, option_incendie : variables similaires pour d'autres options, mais aucune ne couvre les pertes indirectes",
+        "aide": {
+          "oui": "Les conditions particulières mentionnent la garantie pertes indirectes (option Sérénité + avec pertes indirectes)",
+          "non": "Les conditions particulières ne mentionnent pas la garantie pertes indirectes"
+        }
+      }
+    ],
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "3.2.3",
+        "texte": "aux garanties des options : «confort»",
+        "pourquoi": "indemnités exclues du calcul de la majoration de 10 % : un montant, pas la couverture"
+      },
+      {
+        "article": "3.2.3",
+        "texte": "aux garanties des options : «confort», «responsabilités civiles, protection juridique et risques liés à internet",
+        "pourquoi": "indemnités exclues du calcul de la majoration de 10 % : un montant, pas la couverture"
+      },
+      {
+        "article": "3.2.3",
+        "texte": "aux garanties responsabilité civile immeuble et protection juridique immeuble",
+        "pourquoi": "indemnités exclues du calcul de la majoration de 10 % : un montant, pas la couverture"
+      },
+      {
+        "article": "3.2.3",
+        "texte": "à la garantie dégâts électriques",
+        "pourquoi": "indemnités exclues du calcul de la majoration de 10 % : un montant, pas la couverture"
+      },
+      {
+        "article": "3.2.3",
+        "texte": "à la garantie vol",
+        "pourquoi": "indemnités exclues du calcul de la majoration de 10 % : un montant, pas la couverture"
+      },
+      {
+        "article": "3.2.3",
+        "texte": "à la garantie matériel multimédia",
+        "pourquoi": "indemnités exclues du calcul de la majoration de 10 % : un montant, pas la couverture"
+      },
+      {
+        "article": "3.2.3",
+        "texte": "à la garantie Emergency@Home",
+        "pourquoi": "indemnités exclues du calcul de la majoration de 10 % : un montant, pas la couverture"
+      },
+      {
+        "article": "3.2.3",
+        "texte": "à l’assurance recours des tiers",
+        "pourquoi": "indemnités exclues du calcul de la majoration de 10 % : un montant, pas la couverture"
+      },
+      {
+        "article": "3.2.3",
+        "texte": "à l’assurance chômage commercial",
+        "pourquoi": "indemnités exclues du calcul de la majoration de 10 % : un montant, pas la couverture"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.2.3) : indemnités exclues du calcul de la majoration de 10 % : un montant, pas la couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.2.3) : indemnités exclues du calcul de la majoration de 10 % : un montant, pas la couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.2.3) : indemnités exclues du calcul de la majoration de 10 % : un montant, pas la couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.2.3) : indemnités exclues du calcul de la majoration de 10 % : un montant, pas la couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.2.3) : indemnités exclues du calcul de la majoration de 10 % : un montant, pas la couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.2.3) : indemnités exclues du calcul de la majoration de 10 % : un montant, pas la couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.2.3) : indemnités exclues du calcul de la majoration de 10 % : un montant, pas la couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.2.3) : indemnités exclues du calcul de la majoration de 10 % : un montant, pas la couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.2.3) : indemnités exclues du calcul de la majoration de 10 % : un montant, pas la couverture"
+    }
+  ]
+}

@@ -38,7 +38,7 @@ from .texte import normaliser
 from .validation import _compact, extrait_present, passage_exact
 
 PROPOSITIONS = prolog.DOSSIER / "propositions"
-VERSION = "v9"
+VERSION = "v10"
 IDENT = re.compile(r"^[a-z][a-z0-9_]*$")
 BLOQUANT, A_RELIRE, INFO = "bloquant", "à relire", "info"
 
@@ -52,7 +52,8 @@ Une garantie a :
 - des exclusions : « portee » vaut "tout", ou {"bien": "valeur"} si elle n'exclut qu'un bien ; « a_demander » vaut true si l'on doit poser la question quand le fait est inconnu (circonstance que le déclarant ne mentionnerait pas de lui-même), false sinon ;
 - des limites : un plafond, sans condition.
 Une garantie qui ne joue qu'après un sinistre couvert par une autre (frais de sauvetage, de déblai, de logement provisoire, pertes indirectes) porte "accessoire": true : elle ne décide pas si le sinistre est couvert, elle dit ce qui s'y ajoute. Ne mets pas dans son périmètre tous les événements du contrat, ni un concept « sinistre » : « après un sinistre couvert » est implicite. Son périmètre ne dit que ce qui la restreint (une fête de famille, un déménagement) ; s'il n'y a rien, laisse-le vide ([]).
-Une extension qui élargit un LIEU ou un BIEN assuré (« le contenu lors d'un séjour temporaire », « pendant son transport lors d'un déménagement ») n'est pas une garantie : elle élargit la définition du contrat que les garanties emploient déjà (concept bâtiment, contenu…). Mets-la dans "extensions" : {"concept": "batiment", "condition": …, "article", "texte"} ; elle vaut alors pour toutes les garanties du contrat.
+Une extension qui élargit un LIEU ou un BIEN assuré (« le contenu lors d'un séjour temporaire », « pendant son transport lors d'un déménagement ») n'est pas une garantie : elle élargit la définition du contrat que les garanties emploient déjà : prends son nom dans « Concepts déjà définis dans les règles du contrat » (le lieu assuré, le contenu), jamais un nom d'un autre contrat. Mets-la dans "extensions" : {"concept": "<un concept du contrat>", "condition": …, "article", "texte"} ; elle vaut alors pour toutes les garanties du contrat.
+Des dégâts causés PAR un assuré au bien d'un autre (l'hôtel, la chambre louée, la salle de fête) relèvent de sa responsabilité, pas d'une extension : une garantie accessoire tant que la responsabilité civile n'est pas traduite. Une restriction à un pays s'écrit avec une variable pays, une valeur par pays (jamais une valeur « liste de pays »).
 Les exclusions d'un article (« vols exclus ») valent pour TOUTES ses garanties, extensions comprises : mets-les dans "exclusions_communes", pas dans une seule garantie. N'attache à une garantie que les exclusions qui ne valent que pour elle.
 Une condition est un terme JSON : {"f": ["variable", "valeur"]}, {"et": [c1, c2]}, {"ou": [c1, c2]}, {"non": c}, {"si": [a, b]} (si a alors b), {"concept": "nom"} (une définition).
 La logique a trois valeurs : un fait que la déclaration ne donne pas est « inconnu », et le moteur pose alors la question. N'essaie pas de compenser un fait inconnu.
@@ -595,7 +596,8 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
     # d'une liste d'exclusions de l'article non mise en commun, est bloquante.
     if any(c.type == TypeClause.EXCLUSION for c in clauses_article(clauses, article)) and not prop.get("exclusions_communes"):
         for g in prop.get("garanties", []):
-            if not g.get("exclusions"):
+            # Une accessoire ne décide rien (7.68) : ses exclusions ne changeraient aucune décision (7.73).
+            if not g.get("exclusions") and not g.get("accessoire"):
                 noter(BLOQUANT, "exclusions", f"garantie {g.get('id')} : aucune exclusion, alors que l'article en a ; "
                       f"les mettre dans « exclusions_communes »")
     for x in exclusions(prop):
@@ -662,8 +664,10 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
                 noter(BLOQUANT, "concept", f"concept inconnu : {n}")
     for x in prop.get("extensions") or []:
         if x.get("concept") not in existants | nouveaux:
-            noter(BLOQUANT, "concept", f"extension d'un concept inconnu : {x.get('concept')} (une extension élargit "
-                  f"une définition du contrat : le bâtiment, le contenu…)")
+            # Le nom vient de ce contrat, pas d'un autre : l'assureur B appelle son lieu assuré
+            # `batiment_designe`, le modèle écrivait `batiment` comme pour A (7.72).
+            noter(BLOQUANT, "concept", f"extension d'un concept inconnu : {x.get('concept')} (concepts de ce contrat : "
+                  f"{', '.join(sorted(existants | nouveaux)) or 'aucun'})")
     deja = set(re.findall(r"^garantie\((\w+),", contrat_pl, re.M))
     ids = [g.get("id", "") for g in prop.get("garanties", [])]
     for i in ids:
@@ -800,6 +804,7 @@ def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
             voc[v]["valeurs"] += nouvelles
             avant = list(voc[v].get("pour") or [])
             evs = evenements_par_variable(prop).get(v) or list(prop.get("evenements") or [])
+            evs = [e for e in evs if e not in PSEUDO_EVENEMENTS]
             if avant and evs:
                 voc[v]["pour"] = avant + [e for e in evs if e not in avant]
                 ajouts += [f"{v} : lue aussi pour {e}" for e in evs if e not in avant]
@@ -841,7 +846,15 @@ def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
                 if val not in declencheurs[v]:
                     declencheurs[v].append(val)
         for v, _ in feuilles_x:
-            if v in prolog.SOCLE or v not in voc or not declencheurs:
+            if v in prolog.SOCLE or v not in voc:
+                continue
+            if not declencheurs:
+                # Sans lieu ni bien qui la déclenche (« déménagement depuis moins de 90 jours »), une variable née
+                # de l'extension n'est pas lue d'emblée : sans « pour », elle l'était pour chaque sinistre (7.73).
+                # L'extension, entamée par ses autres faits, la pose en question.
+                if v in nouvelles_variables and voc[v].get("pour") != [EXTENSION]:
+                    voc[v]["pour"] = [EXTENSION]
+                    ajouts.append(f"{v} : lue seulement en question (extension de « {x.get('concept')} »)")
                 continue
             si = voc[v].setdefault("si", {})
             for var, vals in declencheurs.items():
@@ -850,6 +863,7 @@ def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
                 voc[v]["pour"] = [EXTENSION]
             ajouts.append(f"{v} : lue aussi si " + " ; ".join(f"{var} = {'/'.join(vals)}" for var, vals in declencheurs.items())
                           + f" (extension de « {x.get('concept')} »)")
+    ajouts = list(dict.fromkeys(ajouts))  # une ligne par fait, pas une par extension qui l'emploie
     if ajouts:
         chemin.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return ajouts
@@ -857,6 +871,9 @@ def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
 
 ACCESSOIRE = "accessoire"      # « pour » d'une variable que seules des garanties accessoires emploient : pas lue
 EXTENSION = "extension"        # « pour » d'une variable née d'une extension : lue seulement si son lieu est lu
+# Ces deux « pour » ne sont pas des événements : ajoutés à une variable déjà lue pour un vol, ils n'y changent
+# rien et brouillent le vocabulaire (« option_incendie : lue aussi pour accessoire », 7.73).
+PSEUDO_EVENEMENTS = (ACCESSOIRE, EXTENSION)
 
 
 def evenements_par_variable(prop: dict) -> dict[str, list[str]]:
@@ -958,7 +975,7 @@ def etendre_pour(prop: dict, voc: dict) -> list[str]:
         d = voc.get(v)
         if not d or not d.get("pour") or not evenements:
             continue
-        manquants = [e for e in evenements if e not in d["pour"]]
+        manquants = [e for e in evenements if e not in d["pour"] and e not in PSEUDO_EVENEMENTS]
         if manquants:
             d["pour"] = d["pour"] + manquants
             ajouts.append(f"{v} : lue aussi pour {', '.join(manquants)}")

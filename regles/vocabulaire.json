@@ -83,7 +83,8 @@
         "enseigne",
         "equipement_alarme_surveillance",
         "equipement_domotique",
-        "consommable"
+        "consommable",
+        "sepulture"
       ],
       "question": "Quels biens sont endommagés ou volés ?",
       "parents": {
@@ -181,7 +182,8 @@
         "enseigne": "enseigne, panneau publicitaire",
         "equipement_alarme_surveillance": "alarme, caméra de surveillance, détecteurs",
         "equipement_domotique": "box domotique, volets ou éclairage pilotés",
-        "consommable": "lampe, tube, fusible, joint, courroie, chaîne"
+        "consommable": "lampe, tube, fusible, joint, courroie, chaîne",
+        "sepulture": "tombe, sépulture dont l'assuré est propriétaire"
       }
     },
     "lieu": {
@@ -200,7 +202,10 @@
         "chez_reparateur",
         "autre_batiment",
         "casier",
-        "vehicule"
+        "vehicule",
+        "chambre_etudiant",
+        "maison_repos",
+        "local_fete_privee"
       ],
       "question": "Où se trouvaient les biens ?",
       "aide": {
@@ -213,7 +218,21 @@
         "voie_publique": "rue, transports, magasin, tout lieu public",
         "autre_batiment": "un autre bâtiment (club, bureau, chez quelqu'un)",
         "casier": "casier d'un club de sport ou d'une association",
-        "vehicule": "dans une voiture, un véhicule"
+        "vehicule": "dans une voiture, un véhicule",
+        "chambre_etudiant": "chambre ou studio d'étudiant loué pour les études",
+        "maison_repos": "chambre ou appartement en maison de repos",
+        "local_fete_privee": "local pris en location pour une fête privée"
+      },
+      "parents": {
+        "chambre_etudiant": [
+          "autre_batiment"
+        ],
+        "maison_repos": [
+          "autre_batiment"
+        ],
+        "local_fete_privee": [
+          "autre_batiment"
+        ]
       }
     },
     "fermeture": {
@@ -1082,7 +1101,6 @@
         "foudre",
         "electricite",
         "fumee",
-        "incendie",
         "autre",
         "heurt",
         "vol",
@@ -1723,7 +1741,12 @@
       },
       "pour": [
         "accessoire"
-      ]
+      ],
+      "si": {
+        "lieu": [
+          "autre_batiment"
+        ]
+      }
     },
     "occasion_fete_familiale": {
       "valeurs": [
@@ -1853,6 +1876,97 @@
           "vehicule"
         ]
       }
+    },
+    "duree_demenagement": {
+      "valeurs": [
+        "moins_90_jours",
+        "plus_90_jours"
+      ],
+      "question": "Le déménagement a-t-il commencé depuis moins de 90 jours ?",
+      "aide": {
+        "moins_90_jours": "oui, depuis moins de 90 jours",
+        "plus_90_jours": "non, depuis plus de 90 jours"
+      },
+      "pour": [
+        "extension"
+      ]
+    },
+    "pays": {
+      "valeurs": [
+        "luxembourg",
+        "allemagne",
+        "belgique",
+        "france",
+        "autre_ue",
+        "suisse",
+        "norvege",
+        "hors_europe"
+      ],
+      "question": "Dans quel pays se trouvait le lieu du sinistre ?",
+      "aide": {
+        "luxembourg": "au Grand-Duché de Luxembourg",
+        "allemagne": "en Allemagne",
+        "belgique": "en Belgique",
+        "france": "en France",
+        "autre_ue": "dans un autre pays de l'Union européenne",
+        "suisse": "en Suisse",
+        "norvege": "en Norvège",
+        "hors_europe": "hors de l'Union européenne, de la Suisse et de la Norvège"
+      },
+      "pour": [
+        "extension"
+      ],
+      "si": {
+        "lieu": [
+          "autre_batiment",
+          "chambre_etudiant"
+        ],
+        "bien": [
+          "sepulture"
+        ]
+      }
+    },
+    "cause_pollution": {
+      "valeurs": [
+        "huile_minerale",
+        "autre"
+      ],
+      "question": "La pollution provient-elle d'un écoulement d'huile minérale ?",
+      "aide": {
+        "huile_minerale": "l'écoulement vient d'huile minérale, de mazout, de carburant",
+        "autre": "autre polluant"
+      },
+      "pour": [
+        "accessoire"
+      ]
+    },
+    "reglementation_pollution_respectee": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La réglementation en matière de dépollution a-t-elle été respectée ?",
+      "aide": {
+        "oui": "les règles légales de dépollution ont été suivies",
+        "non": "non respectées"
+      },
+      "pour": [
+        "accessoire"
+      ]
+    },
+    "option_pertes_indirectes": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Vos conditions particulières mentionnent-elles la garantie « pertes indirectes » ?",
+      "aide": {
+        "oui": "Les conditions particulières mentionnent la garantie pertes indirectes (option Sérénité + avec pertes indirectes)",
+        "non": "Les conditions particulières ne mentionnent pas la garantie pertes indirectes"
+      },
+      "pour": [
+        "accessoire"
+      ]
     }
   }
 }

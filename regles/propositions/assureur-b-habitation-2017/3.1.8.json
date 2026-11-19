@@ -1,0 +1,445 @@
+{
+  "meta": {
+    "article": "3.1.8",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-19",
+    "consigne": "redaction-regles v9",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-19",
+      "modifications": [
+        "extensions sur `batiment_designe`, le lieu assuré de ce contrat (le modèle employait les concepts de l'assureur A)",
+        "dégâts causés PAR un assuré à l'hôtel, à la chambre d'étudiant, au local de fête : responsabilité, non traduite ; garanties accessoires",
+        "zone_geographique (dix valeurs dont des listes) → pays, une valeur par pays ; « n'importe où dans le monde » : aucune condition",
+        "sépultures « au Luxembourg ou à 50 km des frontières » : Luxembourg seulement (prudent : au-delà, la réponse ne sera pas « couvert »)",
+        "garages à une autre adresse : hors décision (déjà un lieu du bâtiment désigné)",
+        "valeurs de lieu nouvelles rattachées à autre_batiment ; « occasion = fête privée » retirée (le lieu le dit)"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "rc_sejour_temporaire",
+        "nom": "Dégâts causés à l'hôtel ou à la villégiature (responsabilité)",
+        "article": "3.1.8.3",
+        "texte": "Les dégâts matériels accidentels causés par un Assuré à l’occasion d’un séjour temporaire privé ou professionnel n’importe où dans le monde : n à un bâtiment de villégiature loué par un Assuré ; n à l’hôtel ou logement similaire occupé par un Assuré",
+        "perimetre": [
+          {
+            "f": [
+              "sejour_temporaire",
+              "oui"
+            ]
+          },
+          {
+            "f": [
+              "lieu",
+              "autre_batiment"
+            ]
+          }
+        ],
+        "accessoire": true,
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      },
+      {
+        "id": "rc_logement_etudiant",
+        "nom": "Dégâts causés au logement d'étudiant (responsabilité)",
+        "article": "3.1.8.4",
+        "texte": "La Compagnie couvre les dégâts matériels accidentels causés par les enfants assurés au logement –chambre ou studio– meublé ou non qu'ils louent pendant leurs études dans un des pays membre de l'Union Européenne, en Suisse ou en Norvège",
+        "perimetre": [
+          {
+            "f": [
+              "lieu",
+              "chambre_etudiant"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "pays",
+                  "luxembourg"
+                ]
+              },
+              {
+                "f": [
+                  "pays",
+                  "allemagne"
+                ]
+              },
+              {
+                "f": [
+                  "pays",
+                  "belgique"
+                ]
+              },
+              {
+                "f": [
+                  "pays",
+                  "france"
+                ]
+              },
+              {
+                "f": [
+                  "pays",
+                  "autre_ue"
+                ]
+              },
+              {
+                "f": [
+                  "pays",
+                  "suisse"
+                ]
+              },
+              {
+                "f": [
+                  "pays",
+                  "norvege"
+                ]
+              }
+            ]
+          }
+        ],
+        "accessoire": true,
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      },
+      {
+        "id": "rc_local_fete",
+        "nom": "Dégâts causés au local de fête (responsabilité)",
+        "article": "3.1.8.6",
+        "texte": "La Compagnie couvre les dommages matériels accidentels causés par un Assuré aux locaux situés au Grand-duché de Luxembourg, en Allemagne, en Belgique ou en France, pris en location à l'occasion d'une fête privée",
+        "perimetre": [
+          {
+            "f": [
+              "lieu",
+              "local_fete_privee"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "pays",
+                  "luxembourg"
+                ]
+              },
+              {
+                "f": [
+                  "pays",
+                  "allemagne"
+                ]
+              },
+              {
+                "f": [
+                  "pays",
+                  "belgique"
+                ]
+              },
+              {
+                "f": [
+                  "pays",
+                  "france"
+                ]
+              }
+            ]
+          }
+        ],
+        "accessoire": true,
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [
+      {
+        "concept": "batiment_designe",
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "residence_principale_inhabitable",
+                "oui"
+              ]
+            },
+            {
+              "f": [
+                "lieu",
+                "autre_batiment"
+              ]
+            },
+            {
+              "f": [
+                "pays",
+                "luxembourg"
+              ]
+            }
+          ]
+        },
+        "article": "3.1.8.2",
+        "texte": "Si le logement couvert par le présent contrat est devenu temporairement inhabitable en raison d'un sinistre couvert, les garanties sont automatiquement transférées sur le bâtiment pris en location au Grand-Duché de Luxembourg pour une période de 18 mois maximum"
+      },
+      {
+        "concept": "batiment_designe",
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "sejour_temporaire",
+                "oui"
+              ]
+            },
+            {
+              "f": [
+                "lieu",
+                "autre_batiment"
+              ]
+            }
+          ]
+        },
+        "article": "3.1.8.3",
+        "texte": "La Compagnie couvre également les dégâts causés aux objets personnels qu'un Assuré déplace à l'occasion d'un séjour temporaire privé ou professionnel dans un bâtiment situé n'importe où dans le monde"
+      },
+      {
+        "concept": "batiment_designe",
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "lieu",
+                "chambre_etudiant"
+              ]
+            },
+            {
+              "ou": [
+                {
+                  "f": [
+                    "pays",
+                    "luxembourg"
+                  ]
+                },
+                {
+                  "f": [
+                    "pays",
+                    "allemagne"
+                  ]
+                },
+                {
+                  "f": [
+                    "pays",
+                    "belgique"
+                  ]
+                },
+                {
+                  "f": [
+                    "pays",
+                    "france"
+                  ]
+                },
+                {
+                  "f": [
+                    "pays",
+                    "autre_ue"
+                  ]
+                },
+                {
+                  "f": [
+                    "pays",
+                    "suisse"
+                  ]
+                },
+                {
+                  "f": [
+                    "pays",
+                    "norvege"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "article": "3.1.8.4",
+        "texte": "Les garanties sont étendues au contenu qui leur appartient et qui est entreposé dans ce logement"
+      },
+      {
+        "concept": "batiment_designe",
+        "condition": {
+          "f": [
+            "lieu",
+            "maison_repos"
+          ]
+        },
+        "article": "3.1.8.5",
+        "texte": "La Compagnie couvre les dommages matériels accidentels causés au contenu appartenant au Preneur d'assurance, à son conjoint ou à leurs ascendants entreposé dans la chambre ou l'appartement occupé en maison de repos"
+      },
+      {
+        "concept": "batiment_designe",
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "bien",
+                "sepulture"
+              ]
+            },
+            {
+              "f": [
+                "pays",
+                "luxembourg"
+              ]
+            }
+          ]
+        },
+        "article": "3.1.8.7",
+        "texte": "La Compagnie couvre les dommages matériels accidentels causés aux sépultures dont un des assurés est propriétaire et situées au Grand-Duché de Luxembourg ou dans un rayon de maximum 50 km au-delà des frontières"
+      },
+      {
+        "concept": "batiment_designe",
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "demenagement",
+                "oui"
+              ]
+            },
+            {
+              "f": [
+                "pays",
+                "luxembourg"
+              ]
+            },
+            {
+              "f": [
+                "duree_demenagement",
+                "moins_90_jours"
+              ]
+            }
+          ]
+        },
+        "article": "3.1.8.8",
+        "texte": "En cas de déménagement au Grand-Duché de Luxembourg, les garanties souscrites sont acquises tant à l'ancienne qu'à la nouvelle adresse pendant 90 jours à compter du début du déménagement"
+      }
+    ],
+    "vocabulaire_manquant": [
+      {
+        "variable": "lieu",
+        "valeurs": [
+          "chambre_etudiant",
+          "maison_repos",
+          "local_fete_privee"
+        ],
+        "question": "De quel type de lieu s'agit-il ?",
+        "pourquoi": "extensions 3.1.8.4, 3.1.8.5, 3.1.8.6",
+        "plus_proche": "lieu : logement, autre_batiment",
+        "parent": {
+          "chambre_etudiant": "autre_batiment",
+          "maison_repos": "autre_batiment",
+          "local_fete_privee": "autre_batiment"
+        },
+        "aide": {
+          "chambre_etudiant": "chambre ou studio d'étudiant loué pour les études",
+          "maison_repos": "chambre ou appartement en maison de repos",
+          "local_fete_privee": "local pris en location pour une fête privée"
+        }
+      },
+      {
+        "variable": "bien",
+        "valeurs": [
+          "sepulture"
+        ],
+        "question": "S'agit-il d'une sépulture ?",
+        "pourquoi": "extension 3.1.8.7",
+        "plus_proche": "bien : objet_divers",
+        "parent": {},
+        "aide": {
+          "sepulture": "tombe, sépulture dont l'assuré est propriétaire"
+        }
+      },
+      {
+        "variable": "duree_demenagement",
+        "valeurs": [
+          "moins_90_jours",
+          "plus_90_jours"
+        ],
+        "question": "Le déménagement a-t-il commencé depuis moins de 90 jours ?",
+        "pourquoi": "extension 3.1.8.8",
+        "plus_proche": "demenagement",
+        "aide": {
+          "moins_90_jours": "oui, depuis moins de 90 jours",
+          "plus_90_jours": "non, depuis plus de 90 jours"
+        }
+      },
+      {
+        "variable": "pays",
+        "valeurs": [
+          "luxembourg",
+          "allemagne",
+          "belgique",
+          "france",
+          "autre_ue",
+          "suisse",
+          "norvege",
+          "hors_europe"
+        ],
+        "question": "Dans quel pays se trouvait le lieu du sinistre ?",
+        "pourquoi": "restrictions géographiques des extensions 3.1.8 (Luxembourg ; pays voisins ; UE, Suisse, Norvège)",
+        "plus_proche": "lieu : dit le type de lieu, pas le pays",
+        "aide": {
+          "luxembourg": "au Grand-Duché de Luxembourg",
+          "allemagne": "en Allemagne",
+          "belgique": "en Belgique",
+          "france": "en France",
+          "autre_ue": "dans un autre pays de l'Union européenne",
+          "suisse": "en Suisse",
+          "norvege": "en Norvège",
+          "hors_europe": "hors de l'Union européenne, de la Suisse et de la Norvège"
+        }
+      }
+    ],
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "3.1.8.1",
+        "texte": "les dégâts causés aux garages à usage privé –3 maximum – dont un des Assurés est propriétaire, locataire ou occupant à titre gratuit et situés à une autre adresse que le risque principal sont couverts, de même que le contenu qu'un Assuré y entrepose",
+        "pourquoi": "un garage est déjà un lieu du bâtiment désigné : le vocabulaire ne distingue pas deux adresses"
+      },
+      {
+        "article": "3.1.8",
+        "texte": "Les présentes conditions spéciales sont applicables par extension aux garanties souscrites",
+        "pourquoi": "le champ des extensions : elles élargissent les garanties souscrites, ce que fait `extension/4`"
+      },
+      {
+        "article": "3.1.8",
+        "texte": "les dégâts occasionnés au bâtiment par un événement soudain",
+        "pourquoi": "porte sur les dégâts causés aux bâtiments loués : les extensions de responsabilité, accessoires, sans effet sur une décision"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.1.8.1) : un garage est déjà un lieu du bâtiment désigné : le vocabulaire ne distingue pas deux adresses"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.1.8) : le champ des extensions : elles élargissent les garanties souscrites, ce que fait `extension/4`"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.1.8) : porte sur les dégâts causés aux bâtiments loués : les extensions de responsabilité, accessoires, sans effet sur une décision"
+    }
+  ]
+}

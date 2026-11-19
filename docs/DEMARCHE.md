@@ -2611,9 +2611,93 @@ pourtant. Rien ne vient des règles du 6.1 ; la lecture reste le chantier.
 situation au lieu d'un devoir) ne se voit pas à la lecture du texte ; elle se voit sur un cas que la garantie doit
 couvrir. Le code la reconnaît désormais à sa forme.
 
+### 7.72 Assureur B, lot B : des extensions sur les concepts d'un autre contrat, et des responsabilités déguisées
+
+**Rédaction** (consigne v9, Mistral Large, trois articles en parallèle, 13 min). 3.1.8 : onze extensions et
+24 contrôles bloquants ; 3.1.9 : dix frais, tous marqués accessoires (bien) ; 3.2.3 : les pertes indirectes
+(une majoration de 10 % des indemnités), accessoire aussi.
+
+**Ce que la relecture a trouvé.**
+1. *Les concepts d'un autre contrat.* Les onze extensions portaient sur `batiment`, `contenu`, `bien` : les mots
+   de l'assureur A, qui servaient d'exemple dans la consigne v9. Le lieu assuré de B s'appelle `batiment_designe`.
+   **Consigne v10** : le concept vient des « Concepts déjà définis dans les règles du contrat », jamais d'un autre ;
+   le **contrôle** donne la liste des concepts du contrat dans son message.
+2. *Des responsabilités déguisées en extensions.* « Les dégâts causés par un assuré à l'hôtel, à la chambre
+   d'étudiant, au local de fête » ne disent pas qu'un lieu de plus est assuré : ils couvrent la responsabilité de
+   l'assuré envers le propriétaire. Responsabilité civile non traduite : **garanties accessoires**, comme les
+   extensions de responsabilité de l'assureur A (7.69). Consigne v10 : la règle est dite au modèle.
+3. *Des listes de pays en valeurs.* `zone_geographique = luxembourg_allemagne_belgique_france` : une valeur par
+   liste. Remplacée par `pays`, une valeur par pays, et des conditions « ou ». Consigne v10.
+4. *Pertes indirectes* : la liste des garanties dont l'indemnité n'est pas majorée est un calcul de montant, pas
+   une condition de couverture : hors décision.
+
+**Relecture** (`relecture/assureur_b_lot_b.py`) : six extensions de `batiment_designe` (logement de remplacement au
+Luxembourg, séjour temporaire partout, chambre d'étudiant dans l'UE, en Suisse ou en Norvège, maison de repos,
+sépultures au Luxembourg, nouvelle adresse pendant 90 jours), trois responsabilités accessoires, le garage à une
+autre adresse hors décision (déjà un lieu assuré). Sépultures « au Luxembourg ou à 50 km des frontières » :
+Luxembourg seulement, par prudence (au-delà, pas de « couvert »).
+
+**Simulation** (oracle, 15 cas de l'assureur B) : aucune décision ne change. Un incendie dans la chambre de
+maison de repos est couvert (sous réserve de l'option incendie), avec la citation de l'extension ; les frais
+(sauvetage, déblai, logement provisoire…) et les pertes indirectes s'ajoutent aux sinistres couverts.
+
+**Leçon 86.** Un exemple dans une consigne devient le vocabulaire du modèle : il faut l'écrire comme une place à
+remplir (« un concept du contrat »), pas avec le nom d'un contrat.
+
+### 7.73 Le contrôle du lot B : trois défauts de l'acceptation du vocabulaire
+
+**Contrôle après relecture** (19 nov.) : 3.1.9 et 3.2.3 sans contrôle bloquant ; 3.1.8 en garde trois, tous du
+même type : « garantie rc_… : aucune exclusion, alors que l'article en a ». Les tests passent (137).
+
+**Ce que l'acceptation du vocabulaire a révélé.**
+1. *Le contrôle des exclusions visait les accessoires.* Une garantie sans exclusion à côté d'exclusions de
+   l'article est bloquante (7.53) ; mais une accessoire ne décide rien (7.68), ses exclusions ne changeraient
+   aucune réponse. Le contrôle ne la vise plus.
+2. *Des pseudo-événements dans les « pour ».* `option_incendie`, `sejour_temporaire`, `travaux_construction`,
+   `lien_causal_travaux` ont reçu « accessoire » dans leur liste d'événements, parce qu'une garantie de frais les
+   emploie. Sans effet sur la lecture (aucun sinistre ne s'appelle « accessoire »), mais le vocabulaire en devenait
+   faux. « accessoire » et « extension » ne s'ajoutent plus à une variable déjà lue ; le vocabulaire est nettoyé.
+3. *Une variable d'extension lue pour chaque sinistre.* `duree_demenagement` (« la nouvelle adresse pendant
+   90 jours ») n'a ni lieu ni bien qui la déclenche : l'acceptation la laissait sans « pour », donc lue partout,
+   ce qui allonge la lecture de toutes les déclarations (7.70). Une variable née d'une extension sans
+   déclencheur est désormais `pour: ["extension"]` : l'extension, entamée par ses autres faits (un déménagement),
+   la pose en question.
+4. Le compte rendu répétait sept fois « pays : lue aussi si lieu = chambre_etudiant » (une fois par pays de la
+   liste) : une ligne par fait.
+
+**Leçon 87.** Une marque interne (« accessoire », « extension ») rangée dans le même champ que les vraies valeurs
+finit par s'y mélanger : l'écrire en un seul endroit, et la filtrer partout où le champ se complète.
+
+### 7.74 Le banc de l'assureur B après le lot B : rien ne bouge, et une comparaison trompeuse
+
+**Acceptation** (19 nov., 14 h 45) : 3.1.8, 3.1.9 et 3.2.3 acceptés sans contrôle bloquant ; `couverture regles` :
+352 couples du vocabulaire employés, 0 hors vocabulaire, 214 citations retrouvées ; 139 tests passent.
+
+**Banc** (golden v11, 15 cas, lecture vérifiée par Mistral Small) : règles seules 100 % justes ; chaîne 73 % justes,
+47 % exactes, **0 couvert à tort, 0 refus à tort**, 0 instable ; un cas à la fois : médiane 4,3 s, 95e centile
+5,3 s (les variables de lieu et de pays ne sont lues que pour leur lieu : la lecture ne s'allonge pas).
+
+**La comparaison trompeuse.** Le rapport annonce une baisse (82 % → 73 % justes) : il compare au dernier banc
+de l'assureur B, qui avait la confirmation par Mistral Large (7.67). Comparé cas par cas au banc du 18 nov. dans
+la même configuration, les décisions sont les mêmes, sauf deux :
+- `b-v07` passe d'« incertain » à « couvert sous réserve » des conditions particulières (formules « vol » et
+  « matériel multimédia ») : acceptable, et plus utile ;
+- `b-v12` (la femme de ménage) était une fois sur trois refusé à juste titre ; il est « incertain » trois fois.
+
+Les quatre erreurs (`b-v02`, `b-v06`, `b-v09`, `b-v12`) sont des « incertain » là où le refus était attendu : la
+lecture ne pose pas les faits négatifs que la déclaration ne dit pas (« ni violence », « pas de serrure de
+sûreté »), et la question suffit à trancher. Aucune erreur dangereuse. À surveiller : `b-v03`, que la lecture seule
+mènerait à « couvert » (bris de vitre lu en trop) ; la chaîne s'arrête sur une question.
+
+**Correction** : le rapport se compare désormais au dernier banc de **même modèle et même lecture**, et nomme
+cette configuration dans son titre (`banc.dernier`, test `test_banc_precedent_de_meme_configuration`).
+
+**Leçon 88.** Un écart entre deux bancs ne se lit qu'à configuration égale : le rapport doit nommer celle du banc
+auquel il se compare.
+
 ## 8. Ce qui reste à faire
 
-Tenu à jour le 19 nov. 2026, midi ; ce qui est fait est dans les sections 7.
+Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.
 
 **Le plan de lecture (7.35)**
 - La lecture vérifiée est la lecture par défaut (7.45). Mesurer Mistral Large avec elle, pour le recours dans la cascade.
@@ -2629,7 +2713,7 @@ Tenu à jour le 19 nov. 2026, midi ; ce qui est fait est dans les sections 7.
 
 **Le passage à l'échelle**
 - Assureur A : lots A et B et pack multimédia faits (7.63, 7.69, 7.71). Reste : la responsabilité civile (2.5, section 5), l'assistance (2.13), la défense en justice (2.14).
-- Assureur B : vol et lot A faits (7.53 à 7.65). Reste : les extensions et frais (3.1.8, 3.1.9, 3.2.3, en accessoires ou extensions), la responsabilité de l'immeuble (3.1.10), la protection juridique (3.1.11), l'assistance (3.1.12), les sections 3.3 et 4. Puis un **jeu Assureur B écrit par l'auteur sans voir les règles**, et la **question métier** du vol simple au jardin (7.55).
+- Assureur B : vol, lot A et lot B faits (7.53 à 7.65, 7.72 à 7.74). Reste : la responsabilité de l'immeuble (3.1.10), la protection juridique (3.1.11), l'assistance (3.1.12), les sections 3.3 et 4. Puis un **jeu Assureur B écrit par l'auteur sans voir les règles**, et la **question métier** du vol simple au jardin (7.55).
 - Lecture : l'aide de `sejour_temporaire` (les biens hors de chez soi, pas le déclarant en vacances) ; ne lire les variables d'une accessoire que pour son domaine (7.70).
 - Contrôle mécanique à écrire : aucune exclusion commune ne doit rendre une extension impossible (leçon 70) ; le moteur peut le vérifier en prenant le périmètre de chaque garantie comme faits.
 - Le coût de la confirmation sur Assureur B (deux réponses justes suspendues sur 15) : mesurer si la confirmation peut épargner les faits que la lecture et la vérification donnent tous deux.
@@ -2726,3 +2810,6 @@ Tenu à jour le 19 nov. 2026, midi ; ce qui est fait est dans les sections 7.
 83. Une documentation qui décrit un système retiré est pire qu'une absence : elle se relit à chaque simplification, comme le code.
 84. En Prolog, une relation pensée pour calculer une valeur ne sert pas forcément à la vérifier : on calcule, puis on compare.
 85. Une condition écrite au mauvais niveau ne se voit pas à la lecture du texte ; elle se voit sur un cas que la garantie doit couvrir.
+86. Un exemple dans une consigne devient le vocabulaire du modèle : l'écrire comme une place à remplir, pas avec le nom d'un contrat.
+87. Une marque interne rangée parmi les vraies valeurs d'un champ s'y mélange : la filtrer partout où le champ se complète.
+88. Deux bancs ne se comparent qu'à configuration égale : le rapport doit nommer celle de son point de comparaison.

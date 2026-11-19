@@ -288,7 +288,9 @@ def test_extension_de_definition_en_prolog_et_controles(voc_etendu):
     assert "extension(batiment, et([f(sejour_temporaire, oui), f(lieu, autre_batiment)]), '2.2'" in redaction.en_prolog(prop, "2.2")
     assert not [p for p in bloquants(controles(prop), "concept") if "extension" in p["message"]]
     prop["extensions"][0]["concept"] = "piscine_couverte"
-    assert any("extension d'un concept inconnu" in p["message"] for p in bloquants(controles(prop), "concept"))
+    assert any("extension d'un concept inconnu" in p["message"] and "concepts de ce contrat" in p["message"]
+               and "batiment" in p["message"] for p in bloquants(controles(prop), "concept")), \
+        "le message donne les concepts du contrat (7.72 : le modèle employait ceux d'un autre assureur)"
     prop["extensions"][0]["concept"] = "batiment"
     doc = json.loads(voc_etendu.read_text(encoding="utf-8"))
     doc["variables"]["sejour_temporaire"]["pour"] = ["vol"]
@@ -355,6 +357,42 @@ def test_variables_lues_selon_l_evenement_et_le_lieu_qui_les_entourent(voc_etend
     a_la_cave = prolog.variables_du_temps_2(voc, ["vol"], {"lieu": ["cave"]})
     dans_la_voiture = prolog.variables_du_temps_2(voc, ["vol"], {"lieu": ["vehicule"]})
     assert "habitacle_x" not in a_la_cave and "habitacle_x" in dans_la_voiture and "sans_surveillance_x" in a_la_cave
+
+
+def test_vocabulaire_sans_pseudo_evenement_ni_variable_lue_partout(voc_etendu):
+    """7.73 : une variable déjà lue pour le vol, employée par une accessoire, ne reçoit pas « accessoire » dans son
+    « pour » ; une variable d'extension sans lieu qui la déclenche n'est pas lue pour chaque sinistre ; une ligne
+    par fait dans le compte rendu."""
+    prop = copy.deepcopy(BONNE)
+    prop["evenements"] = []
+    prop["garanties"] = [{"id": "frais_x", "nom": "Frais", "article": "2.2", "texte": "t", "accessoire": True,
+                          "perimetre": [{"f": ["sejour_temporaire", "oui"]}], "circonstances": [], "obligations": [],
+                          "exclusions": [], "limites": []}]
+    prop["extensions"] = [
+        {"concept": "batiment", "condition": {"et": [{"f": ["demenagement", "oui"]}, {"f": ["delai_x", "court"]}]},
+         "article": "2.2", "texte": "t"},
+        {"concept": "batiment", "condition": {"et": [{"f": ["lieu", "autre_batiment"]},
+                                                     {"ou": [{"f": ["pays_x", "lu"]}, {"f": ["pays_x", "autre"]}]}]},
+         "article": "2.2", "texte": "t"}]
+    prop["vocabulaire_manquant"] = [{"variable": "delai_x", "valeurs": ["court", "long"], "question": "?"},
+                                    {"variable": "pays_x", "valeurs": ["lu", "autre"], "question": "?"}]
+    avant = json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]["sejour_temporaire"]["pour"]
+    ajouts = redaction.accepter_vocabulaire(prop, voc_etendu)
+    voc = json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]
+    assert voc["sejour_temporaire"]["pour"] == avant and redaction.ACCESSOIRE not in avant
+    assert voc["delai_x"]["pour"] == [redaction.EXTENSION]
+    assert "delai_x" not in prolog.variables_du_temps_2(voc, ["incendie"], {"lieu": ["logement"]})
+    assert len(ajouts) == len(set(ajouts)) and sum(a.startswith("pays_x : lue aussi si") for a in ajouts) == 1
+
+
+def test_accessoire_sans_exclusion_ne_bloque_pas():
+    """7.73 : une accessoire ne décide rien ; qu'elle n'ait pas les exclusions de l'article ne bloque pas."""
+    prop = copy.deepcopy(BONNE)
+    prop["garanties"][0]["exclusions"] = []
+    ctl = controles(prop)
+    assert any(c["controle"] == "exclusions" and c["gravite"] == redaction.BLOQUANT for c in ctl)
+    prop["garanties"][0]["accessoire"] = True
+    assert not any(c["controle"] == "exclusions" and c["gravite"] == redaction.BLOQUANT for c in controles(prop))
 
 
 def test_garantie_accessoire_en_prolog():
@@ -451,7 +489,7 @@ def test_jeu_redaction_coherent():
 def test_consigne_de_redaction_versionnee():
     from couverture.consignes import CONSIGNES
 
-    assert CONSIGNES["couverture-redaction-regles"][2] == "v9"
+    assert CONSIGNES["couverture-redaction-regles"][2] == "v10"
 
 
 # --- Après la première rédaction réelle (Mistral Large, 17 nov. 2026, docs/DEMARCHE.md 7.20) ---------------
