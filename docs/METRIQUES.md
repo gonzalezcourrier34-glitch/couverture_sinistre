@@ -109,6 +109,10 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 
 ## 5. Dernières mesures
 
+**19 nov. 2026, 14 h, Assureur A, golden v11, avec le pack multimédia (6.1)** : règles seules 100 % justes,
+91 % exactes ; **chaîne 88 % justes, 75 % exactes, 4 couverts à tort**, 1,67 refus à tort, 12 instables ; un cas à
+la fois : médiane 3,7 s, 95e centile 10,5 s. Toutes les erreurs restantes viennent de la lecture. DEMARCHE 7.71.
+
 **19 nov. 2026, 13 h, Assureur A, golden v10, après le lot B et les corrections de lecture** (toutes les garanties
 de dommages traduites, extensions et garanties accessoires) : règles seules 100 % justes, 91 % exactes ; **chaîne
 88 % justes, 76 % exactes, 4,67 couverts à tort**, 0,67 refus à tort, 13 instables ; un cas à la fois : médiane

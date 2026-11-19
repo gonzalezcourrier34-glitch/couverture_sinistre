@@ -2599,6 +2599,14 @@ lisaient pour tout vol, et celles du vol pour toute chute. Désormais une variab
 (`habitacle_ferme` : dans un véhicule) porte `"seulement_si": {"lieu": ["vehicule"]}` et ne se lit pas quand le
 lieu lu est une cave. Le vocabulaire déjà accepté est corrigé à la main pour les sept variables touchées.
 
+**Banc après le 6.1** (golden v11, 14 h) : règles seules 100 % / 91 % ; chaîne **88 % justes, 75 % exactes,
+4 couverts à tort** (4,67 avant), 1,67 refus à tort (0,67), 12 instables ; un cas à la fois : médiane 3,7 s,
+**95e centile 10,5 s** (68 s au passage précédent, un appel lent). Les couverts à tort sont les quatre erreurs de
+lecture connues (jardin lu logement, rayure lue vandalisme, clé sous le paillasson, bain à bulles lu aquarium).
+Les refus à tort sont aussi des erreurs de lecture : la baignoire qui déborde lue « récipient » (val-12, 3 fois sur
+3), et g2-l03 (« je n'étais pas absente », la nuit), où la vérification retire `absence = non` que la phrase dit
+pourtant. Rien ne vient des règles du 6.1 ; la lecture reste le chantier.
+
 **Leçon 85.** Une condition écrite au mauvais niveau (toute la garantie au lieu d'un de ses événements, une
 situation au lieu d'un devoir) ne se voit pas à la lecture du texte ; elle se voit sur un cas que la garantie doit
 couvrir. Le code la reconnaît désormais à sa forme.
