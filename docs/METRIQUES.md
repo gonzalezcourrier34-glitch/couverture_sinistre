@@ -109,6 +109,11 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 
 ## 5. Dernières mesures
 
+**19 nov. 2026, 15 h 30, vérification v2 (les négations écrites) et exclusion du personnel corrigée**, golden
+v12 : **Assureur B 78 % justes** (73 % avant), 51 % exactes, 0 couvert à tort, 0 refus à tort, 2 instables ;
+**Assureur A 87 % justes**, 73 % exactes, **3,67 couverts à tort** (4 avant), **3 refus à tort** (1,67 avant),
+14 instables ; un cas à la fois : médiane 4,1 à 4,7 s, 95e centile 5,5 à 6,2 s. DEMARCHE 7.76.
+
 **19 nov. 2026, 14 h 50, Assureur B, golden v11, après le lot B** (extensions du lieu assuré, frais, pertes
 indirectes) : règles seules 100 % justes, 87 % exactes ; **chaîne 73 % justes, 47 % exactes, 0 couvert à tort,
 0 refus à tort**, 0 instable ; un cas à la fois : médiane 4,3 s, 95e centile 5,3 s. Mêmes décisions, cas par cas,

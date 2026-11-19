@@ -39,7 +39,7 @@ exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(evenement, elec
     "les dommages d'origine électrique").
 exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(bien, denrees_alimentaires), bien(denrees_alimentaires), non, '3.1.7.2',
     "les dommages causés au contenu des appareils").
-exclusion([materiel_multimedia_bris, materiel_multimedia_vol], ou([f(auteur, assure), f(auteur, famille), f(auteur, personnel_prive)]), tout, oui, '3.1.7.2',
+exclusion([materiel_multimedia_bris, materiel_multimedia_vol], ou([f(auteur, assure), f(auteur, famille), et([f(auteur, personnel_prive), ou([f(heures_service, oui), non(ou([f(effraction, oui), f(violence, oui)]))])])]), tout, oui, '3.1.7.2',
     "les vols commis par ou avec la complicité de ou du : n Preneur d’assurance, son conjoint, leurs ascendants ou descendants ainsi que les conjoints de ces personnes ; n l’Assuré ; n toute personne au service de l’Assuré pendant les heures de service et, si ces vols ont été commis en dehors de celles-ci, autrement que par effraction ou avec violence. En ce qui concerne les pièces mentionnées aux points").
 exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(option_materiel_multimedia, non), tout, oui, '3.1.7',
     "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “matériel multimédia” est accordée.").

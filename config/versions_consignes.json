@@ -30,8 +30,8 @@
     "source": "couverture.redaction.SYSTEME_REDACTION"
   },
   "couverture-verification-faits": {
-    "version": "v1",
-    "empreinte": "7095e756cac41401",
+    "version": "v2",
+    "empreinte": "1c153e55127bf54e",
     "source": "couverture.prolog.SYSTEME_VERIFICATION"
   }
 }

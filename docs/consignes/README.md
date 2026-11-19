@@ -10,7 +10,7 @@ version garde ici son **texte intégral**, dans `<consigne>/<version>.txt`.
 
 ## Historique
 
-En service : `faits-regles` v4, `lecture-socle` v2, `lecture-details` v2, `verification-faits` v1, `redaction-regles` v10, `document-brut` v1, `legalbench` v1 (voir `config/versions_consignes.json`). Les autres sont celles des méthodes retirées le 18 nov. 2026 (DEMARCHE 7.36).
+En service : `faits-regles` v4, `lecture-socle` v2, `lecture-details` v2, `verification-faits` v2, `redaction-regles` v10, `document-brut` v1, `legalbench` v1 (voir `config/versions_consignes.json`). Les autres sont celles des méthodes retirées le 18 nov. 2026 (DEMARCHE 7.36).
 
 | Consigne | Version | Date | Pourquoi |
 |---|---|---|---|
@@ -42,6 +42,7 @@ En service : `faits-regles` v4, `lecture-socle` v2, `lecture-details` v2, `verif
 | `lecture-socle`, `lecture-details` | v1 | 18 nov. 2026 | La lecture v4 coupée en deux temps : l'événement, le bien et le lieu, puis les seules questions de cet événement (7.38) |
 | `lecture-socle`, `lecture-details` | v2 | 18 nov. 2026 | Chaque variable propose d'abord la valeur « inconnu » : le schéma poussait à remplir (7.40) |
 | `verification-faits` | v1 | 18 nov. 2026 | Chaque fait lu soumis au modèle comme une affirmation ; un fait « non dit » redevient inconnu (7.43) |
+| `verification-faits` | v2 | 19 nov. 2026 | Une négation écrite, ou un détail qui correspond au sens donné de la valeur (« un simple cadenas »), est « dit » (7.75) |
 | `legalbench` | v1 | 18 nov. 2026 | Second banc, externe : répondre et citer la phrase de la clause (7.34) |
 | `faits` | v1 | 17 nov. 2026 | Événement, bien et lieu extraits par le modèle, pour choisir les fiches |
 | `routage` | v1 | 17 nov. 2026 | Choisir les fiches quand l'événement n'est pas reconnu dans la déclaration |

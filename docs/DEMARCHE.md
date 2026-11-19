@@ -2695,6 +2695,65 @@ cette configuration dans son titre (`banc.dernier`, test `test_banc_precedent_de
 **Leçon 88.** Un écart entre deux bancs ne se lit qu'à configuration égale : le rapport doit nommer celle du banc
 auquel il se compare.
 
+### 7.75 Les faits négatifs : la vérification retirait des « non » écrits, et une exclusion mal traduite
+
+**Le constat** (banc 7.74). Les quatre erreurs de l'assureur B sont des « incertain » là où le refus était attendu.
+Cas par cas, ce n'est pas la lecture qui manque les faits négatifs : elle les lit, et la **vérification les
+retire** comme « non dits » :
+- `b-v09` : « une cave fermée par un simple cadenas » ; lu `serrure_surete = non` (l'aide du vocabulaire dit
+  « non : cadenas »), retiré ;
+- `b-v06` : « on m'a subtilisé mon portefeuille sans que je m'en rende compte » ; lu `violence = non`, retiré ;
+- `b-v02` : « aucune effraction, personne n'a été menacé », écrit en toutes lettres, et pourtant perdu dans la
+  chaîne (la question « y a-t-il eu effraction ? » est posée).
+La consigne de vérification v1 disait seulement « une affirmation plausible mais non écrite est non dit » : le
+modèle prenait toute négation pour une supposition.
+
+**Consigne `verification-faits` v2.** Une négation compte comme le reste : « dit » quand elle est écrite en
+toutes lettres, ou quand un détail écrit correspond au sens donné entre parenthèses pour la valeur (le
+vocabulaire le donne déjà : « non : cadenas, simple loquet » ; « non : aucun contact ni menace, vol à la tire »).
+Le contre-exemple de v1 reste : « le local n'était pas fermé » pour « volé dans ma cave » est non dit.
+
+**Une exclusion mal traduite** (`b-v12`, la femme de ménage). Le texte exclut les vols d'une personne au service
+de l'Assuré « pendant les heures de service et, si ces vols ont été commis en dehors de celles-ci, autrement que
+par effraction ou avec violence ». Deux cas : pendant le service, toujours ; en dehors, sauf effraction ou
+violence. La rédaction de 3.1.6 n'avait gardé que le second (il fallait savoir s'il y avait eu violence) ; celle de
+3.1.7 excluait le personnel en toute circonstance (un cambriolage avec effraction un jour de congé aurait été
+refusé à tort). Nouvelle variable `heures_service` ; les deux exclusions corrigées par
+`relecture/assureur_b_personnel.py` ; faits idéaux de `b-v12` complétés (`heures_service = oui` : « pendant
+qu'elle travaillait chez nous »). Simulation (oracle) : aucune autre décision du golden ne change ; sans
+`heures_service` lue, la réponse reste « incertain » ; effraction hors service, couvert.
+
+**Le risque.** Ces quinze cas ont été écrits par Claude après avoir lu les règles, et les corrections sont
+tirées de leurs erreurs : la mesure qui suivra sera optimiste. Les deux corrections sont générales (une consigne
+sur les négations, une clause relue contre son texte), mais seul un jeu écrit sans voir les règles dira si elles
+tiennent. À vérifier aussi : l'assureur A exclut le personnel en toute circonstance (2.10-a) ; relire son texte.
+
+**Leçon 89.** Un vérificateur trop strict ne fait pas d'erreur dangereuse, mais il ôte au système les « non »
+qui permettent de refuser : sa consigne doit dire ce qu'est une négation écrite.
+
+### 7.76 La mesure de la vérification v2 : mieux chez B, un refus à tort de plus chez A
+
+**Assureur B** (golden v12) : chaîne **78 % justes** (73 %), 0 couvert à tort, 0 refus à tort. `b-v02` (« aucune
+effraction, personne n'a été menacé ») et `b-v12` (la femme de ménage) sont refusés à juste titre une fois sur
+trois, au lieu de jamais ; les autres exécutions restent « incertain » : la lecture de Mistral Small varie d'une
+fois à l'autre (2 cas instables).
+
+**Assureur A** : chaîne 87 % justes (88 %), **3,67 couverts à tort** (4), **3 refus à tort** (1,67). Cas par cas,
+la plupart des écarts sont l'instabilité habituelle (14 cas instables). Un seul est systématique : `g2-i16`
+(« de l'eau de mon appartement s'est infiltrée chez le voisin du dessous ») passe de « couvert » deux fois sur
+trois à « refusé » trois fois. La lecture prend « infiltrée » pour `cause_eau = infiltration_exterieure` (la
+pluie entrée par un mur, exclue en 2.7-b) ; l'erreur existait avant, mais la vérification v1 retirait parfois le
+fait, et la v2, qui accepte un détail écrit correspondant au sens d'une valeur, le garde. L'oracle le confirme :
+sans `cause_eau`, couvert ; avec, refusé.
+
+**Correction** : l'aide de `infiltration_exterieure` précise « pas l'eau partie de chez l'assuré qui s'infiltre
+chez un voisin ». La vérification v2 rend les erreurs de lecture plus durables, dans les deux sens : un « non »
+juste survit, un fait mal lu aussi. Le rôle de la vérification, retirer ce qui n'est pas écrit, ne corrige pas
+un fait mal compris ; c'est à l'aide du vocabulaire de le faire.
+
+**Leçon 90.** Assouplir un vérificateur laisse passer les bons faits négatifs et les mauvaises lectures : chaque
+assouplissement se mesure sur les refus à tort, pas seulement sur l'exactitude.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.
@@ -2813,3 +2872,5 @@ Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les section
 86. Un exemple dans une consigne devient le vocabulaire du modèle : l'écrire comme une place à remplir, pas avec le nom d'un contrat.
 87. Une marque interne rangée parmi les vraies valeurs d'un champ s'y mélange : la filtrer partout où le champ se complète.
 88. Deux bancs ne se comparent qu'à configuration égale : le rapport doit nommer celle de son point de comparaison.
+89. Un vérificateur trop strict ôte au système les « non » qui permettent de refuser : dire ce qu'est une négation écrite.
+90. Assouplir un vérificateur laisse passer les bons « non » et les mauvaises lectures : mesurer les refus à tort.

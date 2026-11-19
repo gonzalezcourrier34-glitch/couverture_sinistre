@@ -1,9 +1,9 @@
 {
-  "version": 11,
+  "version": 12,
   "date": "2026-11-19",
   "empreintes": {
     "assureur-a-habitation-2025": "0534a0545f66a07d",
-    "assureur-b-habitation-2017": "f08ec5c7d5a5fbe0"
+    "assureur-b-habitation-2017": "60454afe2fa4e1ae"
   },
   "historique": [
     "v1 (2026-11-17) : 68 cas : 39 existants étiquetés, 29 nouveaux",
@@ -17,6 +17,7 @@
     "v9 (2026-11-19) : b-v07 : COUVERT accepté, le vol du téléphone dans la rue relève aussi de 3.1.7 (matériel multimédia), traduit le 19 nov.",
     "v10 (2026-11-19) : b-v07 : question formule retirée des attendues (réponse couverte sous réserve des options)",
     "v10 (anonymisation) : identifiants de contrats et de cas renommés ; cas, faits et réponses attendues inchangés",
-    "v11 (2026-11-19) : v11 : g2-i07 INCERTAIN (pack multimédia 6.1 traduit)"
+    "v11 (2026-11-19) : v11 : g2-i07 INCERTAIN (pack multimédia 6.1 traduit)",
+    "v12 (2026-11-19) : v12 : b-v12 heures_service = oui (exclusion du personnel corrigée)"
   ]
 }

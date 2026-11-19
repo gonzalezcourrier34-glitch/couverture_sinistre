@@ -16,7 +16,8 @@
         "la réserve « garantie vol accordée » sur la seule garantie vol : écrite « vol et option inconnue », elle était entamée par l'événement et posait la question à chaque vol",
         "frais d'entretien, de réparation de défauts, pertes indirectes, pertes de données, franchise de 60 € : hors décision ; « dommages d'origine électrique » = événement électricité",
         "defaut_fonctionnement et fonctionnement_defectueux : une seule variable ; auteur = preneur → assure",
-        "les six passages « non traduits » (extension des autres garanties en séjour, indemnisation, obligations après sinistre) : hors décision"
+        "les six passages « non traduits » (extension des autres garanties en séjour, indemnisation, obligations après sinistre) : hors décision",
+        "personnel au service de l'Assuré : exclu pendant les heures de service, et en dehors sauf effraction ou violence (variable heures_service) ; 7.75"
       ],
       "question_metier": "Le matériel multimédia en séjour temporaire est couvert par les garanties incendie, tempête, eaux… « sous réserve qu'elles aient été accordées » : non traduit ici (hors décision), à vérifier avec un souscripteur."
     }
@@ -423,9 +424,41 @@
               ]
             },
             {
-              "f": [
-                "auteur",
-                "personnel_prive"
+              "et": [
+                {
+                  "f": [
+                    "auteur",
+                    "personnel_prive"
+                  ]
+                },
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "heures_service",
+                        "oui"
+                      ]
+                    },
+                    {
+                      "non": {
+                        "ou": [
+                          {
+                            "f": [
+                              "effraction",
+                              "oui"
+                            ]
+                          },
+                          {
+                            "f": [
+                              "violence",
+                              "oui"
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
               ]
             }
           ]

@@ -395,6 +395,8 @@ Pour chaque affirmation, réponds :
 
 Une affirmation plausible mais non écrite est "non_dit". Exemples : « le local n'était pas fermé » pour « on m'a volé mon vélo dans ma cave » est non_dit (la déclaration ne dit rien de la fermeture) ; « l'assuré était absent » pour « pendant mes vacances » est dit.
 
+Une négation compte comme le reste : elle est "dit" quand elle est écrite en toutes lettres (« aucune effraction », « personne n'a été menacé »), ou quand un détail écrit correspond au sens donné entre parenthèses pour cette valeur. Exemples : « fermée par un simple cadenas » pour une serrure de sûreté → non (cadenas…) est dit ; « on me l'a pris sans que je m'en rende compte » pour des violences → non (aucun contact ni menace…) est dit.
+
 Réponds uniquement par un objet JSON : {"verdicts": {"variable": "dit"}}"""
 
 
