@@ -167,10 +167,10 @@ class Moteur:
         if nom == "si":
             return self.eval(Terme(("ou", [Terme(("non", t.args[0])), t.args[1]])))
         if nom == "concept":
-            d = self.c.definition(t.args[0])
-            if d is None:
+            c = self.concept(t.args[0])
+            if c is None:
                 raise KeyError(f"concept inconnu : {t.args[0]}")
-            return self.eval(d.args[1])
+            return self.eval(c)
         raise TypeError(t)
 
     def variables(self, t) -> list:
@@ -185,8 +185,8 @@ class Moteur:
         if t.nom == "si":
             return self.variables(t.args[0]) + self.variables(t.args[1])
         if t.nom == "concept":
-            d = self.c.definition(t.args[0])
-            return self.variables(d.args[1]) if d else []
+            c = self.concept(t.args[0])
+            return self.variables(c) if c is not None else []
         return []
 
     def feuilles(self, t) -> list:
@@ -201,8 +201,8 @@ class Moteur:
         if t.nom == "si":
             return self.feuilles(t.args[0]) + self.feuilles(t.args[1])
         if t.nom == "concept":
-            d = self.c.definition(t.args[0])
-            return self.feuilles(d.args[1]) if d else []
+            c = self.concept(t.args[0])
+            return self.feuilles(c) if c is not None else []
         return []
 
     def positives(self, t) -> list:
@@ -219,6 +219,29 @@ class Moteur:
             d = self.c.definition(t.args[0])
             return self.positives(d.args[1]) if d else []
         return []
+
+    def entamee_propre(self, t) -> bool:
+        """Entamée par ses propres faits, hors des concepts qu'elle emploie (« contenu » ne dit rien d'un séjour)."""
+        def propres(t):
+            if not isinstance(t, Terme) or t.nom == "concept":
+                return []
+            if t.nom == "f":
+                return [t]
+            if t.nom in ("et", "ou"):
+                return [f for c in t.args[0] for f in propres(c)]
+            if t.nom == "si":
+                return propres(t.args[1])
+            return []
+        return any(self.eval(f) == OUI for f in propres(t))
+
+    def concept(self, n):
+        """La définition élargie par ses extensions établies ou entamées (7.69)."""
+        d = self.c.definition(n)
+        if d is None:
+            return None
+        xs = [x.args[1] for x in self.c.regles("extension", 4) if x.args[0] == n
+              and (self.eval(x.args[1]) == OUI or (self.eval(x.args[1]) == INCONNU and self.entamee_propre(x.args[1])))]
+        return Terme(("ou", [d.args[1], *xs])) if xs else d.args[1]
 
     def entamee(self, t) -> bool:
         """Une condition inconnue dont un fait positif est établi : la déclaration l'a mise en jeu."""
@@ -303,7 +326,7 @@ class Moteur:
             return {"type": "si", "etat": e, "enfants": [self.arbre(t.args[0]), self.arbre(t.args[1])]}
         d = self.c.definition(t.args[0])
         return {"type": "concept", "nom": t.args[0], "article": d.args[2], "texte": d.args[3], "etat": e,
-                "enfants": [self.arbre(d.args[1])]}
+                "enfants": [self.arbre(self.concept(t.args[0]))]}
 
     def arbre_garantie(self, g) -> dict:
         gar = next(x for x in self.c.regles("garantie", 4) if x.args[0] == g)
@@ -347,7 +370,7 @@ class Moteur:
             for g in self.c.regles("garantie", 4):
                 if g.args[0] in self.accessoires():
                     r = self.garantie(g.args[0])
-                    if r["rattachement"] != "hors" and r["decision"] != "NON_COUVERT":
+                    if r["rattachement"] == "rattachée" and r["decision"] != "NON_COUVERT":
                         d["accessoires"].append({**r, "id": g.args[0]})
         return d
 

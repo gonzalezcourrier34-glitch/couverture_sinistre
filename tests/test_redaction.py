@@ -250,6 +250,53 @@ def test_hors_decision_cite_et_non_bloquant():
     assert any("hors décision" in p["message"] for p in bloquants(controles(prop), "citation"))
 
 
+def test_condition_des_conditions_particulieres_mise_en_reserve():
+    """7.69 : « en fonction des couvertures mentionnées dans vos conditions particulières » devient une réserve
+    (exclusion « non condition », à demander), pour tout contrat ; une formule à plusieurs valeurs reste posée."""
+    prop = copy.deepcopy(BONNE)
+    g = prop["garanties"][0]
+    g["circonstances"].append({"condition": {"f": ["couverture_contenu", "oui"]}, "article": "2.2",
+                               "texte": "en fonction des couvertures mentionnées dans vos conditions particulières"})
+    g["circonstances"].append({"condition": {"f": ["formule", "privilege"]}, "article": "2.2",
+                               "texte": "selon la formule de vos conditions particulières"})
+    g["perimetre"].append({"f": ["option_tempete_x", "oui"]})
+    prop["vocabulaire_manquant"].append({"variable": "option_tempete_x", "valeurs": ["oui", "non"],
+                                         "question": "Vos conditions particulières mentionnent-elles la tempête ?"})
+    notes = redaction.conditions_particulieres_en_reserve(prop)
+    assert len(notes) == 2
+    assert [c["condition"] for c in g["circonstances"]] == [{"concept": "tempete"}, {"f": ["formule", "privilege"]}]
+    assert {"f": ["option_tempete_x", "oui"]} not in g["perimetre"]
+    reserves = [x for x in g["exclusions"] if "non" in x["condition"]]
+    assert [x["condition"]["non"]["f"][0] for x in reserves] == ["couverture_contenu", "option_tempete_x"]
+    assert all(x["a_demander"] and x["portee"] == "tout" for x in reserves)
+    assert redaction.conditions_particulieres_en_reserve(prop) == [], "une seconde passe ne change rien"
+
+
+def test_non_traduit_d_accessoires_ne_bloque_pas():
+    prop = copy.deepcopy(BONNE)
+    assert any("déclaré non traduit" in p["message"] for p in bloquants(controles(prop), "couverture"))
+    prop["garanties"][0]["accessoire"] = True
+    assert not any("déclaré non traduit" in p["message"] for p in bloquants(controles(prop), "couverture"))
+
+
+def test_extension_de_definition_en_prolog_et_controles(voc_etendu):
+    """7.69 : une extension de lieu élargit une définition du contrat (le bâtiment) au lieu d'être une garantie."""
+    prop = copy.deepcopy(BONNE)
+    prop["extensions"] = [{"concept": "batiment", "condition": {"et": [{"f": ["sejour_temporaire", "oui"]},
+                                                                    {"f": ["lieu", "autre_batiment"]}]},
+                           "article": "2.2", "texte": "Nous couvrons les dommages matériels"}]
+    assert "extension(batiment, et([f(sejour_temporaire, oui), f(lieu, autre_batiment)]), '2.2'" in redaction.en_prolog(prop, "2.2")
+    assert not [p for p in bloquants(controles(prop), "concept") if "extension" in p["message"]]
+    prop["extensions"][0]["concept"] = "piscine_couverte"
+    assert any("extension d'un concept inconnu" in p["message"] for p in bloquants(controles(prop), "concept"))
+    prop["extensions"][0]["concept"] = "batiment"
+    voc = json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]
+    assert voc["sejour_temporaire"].get("pour")
+    ajouts = redaction.accepter_vocabulaire(prop, voc_etendu)
+    assert "pour" not in json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]["sejour_temporaire"]
+    assert any("sejour_temporaire : lue pour tous les sinistres" in a for a in ajouts)
+
+
 def test_garantie_accessoire_en_prolog():
     prop = copy.deepcopy(BONNE)
     prop["garanties"][0]["accessoire"] = True
@@ -344,7 +391,7 @@ def test_jeu_redaction_coherent():
 def test_consigne_de_redaction_versionnee():
     from couverture.consignes import CONSIGNES
 
-    assert CONSIGNES["couverture-redaction-regles"][2] == "v8"
+    assert CONSIGNES["couverture-redaction-regles"][2] == "v9"
 
 
 # --- Après la première rédaction réelle (Mistral Large, 17 nov. 2026, docs/DEMARCHE.md 7.20) ---------------

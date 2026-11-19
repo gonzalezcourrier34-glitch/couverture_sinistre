@@ -645,11 +645,15 @@
         "oui",
         "non"
       ],
-      "question": "Les objets volés avaient-ils été emportés lors d'un séjour temporaire hors du domicile ?",
+      "question": "Les biens se trouvaient-ils hors de chez vous, lors d'un séjour temporaire (vacances, hôtel, location) ?",
       "pour": [
         "vol",
         "vandalisme"
-      ]
+      ],
+      "aide": {
+        "oui": "en vacances, à l'hôtel, en location, chez quelqu'un, pour un temps",
+        "non": "chez vous, ou ailleurs sans séjour"
+      }
     },
     "travaux_construction": {
       "valeurs": [

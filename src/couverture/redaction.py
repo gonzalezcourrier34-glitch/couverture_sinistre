@@ -38,7 +38,7 @@ from .texte import normaliser
 from .validation import _compact, extrait_present, passage_exact
 
 PROPOSITIONS = prolog.DOSSIER / "propositions"
-VERSION = "v8"
+VERSION = "v9"
 IDENT = re.compile(r"^[a-z][a-z0-9_]*$")
 BLOQUANT, A_RELIRE, INFO = "bloquant", "à relire", "info"
 
@@ -51,7 +51,8 @@ Une garantie a :
 - des obligations de prévention : ce que l'assuré doit faire ; « exception » est ce qui l'excuse (ou null) ; « lien_causal » vaut true si le contrat ne refuse que s'il y a un lien causal avec le sinistre ;
 - des exclusions : « portee » vaut "tout", ou {"bien": "valeur"} si elle n'exclut qu'un bien ; « a_demander » vaut true si l'on doit poser la question quand le fait est inconnu (circonstance que le déclarant ne mentionnerait pas de lui-même), false sinon ;
 - des limites : un plafond, sans condition.
-Une garantie qui ne joue qu'après un sinistre couvert par une autre (frais de sauvetage, de déblai, de logement provisoire, extension à un séjour temporaire, pertes indirectes) porte "accessoire": true : elle ne décide pas si le sinistre est couvert, elle dit ce qui s'y ajoute. Ne mets pas dans son périmètre tous les événements du contrat.
+Une garantie qui ne joue qu'après un sinistre couvert par une autre (frais de sauvetage, de déblai, de logement provisoire, pertes indirectes) porte "accessoire": true : elle ne décide pas si le sinistre est couvert, elle dit ce qui s'y ajoute. Ne mets pas dans son périmètre tous les événements du contrat, ni un concept « sinistre » : « après un sinistre couvert » est implicite. Son périmètre ne dit que ce qui la restreint (une fête de famille, un déménagement) ; s'il n'y a rien, laisse-le vide ([]).
+Une extension qui élargit un LIEU ou un BIEN assuré (« le contenu lors d'un séjour temporaire », « pendant son transport lors d'un déménagement ») n'est pas une garantie : elle élargit la définition du contrat que les garanties emploient déjà (concept bâtiment, contenu…). Mets-la dans "extensions" : {"concept": "batiment", "condition": …, "article", "texte"} ; elle vaut alors pour toutes les garanties du contrat.
 Les exclusions d'un article (« vols exclus ») valent pour TOUTES ses garanties, extensions comprises : mets-les dans "exclusions_communes", pas dans une seule garantie. N'attache à une garantie que les exclusions qui ne valent que pour elle.
 Une condition est un terme JSON : {"f": ["variable", "valeur"]}, {"et": [c1, c2]}, {"ou": [c1, c2]}, {"non": c}, {"si": [a, b]} (si a alors b), {"concept": "nom"} (une définition).
 La logique a trois valeurs : un fait que la déclaration ne donne pas est « inconnu », et le moteur pose alors la question. N'essaie pas de compenser un fait inconnu.
@@ -80,6 +81,7 @@ La logique a trois valeurs : un fait que la déclaration ne donne pas est « inc
                   {"condition": {"f": ["bien", "canalisation"]}, "portee": {"bien": "canalisation"}, "a_demander": true, "article": "2.7-b", "texte": "aux canalisations, radiateurs, robinets, citernes, chaudières et autres appareils chauffant de l'eau, qui sont à l'origine du sinistre"}],
    "limites": [{"article": "2.7", "texte": "Dégâts causés par l'eau", "montant": "valeur à neuf"}]}],
  "exclusions_communes": [],
+ "extensions": [],
  "vocabulaire_manquant": [{"variable": "piscine", "valeurs": ["oui", "non"], "question": "L'eau venait-elle d'une piscine ?", "pourquoi": "exclusion de l'écoulement des piscines", "plus_proche": "cause_eau : aucune de ses valeurs ne dit d'où vient l'eau", "aide": {"oui": "l'eau venait de la piscine, du bassin", "non": "l'eau venait d'ailleurs"}}],
  "non_traduit": []}"""
 
@@ -179,6 +181,8 @@ def en_prolog(prop: dict, article: str, entete: str = "") -> str:
             lignes.append(f"evenement_traduit({atome(e)}).")
     for d in prop.get("definitions", []):
         lignes.append(f"definition({atome(d['concept'])}, {terme(d['condition'])}, {atome(d['article'])},\n    {chaine(d['texte'])}).")
+    for d in prop.get("extensions") or []:       # 7.69 : élargit une définition, pour toutes les garanties
+        lignes.append(f"extension({atome(d['concept'])}, {terme(d['condition'])}, {atome(d['article'])},\n    {chaine(d['texte'])}).")
     for g in prop.get("garanties", []):
         gid = atome(g["id"])
         lignes.append(f"garantie({gid}, {chaine(g['nom'])}, {atome(g['article'])},\n    {chaine(g['texte'])}).")
@@ -218,6 +222,7 @@ def fusionner(contrat_pl: str, *propositions_pl: str) -> str:
 
 CHAMPS = {
     "definitions": ("concept", "condition", "article", "texte"),
+    "extensions": ("concept", "condition", "article", "texte"),
     "garanties": ("id", "nom", "article", "texte", "perimetre"),
     "circonstances": ("condition", "article", "texte"),
     "obligations": ("condition", "article", "texte"),
@@ -247,6 +252,65 @@ def envelopper_conditions_nues(prop: dict) -> list[str]:
                     # le relecteur n'a pas remplacé la citation et retiré « a_preciser ».
                     notes.append(f"garantie {g.get('id')} : {nature[:-1]} {json.dumps(x['condition'], ensure_ascii=False)[:60]} "
                                  f"rendue sans citation ; rattachée à celle de la garantie, à préciser")
+    return notes
+
+
+def questions_connues(prop: dict) -> dict:
+    """La question de chaque variable : celles que propose le modèle, puis celles du vocabulaire commun."""
+    qs = {}
+    try:
+        voc = json.loads((prolog.DOSSIER / "vocabulaire.json").read_text(encoding="utf-8"))["variables"]
+        qs.update({v: d.get("question", "") for v, d in voc.items()})
+    except (OSError, ValueError, KeyError):
+        pass
+    qs.update({m.get("variable"): m.get("question", "") for m in prop.get("vocabulaire_manquant") or []
+               if isinstance(m, dict)})
+    return qs
+
+
+def conditions_particulieres_en_reserve(prop: dict) -> list[str]:
+    """« En fonction des couvertures mentionnées dans vos conditions particulières » : le déclarant ne les a pas
+    sous les yeux, et le moteur ne les lit pas. Une telle condition est une RÉSERVE (« sous réserve que vos
+    conditions particulières… »), pas une question posée à chaque sinistre (7.62, 7.69). Le relecteur le faisait
+    à la main pour chaque garantie optionnelle d'AXA ; le code le fait désormais pour tout contrat : la
+    circonstance (ou le terme de périmètre) devient une exclusion « non condition », à demander, sur la même
+    garantie. Inconnue et non évoquée, elle reste une réserve (règle 6 bis du moteur)."""
+    qs, notes = questions_connues(prop), []
+
+    def vise_les_cp(texte, condition):
+        # Seulement « la couverture X est-elle mentionnée » (oui/non) : une formule à plusieurs valeurs (Foyer,
+        # Privilège ou Active) décide de ce qui est couvert, et la question reste posée.
+        if not (isinstance(condition, dict) and isinstance(condition.get("f"), list)
+                and len(condition["f"]) == 2 and condition["f"][1] == "oui"):
+            return False
+        return "conditions particulieres" in normaliser((texte or "") + " " + (qs.get(condition["f"][0]) or ""))
+
+    for g in prop.get("garanties") or []:
+        if not isinstance(g, dict):
+            continue
+        garder = []
+        for c in g.get("circonstances") or []:
+            if isinstance(c, dict) and "condition" in c and vise_les_cp(c.get("texte"), c["condition"]):
+                g.setdefault("exclusions", []).append({"condition": {"non": c["condition"]}, "portee": "tout",
+                                                       "a_demander": True, "article": c.get("article"),
+                                                       "texte": c.get("texte", "")})
+                notes.append(f"garantie {g.get('id')} : {json.dumps(c['condition'], ensure_ascii=False)[:60]} "
+                             f"(conditions particulières) mise en réserve, et non en question")
+            else:
+                garder.append(c)
+        if "circonstances" in g:
+            g["circonstances"] = garder
+        perimetre = []
+        for t in g.get("perimetre") or []:
+            if isinstance(t, dict) and "f" in t and vise_les_cp("", t):
+                g.setdefault("exclusions", []).append({"condition": {"non": t}, "portee": "tout", "a_demander": True,
+                                                       "article": g.get("article"), "texte": g.get("texte", "")})
+                notes.append(f"garantie {g.get('id')} : {json.dumps(t, ensure_ascii=False)[:60]} retiré du périmètre "
+                             f"(conditions particulières) et mis en réserve")
+            else:
+                perimetre.append(t)
+        if "perimetre" in g:
+            g["perimetre"] = perimetre
     return notes
 
 
@@ -285,11 +349,12 @@ def erreurs_schema(prop) -> list[str]:
                     erreurs.append(f"{ou} : {e}")
 
     champs(prop.get("definitions"), "definitions", "definitions")
+    champs(prop.get("extensions"), "extensions", "extensions")
     champs(prop.get("non_traduit"), "non_traduit", "non_traduit")
     champs(prop.get("hors_decision"), "hors_decision", "hors_decision")
     champs(prop.get("exclusions_communes"), "exclusions", "exclusions_communes")
     garanties = prop.get("garanties")
-    if not garanties:
+    if not garanties and not prop.get("extensions"):
         erreurs.append("aucune garantie proposée")
     champs(garanties, "garanties", "garanties")
     for g in garanties or []:
@@ -336,6 +401,8 @@ def elements_cites(prop: dict):
     """(rôle, élément) pour tout ce qui porte article et texte."""
     for d in prop.get("definitions", []):
         yield "définition", d
+    for d in prop.get("extensions") or []:
+        yield "extension", d
     for g in prop.get("garanties", []):
         yield "garantie", g
         for role, cle in (("circonstance", "circonstances"), ("obligation", "obligations"),
@@ -348,6 +415,8 @@ def elements_cites(prop: dict):
 
 def conditions(prop: dict):
     for d in prop.get("definitions", []):
+        yield d.get("condition")
+    for d in prop.get("extensions") or []:
         yield d.get("condition")
     for g in prop.get("garanties", []):
         yield from g.get("perimetre", [])
@@ -386,6 +455,8 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
         prop["non_traduit"] = non_traduits(prop)
     for note in envelopper_conditions_nues(prop) if isinstance(prop, dict) else []:
         noter(A_RELIRE, "structure", note)
+    for note in conditions_particulieres_en_reserve(prop) if isinstance(prop, dict) and not erreurs_schema(prop) else []:
+        noter(INFO, "couverture", note)
     schema = erreurs_schema(prop)
     if not schema:
         try:
@@ -503,9 +574,14 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
             noter(BLOQUANT, "citation", f"hors décision ({n.get('article')}) : « {str(n.get('texte'))[:80]} » ne figure pas dans la clause")
         else:
             noter(INFO, "couverture", f"hors décision ({n.get('article')}) : {n.get('pourquoi', '')}")
+    # Dans un article fait seulement de garanties accessoires, ce qui reste non traduit (un barème, une procédure
+    # d'expertise) ne peut pas changer une décision : le moteur ne les consulte qu'après un sinistre couvert (7.68).
+    seulement_accessoires = bool(prop.get("garanties")) and all(isinstance(g, dict) and g.get("accessoire")
+                                                                for g in prop["garanties"])
     for n in non_traduits(prop):
-        noter(BLOQUANT, "couverture", f"déclaré non traduit ({n.get('article')}) : « {str(n.get('texte'))[:100]} » "
-              f"— {n.get('pourquoi', '')}")
+        noter(INFO if seulement_accessoires else BLOQUANT, "couverture",
+              f"déclaré non traduit ({n.get('article')}) : « {str(n.get('texte'))[:100]} » — {n.get('pourquoi', '')}"
+              + (" (garanties accessoires : sans effet sur la décision)" if seulement_accessoires else ""))
 
     # 4 bis. La définition de l'événement couvert (« tempête ») est une condition de la garantie.
     titres = normaliser(" ".join(c.chemin[-1] for c in clauses_article(clauses, article) if c.chemin))
@@ -530,6 +606,10 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
         for n in concepts_employes(c):
             if n not in existants | nouveaux:
                 noter(BLOQUANT, "concept", f"concept inconnu : {n}")
+    for x in prop.get("extensions") or []:
+        if x.get("concept") not in existants | nouveaux:
+            noter(BLOQUANT, "concept", f"extension d'un concept inconnu : {x.get('concept')} (une extension élargit "
+                  f"une définition du contrat : le bâtiment, le contenu…)")
     deja = set(re.findall(r"^garantie\((\w+),", contrat_pl, re.M))
     ids = [g.get("id", "") for g in prop.get("garanties", [])]
     for i in ids:
@@ -687,6 +767,12 @@ def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
                 voc[v]["pour"] = evs
             ajouts.append(f"{v} ({', '.join(valeurs)}) : « {voc[v]['question']} »")
     ajouts += etendre_pour(prop, voc)
+    # Une variable d'extension (le séjour temporaire élargit le bâtiment) vaut pour toutes les garanties qui
+    # emploient le concept : elle est lue pour tout sinistre (7.69).
+    for x in prop.get("extensions") or []:
+        for v, _ in feuilles(x.get("condition")):
+            if v in voc and voc[v].pop("pour", None):
+                ajouts.append(f"{v} : lue pour tous les sinistres (extension de « {x.get('concept')} »)")
     if ajouts:
         chemin.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return ajouts

@@ -68,11 +68,34 @@ eval(et(L), E) :- !, maplist(eval, L, Es), et3(Es, E).
 eval(ou(L), E) :- !, maplist(eval, L, Es), ou3(Es, E).
 eval(si(A, B), E) :- !, eval(ou([non(A), B]), E).
 eval(concept(N), E) :- !,
-    (   regle(definition(N, C, _, _))
+    (   condition_concept(N, C)
     ->  eval(C, E)
     ;   throw(error(existence_error(concept, N), _))
     ).
 eval(T, _) :- throw(error(type_error(condition, T), _)).
+
+%!  condition_concept(+Concept, -Condition)
+%   La définition du contrat, élargie par ses extensions (DEMARCHE 7.69) : « nous étendons la garantie au
+%   contenu lors d'un séjour temporaire » élargit le lieu assuré (le bâtiment), pour toutes les garanties qui
+%   l'emploient. Une extension ne compte que si elle est établie, ou entamée par la déclaration (le séjour est
+%   dit, le lieu ne l'est pas) : elle n'est jamais présumée, et ses faits ne sont pas demandés pour chaque
+%   sinistre.
+condition_concept(N, C) :-
+    regle(definition(N, C0, _, _)), !,
+    findall(X, ( regle(extension(N, X, _, _)), extension_active(X) ), Xs),
+    (   Xs == [] -> C = C0 ; C = ou([C0|Xs]) ).
+
+extension_active(X) :- eval(X, oui), !.
+extension_active(X) :- eval(X, inconnu), propres(X, Fs), member(F, Fs), eval(F, oui), !.
+
+%  Les faits positifs propres à une extension, hors des concepts qu'elle emploie : « contenu » est établi par
+%  presque toute déclaration (un meuble), il ne dit rien d'un séjour ou d'un déménagement.
+propres(concept(_), []) :- !.
+propres(f(V, X), [f(V, X)]) :- !.
+propres(et(L), Fs) :- !, maplist(propres, L, Fss), append(Fss, Fs).
+propres(ou(L), Fs) :- !, maplist(propres, L, Fss), append(Fss, Fs).
+propres(si(_, B), Fs) :- !, propres(B, Fs).
+propres(_, []).
 
 %  ancetre(V, X, A) : A est une catégorie plus large que X (vocabulaire, « parents »).
 ancetre(V, X, A) :- parent_valeur(V, X, A).
@@ -103,7 +126,7 @@ variables(et(L), Vs) :- !, maplist(variables, L, Vss), append(Vss, Vs).
 variables(ou(L), Vs) :- !, maplist(variables, L, Vss), append(Vss, Vs).
 variables(si(A, B), Vs) :- !, variables(A, Va), variables(B, Vb), append(Va, Vb, Vs).
 variables(concept(N), Vs) :- !,
-    (   regle(definition(N, C, _, _)) -> variables(C, Vs) ; Vs = [] ).
+    (   condition_concept(N, C) -> variables(C, Vs) ; Vs = [] ).
 variables(_, []).
 
 %!  inconnues(+Condition, -Variables) : les variables dont un fait élémentaire de la condition est
@@ -119,7 +142,7 @@ feuilles(et(L), Fs) :- !, maplist(feuilles, L, Fss), append(Fss, Fs).
 feuilles(ou(L), Fs) :- !, maplist(feuilles, L, Fss), append(Fss, Fs).
 feuilles(si(A, B), Fs) :- !, feuilles(A, Fa), feuilles(B, Fb), append(Fa, Fb, Fs).
 feuilles(concept(N), Fs) :- !,
-    (   regle(definition(N, C, _, _)) -> feuilles(C, Fs) ; Fs = [] ).
+    (   condition_concept(N, C) -> feuilles(C, Fs) ; Fs = [] ).
 feuilles(_, []).
 
 %!  positives(+Condition, -Feuilles) : les faits qui comptent « pour » la condition : hors d'une
@@ -130,13 +153,13 @@ positives(et(L), Fs) :- !, maplist(positives, L, Fss), append(Fss, Fs).
 positives(ou(L), Fs) :- !, maplist(positives, L, Fss), append(Fss, Fs).
 positives(si(_, B), Fs) :- !, positives(B, Fs).
 positives(concept(N), Fs) :- !,
-    (   regle(definition(N, C, _, _)) -> positives(C, Fs) ; Fs = [] ).
+    (   regle(definition(N, C, _, _)) -> positives(C, Fs) ; Fs = [] ).   % la définition seule : pas de boucle
 positives(_, []).
 
 entamee(C) :- positives(C, Fs), member(F, Fs), eval(F, oui), !.
 
 concepts(concept(N), [N|Ns]) :- !,
-    (   regle(definition(N, C, _, _)) -> concepts(C, Ns) ; Ns = [] ).
+    (   condition_concept(N, C) -> concepts(C, Ns) ; Ns = [] ).
 concepts(non(C), Ns) :- !, concepts(C, Ns).
 concepts(et(L), Ns) :- !, maplist(concepts, L, Nss), append(Nss, Ns).
 concepts(ou(L), Ns) :- !, maplist(concepts, L, Nss), append(Nss, Ns).
@@ -145,6 +168,7 @@ concepts(_, []).
 
 preuve_concept(N, _{article:A, texte:T, role:"définition"}) :- regle(definition(N, _, A, T)).
 preuve_concept(N, _{article:A, texte:T, role:"définition"}) :- regle(precision(N, A, T)).
+preuve_concept(N, _{article:A, texte:T, role:"extension"}) :- regle(extension(N, X, A, T)), eval(X, oui).
 
 %!  preuves_conditions(+Conditions, -Preuves) : les définitions citées par ces conditions.
 preuves_conditions(Cs, Preuves) :-
@@ -311,13 +335,14 @@ decider(D) :-
 %!  accessoires(+Decision, -Accessoires)
 %   Une garantie accessoire (frais de sauvetage, logement provisoire, extension en séjour : DEMARCHE 7.68)
 %   ne joue qu'après un sinistre couvert par une garantie de base. Elle ne change jamais la décision : si la
-%   décision est COUVERT, on liste celles qui s'appliquent ou pourraient s'appliquer (avec leurs questions) ;
-%   sinon, aucune. Traduites comme des garanties ordinaires, elles faisaient passer des refus justes à
+%   décision est COUVERT, on liste celles dont le périmètre est établi (le séjour, le déménagement : faits
+%   déclarés), avec leurs questions et réserves ; sinon, aucune. Une accessoire au périmètre seulement
+%   possible n'est pas listée : sans cela, chaque incendie couvert énumérait toutes les extensions de Foyer 3.1. Traduites comme des garanties ordinaires, elles faisaient passer des refus justes à
 %   « incertain » (25 cas au contrôle de non-régression du lot B de Foyer).
 accessoires(D, Acc) :-
     get_dict(decision, D, "COUVERT"), !,
     findall(R, ( regle(accessoire(G)), evaluer_garantie(G, R),
-                 \+ get_dict(rattachement, R, "hors"), \+ get_dict(decision, R, "NON_COUVERT") ), Acc).
+                 get_dict(rattachement, R, "rattachée"), \+ get_dict(decision, R, "NON_COUVERT") ), Acc).
 accessoires(_, []).
 
 %  Les événements déclarés dont aucune garantie n'est traduite en règles.
@@ -346,7 +371,7 @@ arbre_noeud(et(L), E, _{type:"et", etat:E, enfants:Ts}) :- !, maplist(arbre, L, 
 arbre_noeud(ou(L), E, _{type:"ou", etat:E, enfants:Ts}) :- !, maplist(arbre, L, Ts).
 arbre_noeud(si(A, B), E, _{type:"si", etat:E, enfants:[TA, TB]}) :- !, arbre(A, TA), arbre(B, TB).
 arbre_noeud(concept(N), E, _{type:"concept", nom:N, article:A, texte:Tx, etat:E, enfants:[T]}) :- !,
-    once(regle(definition(N, C, A, Tx))), arbre(C, T).
+    once(regle(definition(N, _, A, Tx))), condition_concept(N, C), arbre(C, T).
 arbre_noeud(vrai, E, _{type:"vrai", etat:E, enfants:[]}) :- !.
 arbre_noeud(faux, E, _{type:"faux", etat:E, enfants:[]}).
 

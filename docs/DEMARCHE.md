@@ -2449,6 +2449,52 @@ proposition d'accessoires.
 qu'est-ce qui s'y ajoute ? ». Les mettre au même niveau dans le moteur dégrade les décisions qu'elles ne
 concernent pas ; la distinction se fait une fois, dans le moteur, et vaut pour tous les contrats.
 
+### 7.69 Le lot B de Foyer : trois façons d'« étendre » une garantie, et une seule était accessoire
+
+**Rédaction (consigne v8, Mistral Large, 12 min).** Art. 3.1 : sept « extensions », toutes marquées accessoires
+par le modèle ; art. 4 : une garantie complémentaire (frais de sauvetage, déblai, logement provisoire, expertise…),
+accessoire aussi. Contrôles : 9 bloquants pour 3.1 (du vocabulaire nouveau à accepter), 3 pour 4 (un concept
+« sinistre » inconnu et deux passages non traduits : le barème d'expertise et sa procédure).
+
+**Ce que la relecture a montré, en simulant les 97 cas du golden avec l'oracle.** L'art. 4 ne change aucune
+décision et s'ajoute aux 44 sinistres couverts : c'est bien une accessoire. Mais un incendie à l'hôtel restait
+NON_COUVERT : « le contenu lors d'un séjour temporaire » n'ajoute rien à un sinistre couvert, il **élargit le lieu
+assuré**, et toutes les garanties de base excluent un « autre bâtiment » par leur concept `batiment`. Accessoire,
+l'extension ne jouait jamais.
+
+**Trois corrections, dans le code et non dans le contrat.**
+1. **Extension de définition** (moteur et oracle) : `extension(batiment, Condition, Art, Texte)` élargit la
+   définition du bâtiment pour toutes les garanties qui l'emploient. Elle n'est jamais présumée : elle compte si
+   elle est établie, ou entamée par ses propres faits (le séjour ou l'« autre bâtiment » sont déclarés), jamais par
+   les concepts qu'elle emploie (« contenu » est établi par presque toute déclaration). Sinon ses questions
+   seraient posées à chaque sinistre : c'est ce que la première simulation montrait (3 cas). La preuve cite
+   l'extension quand elle joue. Rédaction : champ `extensions`, consigne v9, contrôle « extension d'un concept
+   inconnu » ; à l'acceptation, une variable d'extension est lue pour tous les sinistres (plus de « pour »).
+2. **Conditions particulières en réserve, pour tout contrat** : « en fonction des couvertures mentionnées dans vos
+   conditions particulières » devient une exclusion « non condition » à demander, c'est-à-dire une réserve, et non
+   une question posée à chaque sinistre. Le relecteur le faisait à la main pour huit garanties optionnelles d'AXA
+   (7.62) ; le contrôle le fait désormais (`conditions_particulieres_en_reserve`), pour une condition oui/non
+   seulement : une formule à plusieurs valeurs (Foyer : Privilège, Active) reste demandée. Sur les propositions
+   existantes, seules 3.1 et 6.1 (non acceptées) changent.
+3. **Accessoires** : seules celles dont le périmètre est établi sont listées (sans cela, chaque incendie couvert
+   énumérait les sept extensions) ; un passage non traduit d'un article fait seulement d'accessoires ne bloque
+   plus (il ne peut pas changer une décision) ; le périmètre d'une accessoire ne dit pas « sinistre » (consigne v9).
+
+**Relecture** (`relecture/foyer_lot_b.py`). 3.1 : séjour temporaire et transport pendant le déménagement deviennent
+deux extensions du bâtiment (pour le contenu) ; la nouvelle adresse est hors décision (le logement est déjà le
+bâtiment) ; les quatre extensions de responsabilité locative restent accessoires, à revoir avec la section 5.
+4 : périmètre vidé. La question `sejour_temporaire`, écrite pour le vol d'AXA, devient générale (« hors de chez
+vous, lors d'un séjour temporaire »).
+
+**Simulation (oracle, 97 cas Foyer).** Aucune décision ne change. Une question s'ajoute pour g2-i08 (« vol de mon
+sac au restaurant ») : le séjour temporaire, que l'« autre bâtiment » entame ; la question attendue (violence)
+reste posée. Incendie à l'hôtel en séjour : COUVERT par la garantie incendie, avec la citation de l'extension.
+Tests : 131 réussis.
+
+**Leçon 82.** « Étendre » recouvre trois choses : ajouter des frais à un sinistre couvert (accessoire), élargir un
+lieu ou un bien assuré (extension de définition), et couvrir une autre responsabilité (une garantie à part). Le mot
+du contrat ne dit pas laquelle ; la simulation sur le golden l'a montré en une minute.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 19 nov. 2026 ; ce qui est fait est dans les sections 7.

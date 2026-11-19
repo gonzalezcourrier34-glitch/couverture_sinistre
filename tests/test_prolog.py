@@ -93,6 +93,31 @@ def contrat_sans(tmp_path, *articles):
     return Contrat(f)
 
 
+def test_extension_de_definition(tmp_path):
+    """7.69 : « nous étendons la garantie au contenu lors d'un séjour temporaire » élargit le lieu assuré pour
+    toutes les garanties qui l'emploient. L'extension n'est jamais présumée, et n'est demandée que si la
+    déclaration l'entame."""
+    regles = tmp_path / "c.pl"
+    regles.write_text(''':- discontiguous garantie/4, perimetre/2, circonstance/4, extension/4.
+evenement_traduit(incendie).
+definition(batiment, ou([f(lieu, logement), f(lieu, cave)]), '12', "les constructions à l'adresse").
+extension(batiment, et([f(sejour_temporaire, oui), f(lieu, autre_batiment)]), '3.1', "le contenu lors d'un séjour temporaire").
+garantie(incendie, "Incendie", '2.1', "Nous couvrons l'incendie").
+perimetre(incendie, f(evenement, incendie)).
+perimetre(incendie, concept(batiment)).
+''', encoding="utf-8")
+    contrat = Contrat(regles)
+    def d(**f):
+        return Moteur(contrat, {"evenement": "incendie", **f}).decider()
+    assert d(lieu="logement")["decision"] == "COUVERT"
+    assert d(lieu="autre_batiment", sejour_temporaire="oui")["decision"] == "COUVERT"
+    assert d(lieu="autre_batiment", sejour_temporaire="non")["decision"] == "NON_COUVERT"
+    entamee = d(lieu="autre_batiment")
+    assert entamee["decision"] == "INCERTAIN" and entamee["retenues"][0]["questions"] == ["sejour_temporaire"]
+    inconnu = d()
+    assert inconnu["retenues"][0]["questions"] == ["lieu"], "le séjour n'est pas demandé quand rien ne l'évoque"
+
+
 def test_garantie_accessoire_ne_change_jamais_la_decision(tmp_path):
     """7.68 : des frais de logement provisoire ne disent pas si un incendie est couvert. Une garantie accessoire
     n'entre pas dans la décision ; si le sinistre est couvert, elle est listée, avec ses questions."""
@@ -106,12 +131,18 @@ garantie(logement_provisoire, "Frais de logement provisoire", '4', "les frais de
 perimetre(logement_provisoire, f(evenement, incendie)).
 circonstance(logement_provisoire, f(non_habitabilite, oui), '4', "si le logement est inhabitable").
 accessoire(logement_provisoire).
+garantie(sejour, "Extension en séjour temporaire", '3.1', "en séjour temporaire").
+perimetre(sejour, f(sejour_temporaire, oui)).
+accessoire(sejour).
+garantie(complementaires, "Garanties complémentaires", '4', "en cas de sinistre assuré").
+accessoire(complementaires).
 ''', encoding="utf-8")
     contrat = Contrat(regles)
     couvert = Moteur(contrat, {"evenement": ["incendie"], "flammes": "oui"}).decider()
     assert couvert["decision"] == "COUVERT" and [g["id"] for g in couvert["garanties"]] == ["incendie"]
     acc = couvert["accessoires"]
-    assert [a["id"] for a in acc] == ["logement_provisoire"] and acc[0]["decision"] == "INCERTAIN"
+    assert [a["id"] for a in acc] == ["logement_provisoire", "complementaires"] and acc[0]["decision"] == "INCERTAIN", \
+        "sans périmètre, elle suit tout sinistre couvert ; au périmètre seulement possible (le séjour), elle n'est pas listée"
     assert "non_habitabilite" in acc[0]["questions"]
     refuse = Moteur(contrat, {"evenement": ["incendie"], "flammes": "non", "non_habitabilite": "oui"}).decider()
     assert refuse["decision"] == "NON_COUVERT" and refuse["accessoires"] == [], \
