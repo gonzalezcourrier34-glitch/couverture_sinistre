@@ -474,11 +474,6 @@
       "gravite": "à relire",
       "controle": "réserve",
       "message": "exclusion « piscines, sauf si mention en est faite aux conditions partic » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "prolog",
-      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
     }
   ]
 }

@@ -374,11 +374,6 @@
       "gravite": "à relire",
       "controle": "limite",
       "message": "limite « Lorsque les conditions particulières mentionnent que les bie » (pluies_inondations) : elle pose une condition ; circonstance ou garantie à part ?"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "prolog",
-      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
     }
   ]
 }

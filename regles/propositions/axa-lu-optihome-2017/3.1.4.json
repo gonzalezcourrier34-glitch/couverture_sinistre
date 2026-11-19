@@ -703,11 +703,6 @@
       "gravite": "info",
       "controle": "couverture",
       "message": "hors décision (3.1.4.1) : extensions aux frais de recherche de fuite et à l'huile minérale : des frais, sans effet sur la question de couverture"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "prolog",
-      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
     }
   ]
 }

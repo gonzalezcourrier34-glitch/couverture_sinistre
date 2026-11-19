@@ -67,7 +67,8 @@ V_CATA = var("catastrophe", ["tremblement_terre", "inondation", "ruissellement",
 p = DOCS["3.1.1"]["proposition"]; G = {g["id"]: g for g in p["garanties"]}
 G["incendie_base"]["perimetre"] = [ou(f("evenement", "incendie"), f("evenement", "explosion"), f("evenement", "foudre"),
                                       et(f("evenement", "electricite"), f("bien", "animal")), f("evenement", "fumee"),
-                                      f("chaleur_sans_feu", "oui")), {"concept": "batiment_designe"}]
+                                      et(ou(f("evenement", "incendie"), f("evenement", "autre")), f("chaleur_sans_feu", "oui"))),
+                                   {"concept": "batiment_designe"}]
 G["incendie_base"]["circonstances"][0]["condition"] = si(f("evenement", "incendie"), {"concept": "incendie"})
 G["decongelation"]["perimetre"] = [f("bien", "denrees_alimentaires")]
 G["linge"]["perimetre"] = [f("bien", "objet_divers"), f("lieu", "logement")]
@@ -98,7 +99,7 @@ fin("3.1.1", [opt_var("option_incendie", "incendie et périls assimilés"),
               V_STATUT], [
   "« applicables si les conditions particulières mentionnent la garantie » : réserve (option_incendie), retirée du périmètre où elle faisait poser une question à chaque incendie",
   "la définition de l'incendie (flammes qui se propagent) ne vaut que pour l'incendie : circonstance si(incendie, …) ; l'explosion, la foudre, la fumée n'en dépendent pas",
-  "électrocution : seulement des animaux (3.1.1.1.4)",
+  "électrocution : seulement des animaux (3.1.1.1.4) ; « action subite de la chaleur » : pour un incendie ou un autre événement, pas pour un vol (le banc posait la question pour un cambriolage, axa-v04)",
   "dégradations immobilières à l'occasion d'un vol : limitées aux éléments du bâtiment ; sans cela, tout vol de contenu était couvert par l'article incendie",
   "« à l'extérieur du bâtiment » = jardin ou terrasse, objets et non le bâtiment (règle 3 quater) ; la voie publique tuait le vol par agression de 3.1.6 (axa-v07)",
   "vandalisme : « l'assuré est propriétaire » n'est pas `proprietaire = assure` (à qui sont les biens) : variable statut_logement ; les trois conditions en réserves",

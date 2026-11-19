@@ -2384,6 +2384,39 @@ faits dont dépend une réponse ferme (le moteur les désigne en quelques millis
 seulement quand la réponse est ferme. Le banc note le modèle de confirmation dans son résultat et le nom de son
 rapport. Un test vérifie que c'est ce modèle, et non le lecteur, qui tranche.
 
+### 7.67 Confirmer avec Mistral Large : moins de couverts à tort, plus de « je ne sais pas », trois fois plus lent
+
+Même vocabulaire, même golden (v9), Mistral Small pour la lecture, trois exécutions :
+
+| Foyer, 97 cas | Confirmation par Small | Confirmation par Large |
+|---|---|---|
+| Chaîne : justes / exactes | 89 % / 75 % | 86 % / 67 % |
+| **Couverts à tort** (par exécution) | **4** | **1,67** |
+| Refus à tort | 0,67 | 0 |
+| Réponses « couvert / non couvert / incertain » (sur 291) | 130 / 94 / 67 | 89 / 81 / 121 |
+| Un cas à la fois, médiane / 95e centile | 3,2 s / 19 s | **8,6 s / 40 s** |
+
+AXA (15 cas), confirmation par Large : 82 % justes (76 % avec Small), 0 couvert et 0 refus à tort, 1 instable ;
+médiane 7,8 s.
+
+**Ce que fait Large.** Il refuse la vitre rayée lue « vandalisme », le jardin lu « terrasse », les clés sous le
+paillasson : bougie-04, red-b06 et g-p03 ne couvrent plus à tort. Il ne voit pas le bain à bulles lu
+« aquarium » (g2-p08, 3 sur 3) : l'erreur n'est pas dans un fait décisif que l'on confirme, mais dans le choix de
+la valeur. Et il est plus exigeant : dix cas justement couverts (la bougie qui brûle la table, un dégât des eaux
+simple…) deviennent « incertains », parce qu'il juge « non dit » ce que la déclaration implique.
+
+**Décision : l'option reste désactivée par défaut**, documentée et mesurée. Elle divise les couverts à tort par
+2,4 au prix de 3 points de réponses justes et d'un temps de réponse multiplié par 2,7 (la porte « 95e centile
+≤ 10 s » échoue). Pour un gestionnaire qui préfère un « je ne sais pas » à une erreur, elle se justifie ; pour un
+traitement de masse, non. C'est un réglage d'exploitation (`COUVERTURE_MODELE_CONFIRMATION`), pas un choix de code.
+
+**Deux réglages AXA au passage.** « L'action subite de la chaleur » (3.1.1.1.6) faisait poser la question pour un
+cambriolage : limitée à l'incendie et aux autres événements. axa-v07 n'attend plus la question de la formule
+(la réponse couverte sous réserve des options ne la pose plus) : golden v10.
+
+**Leçon 80.** Un juge plus fort corrige les erreurs de fait, pas les erreurs de choix ; et un juge plus strict
+coûte des réponses justes. Le bon réglage dépend de qui lit la réponse.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 18 nov. 2026, 22 h 40 ; ce qui est fait est dans les sections 7.
@@ -2493,3 +2526,4 @@ Tenu à jour le 18 nov. 2026, 22 h 40 ; ce qui est fait est dans les sections 7.
 77. Rédiger en parallèle va trois fois plus vite, mais chaque proposition invente son vocabulaire : la relecture commence par harmoniser les noms.
 78. Chaque garantie traduite ouvre une route de plus vers « couvert » : une valeur nouvelle doit être rattachée à celles que les règles connaissent déjà.
 79. Une garantie optionnelle (« si les conditions particulières le mentionnent ») est une réserve, jamais une question au déclarant.
+80. Un juge plus fort corrige les erreurs de fait, pas les erreurs de choix ; un juge plus strict coûte des réponses justes.

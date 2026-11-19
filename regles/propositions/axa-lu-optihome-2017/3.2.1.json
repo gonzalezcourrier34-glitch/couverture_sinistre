@@ -297,11 +297,6 @@
       "gravite": "info",
       "controle": "couverture",
       "message": "hors décision (3.2.1.2) : un terrain de golf ou de tennis n'est pas un bien d'un contrat habitation de particulier : sans effet en pratique"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "prolog",
-      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
     }
   ]
 }

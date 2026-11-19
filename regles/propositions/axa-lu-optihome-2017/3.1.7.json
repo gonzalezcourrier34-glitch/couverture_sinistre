@@ -663,16 +663,6 @@
   },
   "controles": [
     {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "obligation (3.1.7.4) : citation réparée en « Lorsque les biens assurés se trouvent à l’intérieur d’un véhicule inoccupé, la g »"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "obligation (3.1.7.4) : citation réparée en « Lorsque les biens assurés se trouvent à l’intérieur d’un véhicule inoccupé, la g »"
-    },
-    {
       "gravite": "à relire",
       "controle": "limite",
       "message": "limite « 1 0.000 € par sinistre lorsque les conditions particulières  » (materiel_multimedia_bris) : elle pose une condition ; circonstance ou garantie à part ?"
@@ -731,11 +721,6 @@
       "gravite": "info",
       "controle": "couverture",
       "message": "hors décision (3.1.7.2) : dérogation aux exclusions pour l'indemnisation : sans effet sur la question de couverture"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "prolog",
-      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
     }
   ]
 }
