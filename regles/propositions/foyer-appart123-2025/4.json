@@ -93,5 +93,22 @@
         "pourquoi": "Procédure de contestation complexe"
       }
     ]
-  }
+  },
+  "controles": [
+    {
+      "gravite": "à relire",
+      "controle": "limite",
+      "message": "limite « • frais liés aux garanties dégâts causés par l'eau et le maz » (garanties_complementaires) : elle pose une condition ; circonstance ou garantie à part ?"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "déclaré non traduit (4~2) : « Barème appliqué en % de ces indemnités Jusqu’à 7.500 EUR 5% De 7.500 EUR à 50.000 EUR 375 EUR + 3,5% » — Barème détaillé non traduisible en montant simple (garanties accessoires : sans effet sur la décision)"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "déclaré non traduit (4~2) : « Uniquement pour les frais d’expertise dépassant le barème prévu ci-dessus : en cas de contestation s » — Procédure de contestation complexe (garanties accessoires : sans effet sur la décision)"
+    }
+  ]
 }

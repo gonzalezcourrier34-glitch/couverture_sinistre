@@ -358,3 +358,57 @@ exclusion(degradations_vol_vandalisme, et([f(bien, materiaux_construction), ou([
     "aux matériaux à pied d'œuvre se trouvant à l’extérieur ou dans un bâtiment non fermé à clé").
 exclusion(degradations_vol_vandalisme, ou([f(auteur, assure), f(auteur, famille), f(auteur, locataire), f(auteur, personnel_prive)]), tout, oui, '2.11',
     "par ou avec la complicité d'un assuré, d'un descendant ou ascendant, du conjoint ou partenaire de chacun d'eux ou d'un locataire ou des personnes vivant à son foyer").
+
+% --- Art. 3.1 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
+extension(batiment, et([f(sejour_temporaire, oui), f(lieu, autre_batiment), concept(contenu)]), '3.1',
+    "Le déplacement de votre contenu à l'occasion d'un séjour temporaire dans un bâtiment à concurrence de 5.000 EUR (à l’exception d’une caravane tractable ou d’un mobilhome pour lesquels la limite d’indemnisation est fixée à 500 EUR)").
+extension(batiment, et([f(demenagement, oui), f(lieu, vehicule), f(detenteur_vehicule, oui), concept(contenu)]), '3.1',
+    "Le contenu est également couvert lors de son transport dans un véhicule dont vous êtes le détenteur à concurrence de 5.000 EUR.").
+garantie(extension_residence_remplacement, "Extension - Résidence de remplacement (RC locative)", '3.1',
+    "La résidence de remplacement (meublée ou non) : si votre résidence principale est temporairement inhabitable à la suite d'un sinistre, nous couvrons pendant 18 mois votre responsabilité locative pour les dégâts causés à cette résidence de remplacement").
+perimetre(extension_residence_remplacement, f(residence_principale, oui)).
+perimetre(extension_residence_remplacement, f(residence_principale_inhabitable, oui)).
+perimetre(extension_residence_remplacement, f(lieu, autre_batiment)).
+exclusion(extension_residence_remplacement, non(f(couverture_rc_locative, oui)), tout, oui, '3.1',
+    "Si nous couvrons votre résidence principale, et en fonction des couvertures (RC locative et/ou contenu) mentionnées dans vos conditions particulières").
+limite(extension_residence_remplacement, '3.1', "jusqu'à concurrence de 1.000.000 EUR", "1000000 EUR").
+limite(extension_residence_remplacement, '3.1', "pendant 18 mois", "18 mois").
+garantie(extension_residence_villegiature, "Extension - Résidence de villégiature (RC contractuelle)", '3.1',
+    "La résidence de villégiature (meublée ou non), à l'occasion d'un séjour temporaire nous couvrons votre responsabilité contractuelle pour les dégâts causés à cette résidence de villégiature, l'hôtel ou un logement similaire").
+perimetre(extension_residence_villegiature, f(sejour_temporaire, oui)).
+perimetre(extension_residence_villegiature, f(lieu, autre_batiment)).
+exclusion(extension_residence_villegiature, non(f(couverture_rc_locative, oui)), tout, oui, '3.1',
+    "Si nous couvrons votre résidence principale, et en fonction des couvertures (RC locative et/ou contenu) mentionnées dans vos conditions particulières").
+limite(extension_residence_villegiature, '3.1', "jusqu'à concurrence de 1.000.000 EUR", "1000000 EUR").
+garantie(extension_local_fete_familiale, "Extension - Local de fête de famille (RC locative)", '3.1',
+    "Le local que vous occupez à l’occasion d’une fête de famille, c’est-à-dire une festivité privée à caractère familial. Nous couvrons votre responsabilité locative pour les dégâts que vous causez à ce local. Les tentes, chapiteaux et péniches à quai sont assimilés aux locaux de fête").
+perimetre(extension_local_fete_familiale, f(occasion_fete_familiale, oui)).
+perimetre(extension_local_fete_familiale, f(lieu, autre_batiment)).
+exclusion(extension_local_fete_familiale, non(f(couverture_rc_locative, oui)), tout, oui, '3.1',
+    "Si nous couvrons votre résidence principale, et en fonction des couvertures (RC locative et/ou contenu) mentionnées dans vos conditions particulières").
+limite(extension_local_fete_familiale, '3.1', "jusqu'à concurrence de 1.000.000 EUR", "1000000 EUR").
+garantie(extension_abandon_recours_famille, "Extension - Abandon de recours envers les parents ou alliés en ligne directe", '3.1',
+    "L’abandon de recours : nous abandonnons tout recours envers les parents ou alliés en ligne directe auxquels vous prêtez ou louez votre habitation sauf en cas de malveillance ou dans la mesure où ces personnes disposent d’une assurance garantissant leur responsabilité").
+perimetre(extension_abandon_recours_famille, f(auteur, famille)).
+perimetre(extension_abandon_recours_famille, f(pret_ou_location_habitation, oui)).
+exclusion(extension_abandon_recours_famille, f(malveillance_auteur, oui), tout, oui, '3.1',
+    "sauf en cas de malveillance").
+exclusion(extension_abandon_recours_famille, f(assurance_responsabilite_tiers, oui), tout, oui, '3.1',
+    "ou dans la mesure où ces personnes disposent d’une assurance garantissant leur responsabilité").
+exclusion(extension_abandon_recours_famille, non(f(couverture_rc_locative, oui)), tout, oui, '3.1',
+    "Si nous couvrons votre résidence principale, et en fonction des couvertures (RC locative et/ou contenu) mentionnées dans vos conditions particulières").
+accessoire(extension_residence_remplacement).
+accessoire(extension_residence_villegiature).
+accessoire(extension_local_fete_familiale).
+accessoire(extension_abandon_recours_famille).
+
+% --- Art. 4 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
+garantie(garanties_complementaires, "Garanties complémentaires (frais, pertes)", '4~1',
+    "Vous bénéficiez des garanties complémentaires en cas de sinistre assuré par une garantie de base ou par une garantie facultative que vous avez souscrite et ce compris les événements survenant en dehors de l’habitation mentionnée en conditions particulières.").
+limite(garanties_complementaires, '4~1', "• frais de sauvetage • frais de déblai et de démolition des biens assurés, en ce compris les frais d'abattage, d'élagage et d'enlèvement de l'arbre ou du pylône qui a causé les dégâts • frais de nettoyage des locaux endommagés après travaux • frais de conservation et d’entreposage des biens sauvés", "sans plafond").
+limite(garanties_complementaires, '4~1', "• frais de logement provisoire pendant la durée normale de non habitabilité de votre bâtiment • le chômage immobilier pendant la durée normale de reconstruction de votre bâtiment. Cette indemnité ne peut se cumuler pour une même période et un même logement sinistré avec la garantie des frais de logement provisoire et ce pour une période maximale de 18 mois.", "18 mois max").
+limite(garanties_complementaires, '4~1', "• frais liés aux garanties dégâts causés par l'eau et le mazout c'est-à-dire les frais liés à la recherche, la réparation ou le remplacement de la partie de canalisation à l'origine du sinistre y compris les radiateurs, ainsi que la remise en état consécutive. Nous prenons en charge ces frais jusqu'à concurrence de maximum 1.100 EUR lorsque les biens assurés n'ont pas été endommagés. Nous couvrons également la moins-value du bâtiment pouvant en résulter et fixée par l'expert, jusqu'à concurrence de maximum 2.200 EUR par sinistre", "1100 EUR / 2200 EUR").
+limite(garanties_complementaires, '4~2', "• l’avance de fonds jusqu'à 7.700 EUR, pour couvrir les frais de première nécessité et les réparations en cas de non habitabilité du bâtiment. Cette avance n'implique aucune reconnaissance de la prise en charge du sinistre et est déduite de l'indemnité définitive éventuelle", "7700 EUR").
+limite(garanties_complementaires, '4~2', "• frais médicaux et pharmaceutiques à concurrence de 2.000 EUR.", "2000 EUR").
+limite(garanties_complementaires, '4~2', "• frais d’expertise c'est-à-dire les frais et honoraires de votre expert et le cas échéant ceux d’un tiersexpert, calculés en pourcentage des indemnités dues hors TVA, conformément au barème repris ciaprès, à l'exclusion de celles relatives aux assurances de responsabilité et des pertes indirectes.", "barème % max 25000 EUR").
+accessoire(garanties_complementaires).

@@ -646,10 +646,6 @@
         "non"
       ],
       "question": "Les biens se trouvaient-ils hors de chez vous, lors d'un séjour temporaire (vacances, hôtel, location) ?",
-      "pour": [
-        "vol",
-        "vandalisme"
-      ],
       "aide": {
         "oui": "en vacances, à l'hôtel, en location, chez quelqu'un, pour un temps",
         "non": "chez vous, ou ailleurs sans séjour"
@@ -1095,10 +1091,7 @@
       "aide": {
         "oui": "en déménageant, en transportant les meubles",
         "non": "hors de tout déménagement"
-      },
-      "pour": [
-        "heurt"
-      ]
+      }
     },
     "choc_deux_corps_durs": {
       "valeurs": [
@@ -1656,6 +1649,83 @@
       "pour": [
         "catastrophe_naturelle"
       ]
+    },
+    "couverture_rc_locative": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Vos conditions particulières couvrent-elles la responsabilité locative (RC locative) ?",
+      "aide": {
+        "oui": "le contrat couvre la responsabilité locative",
+        "non": "le contrat ne couvre pas la RC locative"
+      }
+    },
+    "detenteur_vehicule": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Êtes-vous le détenteur du véhicule dans lequel le contenu est transporté pendant le déménagement ?",
+      "aide": {
+        "oui": "l'assuré est le détenteur du véhicule (propriétaire, locataire, emprunteur...)",
+        "non": "l'assuré n'est pas le détenteur du véhicule"
+      }
+    },
+    "residence_principale_inhabitable": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Votre résidence principale est-elle temporairement inhabitable à la suite d'un sinistre ?",
+      "aide": {
+        "oui": "la résidence principale est inhabitable (dégâts importants, incendie, inondation...)",
+        "non": "la résidence principale est habitable"
+      }
+    },
+    "occasion_fete_familiale": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "S'agit-il d'une fête de famille (festivité privée à caractère familial) ?",
+      "aide": {
+        "oui": "l'assuré occupe un local pour une fête de famille (mariage, anniversaire familial, réception familiale...)",
+        "non": "ce n'est pas une fête de famille"
+      }
+    },
+    "pret_ou_location_habitation": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Avez-vous prêté ou loué votre habitation à cette personne (parent ou allié en ligne directe) ?",
+      "aide": {
+        "oui": "l'assuré a prêté ou loué son habitation à ce membre de la famille",
+        "non": "l'assuré n'a pas prêté ou loué son habitation à cette personne"
+      }
+    },
+    "malveillance_auteur": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'auteur du dommage (parent ou allié) a-t-il agi avec malveillance ?",
+      "aide": {
+        "oui": "le parent/allié a causé le dommage volontairement, avec malveillance",
+        "non": "le dommage n'est pas dû à une malveillance volontaire"
+      }
+    },
+    "assurance_responsabilite_tiers": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Cette personne (parent ou allié en ligne directe) dispose-t-elle d'une assurance garantissant sa responsabilité civile ?",
+      "aide": {
+        "oui": "le parent/allié dispose d'une assurance responsabilité civile",
+        "non": "le parent/allié ne dispose pas d'assurance responsabilité civile"
+      }
     }
   }
 }

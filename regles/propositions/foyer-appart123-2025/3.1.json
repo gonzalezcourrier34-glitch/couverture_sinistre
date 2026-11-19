@@ -45,20 +45,24 @@
             ]
           }
         ],
-        "circonstances": [
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
           {
             "condition": {
-              "f": [
-                "couverture_rc_locative",
-                "oui"
-              ]
+              "non": {
+                "f": [
+                  "couverture_rc_locative",
+                  "oui"
+                ]
+              }
             },
+            "portee": "tout",
+            "a_demander": true,
             "article": "3.1",
             "texte": "Si nous couvrons votre résidence principale, et en fonction des couvertures (RC locative et/ou contenu) mentionnées dans vos conditions particulières"
           }
         ],
-        "obligations": [],
-        "exclusions": [],
         "limites": [
           {
             "article": "3.1",
@@ -92,20 +96,24 @@
             ]
           }
         ],
-        "circonstances": [
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
           {
             "condition": {
-              "f": [
-                "couverture_rc_locative",
-                "oui"
-              ]
+              "non": {
+                "f": [
+                  "couverture_rc_locative",
+                  "oui"
+                ]
+              }
             },
+            "portee": "tout",
+            "a_demander": true,
             "article": "3.1",
             "texte": "Si nous couvrons votre résidence principale, et en fonction des couvertures (RC locative et/ou contenu) mentionnées dans vos conditions particulières"
           }
         ],
-        "obligations": [],
-        "exclusions": [],
         "limites": [
           {
             "article": "3.1",
@@ -134,20 +142,24 @@
             ]
           }
         ],
-        "circonstances": [
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
           {
             "condition": {
-              "f": [
-                "couverture_rc_locative",
-                "oui"
-              ]
+              "non": {
+                "f": [
+                  "couverture_rc_locative",
+                  "oui"
+                ]
+              }
             },
+            "portee": "tout",
+            "a_demander": true,
             "article": "3.1",
             "texte": "Si nous couvrons votre résidence principale, et en fonction des couvertures (RC locative et/ou contenu) mentionnées dans vos conditions particulières"
           }
         ],
-        "obligations": [],
-        "exclusions": [],
         "limites": [
           {
             "article": "3.1",
@@ -176,18 +188,7 @@
             ]
           }
         ],
-        "circonstances": [
-          {
-            "condition": {
-              "f": [
-                "couverture_rc_locative",
-                "oui"
-              ]
-            },
-            "article": "3.1",
-            "texte": "Si nous couvrons votre résidence principale, et en fonction des couvertures (RC locative et/ou contenu) mentionnées dans vos conditions particulières"
-          }
-        ],
+        "circonstances": [],
         "obligations": [],
         "exclusions": [
           {
@@ -213,6 +214,20 @@
             "a_demander": true,
             "article": "3.1",
             "texte": "ou dans la mesure où ces personnes disposent d’une assurance garantissant leur responsabilité"
+          },
+          {
+            "condition": {
+              "non": {
+                "f": [
+                  "couverture_rc_locative",
+                  "oui"
+                ]
+              }
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1",
+            "texte": "Si nous couvrons votre résidence principale, et en fonction des couvertures (RC locative et/ou contenu) mentionnées dans vos conditions particulières"
           }
         ],
         "limites": []
@@ -383,5 +398,17 @@
         "pourquoi": "la nouvelle adresse est le logement de l'assuré : le vocabulaire ne distingue pas deux adresses, le bâtiment la couvre déjà"
       }
     ]
-  }
+  },
+  "controles": [
+    {
+      "gravite": "à relire",
+      "controle": "réserve",
+      "message": "exclusion « sauf en cas de malveillance » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.1) : la nouvelle adresse est le logement de l'assuré : le vocabulaire ne distingue pas deux adresses, le bâtiment la couvre déjà"
+    }
+  ]
 }
