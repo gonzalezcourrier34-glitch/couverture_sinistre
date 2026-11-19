@@ -139,6 +139,13 @@ def test_vocabulaire_nouveau_declare_bloque_jusqu_a_acceptation(voc_etendu):
     redaction.accepter_vocabulaire(prop, voc_etendu)
     assert json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]["grele"]["aide"] == \
         {"oui": "grêlons, impacts de grêle"}, "l'aide est reprise, pour les seules valeurs déclarées (7.62)"
+    prop["vocabulaire_manquant"] = [{"variable": "bien", "valeurs": ["tablette"], "parent": "electronique"}]
+    redaction.accepter_vocabulaire(prop, voc_etendu)
+    assert json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]["bien"]["parents"]["tablette"] == ["electronique"], \
+        "une valeur plus fine est rattachée à sa valeur existante (7.64)"
+    sans = copy.deepcopy(BONNE)
+    sans["vocabulaire_manquant"] = [{"variable": "bien", "valeurs": ["liseuse"], "question": "?"}]
+    assert any("sans « parent »" in p["message"] for p in controles(sans))
 
 
 def test_fait_invente_non_declare():
@@ -329,7 +336,7 @@ def test_jeu_redaction_coherent():
 def test_consigne_de_redaction_versionnee():
     from couverture.consignes import CONSIGNES
 
-    assert CONSIGNES["couverture-redaction-regles"][2] == "v6"
+    assert CONSIGNES["couverture-redaction-regles"][2] == "v7"
 
 
 # --- Après la première rédaction réelle (Mistral Large, 17 nov. 2026, docs/DEMARCHE.md 7.20) ---------------

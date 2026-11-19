@@ -1,0 +1,469 @@
+{
+  "meta": {
+    "article": "3.2.1",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-19",
+    "consigne": "redaction-regles v6"
+  },
+  "proposition": {
+    "evenements": [
+      "tremblement_terre"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "tremblement_terre",
+        "nom": "Tremblement de terre",
+        "article": "3.2.1.1",
+        "texte": "La Compagnie garantit, sous réserve des exclusions générales et des exclusions spécifiques, les dommages matériels causés aux biens désignés par un tremblement de terre.",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "tremblement_terre"
+            ]
+          },
+          {
+            "f": [
+              "formule",
+              "serenite_plus"
+            ]
+          },
+          {
+            "concept": "batiment_designe"
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "evenement",
+                "tremblement_terre"
+              ]
+            },
+            "article": "3.2.1.1",
+            "texte": "Sont considérés comme un seul sinistre le séisme initial et les éventuelles répliques survenues dans les 72h, de même que les dommages tombant sous le coup d’un péril assuré qui en sont la conséquence directe."
+          }
+        ],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "travaux_construction",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "lien_causal_travaux",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.2.1.2",
+            "texte": "survenus alors que le bâtiment est en cours de construction, transformation ou rénovation dans la mesure où il existe un lien causal entre les dommages et les travaux en cours"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "lieu",
+                        "jardin"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "lieu",
+                        "terrasse"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "lieu",
+                        "abri_jardin"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "lieu",
+                        "parties_communes"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "non": {
+                    "f": [
+                      "fixe_a_demeure",
+                      "oui"
+                    ]
+                  }
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.2.1.2",
+            "texte": "survenus aux objets se trouvant à l’extérieur du bâtiment sauf s’ils sont fixés à demeure"
+          },
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "construction_facilement_deplacable",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "construction_delabree",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "contenu_construction_delabree_ou_deplacable",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.2.1.2",
+            "texte": "aux constructions faciles à déplacer ou à démonter, délabrées ou en cours de démolition de même qu’à leur éventuel contenu"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "annexe_ancree_beton",
+                    "non"
+                  ]
+                },
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "lieu",
+                        "annexe"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "lieu",
+                        "abri_jardin"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.2.1.2",
+            "texte": "aux dépendances et abris de jardins qui ne reposent pas sur des fondations"
+          },
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "bien",
+                    "plantation"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "terrain_jardin"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.2.1.2",
+            "texte": "aux jardins et plantations"
+          },
+          {
+            "condition": {
+              "f": [
+                "bien",
+                "terrain_golf_tennis"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.2.1.2",
+            "texte": "aux terrains de golf ou de tennis"
+          },
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "bien",
+                    "vehicule_moteur"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "vehicule_aerien"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "vehicule_maritime"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "vehicule_fluvial"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.2.1.2",
+            "texte": "aux véhicules terrestres à moteur, aériens, maritimes ou fluviaux"
+          }
+        ],
+        "limites": [
+          {
+            "article": "3.2.1.3",
+            "texte": "Lors du règlement de l’indemnité, l’Assuré conserve à sa charge un montant de 10% du dommage avec un minimum de 1.500 €.",
+            "montant": "10% du dommage avec un minimum de 1.500 €"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "evenement",
+        "valeurs": [
+          "tremblement_terre"
+        ],
+        "question": "S'agit-il d'un tremblement de terre (séisme) ?",
+        "pourquoi": "la garantie couvre spécifiquement le tremblement de terre, distinct des autres catastrophes naturelles",
+        "plus_proche": "catastrophe_naturelle",
+        "aide": {
+          "tremblement_terre": "il y a eu un séisme, un tremblement de terre"
+        }
+      },
+      {
+        "variable": "formule",
+        "valeurs": [
+          "serenite_plus"
+        ],
+        "question": "La formule mentionnée dans les conditions particulières est-elle 'Sérénité +' ?",
+        "pourquoi": "la garantie tremblement de terre fait partie de l'option Sérénité + et n'est accordée que si les conditions particulières le mentionnent",
+        "plus_proche": "privilege, active, standard",
+        "aide": {
+          "serenite_plus": "les conditions particulières mentionnent l'option Sérénité +"
+        }
+      },
+      {
+        "variable": "fixe_a_demeure",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "L'objet se trouvant à l'extérieur du bâtiment était-il fixé à demeure (scellé, ancré de façon permanente au sol ou au mur) ?",
+        "pourquoi": "réserve de l'exclusion des objets à l'extérieur : ils sont couverts s'ils sont fixés à demeure",
+        "plus_proche": "aucune",
+        "aide": {
+          "oui": "l'objet était fixé à demeure, scellé, ancré",
+          "non": "l'objet était simplement posé, mobile"
+        }
+      },
+      {
+        "variable": "construction_facilement_deplacable",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La construction endommagée est-elle facile à déplacer ou à démonter (abri de jardin non ancré, cabane démontable, etc.) ?",
+        "pourquoi": "exclusion des constructions faciles à déplacer ou à démonter",
+        "plus_proche": "construction_delabree",
+        "aide": {
+          "oui": "c'est une construction légère, démontable, non fixée au sol",
+          "non": "c'est une construction fixe, maçonnée, permanente"
+        }
+      },
+      {
+        "variable": "contenu_construction_delabree_ou_deplacable",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le bien endommagé se trouvait-il à l'intérieur d'une construction facile à déplacer, délabrée ou en cours de démolition ?",
+        "pourquoi": "l'exclusion vise aussi le contenu de ces constructions",
+        "plus_proche": "aucune",
+        "aide": {
+          "oui": "le bien était dans un abri démontable ou une construction délabrée",
+          "non": "le bien était dans une construction solide et permanente"
+        }
+      },
+      {
+        "variable": "bien",
+        "valeurs": [
+          "terrain_jardin"
+        ],
+        "question": "Le bien endommagé est-il le terrain de jardin lui-même (terre, gazon, allées) ?",
+        "pourquoi": "exclusion des jardins (en plus des plantations)",
+        "plus_proche": "plantation",
+        "aide": {
+          "terrain_jardin": "c'est le sol du jardin, la pelouse, les allées"
+        }
+      },
+      {
+        "variable": "bien",
+        "valeurs": [
+          "terrain_golf_tennis"
+        ],
+        "question": "Le bien endommagé est-il un terrain de golf ou de tennis ?",
+        "pourquoi": "exclusion spécifique des terrains de golf ou de tennis",
+        "plus_proche": "plantation",
+        "aide": {
+          "terrain_golf_tennis": "c'est un terrain de golf ou de tennis"
+        }
+      },
+      {
+        "variable": "bien",
+        "valeurs": [
+          "vehicule_aerien",
+          "vehicule_maritime",
+          "vehicule_fluvial"
+        ],
+        "question": "Le bien endommagé est-il un véhicule aérien, maritime ou fluvial ?",
+        "pourquoi": "exclusion des véhicules aériens, maritimes ou fluviaux en complément des véhicules terrestres à moteur",
+        "plus_proche": "vehicule_moteur",
+        "aide": {
+          "vehicule_aerien": "c'est un avion, un hélicoptère, un drone",
+          "vehicule_maritime": "c'est un bateau de mer, un yacht",
+          "vehicule_fluvial": "c'est un bateau de rivière, une péniche"
+        }
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "evenement = tremblement_terre : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.2.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "formule = serenite_plus : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.2.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "fixe_a_demeure = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.2.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "construction_facilement_deplacable = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.2.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "contenu_construction_delabree_ou_deplacable = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.2.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = terrain_jardin : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.2.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = terrain_golf_tennis : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.2.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = vehicule_aerien : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.2.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = vehicule_maritime : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.2.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = vehicule_fluvial : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.2.1`) ou à remplacer"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 3.2.1.2 (et non 3.2.1.2.1)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 3.2.1.2 (et non 3.2.1.2.2)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 3.2.1.2 (et non 3.2.1.2.3)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 3.2.1.2 (et non 3.2.1.2.4)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 3.2.1.2 (et non 3.2.1.2.4)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 3.2.1.2 (et non 3.2.1.2.4)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 3.2.1.2 (et non 3.2.1.2.5)"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « aux jardins et plantations » : ne vise que plantation, terrain_jardin, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « aux terrains de golf ou de tennis » : ne vise que terrain_golf_tennis, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « aux véhicules terrestres à moteur, aériens, maritimes ou flu » : ne vise que vehicule_aerien, vehicule_fluvial, vehicule_maritime, vehicule_moteur, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    }
+  ]
+}

@@ -32,7 +32,7 @@
         "attentat": "émeute, manifestation qui dégénère, attentat, conflit social",
         "fumee": "suie ou fumée qui salit ou noircit, sans incendie",
         "autre": "rien de ce qui précède",
-        "vandalisme": "dégradations volontaires par un tiers : tags, rayures, portes ou vitres abîmées, sans vol",
+        "vandalisme": "quelqu'un a abîmé exprès : tags, vitres cassées, portes rayées par un tiers ; pas une simple rayure dont on ignore la cause",
         "merule": "champignon (mérule) qui attaque le bois du bâtiment",
         "conflit_du_travail": "grève, lock-out, manifestation de travailleurs"
       }
@@ -119,6 +119,15 @@
         ],
         "objet_verre_non_vitre": [
           "objet_divers"
+        ],
+        "appareil_informatique": [
+          "electronique"
+        ],
+        "denrees_alimentaires": [
+          "objet_divers"
+        ],
+        "citerne": [
+          "element_batiment"
         ]
       },
       "aide": {
@@ -272,7 +281,11 @@
       "question": "S'agit-il d'une simple disparition, sans trace de vol ?",
       "pour": [
         "vol"
-      ]
+      ],
+      "aide": {
+        "oui": "l'objet a disparu et rien ne montre qu'il a été volé (on ne sait pas où il est)",
+        "non": "il y a des signes de vol : effraction, voleur vu, objets fouillés"
+      }
     },
     "depot_moins_30j": {
       "valeurs": [

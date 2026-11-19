@@ -2281,6 +2281,37 @@ décision. La responsabilité civile immeuble (2.5) demande, comme la section 5,
 **Leçon 77.** Rédiger en parallèle va trois fois plus vite, mais chaque proposition invente son vocabulaire : la
 relecture commence par harmoniser les noms, avant de juger le fond.
 
+### 7.64 Le banc après le lot A : la chaîne recule, et la cause est dans le vocabulaire
+
+Banc Foyer, golden v8, Mistral Small (sur le poste, 128 tests et `--controler` sans rien de bloquant) :
+
+| | Avant le lot A (7.60) | Après |
+|---|---|---|
+| Règles seules : justes / exactes | 100 % / 81 % | 100 % / **92 %** |
+| Chaîne : justes / exactes | 90 % / 67 % | 89 % / **76 %** |
+| Couverts à tort | 1,33 | **4,33** |
+| Refus à tort | 1 | 0,33 |
+| Contradictions de lecture | 17 cas | 26 cas |
+| 95e centile, un cas à la fois | 4,1 s | 39 s (médiane 3,6 s : lenteur de l'API) |
+
+L'exactitude monte (les garanties traduites répondent là où l'on disait « je ne sais pas »), mais trois cas
+nouveaux deviennent couverts à tort. Lecture cas par cas :
+- **val-03** (ordinateur d'amis hébergés, volé) : l'ordinateur est lu `appareil_informatique`, valeur ajoutée
+  par 2.6. Elle n'était rattachée à rien : ce n'était plus de l'« électronique », donc plus du « contenu » pour la
+  garantie vol écrite avant elle. **Défaut général** : une valeur plus fine d'une variable existante doit déclarer
+  sa valeur parente (le vocabulaire sait l'exprimer, `parents` ; ni la consigne ni l'acceptation ne le
+  demandaient). Corrigé : consigne v7 (`parent`), `--accepter-vocabulaire` le reprend, une valeur nouvelle sans
+  parent est « à relire » ; rattachements ajoutés pour `appareil_informatique` (électronique),
+  `denrees_alimentaires` (objet divers), `citerne` (élément du bâtiment).
+- **red-b06** (vitre rayée) : lu `vandalisme` sans que personne soit nommé ; la garantie 2.11 couvre alors. Aide
+  ajoutée : le vandalisme suppose que quelqu'un a abîmé exprès.
+- **g2-i04** (bijoux disparus après le plombier) : `simple_disparition = non` inventé. Aide ajoutée.
+- **bougie-04** : le jardin lu « terrasse », déjà vu (7.44).
+
+**Leçon 78.** Chaque garantie traduite ouvre une route de plus vers « couvert » : une lecture approximative qui
+ne menait nulle part peut désormais aboutir. Les aides de lecture et la hiérarchie des valeurs sont aussi
+importantes que les règles.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 18 nov. 2026, 22 h 40 ; ce qui est fait est dans les sections 7.
@@ -2388,3 +2419,4 @@ Tenu à jour le 18 nov. 2026, 22 h 40 ; ce qui est fait est dans les sections 7.
 75. Sur un contrat neuf, le banc trouve d'abord des erreurs de traduction, puis des erreurs de lecture.
 76. Une exclusion que rien n'évoque reste une réserve ; une exclusion que la déclaration entame devient une question (précise la leçon 56).
 77. Rédiger en parallèle va trois fois plus vite, mais chaque proposition invente son vocabulaire : la relecture commence par harmoniser les noms.
+78. Chaque garantie traduite ouvre une route de plus vers « couvert » : une valeur nouvelle doit être rattachée à celles que les règles connaissent déjà.

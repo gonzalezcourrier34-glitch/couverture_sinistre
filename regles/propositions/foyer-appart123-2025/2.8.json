@@ -212,11 +212,6 @@
       "gravite": "info",
       "controle": "couverture",
       "message": "hors décision (2.8-b) : des frais exclus, pas un sinistre exclu : sans effet sur la couverture"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "prolog",
-      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
     }
   ]
 }

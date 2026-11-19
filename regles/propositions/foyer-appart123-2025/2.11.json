@@ -343,11 +343,5 @@
     ],
     "non_traduit": []
   },
-  "controles": [
-    {
-      "gravite": "à relire",
-      "controle": "prolog",
-      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
-    }
-  ]
+  "controles": []
 }

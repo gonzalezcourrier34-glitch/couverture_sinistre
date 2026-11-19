@@ -25,8 +25,8 @@
     "source": "couverture.legalbench.SYSTEME_LEGALBENCH"
   },
   "couverture-redaction-regles": {
-    "version": "v6",
-    "empreinte": "89511657aebb321e",
+    "version": "v7",
+    "empreinte": "6b6d52df8cbe2bc6",
     "source": "couverture.redaction.SYSTEME_REDACTION"
   },
   "couverture-verification-faits": {

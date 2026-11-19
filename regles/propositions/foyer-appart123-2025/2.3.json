@@ -440,11 +440,6 @@
       "gravite": "info",
       "controle": "couverture",
       "message": "hors décision (2.3-a) : règle d'indemnisation des biens reconstruits, sans effet sur la question de couverture"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "prolog",
-      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
     }
   ]
 }

@@ -38,7 +38,7 @@ from .texte import normaliser
 from .validation import _compact, extrait_present, passage_exact
 
 PROPOSITIONS = prolog.DOSSIER / "propositions"
-VERSION = "v6"
+VERSION = "v7"
 IDENT = re.compile(r"^[a-z][a-z0-9_]*$")
 BLOQUANT, A_RELIRE, INFO = "bloquant", "à relire", "info"
 
@@ -57,7 +57,7 @@ La logique a trois valeurs : un fait que la déclaration ne donne pas est « inc
 
 ## Règles d'écriture
 1. Chaque garantie, définition, circonstance, obligation, exclusion et limite porte "article" (l'identifiant de clause fourni) et "texte" : une phrase COPIÉE MOT POUR MOT de cette clause. Pas de reformulation, pas de coupure, pas de « … ».
-2. N'emploie que les variables et les valeurs du vocabulaire. Si le texte exige un fait que le vocabulaire n'a pas, n'approxime pas avec un fait voisin : emploie une variable ou une valeur nouvelle ET déclare-la dans "vocabulaire_manquant" (variable, valeurs, question à poser à l'assuré, pourquoi, "plus_proche" : la variable existante la plus proche et pourquoi elle ne suffit pas, "aide" : pour chaque valeur, ce qu'un assuré dirait dans sa déclaration pour qu'on la retienne). Un humain décidera. Avant de créer une variable, relis les questions du vocabulaire : « agression » est une violence, « complicité de l'assuré » est un auteur, « vol simple » est un vol sans effraction ni violence ; une notion qui se dit avec des faits existants s'écrit avec eux, au besoin par un concept.
+2. N'emploie que les variables et les valeurs du vocabulaire. Si le texte exige un fait que le vocabulaire n'a pas, n'approxime pas avec un fait voisin : emploie une variable ou une valeur nouvelle ET déclare-la dans "vocabulaire_manquant" (variable, valeurs, question à poser à l'assuré, pourquoi, "plus_proche" : la variable existante la plus proche et pourquoi elle ne suffit pas, "aide" : pour chaque valeur, ce qu'un assuré dirait dans sa déclaration pour qu'on la retienne ; pour une valeur nouvelle d'une variable existante, "parent" : la valeur existante qui la contient, ex. un ordinateur est de l'« electronique »). Un humain décidera. Avant de créer une variable, relis les questions du vocabulaire : « agression » est une violence, « complicité de l'assuré » est un auteur, « vol simple » est un vol sans effraction ni violence ; une notion qui se dit avec des faits existants s'écrit avec eux, au besoin par un concept.
 3. Traduis TOUT le texte : chaque élément d'une liste d'exclusions devient une exclusion. Ce que tu ne sais pas exprimer va dans "non_traduit" sous la forme {"article", "texte", "pourquoi"}. N'omets jamais rien en silence : une exclusion oubliée fait couvrir à tort.
 3 bis. Une exclusion garde ses réserves et ses conditions : « à l'exception du mobilier de jardin » s'écrit {"et": [condition, {"non": réserve}]}, et « si l'Assuré n'occupe que partiellement le bâtiment » fait partie de la condition. Une réserve perdue fait refuser à tort.
 3 ter. « À moins que l'Assuré ne démontre… » est une réserve de l'exclusion : {"et": [condition, {"non": preuve}]}, avec "a_demander": true. Le moteur pose la question dès que la déclaration établit la condition (les travaux), et ne la pose pas sinon.
@@ -407,6 +407,11 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
             else:
                 noter(BLOQUANT, "vocabulaire", f"{v} = {x} : hors vocabulaire, et non déclaré")
     for m in prop.get("vocabulaire_manquant", []):
+        if m.get("variable") in voc and voc[m["variable"]].get("parents") and not m.get("parent"):
+            nouvelles = [x for x in m.get("valeurs", []) if x not in voc[m["variable"]]["valeurs"]]
+            if nouvelles:
+                noter(A_RELIRE, "vocabulaire", f"{m['variable']} = {', '.join(nouvelles)} : valeur nouvelle sans « parent » ; "
+                      f"les règles déjà écrites ne la reconnaîtront pas (un ordinateur qui n'est plus de l'électronique, 7.64)")
         if m.get("variable") not in voc and not m.get("aide"):
             noter(A_RELIRE, "vocabulaire", f"{m.get('variable')} : variable nouvelle sans « aide » par valeur ; "
                   f"elle sera mal lue (7.59)")
@@ -654,6 +659,11 @@ def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
             for x in nouvelles:
                 if (m.get("aide") or {}).get(x):
                     voc[v].setdefault("aide", {})[x] = str(m["aide"][x])
+                # Une valeur plus fine qu'une valeur existante doit y être rattachée : sans cela, un ordinateur lu
+                # `appareil_informatique` n'est plus de l'« electronique » pour les règles déjà écrites (7.64).
+                parent = (m.get("parent") or {}).get(x) if isinstance(m.get("parent"), dict) else m.get("parent")
+                if parent and parent in voc[v]["valeurs"] and parent != x:
+                    voc[v].setdefault("parents", {})[x] = [parent]
             ajouts += [f"{v} = {x}" for x in nouvelles]
         else:
             voc[v] = {"valeurs": valeurs, "question": m.get("question") or f"Préciser : {v}"}

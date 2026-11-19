@@ -1,0 +1,791 @@
+{
+  "meta": {
+    "article": "3.1.3",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-19",
+    "consigne": "redaction-regles v6",
+    "premiere_reponse": {
+      "proposition": {
+        "evenements": [
+          "electricite"
+        ],
+        "definitions": [],
+        "garanties": [
+          {
+            "id": "degats_electriques",
+            "nom": "Dégâts électriques",
+            "article": "3.1.3.1",
+            "texte": "La Compagnie assure les biens désignés contre l’action de l’électricité.",
+            "perimetre": [
+              {
+                "f": [
+                  "evenement",
+                  "electricite"
+                ]
+              },
+              {
+                "condition": {
+                  "f": [
+                    "garantie_degats_electriques_souscrite",
+                    "oui"
+                  ]
+                },
+                "article": "3.1.3",
+                "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ dégâts électriques” est souscrite."
+              }
+            ],
+            "circonstances": [],
+            "obligations": [],
+            "exclusions": [
+              {
+                "condition": {
+                  "f": [
+                    "domotique",
+                    "oui"
+                  ]
+                },
+                "portee": "tout",
+                "a_demander": true,
+                "article": "3.1.3.2",
+                "texte": "les frais de recherche du défaut ou de la pièce défectueuse liés à l’équipement domotique à l’origine du sinistre"
+              },
+              {
+                "condition": {
+                  "et": [
+                    {
+                      "f": [
+                        "bien",
+                        "appareil_informatique"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "usage_professionnel",
+                        "oui"
+                      ]
+                    }
+                  ]
+                },
+                "portee": "tout",
+                "a_demander": false,
+                "article": "3.1.3.2",
+                "texte": "les équipements informatiques et bureautiques à usage professionnel"
+              },
+              {
+                "condition": {
+                  "f": [
+                    "proprietaire",
+                    "hote"
+                  ]
+                },
+                "portee": "tout",
+                "a_demander": false,
+                "article": "3.1.3.2",
+                "texte": "les équipements dont l’Assuré n’est pas propriétaire"
+              },
+              {
+                "condition": {
+                  "f": [
+                    "support_donnees",
+                    "oui"
+                  ]
+                },
+                "portee": "tout",
+                "a_demander": true,
+                "article": "3.1.3.2",
+                "texte": "les dégâts à tous supports de données et aux logiciels de traitement des données"
+              },
+              {
+                "condition": {
+                  "f": [
+                    "reconstitution_donnees",
+                    "oui"
+                  ]
+                },
+                "portee": "tout",
+                "a_demander": true,
+                "article": "3.1.3.2",
+                "texte": "la reconstitution des données"
+              },
+              {
+                "condition": {
+                  "f": [
+                    "garantie_fabricant",
+                    "oui"
+                  ]
+                },
+                "portee": "tout",
+                "a_demander": false,
+                "article": "3.1.3.2",
+                "texte": "les dégâts tombant sous la garantie du fabricant"
+              },
+              {
+                "condition": {
+                  "f": [
+                    "autre_division",
+                    "oui"
+                  ]
+                },
+                "portee": "tout",
+                "a_demander": true,
+                "article": "3.1.3.2",
+                "texte": "les dégâts assurables par d’autres divisions du contrat"
+              },
+              {
+                "condition": {
+                  "f": [
+                    "marchandise",
+                    "oui"
+                  ]
+                },
+                "portee": "tout",
+                "a_demander": true,
+                "article": "3.1.3.2",
+                "texte": "les dégâts aux appareils ou installations électriques constituant des marchandises"
+              },
+              {
+                "condition": {
+                  "et": [
+                    {
+                      "f": [
+                        "travaux_construction",
+                        "oui"
+                      ]
+                    },
+                    {
+                      "non": {
+                        "f": [
+                          "lien_causal_travaux",
+                          "non"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "portee": "tout",
+                "a_demander": true,
+                "article": "3.1.3.2",
+                "texte": "les dégâts causés lorsque le bâtiment est en cours de construction, de transformation ou de rénovation à moins que l’Assuré démontre que cette circonstance n’a pas contribué à la survenance ou à l’aggravation des conséquences du sinistre"
+              },
+              {
+                "condition": {
+                  "f": [
+                    "contenu_electromenager",
+                    "oui"
+                  ]
+                },
+                "portee": "tout",
+                "a_demander": true,
+                "article": "3.1.3.2",
+                "texte": "les dégâts au contenu des appareils électroménagers"
+              },
+              {
+                "condition": {
+                  "f": [
+                    "age_appareil_plus_15_ans",
+                    "oui"
+                  ]
+                },
+                "portee": "tout",
+                "a_demander": true,
+                "article": "3.1.3.2",
+                "texte": "les dégâts aux appareils de plus de 15 ans d’âge"
+              },
+              {
+                "condition": {
+                  "ou": [
+                    {
+                      "f": [
+                        "manque_entretien",
+                        "oui"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "fonctionnement_defectueux",
+                        "oui"
+                      ]
+                    }
+                  ]
+                },
+                "portee": "tout",
+                "a_demander": false,
+                "article": "3.1.3.2",
+                "texte": "les pertes ou dommages qui sont la conséquence directe : – des effets continuels de l’exploitation (usure) ; – d’un fonctionnement défectueux"
+              }
+            ],
+            "limites": [
+              {
+                "article": "3.1.3.1",
+                "texte": "Les dommages matériels occasionnés aux panneaux solaires et/ou installations photovoltaïques sont couverts à concurrence de 50.000 € par sinistre.",
+                "montant": "50000"
+              }
+            ]
+          }
+        ],
+        "exclusions_communes": [],
+        "vocabulaire_manquant": [
+          {
+            "variable": "garantie_degats_electriques_souscrite",
+            "valeurs": [
+              "oui",
+              "non"
+            ],
+            "question": "La garantie dégâts électriques est-elle souscrite dans les conditions particulières ?",
+            "pourquoi": "condition d'applicabilité de l'article 3.1.3",
+            "plus_proche": "formule",
+            "aide": {
+              "oui": "mentionnée comme souscrite",
+              "non": "non souscrite"
+            }
+          },
+          {
+            "variable": "domotique",
+            "valeurs": [
+              "oui",
+              "non"
+            ],
+            "question": "L'équipement à l'origine du sinistre est-il domotique ?",
+            "pourquoi": "exclusion des frais de recherche liés à la domotique",
+            "plus_proche": "appareil_informatique",
+            "aide": {
+              "oui": "équipement domotique (maison connectée)",
+              "non": "autre équipement"
+            }
+          },
+          {
+            "variable": "support_donnees",
+            "valeurs": [
+              "oui",
+              "non"
+            ],
+            "question": "S'agit-il de supports de données ou logiciels ?",
+            "pourquoi": "exclusion des dégâts aux données",
+            "plus_proche": "bien",
+            "aide": {
+              "oui": "disque dur, clé USB, logiciel",
+              "non": "autre bien"
+            }
+          },
+          {
+            "variable": "reconstitution_donnees",
+            "valeurs": [
+              "oui",
+              "non"
+            ],
+            "question": "S'agit-il de la reconstitution de données ?",
+            "pourquoi": "exclusion de la reconstitution",
+            "plus_proche": "support_donnees",
+            "aide": {
+              "oui": "récupération de données perdues",
+              "non": "autre"
+            }
+          },
+          {
+            "variable": "autre_division",
+            "valeurs": [
+              "oui",
+              "non"
+            ],
+            "question": "Les dégâts sont-ils assurables par une autre division du contrat ?",
+            "pourquoi": "exclusion des dégâts assurables ailleurs",
+            "plus_proche": "aucune",
+            "aide": {
+              "oui": "couvert par une autre garantie du contrat",
+              "non": "non couvert ailleurs"
+            }
+          },
+          {
+            "variable": "marchandise",
+            "valeurs": [
+              "oui",
+              "non"
+            ],
+            "question": "L'appareil endommagé constitue-t-il une marchandise ?",
+            "pourquoi": "exclusion des marchandises",
+            "plus_proche": "bien",
+            "aide": {
+              "oui": "stock destiné à la vente",
+              "non": "bien d'usage personnel"
+            }
+          },
+          {
+            "variable": "contenu_electromenager",
+            "valeurs": [
+              "oui",
+              "non"
+            ],
+            "question": "S'agit-il du contenu d'un appareil électroménager ?",
+            "pourquoi": "exclusion du contenu des appareils électroménagers",
+            "plus_proche": "bien",
+            "aide": {
+              "oui": "aliments dans le frigo, linge dans la machine",
+              "non": "l'appareil lui-même"
+            }
+          },
+          {
+            "variable": "age_appareil_plus_15_ans",
+            "valeurs": [
+              "oui",
+              "non"
+            ],
+            "question": "L'appareil endommagé a-t-il plus de 15 ans ?",
+            "pourquoi": "exclusion des appareils de plus de 15 ans",
+            "plus_proche": "manque_entretien",
+            "aide": {
+              "oui": "plus de 15 ans",
+              "non": "moins de 15 ans"
+            }
+          },
+          {
+            "variable": "fonctionnement_defectueux",
+            "valeurs": [
+              "oui",
+              "non"
+            ],
+            "question": "Le dommage résulte-t-il directement d'un fonctionnement défectueux ?",
+            "pourquoi": "exclusion du fonctionnement défectueux",
+            "plus_proche": "manque_entretien",
+            "aide": {
+              "oui": "défaut de fonctionnement interne",
+              "non": "cause externe"
+            }
+          }
+        ],
+        "non_traduit": []
+      },
+      "ecarts": [
+        "garantie degats_electriques, périmètre 2 : condition mal formée : {\"condition\": {\"f\": [\"garantie_degats_electriques_souscrite\", \"oui\"]}, \"article\": \"3.1.3\", \"texte\": \"Les présentes condi"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "electricite"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "degats_electriques",
+        "nom": "Dégâts électriques",
+        "article": "3.1.3.1",
+        "texte": "La Compagnie assure les biens désignés contre l'action de l'électricité.",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "electricite"
+            ]
+          },
+          {
+            "f": [
+              "garantie_degats_electriques_souscrite",
+              "oui"
+            ]
+          },
+          {
+            "concept": "batiment_designe"
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "cause_domotique",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.3.2",
+            "texte": "les frais de recherche du défaut ou de la pièce défectueuse liés à l'équipement domotique à l'origine du sinistre"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "bien",
+                        "appareil_informatique"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "bien",
+                        "equipement_bureautique"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "f": [
+                    "usage_professionnel",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.3.2",
+            "texte": "les équipements informatiques et bureautiques à usage professionnel"
+          },
+          {
+            "condition": {
+              "f": [
+                "proprietaire",
+                "hote"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.3.2",
+            "texte": "les équipements dont l'Assuré n'est pas propriétaire"
+          },
+          {
+            "condition": {
+              "f": [
+                "support_donnees_ou_logiciel",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.3.2",
+            "texte": "les dégâts à tous supports de données et aux logiciels de traitement des données"
+          },
+          {
+            "condition": {
+              "f": [
+                "reconstitution_donnees",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.3.2",
+            "texte": "la reconstitution des données"
+          },
+          {
+            "condition": {
+              "f": [
+                "garantie_fabricant",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.3.2",
+            "texte": "les dégâts tombant sous la garantie du fabricant"
+          },
+          {
+            "condition": {
+              "f": [
+                "autre_division_assurable",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.3.2",
+            "texte": "les dégâts assurables par d'autres divisions du contrat"
+          },
+          {
+            "condition": {
+              "f": [
+                "bien_marchandise",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.3.2",
+            "texte": "les dégâts aux appareils ou installations électriques constituant des marchandises"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "travaux_construction",
+                    "oui"
+                  ]
+                },
+                {
+                  "non": {
+                    "f": [
+                      "lien_causal_travaux",
+                      "non"
+                    ]
+                  }
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.3.2",
+            "texte": "les dégâts causés lorsque le bâtiment est en cours de construction, de transformation ou de rénovation à moins que l'Assuré démontre que cette circonstance n'a pas contribué à la survenance ou à l'aggravation des conséquences du sinistre"
+          },
+          {
+            "condition": {
+              "f": [
+                "contenu_appareil_electromenager",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.3.2",
+            "texte": "les dégâts au contenu des appareils électroménagers"
+          },
+          {
+            "condition": {
+              "f": [
+                "appareil_plus_15_ans",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.3.2",
+            "texte": "les dégâts aux appareils de plus de 15 ans d'âge"
+          },
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "manque_entretien",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "fonctionnement_defectueux",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.3.2",
+            "texte": "les pertes ou dommages qui sont la conséquence directe : – des effets continuels de l'exploitation (usure) ; – d'un fonctionnement défectueux"
+          }
+        ],
+        "limites": [
+          {
+            "article": "3.1.3.1",
+            "texte": "Les dommages matériels occasionnés aux panneaux solaires et/ou installations photovoltaïques sont couverts à concurrence de 50.000 € par sinistre.",
+            "montant": "50000"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "garantie_degats_electriques_souscrite",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La garantie « dégâts électriques » est-elle mentionnée comme souscrite dans les conditions particulières ?",
+        "pourquoi": "L'article 3.1.3 conditionne l'application des conditions spéciales à la souscription de cette garantie",
+        "plus_proche": "formule : indique la formule générale (Privilège, Active, standard) mais pas spécifiquement la garantie dégâts électriques",
+        "aide": {
+          "oui": "les conditions particulières mentionnent la garantie dégâts électriques",
+          "non": "la garantie dégâts électriques n'est pas souscrite"
+        }
+      },
+      {
+        "variable": "cause_domotique",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "L'équipement domotique est-il à l'origine du sinistre ?",
+        "pourquoi": "Exclusion des frais de recherche liés à l'équipement domotique",
+        "plus_proche": "bien_a_l_origine_sinistre : indique si le bien endommagé est la cause, mais pas spécifiquement l'équipement domotique",
+        "aide": {
+          "oui": "le sinistre provient d'un équipement domotique (box, capteur connecté, etc.)",
+          "non": "le sinistre ne provient pas d'un équipement domotique"
+        }
+      },
+      {
+        "variable": "equipement_bureautique",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le bien endommagé est-il un équipement bureautique (imprimante, photocopieuse, etc.) ?",
+        "pourquoi": "Exclusion des équipements bureautiques à usage professionnel",
+        "plus_proche": "appareil_informatique : couvre les ordinateurs mais pas tous les équipements bureautiques",
+        "aide": {
+          "oui": "imprimante, scanner, photocopieuse, fax, etc.",
+          "non": "autre type d'équipement"
+        }
+      },
+      {
+        "variable": "support_donnees_ou_logiciel",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "S'agit-il de dégâts à des supports de données (disques durs, clés USB, etc.) ou à des logiciels ?",
+        "pourquoi": "Exclusion des dégâts aux supports de données et logiciels",
+        "plus_proche": "bien : la liste ne contient pas de valeur pour supports de données ou logiciels",
+        "aide": {
+          "oui": "disque dur endommagé, clé USB, logiciel corrompu",
+          "non": "autre bien"
+        }
+      },
+      {
+        "variable": "reconstitution_donnees",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "S'agit-il de frais de reconstitution de données ?",
+        "pourquoi": "Exclusion de la reconstitution des données",
+        "plus_proche": "aucune variable ne couvre les frais de reconstitution de données",
+        "aide": {
+          "oui": "coûts pour récupérer ou recréer des données perdues",
+          "non": "autre type de frais"
+        }
+      },
+      {
+        "variable": "autre_division_assurable",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Les dégâts sont-ils assurables par une autre division du contrat ?",
+        "pourquoi": "Exclusion des dégâts assurables par d'autres divisions",
+        "plus_proche": "aucune variable n'indique si une autre division couvre le sinistre",
+        "aide": {
+          "oui": "une autre garantie du contrat couvre ces dégâts (ex: garantie vol, incendie spécifique)",
+          "non": "aucune autre division ne couvre"
+        }
+      },
+      {
+        "variable": "bien_marchandise",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "L'appareil ou l'installation électrique endommagé constitue-t-il une marchandise (stock, bien destiné à la vente) ?",
+        "pourquoi": "Exclusion des dégâts aux appareils constituant des marchandises",
+        "plus_proche": "bien : aucune valeur ne distingue les marchandises des autres biens",
+        "aide": {
+          "oui": "appareil en stock, destiné à la vente, marchandise",
+          "non": "appareil personnel ou professionnel non destiné à la vente"
+        }
+      },
+      {
+        "variable": "contenu_appareil_electromenager",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "S'agit-il de dégâts au contenu d'un appareil électroménager (ex: aliments dans un congélateur) ?",
+        "pourquoi": "Exclusion des dégâts au contenu des appareils électroménagers",
+        "plus_proche": "denrees_alimentaires : couvre les denrées mais pas spécifiquement le contenu des appareils",
+        "aide": {
+          "oui": "aliments dans le réfrigérateur/congélateur, contenu d'un appareil électroménager",
+          "non": "dégâts à l'appareil lui-même ou à un autre bien"
+        }
+      },
+      {
+        "variable": "appareil_plus_15_ans",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "L'appareil endommagé a-t-il plus de 15 ans ?",
+        "pourquoi": "Exclusion des dégâts aux appareils de plus de 15 ans",
+        "plus_proche": "aucune variable n'indique l'âge de l'appareil",
+        "aide": {
+          "oui": "appareil acheté il y a plus de 15 ans",
+          "non": "appareil de moins de 15 ans"
+        }
+      },
+      {
+        "variable": "fonctionnement_defectueux",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le dommage est-il la conséquence directe d'un fonctionnement défectueux ?",
+        "pourquoi": "Exclusion des dommages consécutifs à un fonctionnement défectueux",
+        "plus_proche": "manque_entretien : couvre l'usure et le manque d'entretien, mais pas spécifiquement le fonctionnement défectueux",
+        "aide": {
+          "oui": "défaut de fonctionnement de l'appareil ayant causé le dommage",
+          "non": "autre cause"
+        }
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "garantie_degats_electriques_souscrite = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "cause_domotique = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = equipement_bureautique : hors vocabulaire, et non déclaré"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "support_donnees_ou_logiciel = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "reconstitution_donnees = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "autre_division_assurable = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien_marchandise = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "contenu_appareil_electromenager = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "appareil_plus_15_ans = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "fonctionnement_defectueux = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.3`) ou à remplacer"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "garantie : citation rattachée à 3.1.3.1 (et non 3.1.3)"
+    }
+  ]
+}
