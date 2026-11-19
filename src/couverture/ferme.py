@@ -65,21 +65,32 @@ def annoter(modele: str, paralleles: int = 2) -> None:
     cas = lire(DOSSIER / "cas_agent.jsonl")
     sortie = DOSSIER / "avis_second.jsonl"
     faits = {a["id"]: a for a in lire(sortie)}
-    base, llm = Base(Path("data") / "base.sqlite"), MistralLLM(modele=modele)
+    # Le texte entier d'un contrat (jusqu'à 70 000 tokens) à chaque appel : 120 s ne suffisaient pas (19 nov.).
+    base, llm = Base(Path("data") / "base.sqlite"), MistralLLM(modele=modele, timeout=600)
     textes = {c: base.texte_brut(i) for c, i in CONTRATS.items()}
     a_faire = [c for c in cas if c["id"] not in faits]
     print(f"{len(a_faire)} cas à annoter par {modele} ({len(faits)} déjà faits)…", flush=True)
 
-    def un(c: dict) -> dict:
+    def un(c: dict) -> dict | None:
         message = f"## Conditions générales\n{textes[c['contrat']]}\n\n## Déclaration\n{c['declaration']}"
-        r = extraire_json(completer_avec_schema(llm, SYSTEME_SECOND_AVIS, message, SCHEMA))
+        try:
+            r = extraire_json(completer_avec_schema(llm, SYSTEME_SECOND_AVIS, message, SCHEMA))
+        except Exception as e:  # noqa: BLE001 — un cas en échec n'arrête pas les autres ; relancer le reprendra
+            print(f"  {c['id']} : échec ({type(e).__name__}: {e}) ; à relancer", flush=True)
+            return None
         return {"id": c["id"], "modele": modele, **{k: r.get(k) for k in SCHEMA["required"]}}
 
+    echecs = 0
     with ThreadPoolExecutor(max_workers=paralleles) as ex:
         for i, r in enumerate(ex.map(un, a_faire), 1):
+            if r is None:
+                echecs += 1
+                continue
             faits[r["id"]] = r
             ecrire(sortie, [faits[c["id"]] for c in cas if c["id"] in faits])  # sauvé à chaque cas
             print(f"  {i}/{len(a_faire)} {r['id']} → {r['attendu']}", flush=True)
+    if echecs:
+        print(f"{echecs} cas en échec : relancer `annoter` (les cas faits sont gardés).")
 
 
 def accord(a: dict, b: dict) -> str | None:
