@@ -3,49 +3,23 @@
     "article": "3.2.2",
     "modele": "mistral:mistral-large-latest",
     "date": "2026-11-19",
-    "consigne": "redaction-regles v6"
+    "consigne": "redaction-regles v6",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-19",
+      "modifications": [
+        "événements inondation, ruissellement, glissement → evenement = catastrophe_naturelle et catastrophe = … (partagé avec 3.2.1)",
+        "« applicables si… » : réserve (option_pluies_inondations)",
+        "dommages dans les 72 heures : exclusion à établir par l'assureur, pas une question à chaque inondation",
+        "hygrométrie, champignons, humidité, condensation : cause_eau = condensation ; défaut d'étanchéité → manque_entretien ; « à l'extérieur des locaux » : règle 3 quater"
+      ]
+    }
   },
   "proposition": {
     "evenements": [
-      "inondation",
-      "ruissellement",
-      "glissement_terrain"
+      "catastrophe_naturelle"
     ],
-    "definitions": [
-      {
-        "concept": "a_l_exterieur_locaux",
-        "condition": {
-          "ou": [
-            {
-              "f": [
-                "lieu",
-                "jardin"
-              ]
-            },
-            {
-              "f": [
-                "lieu",
-                "terrasse"
-              ]
-            },
-            {
-              "f": [
-                "lieu",
-                "abri_jardin"
-              ]
-            },
-            {
-              "f": [
-                "lieu",
-                "parties_communes"
-              ]
-            }
-          ]
-        },
-        "article": "3.2.2.4",
-        "texte": "au contenu se trouvant à l’extérieur des locaux"
-      }
-    ],
+    "definitions": [],
     "garanties": [
       {
         "id": "pluies_inondations",
@@ -55,27 +29,27 @@
         "perimetre": [
           {
             "f": [
-              "garantie_pluies_inondations_accordee",
-              "oui"
+              "evenement",
+              "catastrophe_naturelle"
             ]
           },
           {
             "ou": [
               {
                 "f": [
-                  "evenement",
+                  "catastrophe",
                   "inondation"
                 ]
               },
               {
                 "f": [
-                  "evenement",
+                  "catastrophe",
                   "ruissellement"
                 ]
               },
               {
                 "f": [
-                  "evenement",
+                  "catastrophe",
                   "glissement_terrain"
                 ]
               }
@@ -85,25 +59,39 @@
             "concept": "batiment_designe"
           }
         ],
-        "circonstances": [
-          {
-            "condition": {
-              "f": [
-                "dommages_dans_72h",
-                "oui"
-              ]
-            },
-            "article": "3.2.2.1",
-            "texte": "Les dommages qui résultent des événements climatiques cités ci-dessus seront pris en charge par la Compagnie à conditions qu’ils se soient réalisés dans les 72 heures suivant l’événement."
-          }
-        ],
+        "circonstances": [],
         "obligations": [],
         "exclusions": [
           {
             "condition": {
               "et": [
                 {
-                  "concept": "a_l_exterieur_locaux"
+                  "et": [
+                    {
+                      "ou": [
+                        {
+                          "f": [
+                            "lieu",
+                            "jardin"
+                          ]
+                        },
+                        {
+                          "f": [
+                            "lieu",
+                            "terrasse"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "non": {
+                        "f": [
+                          "bien",
+                          "element_batiment"
+                        ]
+                      }
+                    }
+                  ]
                 },
                 {
                   "non": {
@@ -169,58 +157,48 @@
           {
             "condition": {
               "f": [
-                "hygrometrie_ambiante",
-                "oui"
+                "cause_eau",
+                "condensation"
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.2.2.4",
             "texte": "par l’hygrométrie ambiante, même consécutivement à un sinistre couvert"
           },
           {
             "condition": {
               "f": [
-                "champignons_moisissures",
-                "oui"
+                "cause_eau",
+                "condensation"
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.2.2.4",
             "texte": "par des champignons ou des moisissures, même consécutivement à un sinistre couvert"
           },
           {
             "condition": {
-              "ou": [
-                {
-                  "f": [
-                    "manque_entretien",
-                    "oui"
-                  ]
-                },
-                {
-                  "f": [
-                    "defaut_etancheite",
-                    "oui"
-                  ]
-                }
+              "f": [
+                "manque_entretien",
+                "oui"
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.2.2.4",
             "texte": "par un défaut de réparation ou d’entretien, ou dus à une étanchéité absente, mal conçue ou mal réalisée"
           },
           {
             "condition": {
               "f": [
-                "humidite_porosite_condensation_capillarite",
-                "oui"
+                "cause_eau",
+                "condensation"
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.2.2.4",
             "texte": "par l’humidité, la porosité, la condensation, les phénomènes de capillarité"
           },
@@ -232,7 +210,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.2.2.4",
             "texte": "aux bâtiments situés sur un terrain non constructible"
           },
@@ -244,9 +222,21 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.2.2.4",
             "texte": "aux bâtiments soumis à l’autorisation de l’Administration de la gestion de l’eau et qui ne respectent pas les conditions afférentes à cette autorisation"
+          },
+          {
+            "condition": {
+              "f": [
+                "dommages_dans_72h",
+                "non"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.2.2.1",
+            "texte": "Les dommages qui résultent des événements climatiques cités ci-dessus seront pris en charge par la Compagnie à conditions qu’ils se soient réalisés dans les 72 heures suivant l’événement."
           }
         ],
         "limites": [
@@ -268,37 +258,52 @@
         ]
       }
     ],
-    "exclusions_communes": [],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "f": [
+            "option_pluies_inondations",
+            "non"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "3.2.2",
+        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “Pluies & inondations” est accordée."
+      }
+    ],
     "vocabulaire_manquant": [
       {
-        "variable": "evenement",
+        "variable": "catastrophe",
         "valeurs": [
+          "tremblement_terre",
           "inondation",
           "ruissellement",
           "glissement_terrain"
         ],
-        "question": "Quel est l'événement climatique : une inondation, un ruissellement d'eau ou un glissement de terrain ?",
-        "pourquoi": "la garantie 3.2.2 couvre spécifiquement ces trois types d'événements climatiques",
-        "plus_proche": "catastrophe_naturelle : trop générique, ne distingue pas l'inondation du ruissellement ou du glissement de terrain",
+        "question": "Quel phénomène naturel a causé les dégâts ?",
         "aide": {
-          "inondation": "l'eau a débordé, submergé les lieux (crue, débordement d'égouts)",
-          "ruissellement": "l'eau a ruisselé sur le sol sans absorption (pluies torrentielles)",
-          "glissement_terrain": "le terrain s'est affaissé ou a glissé (consécutif à des pluies torrentielles)"
-        }
+          "tremblement_terre": "séisme, tremblement de terre et ses répliques",
+          "inondation": "crue, débordement d'un cours d'eau, refoulement d'égouts",
+          "ruissellement": "eau de pluies torrentielles qui ruisselle faute d'absorption du sol",
+          "glissement_terrain": "glissement ou affaissement de terrain"
+        },
+        "pourquoi": "AXA distingue deux garanties optionnelles : tremblement de terre (3.2.1) et pluies et inondations (3.2.2)",
+        "plus_proche": "cause_eau = inondation : ne dit ni le séisme ni le glissement"
       },
       {
-        "variable": "garantie_pluies_inondations_accordee",
+        "variable": "option_pluies_inondations",
         "valeurs": [
           "oui",
           "non"
         ],
-        "question": "Les conditions particulières mentionnent-elles que la garantie 'Pluies & inondations' est accordée ?",
-        "pourquoi": "la clause 3.2.2 rend les conditions applicables uniquement si cette garantie est accordée",
-        "plus_proche": "formule : ne couvre pas l'activation d'une option spécifique comme 'Sérénité +'",
+        "question": "Vos conditions particulières mentionnent-elles la garantie « pluies et inondations » ?",
         "aide": {
-          "oui": "les conditions particulières indiquent 'Pluies & inondations' ou 'Sérénité +' avec cette garantie",
-          "non": "la garantie n'est pas mentionnée dans les conditions particulières"
-        }
+          "oui": "la garantie figure aux conditions particulières",
+          "non": "elle n'y figure pas"
+        },
+        "pourquoi": "garantie optionnelle : réserve tant que les conditions particulières ne sont pas lues",
+        "plus_proche": "aucune ; fait des conditions particulières"
       },
       {
         "variable": "dommages_dans_72h",
@@ -315,20 +320,6 @@
         }
       },
       {
-        "variable": "zone_inondable",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Les biens désignés sont-ils situés en zone inondable selon les conditions particulières ?",
-        "pourquoi": "les clauses 3.2.2.2 et 3.2.2.3 prévoient des plafonds différents selon que le bien est en zone inondable ou non",
-        "plus_proche": "aucune variable existante ne décrit le classement en zone inondable",
-        "aide": {
-          "oui": "les conditions particulières indiquent que le bien est en zone inondable",
-          "non": "les conditions particulières indiquent que le bien n'est pas en zone inondable"
-        }
-      },
-      {
         "variable": "ouvertures_non_fermees",
         "valeurs": [
           "oui",
@@ -340,62 +331,6 @@
         "aide": {
           "oui": "l'eau est passée par une porte, fenêtre, soupirail ou lucarne laissée ouverte",
           "non": "toutes les ouvertures étaient fermées"
-        }
-      },
-      {
-        "variable": "hygrometrie_ambiante",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Les dommages sont-ils causés par l'hygrométrie ambiante ?",
-        "pourquoi": "l'exclusion 3.2.2.4.5 vise l'hygrométrie ambiante même consécutive à un sinistre couvert",
-        "plus_proche": "cause_eau : condensation est une valeur mais ne couvre pas l'hygrométrie ambiante générale",
-        "aide": {
-          "oui": "les dégâts viennent de l'humidité ambiante de l'air, pas d'une fuite ou inondation",
-          "non": "les dégâts viennent d'une cause autre que l'hygrométrie ambiante"
-        }
-      },
-      {
-        "variable": "champignons_moisissures",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Les dommages sont-ils causés par des champignons ou des moisissures ?",
-        "pourquoi": "l'exclusion 3.2.2.4.6 vise les champignons et moisissures même consécutifs à un sinistre couvert",
-        "plus_proche": "merule : ne couvre que la mérule, pas les moisissures générales",
-        "aide": {
-          "oui": "il y a des taches de moisissure, des champignons sur les murs ou biens",
-          "non": "pas de champignons ni moisissures"
-        }
-      },
-      {
-        "variable": "defaut_etancheite",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Les dommages sont-ils dus à une étanchéité absente, mal conçue ou mal réalisée ?",
-        "pourquoi": "l'exclusion 3.2.2.4.7 vise les défauts d'étanchéité en plus du défaut d'entretien",
-        "plus_proche": "manque_entretien : couvre l'entretien mais pas spécifiquement l'étanchéité",
-        "aide": {
-          "oui": "l'étanchéité était absente, mal faite ou mal conçue (toiture, murs, fondations)",
-          "non": "l'étanchéité était conforme"
-        }
-      },
-      {
-        "variable": "humidite_porosite_condensation_capillarite",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Les dommages sont-ils dus à l'humidité, la porosité, la condensation ou des phénomènes de capillarité ?",
-        "pourquoi": "l'exclusion 3.2.2.4.8 vise ces phénomènes physiques spécifiques",
-        "plus_proche": "cause_eau : condensation est une valeur mais ne couvre pas la porosité ou la capillarité",
-        "aide": {
-          "oui": "remontées capillaires, porosité des matériaux, condensation sur les parois froides",
-          "non": "pas de phénomènes de ce type"
         }
       },
       {
@@ -431,131 +366,6 @@
   },
   "controles": [
     {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "garantie_pluies_inondations_accordee = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "evenement = inondation : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "evenement = ruissellement : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "evenement = glissement_terrain : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "dommages_dans_72h = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "ouvertures_non_fermees = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "hygrometrie_ambiante = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "champignons_moisissures = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "defaut_etancheite = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "humidite_porosite_condensation_capillarite = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "terrain_non_constructible = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "autorisation_gestion_eau_non_respectee = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "définition : citation rattachée à 3.2.2.4 (et non 3.2.2.4.1)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.2.2.4 (et non 3.2.2.4.1)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.2.2.4 (et non 3.2.2.4.2)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.2.2.4 (et non 3.2.2.4.3)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.2.2.4 (et non 3.2.2.4.4)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.2.2.4 (et non 3.2.2.4.5)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.2.2.4 (et non 3.2.2.4.6)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.2.2.4 (et non 3.2.2.4.7)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.2.2.4 (et non 3.2.2.4.8)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.2.2.4 (et non 3.2.2.4.9)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.2.2.4 (et non 3.2.2.4.10)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "limite : citation rattachée à 3.2.2.4 (et non 3.2.2.4.1)"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "portée",
-      "message": "exclusion « au contenu se trouvant à l’extérieur des locaux, à l’excepti » : ne vise que mobilier_jardin, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
-    },
-    {
       "gravite": "à relire",
       "controle": "limite",
       "message": "limite « Lorsque les conditions particulières mentionnent que les bie » (pluies_inondations) : elle pose une condition ; circonstance ou garantie à part ?"
@@ -564,6 +374,11 @@
       "gravite": "à relire",
       "controle": "limite",
       "message": "limite « Lorsque les conditions particulières mentionnent que les bie » (pluies_inondations) : elle pose une condition ; circonstance ou garantie à part ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "prolog",
+      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
     }
   ]
 }

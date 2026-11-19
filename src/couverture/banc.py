@@ -22,6 +22,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
+import os
 import time
 from collections import Counter, defaultdict
 from datetime import datetime
@@ -408,6 +410,9 @@ def passer(donnees: Path, contrat_id: str, methode: str, couches: list[str], rep
             resultat["modele"] = getattr(getattr(pipeline, "llm", None), "nom", None) or resultat.get("modele")
             if resultat["methode"] == "regles":
                 resultat["lecture"] = prolog.mode_lecture().replace("_", " ")
+                confirmation = os.environ.get("COUVERTURE_MODELE_CONFIRMATION", "").strip()
+                if confirmation and prolog.mode_lecture() == "verifiee":
+                    resultat["lecture"] += f", confirmation {confirmation}"
             rapports.append((evaluer_fn or evaluer)(pipeline, cas, paralleles=paralleles))
             durees.append(time.perf_counter() - debut)
         resultat["couches"]["chaine"] = couche_chaine(cas, rapports, durees)
@@ -430,7 +435,7 @@ def enregistrer(donnees: Path, resultat: dict, dossier: Path | None = None) -> t
     dossier.mkdir(parents=True, exist_ok=True)
     modele = (resultat.get("modele") or "").split(":")[-1].replace("-latest", "")
     nom = f"{datetime.now():%Y%m%d-%H%M%S}-{resultat['contrat']}-{resultat['methode']}" + (f"-{modele}" if modele else "") \
-        + (f"-{resultat['lecture'].replace(' ', '-')}" if resultat.get("lecture") not in (None, "verifiee") else "")
+        + (f"-{re.sub(r'[^a-z0-9-]+', '-', resultat['lecture'])}" if resultat.get("lecture") not in (None, "verifiee") else "")
     js, md = dossier / f"{nom}.json", dossier / f"{nom}.md"
     precedent = dernier(dossier, resultat["contrat"], resultat["methode"])
     texte = markdown(resultat, precedent)

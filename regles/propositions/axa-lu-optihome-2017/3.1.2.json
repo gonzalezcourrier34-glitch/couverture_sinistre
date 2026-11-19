@@ -3,7 +3,17 @@
     "article": "3.1.2",
     "modele": "mistral:mistral-large-latest",
     "date": "2026-11-19",
-    "consigne": "redaction-regles v6"
+    "consigne": "redaction-regles v6",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-19",
+      "modifications": [
+        "la définition de la tempête (80 km/h) ne vaut que pour le vent : circonstance si(vent, tempête) ; la seconde circonstance (grêle ou neige) faisait refuser le vent : retirée",
+        "« applicables si… » : réserve (option_tempete)",
+        "« objet non fixé à l'extérieur » : jardin ou terrasse, objets (règle 3 quater)",
+        "matériaux légers, choc thermique, esthétique, déformation sans perte d'étanchéité, entretien : à l'assureur de l'établir"
+      ]
+    }
   },
   "proposition": {
     "evenements": [
@@ -52,30 +62,20 @@
         "circonstances": [
           {
             "condition": {
-              "concept": "tempete"
-            },
-            "article": "3.1.2.1",
-            "texte": "la tempête (à partir de 80km/h)"
-          },
-          {
-            "condition": {
-              "ou": [
+              "si": [
                 {
                   "f": [
                     "alea_tempete",
-                    "grele"
+                    "vent"
                   ]
                 },
                 {
-                  "f": [
-                    "alea_tempete",
-                    "neige_glace"
-                  ]
+                  "concept": "tempete"
                 }
               ]
             },
             "article": "3.1.2.1",
-            "texte": "la grêle, le poids de la neige ou de la glace"
+            "texte": "la tempête (à partir de 80km/h)"
           }
         ],
         "obligations": [],
@@ -88,7 +88,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.1.2.2",
             "texte": "Ne sont toutefois pas couverts les dommages n résultant d'un défaut de réparation ou d'entretien du bâtiment désigné"
           },
@@ -134,12 +134,6 @@
                         "lieu",
                         "terrasse"
                       ]
-                    },
-                    {
-                      "f": [
-                        "lieu",
-                        "abri_jardin"
-                      ]
                     }
                   ]
                 },
@@ -147,7 +141,7 @@
                   "non": {
                     "f": [
                       "bien",
-                      "mobilier_jardin"
+                      "element_batiment"
                     ]
                   }
                 }
@@ -166,7 +160,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.1.2.2",
             "texte": "n causés aux objets suivants fixés extérieurement alors même qu'ils seraient réputés immeubles par destination : mât, poteau, pylône, panneau publicitaire, lampadaire, enseigne, tente, bâche , décoration de toit (girouette, …)"
           },
@@ -178,7 +172,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.1.2.2",
             "texte": "piscines, sauf si mention en est faite aux conditions particulières"
           },
@@ -214,7 +208,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.1.2.2",
             "texte": "constructions en démolition ou délabrées, c'est-à-dire si le degré de vétusté de la partie sinistrée dépasse 40%"
           },
@@ -226,7 +220,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.1.2.2",
             "texte": "constructions dont les murs extérieurs composés de tôle, d'aggloméré de ciment et d'asbeste, de plaques ondulées ou de matériaux légers notamment bois, argile, matière plastique, panneaux agglomérés de bois et analogues représentent plus de 50% de la superficie totale de ces murs"
           },
@@ -238,7 +232,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.1.2.2",
             "texte": "constructions dont la toiture composée de bois, d'aggloméré de bois ou analogues, de carton bitumé, de matières plastiques ou d'autres matériaux légers (ardoises et tuiles artificielles, chaume ou roofing non compris) représente plus de 20% de la superficie totale de cette toiture"
           },
@@ -262,7 +256,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.1.2.2",
             "texte": "constructions totalement ou partiellement ouvertes, à l'exception des auvents et marquises en matériaux durs, car-ports et pergolas, sous réserve que ces équipements soient solidement fixés au bâtiment ou qu'ils reposent sur des fondations"
           },
@@ -274,7 +268,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.1.2.2",
             "texte": "n causés par la pression de la neige ou de la glace et consistant en la déformation des tuyaux de descente ou du toit sans que cette déformation ait une influence sur l'étanchéité de ceux-ci"
           },
@@ -286,7 +280,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.1.2.2",
             "texte": "n causés par un choc thermique, c'est-à-dire une variation brutale de la température"
           },
@@ -298,7 +292,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.1.2.2",
             "texte": "n d'ordre purement esthétique"
           }
@@ -317,7 +311,20 @@
         ]
       }
     ],
-    "exclusions_communes": [],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "f": [
+            "option_tempete",
+            "non"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "3.1.2",
+        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ tempête et grêle” est souscrite."
+      }
+    ],
     "vocabulaire_manquant": [
       {
         "variable": "batiment_endommage_prealablement",
@@ -444,60 +451,34 @@
           "oui": "rayure, tache sans impact fonctionnel",
           "non": "dommage structurel"
         }
+      },
+      {
+        "variable": "option_tempete",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Vos conditions particulières mentionnent-elles la garantie « tempête, grêle, pression de la neige ou de la glace » ?",
+        "aide": {
+          "oui": "la garantie figure aux conditions particulières",
+          "non": "elle n'y figure pas"
+        },
+        "pourquoi": "garantie optionnelle : réserve tant que les conditions particulières ne sont pas lues",
+        "plus_proche": "aucune ; fait des conditions particulières"
       }
     ],
     "non_traduit": []
   },
   "controles": [
     {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "batiment_endommage_prealablement = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "objet_fixe_exterieurement = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "piscine = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "materiaux_legers_murs = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "materiaux_legers_toiture = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "abri_fixe_sol = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "deformation_sans_perte_etancheite = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "choc_thermique = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "dommage_esthetique = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.2`) ou à remplacer"
-    },
-    {
       "gravite": "à relire",
       "controle": "réserve",
       "message": "exclusion « piscines, sauf si mention en est faite aux conditions partic » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "prolog",
+      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
     }
   ]
 }

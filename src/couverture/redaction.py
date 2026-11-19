@@ -653,9 +653,10 @@ def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
             nouvelles = [x for x in valeurs if x not in voc[v]["valeurs"]]
             voc[v]["valeurs"] += nouvelles
             avant = list(voc[v].get("pour") or [])
-            if avant and prop.get("evenements"):
-                voc[v]["pour"] = avant + [e for e in prop["evenements"] if e not in avant]
-                ajouts += [f"{v} : lue aussi pour {e}" for e in prop["evenements"] if e not in avant]
+            evs = evenements_par_variable(prop).get(v) or list(prop.get("evenements") or [])
+            if avant and evs:
+                voc[v]["pour"] = avant + [e for e in evs if e not in avant]
+                ajouts += [f"{v} : lue aussi pour {e}" for e in evs if e not in avant]
             for x in nouvelles:
                 if (m.get("aide") or {}).get(x):
                     voc[v].setdefault("aide", {})[x] = str(m["aide"][x])
@@ -674,8 +675,9 @@ def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
                 voc[v]["aide"] = aide
             # Sans « pour », la variable serait lue pour tous les sinistres (un dégât des eaux se verrait demander
             # la formule « Privilège ») : elle vaut pour les événements de la garantie qui l'a fait naître (7.56).
-            if prop.get("evenements"):
-                voc[v]["pour"] = list(prop["evenements"])
+            evs = evenements_par_variable(prop).get(v) or list(prop.get("evenements") or [])
+            if evs:
+                voc[v]["pour"] = evs
             ajouts.append(f"{v} ({', '.join(valeurs)}) : « {voc[v]['question']} »")
     ajouts += etendre_pour(prop, voc)
     if ajouts:
@@ -683,13 +685,49 @@ def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
     return ajouts
 
 
+def evenements_par_variable(prop: dict) -> dict[str, list[str]]:
+    """Pour chaque variable employée, les événements des garanties qui l'emploient. Un article peut réunir des
+    garanties d'événements différents (AXA 3.1.1 : incendie, heurt, vol, vandalisme…) : les flammes ne sont
+    pas à lire pour un vol (7.65). Une exclusion commune vaut pour les événements de toutes les garanties."""
+    defs = {d.get("concept"): d.get("condition") for d in prop.get("definitions", []) if d.get("concept")}
+
+    def variables(c, vus=()):
+        out = {v for v, _ in feuilles(c)}
+        for n in concepts_employes(c):
+            if n in defs and n not in vus:
+                out |= variables(defs[n], vus + (n,))
+        return out
+
+    tous = list(prop.get("evenements") or [])
+    res: dict[str, list[str]] = {}
+
+    def noter(c, evs):
+        for v in variables(c):
+            res.setdefault(v, [])
+            res[v] += [e for e in evs if e not in res[v]]
+
+    union = []
+    for g in prop.get("garanties", []):
+        evs = [x for c in g.get("perimetre", []) for v, x in feuilles(c) if v == "evenement"] or tous
+        union += [e for e in evs if e not in union]
+        for c in g.get("perimetre", []):
+            noter(c, evs)
+        for cle in ("circonstances", "obligations", "exclusions"):
+            for x in g.get(cle, []):
+                noter(x.get("condition"), evs)
+                if x.get("exception") is not None:
+                    noter(x["exception"], evs)
+    for x in prop.get("exclusions_communes") or []:
+        noter(x.get("condition"), union or tous)
+    return res
+
+
 def etendre_pour(prop: dict, voc: dict) -> list[str]:
-    """Une variable existante que la proposition emploie doit être lue pour les événements de ses garanties :
-    `prevention_gel`, lue pour les dégâts des eaux, sert aussi au mazout (2.8). Sans cela, la lecture
-    restreinte aux événements (7.56) ne la chercherait jamais dans une déclaration de mazout (7.63)."""
-    evenements = list(prop.get("evenements") or [])
+    """Une variable existante que la proposition emploie doit être lue pour les événements des garanties qui
+    l'emploient : `prevention_gel`, lue pour les dégâts des eaux, sert aussi au mazout (2.8). Sans cela, la
+    lecture restreinte aux événements (7.56) ne la chercherait jamais dans une déclaration de mazout (7.63)."""
     ajouts = []
-    for v in sorted({v for c in conditions(prop) for v, _ in feuilles(c)}):
+    for v, evenements in sorted(evenements_par_variable(prop).items()):
         d = voc.get(v)
         if not d or not d.get("pour") or not evenements:
             continue

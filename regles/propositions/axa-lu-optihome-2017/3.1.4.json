@@ -301,6 +301,19 @@
       "ecarts": [
         "garantie degats_eaux, « obligations » : condition mal formée : {\"article\": \"3.1.4.3.1\", \"texte\": \"Il est expressément spécifié que la garantie est maintenue si les dégâts causés par l"
       ]
+    },
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-19",
+      "modifications": [
+        "circonstance : fuite d'installation, infiltration par la toiture ou les terrasses, aquarium ; « infiltration_exterieure » (portes, fenêtres, murs) est exclue plus bas, elle ne peut pas être aussi une condition",
+        "obligation gel : si période de gel, alors prévention (comme Foyer) ; l'obligation sans condition retirée",
+        "toiture : valeur bien = toiture (parent : élément du bâtiment), portée limitée au bien ; sans cela, tout le bâtiment était exclu",
+        "« aux conduites… à l'origine du sinistre » : citation exacte, portée canalisation",
+        "objet non relié à l'installation : cause_eau = debordement_recipient (l'aquarium est une autre valeur)",
+        "lien_causal_travaux_eaux → lien_causal_travaux (variable acceptée avec 3.1.6)",
+        "« applicables si… » : réserve (option_degats_eaux) ; frais de recherche et huile minérale : hors décision"
+      ]
     }
   },
   "proposition": {
@@ -338,13 +351,13 @@
                 {
                   "f": [
                     "cause_eau",
-                    "infiltration_exterieure"
+                    "infiltration_toiture"
                   ]
                 },
                 {
                   "f": [
                     "cause_eau",
-                    "infiltration_toiture"
+                    "debordement_aquarium"
                   ]
                 }
               ]
@@ -356,9 +369,19 @@
         "obligations": [
           {
             "condition": {
-              "f": [
-                "periode_gel",
-                "oui"
+              "si": [
+                {
+                  "f": [
+                    "periode_gel",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "prevention_gel",
+                    "oui"
+                  ]
+                }
               ]
             },
             "obligation": {
@@ -371,19 +394,6 @@
             "lien_causal": true,
             "article": "3.1.4.3",
             "texte": "Pendant la période de gel, l’Assuré doit, si les locaux ne sont pas chauffés ou si les installations se trouvent à l’extérieur, vidanger ou protéger les conduites et réservoirs ainsi que les installations de chauffage non pourvues d’antigel en quantité suffisante : n dans les résidences principales en cas d’inoccupation des locaux de plus de 15 jours consécutifs ; n dans les résidences secondaires, en cas d’inoccupation des locaux supérieure à 3 jours consécutifs. Si l’Assuré ne respecte pas ces prescriptions, sauf cas de force majeure, et si un sinistre survient ou est aggravé de ce fait, l’indemnité due sera réduite de moitié."
-          },
-          {
-            "condition": null,
-            "obligation": {
-              "f": [
-                "manque_entretien",
-                "non"
-              ]
-            },
-            "exception": null,
-            "lien_causal": true,
-            "article": "3.1.4.3",
-            "texte": "L’Assuré doit entretenir, réparer ou remplacer les installations hydrauliques et de chauffage du bâtiment dès qu’il se rend compte ou est informé de leur mauvais fonctionnement. A défaut, la Compagnie peut refuser son intervention si l’inobservation de cette règle a contribué à la survenance de ce sinistre. En cas de litige, la charge de la preuve du respect par l’Assuré de ses obligations lui incombera."
           }
         ],
         "exclusions": [
@@ -391,39 +401,29 @@
             "condition": {
               "f": [
                 "bien",
-                "element_batiment"
+                "toiture"
               ]
             },
-            "portee": "tout",
-            "a_demander": true,
+            "portee": {
+              "bien": "toiture"
+            },
+            "a_demander": false,
             "article": "3.1.4.2",
             "texte": "à la toiture du bâtiment ainsi qu’aux revêtements qui en assurent l’étanchéité"
           },
           {
             "condition": {
-              "et": [
-                {
-                  "f": [
-                    "bien",
-                    "canalisation"
-                  ]
-                },
-                {
-                  "non": {
-                    "f": [
-                      "canalisation_encastree",
-                      "oui"
-                    ]
-                  }
-                }
+              "f": [
+                "bien",
+                "canalisation"
               ]
             },
             "portee": {
               "bien": "canalisation"
             },
-            "a_demander": true,
-            "article": "3.1.4.2.2",
-            "texte": "aux conduites, aux installations et appareils hydrauliques, aux tuyaux d’évacuation, aux boilers, chaudières, citernes, aquariums et matelas d’eau à l’origine du sinistre ; toutefois, les dommages aux conduites encastrées sont pris en charge par la Compagnie"
+            "a_demander": false,
+            "article": "3.1.4.2",
+            "texte": "a ux conduites, aux installations et appareils hydrauliques, aux tuyaux d’évacuation, aux boilers, chaudières, citernes, aquariums et matelas d’eau à l’origine du sinistre ; toutefois, les dommages aux conduites encastrées sont pris en charge par la Compagnie"
           },
           {
             "condition": {
@@ -433,7 +433,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.1.4.2",
             "texte": "par la condensation"
           },
@@ -510,8 +510,8 @@
           {
             "condition": {
               "f": [
-                "bien_a_l_origine_sinistre",
-                "oui"
+                "cause_eau",
+                "debordement_recipient"
               ]
             },
             "portee": "tout",
@@ -527,7 +527,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.1.4.2",
             "texte": "par des conduites, installations et appareils apparents présentant des points de corrosion visibles et non traités"
           },
@@ -536,14 +536,14 @@
               "et": [
                 {
                   "f": [
-                    "travaux_batiment",
-                    "autres_que_entretien_reparation"
+                    "travaux_construction",
+                    "oui"
                   ]
                 },
                 {
                   "non": {
                     "f": [
-                      "lien_causal_travaux_eaux",
+                      "lien_causal_travaux",
                       "non"
                     ]
                   }
@@ -563,7 +563,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.1.4.2",
             "texte": "par l’hygrométrie ambiante, même consécutivement à un sinistre couvert"
           },
@@ -575,7 +575,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.1.4.2",
             "texte": "par des champignons ou des moisissures, même consécutivement à un sinistre couvert"
           },
@@ -587,7 +587,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.1.4.2",
             "texte": "par un défaut de réparation ou d’entretien, ou dus à une étanchéité absente, mal conçue ou mal réalisée"
           },
@@ -613,7 +613,20 @@
         ]
       }
     ],
-    "exclusions_communes": [],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "f": [
+            "option_degats_eaux",
+            "non"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "3.1.4",
+        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ dégâts des eaux ” est souscrite."
+      }
+    ],
     "vocabulaire_manquant": [
       {
         "variable": "canalisation_encastree",
@@ -644,143 +657,57 @@
         }
       },
       {
-        "variable": "lien_causal_travaux_eaux",
+        "variable": "option_degats_eaux",
         "valeurs": [
           "oui",
           "non"
         ],
-        "question": "Les travaux ont-ils contribué à la survenance ou à l'aggravation du sinistre d'eau ?",
-        "pourquoi": "réserve de l'exclusion 3.1.4.2.10",
-        "plus_proche": "lien_causal_travaux : question spécifique au vol",
+        "question": "Vos conditions particulières mentionnent-elles la garantie « dégâts des eaux » ?",
         "aide": {
-          "oui": "les travaux ont causé ou aggravé le dégât des eaux",
-          "non": "les travaux n'ont aucun lien avec le sinistre"
-        }
+          "oui": "la garantie figure aux conditions particulières",
+          "non": "elle n'y figure pas"
+        },
+        "pourquoi": "garantie optionnelle : réserve tant que les conditions particulières ne sont pas lues",
+        "plus_proche": "aucune ; fait des conditions particulières"
+      },
+      {
+        "variable": "bien",
+        "valeurs": [
+          "toiture"
+        ],
+        "question": "Quels biens ?",
+        "aide": {
+          "toiture": "le toit lui-même, les tuiles, la couverture, son étanchéité"
+        },
+        "pourquoi": "3.1.4.2",
+        "plus_proche": "element_batiment",
+        "parent": "element_batiment"
       }
     ],
-    "non_traduit": [
+    "non_traduit": [],
+    "hors_decision": [
       {
         "article": "3.1.4.1",
         "texte": "La Compagnie étend sans supplément de prime la portée de la garantie : n aux frais de recherche des fuites des installations hydrauliques défectueuses du bâtiment désigné ainsi que les frais d’ouverture et de remise en état des murs, planchers et plafonds en vue de la réparation desdites installations ; n aux frais liés à la réparation ou au remplacement de la canalisation encastrée ou souterraine à l’origine du sinistre. n aux dégâts liés l’écoulement d’huile minérale par suite de rupture des installations (réservoir et canalisations). La perte d’huile minérale subie à l’occasion d’un sinistre est également couverte.",
-        "pourquoi": "extensions de garantie (frais de recherche, huile minérale) sans variables dédiées dans le vocabulaire pour ces biens/frais"
+        "pourquoi": "extensions aux frais de recherche de fuite et à l'huile minérale : des frais, sans effet sur la question de couverture"
       }
     ]
   },
   "controles": [
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "canalisation_encastree = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.4`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "installation_hydraulique_exterieure = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.4`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "lien_causal_travaux_eaux = non : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.4`) ou à remplacer"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "obligation : citation rattachée à 3.1.4.3 (et non 3.1.4.3.1)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "obligation : citation rattachée à 3.1.4.3 (et non 3.1.4.3.2)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.4.2 (et non 3.1.4.2.1)"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "citation",
-      "message": "exclusion : article 3.1.4.2.2 inconnu"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.4.2 (et non 3.1.4.2.3)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.4.2 (et non 3.1.4.2.4)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.4.2 (et non 3.1.4.2.5)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.4.2 (et non 3.1.4.2.6)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.4.2 (et non 3.1.4.2.7)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.4.2 (et non 3.1.4.2.8)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.4.2 (et non 3.1.4.2.9)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.4.2 (et non 3.1.4.2.10)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.4.2 (et non 3.1.4.2.11)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.4.2 (et non 3.1.4.2.12)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.4.2 (et non 3.1.4.2.13)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.4.2 (et non 3.1.4.2.14)"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "portée",
-      "message": "exclusion « à la toiture du bâtiment ainsi qu’aux revêtements qui en ass » : ne vise que element_batiment, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
-    },
     {
       "gravite": "à relire",
       "controle": "réserve",
       "message": "exclusion « par les dommages causés par un objet non relié à l’installat » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (3.1.4.2) : « a ux conduites, aux installations et appareils hydrauliques, aux tuyaux d’évacuation, aux boilers, c »"
+      "message": "hors décision (3.1.4.1) : extensions aux frais de recherche de fuite et à l'huile minérale : des frais, sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "déclaré non traduit (3.1.4.1) : « La Compagnie étend sans supplément de prime la portée de la garantie : n aux frais de recherche des  » — extensions de garantie (frais de recherche, huile minérale) sans variables dédiées dans le vocabulaire pour ces biens/frais"
+      "gravite": "à relire",
+      "controle": "prolog",
+      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
     }
   ]
 }

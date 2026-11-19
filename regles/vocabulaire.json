@@ -19,7 +19,8 @@
         "fumee",
         "vandalisme",
         "merule",
-        "conflit_du_travail"
+        "conflit_du_travail",
+        "heurt"
       ],
       "question": "Que s'est-il passé (la cause, et le dommage s'il est d'une autre nature) ?",
       "aide": {
@@ -34,7 +35,8 @@
         "autre": "rien de ce qui précède",
         "vandalisme": "quelqu'un a abîmé exprès : tags, vitres cassées, portes rayées par un tiers ; pas une simple rayure dont on ignore la cause",
         "merule": "champignon (mérule) qui attaque le bois du bâtiment",
-        "conflit_du_travail": "grève, lock-out, manifestation de travailleurs"
+        "conflit_du_travail": "grève, lock-out, manifestation de travailleurs",
+        "heurt": "un véhicule, un arbre ou un objet a percuté le bâtiment ou les biens"
       }
     },
     "bien": {
@@ -74,7 +76,14 @@
         "citerne",
         "materiaux_construction",
         "denrees_alimentaires",
-        "appareil_informatique"
+        "appareil_informatique",
+        "toiture",
+        "appareil_electromenager",
+        "verre_optique",
+        "enseigne",
+        "equipement_alarme_surveillance",
+        "equipement_domotique",
+        "consommable"
       ],
       "question": "Quels biens sont endommagés ou volés ?",
       "parents": {
@@ -128,6 +137,27 @@
         ],
         "citerne": [
           "element_batiment"
+        ],
+        "toiture": [
+          "element_batiment"
+        ],
+        "appareil_electromenager": [
+          "objet_divers"
+        ],
+        "verre_optique": [
+          "objet_divers"
+        ],
+        "enseigne": [
+          "element_batiment"
+        ],
+        "equipement_alarme_surveillance": [
+          "electronique"
+        ],
+        "equipement_domotique": [
+          "electronique"
+        ],
+        "consommable": [
+          "objet_divers"
         ]
       },
       "aide": {
@@ -144,7 +174,14 @@
         "citerne": "cuve à mazout, citerne",
         "materiaux_construction": "matériaux de construction pas encore posés : briques, ciment, tuiles sur le chantier",
         "denrees_alimentaires": "aliments du frigo ou du congélateur",
-        "appareil_informatique": "ordinateur, portable, tablette, imprimante"
+        "appareil_informatique": "ordinateur, portable, tablette, imprimante",
+        "toiture": "le toit lui-même, les tuiles, la couverture, son étanchéité",
+        "appareil_electromenager": "four, frigo, lave-linge : leurs parties vitrées",
+        "verre_optique": "lunettes, verres de vue",
+        "enseigne": "enseigne, panneau publicitaire",
+        "equipement_alarme_surveillance": "alarme, caméra de surveillance, détecteurs",
+        "equipement_domotique": "box domotique, volets ou éclairage pilotés",
+        "consommable": "lampe, tube, fusible, joint, courroie, chaîne"
       }
     },
     "lieu": {
@@ -162,7 +199,8 @@
         "voie_publique",
         "chez_reparateur",
         "autre_batiment",
-        "casier"
+        "casier",
+        "vehicule"
       ],
       "question": "Où se trouvaient les biens ?",
       "aide": {
@@ -174,7 +212,8 @@
         "terrasse": "terrasse ou balcon attenant au logement",
         "voie_publique": "rue, transports, magasin, tout lieu public",
         "autre_batiment": "un autre bâtiment (club, bureau, chez quelqu'un)",
-        "casier": "casier d'un club de sport ou d'une association"
+        "casier": "casier d'un club de sport ou d'une association",
+        "vehicule": "dans une voiture, un véhicule"
       }
     },
     "fermeture": {
@@ -266,7 +305,9 @@
       ],
       "question": "À qui appartiennent les biens ?",
       "pour": [
-        "vol"
+        "vol",
+        "electricite",
+        "bris"
       ],
       "aide": {
         "assure": "les biens vous appartiennent (à vous ou à votre ménage), même emportés en voyage ou à l'hôtel",
@@ -348,7 +389,8 @@
         "explosion",
         "foudre",
         "fumee",
-        "autre"
+        "autre",
+        "electricite"
       ]
     },
     "embrasement": {
@@ -362,7 +404,8 @@
         "explosion",
         "foudre",
         "fumee",
-        "autre"
+        "autre",
+        "electricite"
       ]
     },
     "chaleur_sans_feu": {
@@ -376,7 +419,8 @@
         "explosion",
         "foudre",
         "fumee",
-        "autre"
+        "autre",
+        "electricite"
       ]
     },
     "prevention_gel": {
@@ -429,7 +473,8 @@
       ],
       "question": "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ?",
       "pour": [
-        "bris"
+        "bris",
+        "degat_eaux"
       ]
     },
     "travaux_vitres": {
@@ -465,18 +510,24 @@
       ],
       "question": "Quel est le type de dommage ?",
       "pour": [
-        "bris"
+        "bris",
+        "vol"
       ]
     },
     "cause_dommage": {
       "valeurs": [
         "gel",
-        "autre"
+        "autre",
+        "virus"
       ],
       "question": "La cause du dommage est-elle le gel ?",
       "pour": [
-        "bris"
-      ]
+        "bris",
+        "vol"
+      ],
+      "aide": {
+        "virus": "virus informatique, logiciel malveillant"
+      }
     },
     "intentionnel": {
       "question": "Le dommage a-t-il été causé volontairement par l'assuré (ou avec sa complicité) ?",
@@ -544,7 +595,9 @@
       "question": "Une plainte a-t-elle été déposée auprès des autorités ?",
       "pour": [
         "vol",
-        "vandalisme"
+        "vandalisme",
+        "attentat",
+        "conflit_du_travail"
       ]
     },
     "formule": {
@@ -568,7 +621,8 @@
       "pour": [
         "vol",
         "vandalisme",
-        "catastrophe_naturelle"
+        "catastrophe_naturelle",
+        "bris"
       ],
       "aide": {
         "oui": "vous habitez un appartement, ou une partie d'un bâtiment partagé avec d'autres occupants",
@@ -605,7 +659,12 @@
       "question": "Bâtiment en construction/transformation/rénovation ?",
       "pour": [
         "vol",
-        "vandalisme"
+        "vandalisme",
+        "tempete",
+        "electricite",
+        "degat_eaux",
+        "bris",
+        "catastrophe_naturelle"
       ]
     },
     "lien_causal_travaux": {
@@ -616,7 +675,11 @@
       "question": "Les travaux ont-ils contribué au vol ou à l'aggravation de ses conséquences ?",
       "pour": [
         "vol",
-        "vandalisme"
+        "vandalisme",
+        "electricite",
+        "degat_eaux",
+        "bris",
+        "catastrophe_naturelle"
       ]
     },
     "occupation_irreguliere": {
@@ -722,7 +785,8 @@
         "non": "simplement posée sur le sol"
       },
       "pour": [
-        "tempete"
+        "tempete",
+        "catastrophe_naturelle"
       ]
     },
     "alea_tempete": {
@@ -738,7 +802,8 @@
         "neige_glace": "toit ou auvent écrasé par la neige, la glace"
       },
       "pour": [
-        "tempete"
+        "tempete",
+        "heurt"
       ]
     },
     "vent_80_kmh_irm": {
@@ -880,7 +945,9 @@
         "non": "pas de garantie externe, seul l'assurance peut intervenir"
       },
       "pour": [
-        "electricite"
+        "electricite",
+        "bris",
+        "vol"
       ]
     },
     "cause_perte_alimentaire": {
@@ -912,7 +979,8 @@
         "non": "le bien endommagé n'est pas la cause, il subit le dommage"
       },
       "pour": [
-        "mazout"
+        "mazout",
+        "heurt"
       ]
     },
     "periode_gel": {
@@ -926,7 +994,8 @@
         "non": "il ne gelait pas au moment des faits"
       },
       "pour": [
-        "mazout"
+        "mazout",
+        "degat_eaux"
       ]
     },
     "controle_citerne_conforme": {
@@ -986,6 +1055,600 @@
       "pour": [
         "vol",
         "vandalisme"
+      ]
+    },
+    "option_incendie": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Vos conditions particulières mentionnent-elles la garantie « incendie et périls assimilés » ?",
+      "aide": {
+        "oui": "la garantie figure aux conditions particulières",
+        "non": "elle n'y figure pas"
+      },
+      "pour": [
+        "incendie",
+        "explosion",
+        "foudre",
+        "electricite",
+        "fumee",
+        "heurt",
+        "vol",
+        "vandalisme",
+        "attentat",
+        "conflit_du_travail"
+      ]
+    },
+    "demenagement": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les dégâts sont-ils survenus pendant un déménagement ?",
+      "aide": {
+        "oui": "en déménageant, en transportant les meubles",
+        "non": "hors de tout déménagement"
+      },
+      "pour": [
+        "heurt"
+      ]
+    },
+    "choc_deux_corps_durs": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les dégâts viennent-ils directement d'un choc entre deux objets durs ?",
+      "aide": {
+        "oui": "percuté, cogné par un objet dur",
+        "non": "rayé, frotté, mouillé, sans choc"
+      },
+      "pour": [
+        "heurt"
+      ]
+    },
+    "statut_logement": {
+      "valeurs": [
+        "proprietaire",
+        "locataire"
+      ],
+      "question": "Êtes-vous propriétaire ou locataire du bâtiment ?",
+      "aide": {
+        "proprietaire": "vous êtes propriétaire du logement ou de la maison",
+        "locataire": "vous louez le logement"
+      },
+      "pour": [
+        "vandalisme",
+        "bris"
+      ]
+    },
+    "batiment_endommage_prealablement": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le bâtiment a-t-il été préalablement endommagé par le vent, la grêle ou la neige/glace ?",
+      "aide": {
+        "oui": "le toit a été endommagé d'abord, puis l'eau est entrée",
+        "non": "l'eau est entrée sans dommage préalable"
+      },
+      "pour": [
+        "tempete"
+      ]
+    },
+    "objet_fixe_exterieurement": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'objet est-il fixé extérieurement (mât, poteau, enseigne, bâche, décoration de toit...) ?",
+      "aide": {
+        "oui": "c'est un lampadaire, une enseigne fixée dehors",
+        "non": "objet non fixé ou intérieur"
+      },
+      "pour": [
+        "tempete"
+      ]
+    },
+    "piscine": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "S'agit-il d'une piscine ?",
+      "aide": {
+        "oui": "c'est une piscine",
+        "non": "ce n'est pas une piscine"
+      },
+      "pour": [
+        "tempete"
+      ]
+    },
+    "materiaux_legers_murs": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les murs extérieurs sont-ils composés à plus de 50% de matériaux légers (tôle, bois, plastique...) ?",
+      "aide": {
+        "oui": "murs en tôle, bois, plastique...",
+        "non": "murs en brique, pierre, béton..."
+      },
+      "pour": [
+        "tempete"
+      ]
+    },
+    "materiaux_legers_toiture": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La toiture est-elle composée à plus de 20% de matériaux légers (bois, carton bitumé, plastique...) ?",
+      "aide": {
+        "oui": "toit en tôle, plastique, carton...",
+        "non": "toit en tuiles, ardoises, roofing..."
+      },
+      "pour": [
+        "tempete"
+      ]
+    },
+    "abri_fixe_sol": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "S'agit-il d'un auvent, marquise, car-port ou pergola solidement fixé au bâtiment ou sur fondations ?",
+      "aide": {
+        "oui": "c'est un car-port fixé au sol",
+        "non": "construction ouverte sans fixation solide"
+      },
+      "pour": [
+        "tempete"
+      ]
+    },
+    "deformation_sans_perte_etancheite": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La déformation des tuyaux/toit affecte-t-elle l'étanchéité ?",
+      "aide": {
+        "oui": "l'eau passe, ce n'est plus étanche",
+        "non": "déformé mais étanche"
+      },
+      "pour": [
+        "tempete"
+      ]
+    },
+    "choc_thermique": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage vient-il d'une variation brutale de température ?",
+      "aide": {
+        "oui": "choc thermique (chaud/froid brutal)",
+        "non": "autre cause"
+      },
+      "pour": [
+        "tempete"
+      ]
+    },
+    "dommage_esthetique": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage est-il purement esthétique ?",
+      "aide": {
+        "oui": "rayure, tache sans impact fonctionnel",
+        "non": "dommage structurel"
+      },
+      "pour": [
+        "tempete"
+      ]
+    },
+    "option_tempete": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Vos conditions particulières mentionnent-elles la garantie « tempête, grêle, pression de la neige ou de la glace » ?",
+      "aide": {
+        "oui": "la garantie figure aux conditions particulières",
+        "non": "elle n'y figure pas"
+      },
+      "pour": [
+        "tempete"
+      ]
+    },
+    "support_donnees_ou_logiciel": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "S'agit-il de dégâts à des supports de données (disques durs, clés USB, etc.) ou à des logiciels ?",
+      "aide": {
+        "oui": "disque dur endommagé, clé USB, logiciel corrompu",
+        "non": "autre bien"
+      },
+      "pour": [
+        "electricite"
+      ]
+    },
+    "bien_marchandise": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'appareil ou l'installation électrique endommagé constitue-t-il une marchandise (stock, bien destiné à la vente) ?",
+      "aide": {
+        "oui": "appareil en stock, destiné à la vente, marchandise",
+        "non": "appareil personnel ou professionnel non destiné à la vente"
+      },
+      "pour": [
+        "electricite"
+      ]
+    },
+    "appareil_plus_15_ans": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'appareil endommagé a-t-il plus de 15 ans ?",
+      "aide": {
+        "oui": "appareil acheté il y a plus de 15 ans",
+        "non": "appareil de moins de 15 ans"
+      },
+      "pour": [
+        "electricite"
+      ]
+    },
+    "fonctionnement_defectueux": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage est-il la conséquence directe d'un fonctionnement défectueux ?",
+      "aide": {
+        "oui": "défaut de fonctionnement de l'appareil ayant causé le dommage",
+        "non": "autre cause"
+      },
+      "pour": [
+        "electricite",
+        "bris",
+        "vol"
+      ]
+    },
+    "option_degats_electriques": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Vos conditions particulières mentionnent-elles la garantie « dégâts électriques » ?",
+      "aide": {
+        "oui": "la garantie figure aux conditions particulières",
+        "non": "elle n'y figure pas"
+      },
+      "pour": [
+        "electricite"
+      ]
+    },
+    "canalisation_encastree": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La canalisation à l'origine du sinistre était-elle encastrée ou souterraine ?",
+      "aide": {
+        "oui": "la canalisation était encastrée dans le mur ou souterraine",
+        "non": "la canalisation était apparente"
+      },
+      "pour": [
+        "degat_eaux"
+      ]
+    },
+    "installation_hydraulique_exterieure": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La fuite provenait-elle d'une installation hydraulique extérieure au bâtiment désigné ?",
+      "aide": {
+        "oui": "la fuite venait des tuyaux extérieurs du bâtiment voisin ou extérieurs au bâtiment assuré",
+        "non": "la fuite venait de l'intérieur du bâtiment assuré"
+      },
+      "pour": [
+        "degat_eaux"
+      ]
+    },
+    "option_degats_eaux": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Vos conditions particulières mentionnent-elles la garantie « dégâts des eaux » ?",
+      "aide": {
+        "oui": "la garantie figure aux conditions particulières",
+        "non": "elle n'y figure pas"
+      },
+      "pour": [
+        "degat_eaux"
+      ]
+    },
+    "option_bris_vitrages": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Vos conditions particulières mentionnent-elles la garantie « bris de vitrages » ?",
+      "aide": {
+        "oui": "la garantie figure aux conditions particulières",
+        "non": "elle n'y figure pas"
+      },
+      "pour": [
+        "bris"
+      ]
+    },
+    "vitrage_en_deplacement": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le vitrage était-il en cours de déplacement (transport, manutention) au moment du sinistre ?",
+      "aide": {
+        "oui": "la vitre était en train d'être déplacée, transportée, manipulée",
+        "non": "la vitre était fixe (placée ou non) mais pas en cours de déplacement"
+      },
+      "pour": [
+        "bris"
+      ]
+    },
+    "cause_projection_debris": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les dommages matériels aux biens ont-ils été causés par la projection de débris de vitrages ?",
+      "aide": {
+        "oui": "les biens ont été endommagés par des éclats, débris de verre projetés lors du bris d'une vitre",
+        "non": "les dommages ne proviennent pas de débris de vitre projetés"
+      },
+      "pour": [
+        "bris"
+      ]
+    },
+    "vehicule_vole": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le véhicule lui-même a-t-il été volé ?",
+      "aide": {
+        "oui": "la voiture a été volée avec le matériel",
+        "non": "seul le matériel a été pris"
+      },
+      "pour": [
+        "vol"
+      ]
+    },
+    "vehicule_ferme_cle": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le véhicule était-il fermé à clé ?",
+      "aide": {
+        "oui": "voiture verrouillée",
+        "non": "voiture ouverte, non verrouillée"
+      },
+      "pour": [
+        "bris",
+        "vol"
+      ]
+    },
+    "materiel_laisse_en_vue": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le matériel était-il visible de l'extérieur du véhicule ?",
+      "aide": {
+        "oui": "sur le siège, visible à travers la vitre",
+        "non": "dans le coffre, caché"
+      },
+      "pour": [
+        "bris",
+        "vol"
+      ]
+    },
+    "mise_en_exploitation_satisfaction": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'alarme fonctionnait-elle correctement depuis son installation ?",
+      "aide": {
+        "oui": "installée et en état de marche",
+        "non": "jamais correctement mise en service"
+      },
+      "pour": [
+        "bris"
+      ]
+    },
+    "vice_defaut_connu": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le défaut existait-il et était-il connu avant la souscription ?",
+      "aide": {
+        "oui": "panne ou défaut déjà connu",
+        "non": "défaut apparu ensuite"
+      },
+      "pour": [
+        "bris",
+        "vol"
+      ]
+    },
+    "option_materiel_multimedia": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Vos conditions particulières mentionnent-elles la garantie « matériel multimédia » ?",
+      "aide": {
+        "oui": "la garantie figure aux conditions particulières",
+        "non": "elle n'y figure pas"
+      },
+      "pour": [
+        "bris",
+        "vol"
+      ]
+    },
+    "option_vol": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Vos conditions particulières mentionnent-elles la garantie « vol » ?",
+      "aide": {
+        "oui": "la garantie figure aux conditions particulières",
+        "non": "elle n'y figure pas"
+      },
+      "pour": [
+        "vol"
+      ]
+    },
+    "catastrophe": {
+      "valeurs": [
+        "tremblement_terre",
+        "inondation",
+        "ruissellement",
+        "glissement_terrain"
+      ],
+      "question": "Quel phénomène naturel a causé les dégâts ?",
+      "aide": {
+        "tremblement_terre": "séisme, tremblement de terre et ses répliques",
+        "inondation": "crue, débordement d'un cours d'eau, refoulement d'égouts",
+        "ruissellement": "eau de pluies torrentielles qui ruisselle faute d'absorption du sol",
+        "glissement_terrain": "glissement ou affaissement de terrain"
+      },
+      "pour": [
+        "catastrophe_naturelle"
+      ]
+    },
+    "option_tremblement_terre": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Vos conditions particulières mentionnent-elles la garantie « tremblement de terre » ?",
+      "aide": {
+        "oui": "la garantie figure aux conditions particulières",
+        "non": "elle n'y figure pas"
+      },
+      "pour": [
+        "catastrophe_naturelle"
+      ]
+    },
+    "fixe_a_demeure": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'objet à l'extérieur était-il fixé à demeure (scellé, ancré) ?",
+      "aide": {
+        "oui": "scellé dans le sol ou le mur",
+        "non": "simplement posé"
+      },
+      "pour": [
+        "catastrophe_naturelle"
+      ]
+    },
+    "construction_facilement_deplacable": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La construction est-elle facile à déplacer ou à démonter ?",
+      "aide": {
+        "oui": "cabane démontable, abri posé, tente",
+        "non": "construction fixe"
+      },
+      "pour": [
+        "catastrophe_naturelle"
+      ]
+    },
+    "option_pluies_inondations": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Vos conditions particulières mentionnent-elles la garantie « pluies et inondations » ?",
+      "aide": {
+        "oui": "la garantie figure aux conditions particulières",
+        "non": "elle n'y figure pas"
+      },
+      "pour": [
+        "catastrophe_naturelle"
+      ]
+    },
+    "dommages_dans_72h": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les dommages se sont-ils réalisés dans les 72 heures suivant l'événement climatique ?",
+      "aide": {
+        "oui": "les dégâts sont apparus dans les 3 jours après l'événement",
+        "non": "les dégâts sont apparus plus de 72 heures après l'événement"
+      },
+      "pour": [
+        "catastrophe_naturelle"
+      ]
+    },
+    "ouvertures_non_fermees": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'eau est-elle entrée par des ouvertures non fermées (portes, fenêtres, soupiraux, lucarnes) ?",
+      "aide": {
+        "oui": "l'eau est passée par une porte, fenêtre, soupirail ou lucarne laissée ouverte",
+        "non": "toutes les ouvertures étaient fermées"
+      },
+      "pour": [
+        "catastrophe_naturelle"
+      ]
+    },
+    "terrain_non_constructible": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le bâtiment est-il situé sur un terrain non constructible ?",
+      "aide": {
+        "oui": "le terrain est classé non constructible (zone inondable interdite, zone naturelle protégée, etc.)",
+        "non": "le terrain est constructible"
+      },
+      "pour": [
+        "catastrophe_naturelle"
+      ]
+    },
+    "autorisation_gestion_eau_non_respectee": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le bâtiment respecte-t-il les conditions de l'autorisation de l'Administration de la gestion de l'eau ?",
+      "aide": {
+        "oui": "le bâtiment a une autorisation de l'Administration de la gestion de l'eau mais ne respecte pas ses conditions",
+        "non": "pas d'autorisation requise ou conditions respectées"
+      },
+      "pour": [
+        "catastrophe_naturelle"
       ]
     }
   }

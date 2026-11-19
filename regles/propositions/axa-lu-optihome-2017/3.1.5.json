@@ -3,7 +3,17 @@
     "article": "3.1.5",
     "modele": "mistral:mistral-large-latest",
     "date": "2026-11-19",
-    "consigne": "redaction-regles v6"
+    "consigne": "redaction-regles v6",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-19",
+      "modifications": [
+        "statut_assure_batiment → statut_logement (partagé avec 3.1.1) ; occupant partiel → occupation_partielle (variable existante)",
+        "exclusions de biens (lunettes, objets en verre, enseignes, multimédia) : portée limitée au bien ; châssis de couche : la valeur proposée désignait un cadre de lit, retirée",
+        "lien_causal_travaux_sinistre → lien_causal_travaux ; parties communes : quand l'assuré n'occupe qu'une partie du bâtiment",
+        "« applicables si… » : réserve (option_bris_vitrages) ; valeurs nouvelles rattachées à leur parent"
+      ]
+    }
   },
   "proposition": {
     "evenements": [
@@ -115,7 +125,7 @@
                       },
                       {
                         "f": [
-                          "statut_assure_batiment",
+                          "statut_logement",
                           "locataire"
                         ]
                       }
@@ -149,7 +159,9 @@
                 "appareil_audiovisuel"
               ]
             },
-            "portee": "tout",
+            "portee": {
+              "bien": "appareil_audiovisuel"
+            },
             "a_demander": false,
             "article": "3.1.5.2",
             "texte": "aux parties vitrées du matériel multimédia"
@@ -157,9 +169,6 @@
           {
             "condition": {
               "et": [
-                {
-                  "concept": "batiment_designe"
-                },
                 {
                   "f": [
                     "travaux_construction",
@@ -169,7 +178,7 @@
                 {
                   "non": {
                     "f": [
-                      "lien_causal_travaux_sinistre",
+                      "lien_causal_travaux",
                       "non"
                     ]
                   }
@@ -188,29 +197,23 @@
                 "verre_optique"
               ]
             },
-            "portee": "tout",
+            "portee": {
+              "bien": "verre_optique"
+            },
             "a_demander": false,
             "article": "3.1.5.2",
             "texte": "aux verres optiques et lunettes"
           },
           {
             "condition": {
-              "ou": [
-                {
-                  "f": [
-                    "bien",
-                    "chassis_couche"
-                  ]
-                },
-                {
-                  "f": [
-                    "bien",
-                    "enseigne"
-                  ]
-                }
+              "f": [
+                "bien",
+                "enseigne"
               ]
             },
-            "portee": "tout",
+            "portee": {
+              "bien": "enseigne"
+            },
             "a_demander": false,
             "article": "3.1.5.2",
             "texte": "aux châssis de couche et aux enseignes"
@@ -247,25 +250,9 @@
                   ]
                 },
                 {
-                  "ou": [
-                    {
-                      "f": [
-                        "statut_assure_batiment",
-                        "proprietaire"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "statut_assure_batiment",
-                        "locataire"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "occupation_partielle",
-                        "oui"
-                      ]
-                    }
+                  "f": [
+                    "occupation_partielle",
+                    "oui"
                   ]
                 }
               ]
@@ -282,7 +269,9 @@
                 "objet_verre_non_vitre"
               ]
             },
-            "portee": "tout",
+            "portee": {
+              "bien": "objet_verre_non_vitre"
+            },
             "a_demander": false,
             "article": "3.1.5.2",
             "texte": "aux objets en verre, par exemple lustres, vases, vaisselle"
@@ -295,7 +284,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.1.5.2",
             "texte": "par un défaut de réparation ou d’entretien des châssis, soubassements et support de vitres, glaces et miroirs"
           }
@@ -309,85 +298,69 @@
         ]
       }
     ],
-    "exclusions_communes": [],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "f": [
+            "option_bris_vitrages",
+            "non"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "3.1.5",
+        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ bris de vitrages ” est souscrite."
+      }
+    ],
     "vocabulaire_manquant": [
       {
         "variable": "bien",
         "valeurs": [
-          "appareil_electromenager"
-        ],
-        "question": "S'agit-il d'un appareil électroménager (four, réfrigérateur, lave-linge, lave-vaisselle, etc.) ?",
-        "pourquoi": "La garantie couvre les parties vitrées des appareils électroménagers, distincts du matériel multimédia",
-        "plus_proche": "appareil_audiovisuel : désigne le matériel multimédia (téléviseur, chaîne hi-fi), pas les appareils électroménagers",
-        "aide": {
-          "appareil_electromenager": "l'appareil endommagé est un four, un réfrigérateur, un lave-linge, un lave-vaisselle, une hotte, etc."
-        }
-      },
-      {
-        "variable": "bien",
-        "valeurs": [
-          "verre_optique"
-        ],
-        "question": "S'agit-il de verres optiques ou de lunettes ?",
-        "pourquoi": "Exclusion spécifique des verres optiques et lunettes (3.1.5.2.3)",
-        "plus_proche": "objet_verre_non_vitre : désigne les objets en verre décoratifs (vases, lustres), pas les verres de correction",
-        "aide": {
-          "verre_optique": "ce sont des lunettes, des verres de lunettes, des verres optiques de correction"
-        }
-      },
-      {
-        "variable": "bien",
-        "valeurs": [
-          "chassis_couche"
-        ],
-        "question": "S'agit-il d'un châssis de couche (cadre de lit) ?",
-        "pourquoi": "Exclusion spécifique des châssis de couche (3.1.5.2.4)",
-        "plus_proche": "chassis : désigne les châssis de fenêtres ou de portes, pas les châssis de lit",
-        "aide": {
-          "chassis_couche": "c'est le cadre du lit, le châssis de couche, la structure du lit"
-        }
-      },
-      {
-        "variable": "bien",
-        "valeurs": [
+          "appareil_electromenager",
+          "verre_optique",
           "enseigne"
         ],
-        "question": "S'agit-il d'une enseigne (panneau publicitaire, enseigne commerciale) ?",
-        "pourquoi": "Exclusion spécifique des enseignes (3.1.5.2.4)",
-        "plus_proche": "aucune valeur existante ne désigne une enseigne commerciale",
+        "question": "Quels biens ?",
         "aide": {
-          "enseigne": "c'est une enseigne de magasin, un panneau publicitaire extérieur, une enseigne lumineuse"
+          "appareil_electromenager": "four, frigo, lave-linge : leurs parties vitrées",
+          "verre_optique": "lunettes, verres de vue",
+          "enseigne": "enseigne, panneau publicitaire"
+        },
+        "pourquoi": "3.1.5",
+        "plus_proche": "objet_divers",
+        "parent": {
+          "appareil_electromenager": "objet_divers",
+          "verre_optique": "objet_divers",
+          "enseigne": "element_batiment"
         }
       },
       {
-        "variable": "statut_assure_batiment",
+        "variable": "statut_logement",
         "valeurs": [
           "proprietaire",
-          "locataire",
-          "occupant_partiel"
+          "locataire"
         ],
-        "question": "Quel est votre statut par rapport au bâtiment assuré : êtes-vous propriétaire, locataire, ou n'en occupez-vous qu'une partie ?",
-        "pourquoi": "L'exclusion 3.1.5.2.6 s'applique lorsque l'assuré est propriétaire, locataire ou occupant partiel du bâtiment",
-        "plus_proche": "occupation_partielle : ne couvre que le cas de l'occupant partiel, pas la distinction propriétaire/locataire",
+        "question": "Êtes-vous propriétaire ou locataire du bâtiment ?",
         "aide": {
-          "proprietaire": "je suis propriétaire du bâtiment (ou copropriétaire)",
-          "locataire": "je suis locataire du bâtiment",
-          "occupant_partiel": "j'occupe seulement une partie du bâtiment (ex: un appartement dans un immeuble)"
-        }
+          "proprietaire": "vous êtes propriétaire du logement ou de la maison",
+          "locataire": "vous louez le logement"
+        },
+        "pourquoi": "3.1.1.2.5 (vandalisme : l'assuré est propriétaire), 3.1.5 (vitrages isolants : sauf si l'assuré est locataire)",
+        "plus_proche": "proprietaire : dit à qui sont les biens, pas qui possède le bâtiment"
       },
       {
-        "variable": "lien_causal_travaux_sinistre",
+        "variable": "option_bris_vitrages",
         "valeurs": [
           "oui",
           "non"
         ],
-        "question": "Les travaux ont-ils contribué à la survenance ou à l'aggravation du sinistre (bris de vitrage) ?",
-        "pourquoi": "La réserve de l'exclusion 3.1.5.2.2 nécessite de savoir si les travaux ont contribué au sinistre pour tout type d'événement, pas seulement le vol",
-        "plus_proche": "lien_causal_travaux : sa question ne mentionne que le vol, pas les autres sinistres comme le bris",
+        "question": "Vos conditions particulières mentionnent-elles la garantie « bris de vitrages » ?",
         "aide": {
-          "oui": "les travaux en cours ont causé ou aggravé le bris de vitre",
-          "non": "les travaux n'ont aucun lien causal avec le bris survenu"
-        }
+          "oui": "la garantie figure aux conditions particulières",
+          "non": "elle n'y figure pas"
+        },
+        "pourquoi": "garantie optionnelle : réserve tant que les conditions particulières ne sont pas lues",
+        "plus_proche": "aucune ; fait des conditions particulières"
       },
       {
         "variable": "vitrage_en_deplacement",
@@ -422,109 +395,9 @@
   },
   "controles": [
     {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "bien = appareil_electromenager : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.5`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "cause_projection_debris = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.5`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "statut_assure_batiment = locataire : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.5`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "lien_causal_travaux_sinistre = non : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.5`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "bien = verre_optique : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.5`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "bien = chassis_couche : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.5`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "bien = enseigne : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.5`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "vitrage_en_deplacement = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.5`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "statut_assure_batiment = proprietaire : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.5`) ou à remplacer"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.5.2 (et non 3.1.5.2.1)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.5.2 (et non 3.1.5.2.2)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.5.2 (et non 3.1.5.2.3)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.5.2 (et non 3.1.5.2.4)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.5.2 (et non 3.1.5.2.5)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.5.2 (et non 3.1.5.2.6)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.5.2 (et non 3.1.5.2.7)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.5.2 (et non 3.1.5.2.8)"
-    },
-    {
       "gravite": "à relire",
-      "controle": "portée",
-      "message": "exclusion « aux parties vitrées du matériel multimédia » : ne vise que appareil_audiovisuel, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "portée",
-      "message": "exclusion « aux verres optiques et lunettes » : ne vise que verre_optique, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "portée",
-      "message": "exclusion « aux châssis de couche et aux enseignes » : ne vise que chassis_couche, enseigne, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "portée",
-      "message": "exclusion « aux objets en verre, par exemple lustres, vases, vaisselle » : ne vise que objet_verre_non_vitre, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+      "controle": "prolog",
+      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
     }
   ]
 }

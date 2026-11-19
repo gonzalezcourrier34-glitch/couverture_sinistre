@@ -264,6 +264,8 @@ def configurer(usage: str = "analyse") -> LLM | None:
     ANTHROPIC_API_KEY=...                                       → Anthropic
     COUVERTURE_LLM_URL=... (+ COUVERTURE_LLM_CLE)               → API compatible OpenAI
     COUVERTURE_MODELE=...                                       modèle des analyses (facultatif)
+    COUVERTURE_MODELE_CONFIRMATION=...                          modèle qui confirme les faits portant une
+                                                                réponse ferme (facultatif ; sinon celui de la lecture)
     COUVERTURE_MODELE_CONTRAT=...                               modèle du travail sur les contrats :
                                                                 compilation, juge de qualité, réparation
                                                                 (facultatif ; par défaut COUVERTURE_MODELE)
@@ -281,6 +283,17 @@ def configurer(usage: str = "analyse") -> LLM | None:
         valeur = os.environ.get(variable, "").strip()
         return bool(valeur) and not valeur.startswith("colle")  # valeur d'exemple du .env laissée telle quelle
 
+    if usage == "confirmation":
+        # La confirmation des faits qui portent une réponse ferme (7.66) : quelques faits, une réponse courte ;
+        # un modèle plus fort que celui de la lecture, s'il est demandé. Sinon None : le modèle de la lecture.
+        modele = os.environ.get("COUVERTURE_MODELE_CONFIRMATION", "").strip()
+        if not modele:
+            return None
+        if choix in ("", "mistral") and present("MISTRAL_API_KEY"):
+            return MistralLLM(modele=modele)
+        if choix in ("", "anthropic") and present("ANTHROPIC_API_KEY"):
+            return AnthropicLLM(modele=modele)
+        return None
     modele_contrat = os.environ.get("COUVERTURE_MODELE_CONTRAT", "").strip() if usage == "contrat" else ""
     if choix in ("", "mistral") and present("MISTRAL_API_KEY"):
         if modele_contrat:

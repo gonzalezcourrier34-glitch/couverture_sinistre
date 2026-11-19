@@ -3,7 +3,23 @@
     "article": "3.1.7",
     "modele": "mistral:mistral-large-latest",
     "date": "2026-11-19",
-    "consigne": "redaction-regles v6"
+    "consigne": "redaction-regles v6",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-19",
+      "modifications": [
+        "matériel multimédia (1.25 : ordinateur, tablette, téléphone, appareil photo…) → bien = electronique et ses sous-valeurs ; alarme et domotique rattachées à electronique",
+        "« applicables si… » : réserve (option_materiel_multimedia) ; « sous réserve que la garantie vol ait été accordée » : réserve pour le vol seulement (option_vol)",
+        "vol couvert hors du bâtiment désigné, dans un véhicule volé ou forcé, ou en séjour temporaire avec plainte ; « à l'extérieur du bâtiment » = non(bâtiment désigné)",
+        "obligation du véhicule : si le matériel est dans un véhicule ; elle s'appliquait à tout sinistre ; lieu = vehicule (pas vehicule_moteur, une valeur de bien)",
+        "mise en exploitation satisfaisante : seulement pour l'alarme, en exclusion de portée bien (en circonstance, elle faisait demander si un téléphone était une alarme)",
+        "la réserve « garantie vol accordée » sur la seule garantie vol : écrite « vol et option inconnue », elle était entamée par l'événement et posait la question à chaque vol",
+        "frais d'entretien, de réparation de défauts, pertes indirectes, pertes de données, franchise de 60 € : hors décision ; « dommages d'origine électrique » = événement électricité",
+        "defaut_fonctionnement et fonctionnement_defectueux : une seule variable ; auteur = preneur → assure",
+        "les six passages « non traduits » (extension des autres garanties en séjour, indemnisation, obligations après sinistre) : hors décision"
+      ],
+      "question_metier": "Le matériel multimédia en séjour temporaire est couvert par les garanties incendie, tempête, eaux… « sous réserve qu'elles aient été accordées » : non traduit ici (hors décision), à vérifier avec un souscripteur."
+    }
   },
   "proposition": {
     "evenements": [
@@ -29,7 +45,7 @@
               {
                 "f": [
                   "bien",
-                  "materiel_multimedia"
+                  "electronique"
                 ]
               },
               {
@@ -47,57 +63,69 @@
             ]
           }
         ],
-        "circonstances": [
+        "circonstances": [],
+        "obligations": [
           {
             "condition": {
-              "f": [
-                "mise_en_exploitation_satisfaction",
-                "oui"
+              "si": [
+                {
+                  "f": [
+                    "lieu",
+                    "vehicule"
+                  ]
+                },
+                {
+                  "et": [
+                    {
+                      "f": [
+                        "vehicule_ferme_cle",
+                        "oui"
+                      ]
+                    },
+                    {
+                      "non": {
+                        "f": [
+                          "materiel_laisse_en_vue",
+                          "oui"
+                        ]
+                      }
+                    }
+                  ]
+                }
               ]
             },
-            "article": "3.1.7.1",
-            "texte": "pour autant que la mise en exploitation desdits matériels ait donné entière satisfaction"
+            "article": "3.1.7.4",
+            "texte": "Lorsque les biens assurés se trouvent à l’intérieur d’un véhicule inoccupé, la garantie intervient uniquement si les deux conditions suivantes sont remplies simultanément : n le véhicule a été fermé à clé ; n le matériel assuré n’a pas été laissé en vue à l’intérieur de l’habitacle du véhicule",
+            "exception": null,
+            "lien_causal": false
           }
         ],
-        "obligations": [
+        "exclusions": [
           {
             "condition": {
               "et": [
                 {
                   "f": [
-                    "lieu",
-                    "vehicule_moteur"
+                    "bien",
+                    "equipement_alarme_surveillance"
                   ]
                 },
                 {
                   "f": [
-                    "vehicule_inoccupe",
-                    "oui"
+                    "mise_en_exploitation_satisfaction",
+                    "non"
                   ]
-                },
-                {
-                  "f": [
-                    "vehicule_ferme_cle",
-                    "oui"
-                  ]
-                },
-                {
-                  "non": {
-                    "f": [
-                      "materiel_laisse_en_vue",
-                      "oui"
-                    ]
-                  }
                 }
               ]
             },
-            "article": "3.1.7.4.2",
-            "texte": "Lorsque les biens assurés se trouvent à l'intérieur d'un véhicule inoccupé, la garantie intervient uniquement si les deux conditions suivantes sont remplies simultanément : le véhicule a été fermé à clé ; le matériel assuré n'a pas été laissé en vue à l'intérieur de l'habitacle du véhicule.",
-            "exception": null,
-            "lien_causal": false
+            "portee": {
+              "bien": "equipement_alarme_surveillance"
+            },
+            "a_demander": false,
+            "article": "3.1.7.1",
+            "texte": "pour autant que la mise en exploitation desdits matériels ait donné entière satisfaction"
           }
         ],
-        "exclusions": [],
         "limites": [
           {
             "article": "3.1.7.1",
@@ -128,7 +156,7 @@
               {
                 "f": [
                   "bien",
-                  "materiel_multimedia"
+                  "electronique"
                 ]
               },
               {
@@ -149,29 +177,18 @@
         "circonstances": [
           {
             "condition": {
-              "f": [
-                "garantie_vol_accordee",
-                "oui"
-              ]
-            },
-            "article": "3.1.7.1",
-            "texte": "Sous réserve que la garantie vol ait été accordée"
-          },
-          {
-            "condition": {
               "ou": [
                 {
-                  "f": [
-                    "lieu",
-                    "voie_publique"
-                  ]
+                  "non": {
+                    "concept": "batiment_designe"
+                  }
                 },
                 {
-                  "si": [
+                  "et": [
                     {
                       "f": [
                         "lieu",
-                        "vehicule_moteur"
+                        "vehicule"
                       ]
                     },
                     {
@@ -193,7 +210,7 @@
                   ]
                 },
                 {
-                  "si": [
+                  "et": [
                     {
                       "f": [
                         "sejour_temporaire",
@@ -214,8 +231,56 @@
             "texte": "le vol du matériel multimédia lorsque le vol a eu lieu à l’extérieur du bâtiment désigné ; n le vol de ces équipements se trouvant à l’intérieur d’un véhicule terrestre automoteur à condition que ledit véhicule soit également volé ou qu’il y ait effraction caractérisée du véhicule ; n le vol de ces équipements qu’un Assuré déplace à l’occasion d’un séjour temporaire dans un bâtiment situé n’importe où dans le monde, pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes"
           }
         ],
-        "obligations": [],
-        "exclusions": [],
+        "obligations": [
+          {
+            "condition": {
+              "si": [
+                {
+                  "f": [
+                    "lieu",
+                    "vehicule"
+                  ]
+                },
+                {
+                  "et": [
+                    {
+                      "f": [
+                        "vehicule_ferme_cle",
+                        "oui"
+                      ]
+                    },
+                    {
+                      "non": {
+                        "f": [
+                          "materiel_laisse_en_vue",
+                          "oui"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "article": "3.1.7.4",
+            "texte": "Lorsque les biens assurés se trouvent à l’intérieur d’un véhicule inoccupé, la garantie intervient uniquement si les deux conditions suivantes sont remplies simultanément : n le véhicule a été fermé à clé ; n le matériel assuré n’a pas été laissé en vue à l’intérieur de l’habitacle du véhicule",
+            "exception": null,
+            "lien_causal": false
+          }
+        ],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "option_vol",
+                "non"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.7.1",
+            "texte": "Sous réserve que la garantie vol ait été accordée"
+          }
+        ],
         "limites": []
       }
     ],
@@ -240,7 +305,7 @@
           ]
         },
         "portee": "tout",
-        "a_demander": true,
+        "a_demander": false,
         "article": "3.1.7.2",
         "texte": "les pertes liées à l'action d'un virus et tous préjudices consécutifs"
       },
@@ -252,7 +317,7 @@
           ]
         },
         "portee": "tout",
-        "a_demander": true,
+        "a_demander": false,
         "article": "3.1.7.2",
         "texte": "les pertes ou dommages dus à des vices ou défauts qui existaient à la date d'effet de la présente assurance et qui étaient connus de l'Assuré ou de ses mandataires"
       },
@@ -274,45 +339,9 @@
           ]
         },
         "portee": "tout",
-        "a_demander": true,
-        "article": "3.1.3.2",
-        "texte": "les pertes ou dommages qui sont la conséquence directe : des effets continuels de l'exploitation (usure) ; d'un fonctionnement défectueux"
-      },
-      {
-        "condition": {
-          "et": [
-            {
-              "f": [
-                "defaut_fonctionnement",
-                "oui"
-              ]
-            },
-            {
-              "non": {
-                "f": [
-                  "bien_a_l_origine_sinistre",
-                  "oui"
-                ]
-              }
-            }
-          ]
-        },
-        "portee": "tout",
-        "a_demander": true,
+        "a_demander": false,
         "article": "3.1.7.2",
-        "texte": "les frais exposés pour réparer des défauts de fonctionnement, sauf si ces défauts sont la conséquence d'une perte ou d'un dommage indemnisable causé aux matériels assurés"
-      },
-      {
-        "condition": {
-          "f": [
-            "entretien",
-            "oui"
-          ]
-        },
-        "portee": "tout",
-        "a_demander": true,
-        "article": "3.1.7.2",
-        "texte": "les frais d'entretien des matériels assurés, y compris le coût des pièces remplacées pendant les travaux d'entretien"
+        "texte": "les pertes ou dommages qui sont la conséquence directe : n des effets continuels de l’exploitation (usure) ; n d’un fonctionnement défectueux"
       },
       {
         "condition": {
@@ -322,31 +351,21 @@
           ]
         },
         "portee": "tout",
-        "a_demander": true,
+        "a_demander": false,
         "article": "3.1.7.2",
         "texte": "les pertes ou dommages dont le fabricant ou le fournisseur est légalement ou contractuellement responsable"
       },
       {
         "condition": {
           "f": [
-            "perte_indirecte",
-            "oui"
-          ]
-        },
-        "portee": "tout",
-        "a_demander": true,
-        "article": "3.1.7.2",
-        "texte": "les pertes indirectes de quelque nature que ce soit"
-      },
-      {
-        "condition": {
-          "f": [
             "bien",
-            "lampe_tube_bande_fusible_joint_courroie_chaine"
+            "consommable"
           ]
         },
-        "portee": "tout",
-        "a_demander": true,
+        "portee": {
+          "bien": "consommable"
+        },
+        "a_demander": false,
         "article": "3.1.7.2",
         "texte": "les pertes ou dommages causés aux lampes,tubes, bandes transporteuses, fusibles, joints, courroies, chaînes"
       },
@@ -358,26 +377,14 @@
           ]
         },
         "portee": "tout",
-        "a_demander": true,
+        "a_demander": false,
         "article": "3.1.7.2",
         "texte": "les défauts d'ordre esthétique, tels que les bosses, égratignures, rayures ou écaillements"
       },
       {
         "condition": {
           "f": [
-            "perte_donnees",
-            "oui"
-          ]
-        },
-        "portee": "tout",
-        "a_demander": true,
-        "article": "3.1.7.2",
-        "texte": "les pertes de données"
-      },
-      {
-        "condition": {
-          "f": [
-            "cause_dommage",
+            "evenement",
             "electricite"
           ]
         },
@@ -389,24 +396,14 @@
       {
         "condition": {
           "f": [
-            "montant_dommage",
-            "inferieur_60"
+            "bien",
+            "denrees_alimentaires"
           ]
         },
-        "portee": "tout",
-        "a_demander": true,
-        "article": "3.1.7.2",
-        "texte": "les dommages d'un montant inférieur à 60 €"
-      },
-      {
-        "condition": {
-          "f": [
-            "contenu_appareil",
-            "oui"
-          ]
+        "portee": {
+          "bien": "denrees_alimentaires"
         },
-        "portee": "tout",
-        "a_demander": true,
+        "a_demander": false,
         "article": "3.1.7.2",
         "texte": "les dommages causés au contenu des appareils"
       },
@@ -430,65 +427,60 @@
                 "auteur",
                 "personnel_prive"
               ]
-            },
-            {
-              "f": [
-                "auteur",
-                "preneur"
-              ]
             }
           ]
         },
         "portee": "tout",
         "a_demander": true,
-        "article": "3.1.7.2.15",
-        "texte": "les vols commis par ou avec la complicité de ou du : Preneur d'assurance, son conjoint, leurs ascendants ou descendants ainsi que les conjoints de ces personnes ; l'Assuré ; toute personne au service de l'Assuré pendant les heures de service et, si ces vols ont été commis en dehors de celles-ci, autrement que par effraction ou avec violence"
+        "article": "3.1.7.2",
+        "texte": "les vols commis par ou avec la complicité de ou du : n Preneur d’assurance, son conjoint, leurs ascendants ou descendants ainsi que les conjoints de ces personnes ; n l’Assuré ; n toute personne au service de l’Assuré pendant les heures de service et, si ces vols ont été commis en dehors de celles-ci, autrement que par effraction ou avec violence. En ce qui concerne les pièces mentionnées aux points"
+      },
+      {
+        "condition": {
+          "f": [
+            "option_materiel_multimedia",
+            "non"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "3.1.7",
+        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “matériel multimédia” est accordée."
       }
     ],
     "vocabulaire_manquant": [
       {
         "variable": "bien",
         "valeurs": [
-          "materiel_multimedia",
           "equipement_alarme_surveillance",
           "equipement_domotique",
-          "lampe_tube_bande_fusible_joint_courroie_chaine"
+          "consommable"
         ],
-        "question": "De quel type d'équipement s'agit-il ?",
-        "pourquoi": "Catégories couvertes par la garantie 3.1.7",
-        "plus_proche": "appareil_audiovisuel",
+        "question": "Quels biens ?",
         "aide": {
-          "materiel_multimedia": "matériel multimédia",
-          "equipement_alarme_surveillance": "alarme/surveillance",
-          "equipement_domotique": "domotique",
-          "lampe_tube_bande_fusible_joint_courroie_chaine": "lampe, tube, fusible, joint, courroie, chaîne, bande transporteuse"
+          "equipement_alarme_surveillance": "alarme, caméra de surveillance, détecteurs",
+          "equipement_domotique": "box domotique, volets ou éclairage pilotés",
+          "consommable": "lampe, tube, fusible, joint, courroie, chaîne"
+        },
+        "pourquoi": "3.1.7",
+        "plus_proche": "electronique",
+        "parent": {
+          "equipement_alarme_surveillance": "electronique",
+          "equipement_domotique": "electronique",
+          "consommable": "objet_divers"
         }
       },
       {
         "variable": "lieu",
         "valeurs": [
-          "vehicule_moteur"
+          "vehicule"
         ],
-        "question": "Où se trouvait le bien ?",
-        "pourquoi": "Vol dans un véhicule",
-        "plus_proche": "voie_publique",
+        "question": "Où se trouvaient les biens ?",
         "aide": {
-          "vehicule_moteur": "dans un véhicule terrestre automoteur"
-        }
-      },
-      {
-        "variable": "garantie_vol_accordee",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "La garantie vol est-elle accordée ?",
-        "pourquoi": "Condition d'application",
-        "plus_proche": "formule",
-        "aide": {
-          "oui": "garantie vol souscrite",
-          "non": "non souscrite"
-        }
+          "vehicule": "dans une voiture, un véhicule"
+        },
+        "pourquoi": "3.1.7.1",
+        "plus_proche": "voie_publique"
       },
       {
         "variable": "vehicule_vole",
@@ -496,27 +488,13 @@
           "oui",
           "non"
         ],
-        "question": "Le véhicule a-t-il été volé ?",
-        "pourquoi": "Condition vol dans véhicule",
-        "plus_proche": "effraction",
+        "question": "Le véhicule lui-même a-t-il été volé ?",
         "aide": {
-          "oui": "véhicule volé",
-          "non": "véhicule non volé"
-        }
-      },
-      {
-        "variable": "vehicule_inoccupe",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Le véhicule était-il inoccupé ?",
-        "pourquoi": "Condition 3.1.7.4.2",
-        "plus_proche": "absence",
-        "aide": {
-          "oui": "véhicule laissé sans occupant",
-          "non": "occupé"
-        }
+          "oui": "la voiture a été volée avec le matériel",
+          "non": "seul le matériel a été pris"
+        },
+        "pourquoi": "3.1.7.1",
+        "plus_proche": "aucune"
       },
       {
         "variable": "vehicule_ferme_cle",
@@ -525,12 +503,12 @@
           "non"
         ],
         "question": "Le véhicule était-il fermé à clé ?",
-        "pourquoi": "Condition 3.1.7.4.2",
-        "plus_proche": "portes_fermees",
         "aide": {
-          "oui": "fermé à clé",
-          "non": "non fermé"
-        }
+          "oui": "voiture verrouillée",
+          "non": "voiture ouverte, non verrouillée"
+        },
+        "pourquoi": "3.1.7.4",
+        "plus_proche": "aucune"
       },
       {
         "variable": "materiel_laisse_en_vue",
@@ -538,13 +516,13 @@
           "oui",
           "non"
         ],
-        "question": "Le matériel était-il laissé en vue dans l'habitacle ?",
-        "pourquoi": "Condition 3.1.7.4.2",
-        "plus_proche": "cles_a_proximite",
+        "question": "Le matériel était-il visible de l'extérieur du véhicule ?",
         "aide": {
-          "oui": "visible dans l'habitacle",
-          "non": "caché"
-        }
+          "oui": "sur le siège, visible à travers la vitre",
+          "non": "dans le coffre, caché"
+        },
+        "pourquoi": "3.1.7.4",
+        "plus_proche": "aucune"
       },
       {
         "variable": "mise_en_exploitation_satisfaction",
@@ -552,41 +530,13 @@
           "oui",
           "non"
         ],
-        "question": "La mise en exploitation a-t-elle donné entière satisfaction ?",
-        "pourquoi": "Condition pour équipement alarme",
-        "plus_proche": "aucune",
+        "question": "L'alarme fonctionnait-elle correctement depuis son installation ?",
         "aide": {
-          "oui": "fonctionnement satisfaisant",
-          "non": "problèmes constatés"
-        }
-      },
-      {
-        "variable": "cause_dommage",
-        "valeurs": [
-          "virus",
-          "electricite"
-        ],
-        "question": "Quelle est la cause du dommage ?",
-        "pourquoi": "Exclusions 3.1.7.2.2 et 3.1.7.2.12",
-        "plus_proche": "cause_eau",
-        "aide": {
-          "virus": "virus informatique",
-          "electricite": "origine électrique"
-        }
-      },
-      {
-        "variable": "vice_defaut_connu",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Le vice/défaut existait-il à la date d'effet et était-il connu ?",
-        "pourquoi": "Exclusion 3.1.7.2.3",
-        "plus_proche": "manque_entretien",
-        "aide": {
-          "oui": "défaut préexistant connu",
-          "non": "défaut nouveau ou inconnu"
-        }
+          "oui": "installée et en état de marche",
+          "non": "jamais correctement mise en service"
+        },
+        "pourquoi": "3.1.7.1",
+        "plus_proche": "aucune"
       },
       {
         "variable": "fonctionnement_defectueux",
@@ -594,354 +544,133 @@
           "oui",
           "non"
         ],
-        "question": "S'agit-il d'un fonctionnement défectueux ?",
-        "pourquoi": "Exclusion 3.1.7.2.4",
-        "plus_proche": "manque_entretien",
+        "question": "Le dommage vient-il d'un fonctionnement défectueux de l'appareil ?",
         "aide": {
-          "oui": "défaut de fonctionnement",
-          "non": "autre cause"
-        }
+          "oui": "panne interne, défaut de l'appareil",
+          "non": "cause extérieure : chute, choc, liquide"
+        },
+        "pourquoi": "3.1.3.2 et 3.1.7.2",
+        "plus_proche": "aucune"
       },
       {
-        "variable": "defaut_fonctionnement",
+        "variable": "cause_dommage",
+        "valeurs": [
+          "virus"
+        ],
+        "question": "Quelle est la cause du dommage ?",
+        "aide": {
+          "virus": "virus informatique, logiciel malveillant"
+        },
+        "pourquoi": "3.1.7.2",
+        "plus_proche": "autre"
+      },
+      {
+        "variable": "vice_defaut_connu",
         "valeurs": [
           "oui",
           "non"
         ],
-        "question": "S'agit-il d'un défaut de fonctionnement ?",
-        "pourquoi": "Exclusion 3.1.7.2.5",
-        "plus_proche": "fonctionnement_defectueux",
+        "question": "Le défaut existait-il et était-il connu avant la souscription ?",
         "aide": {
-          "oui": "défaut de fonctionnement",
-          "non": "autre"
-        }
+          "oui": "panne ou défaut déjà connu",
+          "non": "défaut apparu ensuite"
+        },
+        "pourquoi": "3.1.7.2",
+        "plus_proche": "aucune"
       },
       {
-        "variable": "entretien",
+        "variable": "option_materiel_multimedia",
         "valeurs": [
           "oui",
           "non"
         ],
-        "question": "S'agit-il de frais d'entretien ?",
-        "pourquoi": "Exclusion 3.1.7.2.6",
-        "plus_proche": "manque_entretien",
+        "question": "Vos conditions particulières mentionnent-elles la garantie « matériel multimédia » ?",
         "aide": {
-          "oui": "travaux d'entretien",
-          "non": "réparation suite sinistre"
-        }
+          "oui": "la garantie figure aux conditions particulières",
+          "non": "elle n'y figure pas"
+        },
+        "pourquoi": "garantie optionnelle : réserve tant que les conditions particulières ne sont pas lues",
+        "plus_proche": "aucune ; fait des conditions particulières"
       },
       {
-        "variable": "perte_indirecte",
+        "variable": "option_vol",
         "valeurs": [
           "oui",
           "non"
         ],
-        "question": "S'agit-il d'une perte indirecte ?",
-        "pourquoi": "Exclusion 3.1.7.2.8",
-        "plus_proche": "aucune",
+        "question": "Vos conditions particulières mentionnent-elles la garantie « vol » ?",
         "aide": {
-          "oui": "préjudice consécutif, manque à gagner",
-          "non": "dommage direct"
-        }
-      },
-      {
-        "variable": "perte_donnees",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "S'agit-il d'une perte de données ?",
-        "pourquoi": "Exclusion 3.1.7.2.11",
-        "plus_proche": "aucune",
-        "aide": {
-          "oui": "données perdues",
-          "non": "dommage matériel"
-        }
-      },
-      {
-        "variable": "montant_dommage",
-        "valeurs": [
-          "inferieur_60",
-          "superieur_60"
-        ],
-        "question": "Quel est le montant du dommage ?",
-        "pourquoi": "Exclusion 3.1.7.2.13",
-        "plus_proche": "aucune",
-        "aide": {
-          "inferieur_60": "moins de 60 €",
-          "superieur_60": "60 € ou plus"
-        }
-      },
-      {
-        "variable": "contenu_appareil",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "S'agit-il du contenu de l'appareil ?",
-        "pourquoi": "Exclusion 3.1.7.2.14",
-        "plus_proche": "bien",
-        "aide": {
-          "oui": "contenu (cassette, CD, etc.)",
-          "non": "l'appareil lui-même"
-        }
-      },
-      {
-        "variable": "auteur",
-        "valeurs": [
-          "preneur"
-        ],
-        "question": "Qui est l'auteur ?",
-        "pourquoi": "Exclusion 3.1.7.2.15",
-        "plus_proche": "assure",
-        "aide": {
-          "preneur": "le preneur d'assurance"
-        }
+          "oui": "la garantie figure aux conditions particulières",
+          "non": "elle n'y figure pas"
+        },
+        "pourquoi": "garantie optionnelle : réserve tant que les conditions particulières ne sont pas lues",
+        "plus_proche": "aucune ; fait des conditions particulières"
       }
     ],
-    "non_traduit": [
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "3.1.7.2",
+        "texte": "les frais exposés pour réparer des défauts de fonctionnement, sauf si ces défauts sont la conséquence d'une perte ou d'un dommage indemnisable causé aux matériels assurés",
+        "pourquoi": "des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
+      },
+      {
+        "article": "3.1.7.2",
+        "texte": "les frais d'entretien des matériels assurés, y compris le coût des pièces remplacées pendant les travaux d'entretien",
+        "pourquoi": "des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
+      },
+      {
+        "article": "3.1.7.2",
+        "texte": "les pertes indirectes de quelque nature que ce soit",
+        "pourquoi": "des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
+      },
+      {
+        "article": "3.1.7.2",
+        "texte": "les pertes de données",
+        "pourquoi": "des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
+      },
+      {
+        "article": "3.1.7.2",
+        "texte": "les dommages d'un montant inférieur à 60 €",
+        "pourquoi": "des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
+      },
       {
         "article": "3.1.7.1",
         "texte": "Sous réserve que les garanties incendie, tempête, dégâts des eaux, tremblement de terre ou pluies & inondations aient été accordées, la Compagnie étend leur portée respective à tous ces équipements, lorsque ceux-ci ont été déplacés à l'occasion d'un séjour temporaire dans un bâtiment situé n'importe où dans le monde.",
-        "pourquoi": "Extension des autres garanties, non traduisible dans cette garantie seule"
+        "pourquoi": "extension des autres garanties en séjour, règles d'indemnisation, obligations après sinistre, subrogation : sans effet sur la question de couverture, ou déjà couvert par les garanties concernées"
       },
       {
         "article": "3.1.7.1",
         "texte": "Lorsque les conditions particulières mentionnent que seul le bâtiment désigné est couvert, sont assurés les équipements attachés au fonds à perpétuelle demeure et qui ne peuvent être détachés du bâtiment sans être détériorés ou sans détériorer la partie de bâtiment à laquelle ils sont attachés.",
-        "pourquoi": "Condition liée à la portée bâtiment seul, nécessite variable spécifique non définie"
+        "pourquoi": "extension des autres garanties en séjour, règles d'indemnisation, obligations après sinistre, subrogation : sans effet sur la question de couverture, ou déjà couvert par les garanties concernées"
       },
       {
         "article": "3.1.7.3",
-        "texte": "3.1.7.3.1 L'indemnisation se fait par le paiement des frais nécessaires pour la réparation ou le remplacement des matériels détruits, détériorés ou volés, les parties remplacées devenant la propriété de la Compagnie. 3.1.7.3.2 L'indemnité est calculée selon les règles fixées au point 2.5.2.1 des conditions générales communes. 3.1.7.3.3 On considère qu'il y a sinistre partiel chaque fois que les frais de réparation, augmentés de la valeur des parties remplacées : sont inférieurs à la valeur d'assurance ; sont inférieurs à la valeur actuelle, vétusté déduite, lorsqu'il s'agit de matériels pour lesquels les pièces de rechange fabriquées en série ne sont pas disponibles. Dans tous les autres cas, on considère qu'il y a sinistre total. 3.1.7.3.4 Les frais supplémentaires liés au transport par avion ne sont remboursés que pour autant que leur remboursement ait été expressément convenu avec la Compagnie. 3.1.7.3.5 La Compagnie n'est pas tenue à garantie pour : les frais qui auraient été engendrés même si le dommage n'était pas survenu (par ex. pour l'entretien) ; les frais supplémentaires dus au fait qu'à l'occasion du sinistre, le matériel se trouvera transformé ou amélioré ; les frais qui, d'après leur nature ou leur montant, ne sont pas compris dans la somme assurée. 3.1.7.3.6 Si le matériel assuré est réparé provisoirement, la Compagnie rembourse le montant total des frais de réparation provisoire et de réparation définitive seulement jusqu'à concurrence du montant des frais de réparation qui auraient été engendrés sans la réparation provisoire. Cette restriction n'est pas d'application si la réparation provisoire a permis de limiter l'étendue du dommage.",
-        "pourquoi": "Règles d'indemnisation et calcul du sinistre, non des conditions de couverture"
+        "texte": "3.1.7.3.1 L’indemnisation se fait par le paiement des frais nécessaires pour la réparation ou le remplacement des matériels détruits, détériorés ou volés, les parties remplacées devenant la propriété",
+        "pourquoi": "extension des autres garanties en séjour, règles d'indemnisation, obligations après sinistre, subrogation : sans effet sur la question de couverture, ou déjà couvert par les garanties concernées"
       },
       {
-        "article": "3.1.7.4.1",
-        "texte": "L'Assuré prendra toutes précautions utiles et donnera suite à toutes recommandations raisonnables de la Compagnie en vue de prévenir les dommages ou pertes, de remplir les prescriptions légales et de suivre les recommandations faites par le fabricant. Les mandataires de la Compagnie auront le droit d'inspecter et d'évaluer, à tout moment raisonnable, le risque assuré et l'Assuré mettra à la disposition des mandataires de la Compagnie tous les éléments d'information nécessaires pour l'évaluation du risque assuré.",
-        "pourquoi": "Obligation générale de prévention"
+        "article": "3.1.7.4",
+        "texte": "3.1.7.4.1 L’Assuré prendra toutes précautions utiles et donnera suite à toutes recommandations raisonnables de la Compagnie en vue de prévenir les dommages ou pertes, de remplir les prescriptions léga",
+        "pourquoi": "extension des autres garanties en séjour, règles d'indemnisation, obligations après sinistre, subrogation : sans effet sur la question de couverture, ou déjà couvert par les garanties concernées"
       },
       {
-        "article": "3.1.7.4.3",
-        "texte": "Dès qu'il a connaissance d'un événement susceptible de faire jouer la garantie, l'Assuré doit : avertir la Compagnie conformément au point 2.11 des conditions générales communes à toutes les garanties et lui indiquer la nature et l'étendue des dommages et pertes ; prendre toutes mesures en son pouvoir afin de réduire l'étendue des dommages ou pertes ; garder les éléments endommagés pour qu'ils puissent être examinés par un représentant officiel ou un inspecteur de la Compagnie ; fournir toutes les informations et tous les documents que la Compagnie peut lui demander. En aucun cas, la Compagnie ne répondra des dommages ou pertes qui n'auront pas été portés à sa connaissance dans les quinze jours suivant leur survenance. Après avoir averti la Compagnie, conformément aux dispositions ci-dessus, l'Assuré peut, lorsqu'il s'agit de dommages représentant moins de 20% de la valeur à neuf de l'équipement endommagé, faire procéder aux réparations nécessaires ; dans tous les autres cas, l'Assuré devra attendre qu'un représentant de la Compagnie ait possibilité d'examiner les dommages avant de faire procéder aux réparations ou d'effectuer des changements quelconques. La garantie de la Compagnie au titre des présentes conditions spéciales relatives aux matériels endommagés cessera si ceux-ci restent en service sans être réparés d'une manière jugée satisfaisante par la Compagnie ou si des réparations provisoires sont effectuées sans l'accord de la Compagnie.",
-        "pourquoi": "Obligations post-sinistre et délais de déclaration"
-      },
-      {
-        "article": "3.1.7.4.4",
-        "texte": "L'Assuré s'engage à prendre ou à faire prendre, aux frais de la Compagnie, toutes mesures jugées nécessaires ou décidées par la Compagnie en vue de sauvegarder ses droits ou d'obtenir de parties autres que celles mentionnées aux conditions particulières un dédommagement ou une indemnité auxquels elle aurait droit directement ou par subrogation du fait d'avoir indemnisé une perte ou un dommage au titre du présent contrat, que ces mesures soient jugées nécessaires ou soient requises avant ou après que l'Assuré ait été indemnisé par la Compagnie.",
-        "pourquoi": "Clause de subrogation"
+        "article": "3.1.7.2",
+        "texte": "et 3.1.7.2.10, la Compagnie est tenue de payer une indemnité lorsqu’elles ont été endommagées à la suite d’une perte ou d’un dommage indemnisable causé aux matériels assurés",
+        "pourquoi": "dérogation aux exclusions pour l'indemnisation : sans effet sur la question de couverture"
       }
     ]
   },
   "controles": [
     {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "bien = materiel_multimedia : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "bien = equipement_alarme_surveillance : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "bien = equipement_domotique : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "mise_en_exploitation_satisfaction = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "lieu = vehicule_moteur : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "vehicule_inoccupe = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "vehicule_ferme_cle = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "materiel_laisse_en_vue = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "garantie_vol_accordee = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "vehicule_vole = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "cause_dommage = virus : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "vice_defaut_connu = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "fonctionnement_defectueux = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "defaut_fonctionnement = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "entretien = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "perte_indirecte = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "bien = lampe_tube_bande_fusible_joint_courroie_chaine : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "perte_donnees = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "cause_dommage = electricite : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "montant_dommage = inferieur_60 : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "contenu_appareil = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "auteur = preneur : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.7`) ou à remplacer"
+      "gravite": "info",
+      "controle": "citation",
+      "message": "obligation (3.1.7.4) : citation réparée en « Lorsque les biens assurés se trouvent à l’intérieur d’un véhicule inoccupé, la g »"
     },
     {
       "gravite": "info",
       "controle": "citation",
-      "message": "garantie (3.1.7.1) : citation réparée en « La Compagnie couvre tout bris ou destruction accidentel résultant d’une chute, d »"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "citation",
-      "message": "obligation : article 3.1.7.4.2 inconnu"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "garantie (3.1.7.1) : citation réparée en « Sous réserve que la garantie vol ait été accordée, la Compagnie couvre également »"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "circonstance (3.1.7.1) : citation réparée en « le vol du matériel multimédia lorsque le vol a eu lieu à l’extérieur du bâtiment »"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.7.2 (et non 3.1.7.2.1)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.7.2 (et non 3.1.7.2.2)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.7.2 (et non 3.1.7.2.3)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.3.2 (et non 3.1.7.2.4)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.7.2 (et non 3.1.7.2.5)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.7.2 (et non 3.1.7.2.6)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.7.2 (et non 3.1.7.2.7)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.7.2 (et non 3.1.7.2.8)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.7.2 (et non 3.1.7.2.9)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.7.2 (et non 3.1.7.2.10)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.7.2 (et non 3.1.7.2.11)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.7.2 (et non 3.1.7.2.12)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.7.2 (et non 3.1.7.2.13)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.7.2 (et non 3.1.7.2.14)"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "citation",
-      "message": "exclusion : article 3.1.7.2.15 inconnu"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "portée",
-      "message": "exclusion « les pertes ou dommages causés aux lampes,tubes, bandes trans » : ne vise que lampe_tube_bande_fusible_joint_courroie_chaine, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+      "message": "obligation (3.1.7.4) : citation réparée en « Lorsque les biens assurés se trouvent à l’intérieur d’un véhicule inoccupé, la g »"
     },
     {
       "gravite": "à relire",
@@ -954,49 +683,59 @@
       "message": "limite « 5.000 € par sinistre lorsque les conditions particulières me » (materiel_multimedia_bris) : elle pose une condition ; circonstance ou garantie à part ?"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (3.1.7.2) : « les pertes ou dommages qui sont la conséquence directe : n des effets continuels de l’exploitation ( »"
+      "message": "hors décision (3.1.7.2) : des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (3.1.7.2) : « les vols commis par ou avec la complicité de ou du : n Preneur d’assurance, son conjoint, leurs asce »"
+      "message": "hors décision (3.1.7.2) : des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (3.1.7.2) : « et 3.1.7.2.10, la Compagnie est tenue de payer une indemnité lorsqu’elles ont été endommagées à la s »"
+      "message": "hors décision (3.1.7.2) : des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "déclaré non traduit (3.1.7.1) : « Sous réserve que les garanties incendie, tempête, dégâts des eaux, tremblement de terre ou pluies &  » — Extension des autres garanties, non traduisible dans cette garantie seule"
+      "message": "hors décision (3.1.7.2) : des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "déclaré non traduit (3.1.7.1) : « Lorsque les conditions particulières mentionnent que seul le bâtiment désigné est couvert, sont assu » — Condition liée à la portée bâtiment seul, nécessite variable spécifique non définie"
+      "message": "hors décision (3.1.7.2) : des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "déclaré non traduit (3.1.7.3) : « 3.1.7.3.1 L'indemnisation se fait par le paiement des frais nécessaires pour la réparation ou le rem » — Règles d'indemnisation et calcul du sinistre, non des conditions de couverture"
+      "message": "hors décision (3.1.7.1) : extension des autres garanties en séjour, règles d'indemnisation, obligations après sinistre, subrogation : sans effet sur la question de couverture, ou déjà couvert par les garanties concernées"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "déclaré non traduit (3.1.7.4.1) : « L'Assuré prendra toutes précautions utiles et donnera suite à toutes recommandations raisonnables de » — Obligation générale de prévention"
+      "message": "hors décision (3.1.7.1) : extension des autres garanties en séjour, règles d'indemnisation, obligations après sinistre, subrogation : sans effet sur la question de couverture, ou déjà couvert par les garanties concernées"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "déclaré non traduit (3.1.7.4.3) : « Dès qu'il a connaissance d'un événement susceptible de faire jouer la garantie, l'Assuré doit : aver » — Obligations post-sinistre et délais de déclaration"
+      "message": "hors décision (3.1.7.3) : extension des autres garanties en séjour, règles d'indemnisation, obligations après sinistre, subrogation : sans effet sur la question de couverture, ou déjà couvert par les garanties concernées"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "déclaré non traduit (3.1.7.4.4) : « L'Assuré s'engage à prendre ou à faire prendre, aux frais de la Compagnie, toutes mesures jugées néc » — Clause de subrogation"
+      "message": "hors décision (3.1.7.4) : extension des autres garanties en séjour, règles d'indemnisation, obligations après sinistre, subrogation : sans effet sur la question de couverture, ou déjà couvert par les garanties concernées"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.1.7.2) : dérogation aux exclusions pour l'indemnisation : sans effet sur la question de couverture"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "prolog",
+      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
     }
   ]
 }

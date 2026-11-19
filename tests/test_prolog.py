@@ -790,3 +790,13 @@ def test_je_ne_sais_pas_plutot_qu_une_reponse_fausse(monkeypatch, contrat):
     # (sans clauses fournies, le contrôle des citations rétrograde toute réponse : on lit la réponse avant lui)
     assert (confirme.decision_initiale or confirme.decision).value == "NON_COUVERT", "confirmé : la réponse ferme reste"
     assert "fermeture" in m.confirmations[-1], "le fait décisif est soumis à confirmation"
+
+    # Un modèle plus fort peut confirmer à la place du modèle de lecture (7.66) : c'est lui qui tranche.
+    from couverture import llm as llm_mod
+    lecteur, juge = Modele("dit"), Modele("non_dit")
+    juge.confirmations = [set()]          # le juge ne fait que la confirmation : il répond tout de suite
+    monkeypatch.setattr(llm_mod, "configurer", lambda usage="analyse": juge if usage == "confirmation" else None)
+    v = prolog.PipelineRegles(CONTRAT, [], lecteur, decideur=oracle).analyser(sinistre).verdict
+    assert v.decision.value == "INCERTAIN" and "fermeture" in juge.confirmations[-1], \
+        "le modèle de confirmation a refusé le cadenas : la réponse est suspendue"
+    assert all("fermeture" not in c for c in lecteur.confirmations[1:]), "le lecteur n'a pas confirmé lui-même"

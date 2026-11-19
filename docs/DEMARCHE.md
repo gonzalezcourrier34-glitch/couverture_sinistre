@@ -2312,6 +2312,78 @@ nouveaux deviennent couverts à tort. Lecture cas par cas :
 ne menait nulle part peut désormais aboutir. Les aides de lecture et la hiérarchie des valeurs sont aussi
 importantes que les règles.
 
+### 7.65 AXA, lot A : huit garanties rédigées en 21 minutes, relues, acceptées
+
+Incendie et périls assimilés (3.1.1, sept garanties : incendie, décongélation, linge, heurt, dégradations
+immobilières à l'occasion d'un vol, vandalisme, attentats), tempête et grêle (3.1.2), dégâts électriques (3.1.3),
+dégâts des eaux (3.1.4), bris de vitrages (3.1.5), matériel multimédia (3.1.7, bris et vol), tremblement de terre
+(3.2.1), pluies et inondations (3.2.2). Relecture : `relecture/axa_lot_a.py`, tracée dans chaque proposition.
+
+**Trois défauts qui reviennent dans presque toutes les propositions, traités de la même façon partout.**
+- *« Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent la garantie
+  X »* : le modèle l'a mis dans le périmètre (`garantie_incendie_accordee = oui`), ce qui faisait poser la
+  question à chaque déclaration. C'est une option du contrat : une **réserve** (`option_incendie`,
+  `option_tempete`… ; exclusion « option = non », à demander) : « couvert, sous réserve que vos conditions
+  particulières mentionnent la garantie ».
+- *Des frais exclus* (reconstitution des données, entretien, pertes indirectes, franchise de 60 €, frais de
+  recherche de fuite) : sans effet sur la question de couverture, **hors décision**.
+- *Des exclusions de biens sans portée* (lunettes, toiture, véhicules, plantations) : portée limitée au bien. La
+  toiture, sans cela, excluait tout le bâtiment des dégâts des eaux.
+
+**Les erreurs de fond.**
+- 3.1.1 : « dégradations immobilières à l'occasion d'un vol » couvrait **tout vol**, contenu compris ; limité aux
+  éléments du bâtiment. La définition de l'incendie (flammes qui se propagent) s'appliquait à l'explosion et à
+  la foudre. « Propriétaire du bâtiment » avait été traduit par `proprietaire = assure`, qui dit à qui sont les
+  biens : variable `statut_logement`.
+- 3.1.2 : deux circonstances contradictoires (la tempête à 80 km/h, et « grêle ou neige ») : un coup de vent ne
+  pouvait jamais être couvert. Une seule : `si(vent, tempête)`.
+- 3.1.4 : « infiltration extérieure » était à la fois condition de la garantie et exclusion.
+- 3.1.7 : le matériel multimédia (1.25 : ordinateur, téléphone…) est `electronique` ; l'alarme et la domotique y
+  sont rattachées. La condition propre à l'alarme s'appliquait à tout appareil ; l'obligation du véhicule à tout
+  sinistre.
+- 3.2.1 et 3.2.2 : `evenement = tremblement_terre`, `inondation`, `ruissellement`, `glissement_terrain` →
+  `catastrophe_naturelle` (comme Foyer) et une variable `catastrophe`. Les dommages dans les 72 heures : à
+  l'assureur de l'établir.
+
+**Deux corrections générales.**
+- Les événements de lecture d'une variable sont calculés **garantie par garantie** (`evenements_par_variable`) :
+  3.1.1 réunit sept garanties d'événements différents, et les flammes se retrouvaient à lire pour un vol.
+- Une réserve d'option combinée à l'événement (« vol et option vol inconnue ») est *entamée* dès que l'événement
+  est établi (règle 7.58) et pose la question : la réserve se pose sur la seule garantie concernée, sans
+  l'événement.
+
+**Vérifications.** Golden AXA (oracle) : 100 % justes, 0 couvert ni refus à tort. axa-v07 (téléphone arraché
+dans la rue, formule inconnue) devient « couvert » par 3.1.7 : conforme au contrat, sous réserve des options
+multimédia et vol ; annotation complétée, golden **v9**. Seize cas de contrôle sur les nouvelles garanties
+(incendie, explosion, tempête à 100 km/h, grêle, vent de force inconnue, fuite, pluie par une fenêtre ouverte,
+vitre, lunettes, téléphone tombé ou volé dans une voiture, séisme, inondation, surtension, voiture contre le mur) :
+réponses conformes au texte, les options en réserve.
+
+**Leçon 79.** Un contrat qui découpe ses garanties en options (« si les conditions particulières le
+mentionnent ») ne se lit pas comme un contrat tout compris : l'option est une réserve, jamais une question posée
+au déclarant, qui ne la connaît pas.
+
+### 7.66 Foyer après les rattachements : 5 couverts à tort, tous des erreurs de lecture confirmées
+
+Banc Foyer (golden v8, sur le poste, 128 tests) : règles seules 100 % (91 % exactes) ; chaîne 89 % justes,
+73 % exactes, **5 couverts à tort**, 0,67 refus à tort, 14 instables ; un cas à la fois, 95e centile 4,2 s.
+(Le vocabulaire d'AXA a été déposé pendant ce banc : la mesure est à refaire, mais les cas parlent.)
+
+Les sept cas couverts à tort, un par un : le jardin lu « terrasse » (bougie-04, 3 sur 3), la vitre rayée lue
+« vandalisme » (red-b06, 3 sur 3 malgré l'aide de 7.64), les clés sous le paillasson lues « clés volées » (g-p03,
+3 sur 3, connu depuis 7.50), le bain à bulles lu « aquarium » (g2-p08), le vase en cristal lu « verre de
+meuble » (red-b04), et deux tirages isolés. **Aucune erreur de règle.**
+
+Toutes ces lectures sont passées par la confirmation des faits décisifs (7.49) : le même petit modèle relit sa
+propre lecture et la confirme. Plus il y a de garanties traduites, plus une lecture approximative trouve une
+garantie qui couvre (leçon 78).
+
+**Correction mise en place, à mesurer** : la confirmation peut être faite par un modèle plus fort que celui de la
+lecture (`COUVERTURE_MODELE_CONFIRMATION`, par exemple `mistral-large-latest`). Elle ne porte que sur les quelques
+faits dont dépend une réponse ferme (le moteur les désigne en quelques millisecondes) : un appel court, et
+seulement quand la réponse est ferme. Le banc note le modèle de confirmation dans son résultat et le nom de son
+rapport. Un test vérifie que c'est ce modèle, et non le lecteur, qui tranche.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 18 nov. 2026, 22 h 40 ; ce qui est fait est dans les sections 7.
@@ -2420,3 +2492,4 @@ Tenu à jour le 18 nov. 2026, 22 h 40 ; ce qui est fait est dans les sections 7.
 76. Une exclusion que rien n'évoque reste une réserve ; une exclusion que la déclaration entame devient une question (précise la leçon 56).
 77. Rédiger en parallèle va trois fois plus vite, mais chaque proposition invente son vocabulaire : la relecture commence par harmoniser les noms.
 78. Chaque garantie traduite ouvre une route de plus vers « couvert » : une valeur nouvelle doit être rattachée à celles que les règles connaissent déjà.
+79. Une garantie optionnelle (« si les conditions particulières le mentionnent ») est une réserve, jamais une question au déclarant.

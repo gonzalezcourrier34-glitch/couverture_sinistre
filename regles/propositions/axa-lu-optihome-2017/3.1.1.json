@@ -3,7 +3,21 @@
     "article": "3.1.1",
     "modele": "mistral:mistral-large-latest",
     "date": "2026-11-19",
-    "consigne": "redaction-regles v6"
+    "consigne": "redaction-regles v6",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-19",
+      "modifications": [
+        "« applicables si les conditions particulières mentionnent la garantie » : réserve (option_incendie), retirée du périmètre où elle faisait poser une question à chaque incendie",
+        "la définition de l'incendie (flammes qui se propagent) ne vaut que pour l'incendie : circonstance si(incendie, …) ; l'explosion, la foudre, la fumée n'en dépendent pas",
+        "électrocution : seulement des animaux (3.1.1.1.4)",
+        "dégradations immobilières à l'occasion d'un vol : limitées aux éléments du bâtiment ; sans cela, tout vol de contenu était couvert par l'article incendie",
+        "« à l'extérieur du bâtiment » = jardin ou terrasse, objets et non le bâtiment (règle 3 quater) ; la voie publique tuait le vol par agression de 3.1.6 (axa-v07)",
+        "vandalisme : « l'assuré est propriétaire » n'est pas `proprietaire = assure` (à qui sont les biens) : variable statut_logement ; les trois conditions en réserves",
+        "occupation régulière, choc entre corps durs, déménagement : des faits que l'assureur établit, pas des questions à chaque sinistre",
+        "attentat : « auteur = tiers » retiré du périmètre (inconnu, il faisait demander qui sont les terroristes)"
+      ]
+    }
   },
   "proposition": {
     "evenements": [
@@ -59,12 +73,6 @@
         "texte": "La Compagnie assure les biens désignés, contre les périls suivants : 3.1.1.1.1 L'incendie, c'est-à-dire la destruction par des flammes se propageant ou susceptibles de se propager en dehors de leur domaine normal ou d'objets dont la destination n'est pas, à ce moment, de brûler ; 3.1.1.1.2 L'explosion ou l'implosion ; 3.1.1.1.3 La chute de la foudre ; 3.1.1.1.4 L'électrocution d'animaux ; 3.1.1.1.5 Les fumées et les suies ; 3.1.1.1.6 Les dégâts occasionnés au mobilier assuré et au bâtiment désigné par un événement soudain, résultant de l'action subite de la chaleur ou par le contact direct et immédiat avec un foyer ou une substance incandescente, même lorsqu'il n'y a pas eu embrasement, ni commencement d'incendie.",
         "perimetre": [
           {
-            "f": [
-              "garantie_incendie_accordee",
-              "oui"
-            ]
-          },
-          {
             "ou": [
               {
                 "f": [
@@ -85,9 +93,19 @@
                 ]
               },
               {
-                "f": [
-                  "evenement",
-                  "electricite"
+                "et": [
+                  {
+                    "f": [
+                      "evenement",
+                      "electricite"
+                    ]
+                  },
+                  {
+                    "f": [
+                      "bien",
+                      "animal"
+                    ]
+                  }
                 ]
               },
               {
@@ -111,7 +129,17 @@
         "circonstances": [
           {
             "condition": {
-              "concept": "incendie"
+              "si": [
+                {
+                  "f": [
+                    "evenement",
+                    "incendie"
+                  ]
+                },
+                {
+                  "concept": "incendie"
+                }
+              ]
             },
             "article": "3.1.1.1",
             "texte": "L'incendie, c'est-à-dire la destruction par des flammes se propageant ou susceptibles de se propager en dehors de leur domaine normal ou d'objets dont la destination n'est pas, à ce moment, de brûler"
@@ -131,12 +159,6 @@
             "f": [
               "bien",
               "denrees_alimentaires"
-            ]
-          },
-          {
-            "f": [
-              "cause_perte_alimentaire",
-              "arret_6h"
             ]
           }
         ],
@@ -188,6 +210,12 @@
             "f": [
               "bien",
               "objet_divers"
+            ]
+          },
+          {
+            "f": [
+              "lieu",
+              "logement"
             ]
           }
         ],
@@ -288,7 +316,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.1.1.2",
             "texte": "les dégâts causés au bâtiment désigné en cas de déménagement du mobilier"
           },
@@ -312,7 +340,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.1.1.2",
             "texte": "les dégâts ne résultant pas directement d'un choc entre deux corps durs"
           },
@@ -324,7 +352,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.1.1.2",
             "texte": "les dégâts causés par la grêle"
           }
@@ -345,8 +373,8 @@
           },
           {
             "f": [
-              "occupation_irreguliere",
-              "non"
+              "bien",
+              "element_batiment"
             ]
           }
         ],
@@ -355,9 +383,31 @@
         "exclusions": [
           {
             "condition": {
-              "f": [
-                "lieu",
-                "voie_publique"
+              "et": [
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "lieu",
+                        "jardin"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "lieu",
+                        "terrasse"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "non": {
+                    "f": [
+                      "bien",
+                      "element_batiment"
+                    ]
+                  }
+                }
               ]
             },
             "portee": "tout",
@@ -388,6 +438,18 @@
             "a_demander": true,
             "article": "3.1.1.2",
             "texte": "lorsque le bâtiment est en cours de construction, transformation ou rénovation, à moins que l'Assuré démontre que cette circonstance n'a pas contribué à la survenance ou à l'aggravation des conséquences du sinistre"
+          },
+          {
+            "condition": {
+              "f": [
+                "occupation_irreguliere",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.1.2",
+            "texte": "aux dégradations immobilières causées à l’occasion d’un vol ou d’une tentative de vol dans les locaux à occupation régulière"
           }
         ],
         "limites": []
@@ -406,20 +468,8 @@
           },
           {
             "f": [
-              "proprietaire",
-              "assure"
-            ]
-          },
-          {
-            "f": [
-              "occupation_irreguliere",
-              "non"
-            ]
-          },
-          {
-            "f": [
-              "travaux_construction",
-              "non"
+              "bien",
+              "element_batiment"
             ]
           },
           {
@@ -428,7 +478,44 @@
         ],
         "circonstances": [],
         "obligations": [],
-        "exclusions": [],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "statut_logement",
+                "locataire"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.1.2",
+            "texte": "l’Assuré est propriétaire du bâtiment"
+          },
+          {
+            "condition": {
+              "f": [
+                "occupation_irreguliere",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.1.2",
+            "texte": "le bâtiment fait l’objet d’une occupation régulière"
+          },
+          {
+            "condition": {
+              "f": [
+                "travaux_construction",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.1.2",
+            "texte": "le bâtiment n’est pas en cours de construction, ni de transformation, ni de rénovation"
+          }
+        ],
         "limites": [
           {
             "article": "3.1.1.2",
@@ -460,12 +547,6 @@
             ]
           },
           {
-            "f": [
-              "auteur",
-              "tiers"
-            ]
-          },
-          {
             "concept": "batiment_designe"
           }
         ],
@@ -493,35 +574,47 @@
         ]
       }
     ],
-    "exclusions_communes": [],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "f": [
+            "option_incendie",
+            "non"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "3.1.1",
+        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ incendie et périls assimilés ” est accordée."
+      }
+    ],
     "vocabulaire_manquant": [
       {
-        "variable": "garantie_incendie_accordee",
+        "variable": "option_incendie",
         "valeurs": [
           "oui",
           "non"
         ],
-        "question": "Les conditions particulières mentionnent-elles la garantie 'incendie et périls assimilés' ?",
-        "pourquoi": "condition d'applicabilité 3.1.1",
-        "plus_proche": "formule : ne désigne pas cette garantie spécifique",
+        "question": "Vos conditions particulières mentionnent-elles la garantie « incendie et périls assimilés » ?",
         "aide": {
-          "oui": "la garantie incendie est souscrite",
-          "non": "pas de garantie incendie"
-        }
+          "oui": "la garantie figure aux conditions particulières",
+          "non": "elle n'y figure pas"
+        },
+        "pourquoi": "garantie optionnelle : réserve tant que les conditions particulières ne sont pas lues",
+        "plus_proche": "aucune ; fait des conditions particulières"
       },
       {
-        "variable": "heurt",
+        "variable": "evenement",
         "valeurs": [
-          "oui",
-          "non"
+          "heurt"
         ],
-        "question": "S'agit-il d'un heurt (choc) ?",
-        "pourquoi": "événement 3.1.1.2.3",
-        "plus_proche": "bris : casse sans choc",
+        "question": "Que s'est-il passé ?",
         "aide": {
-          "oui": "choc, heurt",
-          "non": "pas de choc"
-        }
+          "heurt": "un véhicule, un arbre ou un objet a percuté le bâtiment ou les biens"
+        },
+        "pourquoi": "3.1.1.2.3",
+        "plus_proche": "bris : la casse, pas le choc",
+        "parent": null
       },
       {
         "variable": "demenagement",
@@ -529,13 +622,13 @@
           "oui",
           "non"
         ],
-        "question": "S'agit-il d'un déménagement du mobilier ?",
-        "pourquoi": "exclusion 3.1.1.2.3",
-        "plus_proche": "travaux_batiment : pas un déménagement",
+        "question": "Les dégâts sont-ils survenus pendant un déménagement ?",
         "aide": {
-          "oui": "déménagement en cours",
-          "non": "pas de déménagement"
-        }
+          "oui": "en déménageant, en transportant les meubles",
+          "non": "hors de tout déménagement"
+        },
+        "pourquoi": "3.1.1.2.3",
+        "plus_proche": "aucune"
       },
       {
         "variable": "choc_deux_corps_durs",
@@ -543,147 +636,36 @@
           "oui",
           "non"
         ],
-        "question": "Le dégât résulte-t-il directement d'un choc entre deux corps durs ?",
-        "pourquoi": "exclusion 3.1.1.2.3",
-        "plus_proche": "heurt : implique le choc mais pas explicitement deux corps durs",
+        "question": "Les dégâts viennent-ils directement d'un choc entre deux objets durs ?",
         "aide": {
-          "oui": "choc entre deux objets durs",
-          "non": "pas de choc direct"
-        }
+          "oui": "percuté, cogné par un objet dur",
+          "non": "rayé, frotté, mouillé, sans choc"
+        },
+        "pourquoi": "3.1.1.2.3",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "statut_logement",
+        "valeurs": [
+          "proprietaire",
+          "locataire"
+        ],
+        "question": "Êtes-vous propriétaire ou locataire du bâtiment ?",
+        "aide": {
+          "proprietaire": "vous êtes propriétaire du logement ou de la maison",
+          "locataire": "vous louez le logement"
+        },
+        "pourquoi": "3.1.1.2.5 (vandalisme : l'assuré est propriétaire), 3.1.5 (vitrages isolants : sauf si l'assuré est locataire)",
+        "plus_proche": "proprietaire : dit à qui sont les biens, pas qui possède le bâtiment"
       }
     ],
     "non_traduit": []
   },
   "controles": [
     {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "garantie_incendie_accordee = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "evenement = heurt : hors vocabulaire, et non déclaré"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "demenagement = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "choc_deux_corps_durs = non : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "evenement = heurt : hors vocabulaire, et non déclaré"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "définition : citation rattachée à 3.1.1.1 (et non 3.1.1.1.1)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "circonstance : citation rattachée à 3.1.1.1 (et non 3.1.1.1.1)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "garantie : citation rattachée à 3.1.1.2 (et non 3.1.1.2.1)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "circonstance : citation rattachée à 3.1.1.2 (et non 3.1.1.2.1)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "garantie : citation rattachée à 3.1.1.2 (et non 3.1.1.2.2)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "circonstance : citation rattachée à 3.1.1.2 (et non 3.1.1.2.2)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "garantie : citation rattachée à 3.1.1.2 (et non 3.1.1.2.3)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.1.2 (et non 3.1.1.2.3)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.1.2 (et non 3.1.1.2.3)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.1.2 (et non 3.1.1.2.3)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.1.2 (et non 3.1.1.2.3)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.1.2 (et non 3.1.1.2.3)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "garantie : citation rattachée à 3.1.1.2 (et non 3.1.1.2.4)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.1.2 (et non 3.1.1.2.4)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.1.1.2 (et non 3.1.1.2.4)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "garantie : citation rattachée à 3.1.1.2 (et non 3.1.1.2.5)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "limite : citation rattachée à 3.1.1.2 (et non 3.1.1.2.5)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "garantie : citation rattachée à 3.1.1.2 (et non 3.1.1.2.6)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "obligation : citation rattachée à 3.1.1.2 (et non 3.1.1.2.6)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "limite : citation rattachée à 3.1.1.2 (et non 3.1.1.2.6)"
-    },
-    {
       "gravite": "à relire",
-      "controle": "non-régression",
-      "message": "axa-v07 : INCERTAIN → NON_COUVERT avec les nouvelles règles"
+      "controle": "prolog",
+      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
     }
   ]
 }

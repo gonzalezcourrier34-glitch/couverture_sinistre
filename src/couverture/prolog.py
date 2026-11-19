@@ -547,6 +547,7 @@ class PipelineRegles:
     def __init__(self, contrat_id: str, clauses: list[Clause], llm: LLM, decideur=None):
         """`decideur(faits) -> dict` : par défaut SWI-Prolog ; remplaçable dans les tests."""
         self.contrat_id, self.clauses, self.llm = contrat_id, clauses, llm
+        self.llm_confirmation = None          # COUVERTURE_MODELE_CONFIRMATION, chargé à la première confirmation
         self.decideur = decideur or (lambda faits: decider(contrat_id, faits))
         self.variables = variables_du_contrat(contrat_id)
 
@@ -594,6 +595,15 @@ class PipelineRegles:
                         faits=faits_lisibles(faits), clauses_consultees=consultees, verdict=verdict,
                         durees_ms={"lecture": int((lu - debut) * 1000), "decision": int((decide - lu) * 1000)})
 
+    def modele_confirmation(self) -> LLM:
+        """Le modèle qui confirme les faits décisifs. Le petit modèle confirmait ses propres erreurs de lecture
+        (le jardin lu « terrasse », une rayure lue « vandalisme » : 7.66) ; un modèle plus fort peut être
+        demandé pour ce seul contrôle, court, avec COUVERTURE_MODELE_CONFIRMATION."""
+        if self.llm_confirmation is None:
+            from .llm import configurer
+            self.llm_confirmation = configurer("confirmation") or self.llm
+        return self.llm_confirmation
+
     def confirmer(self, sinistre: str, faits: dict, d: dict) -> tuple[dict, list[str], list[str]]:
         """Une réponse ferme doit reposer sur des faits confirmés (7.49). Le moteur dit quels faits portent la
         décision ; le modèle confirme, sur la déclaration, que chacun y est écrit. Un seul « non dit » : la
@@ -602,7 +612,7 @@ class PipelineRegles:
         if not decisifs:
             return d, [], []
         try:
-            verdicts = juger_affirmations(sinistre, {v: faits[v] for v in decisifs}, self.llm, vocabulaire())
+            verdicts = juger_affirmations(sinistre, {v: faits[v] for v in decisifs}, self.modele_confirmation(), vocabulaire())
         except ErreurLLM:
             raise
         except Exception as e:  # noqa: BLE001

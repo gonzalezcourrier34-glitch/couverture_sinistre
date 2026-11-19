@@ -357,6 +357,16 @@
       "ecarts": [
         "garantie degats_electriques, périmètre 2 : condition mal formée : {\"condition\": {\"f\": [\"garantie_degats_electriques_souscrite\", \"oui\"]}, \"article\": \"3.1.3\", \"texte\": \"Les présentes condi"
       ]
+    },
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-19",
+      "modifications": [
+        "« applicables si… souscrite » : réserve (option_degats_electriques), retirée du périmètre",
+        "frais de recherche (domotique), reconstitution des données, cumul avec d'autres divisions : hors décision",
+        "équipement bureautique → bien = appareil_informatique (l'aide dit « imprimante ») ; contenu des électroménagers → bien = denrees_alimentaires ; portée limitée au bien",
+        "garantie du fabricant, marchandises, supports de données, usure et fonctionnement défectueux : à l'assureur de l'établir"
+      ]
     }
   },
   "proposition": {
@@ -378,12 +388,6 @@
             ]
           },
           {
-            "f": [
-              "garantie_degats_electriques_souscrite",
-              "oui"
-            ]
-          },
-          {
             "concept": "batiment_designe"
           }
         ],
@@ -392,33 +396,11 @@
         "exclusions": [
           {
             "condition": {
-              "f": [
-                "cause_domotique",
-                "oui"
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "3.1.3.2",
-            "texte": "les frais de recherche du défaut ou de la pièce défectueuse liés à l'équipement domotique à l'origine du sinistre"
-          },
-          {
-            "condition": {
               "et": [
                 {
-                  "ou": [
-                    {
-                      "f": [
-                        "bien",
-                        "appareil_informatique"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "bien",
-                        "equipement_bureautique"
-                      ]
-                    }
+                  "f": [
+                    "bien",
+                    "appareil_informatique"
                   ]
                 },
                 {
@@ -429,8 +411,10 @@
                 }
               ]
             },
-            "portee": "tout",
-            "a_demander": true,
+            "portee": {
+              "bien": "appareil_informatique"
+            },
+            "a_demander": false,
             "article": "3.1.3.2",
             "texte": "les équipements informatiques et bureautiques à usage professionnel"
           },
@@ -454,21 +438,9 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.1.3.2",
             "texte": "les dégâts à tous supports de données et aux logiciels de traitement des données"
-          },
-          {
-            "condition": {
-              "f": [
-                "reconstitution_donnees",
-                "oui"
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "3.1.3.2",
-            "texte": "la reconstitution des données"
           },
           {
             "condition": {
@@ -478,21 +450,9 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.1.3.2",
             "texte": "les dégâts tombant sous la garantie du fabricant"
-          },
-          {
-            "condition": {
-              "f": [
-                "autre_division_assurable",
-                "oui"
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "3.1.3.2",
-            "texte": "les dégâts assurables par d'autres divisions du contrat"
           },
           {
             "condition": {
@@ -502,7 +462,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.1.3.2",
             "texte": "les dégâts aux appareils ou installations électriques constituant des marchandises"
           },
@@ -533,12 +493,14 @@
           {
             "condition": {
               "f": [
-                "contenu_appareil_electromenager",
-                "oui"
+                "bien",
+                "denrees_alimentaires"
               ]
             },
-            "portee": "tout",
-            "a_demander": true,
+            "portee": {
+              "bien": "denrees_alimentaires"
+            },
+            "a_demander": false,
             "article": "3.1.3.2",
             "texte": "les dégâts au contenu des appareils électroménagers"
           },
@@ -572,7 +534,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "3.1.3.2",
             "texte": "les pertes ou dommages qui sont la conséquence directe : – des effets continuels de l'exploitation (usure) ; – d'un fonctionnement défectueux"
           }
@@ -586,50 +548,21 @@
         ]
       }
     ],
-    "exclusions_communes": [],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "f": [
+            "option_degats_electriques",
+            "non"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "3.1.3",
+        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ dégâts électriques” est souscrite."
+      }
+    ],
     "vocabulaire_manquant": [
-      {
-        "variable": "garantie_degats_electriques_souscrite",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "La garantie « dégâts électriques » est-elle mentionnée comme souscrite dans les conditions particulières ?",
-        "pourquoi": "L'article 3.1.3 conditionne l'application des conditions spéciales à la souscription de cette garantie",
-        "plus_proche": "formule : indique la formule générale (Privilège, Active, standard) mais pas spécifiquement la garantie dégâts électriques",
-        "aide": {
-          "oui": "les conditions particulières mentionnent la garantie dégâts électriques",
-          "non": "la garantie dégâts électriques n'est pas souscrite"
-        }
-      },
-      {
-        "variable": "cause_domotique",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "L'équipement domotique est-il à l'origine du sinistre ?",
-        "pourquoi": "Exclusion des frais de recherche liés à l'équipement domotique",
-        "plus_proche": "bien_a_l_origine_sinistre : indique si le bien endommagé est la cause, mais pas spécifiquement l'équipement domotique",
-        "aide": {
-          "oui": "le sinistre provient d'un équipement domotique (box, capteur connecté, etc.)",
-          "non": "le sinistre ne provient pas d'un équipement domotique"
-        }
-      },
-      {
-        "variable": "equipement_bureautique",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Le bien endommagé est-il un équipement bureautique (imprimante, photocopieuse, etc.) ?",
-        "pourquoi": "Exclusion des équipements bureautiques à usage professionnel",
-        "plus_proche": "appareil_informatique : couvre les ordinateurs mais pas tous les équipements bureautiques",
-        "aide": {
-          "oui": "imprimante, scanner, photocopieuse, fax, etc.",
-          "non": "autre type d'équipement"
-        }
-      },
       {
         "variable": "support_donnees_ou_logiciel",
         "valeurs": [
@@ -645,34 +578,6 @@
         }
       },
       {
-        "variable": "reconstitution_donnees",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "S'agit-il de frais de reconstitution de données ?",
-        "pourquoi": "Exclusion de la reconstitution des données",
-        "plus_proche": "aucune variable ne couvre les frais de reconstitution de données",
-        "aide": {
-          "oui": "coûts pour récupérer ou recréer des données perdues",
-          "non": "autre type de frais"
-        }
-      },
-      {
-        "variable": "autre_division_assurable",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Les dégâts sont-ils assurables par une autre division du contrat ?",
-        "pourquoi": "Exclusion des dégâts assurables par d'autres divisions",
-        "plus_proche": "aucune variable n'indique si une autre division couvre le sinistre",
-        "aide": {
-          "oui": "une autre garantie du contrat couvre ces dégâts (ex: garantie vol, incendie spécifique)",
-          "non": "aucune autre division ne couvre"
-        }
-      },
-      {
         "variable": "bien_marchandise",
         "valeurs": [
           "oui",
@@ -684,20 +589,6 @@
         "aide": {
           "oui": "appareil en stock, destiné à la vente, marchandise",
           "non": "appareil personnel ou professionnel non destiné à la vente"
-        }
-      },
-      {
-        "variable": "contenu_appareil_electromenager",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "S'agit-il de dégâts au contenu d'un appareil électroménager (ex: aliments dans un congélateur) ?",
-        "pourquoi": "Exclusion des dégâts au contenu des appareils électroménagers",
-        "plus_proche": "denrees_alimentaires : couvre les denrées mais pas spécifiquement le contenu des appareils",
-        "aide": {
-          "oui": "aliments dans le réfrigérateur/congélateur, contenu d'un appareil électroménager",
-          "non": "dégâts à l'appareil lui-même ou à un autre bien"
         }
       },
       {
@@ -727,65 +618,61 @@
           "oui": "défaut de fonctionnement de l'appareil ayant causé le dommage",
           "non": "autre cause"
         }
+      },
+      {
+        "variable": "option_degats_electriques",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Vos conditions particulières mentionnent-elles la garantie « dégâts électriques » ?",
+        "aide": {
+          "oui": "la garantie figure aux conditions particulières",
+          "non": "elle n'y figure pas"
+        },
+        "pourquoi": "garantie optionnelle : réserve tant que les conditions particulières ne sont pas lues",
+        "plus_proche": "aucune ; fait des conditions particulières"
       }
     ],
-    "non_traduit": []
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "3.1.3.2",
+        "texte": "les frais de recherche du défaut ou de la pièce défectueuse liés à l'équipement domotique à l'origine du sinistre",
+        "pourquoi": "des frais ou une règle de cumul entre garanties : sans effet sur la question de couverture"
+      },
+      {
+        "article": "3.1.3.2",
+        "texte": "la reconstitution des données",
+        "pourquoi": "des frais ou une règle de cumul entre garanties : sans effet sur la question de couverture"
+      },
+      {
+        "article": "3.1.3.2",
+        "texte": "les dégâts assurables par d'autres divisions du contrat",
+        "pourquoi": "des frais ou une règle de cumul entre garanties : sans effet sur la question de couverture"
+      }
+    ]
   },
   "controles": [
     {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "garantie_degats_electriques_souscrite = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.3`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "cause_domotique = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.3`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "bien = equipement_bureautique : hors vocabulaire, et non déclaré"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "support_donnees_ou_logiciel = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.3`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "reconstitution_donnees = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.3`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "autre_division_assurable = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.3`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "bien_marchandise = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.3`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "contenu_appareil_electromenager = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.3`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "appareil_plus_15_ans = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.3`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "fonctionnement_defectueux = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.1.3`) ou à remplacer"
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.1.3.2) : des frais ou une règle de cumul entre garanties : sans effet sur la question de couverture"
     },
     {
       "gravite": "info",
-      "controle": "citation",
-      "message": "garantie : citation rattachée à 3.1.3.1 (et non 3.1.3)"
+      "controle": "couverture",
+      "message": "hors décision (3.1.3.2) : des frais ou une règle de cumul entre garanties : sans effet sur la question de couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.1.3.2) : des frais ou une règle de cumul entre garanties : sans effet sur la question de couverture"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "prolog",
+      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
     }
   ]
 }

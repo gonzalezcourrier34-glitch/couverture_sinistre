@@ -150,8 +150,8 @@ def test_vocabulaire_nouveau_declare_bloque_jusqu_a_acceptation(voc_etendu):
 
 def test_fait_invente_non_declare():
     prop = copy.deepcopy(BONNE)
-    prop["garanties"][0]["perimetre"].append({"f": ["bien", "toiture"]})
-    assert any("toiture : hors vocabulaire, et non déclaré" in p["message"] for p in bloquants(controles(prop)))
+    prop["garanties"][0]["perimetre"].append({"f": ["bien", "cheminee"]})
+    assert any("cheminee : hors vocabulaire, et non déclaré" in p["message"] for p in bloquants(controles(prop)))
 
 
 def test_citation_reparee_ou_refusee():
