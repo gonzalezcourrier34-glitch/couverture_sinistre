@@ -1,0 +1,1399 @@
+{
+ "date": "2026-11-19T19:31:41",
+ "contrat": "assureur-b-habitation-2017",
+ "methode": "regles",
+ "jeu": "ferme",
+ "golden": {
+  "jeu": "ferme",
+  "version": null,
+  "empreinte": "e419734e12e73607",
+  "fige": true,
+  "n": 20,
+  "valides": 0,
+  "auteurs": {
+   "agent+mistral-large": 20
+  }
+ },
+ "couches": {
+  "chaine": {
+   "metriques": {
+    "exactitude": {
+     "moyenne": 0.633,
+     "min": 0.6,
+     "max": 0.65
+    },
+    "exactitude_stricte": {
+     "moyenne": 0.567,
+     "min": 0.55,
+     "max": 0.6
+    },
+    "faux_couverts": {
+     "moyenne": 1.333,
+     "min": 1,
+     "max": 2
+    },
+    "faux_refus": {
+     "moyenne": 0.0,
+     "min": 0,
+     "max": 0
+    },
+    "taux_incertain": {
+     "moyenne": 0.45,
+     "min": 0.4,
+     "max": 0.5
+    },
+    "n": 20,
+    "executions": 3,
+    "instables": 4,
+    "rappel_clauses": 0.216,
+    "rappel_questions": 0.0,
+    "erreurs_fournisseur": 0,
+    "duree_moyenne_s": 37.6,
+    "latence_mediane_s": 3.59,
+    "latence_p95_s": 39.05,
+    "latence_lecture_mediane_s": 2.98,
+    "latence_lecture_p95_s": 37.67,
+    "latence_decision_mediane_s": 0.02,
+    "latence_decision_p95_s": 0.1,
+    "latence_seule_mediane_s": 3.69,
+    "latence_seule_p95_s": 5.83,
+    "latence_seule_lecture_mediane_s": 3.03,
+    "latence_seule_lecture_p95_s": 4.6,
+    "latence_seule_decision_mediane_s": 0.02,
+    "latence_seule_decision_p95_s": 0.03,
+    "latence_seule_nb": 10
+   },
+   "groupes": {
+    "auteur : agent+mistral-large": {
+     "n": 20,
+     "exactitude": 0.65,
+     "exactitude_stricte": 0.6,
+     "faux_couverts": 1,
+     "faux_refus": 0,
+     "taux_incertain": 0.45
+    },
+    "garantie : ?": {
+     "n": 20,
+     "exactitude": 0.65,
+     "exactitude_stricte": 0.6,
+     "faux_couverts": 1,
+     "faux_refus": 0,
+     "taux_incertain": 0.45
+    },
+    "thème : assistance": {
+     "n": 1,
+     "exactitude": 0.0,
+     "exactitude_stricte": 0.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 1.0
+    },
+    "thème : base": {
+     "n": 4,
+     "exactitude": 0.75,
+     "exactitude_stricte": 0.75,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.25
+    },
+    "thème : exclusion": {
+     "n": 4,
+     "exactitude": 0.25,
+     "exactitude_stricte": 0.25,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.75
+    },
+    "thème : incertain": {
+     "n": 5,
+     "exactitude": 0.6,
+     "exactitude_stricte": 0.6,
+     "faux_couverts": 1,
+     "faux_refus": 0,
+     "taux_incertain": 0.6
+    },
+    "thème : piege": {
+     "n": 4,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.75,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "thème : rc": {
+     "n": 2,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.5
+    }
+   },
+   "reponses": {
+    "f-b01": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "f-b02": [
+     "COUVERT",
+     "COUVERT",
+     "INCERTAIN"
+    ],
+    "f-b03": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-b04": [
+     "NON_COUVERT",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-b05": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "f-b06": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-b07": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "f-b08": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-b09": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "f-b10": [
+     "INCERTAIN",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "f-b11": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "f-b12": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "f-b13": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-b14": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "f-b15": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-b16": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-b17": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "f-b18": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "f-b19": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-b20": [
+     "INCERTAIN",
+     "COUVERT",
+     "INCERTAIN"
+    ]
+   },
+   "instables": [
+    "f-b02",
+    "f-b04",
+    "f-b10",
+    "f-b20"
+   ],
+   "executions": [
+    [
+     {
+      "id": "f-b01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Vos conditions particulières mentionnent-elles la garantie « incendie et périls assimilés » ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2486,
+       "decision": 6,
+       "total": 3591
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Vos conditions particulières mentionnent-elles la garantie « dégâts des eaux » ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.33,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3308,
+       "decision": 7,
+       "total": 4346
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Le vent a-t-il atteint une vitesse de pointe d'au moins 80 km/h selon la station IRM la plus proche du bâtiment ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3390,
+       "decision": 131,
+       "total": 3523
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b04",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2552,
+       "decision": 150,
+       "total": 3294
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ?",
+       "Occupation irrégulière des locaux ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3711,
+       "decision": 76,
+       "total": 5573
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Une plainte a-t-elle été déposée auprès des autorités ?",
+       "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2795,
+       "decision": 22,
+       "total": 2821
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b07",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3147,
+       "decision": 22,
+       "total": 4222
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b08",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2182,
+       "decision": 15,
+       "total": 2199
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b09",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2980,
+       "decision": 18,
+       "total": 3924
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b10",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2927,
+       "decision": 32,
+       "total": 2963
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b11",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Vos conditions particulières mentionnent-elles la garantie « tempête, grêle, pression de la neige ou de la glace » ? (oui → couvert ; non → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3433,
+       "decision": 20,
+       "total": 4476
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b12",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Vos conditions particulières mentionnent-elles la garantie « dégâts des eaux » ? (oui → couvert ; non → non couvert)",
+       "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ? (aucun/autres_que_entretien_reparation → couvert ; entretien_reparation → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.33,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3377,
+       "decision": 18,
+       "total": 4341
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b13",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2388,
+       "decision": 14,
+       "total": 2406
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b14",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3338,
+       "decision": 29,
+       "total": 4420
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b15",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Quel phénomène a causé les dégâts : le vent, la grêle, ou le poids de la neige ou de la glace ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2866,
+       "decision": 19,
+       "total": 2887
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-b16",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1920,
+       "decision": 8,
+       "total": 1930
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-b17",
+      "attendu": "INCERTAIN",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Les biens se trouvaient-ils hors de chez vous, lors d'un séjour temporaire (vacances, hôtel, location) ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3165,
+       "decision": 20,
+       "total": 5625
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-b18",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3758,
+       "decision": 19,
+       "total": 4638
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-b19",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1964,
+       "decision": 95,
+       "total": 2062
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-b20",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2220,
+       "decision": 6,
+       "total": 2229
+      },
+      "rappel_questions": 0.0
+     }
+    ],
+    [
+     {
+      "id": "f-b01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Vos conditions particulières mentionnent-elles la garantie « incendie et périls assimilés » ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2689,
+       "decision": 37,
+       "total": 4296
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Vos conditions particulières mentionnent-elles la garantie « dégâts des eaux » ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.33,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2466,
+       "decision": 6,
+       "total": 3683
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Quel phénomène a causé les dégâts : le vent, la grêle, ou le poids de la neige ou de la glace ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3921,
+       "decision": 13,
+       "total": 3936
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b04",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1705,
+       "decision": 10,
+       "total": 1726
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3086,
+       "decision": 15,
+       "total": 4197
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Une plainte a-t-elle été déposée auprès des autorités ?",
+       "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3783,
+       "decision": 21,
+       "total": 3808
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b07",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2100,
+       "decision": 5,
+       "total": 2349
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b08",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1674,
+       "decision": 14,
+       "total": 1691
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b09",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3159,
+       "decision": 53,
+       "total": 3913
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b10",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ? (oui → couvert ; non → non couvert)",
+       "Les dégâts viennent-ils du contact direct avec un foyer ou une substance incandescente (braise, bûche, mégot) ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2873,
+       "decision": 10,
+       "total": 3395
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b11",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Vos conditions particulières mentionnent-elles la garantie « tempête, grêle, pression de la neige ou de la glace » ? (oui → couvert ; non → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3425,
+       "decision": 13,
+       "total": 4469
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b12",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Vos conditions particulières mentionnent-elles la garantie « dégâts des eaux » ? (oui → couvert ; non → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.33,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2503,
+       "decision": 27,
+       "total": 3381
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b13",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3290,
+       "decision": 160,
+       "total": 3453
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b14",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2784,
+       "decision": 35,
+       "total": 4246
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b15",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Quel phénomène a causé les dégâts : le vent, la grêle, ou le poids de la neige ou de la glace ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2921,
+       "decision": 11,
+       "total": 2935
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-b16",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1740,
+       "decision": 13,
+       "total": 1755
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-b17",
+      "attendu": "INCERTAIN",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3862,
+       "decision": 6,
+       "total": 4176
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-b18",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 4138,
+       "decision": 23,
+       "total": 5068
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-b19",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2259,
+       "decision": 21,
+       "total": 2281
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-b20",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Vos conditions particulières mentionnent-elles la garantie « incendie et périls assimilés » ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2088,
+       "decision": 9,
+       "total": 2975
+      },
+      "rappel_questions": 0.0
+     }
+    ],
+    [
+     {
+      "id": "f-b01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Vos conditions particulières mentionnent-elles la garantie « incendie et périls assimilés » ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2766,
+       "decision": 6,
+       "total": 3765
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b02",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Quel est le type de dommage ?",
+       "Vos conditions particulières mentionnent-elles la garantie « dégâts des eaux » ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.33,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2532,
+       "decision": 7,
+       "total": 3256
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Le vent a-t-il atteint une vitesse de pointe d'au moins 80 km/h selon la station IRM la plus proche du bâtiment ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3286,
+       "decision": 9,
+       "total": 3298
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b04",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1612,
+       "decision": 14,
+       "total": 1638
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3048,
+       "decision": 29,
+       "total": 4120
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Une plainte a-t-elle été déposée auprès des autorités ?",
+       "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3106,
+       "decision": 22,
+       "total": 3132
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b07",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3289,
+       "decision": 8,
+       "total": 3542
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b08",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1787,
+       "decision": 16,
+       "total": 1805
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b09",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 68278,
+       "decision": 17,
+       "total": 69129
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b10",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 69842,
+       "decision": 4,
+       "total": 70099
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b11",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Vos conditions particulières mentionnent-elles la garantie « tempête, grêle, pression de la neige ou de la glace » ? (oui → couvert ; non → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 37666,
+       "decision": 15,
+       "total": 39048
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b12",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Vos conditions particulières mentionnent-elles la garantie « dégâts des eaux » ? (oui → couvert ; non → non couvert)",
+       "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ? (aucun/autres_que_entretien_reparation → couvert ; entretien_reparation → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.33,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 67450,
+       "decision": 18,
+       "total": 68703
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b13",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Quels biens sont endommagés ou volés ?",
+       "Vos conditions particulières mentionnent-elles la garantie « dégâts des eaux » ? (oui → couvert ; non → non couvert)",
+       "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ? (aucun/autres_que_entretien_reparation → couvert ; entretien_reparation → non couvert)",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2686,
+       "decision": 7,
+       "total": 3626
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b14",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 4439,
+       "decision": 30,
+       "total": 5714
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-b15",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Quel phénomène a causé les dégâts : le vent, la grêle, ou le poids de la neige ou de la glace ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2665,
+       "decision": 10,
+       "total": 2678
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-b16",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2144,
+       "decision": 4,
+       "total": 2150
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-b17",
+      "attendu": "INCERTAIN",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Les biens se trouvaient-ils hors de chez vous, lors d'un séjour temporaire (vacances, hôtel, location) ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3783,
+       "decision": 13,
+       "total": 4792
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-b18",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 4548,
+       "decision": 19,
+       "total": 5632
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-b19",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3284,
+       "decision": 20,
+       "total": 3306
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-b20",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Les dégâts viennent-ils de la chaleur seule, sans contact avec le feu ?",
+       "Les dégâts viennent-ils du contact direct avec un foyer ou une substance incandescente (braise, bûche, mégot) ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2399,
+       "decision": 82,
+       "total": 2484
+      },
+      "rappel_questions": 0.0
+     }
+    ]
+   ]
+  }
+ },
+ "avertissements": [
+  "jeu « ferme » : sans faits idéaux, la chaîne complète seule"
+ ],
+ "modele": "mistral:mistral-small-latest",
+ "lecture": "verifiee",
+ "portes": [
+  {
+   "couche": "chaine",
+   "critere": "faux_couverts",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 1.333,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "faux_refus",
+   "sens": "max",
+   "seuil": 1,
+   "valeur": 0.0,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "exactitude",
+   "sens": "min",
+   "seuil": 0.85,
+   "valeur": 0.633,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "instables",
+   "sens": "max",
+   "seuil": 3,
+   "valeur": 4,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "rappel_questions",
+   "sens": "min",
+   "seuil": 0.8,
+   "valeur": 0.0,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "latence_seule_p95_s",
+   "sens": "max",
+   "seuil": 10,
+   "valeur": 5.83,
+   "ok": true
+  }
+ ],
+ "passe": false
+}

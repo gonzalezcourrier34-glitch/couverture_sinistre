@@ -28,7 +28,7 @@ exclusion(degats_eaux_3_1_4, et([f(travaux_construction, oui), non(f(lien_causal
     "lorsque le bâtiment désigné est en cours de construction, de transformation ou de rénovation, à moins que l’Assuré ne démontre que cette circonstance n’a pas contribué à la survenance ou à l’aggravation des conséquences du sinistre").
 exclusion(degats_eaux_3_1_4, f(cause_eau, condensation), tout, non, '3.1.4.2',
     "par l’hygrométrie ambiante, même consécutivement à un sinistre couvert").
-exclusion(degats_eaux_3_1_4, f(cause_eau, condensation), tout, non, '3.1.4.2',
+exclusion(degats_eaux_3_1_4, f(type_dommage, moisissure), tout, non, '3.1.4.2',
     "par des champignons ou des moisissures, même consécutivement à un sinistre couvert").
 exclusion(degats_eaux_3_1_4, f(manque_entretien, oui), tout, non, '3.1.4.2',
     "par un défaut de réparation ou d’entretien, ou dus à une étanchéité absente, mal conçue ou mal réalisée").

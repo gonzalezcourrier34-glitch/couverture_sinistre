@@ -363,7 +363,7 @@ class Moteur:
         d = self.combiner()
         traduits = {e.args[0] for e in self.c.regles("evenement_traduit", 1)}
         nt = sorted(e for e in self.faits.get("evenement", set()) if e != "autre" and e not in traduits)
-        if nt and d["decision"] != "COUVERT":
+        if nt:  # 7.84 : même un « couvert » ; couvrir une partie n'est pas couvrir la demande
             d.update(decision="INCERTAIN", non_traduits=nt, aucune=False)
         d["accessoires"] = []
         if d["decision"] == "COUVERT":           # 7.68 : une garantie accessoire ne joue qu'après un sinistre couvert

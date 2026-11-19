@@ -560,14 +560,20 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
     index = {c.id: c for c in clauses}
     # 2 bis. Une réduction n'est pas un refus (7.81) : le gel sans vidange chez l'assureur B réduit l'indemnité de
     # moitié, et la règle refusait ; le jeu fermé l'a montré (f-b02).
+    # Seule compte la sanction qui suit le devoir (3.1.1.2 de B, une longue clause, parle ailleurs d'une réduction).
     for g in prop.get("garanties", []):
         for o in g.get("obligations") or []:
             c = index.get(o.get("article"))
-            if c is not None and re.search(r"\br[ée]dui|proportionnel", normaliser(c.texte)) \
-                    and not re.search(r"refuser|pas de garantie|n.?est pas garanti", normaliser(c.texte)):
+            t, d = (normaliser(c.texte), normaliser(str(o.get("texte", "")))) if c is not None else ("", "")
+            i = t.find(d[:60]) if d else -1
+            fenetre = t[i:i + len(d) + 400] if i >= 0 else ""
+            if c is None or not fenetre:
+                continue
+            if re.search(r"\br[ée]dui|proportionnel", fenetre) \
+                    and not re.search(r"refuser|pas de garantie|n.?est pas garanti", fenetre):
                 noter(BLOQUANT, "couverture", f"garantie {g.get('id')} : l'obligation « {str(o.get('texte'))[:60]} » : "
                       f"sa clause ({o.get('article')}) réduit l'indemnité sans refuser ; une limite, pas une obligation")
-            elif c is not None and re.search(r"\br[ée]dui|proportionnel", normaliser(c.texte)):
+            elif re.search(r"\br[ée]dui|proportionnel", fenetre):
                 noter(A_RELIRE, "couverture", f"garantie {g.get('id')} : l'obligation « {str(o.get('texte'))[:60]} » : "
                       f"sa clause ({o.get('article')}) parle d'une réduction ; vérifier que ce devoir-ci refuse")
     for role, x in elements_cites(prop):

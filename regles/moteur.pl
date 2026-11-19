@@ -33,8 +33,9 @@
       7. sinon couvert ; une exclusion « à demander » inconnue est une réserve (charge de la
          preuve : l'assureur prouve l'exclusion) ; une exclusion qui ne vise qu'un bien
          (Portee = bien(B)) n'exclut que ce bien.
-      8. un événement déclaré qui n'est pas traduit en règles (ni « autre ») : la décision est au
-         plus INCERTAIN. Un refus ne vaut que si toutes les garanties en jeu ont été examinées.
+      8. un événement déclaré qui n'est pas traduit en règles (ni « autre ») : la décision est
+         INCERTAIN, même si une garantie traduite couvre (7.84). Un refus ne vaut que si toutes les
+         garanties en jeu ont été examinées ; une couverture, que si toute la demande l'a été.
 */
 
 :- use_module(library(lists)).
@@ -363,8 +364,9 @@ non_traduits(NT) :-
     findall(E, ( fait(evenement, E), E \== autre, \+ regle(evenement_traduit(E)) ), NT0),
     sort(NT0, NT).
 
+%  Un « couvert » aussi (7.84) : couvrir une partie du sinistre n'est pas couvrir la demande (« ma chaudière
+%  fuit, j'ai appelé l'assistance » : le dégât des eaux est couvert, la demande porte sur le dépannage).
 plafonner([], D, D) :- !.
-plafonner(_, D, D) :- get_dict(decision, D, "COUVERT"), !.
 plafonner(NT, D0, D) :- put_dict(_{decision:"INCERTAIN", non_traduits:NT, aucune:false}, D0, D).
 
 % --- Arbre de preuve : pourquoi cette décision ------------------------------------------------------

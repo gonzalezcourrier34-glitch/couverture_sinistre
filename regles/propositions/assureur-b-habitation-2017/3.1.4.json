@@ -313,7 +313,8 @@
         "objet non relié à l'installation : cause_eau = debordement_recipient (l'aquarium est une autre valeur)",
         "lien_causal_travaux_eaux → lien_causal_travaux (variable acceptée avec 3.1.6)",
         "« applicables si… » : réserve (option_degats_eaux) ; frais de recherche et huile minérale : hors décision",
-        "3.1.4.3 : la sanction réduit l'indemnité, elle ne refuse pas ; obligation remplacée par une limite (7.81)"
+        "3.1.4.3 : la sanction réduit l'indemnité, elle ne refuse pas ; obligation remplacée par une limite (7.81)",
+        "moisissures : la condition était `cause_eau = condensation` (une autre exclusion) ; désormais `type_dommage = moisissure` (7.83)"
       ]
     }
   },
@@ -542,8 +543,8 @@
           {
             "condition": {
               "f": [
-                "cause_eau",
-                "condensation"
+                "type_dommage",
+                "moisissure"
               ]
             },
             "portee": "tout",

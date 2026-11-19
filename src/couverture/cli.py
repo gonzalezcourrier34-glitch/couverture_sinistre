@@ -266,6 +266,22 @@ def banc_cli(base: Base, donnees: Path, contrat_id: str, methode: str, couches: 
     return 0 if r["passe"] else 1
 
 
+def tableau(rapport: dict) -> str:
+    """Une ligne par cas, puis les indicateurs qui comptent."""
+    lignes = [f"{'cas':<11}{'attendu':<14}{'obtenu':<14}{'':<4}confiance"]
+    for c in rapport["cas"]:
+        marque = "err" if c.get("erreur") else "ok" if c["obtenu"] == c["attendu"] else ("~" if c.get("acceptable") else "X")
+        lignes.append(f"{c['id']:<11}{c['attendu']:<14}{c['obtenu']:<14}{marque:<4}{c['confiance']:.2f}")
+    lignes.append("")
+    lignes.append(f"Exactitude {rapport['exactitude']:.0%} (stricte {rapport['exactitude_stricte']:.0%})  ·  "
+                  f"couverts à tort {rapport['faux_couverts']}  ·  refus à tort {rapport['faux_refus']}  ·  "
+                  f"incertains {rapport['taux_incertain']:.0%}"
+                  + (f"  ·  erreurs du fournisseur {rapport['erreurs_fournisseur']} (relancer)" if rapport.get("erreurs_fournisseur") else ""))
+    lignes.append("ok : exact   ~ : réponse acceptable (cas ambigu)   X : erreur   err : pas de réponse du fournisseur   ·   détail : --detail")
+    return "\n".join(lignes)
+
+
+
 def legalbench_cli(donnees: Path, telecharger: bool, fichier: str | None, split: str, limite: int | None,
                    paralleles: int) -> int:
     """LegalBench : le modèle répond et cite, le code vérifie la citation ; réponse brute et contrôlée comparées."""

@@ -109,6 +109,10 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 
 ## 5. Dernières mesures
 
+**19 nov. 2026, 17 h 58, jeu fermé après les corrections de 7.81** : **Assureur A 77 % justes** (70 %), 1,67 couvert
+à tort (3), 0 refus à tort ; **Assureur B 62 % justes** (57 %), 1 couvert à tort (0), 1 refus à tort (1,33). Mesure
+optimiste : cinq cas ont servi à corriger (DEMARCHE 7.82).
+
 **19 nov. 2026, 17 h 45, jeu fermé** (40 cas écrits sans voir les règles, 7.79 ; chaîne complète, configuration
 par défaut, sans Mistral Large) : **Assureur A 70 % justes**, 60 % exactes, 3 couverts à tort, 0,33 refus à tort,
 5 instables ; **Assureur B 57 % justes**, 52 % exactes, 0 couvert à tort, 1,33 refus à tort ; médiane 4,1 à 4,2 s.

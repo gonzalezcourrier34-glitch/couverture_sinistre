@@ -155,8 +155,8 @@ accessoire(complementaires).
 
 
 def test_evenement_non_traduit_jamais_refuse(tmp_path):
-    """Un événement dont la garantie n'est pas en règles (la tempête) : au plus INCERTAIN, même si une
-    garantie traduite refuse. « autre » ne compte pas ; un COUVERT reste couvert."""
+    """Un événement dont la garantie n'est pas en règles (la tempête) : INCERTAIN, même si une garantie traduite
+    refuse, ou couvre (7.84 : couvrir une partie du sinistre n'est pas couvrir la demande). « autre » ne compte pas."""
     contrat = contrat_sans(tmp_path, "2.2")
     tempete = {"evenement": ["tempete", "degat_eaux"], "bien": ["element_batiment"], "lieu": ["logement"],
                "cause_eau": "infiltration_exterieure"}
@@ -166,7 +166,9 @@ def test_evenement_non_traduit_jamais_refuse(tmp_path):
     brulure = {"evenement": ["autre"], "bien": ["objet_divers"], "lieu": ["logement"], "flammes": "non", "embrasement": "non"}
     assert Moteur(contrat, brulure).decider()["decision"] == "NON_COUVERT"
     feu = {"evenement": ["incendie", "tempete"], "bien": ["mobilier"], "lieu": ["logement"], "flammes": "oui", "embrasement": "oui"}
-    assert Moteur(contrat, feu).decider()["decision"] == "COUVERT"
+    d = Moteur(contrat, feu).decider()
+    assert d["decision"] == "INCERTAIN" and d["non_traduits"] == ["tempete"]
+    assert Moteur(contrat, {**feu, "evenement": ["incendie"]}).decider()["decision"] == "COUVERT"
 
 
 def test_trous_trouves_par_le_golden_v5(tmp_path):

@@ -22,7 +22,8 @@
         "conflit_du_travail",
         "heurt",
         "responsabilite",
-        "assistance"
+        "assistance",
+        "accident"
       ],
       "question": "Que s'est-il passé (la cause, et le dommage s'il est d'une autre nature) ?",
       "aide": {
@@ -40,7 +41,14 @@
         "conflit_du_travail": "grève, lock-out, manifestation de travailleurs",
         "heurt": "un véhicule, un arbre ou un objet a percuté le bâtiment ou les biens",
         "responsabilite": "un dommage causé par l'assuré, un proche ou son animal à quelqu'un d'autre, qui en demande réparation : un passant blessé, un objet emprunté cassé, des dégâts chez un voisin",
-        "assistance": "un besoin d'aide ou de dépannage sans dommage à indemniser : serrurier après des clés oubliées, intervention d'urgence demandée"
+        "assistance": "un besoin d'aide ou de dépannage sans dommage à indemniser : serrurier après des clés oubliées, intervention d'urgence demandée",
+        "accident": "casse ou dommage accidentel d'un objet (pas d'une vitre, d'un miroir ni d'un verre : c'est « bris ») par l'assuré ou un proche : chute, choc, objet renversé ou tombé ; pas un vol, un incendie, l'eau, la tempête ni l'électricité"
+      },
+      "parents": {
+        "accident": [
+          "heurt",
+          "bris"
+        ]
       }
     },
     "bien": {
@@ -474,12 +482,12 @@
       "aide": {
         "fuite_installation": "fuite ou rupture d'un appareil relié à l'eau : tuyau, chauffe-eau, machine à laver, évier, baignoire qui déborde",
         "debordement_recipient": "récipient non relié à l'eau qui se renverse ou se brise : seau, vase, bassine (pas un aquarium)",
-        "infiltration_exterieure": "pluie entrée par une terrasse, un balcon, une porte, une fenêtre ou un mur extérieur (pas par le toit) ; pas l'eau partie de chez l'assuré qui s'infiltre chez un voisin",
+        "infiltration_exterieure": "pluie entrée par une terrasse, un balcon, une porte, une fenêtre (fenêtre de toit et lucarne comprises) ou un mur extérieur ; pas l'eau partie de chez l'assuré qui s'infiltre chez un voisin",
         "inondation": "débordement d'un cours d'eau, refoulement des égouts publics",
         "gel": "canalisation qui gèle et éclate",
         "condensation": "humidité de condensation",
         "debordement_aquarium": "aquarium ou matelas d'eau qui fuit ou se brise",
-        "infiltration_toiture": "pluie entrée par le toit",
+        "infiltration_toiture": "pluie entrée par la couverture du toit (tuiles, ardoises, gouttières), pas par une fenêtre de toit ni une lucarne",
         "eau_souterraine": "eau qui remonte du sol (nappe, remontées par les fondations)",
         "piscine_exterieure": "fuite d'une piscine ou d'un bain à bulles extérieurs, ou de leurs installations"
       },
@@ -534,13 +542,19 @@
         "bris",
         "felure",
         "rayure_ou_ecaillement",
-        "opacification_ou_perte_etancheite"
+        "opacification_ou_perte_etancheite",
+        "moisissure"
       ],
       "question": "Quel est le type de dommage ?",
       "pour": [
         "bris",
-        "vol"
-      ]
+        "vol",
+        "degat_eaux",
+        "catastrophe_naturelle"
+      ],
+      "aide": {
+        "moisissure": "champignons, moisissures, taches noires d'humidité"
+      }
     },
     "cause_dommage": {
       "valeurs": [
@@ -1989,6 +2003,25 @@
       "aide": {
         "oui": "pendant qu'elle travaillait chez l'assuré",
         "non": "en dehors de son travail, un jour de congé, la nuit"
+      }
+    },
+    "contact_incandescent": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les dégâts viennent-ils du contact direct avec un foyer ou une substance incandescente (braise, bûche, mégot) ?",
+      "pour": [
+        "incendie",
+        "explosion",
+        "foudre",
+        "fumee",
+        "autre",
+        "electricite"
+      ],
+      "aide": {
+        "oui": "une braise, une bûche, un mégot ou un objet brûlant a touché et abîmé le bien",
+        "non": "aucun contact avec quelque chose d'incandescent"
       }
     }
   }

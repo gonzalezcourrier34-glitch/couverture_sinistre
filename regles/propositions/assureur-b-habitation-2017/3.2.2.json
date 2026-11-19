@@ -11,7 +11,8 @@
         "événements inondation, ruissellement, glissement → evenement = catastrophe_naturelle et catastrophe = … (partagé avec 3.2.1)",
         "« applicables si… » : réserve (option_pluies_inondations)",
         "dommages dans les 72 heures : exclusion à établir par l'assureur, pas une question à chaque inondation",
-        "hygrométrie, champignons, humidité, condensation : cause_eau = condensation ; défaut d'étanchéité → manque_entretien ; « à l'extérieur des locaux » : règle 3 quater"
+        "hygrométrie, champignons, humidité, condensation : cause_eau = condensation ; défaut d'étanchéité → manque_entretien ; « à l'extérieur des locaux » : règle 3 quater",
+        "moisissures : la condition était `cause_eau = condensation` (une autre exclusion) ; désormais `type_dommage = moisissure` (7.83)"
       ]
     }
   },
@@ -169,8 +170,8 @@
           {
             "condition": {
               "f": [
-                "cause_eau",
-                "condensation"
+                "type_dommage",
+                "moisissure"
               ]
             },
             "portee": "tout",

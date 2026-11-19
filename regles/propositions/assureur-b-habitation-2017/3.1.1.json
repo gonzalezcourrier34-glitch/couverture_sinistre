@@ -15,7 +15,8 @@
         "« à l'extérieur du bâtiment » = jardin ou terrasse, objets et non le bâtiment (règle 3 quater) ; la voie publique tuait le vol par agression de 3.1.6 (b-v07)",
         "vandalisme : « l'assuré est propriétaire » n'est pas `proprietaire = assure` (à qui sont les biens) : variable statut_logement ; les trois conditions en réserves",
         "occupation régulière, choc entre corps durs, déménagement : des faits que l'assureur établit, pas des questions à chaque sinistre",
-        "attentat : « auteur = tiers » retiré du périmètre (inconnu, il faisait demander qui sont les terroristes)"
+        "attentat : « auteur = tiers » retiré du périmètre (inconnu, il faisait demander qui sont les terroristes)",
+        "3.1.1.1.6 : contact direct avec un foyer ou une substance incandescente (contact_incandescent) ; un tel dégât n'a pas à être un incendie au sens de 3.1.1.1.1 (7.83)"
       ]
     }
   },
@@ -133,9 +134,19 @@
                     ]
                   },
                   {
-                    "f": [
-                      "chaleur_sans_feu",
-                      "oui"
+                    "ou": [
+                      {
+                        "f": [
+                          "chaleur_sans_feu",
+                          "oui"
+                        ]
+                      },
+                      {
+                        "f": [
+                          "contact_incandescent",
+                          "oui"
+                        ]
+                      }
                     ]
                   }
                 ]
@@ -157,7 +168,27 @@
                   ]
                 },
                 {
-                  "concept": "incendie"
+                  "ou": [
+                    {
+                      "concept": "incendie"
+                    },
+                    {
+                      "ou": [
+                        {
+                          "f": [
+                            "chaleur_sans_feu",
+                            "oui"
+                          ]
+                        },
+                        {
+                          "f": [
+                            "contact_incandescent",
+                            "oui"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             },
@@ -681,11 +712,5 @@
     ],
     "non_traduit": []
   },
-  "controles": [
-    {
-      "gravite": "à relire",
-      "controle": "prolog",
-      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
-    }
-  ]
+  "controles": []
 }

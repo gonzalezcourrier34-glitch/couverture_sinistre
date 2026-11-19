@@ -2912,6 +2912,93 @@ de mise au point. La prochaine mesure honnête demandera un second jeu fermé, �
 **Leçon 94.** Un jeu de cas écrit en voyant les règles ne trouve pas les trous des règles : le moteur refusait
 la responsabilité civile, non traduite, depuis le début, et seul un jeu écrit sans les règles l'a montré.
 
+### 7.82 Le jeu fermé après les corrections
+
+**Banc** (17 h 58). **Assureur A : 77 % justes** (70 %), 1,67 couvert à tort (3), 0 refus à tort (0,33).
+**Assureur B : 62 % justes** (57 %), 1 couvert à tort (0), 1 refus à tort (1,33). Mesure **optimiste** : f-a18,
+f-a20, f-b02 et f-b16 ont servi à corriger et passent désormais (dix points sur vingt cas, à peu près).
+
+**Ce qui a changé, cas par cas.**
+- Garanties non traduites : le piéton renversé (f-a18), le serrurier (f-a20), la morsure du chien (f-b16) et la
+  tondeuse empruntée (f-a19) répondent « incertain » ; ce dernier devient une erreur (le texte l'exclut, mais la
+  responsabilité civile n'est pas traduite), une erreur prudente.
+- Le gel (f-b02) est couvert, avec la réduction de moitié en limite.
+- **Nouveau couvert à tort, f-b13** : « ma chaudière s'est mise à fuir ; j'ai appelé l'assistance » deux semaines
+  après la souscription. La demande porte sur l'intervention (soumise à un délai d'attente de 30 jours), mais la
+  lecture y voit aussi un dégât des eaux, que la garantie couvre ; et le moteur garde « couvert » quand une
+  garantie traduite joue, même si un événement non traduit (l'assistance) est lu. Règle du moteur à rediscuter :
+  « couvert » sur une partie du sinistre n'est pas « couvert » sur la demande.
+- Restent : le déménagement non déclaré (f-a17, clause de vie du contrat), les lectures (vase, store, remise),
+  le vol à la porte ouverte (faits négatifs, sans recours), la braise, la fenêtre de toit, la moisissure, le violon.
+
+### 7.83 Trois trous des règles de l'assureur B, trouvés par le jeu fermé
+
+- **La braise sur le tapis** (f-b01). 3.1.1.1.6 couvre les dégâts « par l'action subite de la chaleur ou par le
+  contact direct et immédiat avec un foyer ou une substance incandescente, même lorsqu'il n'y a pas eu
+  embrasement ». La règle ne connaissait que la chaleur seule, et exigeait, pour un événement lu « incendie », un
+  incendie au sens de 3.1.1.1.1 (des flammes) : la braise n'était ni l'un ni l'autre. Nouvelle variable
+  `contact_incandescent` ; la circonstance accepte désormais l'incendie, la chaleur seule ou le contact.
+- **La moisissure** (f-b04). « Par des champignons ou des moisissures, même consécutivement à un sinistre
+  couvert » (3.1.4.2.12, et 3.2.2.4) avait été traduit par `cause_eau = condensation`, la condition d'une autre
+  exclusion : une moisissure après une fuite restait couverte. Nouvelle valeur `type_dommage = moisissure`.
+  Même défaut que l'exclusion du personnel (7.75) : une exclusion rattachée à la condition de sa voisine.
+- **La pluie par une fenêtre de toit** (f-b03). La règle était juste (3.1.4.2.6 exclut l'eau de pluie entrée par
+  une ouverture, `infiltration_exterieure`) ; l'aide du vocabulaire ne disait pas qu'une fenêtre de toit est une
+  ouverture, et la lecture pouvait choisir `infiltration_toiture`, couverte. Aides précisées.
+
+Correction : `relecture/assureur_b_jeu_ferme.py` (3.1.1, 3.1.4, 3.2.2) ; vocabulaire. Oracle : aucune décision du
+golden set ne change ; braise couverte, moisissure refusée, fuite simple couverte.
+
+**Leçon 95.** Une exclusion peut citer le bon texte et porter la condition de sa voisine : le contrôle des
+citations ne le voit pas ; seul un cas qui la met à l'épreuve le montre.
+
+### 7.84 Deux décisions sur ce que le moteur ne sait pas (décidées avec l'auteur)
+
+**Un événement non traduit plafonne aussi un « couvert ».** Jusqu'ici (règle 8 du moteur), un événement lu dont
+la garantie n'est pas traduite empêchait un refus, mais laissait passer un « couvert » si une garantie traduite
+jouait. f-b13 (« ma chaudière fuit, j'ai appelé l'assistance », deux semaines après la souscription) l'a montré :
+le dégât des eaux était couvert, alors que la demande portait sur le dépannage, soumis à un délai d'attente.
+Couvrir une partie du sinistre n'est pas couvrir la demande : la réponse est désormais « incertain », « à examiner
+par un gestionnaire », avec ce que disent les garanties traduites. Choix de l'auteur, le plus prudent ; prix :
+quelques « couvert » justes deviendront « incertain » quand la lecture ajoute un événement de trop. Moteur Prolog,
+oracle et test (`test_evenement_non_traduit_jamais_refuse`) changés ensemble.
+
+**La casse accidentelle.** f-b19 (un violon tombé de son pupitre) : chez l'assureur B, une casse accidentelle
+relève d'une option non traduite (« dommages aux biens », formule Confort), et le moteur refusait. Nouvelle valeur
+`evenement = accident` (chute, choc, objet renversé), de parent `heurt` : chez l'assureur A, le pack multimédia
+(6.1, traduit sur le heurt) continue de couvrir l'ordinateur tombé, et le contrat ne garantit pas d'autre casse :
+`evenement_traduit(accident)` y est déclaré (question examinée, le vase cassé reste refusé). Chez B, rien ne la
+traduit : « incertain ».
+
+Oracle : aucune décision du golden set ne change (A et B) ; violon « incertain » (B), ordinateur tombé couvert et
+vase refusé (A), chaudière « incertain » (B).
+
+### 7.85 Le banc après 7.83 et 7.84 : la valeur « accident » prenait la place de « bris »
+
+**Banc** (18 h 10 à 18 h 25, sans Mistral Large). Jeu fermé : A 73 % justes (2 couverts à tort, 1 refus à
+tort) ; B 60 % (0 couvert à tort, 0,67 refus à tort), sans la correction de 3.1.1, refusée par le contrôle (voir
+plus bas). Golden set : **B 82 % justes** (76 %), 0 couvert à tort, 0 refus à tort ; **A 86 % justes, 4,33 refus
+à tort** (0,67 à 16 h 10).
+
+**Ce qui a fait monter les refus à tort chez A.** Cas par cas, trois bris de vitre accidentels (`red-b01`,
+`red-b02`, `red-b05` : une vitre cassée par un enfant, par l'assuré) sont désormais lus `evenement = accident`
+au lieu de `bris` : la garantie bris de vitrages ne se reconnaissait plus, et l'assureur A ayant déclaré la casse
+accidentelle « examinée », la réponse devenait « refusé ». Les autres écarts sont l'instabilité habituelle de la
+lecture. Correction : `accident` a pour parents `heurt` **et** `bris` (une vitre cassée par accident reste un bris
+de vitrage pour les règles), et l'aide de la valeur renvoie les vitres, miroirs et verres à « bris ». Oracle : les
+trois cas, lus « accident », redeviennent couverts ou refusés à juste titre ; aucune décision du golden set ne
+change.
+
+**Le contrôle de 7.81 trop large.** Il a refusé 3.1.1 : l'obligation de déclaration des attentats (3.1.1.2)
+partage sa clause, longue, avec une réduction d'indemnité sans rapport. Il ne regarde plus que la sanction qui
+suit le devoir (les 400 caractères après la phrase citée).
+
+**`couverture regles`** échouait pour l'assureur A (`tableau` introuvable) : la fonction avait été retirée comme
+code mort lors du tour du code (7.70), alors qu'elle servait encore. Rétablie.
+
+**Leçon 96.** Une nouvelle valeur du vocabulaire peut voler les lectures d'une valeur existante : la rattacher à
+celles dont elle peut prendre la place, et la mesurer sur le golden set avant le jeu fermé.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.
@@ -3036,3 +3123,5 @@ Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les section
 92. Quand une consigne ne change plus un petit modèle, changer qui décide : un second avis plus fort, sur les seuls faits qui comptent.
 93. Pour mesurer la fidélité des règles au contrat, la référence ne doit rien devoir aux règles : ni l'auteur des cas, ni leur vocabulaire.
 94. Un jeu écrit en voyant les règles ne trouve pas leurs trous : seul un jeu écrit sans elles a montré la responsabilité civile refusée.
+95. Une exclusion peut citer le bon texte et porter la condition de sa voisine : seul un cas qui la met à l'épreuve le montre.
+96. Une nouvelle valeur du vocabulaire peut voler les lectures d'une valeur existante : la rattacher à celles dont elle prend la place.

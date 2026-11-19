@@ -15,7 +15,7 @@ exclusion(pluies_inondations, f(cause_eau, eau_souterraine), tout, oui, '3.2.2.4
     "par les infiltrations d’eaux souterraines").
 exclusion(pluies_inondations, f(cause_eau, condensation), tout, non, '3.2.2.4',
     "par l’hygrométrie ambiante, même consécutivement à un sinistre couvert").
-exclusion(pluies_inondations, f(cause_eau, condensation), tout, non, '3.2.2.4',
+exclusion(pluies_inondations, f(type_dommage, moisissure), tout, non, '3.2.2.4',
     "par des champignons ou des moisissures, même consécutivement à un sinistre couvert").
 exclusion(pluies_inondations, f(manque_entretien, oui), tout, non, '3.2.2.4',
     "par un défaut de réparation ou d’entretien, ou dus à une étanchéité absente, mal conçue ou mal réalisée").

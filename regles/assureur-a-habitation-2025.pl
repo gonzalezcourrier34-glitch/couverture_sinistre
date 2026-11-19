@@ -27,6 +27,10 @@ evenement_traduit(explosion).
 evenement_traduit(foudre).
 evenement_traduit(degat_eaux).
 evenement_traduit(fumee).
+%  La casse accidentelle (7.84) : le contrat ne la garantit que pour le matériel informatique (pack multimédia,
+%  art. 6.1, où « accident » compte comme un heurt) ; ailleurs, aucune garantie. La question est examinée :
+%  pas de plafond à « incertain ».
+evenement_traduit(accident).
 
 % --- Définitions (art. 12) -----------------------------------------------------------------------
 

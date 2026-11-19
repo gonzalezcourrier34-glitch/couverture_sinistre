@@ -13,82 +13,6 @@
 
 :- discontiguous definition/4, precision/3, garantie/4, perimetre/2, circonstance/4,
                  obligation/6, exclusion/6, limite/4, evenement_traduit/1, accessoire/1.
-% --- Art. 3.1.1 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
-evenement_traduit(incendie).
-evenement_traduit(explosion).
-evenement_traduit(foudre).
-evenement_traduit(electricite).
-evenement_traduit(fumee).
-evenement_traduit(heurt).
-evenement_traduit(vol).
-evenement_traduit(vandalisme).
-evenement_traduit(attentat).
-evenement_traduit(conflit_du_travail).
-definition(incendie, et([f(flammes, oui), ou([f(embrasement, oui), f(chaleur_sans_feu, non)])]), '3.1.1.1',
-    "L'incendie, c'est-à-dire la destruction par des flammes se propageant ou susceptibles de se propager en dehors de leur domaine normal ou d'objets dont la destination n'est pas, à ce moment, de brûler").
-garantie(incendie_base, "Incendie et périls de base", '3.1.1.1',
-    "La Compagnie assure les biens désignés, contre les périls suivants : 3.1.1.1.1 L'incendie, c'est-à-dire la destruction par des flammes se propageant ou susceptibles de se propager en dehors de leur domaine normal ou d'objets dont la destination n'est pas, à ce moment, de brûler ; 3.1.1.1.2 L'explosion ou l'implosion ; 3.1.1.1.3 La chute de la foudre ; 3.1.1.1.4 L'électrocution d'animaux ; 3.1.1.1.5 Les fumées et les suies ; 3.1.1.1.6 Les dégâts occasionnés au mobilier assuré et au bâtiment désigné par un événement soudain, résultant de l'action subite de la chaleur ou par le contact direct et immédiat avec un foyer ou une substance incandescente, même lorsqu'il n'y a pas eu embrasement, ni commencement d'incendie.").
-perimetre(incendie_base, ou([f(evenement, incendie), f(evenement, explosion), f(evenement, foudre), et([f(evenement, electricite), f(bien, animal)]), f(evenement, fumee), et([ou([f(evenement, incendie), f(evenement, autre)]), f(chaleur_sans_feu, oui)])])).
-perimetre(incendie_base, concept(batiment_designe)).
-circonstance(incendie_base, si(f(evenement, incendie), concept(incendie)), '3.1.1.1',
-    "L'incendie, c'est-à-dire la destruction par des flammes se propageant ou susceptibles de se propager en dehors de leur domaine normal ou d'objets dont la destination n'est pas, à ce moment, de brûler").
-garantie(decongelation, "Décongélation denrées", '3.1.1.2',
-    "à la décongélation de denrées alimentaires périssables contenues dans un surgélateur, congélateur ou réfrigérateur à usage domestique suite à un changement de température résultant d'un arrêt dans la production du froid imputable à la survenance d'un sinistre couvert par les présentes conditions spéciales ou par les conditions spéciales de la garantie \"dégâts électriques\"").
-perimetre(decongelation, f(bien, denrees_alimentaires)).
-circonstance(decongelation, ou([f(evenement, incendie), f(evenement, explosion), f(evenement, foudre), f(evenement, electricite)]), '3.1.1.2',
-    "imputable à la survenance d'un sinistre couvert par les présentes conditions spéciales ou par les conditions spéciales de la garantie \"dégâts électriques\"").
-garantie(linge, "Dégradation linge", '3.1.1.2',
-    "à la dégradation du contenu des sèche-linge ou lave-linge à la suite d'un sinistre relevant de l'un des périls prévus aux présentes conditions spéciales de la garantie \"incendie et périls assimilés\" et aux conditions spéciales de la garantie \"dégâts électriques\"").
-perimetre(linge, f(bien, objet_divers)).
-perimetre(linge, f(lieu, logement)).
-circonstance(linge, ou([f(evenement, incendie), f(evenement, explosion), f(evenement, foudre), f(evenement, electricite)]), '3.1.1.2',
-    "à la suite d'un sinistre relevant de l'un des périls prévus aux présentes conditions spéciales de la garantie \"incendie et périls assimilés\" et aux conditions spéciales de la garantie \"dégâts électriques\"").
-garantie(heurt, "Heurt", '3.1.1.2',
-    "au heurt, sauf : n les dégâts causés au contenu par un Assuré ou par un animal lui appartenant ou lui ayant été confié ; n les dégâts causés au bâtiment désigné en cas de déménagement du mobilier ; n les dégâts au bien ou à l'animal ayant causé le heurt ; n les dégâts ne résultant pas directement d'un choc entre deux corps durs ; n les dégâts causés par la grêle.").
-perimetre(heurt, f(evenement, heurt)).
-perimetre(heurt, concept(batiment_designe)).
-exclusion(heurt, ou([f(auteur, assure), f(bien, animal)]), tout, oui, '3.1.1.2',
-    "les dégâts causés au contenu par un Assuré ou par un animal lui appartenant ou lui ayant été confié").
-exclusion(heurt, et([f(bien, element_batiment), f(demenagement, oui)]), tout, non, '3.1.1.2',
-    "les dégâts causés au bâtiment désigné en cas de déménagement du mobilier").
-exclusion(heurt, f(bien_a_l_origine_sinistre, oui), tout, oui, '3.1.1.2',
-    "les dégâts au bien ou à l'animal ayant causé le heurt").
-exclusion(heurt, f(choc_deux_corps_durs, non), tout, non, '3.1.1.2',
-    "les dégâts ne résultant pas directement d'un choc entre deux corps durs").
-exclusion(heurt, f(alea_tempete, grele), tout, non, '3.1.1.2',
-    "les dégâts causés par la grêle").
-garantie(degradations_vol, "Dégradations lors de vol", '3.1.1.2',
-    "aux dégradations immobilières causées à l'occasion d'un vol ou d'une tentative de vol dans les locaux à occupation régulière ainsi que le vol de parties de bâtiment sauf : n les dommages ou le vol des biens se trouvant à l'extérieur du bâtiment ; n lorsque le bâtiment est en cours de construction, transformation ou rénovation, à moins que l'Assuré démontre que cette circonstance n'a pas contribué à la survenance ou à l'aggravation des conséquences du sinistre.").
-perimetre(degradations_vol, f(evenement, vol)).
-perimetre(degradations_vol, f(bien, element_batiment)).
-exclusion(degradations_vol, et([ou([f(lieu, jardin), f(lieu, terrasse)]), non(f(bien, element_batiment))]), tout, oui, '3.1.1.2',
-    "les dommages ou le vol des biens se trouvant à l'extérieur du bâtiment").
-exclusion(degradations_vol, et([f(travaux_construction, oui), non(f(lien_causal_travaux, non))]), tout, oui, '3.1.1.2',
-    "lorsque le bâtiment est en cours de construction, transformation ou rénovation, à moins que l'Assuré démontre que cette circonstance n'a pas contribué à la survenance ou à l'aggravation des conséquences du sinistre").
-exclusion(degradations_vol, f(occupation_irreguliere, oui), tout, oui, '3.1.1.2',
-    "aux dégradations immobilières causées à l’occasion d’un vol ou d’une tentative de vol dans les locaux à occupation régulière").
-garantie(vandalisme, "Vandalisme", '3.1.1.2',
-    "aux dommages causés par un acte de vandalisme ou de malveillance au bâtiment désigné pour autant que les conditions suivantes soient remplies simultanément : n l'Assuré est propriétaire du bâtiment ; n le bâtiment fait l'objet d'une occupation régulière ; n le bâtiment n'est pas en cours de construction, ni de transformation, ni de rénovation. L'indemnisation des dégâts matériels causés par vandalisme ou malveillance est consentie sans application de la règle proportionnelle à concurrence de 2.500 € par sinistre.").
-perimetre(vandalisme, f(evenement, vandalisme)).
-perimetre(vandalisme, f(bien, element_batiment)).
-perimetre(vandalisme, concept(batiment_designe)).
-exclusion(vandalisme, f(statut_logement, locataire), tout, oui, '3.1.1.2',
-    "l’Assuré est propriétaire du bâtiment").
-exclusion(vandalisme, f(occupation_irreguliere, oui), tout, oui, '3.1.1.2',
-    "le bâtiment fait l’objet d’une occupation régulière").
-exclusion(vandalisme, f(travaux_construction, oui), tout, oui, '3.1.1.2',
-    "le bâtiment n’est pas en cours de construction, ni de transformation, ni de rénovation").
-limite(vandalisme, '3.1.1.2', "L'indemnisation des dégâts matériels causés par vandalisme ou malveillance est consentie sans application de la règle proportionnelle à concurrence de 2.500 € par sinistre.", "2500 EUR").
-garantie(attentats, "Attentats et conflits du travail", '3.1.1.2',
-    "aux attentats et conflits du travail : La Compagnie prend en charge à concurrence de 745.000 € par sinistre les dégâts causés directement aux biens désignés : n par des personnes tierces prenant part à de tels événements ; n qui résulteraient de mesures prises dans les cas précités par une autorité légalement constituée pour la sauvegarde et la protection des biens désignés. En cas de sinistre, l'Assuré s'engage à accomplir, dans les plus brefs délais, toutes les démarches en vue de l'indemnisation des dégâts matériels subis. L'Assuré s'engage à ne pas réclamer à la Compagnie, les indemnités relatives aux dégâts matériels à concurrence desquels il a été ou pourra être indemnisé par tout tiers. En cas de double paiement, l'Assuré doit rembourser à la Compagnie les indemnités que celle-ci lui a versées. Sur base de l'autorisation délivrée par les autorités publiques, la Compagnie se réserve le droit de suspendre cette garantie moyennant l'envoi d'une lettre recommandée. La suspension prend cours 7 jours après la notification faite au Preneur d'assurance.").
-perimetre(attentats, ou([f(evenement, attentat), f(evenement, conflit_du_travail)])).
-perimetre(attentats, concept(batiment_designe)).
-obligation(attentats, f(plainte_deposee, oui), faux, non, '3.1.1.2',
-    "En cas de sinistre, l'Assuré s'engage à accomplir, dans les plus brefs délais, toutes les démarches en vue de l'indemnisation des dégâts matériels subis.").
-limite(attentats, '3.1.1.2', "La Compagnie prend en charge à concurrence de 745.000 € par sinistre les dégâts causés directement aux biens désignés", "745000 EUR").
-exclusion([incendie_base, decongelation, linge, heurt, degradations_vol, vandalisme, attentats], f(option_incendie, non), tout, oui, '3.1.1',
-    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ incendie et périls assimilés ” est accordée.").
-
 % --- Art. 3.1.2 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
 evenement_traduit(tempete).
 definition(tempete, et([f(alea_tempete, vent), f(vent_80_kmh_irm, oui)]), '3.1.2.1',
@@ -208,42 +132,6 @@ exclusion(tremblement_terre, f(bien, vehicule_moteur), bien(vehicule_moteur), no
 limite(tremblement_terre, '3.2.1.3', "Lors du règlement de l’indemnité, l’Assuré conserve à sa charge un montant de 10% du dommage avec un minimum de 1.500 €.", "10% du dommage avec un minimum de 1.500 €").
 exclusion([tremblement_terre], f(option_tremblement_terre, non), tout, oui, '3.2.1',
     "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ tremblement de terre ” est accordée.").
-
-% --- Art. 3.2.2 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
-evenement_traduit(catastrophe_naturelle).
-garantie(pluies_inondations, "Pluies & inondations", '3.2.2',
-    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “Pluies & inondations” est accordée.").
-perimetre(pluies_inondations, f(evenement, catastrophe_naturelle)).
-perimetre(pluies_inondations, ou([f(catastrophe, inondation), f(catastrophe, ruissellement), f(catastrophe, glissement_terrain)])).
-perimetre(pluies_inondations, concept(batiment_designe)).
-exclusion(pluies_inondations, et([et([ou([f(lieu, jardin), f(lieu, terrasse)]), non(f(bien, element_batiment))]), non(f(bien, mobilier_jardin))]), tout, oui, '3.2.2.4',
-    "au contenu se trouvant à l’extérieur des locaux, à l’exception du mobilier de jardin").
-exclusion(pluies_inondations, et([f(travaux_construction, oui), f(lien_causal_travaux, oui)]), tout, oui, '3.2.2.4',
-    "lorsque le bâtiment est en cours de construction, transformation ou rénovation et qu’il existe un lien causal entre les dommages et les travaux en cours").
-exclusion(pluies_inondations, f(ouvertures_non_fermees, oui), tout, oui, '3.2.2.4',
-    "par des entrées d’eaux pluviales, de neige ou de glace par des ouvertures non fermées, tels que portes, fenêtres, soupiraux, lucarnes").
-exclusion(pluies_inondations, f(cause_eau, eau_souterraine), tout, oui, '3.2.2.4',
-    "par les infiltrations d’eaux souterraines").
-exclusion(pluies_inondations, f(cause_eau, condensation), tout, non, '3.2.2.4',
-    "par l’hygrométrie ambiante, même consécutivement à un sinistre couvert").
-exclusion(pluies_inondations, f(cause_eau, condensation), tout, non, '3.2.2.4',
-    "par des champignons ou des moisissures, même consécutivement à un sinistre couvert").
-exclusion(pluies_inondations, f(manque_entretien, oui), tout, non, '3.2.2.4',
-    "par un défaut de réparation ou d’entretien, ou dus à une étanchéité absente, mal conçue ou mal réalisée").
-exclusion(pluies_inondations, f(cause_eau, condensation), tout, non, '3.2.2.4',
-    "par l’humidité, la porosité, la condensation, les phénomènes de capillarité").
-exclusion(pluies_inondations, f(terrain_non_constructible, oui), tout, non, '3.2.2.4',
-    "aux bâtiments situés sur un terrain non constructible").
-exclusion(pluies_inondations, f(autorisation_gestion_eau_non_respectee, oui), tout, non, '3.2.2.4',
-    "aux bâtiments soumis à l’autorisation de l’Administration de la gestion de l’eau et qui ne respectent pas les conditions afférentes à cette autorisation").
-exclusion(pluies_inondations, f(dommages_dans_72h, non), tout, non, '3.2.2.1',
-    "Les dommages qui résultent des événements climatiques cités ci-dessus seront pris en charge par la Compagnie à conditions qu’ils se soient réalisés dans les 72 heures suivant l’événement.").
-limite(pluies_inondations, '3.2.2.2', "Lorsque les conditions particulières mentionnent que les biens désignés ne sont pas situés en zone inondable, l’Assuré bénéficie en cas de sinistre d’une intervention de la Compagnie à concurrence de 250.000€ maximum par sinistre.", "250000").
-limite(pluies_inondations, '3.2.2.3', "Lorsque les conditions particulières mentionnent que les biens désignés sont situés en zone inondable, l’Assuré bénéficie en cas de sinistre d’une intervention de la Compagnie à concurrence de 20.000€ maximum par sinistre. En cas de sinistre, la garantie sera accordée dans la limite du plafond indiqué ci-avant soit 20.000€ et après déduction de la franchise de 1.500€ prévue dans le cadre de la présente garantie.", "20000").
-limite(pluies_inondations, '3.2.2.4', "Dans ce cas, la prise en charge des dommages se fait sans application de la règle proportionnelle à concurrence de 5.000€ par sinistre", "5000").
-exclusion([pluies_inondations], f(option_pluies_inondations, non), tout, oui, '3.2.2',
-    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “Pluies & inondations” est accordée.").
-
 % --- Art. 3.1.8 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
 extension(batiment_designe, et([f(residence_principale_inhabitable, oui), f(lieu, autre_batiment), f(pays, luxembourg)]), '3.1.8.2',
     "Si le logement couvert par le présent contrat est devenu temporairement inhabitable en raison d'un sinistre couvert, les garanties sont automatiquement transférées sur le bâtiment pris en location au Grand-Duché de Luxembourg pour une période de 18 mois maximum").
@@ -393,48 +281,6 @@ exclusion([materiel_multimedia_bris, materiel_multimedia_vol], ou([f(auteur, ass
     "les vols commis par ou avec la complicité de ou du : n Preneur d’assurance, son conjoint, leurs ascendants ou descendants ainsi que les conjoints de ces personnes ; n l’Assuré ; n toute personne au service de l’Assuré pendant les heures de service et, si ces vols ont été commis en dehors de celles-ci, autrement que par effraction ou avec violence. En ce qui concerne les pièces mentionnées aux points").
 exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(option_materiel_multimedia, non), tout, oui, '3.1.7',
     "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “matériel multimédia” est accordée.").
-
-% --- Art. 3.1.4 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
-evenement_traduit(degat_eaux).
-garantie(degats_eaux_3_1_4, "Dégâts des eaux", '3.1.4',
-    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ dégâts des eaux ” est souscrite.").
-perimetre(degats_eaux_3_1_4, f(evenement, degat_eaux)).
-perimetre(degats_eaux_3_1_4, concept(batiment_designe)).
-circonstance(degats_eaux_3_1_4, ou([f(cause_eau, fuite_installation), f(cause_eau, infiltration_toiture), f(cause_eau, debordement_aquarium)]), '3.1.4.1',
-    "La Compagnie assure les biens désignés contre les dégâts des eaux c’est-à-dire : n l’écoulement de l’eau des installations hydrauliques se trouvant à l’intérieur du bâtiment désigné et des bâtiments voisins, par suite de rupture, fissure ou débordement de ces installations ; n la pénétration ou l’infiltration dans le bâtiment désigné d’eau provenant de précipitations atmosphériques par suite de rupture, fissure ou débordement dans les tuyaux extérieurs destinés à l’évacuation de cette eau ; n l’infiltration accidentelle d’eau par les toitures, ciels vitrés, terrasses, balcons et balcons formant terrasse, loggias.").
-exclusion(degats_eaux_3_1_4, f(bien, toiture), bien(toiture), non, '3.1.4.2',
-    "à la toiture du bâtiment ainsi qu’aux revêtements qui en assurent l’étanchéité").
-exclusion(degats_eaux_3_1_4, f(bien, canalisation), bien(canalisation), non, '3.1.4.2',
-    "a ux conduites, aux installations et appareils hydrauliques, aux tuyaux d’évacuation, aux boilers, chaudières, citernes, aquariums et matelas d’eau à l’origine du sinistre ; toutefois, les dommages aux conduites encastrées sont pris en charge par la Compagnie").
-exclusion(degats_eaux_3_1_4, f(cause_eau, condensation), tout, non, '3.1.4.2',
-    "par la condensation").
-exclusion(degats_eaux_3_1_4, et([f(cause_eau, infiltration_exterieure), non(ou([f(lieu, autre_batiment), f(installation_hydraulique_exterieure, oui)]))]), tout, oui, '3.1.4.2',
-    "par la porosité des murs sauf si celle-ci trouve son origine dans un ou des bâtiments voisins ou dans une fuite ou un débordement des installations hydrauliques extérieures au bâtiment désigné").
-exclusion(degats_eaux_3_1_4, f(evenement, tempete), tout, non, '3.1.4.2',
-    "par tous les événements pouvant être pris en charge au titre de la garantie « tempête et grêle » ou de la garantie « pluies & inondations »").
-exclusion(degats_eaux_3_1_4, f(cause_eau, infiltration_exterieure), tout, oui, '3.1.4.2',
-    "par des entrées d’eaux pluviales, de neige ou de glace par des ouvertures fermées ou non, telles que portes, fenêtres, soupiraux, lucarne").
-exclusion(degats_eaux_3_1_4, f(cause_eau, eau_souterraine), tout, oui, '3.1.4.2',
-    "par les infiltrations d’eaux souterraines").
-exclusion(degats_eaux_3_1_4, f(cause_eau, debordement_recipient), tout, oui, '3.1.4.2',
-    "par les dommages causés par un objet non relié à l’installation hydraulique du bâtiment à l’exception des aquariums et matelas d’eau").
-exclusion(degats_eaux_3_1_4, f(corrosion_visible, oui), tout, non, '3.1.4.2',
-    "par des conduites, installations et appareils apparents présentant des points de corrosion visibles et non traités").
-exclusion(degats_eaux_3_1_4, et([f(travaux_construction, oui), non(f(lien_causal_travaux, non))]), tout, oui, '3.1.4.2',
-    "lorsque le bâtiment désigné est en cours de construction, de transformation ou de rénovation, à moins que l’Assuré ne démontre que cette circonstance n’a pas contribué à la survenance ou à l’aggravation des conséquences du sinistre").
-exclusion(degats_eaux_3_1_4, f(cause_eau, condensation), tout, non, '3.1.4.2',
-    "par l’hygrométrie ambiante, même consécutivement à un sinistre couvert").
-exclusion(degats_eaux_3_1_4, f(cause_eau, condensation), tout, non, '3.1.4.2',
-    "par des champignons ou des moisissures, même consécutivement à un sinistre couvert").
-exclusion(degats_eaux_3_1_4, f(manque_entretien, oui), tout, non, '3.1.4.2',
-    "par un défaut de réparation ou d’entretien, ou dus à une étanchéité absente, mal conçue ou mal réalisée").
-exclusion(degats_eaux_3_1_4, f(travaux_batiment, entretien_reparation), tout, oui, '3.1.4.2',
-    "lors du remplissage, de travaux de révision ou de réparation des installations et/ou citernes d’huiles minérales").
-limite(degats_eaux_3_1_4, '3.1.4.1', "La perte d’eau subie à l’occasion d’un sinistre couvert est prise en charge à concurrence de 1.000 €.", "1000").
-limite(degats_eaux_3_1_4, '3.1.4.3', "Si l’Assuré ne respecte pas ces prescriptions, sauf cas de force majeure, et si un sinistre survient ou est aggravé de ce fait, l’indemnité due sera réduite de moitié.", "indemnité réduite de moitié si les conduites n'ont pas été vidangées ou protégées").
-exclusion([degats_eaux_3_1_4], f(option_degats_eaux, non), tout, oui, '3.1.4',
-    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ dégâts des eaux ” est souscrite.").
-
 % --- Art. 3.1.6 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-18 ---
 evenement_traduit(vol).
 evenement_traduit(vandalisme).
@@ -534,3 +380,155 @@ exclusion([vol_batiment, vandalisme_vol, vol_annexes, remplacement_cles, vol_mon
     "le vol des biens dont l'Assuré n'est pas propriétaire").
 exclusion([vol_batiment, vandalisme_vol, vol_annexes, remplacement_cles, vol_monde_sejour, vol_privilege_concierge, vol_privilege_jardin, vol_agression], f(abus_confiance, oui), tout, oui, '3.1.6.2',
     "l'abus de confiance").
+
+% --- Art. 3.1.4 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
+evenement_traduit(degat_eaux).
+garantie(degats_eaux_3_1_4, "Dégâts des eaux", '3.1.4',
+    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ dégâts des eaux ” est souscrite.").
+perimetre(degats_eaux_3_1_4, f(evenement, degat_eaux)).
+perimetre(degats_eaux_3_1_4, concept(batiment_designe)).
+circonstance(degats_eaux_3_1_4, ou([f(cause_eau, fuite_installation), f(cause_eau, infiltration_toiture), f(cause_eau, debordement_aquarium)]), '3.1.4.1',
+    "La Compagnie assure les biens désignés contre les dégâts des eaux c’est-à-dire : n l’écoulement de l’eau des installations hydrauliques se trouvant à l’intérieur du bâtiment désigné et des bâtiments voisins, par suite de rupture, fissure ou débordement de ces installations ; n la pénétration ou l’infiltration dans le bâtiment désigné d’eau provenant de précipitations atmosphériques par suite de rupture, fissure ou débordement dans les tuyaux extérieurs destinés à l’évacuation de cette eau ; n l’infiltration accidentelle d’eau par les toitures, ciels vitrés, terrasses, balcons et balcons formant terrasse, loggias.").
+exclusion(degats_eaux_3_1_4, f(bien, toiture), bien(toiture), non, '3.1.4.2',
+    "à la toiture du bâtiment ainsi qu’aux revêtements qui en assurent l’étanchéité").
+exclusion(degats_eaux_3_1_4, f(bien, canalisation), bien(canalisation), non, '3.1.4.2',
+    "a ux conduites, aux installations et appareils hydrauliques, aux tuyaux d’évacuation, aux boilers, chaudières, citernes, aquariums et matelas d’eau à l’origine du sinistre ; toutefois, les dommages aux conduites encastrées sont pris en charge par la Compagnie").
+exclusion(degats_eaux_3_1_4, f(cause_eau, condensation), tout, non, '3.1.4.2',
+    "par la condensation").
+exclusion(degats_eaux_3_1_4, et([f(cause_eau, infiltration_exterieure), non(ou([f(lieu, autre_batiment), f(installation_hydraulique_exterieure, oui)]))]), tout, oui, '3.1.4.2',
+    "par la porosité des murs sauf si celle-ci trouve son origine dans un ou des bâtiments voisins ou dans une fuite ou un débordement des installations hydrauliques extérieures au bâtiment désigné").
+exclusion(degats_eaux_3_1_4, f(evenement, tempete), tout, non, '3.1.4.2',
+    "par tous les événements pouvant être pris en charge au titre de la garantie « tempête et grêle » ou de la garantie « pluies & inondations »").
+exclusion(degats_eaux_3_1_4, f(cause_eau, infiltration_exterieure), tout, oui, '3.1.4.2',
+    "par des entrées d’eaux pluviales, de neige ou de glace par des ouvertures fermées ou non, telles que portes, fenêtres, soupiraux, lucarne").
+exclusion(degats_eaux_3_1_4, f(cause_eau, eau_souterraine), tout, oui, '3.1.4.2',
+    "par les infiltrations d’eaux souterraines").
+exclusion(degats_eaux_3_1_4, f(cause_eau, debordement_recipient), tout, oui, '3.1.4.2',
+    "par les dommages causés par un objet non relié à l’installation hydraulique du bâtiment à l’exception des aquariums et matelas d’eau").
+exclusion(degats_eaux_3_1_4, f(corrosion_visible, oui), tout, non, '3.1.4.2',
+    "par des conduites, installations et appareils apparents présentant des points de corrosion visibles et non traités").
+exclusion(degats_eaux_3_1_4, et([f(travaux_construction, oui), non(f(lien_causal_travaux, non))]), tout, oui, '3.1.4.2',
+    "lorsque le bâtiment désigné est en cours de construction, de transformation ou de rénovation, à moins que l’Assuré ne démontre que cette circonstance n’a pas contribué à la survenance ou à l’aggravation des conséquences du sinistre").
+exclusion(degats_eaux_3_1_4, f(cause_eau, condensation), tout, non, '3.1.4.2',
+    "par l’hygrométrie ambiante, même consécutivement à un sinistre couvert").
+exclusion(degats_eaux_3_1_4, f(type_dommage, moisissure), tout, non, '3.1.4.2',
+    "par des champignons ou des moisissures, même consécutivement à un sinistre couvert").
+exclusion(degats_eaux_3_1_4, f(manque_entretien, oui), tout, non, '3.1.4.2',
+    "par un défaut de réparation ou d’entretien, ou dus à une étanchéité absente, mal conçue ou mal réalisée").
+exclusion(degats_eaux_3_1_4, f(travaux_batiment, entretien_reparation), tout, oui, '3.1.4.2',
+    "lors du remplissage, de travaux de révision ou de réparation des installations et/ou citernes d’huiles minérales").
+limite(degats_eaux_3_1_4, '3.1.4.1', "La perte d’eau subie à l’occasion d’un sinistre couvert est prise en charge à concurrence de 1.000 €.", "1000").
+limite(degats_eaux_3_1_4, '3.1.4.3', "Si l’Assuré ne respecte pas ces prescriptions, sauf cas de force majeure, et si un sinistre survient ou est aggravé de ce fait, l’indemnité due sera réduite de moitié.", "indemnité réduite de moitié si les conduites n'ont pas été vidangées ou protégées").
+exclusion([degats_eaux_3_1_4], f(option_degats_eaux, non), tout, oui, '3.1.4',
+    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ dégâts des eaux ” est souscrite.").
+
+% --- Art. 3.2.2 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
+evenement_traduit(catastrophe_naturelle).
+garantie(pluies_inondations, "Pluies & inondations", '3.2.2',
+    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “Pluies & inondations” est accordée.").
+perimetre(pluies_inondations, f(evenement, catastrophe_naturelle)).
+perimetre(pluies_inondations, ou([f(catastrophe, inondation), f(catastrophe, ruissellement), f(catastrophe, glissement_terrain)])).
+perimetre(pluies_inondations, concept(batiment_designe)).
+exclusion(pluies_inondations, et([et([ou([f(lieu, jardin), f(lieu, terrasse)]), non(f(bien, element_batiment))]), non(f(bien, mobilier_jardin))]), tout, oui, '3.2.2.4',
+    "au contenu se trouvant à l’extérieur des locaux, à l’exception du mobilier de jardin").
+exclusion(pluies_inondations, et([f(travaux_construction, oui), f(lien_causal_travaux, oui)]), tout, oui, '3.2.2.4',
+    "lorsque le bâtiment est en cours de construction, transformation ou rénovation et qu’il existe un lien causal entre les dommages et les travaux en cours").
+exclusion(pluies_inondations, f(ouvertures_non_fermees, oui), tout, oui, '3.2.2.4',
+    "par des entrées d’eaux pluviales, de neige ou de glace par des ouvertures non fermées, tels que portes, fenêtres, soupiraux, lucarnes").
+exclusion(pluies_inondations, f(cause_eau, eau_souterraine), tout, oui, '3.2.2.4',
+    "par les infiltrations d’eaux souterraines").
+exclusion(pluies_inondations, f(cause_eau, condensation), tout, non, '3.2.2.4',
+    "par l’hygrométrie ambiante, même consécutivement à un sinistre couvert").
+exclusion(pluies_inondations, f(type_dommage, moisissure), tout, non, '3.2.2.4',
+    "par des champignons ou des moisissures, même consécutivement à un sinistre couvert").
+exclusion(pluies_inondations, f(manque_entretien, oui), tout, non, '3.2.2.4',
+    "par un défaut de réparation ou d’entretien, ou dus à une étanchéité absente, mal conçue ou mal réalisée").
+exclusion(pluies_inondations, f(cause_eau, condensation), tout, non, '3.2.2.4',
+    "par l’humidité, la porosité, la condensation, les phénomènes de capillarité").
+exclusion(pluies_inondations, f(terrain_non_constructible, oui), tout, non, '3.2.2.4',
+    "aux bâtiments situés sur un terrain non constructible").
+exclusion(pluies_inondations, f(autorisation_gestion_eau_non_respectee, oui), tout, non, '3.2.2.4',
+    "aux bâtiments soumis à l’autorisation de l’Administration de la gestion de l’eau et qui ne respectent pas les conditions afférentes à cette autorisation").
+exclusion(pluies_inondations, f(dommages_dans_72h, non), tout, non, '3.2.2.1',
+    "Les dommages qui résultent des événements climatiques cités ci-dessus seront pris en charge par la Compagnie à conditions qu’ils se soient réalisés dans les 72 heures suivant l’événement.").
+limite(pluies_inondations, '3.2.2.2', "Lorsque les conditions particulières mentionnent que les biens désignés ne sont pas situés en zone inondable, l’Assuré bénéficie en cas de sinistre d’une intervention de la Compagnie à concurrence de 250.000€ maximum par sinistre.", "250000").
+limite(pluies_inondations, '3.2.2.3', "Lorsque les conditions particulières mentionnent que les biens désignés sont situés en zone inondable, l’Assuré bénéficie en cas de sinistre d’une intervention de la Compagnie à concurrence de 20.000€ maximum par sinistre. En cas de sinistre, la garantie sera accordée dans la limite du plafond indiqué ci-avant soit 20.000€ et après déduction de la franchise de 1.500€ prévue dans le cadre de la présente garantie.", "20000").
+limite(pluies_inondations, '3.2.2.4', "Dans ce cas, la prise en charge des dommages se fait sans application de la règle proportionnelle à concurrence de 5.000€ par sinistre", "5000").
+exclusion([pluies_inondations], f(option_pluies_inondations, non), tout, oui, '3.2.2',
+    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “Pluies & inondations” est accordée.").
+
+% --- Art. 3.1.1 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
+evenement_traduit(incendie).
+evenement_traduit(explosion).
+evenement_traduit(foudre).
+evenement_traduit(electricite).
+evenement_traduit(fumee).
+evenement_traduit(heurt).
+evenement_traduit(vol).
+evenement_traduit(vandalisme).
+evenement_traduit(attentat).
+evenement_traduit(conflit_du_travail).
+definition(incendie, et([f(flammes, oui), ou([f(embrasement, oui), f(chaleur_sans_feu, non)])]), '3.1.1.1',
+    "L'incendie, c'est-à-dire la destruction par des flammes se propageant ou susceptibles de se propager en dehors de leur domaine normal ou d'objets dont la destination n'est pas, à ce moment, de brûler").
+garantie(incendie_base, "Incendie et périls de base", '3.1.1.1',
+    "La Compagnie assure les biens désignés, contre les périls suivants : 3.1.1.1.1 L'incendie, c'est-à-dire la destruction par des flammes se propageant ou susceptibles de se propager en dehors de leur domaine normal ou d'objets dont la destination n'est pas, à ce moment, de brûler ; 3.1.1.1.2 L'explosion ou l'implosion ; 3.1.1.1.3 La chute de la foudre ; 3.1.1.1.4 L'électrocution d'animaux ; 3.1.1.1.5 Les fumées et les suies ; 3.1.1.1.6 Les dégâts occasionnés au mobilier assuré et au bâtiment désigné par un événement soudain, résultant de l'action subite de la chaleur ou par le contact direct et immédiat avec un foyer ou une substance incandescente, même lorsqu'il n'y a pas eu embrasement, ni commencement d'incendie.").
+perimetre(incendie_base, ou([f(evenement, incendie), f(evenement, explosion), f(evenement, foudre), et([f(evenement, electricite), f(bien, animal)]), f(evenement, fumee), et([ou([f(evenement, incendie), f(evenement, autre)]), ou([f(chaleur_sans_feu, oui), f(contact_incandescent, oui)])])])).
+perimetre(incendie_base, concept(batiment_designe)).
+circonstance(incendie_base, si(f(evenement, incendie), ou([concept(incendie), ou([f(chaleur_sans_feu, oui), f(contact_incandescent, oui)])])), '3.1.1.1',
+    "L'incendie, c'est-à-dire la destruction par des flammes se propageant ou susceptibles de se propager en dehors de leur domaine normal ou d'objets dont la destination n'est pas, à ce moment, de brûler").
+garantie(decongelation, "Décongélation denrées", '3.1.1.2',
+    "à la décongélation de denrées alimentaires périssables contenues dans un surgélateur, congélateur ou réfrigérateur à usage domestique suite à un changement de température résultant d'un arrêt dans la production du froid imputable à la survenance d'un sinistre couvert par les présentes conditions spéciales ou par les conditions spéciales de la garantie \"dégâts électriques\"").
+perimetre(decongelation, f(bien, denrees_alimentaires)).
+circonstance(decongelation, ou([f(evenement, incendie), f(evenement, explosion), f(evenement, foudre), f(evenement, electricite)]), '3.1.1.2',
+    "imputable à la survenance d'un sinistre couvert par les présentes conditions spéciales ou par les conditions spéciales de la garantie \"dégâts électriques\"").
+garantie(linge, "Dégradation linge", '3.1.1.2',
+    "à la dégradation du contenu des sèche-linge ou lave-linge à la suite d'un sinistre relevant de l'un des périls prévus aux présentes conditions spéciales de la garantie \"incendie et périls assimilés\" et aux conditions spéciales de la garantie \"dégâts électriques\"").
+perimetre(linge, f(bien, objet_divers)).
+perimetre(linge, f(lieu, logement)).
+circonstance(linge, ou([f(evenement, incendie), f(evenement, explosion), f(evenement, foudre), f(evenement, electricite)]), '3.1.1.2',
+    "à la suite d'un sinistre relevant de l'un des périls prévus aux présentes conditions spéciales de la garantie \"incendie et périls assimilés\" et aux conditions spéciales de la garantie \"dégâts électriques\"").
+garantie(heurt, "Heurt", '3.1.1.2',
+    "au heurt, sauf : n les dégâts causés au contenu par un Assuré ou par un animal lui appartenant ou lui ayant été confié ; n les dégâts causés au bâtiment désigné en cas de déménagement du mobilier ; n les dégâts au bien ou à l'animal ayant causé le heurt ; n les dégâts ne résultant pas directement d'un choc entre deux corps durs ; n les dégâts causés par la grêle.").
+perimetre(heurt, f(evenement, heurt)).
+perimetre(heurt, concept(batiment_designe)).
+exclusion(heurt, ou([f(auteur, assure), f(bien, animal)]), tout, oui, '3.1.1.2',
+    "les dégâts causés au contenu par un Assuré ou par un animal lui appartenant ou lui ayant été confié").
+exclusion(heurt, et([f(bien, element_batiment), f(demenagement, oui)]), tout, non, '3.1.1.2',
+    "les dégâts causés au bâtiment désigné en cas de déménagement du mobilier").
+exclusion(heurt, f(bien_a_l_origine_sinistre, oui), tout, oui, '3.1.1.2',
+    "les dégâts au bien ou à l'animal ayant causé le heurt").
+exclusion(heurt, f(choc_deux_corps_durs, non), tout, non, '3.1.1.2',
+    "les dégâts ne résultant pas directement d'un choc entre deux corps durs").
+exclusion(heurt, f(alea_tempete, grele), tout, non, '3.1.1.2',
+    "les dégâts causés par la grêle").
+garantie(degradations_vol, "Dégradations lors de vol", '3.1.1.2',
+    "aux dégradations immobilières causées à l'occasion d'un vol ou d'une tentative de vol dans les locaux à occupation régulière ainsi que le vol de parties de bâtiment sauf : n les dommages ou le vol des biens se trouvant à l'extérieur du bâtiment ; n lorsque le bâtiment est en cours de construction, transformation ou rénovation, à moins que l'Assuré démontre que cette circonstance n'a pas contribué à la survenance ou à l'aggravation des conséquences du sinistre.").
+perimetre(degradations_vol, f(evenement, vol)).
+perimetre(degradations_vol, f(bien, element_batiment)).
+exclusion(degradations_vol, et([ou([f(lieu, jardin), f(lieu, terrasse)]), non(f(bien, element_batiment))]), tout, oui, '3.1.1.2',
+    "les dommages ou le vol des biens se trouvant à l'extérieur du bâtiment").
+exclusion(degradations_vol, et([f(travaux_construction, oui), non(f(lien_causal_travaux, non))]), tout, oui, '3.1.1.2',
+    "lorsque le bâtiment est en cours de construction, transformation ou rénovation, à moins que l'Assuré démontre que cette circonstance n'a pas contribué à la survenance ou à l'aggravation des conséquences du sinistre").
+exclusion(degradations_vol, f(occupation_irreguliere, oui), tout, oui, '3.1.1.2',
+    "aux dégradations immobilières causées à l’occasion d’un vol ou d’une tentative de vol dans les locaux à occupation régulière").
+garantie(vandalisme, "Vandalisme", '3.1.1.2',
+    "aux dommages causés par un acte de vandalisme ou de malveillance au bâtiment désigné pour autant que les conditions suivantes soient remplies simultanément : n l'Assuré est propriétaire du bâtiment ; n le bâtiment fait l'objet d'une occupation régulière ; n le bâtiment n'est pas en cours de construction, ni de transformation, ni de rénovation. L'indemnisation des dégâts matériels causés par vandalisme ou malveillance est consentie sans application de la règle proportionnelle à concurrence de 2.500 € par sinistre.").
+perimetre(vandalisme, f(evenement, vandalisme)).
+perimetre(vandalisme, f(bien, element_batiment)).
+perimetre(vandalisme, concept(batiment_designe)).
+exclusion(vandalisme, f(statut_logement, locataire), tout, oui, '3.1.1.2',
+    "l’Assuré est propriétaire du bâtiment").
+exclusion(vandalisme, f(occupation_irreguliere, oui), tout, oui, '3.1.1.2',
+    "le bâtiment fait l’objet d’une occupation régulière").
+exclusion(vandalisme, f(travaux_construction, oui), tout, oui, '3.1.1.2',
+    "le bâtiment n’est pas en cours de construction, ni de transformation, ni de rénovation").
+limite(vandalisme, '3.1.1.2', "L'indemnisation des dégâts matériels causés par vandalisme ou malveillance est consentie sans application de la règle proportionnelle à concurrence de 2.500 € par sinistre.", "2500 EUR").
+garantie(attentats, "Attentats et conflits du travail", '3.1.1.2',
+    "aux attentats et conflits du travail : La Compagnie prend en charge à concurrence de 745.000 € par sinistre les dégâts causés directement aux biens désignés : n par des personnes tierces prenant part à de tels événements ; n qui résulteraient de mesures prises dans les cas précités par une autorité légalement constituée pour la sauvegarde et la protection des biens désignés. En cas de sinistre, l'Assuré s'engage à accomplir, dans les plus brefs délais, toutes les démarches en vue de l'indemnisation des dégâts matériels subis. L'Assuré s'engage à ne pas réclamer à la Compagnie, les indemnités relatives aux dégâts matériels à concurrence desquels il a été ou pourra être indemnisé par tout tiers. En cas de double paiement, l'Assuré doit rembourser à la Compagnie les indemnités que celle-ci lui a versées. Sur base de l'autorisation délivrée par les autorités publiques, la Compagnie se réserve le droit de suspendre cette garantie moyennant l'envoi d'une lettre recommandée. La suspension prend cours 7 jours après la notification faite au Preneur d'assurance.").
+perimetre(attentats, ou([f(evenement, attentat), f(evenement, conflit_du_travail)])).
+perimetre(attentats, concept(batiment_designe)).
+obligation(attentats, f(plainte_deposee, oui), faux, non, '3.1.1.2',
+    "En cas de sinistre, l'Assuré s'engage à accomplir, dans les plus brefs délais, toutes les démarches en vue de l'indemnisation des dégâts matériels subis.").
+limite(attentats, '3.1.1.2', "La Compagnie prend en charge à concurrence de 745.000 € par sinistre les dégâts causés directement aux biens désignés", "745000 EUR").
+exclusion([incendie_base, decongelation, linge, heurt, degradations_vol, vandalisme, attentats], f(option_incendie, non), tout, oui, '3.1.1',
+    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ incendie et périls assimilés ” est accordée.").
