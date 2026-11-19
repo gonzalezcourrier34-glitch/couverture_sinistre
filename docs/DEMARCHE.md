@@ -2999,6 +2999,25 @@ code mort lors du tour du code (7.70), alors qu'elle servait encore. Rétablie.
 **Leçon 96.** Une nouvelle valeur du vocabulaire peut voler les lectures d'une valeur existante : la rattacher à
 celles dont elle peut prendre la place, et la mesurer sur le golden set avant le jeu fermé.
 
+### 7.86 Après 7.85 : les refus à tort de A redescendent ; « accident » précisé en « bris » par le code
+
+**Banc** (19 h 30, sans Mistral Large). Golden set A : 88 % justes, **1,33 refus à tort** (4,33 à 18 h 23),
+5,33 couverts à tort (4,33 à 16 h 07 ; `red-b05`, le miroir pas encore accroché, couvert parce que la lecture
+ne dit pas qu'il n'était pas posé ; le reste est l'instabilité connue). Jeu fermé B : 63 % justes (60 %),
+1,33 couvert à tort ; la braise (f-b01) et la moisissure (f-b04, une fois sur trois) passent.
+
+**Ce que la lecture fait encore de « accident ».** f-b08 (« j'ai cogné le miroir avec le manche de l'aspirateur »)
+est lu `accident` malgré l'aide qui renvoie les vitres à `bris` ; chez l'assureur B, où la casse accidentelle
+n'est pas traduite, la réponse tombe à « incertain » (7.84) au lieu de « couvert ». L'aide ne suffit pas : c'est
+le code qui tranche. Nouvelle clé du vocabulaire, `preciser` : une valeur vague remplacée par la précise quand un
+autre fait la désigne ; `evenement = accident` sur un bien en verre (vitre, miroir, vitrocéramique, sanitaire,
+verre de meuble…) devient `bris` (`prolog.preciser`, appelé par `au_vocabulaire` ;
+`test_accident_sur_une_vitre_est_un_bris`). Le violon tombé reste un accident.
+
+Restent en erreur dans le jeu fermé B : la fenêtre de toit (la lecture voit une tempête), la porte ouverte (faits
+négatifs, sans recours), la chaudière et l'assistance (« incertain », voulu), le congélateur de 18 ans, la remise
+du jardin, la voiture à la gare (f-b18, couvert à tort : à examiner), le double vitrage embué.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.

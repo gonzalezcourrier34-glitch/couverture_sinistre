@@ -154,6 +154,15 @@ accessoire(complementaires).
         "la question posée est celle de la garantie de base, pas celle des frais"
 
 
+def test_accident_sur_une_vitre_est_un_bris():
+    """7.86 : « accident » lu pour un miroir cogné devient « bris » ; un violon tombé reste un accident."""
+    voc = prolog.vocabulaire()
+    f, notes = prolog.au_vocabulaire({"evenement": ["accident"], "bien": ["miroir"], "lieu": ["logement"]}, voc)
+    assert f["evenement"] == ["bris"] and notes
+    f, _ = prolog.au_vocabulaire({"evenement": ["accident"], "bien": ["objet_divers"]}, voc)
+    assert f["evenement"] == ["accident"]
+
+
 def test_evenement_non_traduit_jamais_refuse(tmp_path):
     """Un événement dont la garantie n'est pas en règles (la tempête) : INCERTAIN, même si une garantie traduite
     refuse, ou couvre (7.84 : couvrir une partie du sinistre n'est pas couvrir la demande). « autre » ne compte pas."""

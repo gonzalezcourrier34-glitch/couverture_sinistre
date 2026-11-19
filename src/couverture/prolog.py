@@ -573,8 +573,29 @@ def au_vocabulaire(lus: dict, voc: dict) -> tuple[dict, list[str]]:
         ecarts += [f"{v} = {e} : valeur hors vocabulaire, ignorée" for e in valeurs if e not in bonnes]
         if bonnes:
             faits[v] = bonnes if voc[v].get("plusieurs") else bonnes[0]
+    faits, precises = preciser(faits, voc)
     faits, retires = filtrer_faits(faits, voc)
-    return faits, ecarts + retires
+    return faits, ecarts + precises + retires
+
+
+def preciser(faits: dict, voc: dict) -> tuple[dict, list[str]]:
+    """Une valeur vague remplacée par la précise quand un autre fait la désigne (vocabulaire, clé « preciser ») :
+    un « accident » sur une vitre ou un miroir est un bris de vitrage (7.86). Le petit modèle lisait « accident »
+    pour « j'ai cogné le miroir avec l'aspirateur », malgré l'aide ; chez l'assureur B, où la casse accidentelle
+    n'est pas traduite, la réponse tombait à « incertain » au lieu de « couvert »."""
+    notes = []
+    for v, regles in ((v, d.get("preciser")) for v, d in voc.items() if d.get("preciser")):
+        for vague, r in regles.items():
+            valeurs = faits.get(v)
+            liste = valeurs if isinstance(valeurs, list) else [valeurs]
+            if vague not in liste:
+                continue
+            if any(set(r["si"].get(w, [])) & set(faits.get(w) if isinstance(faits.get(w), list) else [faits.get(w)])
+                   for w in r["si"]):
+                nouvelles = list(dict.fromkeys(r["en"] if e == vague else e for e in liste))
+                faits = faits | {v: nouvelles if isinstance(valeurs, list) else nouvelles[0]}
+                notes.append(f"{v} = {vague} précisé en {r['en']}")
+    return faits, notes
 
 
 def description_variable(v: str, d: dict) -> str:

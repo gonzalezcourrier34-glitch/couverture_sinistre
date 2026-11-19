@@ -49,6 +49,23 @@
           "heurt",
           "bris"
         ]
+      },
+      "preciser": {
+        "accident": {
+          "si": {
+            "bien": [
+              "vitre",
+              "miroir",
+              "panneau_verre_plastique",
+              "table_cuisson_vitroceramique",
+              "sanitaire",
+              "verre_meuble",
+              "objet_verre_non_vitre",
+              "verre_optique"
+            ]
+          },
+          "en": "bris"
+        }
       }
     },
     "bien": {
