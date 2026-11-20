@@ -110,6 +110,10 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 
 ## 5. Dernières mesures
 
+**20 nov. 2026, 23 h 50 et 23 h 57, partie test du golden set, Assureur B (7 cas)** : sans exemples **81 %** justes,
+71 % exactes ; avec exemples **81 %**, 76 % exactes ; 0 couvert à tort et 0 refus à tort dans les deux cas. Les exemples
+deviennent la lecture par défaut (DEMARCHE 7.112).
+
 **20 nov. 2026, 17 h 01 à 17 h 34, après la simplification (DEMARCHE 7.110, 7.111)** : jeu fermé sans exemples,
 **A 88 %** (0 couvert à tort, 1 refus à tort), **B 90 %** (0, 0), **D 100 %** ; avec exemples, **A 95 %** (0, 1), B 82 %,
 D 97 %. Partie test du golden set (A, 31 cas) : sans exemples 80 % justes, 3,3 couverts à tort, 8 instables ; **avec,

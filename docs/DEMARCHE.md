@@ -3741,6 +3741,21 @@ d'exemple à lui. Coût : une demi-seconde de plus par cas (un vecteur, des mess
 Restent dans les deux modes : `f-a18` (le vélo lu véhicule à moteur), `red-b05` (le miroir) et `g2-p08` (le bain à
 bulles lu « débordement d'aquarium »).
 
+### 7.112 Les exemples deviennent la lecture par défaut
+
+La mesure demandée en 7.111, sur la partie test de B (7 cas, 3 exécutions), donne la même décision avec et sans
+exemples : **81 % justes, 0 couvert à tort, 0 refus à tort**, 2 instables dans les deux cas ; 76 % d'exactes avec, 71 %
+sans. Le rappel des faits baisse (73 % contre 81 %, un cas avec contradiction), sans effet sur les réponses. B ne recule
+donc pas, et A gagne nettement (7.111) : les exemples deviennent la lecture par défaut.
+
+- `COUVERTURE_EXEMPLES=non` les coupe (pour comparer) ;
+- ils demandent la clé et la banque indexée (`couverture exemples --indexer`) ; sans l'une ou l'autre, la chaîne lit
+  sans exemples, sans erreur. Le docker indexe la banque au démarrage ;
+- le banc inscrit « exemples » dans le mode de lecture d'après la chaîne elle-même, plus d'après la variable : un
+  rapport dit ce qui a vraiment tourné.
+
+Un test ajouté. Suite : le vélo (`f-a18`), le miroir (`red-b05`) et le bain à bulles (`g2-p08`), puis des exemples pour D.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 20 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.
@@ -3763,7 +3778,7 @@ Tenu à jour le 20 nov. 2026, après-midi ; ce qui est fait est dans les section
 - Faits idéaux Assureur B : retirer les valeurs par défaut que la déclaration ne dit pas (`auteur = tiers`, `proprietaire = assure`), qui sous-estiment le rappel.
 
 **La lecture, sans cas particuliers (7.107)**
-- Les exemples aident nettement sur A (7.111) : les mesurer sur la partie test de B, puis décider s'ils deviennent la lecture par défaut ; des exemples pour D.
+- Les exemples sont la lecture par défaut (7.112) : des exemples pour D (son jeu fermé, une fois validé, ne doit pas y entrer) ; le vélo, le miroir, le bain à bulles.
 - Un second lot de déclarations, écrit par Mistral Large et validé, pour un test que rien n'a encore corrigé.
 - La question « qui a subi le dommage ? » dans l'appel 1, pour la responsabilité civile.
 

@@ -64,7 +64,7 @@ uv run couverture analyser --contrat assureur-a-habitation-2025 "Mon vélo a ét
 uv run couverture regles   --contrat assureur-a-habitation-2025   # vérifie les règles (sans modèle) ; --faits pour un cas
 uv run couverture rediger  --contrat assureur-a-habitation-2025 --article 2.2   # Mistral Large rédige, le code contrôle
 uv run couverture banc     --contrat assureur-a-habitation-2025   # golden set (97 cas) : règles, lecture, chaîne, portes
-uv run couverture exemples --indexer                               # banque d'exemples de lecture (mistral-embed) ; --proches "…"
+uv run couverture exemples --indexer                               # banque d'exemples de lecture (mistral-embed), à refaire si le golden set change
 uv run couverture banc     --contrat assureur-a-habitation-2025 --partie test   # les seuls cas de test (data/lecture/partage.json)
 uv run couverture api                                       # l'API (FastAPI), documentation sur http://127.0.0.1:8001/docs
 ```

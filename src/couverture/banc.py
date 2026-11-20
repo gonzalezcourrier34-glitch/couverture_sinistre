@@ -435,8 +435,7 @@ def passer(donnees: Path, contrat_id: str, methode: str, couches: list[str], rep
             pipeline = pipeline_fabrique()
             resultat["modele"] = getattr(getattr(pipeline, "llm", None), "nom", None) or resultat.get("modele")
             if resultat["methode"] == "regles":
-                from .exemples import actifs
-                resultat["lecture"] = "verifiee" + (", exemples" if actifs() else "")
+                resultat["lecture"] = "verifiee" + (", exemples" if getattr(pipeline, "exemples", None) else "")
             rapports.append((evaluer_fn or evaluer)(pipeline, cas, paralleles=paralleles))
             durees.append(time.perf_counter() - debut)
         resultat["couches"]["chaine"] = couche_chaine(cas, rapports, durees)

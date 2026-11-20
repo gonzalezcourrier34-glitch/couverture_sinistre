@@ -1,0 +1,1216 @@
+{
+ "date": "2026-11-20T23:56:49",
+ "contrat": "assureur-b-habitation-2017",
+ "methode": "regles",
+ "jeu": "golden",
+ "golden": {
+  "version": 12,
+  "empreinte": "60454afe2fa4e1ae",
+  "fige": true,
+  "n": 7,
+  "valides": 0,
+  "auteurs": {
+   "claude": 15
+  }
+ },
+ "couches": {
+  "chaine": {
+   "metriques": {
+    "exactitude": {
+     "moyenne": 0.809,
+     "min": 0.714,
+     "max": 0.857
+    },
+    "exactitude_stricte": {
+     "moyenne": 0.762,
+     "min": 0.714,
+     "max": 0.857
+    },
+    "faux_couverts": {
+     "moyenne": 0.0,
+     "min": 0,
+     "max": 0
+    },
+    "faux_refus": {
+     "moyenne": 0.0,
+     "min": 0,
+     "max": 0
+    },
+    "taux_incertain": {
+     "moyenne": 0.381,
+     "min": 0.286,
+     "max": 0.429
+    },
+    "n": 7,
+    "executions": 3,
+    "instables": 2,
+    "rappel_clauses": 0.857,
+    "rappel_questions": 1.0,
+    "erreurs_fournisseur": 0,
+    "duree_moyenne_s": 8.1,
+    "latence_mediane_s": 3.74,
+    "latence_p95_s": 5.04,
+    "latence_lecture_mediane_s": 3.25,
+    "latence_lecture_p95_s": 3.79,
+    "latence_decision_mediane_s": 0.03,
+    "latence_decision_p95_s": 0.05,
+    "latence_seule_mediane_s": 4.29,
+    "latence_seule_p95_s": 4.96,
+    "latence_seule_lecture_mediane_s": 3.47,
+    "latence_seule_lecture_p95_s": 3.86,
+    "latence_seule_decision_mediane_s": 0.02,
+    "latence_seule_decision_p95_s": 0.04,
+    "latence_seule_nb": 7
+   },
+   "groupes": {
+    "auteur : claude": {
+     "n": 7,
+     "exactitude": 0.714,
+     "exactitude_stricte": 0.714,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.429
+    },
+    "garantie : 3.1.6": {
+     "n": 7,
+     "exactitude": 0.714,
+     "exactitude_stricte": 0.714,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.429
+    },
+    "thème : base": {
+     "n": 3,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "thème : incertain": {
+     "n": 1,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 1.0
+    },
+    "thème : piege": {
+     "n": 3,
+     "exactitude": 0.333,
+     "exactitude_stricte": 0.333,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.667
+    }
+   },
+   "reponses": {
+    "b-v02": [
+     "INCERTAIN",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "b-v04": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "b-v06": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "b-v08": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "INCERTAIN"
+    ],
+    "b-v10": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "b-v11": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "b-v13": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ]
+   },
+   "instables": [
+    "b-v02",
+    "b-v08"
+   ],
+   "executions": [
+    [
+     {
+      "id": "b-v02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2895,
+       "decision": 39,
+       "total": 2937
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "objet_divers"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "vol_sur_personne=oui",
+        "proprietaire=assure",
+        "plainte_deposee=oui",
+        "acces_voleur=sans_effraction",
+        "effraction=non"
+       ]
+      },
+      "avertissements": [
+       "effraction = non : non dit dans la déclaration, retiré",
+       "violence = non : non dit dans la déclaration, retiré",
+       "auteur = tiers : non dit dans la déclaration, retiré",
+       "sejour_temporaire = non : non dit dans la déclaration, retiré",
+       "effraction = non : dit par acces_voleur = sans_effraction"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v04",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Une plainte a-t-elle été déposée auprès des autorités ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3532,
+       "decision": 27,
+       "total": 3562
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "mobilier",
+        "velo"
+       ],
+       "lieux": [
+        "garage"
+       ],
+       "circonstances": [
+        "effraction=oui",
+        "proprietaire=assure"
+       ]
+      },
+      "avertissements": [
+       "violence = non : non dit dans la déclaration, retiré",
+       "vol_sur_personne = non : non dit dans la déclaration, retiré",
+       "auteur = tiers : non dit dans la déclaration, retiré",
+       "sejour_temporaire = non : non dit dans la déclaration, retiré",
+       "vehicule_vole = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "b-v06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2875,
+       "decision": 37,
+       "total": 2920
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "valeurs"
+       ],
+       "lieux": [
+        "voie_publique"
+       ],
+       "circonstances": [
+        "vol_sur_personne=oui",
+        "proprietaire=assure",
+        "plainte_deposee=oui",
+        "formule=privilege"
+       ]
+      },
+      "avertissements": [
+       "violence = non : non dit dans la déclaration, retiré",
+       "auteur = tiers : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v08",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 4144,
+       "decision": 7,
+       "total": 5041
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "mobilier_jardin"
+       ],
+       "lieux": [
+        "jardin"
+       ],
+       "circonstances": [
+        "effraction=non",
+        "violence=non",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "proprietaire=assure",
+        "plainte_deposee=oui",
+        "formule=privilege",
+        "sejour_temporaire=non",
+        "construction_close=non",
+        "acces_voleur=sans_effraction"
+       ]
+      },
+      "avertissements": [
+       "vérification écartée : retirer ces faits aurait fait couvrir (effraction = non; violence = non; vol_sur_personne = non; auteur = tiers; sejour_temporaire = non; construction_close = non; acces_voleur = sans_effraction)"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v10",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3660,
+       "decision": 49,
+       "total": 5199
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "vehicule_moteur",
+        "velo"
+       ],
+       "lieux": [
+        "annexe"
+       ],
+       "circonstances": [
+        "effraction=oui",
+        "plainte_deposee=oui",
+        "serrure_cylindre=oui"
+       ]
+      },
+      "avertissements": [
+       "vol_sur_personne = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3304,
+       "decision": 7,
+       "total": 4683
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "vehicule_moteur"
+       ],
+       "lieux": [
+        "garage"
+       ],
+       "circonstances": [
+        "effraction=oui",
+        "auteur=tiers",
+        "proprietaire=assure",
+        "plainte_deposee=oui",
+        "vehicule_vole=oui"
+       ]
+      },
+      "avertissements": [
+       "violence = non : non dit dans la déclaration, retiré",
+       "vol_sur_personne = non : non dit dans la déclaration, retiré",
+       "sejour_temporaire = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v13",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3404,
+       "decision": 104,
+       "total": 4693
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "cles"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "effraction=oui",
+        "proprietaire=assure",
+        "plainte_deposee=oui"
+       ]
+      },
+      "avertissements": [
+       "vol_sur_personne = non : non dit dans la déclaration, retiré",
+       "auteur = tiers : non dit dans la déclaration, retiré",
+       "sejour_temporaire = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     }
+    ],
+    [
+     {
+      "id": "b-v02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2624,
+       "decision": 5,
+       "total": 3560
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "objet_divers"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "violence=non",
+        "vol_sur_personne=oui",
+        "proprietaire=assure",
+        "plainte_deposee=oui",
+        "acces_voleur=sans_effraction",
+        "effraction=non"
+       ]
+      },
+      "avertissements": [
+       "effraction = non : non dit dans la déclaration, retiré",
+       "auteur = tiers : non dit dans la déclaration, retiré",
+       "sejour_temporaire = non : non dit dans la déclaration, retiré",
+       "effraction = non : dit par acces_voleur = sans_effraction"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v04",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Une plainte a-t-elle été déposée auprès des autorités ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3405,
+       "decision": 27,
+       "total": 3435
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "materiaux_construction",
+        "velo"
+       ],
+       "lieux": [
+        "garage"
+       ],
+       "circonstances": [
+        "effraction=oui",
+        "proprietaire=assure"
+       ]
+      },
+      "avertissements": [
+       "violence = non : non dit dans la déclaration, retiré",
+       "vol_sur_personne = non : non dit dans la déclaration, retiré",
+       "auteur = tiers : non dit dans la déclaration, retiré",
+       "sejour_temporaire = non : non dit dans la déclaration, retiré",
+       "vehicule_vole = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "b-v06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2577,
+       "decision": 19,
+       "total": 2603
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "valeurs"
+       ],
+       "lieux": [
+        "voie_publique"
+       ],
+       "circonstances": [
+        "vol_sur_personne=oui",
+        "proprietaire=assure",
+        "plainte_deposee=oui",
+        "formule=privilege"
+       ]
+      },
+      "avertissements": [
+       "violence = non : non dit dans la déclaration, retiré",
+       "auteur = tiers : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v08",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3725,
+       "decision": 5,
+       "total": 4400
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "mobilier_jardin"
+       ],
+       "lieux": [
+        "jardin"
+       ],
+       "circonstances": [
+        "effraction=non",
+        "violence=non",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "proprietaire=assure",
+        "plainte_deposee=oui",
+        "formule=privilege",
+        "sejour_temporaire=non",
+        "construction_close=non",
+        "acces_voleur=sans_effraction"
+       ]
+      },
+      "avertissements": [
+       "vérification écartée : retirer ces faits aurait fait couvrir (effraction = non; violence = non; vol_sur_personne = non; auteur = tiers; sejour_temporaire = non; construction_close = non; acces_voleur = sans_effraction)"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v10",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2382,
+       "decision": 37,
+       "total": 3496
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "vehicule_moteur",
+        "velo"
+       ],
+       "lieux": [
+        "annexe"
+       ],
+       "circonstances": [
+        "serrure_surete=oui",
+        "effraction=oui",
+        "proprietaire=assure",
+        "plainte_deposee=oui",
+        "serrure_cylindre=oui"
+       ]
+      },
+      "avertissements": [
+       "vol_sur_personne = non : non dit dans la déclaration, retiré",
+       "auteur = tiers : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3785,
+       "decision": 45,
+       "total": 4795
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "vehicule_moteur"
+       ],
+       "lieux": [
+        "garage"
+       ],
+       "circonstances": [
+        "effraction=oui",
+        "plainte_deposee=oui",
+        "vehicule_vole=oui"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v13",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3255,
+       "decision": 28,
+       "total": 4710
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "cles"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "effraction=oui",
+        "violence=non",
+        "vol_sur_personne=non",
+        "proprietaire=assure",
+        "plainte_deposee=oui"
+       ]
+      },
+      "avertissements": [
+       "auteur = tiers : non dit dans la déclaration, retiré",
+       "sejour_temporaire = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     }
+    ],
+    [
+     {
+      "id": "b-v02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2407,
+       "decision": 32,
+       "total": 3359
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "objet_divers"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "effraction=non",
+        "violence=non",
+        "proprietaire=assure",
+        "plainte_deposee=oui"
+       ]
+      },
+      "avertissements": [
+       "vol_sur_personne = oui : non dit dans la déclaration, retiré",
+       "auteur = tiers : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v04",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Une plainte a-t-elle été déposée auprès des autorités ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3560,
+       "decision": 35,
+       "total": 3598
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "velo",
+        "objet_divers"
+       ],
+       "lieux": [
+        "garage"
+       ],
+       "circonstances": [
+        "effraction=oui",
+        "proprietaire=assure"
+       ]
+      },
+      "avertissements": [
+       "violence = non : non dit dans la déclaration, retiré",
+       "vol_sur_personne = non : non dit dans la déclaration, retiré",
+       "auteur = tiers : non dit dans la déclaration, retiré",
+       "sejour_temporaire = non : non dit dans la déclaration, retiré",
+       "vehicule_vole = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "b-v06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu violences physiques ou menaces ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2434,
+       "decision": 25,
+       "total": 2466
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "valeurs"
+       ],
+       "lieux": [
+        "voie_publique"
+       ],
+       "circonstances": [
+        "vol_sur_personne=oui",
+        "proprietaire=assure",
+        "plainte_deposee=oui",
+        "formule=privilege"
+       ]
+      },
+      "avertissements": [
+       "violence = non : non dit dans la déclaration, retiré",
+       "auteur = tiers : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v08",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ?",
+       "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3347,
+       "decision": 5,
+       "total": 4263
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "mobilier_jardin"
+       ],
+       "lieux": [
+        "jardin"
+       ],
+       "circonstances": [
+        "effraction=non",
+        "violence=non",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "proprietaire=assure",
+        "plainte_deposee=oui",
+        "formule=privilege",
+        "sejour_temporaire=non",
+        "construction_close=non",
+        "acces_voleur=sans_effraction"
+       ]
+      },
+      "avertissements": [
+       "vérification écartée : retirer ces faits aurait fait couvrir (effraction = non; violence = non; vol_sur_personne = non; auteur = tiers; sejour_temporaire = non; construction_close = non; acces_voleur = sans_effraction)",
+       "effraction : fait décisif non confirmé par la déclaration"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v10",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "À qui appartiennent les biens ? (assure → couvert ; hote → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2453,
+       "decision": 40,
+       "total": 3740
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "vehicule_moteur",
+        "velo"
+       ],
+       "lieux": [
+        "annexe"
+       ],
+       "circonstances": [
+        "serrure_surete=oui",
+        "effraction=oui",
+        "plainte_deposee=oui",
+        "serrure_cylindre=oui"
+       ]
+      },
+      "avertissements": [
+       "vol_sur_personne = non : non dit dans la déclaration, retiré",
+       "auteur = tiers : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2881,
+       "decision": 11,
+       "total": 3769
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "vehicule_moteur"
+       ],
+       "lieux": [
+        "garage"
+       ],
+       "circonstances": [
+        "effraction=oui",
+        "plainte_deposee=oui",
+        "vehicule_vole=oui"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "b-v13",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Abus de confiance ? (non → couvert ; oui → non couvert)",
+       "Occupation irrégulière des locaux ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ?",
+       "Le vol a-t-il été commis pendant les heures de service de la personne employée chez vous ?",
+       "Bâtiment en construction/transformation/rénovation ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2994,
+       "decision": 32,
+       "total": 3993
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "cles"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "effraction=oui",
+        "proprietaire=assure",
+        "plainte_deposee=oui"
+       ]
+      },
+      "avertissements": [
+       "vol_sur_personne = non : non dit dans la déclaration, retiré",
+       "auteur = tiers : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     }
+    ]
+   ]
+  },
+  "lecture": {
+   "metriques": {
+    "rappel_faits": 0.733,
+    "cas_avec_contradiction": 1,
+    "cas_avec_fait_vague": 0,
+    "cas_avec_fait_en_trop": 5,
+    "cas_avec_fait_sans_appui": 6
+   },
+   "cas": [
+    {
+     "id": "b-v02",
+     "rappel": 0.63,
+     "contradictions": [
+      "bien : valeurs lu objet_divers",
+      "vol_sur_personne : non lu oui"
+     ],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "violence = non",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [
+      "acces_voleur = sans_effraction"
+     ],
+     "sans_appui": [
+      "auteur = tiers",
+      "effraction = non",
+      "sejour_temporaire = non",
+      "violence = non",
+      "vol_sur_personne = oui"
+     ]
+    },
+    {
+     "id": "b-v04",
+     "rappel": 0.667,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "auteur = tiers",
+      "sejour_temporaire = non",
+      "vehicule_vole = non",
+      "violence = non",
+      "vol_sur_personne = non"
+     ]
+    },
+    {
+     "id": "b-v06",
+     "rappel": 0.7,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "effraction = non",
+      "violence = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "auteur = tiers",
+      "violence = non"
+     ]
+    },
+    {
+     "id": "b-v08",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "acces_voleur = sans_effraction",
+      "construction_close = non",
+      "sejour_temporaire = non"
+     ],
+     "sans_appui": []
+    },
+    {
+     "id": "b-v10",
+     "rappel": 0.633,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "proprietaire = assure",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [
+      "serrure_surete = oui"
+     ],
+     "sans_appui": [
+      "auteur = tiers",
+      "vol_sur_personne = non"
+     ]
+    },
+    {
+     "id": "b-v11",
+     "rappel": 0.708,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "proprietaire = assure",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [
+      "vehicule_vole = oui"
+     ],
+     "sans_appui": [
+      "sejour_temporaire = non",
+      "violence = non",
+      "vol_sur_personne = non"
+     ]
+    },
+    {
+     "id": "b-v13",
+     "rappel": 0.792,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "auteur = tiers",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [
+      "violence = non"
+     ],
+     "sans_appui": [
+      "auteur = tiers",
+      "sejour_temporaire = non",
+      "vol_sur_personne = non"
+     ]
+    }
+   ]
+  }
+ },
+ "avertissements": [],
+ "partie": "test",
+ "modele": "mistral:mistral-small-latest",
+ "lecture": "verifiee, exemples",
+ "portes": [
+  {
+   "couche": "lecture",
+   "critere": "cas_avec_contradiction",
+   "sens": "max",
+   "seuil": 5,
+   "valeur": 1,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "faux_couverts",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 0.0,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "faux_refus",
+   "sens": "max",
+   "seuil": 1,
+   "valeur": 0.0,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "exactitude",
+   "sens": "min",
+   "seuil": 0.85,
+   "valeur": 0.809,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "instables",
+   "sens": "max",
+   "seuil": 3,
+   "valeur": 2,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "rappel_questions",
+   "sens": "min",
+   "seuil": 0.8,
+   "valeur": 1.0,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "latence_seule_p95_s",
+   "sens": "max",
+   "seuil": 10,
+   "valeur": 4.96,
+   "ok": true
+  }
+ ],
+ "passe": false
+}

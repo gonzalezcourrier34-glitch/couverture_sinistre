@@ -218,10 +218,10 @@ def proches(texte: str, chemin_base: str | Path, embed, **options) -> list[tuple
     return choisir(embed([texte])[0], charger_index(chemin_base), **options)
 
 
-# --- Dans la lecture (COUVERTURE_EXEMPLES=oui) -----------------------------------------------------------------------
+# --- Dans la lecture (par défaut depuis 7.112 ; COUVERTURE_EXEMPLES=non pour s'en passer) ----------------------------
 
 def actifs() -> bool:
-    return os.environ.get("COUVERTURE_EXEMPLES", "").strip().lower() in ("1", "oui", "true", "yes")
+    return os.environ.get("COUVERTURE_EXEMPLES", "").strip().lower() not in ("0", "non", "false", "no")
 
 
 class Banque:

@@ -133,3 +133,24 @@ def test_une_declaration_n_est_jamais_son_propre_exemple():
             self.embed, self.k, self.seuil = (lambda t: [[1.0, 0.0]]), 3, 0.5
     assert [x["id"] for x in B().pour("Vélo volé.")()] == ["b"]
     assert B().pour("") is not None and exemples.bloc([], ("evenement",)) == ""
+
+
+def test_les_exemples_sont_la_lecture_par_defaut(monkeypatch, tmp_path):
+    """7.112 : les exemples sont actifs sans rien régler ; COUVERTURE_EXEMPLES=non les coupe. Sans clé ou sans
+    banque indexée, la chaîne lit sans exemples, sans erreur."""
+    from couverture import chaine, prolog
+    from couverture.base import Base
+
+    monkeypatch.setattr(prolog, "swipl", lambda: "swipl")
+    monkeypatch.delenv("COUVERTURE_EXEMPLES", raising=False)
+    assert exemples.actifs()
+    monkeypatch.setenv("COUVERTURE_EXEMPLES", "non")
+    assert not exemples.actifs()
+    monkeypatch.delenv("COUVERTURE_EXEMPLES")
+
+    base = Base(tmp_path / "base.sqlite")
+    monkeypatch.setattr(base, "clauses", lambda contrat_id: [])
+    monkeypatch.delenv("MISTRAL_API_KEY", raising=False)
+    assert chaine.PipelineRegles.depuis_base(base, "assureur-a-habitation-2025", object()).exemples is None
+    monkeypatch.setenv("MISTRAL_API_KEY", "k")
+    assert chaine.PipelineRegles.depuis_base(base, "assureur-a-habitation-2025", object()).exemples is None  # banque vide

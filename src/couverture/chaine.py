@@ -3,6 +3,7 @@ la réponse, avec ses citations vérifiées et ses questions."""
 
 from __future__ import annotations
 
+import os
 import time
 
 from . import prolog
@@ -21,7 +22,7 @@ class PipelineRegles:
         self.contrat_id, self.clauses, self.llm = contrat_id, clauses, llm
         self.decideur = decideur or (lambda faits: prolog.decider(contrat_id, faits))
         self.variables = variables_du_contrat(contrat_id)
-        self.exemples = None                  # COUVERTURE_EXEMPLES=oui : la banque d'exemples (7.108)
+        self.exemples = None                  # la banque d'exemples (7.108, par défaut depuis 7.112)
 
     @classmethod
     def depuis_base(cls, base, contrat_id: str, llm: LLM) -> "PipelineRegles":
@@ -31,8 +32,12 @@ class PipelineRegles:
             raise LookupError("SWI-Prolog introuvable : `winget install SWI-Prolog.SWI-Prolog` (Windows).")
         p = cls(contrat_id, base.clauses(contrat_id), llm)
         from . import exemples
-        if exemples.actifs():
-            p.exemples = exemples.Banque(base.chemin, exemples.EmbeddingsMistral())
+        # Les exemples demandent la clé (un vecteur par déclaration) et une banque indexée (`couverture exemples
+        # --indexer`) ; sans l'une ou l'autre, la lecture se fait sans exemples, comme avant 7.108.
+        if exemples.actifs() and os.environ.get("MISTRAL_API_KEY", "").strip():
+            banque = exemples.Banque(base.chemin, exemples.EmbeddingsMistral())
+            if banque.index:
+                p.exemples = banque
         return p
 
     def analyser(self, sinistre: str) -> Resultat:
