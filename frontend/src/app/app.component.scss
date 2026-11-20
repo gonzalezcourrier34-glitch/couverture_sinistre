@@ -1,0 +1,669 @@
+// # Écran : la déclaration à gauche, la décision à droite
+//
+// Paysage (ordinateur) : l'écran tient dans la fenêtre, toute sa largeur ; les deux colonnes défilent chacune de
+// leur côté. Portrait (< 900 px) : une seule colonne, qui défile en entier.
+
+$pastille: 999px;
+$rayon: 12px;
+
+
+// # Page
+
+.page {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: 100vh;
+    overflow: hidden;
+    padding: 16px 28px 8px;
+}
+
+.muted {
+    margin: 0;
+    color: var(--plume-fonce);
+}
+
+.small {
+    font-size: 15px;
+    color: var(--plume-fonce);
+}
+
+
+// # En-tête
+
+.header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px 24px;
+    padding: 14px 20px;
+    background: var(--blanc);
+    border-radius: $rayon;
+    box-shadow: var(--ombre);
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    h1 {
+        margin: 0;
+        font-size: 30px;
+        font-weight: 700;
+        color: var(--primaire-nuit);
+    }
+}
+
+.logo {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 auto;
+    fill: var(--primaire);
+}
+
+.logo-coche {
+    fill: none;
+    stroke: var(--blanc);
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.header-subtitle {
+    margin: 2px 0 0;
+    color: var(--texte-doux);
+}
+
+.etat {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.etat-detail {
+    font-size: 15px;
+    color: var(--plume-fonce);
+}
+
+.pastille {
+    padding: 5px 14px;
+    border-radius: $pastille;
+    font-size: 15px;
+    font-weight: 600;
+    background: var(--plume-clair);
+    color: var(--plume-nuit);
+}
+
+.pastille-ok {
+    background: var(--succes-pale);
+    color: var(--succes-fonce);
+}
+
+.pastille-ko {
+    background: var(--danger-pale);
+    color: var(--danger-fonce);
+}
+
+
+// # Espace de travail
+
+.workspace {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(380px, 5fr) minmax(0, 7fr);
+    gap: 20px;
+}
+
+.panneau {
+    min-height: 0;
+    overflow-y: auto;
+    background: var(--blanc);
+    border-radius: $rayon;
+    box-shadow: var(--ombre);
+    padding: 24px 28px;
+}
+
+.declaration {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.etiquette {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--primaire-fonce);
+}
+
+
+// ## Contrats
+
+.contrats {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 8px;
+}
+
+.contrats > .muted {
+    grid-column: 1 / -1;
+}
+
+.contrat {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    padding: 10px 12px;
+    text-align: left;
+    background: var(--plume-pale);
+    border: 2px solid var(--plume-clair);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+
+    &:hover {
+        border-color: var(--primaire-clair);
+    }
+}
+
+.contrat-on {
+    background: var(--primaire-pale);
+    border-color: var(--primaire);
+}
+
+.contrat-assureur {
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--primaire-nuit);
+}
+
+.contrat-produit {
+    font-size: 16px;
+    color: var(--texte-doux);
+}
+
+.contrat-version {
+    font-size: 14px;
+    color: var(--plume-fonce);
+}
+
+
+// ## Saisie
+
+.saisie {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+textarea {
+    width: 100%;
+    resize: vertical;
+    min-height: 220px;
+    padding: 12px 14px;
+    border: 1px solid var(--plume);
+    border-radius: 10px;
+    background: var(--blanc);
+    color: var(--texte);
+
+    &:focus {
+        border-color: var(--primaire);
+        outline: 3px solid var(--primaire-pale);
+    }
+}
+
+.compteur {
+    align-self: flex-end;
+    font-size: 14px;
+    color: var(--plume-fonce);
+}
+
+.exemples {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+
+// ## Boutons et puces (boutons arrondis, comme le site)
+
+.bouton {
+    padding: 12px 30px;
+    border-radius: $pastille;
+    border: 2px solid var(--primaire);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, opacity 0.15s;
+
+    &:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+    }
+}
+
+.bouton-primaire {
+    background: var(--primaire);
+    color: var(--blanc);
+
+    &:hover:not(:disabled) {
+        background: var(--primaire-fonce);
+        border-color: var(--primaire-fonce);
+    }
+}
+
+.bouton-secondaire {
+    background: var(--blanc);
+    color: var(--primaire);
+
+    &:hover {
+        background: var(--primaire-pale);
+    }
+}
+
+.chip {
+    padding: 6px 14px;
+    border-radius: $pastille;
+    border: 1px solid var(--plume);
+    background: var(--blanc);
+    color: var(--plume-nuit);
+    font-size: 16px;
+    cursor: pointer;
+
+    &:hover {
+        border-color: var(--primaire);
+        color: var(--primaire);
+    }
+}
+
+.chip-on {
+    background: var(--primaire);
+    border-color: var(--primaire);
+    color: var(--blanc);
+
+    &:hover {
+        color: var(--blanc);
+    }
+}
+
+
+// ## Principe
+
+.principe {
+    margin: 8px 0 0;
+    padding: 12px 12px 12px 32px;
+    background: var(--plume-pale);
+    border-radius: 10px;
+    font-size: 16px;
+    color: var(--texte-doux);
+
+    li + li {
+        margin-top: 4px;
+    }
+
+    strong {
+        color: var(--primaire-nuit);
+    }
+}
+
+
+// # Décision
+
+.resultat {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.alerte {
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: var(--danger-pale);
+    color: var(--danger-fonce);
+    border-left: 4px solid var(--danger);
+}
+
+.etape {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.etape-passee {
+    opacity: 0.7;
+    padding-bottom: 16px;
+    border-bottom: 1px dashed var(--plume);
+}
+
+.etape-origine {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--primaire-fonce);
+}
+
+.etape-texte {
+    margin: 0;
+    padding: 10px 14px;
+    background: var(--plume-pale);
+    border-left: 3px solid var(--primaire-clair);
+    border-radius: 0 8px 8px 0;
+    color: var(--texte-doux);
+    font-style: italic;
+}
+
+
+// ## Le verdict
+
+.verdict {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 12px;
+    align-self: flex-start;
+    padding: 8px 18px;
+    border-radius: $pastille;
+    border: 2px solid transparent;
+}
+
+.verdict-libelle {
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.verdict-confiance {
+    font-size: 15px;
+}
+
+.ton-succes {
+    background: var(--succes-pale);
+    border-color: var(--succes);
+    color: var(--succes-fonce);
+}
+
+.ton-danger {
+    background: var(--danger-pale);
+    border-color: var(--danger);
+    color: var(--danger-fonce);
+}
+
+.ton-attention {
+    background: var(--attention-pale);
+    border-color: var(--attention);
+    color: var(--attention-fonce);
+}
+
+.justification {
+    margin: 0;
+    font-size: 20px;
+}
+
+
+// ## Blocs
+
+.bloc {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.bloc-titre {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--primaire-nuit);
+}
+
+.faits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.fait {
+    padding: 4px 12px;
+    border-radius: $pastille;
+    background: var(--plume-clair);
+    font-size: 16px;
+}
+
+.fait-variable {
+    color: var(--plume-fonce);
+}
+
+
+// ## À demander au client
+
+.a-preciser {
+    padding: 14px;
+    background: var(--attention-pale);
+    border: 1px solid var(--attention);
+    border-radius: 10px;
+}
+
+.question {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 6px 0;
+
+    & + & {
+        border-top: 1px solid rgba(123, 103, 17, 0.15);
+    }
+}
+
+.question-texte {
+    font-weight: 600;
+}
+
+.etiquette-reserve {
+    margin-right: 6px;
+    padding: 1px 8px;
+    border-radius: $pastille;
+    background: var(--plume-clair);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--plume-nuit);
+}
+
+.valeurs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+
+// ## Citations
+
+.citation {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border-left: 4px solid var(--primaire);
+    background: var(--plume-pale);
+}
+
+.role-exclusion {
+    border-left-color: var(--danger);
+}
+
+.role-limite {
+    border-left-color: var(--plume-fonce);
+}
+
+.citation-tete {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 0;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    color: inherit;
+}
+
+.citation-article {
+    font-weight: 700;
+    color: var(--primaire);
+}
+
+.citation-role {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--plume-fonce);
+}
+
+.citation-extrait {
+    display: block;
+    margin-top: 4px;
+    color: var(--texte-doux);
+}
+
+.clause {
+    margin-top: 8px;
+    padding: 10px 12px;
+    background: var(--blanc);
+    border: 1px solid var(--plume-clair);
+    border-radius: 8px;
+    font-size: 16px;
+
+    p {
+        margin: 6px 0 0;
+        white-space: pre-line;
+    }
+}
+
+.clause-titre {
+    font-size: 14px;
+    color: var(--plume-fonce);
+}
+
+.limites {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 16px;
+}
+
+
+// ## Détails
+
+.details {
+    font-size: 16px;
+
+    summary {
+        cursor: pointer;
+        color: var(--primaire);
+        font-weight: 600;
+    }
+
+    .bloc-titre {
+        margin-top: 10px;
+    }
+}
+
+.avertissements {
+    margin: 4px 0;
+    padding-left: 18px;
+    color: var(--texte-doux);
+}
+
+.raisonnement {
+    margin: 4px 0;
+    padding: 10px;
+    max-height: 320px;
+    overflow: auto;
+    background: var(--primaire-nuit);
+    color: var(--primaire-pale);
+    border-radius: 8px;
+    font-size: 14px;
+    white-space: pre;
+}
+
+
+// ## Attente et accueil
+
+.attente {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    color: var(--primaire-fonce);
+    font-weight: 600;
+}
+
+.spinner {
+    width: 18px;
+    height: 18px;
+    border: 3px solid var(--primaire-pale);
+    border-top-color: var(--primaire);
+    border-radius: 50%;
+    animation: tourne 0.8s linear infinite;
+}
+
+@keyframes tourne {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.vide {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: auto 0;
+    padding: 24px 48px;
+    text-align: center;
+    align-items: center;
+}
+
+.vide-titre {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--primaire-nuit);
+}
+
+.legende {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+}
+
+.pied {
+    flex: 0 0 auto;
+    text-align: center;
+    padding: 2px 0;
+}
+
+
+// # Téléphone
+
+@media (max-width: 900px) {
+    .page {
+        height: auto;
+        overflow: visible;
+        padding: 10px 12px;
+    }
+
+    .workspace {
+        grid-template-columns: 1fr;
+    }
+
+    .panneau {
+        overflow: visible;
+    }
+}

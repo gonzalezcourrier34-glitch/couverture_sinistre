@@ -1,0 +1,81 @@
+// # Types échangés avec l'API (`src/couverture/api/schemas.py`)
+
+export type DecisionValeur = 'COUVERT' | 'NON_COUVERT' | 'INCERTAIN';
+
+export type Faits = Record<string, string | string[]>;
+
+export interface Sante {
+    statut: 'ok' | 'degrade';
+    version: string;
+    contrats_decidables: string[];
+    prolog: boolean;
+    modele: string | null;
+    cle_api_configuree: boolean;
+}
+
+export interface Contrat {
+    id: string;
+    assureur: string;
+    produit: string;
+    version: string;
+    statut: string;
+    nb_clauses: number | null;
+    alertes: string[];
+    regles: boolean;
+}
+
+export interface Clause {
+    id: string;
+    article: string;
+    titre: string;
+    chemin: string[];
+    type: string;
+    texte: string;
+    pages: number[];
+    renvois: string[];
+}
+
+export interface APreciser {
+    variable: string;
+    nature: 'question' | 'reserve';
+    question: string;
+    valeurs: string[];
+    aide: Record<string, string>;
+}
+
+export interface Citation {
+    clause_id: string;
+    extrait: string;
+    role: string;
+    valide: boolean;
+    pages: number[];
+}
+
+export interface Limite {
+    clause_id: string;
+    extrait: string;
+    montant: string;
+}
+
+export interface Decision {
+    contrat_id: string | null;
+    decision: DecisionValeur;
+    justification: string;
+    confiance: number;
+    a_preciser: APreciser[];
+    questions: string[];
+    citations: Citation[];
+    limites: Limite[];
+    faits: Faits;
+    avertissements: string[];
+    raisonnement: string[];
+    mode: string;
+    durees_ms: Record<string, number>;
+}
+
+/** Une étape de l'échange : une analyse de déclaration, ou une décision après les réponses du client. */
+export interface Etape {
+    origine: 'analyse' | 'reponses';
+    texte: string;
+    reponse: Decision;
+}

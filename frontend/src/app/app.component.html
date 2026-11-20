@@ -1,0 +1,247 @@
+<main class="page">
+
+    <!-- # En-tête -->
+
+    <header class="header">
+        <div class="header-title">
+            <svg class="logo" viewBox="0 0 32 32" aria-hidden="true">
+                <path d="M16 2 4 7v8c0 7.5 5.1 13.4 12 15 6.9-1.6 12-7.5 12-15V7L16 2z" />
+                <path class="logo-coche" d="m10.5 16.2 3.8 3.8 7.4-7.6" />
+            </svg>
+            <div>
+                <h1>Couverture des sinistres</h1>
+                <p class="header-subtitle">Le modèle lit la déclaration, la logique décide, le code vérifie chaque citation.</p>
+            </div>
+        </div>
+
+        <div class="etat" aria-live="polite">
+            @if (sante(); as s) {
+                <span class="pastille" [class.pastille-ok]="s.statut === 'ok'" [class.pastille-ko]="s.statut !== 'ok'">
+                    {{ s.statut === 'ok' ? 'Service disponible' : 'Service dégradé' }}
+                </span>
+                <span class="etat-detail">Moteur {{ s.prolog ? 'chargé' : 'absent' }} · modèle {{ s.modele ?? 'non configuré' }} · v{{ s.version }}</span>
+            } @else if (santeErreur()) {
+                <span class="pastille pastille-ko">API injoignable</span>
+            } @else {
+                <span class="pastille">Connexion…</span>
+            }
+        </div>
+    </header>
+
+
+    <!-- # Espace de travail -->
+
+    <section class="workspace">
+
+        <!-- ## Déclaration -->
+
+        <section class="panneau declaration" aria-label="Déclaration du sinistre">
+
+            <div class="etiquette">1. Le contrat</div>
+            <div class="contrats" role="radiogroup" aria-label="Contrat">
+                @for (c of decidables(); track c.id) {
+                    <button type="button" class="contrat" role="radio"
+                        [class.contrat-on]="c.id === contratId()"
+                        [attr.aria-checked]="c.id === contratId()"
+                        (click)="choisirContrat(c.id)">
+                        <span class="contrat-assureur">{{ c.assureur }}</span>
+                        <span class="contrat-produit">{{ c.produit }}</span>
+                        <span class="contrat-version">{{ c.version }} · {{ c.nb_clauses ?? '?' }} clauses</span>
+                    </button>
+                } @empty {
+                    <p class="muted">Aucun contrat décidable : vérifiez que l’API tourne et que la base est remplie.</p>
+                }
+            </div>
+
+            <form class="saisie" (submit)="$event.preventDefault(); analyser()">
+                <label class="etiquette" for="sinistre">2. La déclaration du client</label>
+                <textarea id="sinistre" rows="6" [attr.maxlength]="longueurMax"
+                    placeholder="Décrivez le sinistre comme le client l’écrirait : ce qui s’est passé, où, ce qui est abîmé…"
+                    [value]="sinistre()" (input)="saisir($event)"></textarea>
+                <div class="compteur">{{ sinistre().length }} / {{ longueurMax }}</div>
+
+                <div class="exemples">
+                    <span class="small">Exemples :</span>
+                    @for (e of exemples; track e) {
+                        <button type="button" class="chip" (click)="exemple(e)">{{ e.length > 48 ? e.slice(0, 48) + '…' : e }}</button>
+                    }
+                </div>
+
+                <div class="actions">
+                    @if (etapes().length) {
+                        <button type="button" class="bouton bouton-secondaire" (click)="nouvelleDeclaration()">Nouvelle déclaration</button>
+                    }
+                    <button type="submit" class="bouton bouton-primaire" [disabled]="!peutAnalyser()">
+                        {{ chargement() ? 'Analyse en cours…' : 'Analyser' }}
+                    </button>
+                </div>
+            </form>
+
+            <ol class="principe">
+                <li><strong>Lire</strong> : un modèle de langue traduit la déclaration en faits d’un vocabulaire fermé.</li>
+                <li><strong>Décider</strong> : un moteur logique applique les règles tirées des conditions générales.</li>
+                <li><strong>Vérifier</strong> : chaque citation est retrouvée mot pour mot dans le contrat ; un fait douteux suspend la réponse.</li>
+            </ol>
+        </section>
+
+
+        <!-- ## Décision -->
+
+        <section class="panneau resultat" aria-label="Décision" aria-live="polite">
+
+            @if (erreur()) {
+                <div class="alerte" role="alert">{{ erreur() }}</div>
+            }
+
+            @for (etape of etapes(); track $index; let i = $index, last = $last) {
+                <article class="etape" [class.etape-passee]="!last">
+
+                    <div class="etape-origine">
+                        {{ etape.origine === 'analyse' ? 'Déclaration' : 'Après les réponses du client' }}
+                        <span class="small">· {{ etape.reponse.durees_ms['lecture'] !== undefined ? 'lue par le modèle' : 'moteur seul, sans modèle' }}</span>
+                    </div>
+                    <blockquote class="etape-texte">{{ etape.texte }}</blockquote>
+
+                    <div class="verdict" [class]="tons[etape.reponse.decision]">
+                        <span class="verdict-libelle">{{ libelles[etape.reponse.decision] }}</span>
+                        <span class="verdict-confiance">confiance {{ pourcent(etape.reponse.confiance) }}</span>
+                    </div>
+                    <p class="justification">{{ etape.reponse.justification }}</p>
+
+                    <!-- ### Faits retenus -->
+
+                    @if (lignesDeFaits(etape.reponse.faits).length) {
+                        <div class="bloc">
+                            <div class="bloc-titre">Faits retenus</div>
+                            <div class="faits">
+                                @for (f of lignesDeFaits(etape.reponse.faits); track f.variable) {
+                                    <span class="fait"><span class="fait-variable">{{ f.variable }}</span> {{ f.valeur }}</span>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    <!-- ### Ce qu'il faut demander au client (dernière étape seulement) -->
+
+                    @if (last && aPreciser().length) {
+                        <div class="bloc a-preciser">
+                            <div class="bloc-titre">À demander au client</div>
+                            @for (p of aPreciser(); track p.variable) {
+                                <div class="question">
+                                    <div class="question-texte">
+                                        @if (p.nature === 'reserve') {
+                                            <span class="etiquette-reserve">Réserve</span>
+                                        }
+                                        {{ p.question }}
+                                    </div>
+                                    <div class="valeurs" role="group" [attr.aria-label]="p.question">
+                                        @for (v of p.valeurs; track v) {
+                                            <button type="button" class="chip"
+                                                [class.chip-on]="reponses()[p.variable] === v"
+                                                [attr.aria-pressed]="reponses()[p.variable] === v"
+                                                [attr.title]="p.aide[v]"
+                                                (click)="repondre(p.variable, v)">{{ lisible(v) }}</button>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                            <div class="actions">
+                                <span class="small">Décision immédiate, par le moteur seul.</span>
+                                <button type="button" class="bouton bouton-primaire"
+                                    [disabled]="!nbReponses() || chargement()" (click)="decider()">
+                                    Décider avec {{ nbReponses() }} réponse{{ nbReponses() > 1 ? 's' : '' }}
+                                </button>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- ### Ce qui fonde la décision -->
+
+                    @if (etape.reponse.citations.length) {
+                        <div class="bloc">
+                            <div class="bloc-titre">Clauses citées</div>
+                            @for (c of etape.reponse.citations; track $index) {
+                                @let k = cle(i, c);
+                                <div class="citation" [class]="'role-' + c.role">
+                                    <button type="button" class="citation-tete" [attr.aria-expanded]="estOuverte(k)" (click)="basculer(k)">
+                                        <span class="citation-article">Art. {{ c.clause_id }}</span>
+                                        <span class="citation-role">{{ c.role }}</span>
+                                        @if (c.pages.length) {
+                                            <span class="small">p. {{ c.pages.join(', ') }}</span>
+                                        }
+                                    </button>
+                                    <q class="citation-extrait">{{ c.extrait }}</q>
+                                    @if (estOuverte(k)) {
+                                        @let cl = clause(c.clause_id);
+                                        @if (cl) {
+                                            <div class="clause">
+                                                <div class="clause-titre">{{ cl.chemin.join(' › ') }}</div>
+                                                <p>{{ cl.texte }}</p>
+                                            </div>
+                                        } @else {
+                                            <div class="clause small">Chargement du texte…</div>
+                                        }
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    @if (etape.reponse.limites.length) {
+                        <div class="bloc">
+                            <div class="bloc-titre">Limites</div>
+                            <ul class="limites">
+                                @for (l of etape.reponse.limites; track $index) {
+                                    <li><span class="citation-article">Art. {{ l.clause_id }}</span> {{ l.extrait }}</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    <details class="details">
+                        <summary>Raisonnement du moteur et contrôles</summary>
+                        @if (etape.reponse.avertissements.length) {
+                            <div class="bloc-titre">Contrôles de la lecture</div>
+                            <ul class="avertissements">
+                                @for (a of etape.reponse.avertissements; track $index) {
+                                    <li>{{ a }}</li>
+                                }
+                            </ul>
+                        }
+                        <div class="bloc-titre">Arbre de preuve</div>
+                        <pre class="raisonnement">{{ etape.reponse.raisonnement.join('\n') || '—' }}</pre>
+                        <div class="small">
+                            {{ etape.reponse.mode }}
+                            @for (d of etape.reponse.durees_ms | keyvalue; track d.key) {
+                                · {{ d.key }} {{ d.value }} ms
+                            }
+                        </div>
+                    </details>
+                </article>
+            } @empty {
+                <div class="vide">
+                    <div class="vide-titre">Choisissez un contrat, collez la déclaration, analysez.</div>
+                    <p class="muted">La réponse dit <strong>couvert</strong>, <strong>non couvert</strong> ou <strong>à préciser</strong>,
+                        avec les clauses du contrat qui la fondent. Quand il manque une information, elle dit quoi demander au client :
+                        ses réponses donnent la décision tout de suite.</p>
+                    <div class="legende">
+                        <span class="verdict ton-succes"><span class="verdict-libelle">Couvert</span></span>
+                        <span class="verdict ton-danger"><span class="verdict-libelle">Non couvert</span></span>
+                        <span class="verdict ton-attention"><span class="verdict-libelle">À préciser</span></span>
+                    </div>
+                </div>
+            }
+
+            @if (chargement()) {
+                <div class="attente" role="status">
+                    <span class="spinner" aria-hidden="true"></span>
+                    {{ attente() }}
+                </div>
+            }
+        </section>
+    </section>
+
+    <footer class="pied small">
+        Démonstration · conditions générales d’assureurs anonymisés · la décision ne remplace pas l’examen du dossier par un gestionnaire.
+    </footer>
+</main>

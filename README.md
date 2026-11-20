@@ -89,6 +89,18 @@ l'en-tête `x-api-key` (`COUVERTURE_API_KEY` dans `.env` ; sans elle, les routes
 | `POST /api/v1/analyses` | une déclaration → couvert, non couvert ou incertain, avec les citations |
 | `POST /api/v1/decisions` | des faits → la décision, sans modèle (résout un « incertain ») |
 
+### L'interface
+
+```bash
+cd frontend
+npm install
+npm start                                                   # http://localhost:4220 (l'API doit tourner)
+```
+
+Angular 21, sur le modèle de l'interface de SortirIA, aux couleurs du système de design public de foyer.lu. Le contrat,
+la déclaration, la décision avec ses clauses citées (texte complet au clic) ; pour « à préciser », les questions à poser
+au client, et ses réponses donnent la décision tout de suite. La clé de l'API reste côté serveur (`frontend/proxy.conf.mjs`).
+
 Une réponse « incertain » dit, dans `a_preciser`, quoi demander au client ; ses réponses, ajoutées aux `faits` de la
 réponse, se soumettent à `/decisions` : décision immédiate, gratuite, déterministe.
 

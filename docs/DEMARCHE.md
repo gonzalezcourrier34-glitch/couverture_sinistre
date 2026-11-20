@@ -3473,6 +3473,24 @@ première question : renvoyés tels quels, ils ne redonneraient pas la réponse 
 Tests : la logique (6 tests, oracle Python, base temporaire) et les routes par HTTP (`TestClient`, dépendances
 remplacées : clé, codes d'erreur, aller-retour « incertain » → réponse → décision, une route par fichier vérifiée).
 
+### 7.103 Une interface Angular aux couleurs du système de design de foyer.lu
+
+Sur le modèle de l'interface de SortirIA (Angular 21, composants autonomes, signaux, proxy `/api`), dans
+`frontend/`. Un écran : à gauche le contrat et la déclaration (avec trois exemples), à droite la décision. La
+décision en tête, en couleur (couvert, non couvert, à préciser), puis les faits retenus, les clauses citées (le texte
+complet de la clause s'ouvre au clic), les limites, et, replié, l'arbre de preuve et les contrôles de la lecture.
+
+Le circuit de l'API se voit : une réponse « à préciser » affiche les questions à poser au client, avec les réponses
+possibles en boutons (le sens de chaque valeur au survol) ; « Décider » soumet les faits complétés à `/decisions`, et la
+nouvelle décision s'ajoute sous la première, sans nouvel appel au modèle.
+
+Couleurs et police : celles du système de design public de foyer.lu (variables `--fds-*` relevées sur le site,
+police Barlow) : bleu principal `#2957C8`, gris « plume », vert, rouge et jaune d'état pour la décision. Seules les
+couleurs sont reprises ; ni logo, ni nom, ni contenu de la marque : l'écran reste celui d'une démonstration.
+
+La clé de l'API n'entre jamais dans le navigateur : le proxy de développement (`proxy.conf.mjs`) la lit dans le `.env`
+et l'ajoute aux appels ; en production, ce serait le rôle du serveur placé devant l'API.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.

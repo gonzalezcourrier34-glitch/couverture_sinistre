@@ -1,0 +1,88 @@
+/* Styles globaux (les styles de l'écran sont dans app.component.scss).
+ *
+ * Palette et police reprises du système de design public de foyer.lu (variables --fds-*, police Barlow), relevées
+ * le 20/11/2026. Seules les couleurs sont reprises : ni logo, ni nom, ni contenu de la marque. */
+
+:root {
+    /* Couleur principale (boutons, liens, sélection) */
+    --primaire-pale: #eaeefa;
+    --primaire-clair: #a9bce9;
+    --primaire: #2957c8;
+    --primaire-fonce: #0736a8;
+    --primaire-nuit: #041d58;
+
+    /* Gris « plume » : fonds, bordures, texte secondaire */
+    --plume-pale: #f8f9fc;
+    --plume-clair: #eaeef6;
+    --plume: #c4cede;
+    --plume-fonce: #67768e;
+    --plume-nuit: #454f5f;
+
+    /* Texte */
+    --texte: #1a1d23;
+    --texte-doux: #454f5f;
+    --blanc: #ffffff;
+
+    /* États : la décision */
+    --succes-pale: #e0f5f3;
+    --succes: #00a88c;
+    --succes-fonce: #006353;
+    --danger-pale: #fff0f0;
+    --danger: #ed5e63;
+    --danger-fonce: #a32c30;
+    --attention-pale: #fefae8;
+    --attention: #f5ce22;
+    --attention-fonce: #7b6711;
+    --info-pale: #edf6ff;
+    --info: #4c9adf;
+
+    /* Univers habitation */
+    --habitation: #c4057a;
+
+    --ombre: 0 2px 8px rgba(64, 72, 79, 0.12);
+    --sans: 'Barlow', system-ui, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    background: var(--plume-pale);
+    color: var(--texte);
+    font-family: var(--sans);
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+button,
+input,
+textarea {
+    font: inherit;
+}
+
+a {
+    color: var(--primaire);
+}
+
+a:hover {
+    color: var(--primaire-fonce);
+}
+
+:focus-visible {
+    outline: 3px solid var(--primaire-clair);
+    outline-offset: 2px;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
