@@ -185,7 +185,13 @@
             "texte": "les graffitis, tags, pochoirs et inscriptions de toute nature, affichages, salissures, rayures commis à l’extérieur de votre local d’habitation et de ses dépendances"
           }
         ],
-        "limites": []
+        "limites": [
+          {
+            "article": "4.1",
+            "texte": "Si l’introduction a été facilitée ou aggravée par la nonconformité ou l’absence de mise en œuvre des moyens de protection et/ou de fermeture exigés aux conditions particulières, l’indemnité sera réduite de 50 %",
+            "montant": "indemnité réduite de 50 %"
+          }
+        ]
       }
     ],
     "exclusions_communes": [],
@@ -237,8 +243,40 @@
       {
         "article": "2.6-b",
         "texte": "ATTENTION Vous devez respecter certaines mesures de sécurité pour bénéficier pleinement de la garantie (voir ART. 4.1)",
-        "pourquoi": "renvoi au titre IV (mesures de sécurité), traduit avec lui (lot 3)"
+        "pourquoi": "renvoi au titre IV (mesures de sécurité) : ses réductions sont des limites de la garantie (7.96)"
       }
     ]
-  }
+  },
+  "controles": [
+    {
+      "gravite": "à relire",
+      "controle": "limite",
+      "message": "limite « Si l’introduction a été facilitée ou aggravée par la nonconf » (deteriorations_immobilieres) : elle pose une condition ; circonstance ou garantie à part ?"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.6-a) : la piscine est exclue sauf Pack Piscine (1.1-b)"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.6-a) : la véranda est exclue sauf option (1.1-b)"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.6-a) : des frais, compris dans la garantie"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.6-b) : la garantie couvre la détérioration, pas le vol d'un élément du bâtiment"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.6-b) : renvoi au titre IV (mesures de sécurité) : ses réductions sont des limites de la garantie (7.96)"
+    }
+  ]
 }

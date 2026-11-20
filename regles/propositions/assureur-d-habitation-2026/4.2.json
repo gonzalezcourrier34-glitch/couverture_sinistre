@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "article": "4.2",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12"
+  },
+  "proposition": {
+    "evenements": [
+      "degat_eaux"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "venue_eau_mesures_securite",
+        "nom": "Mesures de sécurité - Venue d'eau",
+        "article": "4.2",
+        "texte": "En toutes périodes de l'année, vous devez fermer l'arrivée d'eau lorsque vous quittez votre habitation plus de quinze jours consécutifs, lorsque l'installation est sous votre contrôle et le permet. En outre, en période de gel (c'est-à-dire lorsque la température extérieure est inférieure à 0°C pendant plus de 24 heures consécutives), les installations doivent être maintenues hors gel. Si les locaux ne sont pas chauffés et lorsqu'il s'agit d'une maison individuelle, vous devez vidanger les conduites et les réservoirs ainsi que les installations de chauffage central non pourvues d'antigel. L'indemnité sera réduite de 50 % si vous ne respectez pas ces prescriptions et qu'un sinistre survient ou est aggravé de ce fait.",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "degat_eaux"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "concept": "contenu"
+              },
+              {
+                "f": [
+                  "bien",
+                  "element_batiment"
+                ]
+              }
+            ]
+          },
+          {
+            "concept": "batiment"
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "4.2",
+            "texte": "En toutes périodes de l'année, vous devez fermer l'arrivée d'eau lorsque vous quittez votre habitation plus de quinze jours consécutifs, lorsque l'installation est sous votre contrôle et le permet. En outre, en période de gel (c'est-à-dire lorsque la température extérieure est inférieure à 0°C pendant plus de 24 heures consécutives), les installations doivent être maintenues hors gel. Si les locaux ne sont pas chauffés et lorsqu'il s'agit d'une maison individuelle, vous devez vidanger les conduites et les réservoirs ainsi que les installations de chauffage central non pourvues d'antigel. L'indemnité sera réduite de 50 % si vous ne respectez pas ces prescriptions et qu'un sinistre survient ou est aggravé de ce fait.",
+            "montant": "réduction de 50 %"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "à relire",
+      "controle": "limite",
+      "message": "limite « En toutes périodes de l'année, vous devez fermer l'arrivée d » (venue_eau_mesures_securite) : elle pose une condition ; circonstance ou garantie à part ?"
+    }
+  ]
+}

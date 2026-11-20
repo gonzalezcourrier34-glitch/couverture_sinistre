@@ -373,6 +373,19 @@
     ],
     "Intervention des moyens de secours": [
       "intervention_secours"
+    ],
+    "Responsabilités civiles liées l’habitation": [
+      "rc_proprietaire_voisins",
+      "rc_proprietaire_immeuble",
+      "rc_locataire",
+      "rc_villegiature"
+    ],
+    "- Responsabilité vie privée": [
+      "rc_vie_privee"
+    ],
+    "Défense pénale et recours suite à accident": [
+      "recours_accident",
+      "defense_penale"
     ]
   }
 }

@@ -1,0 +1,145 @@
+{
+  "meta": {
+    "article": "22.1",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-20",
+      "modifications": [
+        "l'événement `litige` (nouveau) et `domaine_litige` : recours après un accident, défense pénale ; incluses dans les formules"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "litige"
+    ],
+    "definitions": [
+      {
+        "concept": "accident",
+        "condition": {
+          "f": [
+            "domaine_litige",
+            "recours_dommage"
+          ]
+        },
+        "article": "S10-a/accident",
+        "texte": "Tout événement soudain, imprévu et extérieur à la victime à la chose endommagée"
+      }
+    ],
+    "garanties": [
+      {
+        "id": "recours_accident",
+        "nom": "Recours suite à accident",
+        "article": "22.1",
+        "texte": "pour réclamer amiablement et au besoin judiciairement la réparation pécuniaire des dommages subis par vous, ou causés aux biens assurés par le contrat, lorsque ces dommages résultent d’un accident survenu au cours de votre vie privée, engagent la responsabilité d’une personne n’ayant pas la qualité d’assuré au titre du contrat, et ne peuvent être indemnisés au titre d’une garantie du présent contrat",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "litige"
+            ]
+          },
+          {
+            "concept": "accident"
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      },
+      {
+        "id": "defense_penale",
+        "nom": "Défense pénale",
+        "article": "22.1",
+        "texte": "pour vous défendre devant les juridictions répressives et les commissions administratives, si vous êtes poursuivi pour contravention ou délit à la suite d’un événement dont les conséquences pécuniaires à l’égard du tiers sont couvertes par la garantie responsabilité civile du contrat",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "litige"
+            ]
+          },
+          {
+            "f": [
+              "domaine_litige",
+              "defense_penale"
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "evenement",
+        "valeurs": [
+          "litige"
+        ],
+        "question": "Que s'est-il passé ?",
+        "pourquoi": "22.1 à 22.3",
+        "aide": {
+          "litige": "un différend avec quelqu'un (employeur, vendeur, artisan, voisin, administration) pour lequel l'assuré veut être conseillé, aidé ou défendu ; pas un dommage à indemniser"
+        },
+        "plus_proche": "assistance : une aide pratique, pas juridique"
+      },
+      {
+        "variable": "domaine_litige",
+        "valeurs": [
+          "travail",
+          "logement",
+          "travaux",
+          "sante",
+          "consommation",
+          "administration",
+          "voisinage",
+          "employeur_domestique",
+          "location_vacances",
+          "bateau",
+          "association",
+          "famille",
+          "recours_dommage",
+          "defense_penale",
+          "vehicule_moteur",
+          "activite_professionnelle",
+          "divorce_succession",
+          "autre"
+        ],
+        "question": "Sur quoi porte le litige ?",
+        "pourquoi": "les domaines de la défense pénale, du recours et de la protection juridique (22.1 à 22.3)",
+        "aide": {
+          "travail": "avec votre employeur, en tant que salarié",
+          "logement": "votre résidence principale ou secondaire, comme propriétaire, copropriétaire ou locataire",
+          "travaux": "des travaux intérieurs d'entretien, d'embellissement ou de réparation",
+          "sante": "un organisme de soins ou de retraite, un médecin, un hôpital",
+          "consommation": "l'achat, la vente, la location ou la commande d'un bien ou d'un service (pas d'un véhicule à moteur)",
+          "administration": "un service public, une administration, les impôts",
+          "voisinage": "un voisin : servitude, trouble de voisinage",
+          "employeur_domestique": "votre assistante maternelle, femme de ménage ou employé de maison déclarés",
+          "location_vacances": "une location saisonnière de vacances, comme locataire",
+          "bateau": "un petit voilier, un engin nautique, un bateau de plaisance à moteur de 15 CV au plus",
+          "association": "votre participation bénévole à une association",
+          "famille": "succession, legs ou donation en ligne directe ; tutelle, curatelle ; filiation ; violences intrafamiliales",
+          "recours_dommage": "vous réclamez réparation d'un dommage subi lors d'un accident causé par quelqu'un d'autre",
+          "defense_penale": "vous êtes poursuivi devant un tribunal pour une contravention ou un délit après un accident",
+          "vehicule_moteur": "l'achat, la réparation, l'entretien, la conduite ou l'assurance d'une voiture, d'une moto, même avec un garagiste",
+          "activite_professionnelle": "une activité professionnelle non salariée, une entreprise, une société",
+          "divorce_succession": "un divorce, un régime matrimonial, une succession ou une donation hors ligne directe",
+          "autre": "un autre litige"
+        },
+        "plus_proche": "aucune : le vocabulaire ne disait que des dommages"
+      }
+    ],
+    "non_traduit": [],
+    "hors_decision": []
+  },
+  "controles": []
+}

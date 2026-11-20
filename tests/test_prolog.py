@@ -911,3 +911,14 @@ def test_la_source_d_un_fait_deduit():
            "effraction": {"valeurs": ["oui", "non"]}}
     assert prolog.sources_impliquees({"acces_voleur": "sans_effraction", "effraction": "non"}, voc) == {"effraction": "acces_voleur"}
     assert prolog.sources_impliquees({"acces_voleur": "sans_effraction", "effraction": "oui"}, voc) == {}
+
+
+def test_accident_retire_quand_un_autre_evenement_le_dit():
+    """7.97 : « accident » lu avec « responsabilité » ou « tempête » est retiré ; seul, il reste."""
+    voc = {"evenement": {"valeurs": ["accident", "responsabilite", "tempete", "bris"], "plusieurs": True, "preciser": {"accident": [
+        {"si": {"bien": ["vitre"]}, "en": "bris"},
+        {"si": {"evenement": ["responsabilite", "tempete", "bris"]}, "en": None}]}},
+        "bien": {"valeurs": ["vitre", "mobilier"]}}
+    assert prolog.preciser({"evenement": ["accident", "responsabilite"]}, voc)[0]["evenement"] == ["responsabilite"]
+    assert prolog.preciser({"evenement": ["accident"], "bien": "vitre"}, voc)[0]["evenement"] == ["bris"]
+    assert prolog.preciser({"evenement": ["accident"], "bien": "mobilier"}, voc)[0]["evenement"] == ["accident"]

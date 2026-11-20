@@ -204,7 +204,13 @@
             "texte": "les dommages dus à l’humidité et/ou à la condensation"
           }
         ],
-        "limites": []
+        "limites": [
+          {
+            "article": "4.2",
+            "texte": "L’indemnité sera réduite de 50 % si vous ne respectez pas ces prescriptions et qu’un sinistre survient ou est aggravé de ce fait",
+            "montant": "indemnité réduite de 50 %"
+          }
+        ]
       },
       {
         "id": "recherche_fuite",
@@ -346,8 +352,40 @@
       {
         "article": "2.4-c",
         "texte": "ATTENTION Vous devez respecter certaines mesures de sécurité pour bénéficier pleinement de la garantie (voir ART. 4.2)",
-        "pourquoi": "renvoi au titre IV (mesures de sécurité), traduit avec lui (lot 3)"
+        "pourquoi": "renvoi au titre IV (mesures de sécurité) : ses réductions sont des limites de la garantie (7.96)"
       }
     ]
-  }
+  },
+  "controles": [
+    {
+      "gravite": "à relire",
+      "controle": "limite",
+      "message": "limite « L’indemnité sera réduite de 50 % si vous ne respectez pas ce » (venues_eau_gel) : elle pose une condition ; circonstance ou garantie à part ?"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.4-a) : la suite du contrat après le sinistre, pas la couverture de celui-ci"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.4-a) : pas de valeur propre ; lue comme une infiltration extérieure, couverte aussi"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.4-b) : des frais, pas un dommage à décider"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.4-c) : un montant : le tuyau n'est pas payé, les dommages qu'il cause le sont (f-d03)"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.4-c) : renvoi au titre IV (mesures de sécurité) : ses réductions sont des limites de la garantie (7.96)"
+    }
+  ]
 }

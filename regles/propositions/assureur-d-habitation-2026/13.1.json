@@ -1,0 +1,204 @@
+{
+  "meta": {
+    "article": "13.1",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-20",
+      "modifications": [
+        "la vie privée : toute responsabilité, sauf ce que 13.3 exclut ou renvoie à 12.x ; les personnes non indemnisées",
+        "la famille n'est exclue que pour les dommages matériels : à demander (`dommage_tiers`)"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "responsabilite"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "rc_vie_privee",
+        "nom": "Responsabilité civile vie privée",
+        "article": "13.1-a~1",
+        "texte": "La garantie couvre les conséquences financières de la responsabilité civile que les assurés peuvent encourir dans le cadre de leur vie privée, en raison de dommages corporels, matériels et immatériels consécutifs causés aux tiers",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "responsabilite"
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "origine_rc",
+                "activite_professionnelle"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "13.1-a~1",
+            "texte": "dans le cadre de leur vie privée"
+          },
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "victime",
+                    "assure"
+                  ]
+                },
+                {
+                  "f": [
+                    "victime",
+                    "conjoint"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "13.1-a~3",
+            "texte": "le responsable du sinistre et son conjoint ou concubin (signataire ou non d’un PACS)"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "victime",
+                    "famille"
+                  ]
+                },
+                {
+                  "f": [
+                    "dommage_tiers",
+                    "materiel"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "13.1-a~3",
+            "texte": "leurs ascendants et descendants, frères et sœurs et leurs conjoints pour les dommages matériels"
+          },
+          {
+            "condition": {
+              "f": [
+                "victime",
+                "prepose"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "13.1-a~3",
+            "texte": "les préposés attachés à votre service privé pendant la durée de leur service"
+          }
+        ],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "origine_rc",
+        "valeurs": [
+          "personne",
+          "animal_compagnie",
+          "animal_autre",
+          "chien_dangereux",
+          "vehicule_moteur",
+          "habitation",
+          "immeuble",
+          "chasse_sport",
+          "contrat",
+          "activite_professionnelle"
+        ],
+        "question": "Qu'est-ce qui a causé le dommage à l'autre personne ?",
+        "pourquoi": "responsabilité civile : ce que les garanties et exclusions distinguent",
+        "aide": {
+          "personne": "l'assuré, un enfant ou une personne de son foyer : maladresse, chute, jeu, sport en loisir, vélo",
+          "animal_compagnie": "un chien, un chat ou un autre animal de compagnie",
+          "animal_autre": "un cheval, un âne, du bétail, des volailles : un animal qui n'est pas de compagnie",
+          "chien_dangereux": "un chien de 1re ou 2e catégorie (chien d'attaque, de garde ou de défense)",
+          "vehicule_moteur": "une voiture, une moto, un scooter, une trottinette ou un vélo électriques rapides",
+          "habitation": "un incendie, une explosion ou une fuite d'eau partis du logement ou des dépendances occupés",
+          "immeuble": "le bâtiment ou le terrain lui-même : une tuile ou une branche qui tombe, une clôture, un mur",
+          "chasse_sport": "la chasse, le ball-trap, un sport aérien, une compétition, un sport en club ou professionnel",
+          "contrat": "un service ou un travail promis à quelqu'un, mal fait ou pas fait",
+          "activite_professionnelle": "le travail ou l'activité professionnelle de l'assuré"
+        },
+        "plus_proche": "auteur : dit qui, pas par quoi (un animal, un véhicule, le logement)"
+      },
+      {
+        "variable": "victime",
+        "valeurs": [
+          "tiers",
+          "assure",
+          "conjoint",
+          "famille",
+          "prepose"
+        ],
+        "question": "Qui a subi le dommage ?",
+        "pourquoi": "les personnes qui ne peuvent pas être indemnisées (12.1, 13.1)",
+        "aide": {
+          "tiers": "une personne extérieure au foyer : voisin, passant, ami, propriétaire bailleur",
+          "assure": "l'auteur du dommage lui-même ou une personne vivant à son foyer",
+          "conjoint": "le conjoint ou le concubin de l'auteur du dommage",
+          "famille": "les ascendants, descendants, frères et sœurs de l'auteur, ou leurs conjoints",
+          "prepose": "un employé de maison, un gardien, un jardinier, pendant son service"
+        },
+        "plus_proche": "proprietaire : dit à qui est le bien, pas qui demande réparation"
+      },
+      {
+        "variable": "dommage_tiers",
+        "valeurs": [
+          "corporel",
+          "materiel"
+        ],
+        "question": "Le dommage causé est-il corporel (une blessure) ou matériel (un bien abîmé) ?",
+        "pourquoi": "13.1 : la famille n'est pas indemnisée des dommages matériels",
+        "aide": {
+          "corporel": "une personne blessée",
+          "materiel": "un objet, un véhicule, un bâtiment abîmé"
+        },
+        "plus_proche": "type_dommage : la nature d'un bris, pas d'un dommage à autrui"
+      }
+    ],
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "13.1-a~3",
+        "texte": "Toutefois, nous garantissons le recours que la Sécurité Sociale ou tout autre organisme de prévoyance obligatoire peut être fondé à exercer contre vous",
+        "pourquoi": "un recours d'organisme social, pas une déclaration de sinistre"
+      },
+      {
+        "article": "13.1-a~3",
+        "texte": "Étendue territoriale Pour bénéficier de la garantie, le fait dommageable doit s’être produit pendant la période de validité du contrat",
+        "pourquoi": "le pays n'est lu que pour les extensions du lieu assuré"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (13.1-a~3) : un recours d'organisme social, pas une déclaration de sinistre"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (13.1-a~3) : le pays n'est lu que pour les extensions du lieu assuré"
+    }
+  ]
+}

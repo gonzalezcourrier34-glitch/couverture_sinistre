@@ -140,17 +140,5 @@
         "pourquoi": "des frais, pas le dommage à l'appareil"
       }
     ]
-  },
-  "controles": [
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (2.2-b) : des frais, pas le dommage à l'appareil"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (2.2-b) : des frais, pas le dommage à l'appareil"
-    }
-  ]
+  }
 }

@@ -678,3 +678,14 @@ def test_concepts_definis_l_un_par_l_autre():
     assert redaction.cycle_de_concepts(pl, prop) in (["batiment", "contenu", "batiment"], ["contenu", "batiment", "contenu"])
     prop["extensions"][0]["condition"]["et"][1] = {"f": ["bien", "mobilier"]}
     assert redaction.cycle_de_concepts(pl, prop) == []
+
+
+def test_exclusion_commune_qui_nomme_ses_garanties():
+    """7.96 : les biens exclus des dommages aux biens n'excluent pas la responsabilité civile (« cibles »)."""
+    prop = {"garanties": [], "exclusions_communes": [
+        {"condition": {"f": ["bien", "vehicule_moteur"]}, "portee": {"bien": "vehicule_moteur"}, "a_demander": False,
+         "article": "1.2-b", "texte": "t", "cibles": ["vol_vandalisme", "bris_glaces"]},
+        {"condition": {"f": ["intentionnel", "oui"]}, "portee": "tout", "a_demander": False, "article": "S25", "texte": "t"}]}
+    pl = redaction.en_prolog(prop, "1.2")
+    assert "exclusion([vol_vandalisme, bris_glaces], f(bien, vehicule_moteur)" in pl
+    assert "exclusion(tous, f(intentionnel, oui)" in pl

@@ -83,7 +83,14 @@ def formule(cond, article, texte): return circ(cond, article, texte)
 EXCELLENCE = f("formule", "excellence")
 SECURITE_41 = "ATTENTION Vous devez respecter certaines mesures de sécurité pour bénéficier pleinement de la garantie (voir ART. 4.1)"
 SECURITE_42 = "ATTENTION Vous devez respecter certaines mesures de sécurité pour bénéficier pleinement de la garantie (voir ART. 4.2)"
-LOT_3 = "renvoi au titre IV (mesures de sécurité), traduit avec lui (lot 3)"
+LOT_3 = "renvoi au titre IV (mesures de sécurité) : ses réductions sont des limites de la garantie (7.96)"
+# Le titre IV (mesures de sécurité) ne refuse jamais : il réduit l'indemnité de moitié. Une réduction est une
+# limite de la garantie qu'elle touche, citée dans l'article 4.x (7.96), pas une garantie à part comme l'écrivait
+# le modèle (« protection_vol_4_1 »).
+def reduction(article, texte): return {"article": article, "texte": texte, "montant": "indemnité réduite de 50 %"}
+REDUCTION_VOL = reduction("4.1", "Si l’introduction a été facilitée ou aggravée par la nonconformité ou l’absence de mise en "
+                          "œuvre des moyens de protection et/ou de fermeture exigés aux conditions particulières, l’indemnité "
+                          "sera réduite de 50 %")
 
 # L'accès des voleurs : une variable, pas cinq faits oui/non dont un seul inconnu rendait tout incertain.
 VOC_ACCES = {"variable": "acces_voleur", "valeurs": ["escalade", "menaces", "cles_volees", "fausse_qualite", "sans_effraction"],
@@ -139,7 +146,12 @@ ecrire("2.1", {
                 "2.1-a", "la chute de la foudre, c’est-à-dire du fait de l’ébranlement ou de la calcination causés directement "
                 "par l’impact de la foudre", portee={"bien": "electronique"}),
             exc(et(f("evenement", "fumee"), f("cheminee_ouverte", "oui")), "2.1-b",
-                "la fumée provenant de cheminées à feu apparent (dits « à l’ouvert »)")])],
+                "la fumée provenant de cheminées à feu apparent (dits « à l’ouvert »)")],
+        limites=[reduction("4.3", "Si vous ne pouvez produire de justificatif établi par ce professionnel datant de moins de "
+                           "deux ans au jour du sinistre, l’indemnisation des dommages subis par le seul conduit de fumée sera "
+                           "réduite de 50 %"),
+                 reduction("4.3", "Vous devez également vous conformer aux instructions du service public concernant le "
+                           "débroussaillage, à défaut de quoi l’indemnisation sera réduite de 50 %")])],
     "vocabulaire_manquant": [
         oui_non("vehicule_identifie", "Le véhicule qui a heurté le bâtiment a-t-il été identifié ?", "2.1-a",
                 "le conducteur ou la plaque sont connus", "le véhicule est reparti sans être identifié", "plainte_deposee : l'autre branche de la condition, pas l'identification"),
@@ -245,7 +257,9 @@ ecrire("2.4", {
                          "les dommages résultant d’infiltrations à travers les murs et façades extérieurs lorsque la garantie "
                          "décennale du constructeur doit s’appliquer", demander=True),
                      exc(f("evenement", "catastrophe_naturelle"), "2.4-c", "les dommages relevant de la garantie Catastrophes naturelles"),
-                     exc(f("cause_eau", "condensation"), "2.4-c", "les dommages dus à l’humidité et/ou à la condensation")]),
+                     exc(f("cause_eau", "condensation"), "2.4-c", "les dommages dus à l’humidité et/ou à la condensation")],
+                 limites=[reduction("4.2", "L’indemnité sera réduite de 50 % si vous ne respectez pas ces prescriptions et "
+                                    "qu’un sinistre survient ou est aggravé de ce fait")]),
         garantie("recherche_fuite", "Recherche de fuite", "2.4-a", "Sont prises en charge au titre de la recherche de fuite",
                  [f("evenement", "degat_eaux"), DANS_LES_LIEUX], accessoire=True),
         garantie("debordement_cuves", "Débordement des cuves de combustible (Excellence)", "2.4-b",
@@ -298,7 +312,8 @@ ecrire("2.5", {
                          "la formule Eco", demander=True),
                      exc(f("construction_close", "non"), "2.5-c", "les vols, tentatives de vol, actes de vandalisme ou actes "
                          "de sabotage commis sur les terrasses, les balcons, dans les jardins et dans les locaux non entièrement "
-                         "clos ou couverts")]),
+                         "clos ou couverts")],
+                 limites=[REDUCTION_VOL]),
         garantie("vol_cles", "Vol des clés (Confort et Excellence)", "2.5-a",
                  "au vol des clés, en tous lieux de l’Union européenne, du Royaume-Uni de Grande-Bretagne et d’Irlande du "
                  "Nord, de votre local d’habitation et/ou des dépendances assurés dès lors que le dépôt de plainte fait état d’un vol",
@@ -356,7 +371,8 @@ ecrire("2.6", {
              "sauf si une plainte nominative est déposée à leur encontre"},
             exc(f("graffiti_mur_exterieur", "oui"), "2.6-b", "les graffitis, tags, pochoirs et inscriptions de toute nature, "
                 "affichages, salissures, rayures commis à l’extérieur de votre local d’habitation et de ses dépendances",
-                demander=True)])],
+                demander=True)],
+        limites=[REDUCTION_VOL])],
     "vocabulaire_manquant": [VOC_ACCES],
     "hors_decision": [
         hors("2.6-a", "votre piscine, spa ou jacuzzi (si l’option du Pack Piscine est souscrite)",

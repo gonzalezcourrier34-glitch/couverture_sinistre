@@ -120,7 +120,27 @@
         "portee": "tout",
         "a_demander": false,
         "article": "1.2-b",
-        "texte": "les biens mobiliers se trouvant dans les dépendances si vous avez souscrit la formule Eco"
+        "texte": "les biens mobiliers se trouvant dans les dépendances si vous avez souscrit la formule Eco",
+        "cibles": [
+          "incendie_evenements_annexes",
+          "dommages_electriques",
+          "tempete_grele_neige",
+          "venues_eau_gel",
+          "recherche_fuite",
+          "debordement_cuves",
+          "vol_vandalisme",
+          "vol_cles",
+          "deteriorations_immobilieres",
+          "bris_glaces",
+          "bris_glace_plus",
+          "bris_glace_renforce",
+          "contenu_congelateur",
+          "catastrophes_naturelles",
+          "relogement_catnat",
+          "attentats",
+          "emeutes",
+          "intervention_secours"
+        ]
       },
       {
         "condition": {
@@ -146,7 +166,27 @@
         },
         "a_demander": false,
         "article": "1.2-b",
-        "texte": "les objets précieux, les espèces, titres et valeurs, les objets de valeur désignés"
+        "texte": "les objets précieux, les espèces, titres et valeurs, les objets de valeur désignés",
+        "cibles": [
+          "incendie_evenements_annexes",
+          "dommages_electriques",
+          "tempete_grele_neige",
+          "venues_eau_gel",
+          "recherche_fuite",
+          "debordement_cuves",
+          "vol_vandalisme",
+          "vol_cles",
+          "deteriorations_immobilieres",
+          "bris_glaces",
+          "bris_glace_plus",
+          "bris_glace_renforce",
+          "contenu_congelateur",
+          "catastrophes_naturelles",
+          "relogement_catnat",
+          "attentats",
+          "emeutes",
+          "intervention_secours"
+        ]
       },
       {
         "condition": {
@@ -172,7 +212,27 @@
         },
         "a_demander": false,
         "article": "1.2-b",
-        "texte": "les objets précieux, les espèces, titres et valeurs, les objets de valeur désignés"
+        "texte": "les objets précieux, les espèces, titres et valeurs, les objets de valeur désignés",
+        "cibles": [
+          "incendie_evenements_annexes",
+          "dommages_electriques",
+          "tempete_grele_neige",
+          "venues_eau_gel",
+          "recherche_fuite",
+          "debordement_cuves",
+          "vol_vandalisme",
+          "vol_cles",
+          "deteriorations_immobilieres",
+          "bris_glaces",
+          "bris_glace_plus",
+          "bris_glace_renforce",
+          "contenu_congelateur",
+          "catastrophes_naturelles",
+          "relogement_catnat",
+          "attentats",
+          "emeutes",
+          "intervention_secours"
+        ]
       },
       {
         "condition": {
@@ -186,7 +246,27 @@
         },
         "a_demander": false,
         "article": "1.2-b",
-        "texte": "les véhicules terrestres à moteur (y compris les vélos électriques circulant à plus de 25 km/h et les engins de déplacement personnel motorisés), les remorques, les caravanes, les véhicules aériens"
+        "texte": "les véhicules terrestres à moteur (y compris les vélos électriques circulant à plus de 25 km/h et les engins de déplacement personnel motorisés), les remorques, les caravanes, les véhicules aériens",
+        "cibles": [
+          "incendie_evenements_annexes",
+          "dommages_electriques",
+          "tempete_grele_neige",
+          "venues_eau_gel",
+          "recherche_fuite",
+          "debordement_cuves",
+          "vol_vandalisme",
+          "vol_cles",
+          "deteriorations_immobilieres",
+          "bris_glaces",
+          "bris_glace_plus",
+          "bris_glace_renforce",
+          "contenu_congelateur",
+          "catastrophes_naturelles",
+          "relogement_catnat",
+          "attentats",
+          "emeutes",
+          "intervention_secours"
+        ]
       },
       {
         "condition": {
@@ -200,7 +280,27 @@
         },
         "a_demander": false,
         "article": "1.2-b",
-        "texte": "les véhicules terrestres à moteur (y compris les vélos électriques circulant à plus de 25 km/h et les engins de déplacement personnel motorisés), les remorques, les caravanes, les véhicules aériens"
+        "texte": "les véhicules terrestres à moteur (y compris les vélos électriques circulant à plus de 25 km/h et les engins de déplacement personnel motorisés), les remorques, les caravanes, les véhicules aériens",
+        "cibles": [
+          "incendie_evenements_annexes",
+          "dommages_electriques",
+          "tempete_grele_neige",
+          "venues_eau_gel",
+          "recherche_fuite",
+          "debordement_cuves",
+          "vol_vandalisme",
+          "vol_cles",
+          "deteriorations_immobilieres",
+          "bris_glaces",
+          "bris_glace_plus",
+          "bris_glace_renforce",
+          "contenu_congelateur",
+          "catastrophes_naturelles",
+          "relogement_catnat",
+          "attentats",
+          "emeutes",
+          "intervention_secours"
+        ]
       },
       {
         "condition": {
@@ -214,7 +314,27 @@
         },
         "a_demander": false,
         "article": "1.2-b",
-        "texte": "les animaux et les végétaux"
+        "texte": "les animaux et les végétaux",
+        "cibles": [
+          "incendie_evenements_annexes",
+          "dommages_electriques",
+          "tempete_grele_neige",
+          "venues_eau_gel",
+          "recherche_fuite",
+          "debordement_cuves",
+          "vol_vandalisme",
+          "vol_cles",
+          "deteriorations_immobilieres",
+          "bris_glaces",
+          "bris_glace_plus",
+          "bris_glace_renforce",
+          "contenu_congelateur",
+          "catastrophes_naturelles",
+          "relogement_catnat",
+          "attentats",
+          "emeutes",
+          "intervention_secours"
+        ]
       },
       {
         "condition": {
@@ -228,7 +348,27 @@
         },
         "a_demander": false,
         "article": "1.2-b",
-        "texte": "les animaux et les végétaux"
+        "texte": "les animaux et les végétaux",
+        "cibles": [
+          "incendie_evenements_annexes",
+          "dommages_electriques",
+          "tempete_grele_neige",
+          "venues_eau_gel",
+          "recherche_fuite",
+          "debordement_cuves",
+          "vol_vandalisme",
+          "vol_cles",
+          "deteriorations_immobilieres",
+          "bris_glaces",
+          "bris_glace_plus",
+          "bris_glace_renforce",
+          "contenu_congelateur",
+          "catastrophes_naturelles",
+          "relogement_catnat",
+          "attentats",
+          "emeutes",
+          "intervention_secours"
+        ]
       }
     ],
     "extensions": [],
@@ -355,5 +495,97 @@
         "pourquoi": "exclusion propre au fauteuil roulant, hors décision comme lui"
       }
     ]
-  }
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.2-a) : un bien particulier, ses garanties sont aux conditions particulières"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.2-a) : font partie du contenu ; le livre de cave est une preuve, pas une condition de couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.2-b) : le vocabulaire ne distingue pas les timbres"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.2-b) : pas de bateau dans le vocabulaire"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.2-b) : le vocabulaire ne distingue pas le matériel professionnel"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.2-b) : rare ; le vocabulaire ne distingue pas les armes"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.2-b) : un montant, pas la couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.2-b) : le vocabulaire ne distingue pas les bouteilles"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.2-b) : exclusion propre au fauteuil roulant, hors décision comme lui"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.2-b) : exclusion propre au fauteuil roulant, hors décision comme lui"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.2-b) : exclusion propre au fauteuil roulant, hors décision comme lui"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.2-b) : exclusion propre au fauteuil roulant, hors décision comme lui"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.2-b) : exclusion propre au fauteuil roulant, hors décision comme lui"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.2-b) : exclusion propre au fauteuil roulant, hors décision comme lui"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.2-b) : exclusion propre au fauteuil roulant, hors décision comme lui"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.2-b) : exclusion propre au fauteuil roulant, hors décision comme lui"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.2-b) : exclusion propre au fauteuil roulant, hors décision comme lui"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.2-b) : exclusion propre au fauteuil roulant, hors décision comme lui"
+    }
+  ]
 }

@@ -21,3 +21,5 @@ exclusion(incendie_evenements_annexes, et([f(evenement, foudre), f(evenement, el
     "la chute de la foudre, c’est-à-dire du fait de l’ébranlement ou de la calcination causés directement par l’impact de la foudre").
 exclusion(incendie_evenements_annexes, et([f(evenement, fumee), f(cheminee_ouverte, oui)]), tout, non, '2.1-b',
     "la fumée provenant de cheminées à feu apparent (dits « à l’ouvert »)").
+limite(incendie_evenements_annexes, '4.3', "Si vous ne pouvez produire de justificatif établi par ce professionnel datant de moins de deux ans au jour du sinistre, l’indemnisation des dommages subis par le seul conduit de fumée sera réduite de 50 %", "indemnité réduite de 50 %").
+limite(incendie_evenements_annexes, '4.3', "Vous devez également vous conformer aux instructions du service public concernant le débroussaillage, à défaut de quoi l’indemnisation sera réduite de 50 %", "indemnité réduite de 50 %").

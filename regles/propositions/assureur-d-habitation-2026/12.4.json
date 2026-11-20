@@ -1,0 +1,222 @@
+{
+  "meta": {
+    "article": "12.4",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-20",
+      "modifications": [
+        "véhicules à moteur, biens confiés : traduits, pour les garanties de 12.1 à 12.3 seulement (« cibles ») ; le reste hors décision"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "responsabilite"
+    ],
+    "definitions": [],
+    "garanties": [],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "f": [
+            "origine_rc",
+            "vehicule_moteur"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "12.4-a",
+        "texte": "les dommages de toute nature causés par des véhicules à moteur (y compris les vélos électriques circulant à plus de 25 km/h et les engins de déplacement personnel motorisés) soumis à la législation sur l’assurance automobile obligatoire, ou qui y seraient soumis en France,",
+        "cibles": [
+          "rc_proprietaire_voisins",
+          "rc_proprietaire_immeuble",
+          "rc_locataire",
+          "rc_villegiature"
+        ]
+      },
+      {
+        "condition": {
+          "f": [
+            "bien_confie",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "12.4-a",
+        "texte": "les dommages subis par les biens dont vous avez la propriété, la conduite ou la garde,",
+        "cibles": [
+          "rc_proprietaire_voisins",
+          "rc_proprietaire_immeuble",
+          "rc_locataire",
+          "rc_villegiature"
+        ]
+      }
+    ],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "origine_rc",
+        "valeurs": [
+          "personne",
+          "animal_compagnie",
+          "animal_autre",
+          "chien_dangereux",
+          "vehicule_moteur",
+          "habitation",
+          "immeuble",
+          "chasse_sport",
+          "contrat",
+          "activite_professionnelle"
+        ],
+        "question": "Qu'est-ce qui a causé le dommage à l'autre personne ?",
+        "pourquoi": "responsabilité civile : ce que les garanties et exclusions distinguent",
+        "aide": {
+          "personne": "l'assuré, un enfant ou une personne de son foyer : maladresse, chute, jeu, sport en loisir, vélo",
+          "animal_compagnie": "un chien, un chat ou un autre animal de compagnie",
+          "animal_autre": "un cheval, un âne, du bétail, des volailles : un animal qui n'est pas de compagnie",
+          "chien_dangereux": "un chien de 1re ou 2e catégorie (chien d'attaque, de garde ou de défense)",
+          "vehicule_moteur": "une voiture, une moto, un scooter, une trottinette ou un vélo électriques rapides",
+          "habitation": "un incendie, une explosion ou une fuite d'eau partis du logement ou des dépendances occupés",
+          "immeuble": "le bâtiment ou le terrain lui-même : une tuile ou une branche qui tombe, une clôture, un mur",
+          "chasse_sport": "la chasse, le ball-trap, un sport aérien, une compétition, un sport en club ou professionnel",
+          "contrat": "un service ou un travail promis à quelqu'un, mal fait ou pas fait",
+          "activite_professionnelle": "le travail ou l'activité professionnelle de l'assuré"
+        },
+        "plus_proche": "auteur : dit qui, pas par quoi (un animal, un véhicule, le logement)"
+      },
+      {
+        "variable": "bien_confie",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le bien abîmé vous avait-il été prêté, loué ou confié ?",
+        "pourquoi": "12.4 : les biens dont vous avez la garde",
+        "aide": {
+          "oui": "le bien abîmé avait été prêté, loué ou confié à l'assuré",
+          "non": "non"
+        },
+        "plus_proche": "proprietaire : à qui est le bien, pas qui l'a en garde"
+      }
+    ],
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "12.4-a",
+        "texte": "les dommages susceptibles d’engager votre responsabilité en qualité de maître d’ouvrage, de vendeur, d’administrateur de biens ou de syndic de copropriété,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "12.4-a",
+        "texte": "les accidents résultant de la non-observation des règlements et instructions des services publics quant à l’élagage ou l’émondage d’arbres, ou le débroussaillage,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "12.4-a",
+        "texte": "les acceptations conventionnelles de responsabilité,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "12.4-a",
+        "texte": "les terrains d’une superficie supérieure à 10 000 m2 si une mention spéciale n’est pas portée aux conditions particulières,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "12.4-a",
+        "texte": "les dépenses effectuées pour prévenir ou réparer un dommage, pour modifier ou améliorer un bien ayant été à l’origine d’un sinistre,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "12.4-a",
+        "texte": "résultant de pollutions lentes, graduelles ou progressives,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "12.4-a",
+        "texte": "résultant de l’absence ou de défaut d’entretien d’une installation, étant entendu que les causes non supprimées d’un précédent sinistre sont considérées automatiquement comme un défaut d’entretien,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "12.4-a",
+        "texte": "dus aux conséquences d’une pollution résultant d’une contamination virale ou microbienne d’origine animale,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "12.4-a",
+        "texte": "causés directement ou indirectement par des produits phytosanitaires,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "12.4-a",
+        "texte": "causés du fait de l’épandage de boues, effluents ou déchets de toute nature,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "12.4-a",
+        "texte": "causés du fait de votre non-respect du règlement sanitaire départemental",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (12.4-a) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (12.4-a) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (12.4-a) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (12.4-a) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (12.4-a) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (12.4-a) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (12.4-a) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (12.4-a) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (12.4-a) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (12.4-a) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (12.4-a) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    }
+  ]
+}

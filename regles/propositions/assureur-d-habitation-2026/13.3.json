@@ -1,0 +1,353 @@
+{
+  "meta": {
+    "article": "13.3",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-20",
+      "modifications": [
+        "le logement (renvoyé à 12.x), les animaux autres que de compagnie (f-d15), les chiens dangereux, les véhicules à moteur, la chasse et les sports à risque, le contrat, le bâtiment dont on est propriétaire : par `origine_rc`",
+        "les vingt autres exclusions : hors décision, citées"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "responsabilite"
+    ],
+    "definitions": [],
+    "garanties": [],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "f": [
+            "origine_rc",
+            "habitation"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "13.3-a~1",
+        "texte": "les dommages matériels et immatériels consécutifs à un incendie, une explosion, une venue d’eau ayant pris naissance dans un local dont vous êtes propriétaire, locataire ou occupant à titre gratuit, sauf pour la garantie « Responsa bilité civile fêtes familiales » lorsque la garantie est acquise,",
+        "cibles": [
+          "rc_vie_privee"
+        ]
+      },
+      {
+        "condition": {
+          "f": [
+            "origine_rc",
+            "animal_autre"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "13.3-a~1",
+        "texte": "les dommages causés par tous les animaux (y compris les chevaux) autres que les animaux de compagnie. Pour les animaux ayant mordu une personne ou un autre animal, la garantie couvre le coût de leurs visites sanitaires obligatoires,",
+        "cibles": [
+          "rc_vie_privee"
+        ]
+      },
+      {
+        "condition": {
+          "f": [
+            "origine_rc",
+            "contrat"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "13.3-a~1",
+        "texte": "les conséquences pécuniaires des responsabilités résultant de l’exécution, de la mauvaise exécution et de l’inexécution d’un contrat, sauf lors de vos activités bénévoles,",
+        "cibles": [
+          "rc_vie_privee"
+        ]
+      },
+      {
+        "condition": {
+          "f": [
+            "origine_rc",
+            "vehicule_moteur"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "13.3-a~2",
+        "texte": "tous véhicules terrestres à moteur (y compris les vélos électriques circulant à plus de 25 km/h et les engins de déplacement personnel motorisés) soumis à l’obligation d’assurance et leurs remorques ou matériels attelés, ou qui y seraient soumis en France, à l’exception des cas décrits ci-avant,",
+        "cibles": [
+          "rc_vie_privee"
+        ]
+      },
+      {
+        "condition": {
+          "f": [
+            "origine_rc",
+            "chien_dangereux"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "13.3-a~2",
+        "texte": "les dommages causés par les chiens de première catégorie (chiens d’attaque) et deuxième catégorie (chiens de garde et de défense) tels que définis dans la loi n°99-5 du 6 janvier 1999 modifiée par la loi n°2008-582 du 20 juin 2008 et soumis à l’obligation d’assurance,",
+        "cibles": [
+          "rc_vie_privee"
+        ]
+      },
+      {
+        "condition": {
+          "f": [
+            "origine_rc",
+            "chasse_sport"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "13.3-a~2",
+        "texte": "la pratique du ball-trap, de la chasse, y compris les faits des chiens en action de chasse, des sports aériens, de tout sport à titre professionnel,",
+        "cibles": [
+          "rc_vie_privee"
+        ]
+      },
+      {
+        "condition": {
+          "f": [
+            "origine_rc",
+            "chasse_sport"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "13.3-a~2",
+        "texte": "votre participation à toutes épreuves, courses ou compétitions sportives, soumises à une obligation d’assurance légale, ainsi qu’à leurs essais préparatoires,",
+        "cibles": [
+          "rc_vie_privee"
+        ]
+      },
+      {
+        "condition": {
+          "f": [
+            "origine_rc",
+            "chasse_sport"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "13.3-a~2",
+        "texte": "toute activité physique ou sportive que vous exercez en tant que membre d’un club ou d’un groupement sportif agréé conformément à la loi du 29 octobre 1975. Toutefois, la garantie reste acquise en cas d’absence ou d’insuffisance d’assurance du club",
+        "cibles": [
+          "rc_vie_privee"
+        ]
+      },
+      {
+        "condition": {
+          "f": [
+            "origine_rc",
+            "immeuble"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "13.3-a~2",
+        "texte": "tout bien immobilier dont vous êtes propriétaire ou copropriétaire,",
+        "cibles": [
+          "rc_vie_privee"
+        ]
+      }
+    ],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "origine_rc",
+        "valeurs": [
+          "personne",
+          "animal_compagnie",
+          "animal_autre",
+          "chien_dangereux",
+          "vehicule_moteur",
+          "habitation",
+          "immeuble",
+          "chasse_sport",
+          "contrat",
+          "activite_professionnelle"
+        ],
+        "question": "Qu'est-ce qui a causé le dommage à l'autre personne ?",
+        "pourquoi": "responsabilité civile : ce que les garanties et exclusions distinguent",
+        "aide": {
+          "personne": "l'assuré, un enfant ou une personne de son foyer : maladresse, chute, jeu, sport en loisir, vélo",
+          "animal_compagnie": "un chien, un chat ou un autre animal de compagnie",
+          "animal_autre": "un cheval, un âne, du bétail, des volailles : un animal qui n'est pas de compagnie",
+          "chien_dangereux": "un chien de 1re ou 2e catégorie (chien d'attaque, de garde ou de défense)",
+          "vehicule_moteur": "une voiture, une moto, un scooter, une trottinette ou un vélo électriques rapides",
+          "habitation": "un incendie, une explosion ou une fuite d'eau partis du logement ou des dépendances occupés",
+          "immeuble": "le bâtiment ou le terrain lui-même : une tuile ou une branche qui tombe, une clôture, un mur",
+          "chasse_sport": "la chasse, le ball-trap, un sport aérien, une compétition, un sport en club ou professionnel",
+          "contrat": "un service ou un travail promis à quelqu'un, mal fait ou pas fait",
+          "activite_professionnelle": "le travail ou l'activité professionnelle de l'assuré"
+        },
+        "plus_proche": "auteur : dit qui, pas par quoi (un animal, un véhicule, le logement)"
+      }
+    ],
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "13.3",
+        "texte": "responsabilité civile vie privée et à ses extensions",
+        "pourquoi": "l'intitulé de la liste, pas une exclusion"
+      },
+      {
+        "article": "13.3-a~1",
+        "texte": "les chiens lorsque vous en gardez habituellement plus de quatre adultes,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "13.3-a~1",
+        "texte": "les conséquences de la responsabilité que les assurés peuvent encourir du fait de dommages corporels matériels et immatériels causés par tous biens et animaux qu’ils auraient vendus,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "13.3-a~1",
+        "texte": "les vols commis par une personne dont vous êtes civilement responsable, en l’absence de plainte nominative,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "13.3-a~1",
+        "texte": "les dommages relevant d’un régime de réparation des accidents du travail et du fait des préposés non déclarés,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "13.3-a~1",
+        "texte": "les dommages résultant de la prescription et/ou de la pratique d’actes ou d’une activité de recherche, lors de stages dans le domaine médical ou paramédical ou lors de vos activités bénévoles,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "13.3-a~2",
+        "texte": "un appareil de déplacement aérien, par toute embarcation à rame ou à voile de plus de 5,5 mètres de long ou à moteur de plus de 6 CV, dont vous avez la conduite, la propriété ou la garde,",
+        "pourquoi": "rare ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "13.3-a~2",
+        "texte": "vous en tant qu’organisateur, même bénévole, de kermesses, rallyes, réunions ou fêtes dans tout lieu dont vous n’êtes pas propriétaire, ni copropriétaire, ni locataire habituel, sauf si les conditions de notre extension « Responsabilité civile fêtes familiales » sont remplies",
+        "pourquoi": "rare ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "13.3-a~3",
+        "texte": "résultant de pollutions lentes, graduelles ou progressives,",
+        "pourquoi": "pollution : rare ; le vocabulaire ne la distingue pas"
+      },
+      {
+        "article": "13.3-a~3",
+        "texte": "résultant de l’absence ou de défaut d’entretien d’une installation, étant entendu que les causes non supprimées d’un précédent sinistre sont considérées automatiquement comme un défaut d’entretien,",
+        "pourquoi": "pollution : rare ; le vocabulaire ne la distingue pas"
+      },
+      {
+        "article": "13.3-a~3",
+        "texte": "dus aux conséquences d’une pollution résultant d’une contamination virale ou microbienne d’origine animale,",
+        "pourquoi": "pollution : rare ; le vocabulaire ne la distingue pas"
+      },
+      {
+        "article": "13.3-a~3",
+        "texte": "causés directement ou indirectement par des produits phytosanitaires,",
+        "pourquoi": "pollution : rare ; le vocabulaire ne la distingue pas"
+      },
+      {
+        "article": "13.3-a~3",
+        "texte": "causés du fait de l’épandage de boues, effluents ou déchets de toute nature,",
+        "pourquoi": "pollution : rare ; le vocabulaire ne la distingue pas"
+      },
+      {
+        "article": "13.3-a~3",
+        "texte": "causés du fait de votre non-respect du règlement sanitaire départemental",
+        "pourquoi": "pollution : rare ; le vocabulaire ne la distingue pas"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "à relire",
+      "controle": "réserve",
+      "message": "exclusion « les dommages matériels et immatériels consécutifs à un incen » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "réserve",
+      "message": "exclusion « les conséquences pécuniaires des responsabilités résultant d » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "réserve",
+      "message": "exclusion « tous véhicules terrestres à moteur (y compris les vélos élec » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (13.3) : l'intitulé de la liste, pas une exclusion"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (13.3-a~1) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (13.3-a~1) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (13.3-a~1) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (13.3-a~1) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (13.3-a~1) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (13.3-a~2) : rare ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (13.3-a~2) : rare ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (13.3-a~3) : pollution : rare ; le vocabulaire ne la distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (13.3-a~3) : pollution : rare ; le vocabulaire ne la distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (13.3-a~3) : pollution : rare ; le vocabulaire ne la distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (13.3-a~3) : pollution : rare ; le vocabulaire ne la distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (13.3-a~3) : pollution : rare ; le vocabulaire ne la distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (13.3-a~3) : pollution : rare ; le vocabulaire ne la distingue pas"
+    }
+  ]
+}

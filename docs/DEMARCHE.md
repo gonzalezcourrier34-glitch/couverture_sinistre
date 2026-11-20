@@ -3264,6 +3264,64 @@ Cas par cas, les écarts avec les bancs précédents sont des changements d'un p
 lecture), sauf `f-a10`, devenu juste aux trois passages ; aucun cas n'a basculé d'une réponse stable à une autre.
 Les changements faits pour D n'ont pas dégradé A ni B.
 
+### 7.96 Assureur D, lot 3 : la responsabilité civile et la protection juridique, les premières du projet
+
+**Rédaction** : 13 articles (mesures de sécurité 4.1 à 4.3, responsabilité civile 12.1 à 13.3, défense pénale et
+protection juridique 22.1 à 22.3) en 23 min 38 s, **238 contrôles bloquants**, près de **140 variables nouvelles**
+proposées : une par condition du texte (le nombre de chiens adultes, la cylindrée d'un véhicule jouet, la longueur
+d'un voilier, l'épandage de boues…). Accepté tel quel, ce vocabulaire aurait fait de la lecture d'une déclaration
+de responsabilité civile une consigne de plusieurs pages pour un petit modèle.
+
+**Relecture** (`relecture/assureur_d_lot_3.py`) :
+- *Le vocabulaire* : sept variables au lieu de 140. `origine_rc` (ce qui a causé le dommage : une personne, un
+  animal de compagnie, un autre animal, un chien dangereux, un véhicule à moteur, le logement, le bâtiment lui-même,
+  la chasse ou un sport à risque, un contrat, l'activité professionnelle), `victime`, `dommage_tiers`,
+  `bien_confie` ; pour la protection juridique, l'événement `litige` (nouveau), `domaine_litige` et l'option. Les
+  exclusions que la déclaration ne dit jamais (épandage, phytosanitaires, ball-trap, statuts de société…) sont hors
+  décision, chacune citée mot pour mot (le contrôle les compte toutes).
+- *Les garanties* : la responsabilité « liée à l'habitation » selon le statut (propriétaire : le feu ou l'eau
+  partis du logement, l'accident causé par le bâtiment ou le terrain ; locataire ; en vacances) ; la vie privée
+  couvre le reste, sauf ce que 13.3 exclut ou renvoie à 12.x. La protection juridique, une option, en circonstance.
+- *Des exclusions qui nomment leurs garanties* (`cibles`, nouveau champ des exclusions communes). Les articles
+  d'exclusions sans garantie (12.4, 13.3, 22.3) s'écrivaient `tous`. Pire, les biens exclus de 1.1 et 1.2
+  (véhicules, animaux…) visaient `tous` : la voiture rayée par le vélo de l'enfant (`f-d09`) aurait été refusée
+  parce que « les véhicules à moteur » ne sont pas des biens assurés. Elles visent désormais les garanties qu'elles
+  nomment ; un contrôle bloque une cible inconnue.
+- *Les mesures de sécurité* (4.1 à 4.3) ne refusent jamais : elles réduisent l'indemnité de moitié. Le modèle en
+  faisait des garanties (« protection_vol_4_1 ») ; ce sont des limites des garanties qu'elles touchent (vol,
+  détériorations, eau, incendie), citées dans le titre IV. Les propositions 4.x ne sont pas acceptées.
+- 13.2 (fêtes familiales, chambres d'hôtes en option) n'est pas traduit.
+
+**Contrôle par le tableau des formules** : la responsabilité civile et la défense pénale, incluses dans les trois
+formules, y sont reliées ; 0 écart. Oracle, faits écrits à la main : les 25 cas du jeu fermé de D donnent la réponse
+attendue, et dix cas de responsabilité civile et de litige ajoutés (fuite chez le voisin, tuile qui tombe, chien qui
+mord, scooter, objet du frère cassé, litige avec l'employeur…) aussi.
+
+### 7.97 Assureur D à 92 % ; l'« accident » lu en trop
+
+Lot 3 accepté (9 articles), les lots 1 et 2 réacceptés (exclusions qui nomment leurs garanties, réductions du
+titre IV), `couverture regles` en ordre, 0 écart au tableau des formules. Banc sur le jeu fermé de D : **92 %
+justes, 0 couvert à tort, 0 refus à tort, 0 instable**. `f-d15` (le cheval) et `f-d16` (le garagiste) sont refusés
+aux trois passages, comme attendu. Le 95e centile de latence monte à 21,8 s (un appel lent au fournisseur) : la porte
+de latence échoue sur ce passage.
+
+Les deux écarts ont la même cause : le modèle lit **`accident`** en plus de l'événement qui dit déjà tout. `f-d09`
+(le vélo raye une voiture) : `accident` et `responsabilite` ; `f-d14` (le trampoline emporté par le vent) :
+`tempete` et `accident`. `accident` n'étant traduit par aucune garantie de D, la règle 8 du moteur (un événement
+non traduit rend la décision incertaine) suspendait la réponse. L'aide de la valeur le disait pourtant (« pas un
+vol, un incendie, l'eau, la tempête… »). Le vocabulaire retire désormais `accident` quand un autre événement est lu
+(`preciser` accepte plusieurs règles, et une règle sans valeur de remplacement retire la valeur vague). Oracle, sur
+les faits réellement lus : `f-d09` couvert, `f-d14` refusé.
+
+**Résultat** (bancs de 12 h 33 à 12 h 38, chaîne complète, jeu fermé) : **Assureur D 100 % justes**, 0 couvert à
+tort, 0 refus à tort, 0 instable (25 cas, dont 6 « incertain » attendus, l'assistance comprise) ; **A 80 %**
+(77 %), **B 65 %** (63 %) : la règle sur « accident » ne les dégrade pas. Le 95e centile de latence reste
+au-dessus de 20 s pour D et B : quelques appels lents au fournisseur, la médiane est de 4 s.
+
+Limite de la mesure : 25 cas, écrits par un agent et un second avis, arbitrés par l'auteur. Plusieurs écarts du
+banc ont été corrigés en regardant ces cas (7.93 à 7.97) : le 100 % est un résultat de mise au point, plus une
+mesure à l'aveugle. Un second jeu fermé de D, écrit sans voir les règles, dirait ce qu'il vaut.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.
@@ -3401,3 +3459,6 @@ Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les section
 105. Un fait lu peut en dire un autre : l'écrire dans le vocabulaire (« implique »), au lieu d'espérer que le modèle écrive les deux.
 106. Un fait que le petit modèle infère malgré l'aide (« fait construire » → moins de dix ans) : ne plus le lire, et le demander.
 107. Confirmer un fait déduit, c'est confirmer le fait qui le dit : la conséquence n'est jamais écrite telle quelle.
+108. Le modèle traduit une condition par une variable : relu, le vocabulaire se resserre en quelques variables à plusieurs valeurs.
+109. « Tous » est dangereux pour une exclusion de biens : une exclusion nomme les garanties qu'elle vise.
+110. Une valeur fourre-tout lue à côté d'une valeur précise doit s'effacer : sinon elle suspend toute décision.

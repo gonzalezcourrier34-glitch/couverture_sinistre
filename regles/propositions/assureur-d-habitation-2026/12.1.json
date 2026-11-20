@@ -1,0 +1,263 @@
+{
+  "meta": {
+    "article": "12.1",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-20",
+      "modifications": [
+        "deux garanties du propriétaire : le feu ou l'eau partis du logement, l'accident causé par le bâtiment ou le terrain",
+        "`origine_rc` et `victime` au lieu de six variables ; les personnes non indemnisées en exclusion"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "responsabilite"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "rc_proprietaire_voisins",
+        "nom": "Responsabilité civile du propriétaire : incendie, explosion, eau",
+        "article": "12.1-a~1",
+        "texte": "• Envers les voisins et les tiers La garantie couvre les conséquences financières de votre responsabilité civile à raison : - des dommages matériels et immatériels consécutifs subis par les voisins et les tiers à la suite d’un incendie, d’une explosion, d’une venue d’eau ayant pris naissance dans le local d’habitation et/ou des dépendances assurés",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "responsabilite"
+            ]
+          },
+          {
+            "f": [
+              "statut_logement",
+              "proprietaire"
+            ]
+          },
+          {
+            "f": [
+              "origine_rc",
+              "habitation"
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "victime",
+                    "assure"
+                  ]
+                },
+                {
+                  "f": [
+                    "victime",
+                    "conjoint"
+                  ]
+                },
+                {
+                  "f": [
+                    "victime",
+                    "famille"
+                  ]
+                },
+                {
+                  "f": [
+                    "victime",
+                    "prepose"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "12.1-a~2",
+            "texte": "Toute personne autre que : • vous-même, votre conjoint ou concubin (signataire ou non d’un PACS) non séparé, vos ascendants et descendants, • le personnel de garde ou d’entretien pendant son service"
+          }
+        ],
+        "limites": []
+      },
+      {
+        "id": "rc_proprietaire_immeuble",
+        "nom": "Responsabilité civile du propriétaire : accident causé par l'habitation",
+        "article": "12.1-a~2",
+        "texte": "des dommages corporels, matériels et immatériels consécutifs causés aux tiers à la suite d’un accident occasionné pendant la période de validité du contrat par : • l’habitation désignée aux conditions particulières, y compris le terrain, les plantations, les clôtures et leurs aménagements",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "responsabilite"
+            ]
+          },
+          {
+            "f": [
+              "statut_logement",
+              "proprietaire"
+            ]
+          },
+          {
+            "f": [
+              "origine_rc",
+              "immeuble"
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "victime",
+                    "assure"
+                  ]
+                },
+                {
+                  "f": [
+                    "victime",
+                    "conjoint"
+                  ]
+                },
+                {
+                  "f": [
+                    "victime",
+                    "famille"
+                  ]
+                },
+                {
+                  "f": [
+                    "victime",
+                    "prepose"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "12.1-a~2",
+            "texte": "Toute personne autre que : • vous-même, votre conjoint ou concubin (signataire ou non d’un PACS) non séparé, vos ascendants et descendants, • le personnel de garde ou d’entretien pendant son service"
+          }
+        ],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "origine_rc",
+        "valeurs": [
+          "personne",
+          "animal_compagnie",
+          "animal_autre",
+          "chien_dangereux",
+          "vehicule_moteur",
+          "habitation",
+          "immeuble",
+          "chasse_sport",
+          "contrat",
+          "activite_professionnelle"
+        ],
+        "question": "Qu'est-ce qui a causé le dommage à l'autre personne ?",
+        "pourquoi": "responsabilité civile : ce que les garanties et exclusions distinguent",
+        "aide": {
+          "personne": "l'assuré, un enfant ou une personne de son foyer : maladresse, chute, jeu, sport en loisir, vélo",
+          "animal_compagnie": "un chien, un chat ou un autre animal de compagnie",
+          "animal_autre": "un cheval, un âne, du bétail, des volailles : un animal qui n'est pas de compagnie",
+          "chien_dangereux": "un chien de 1re ou 2e catégorie (chien d'attaque, de garde ou de défense)",
+          "vehicule_moteur": "une voiture, une moto, un scooter, une trottinette ou un vélo électriques rapides",
+          "habitation": "un incendie, une explosion ou une fuite d'eau partis du logement ou des dépendances occupés",
+          "immeuble": "le bâtiment ou le terrain lui-même : une tuile ou une branche qui tombe, une clôture, un mur",
+          "chasse_sport": "la chasse, le ball-trap, un sport aérien, une compétition, un sport en club ou professionnel",
+          "contrat": "un service ou un travail promis à quelqu'un, mal fait ou pas fait",
+          "activite_professionnelle": "le travail ou l'activité professionnelle de l'assuré"
+        },
+        "plus_proche": "auteur : dit qui, pas par quoi (un animal, un véhicule, le logement)"
+      },
+      {
+        "variable": "victime",
+        "valeurs": [
+          "tiers",
+          "assure",
+          "conjoint",
+          "famille",
+          "prepose"
+        ],
+        "question": "Qui a subi le dommage ?",
+        "pourquoi": "les personnes qui ne peuvent pas être indemnisées (12.1, 13.1)",
+        "aide": {
+          "tiers": "une personne extérieure au foyer : voisin, passant, ami, propriétaire bailleur",
+          "assure": "l'auteur du dommage lui-même ou une personne vivant à son foyer",
+          "conjoint": "le conjoint ou le concubin de l'auteur du dommage",
+          "famille": "les ascendants, descendants, frères et sœurs de l'auteur, ou leurs conjoints",
+          "prepose": "un employé de maison, un gardien, un jardinier, pendant son service"
+        },
+        "plus_proche": "proprietaire : dit à qui est le bien, pas qui demande réparation"
+      }
+    ],
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "12.1-a~1",
+        "texte": "• Envers les locataires La garantie couvre les conséquences financières de votre responsabilité civile à raison : - des dommages matériels et des dommages immatériels consécutifs causés aux biens de votre locataire",
+        "pourquoi": "le propriétaire bailleur : le vocabulaire ne distingue pas le bail ; le bâtiment en cause relève de l'accident causé par l'habitation"
+      },
+      {
+        "article": "12.1-a~1",
+        "texte": "La garantie est étendue aux responsabilités liées à l’environnement",
+        "pourquoi": "rare ; le vocabulaire ne distingue pas la pollution"
+      },
+      {
+        "article": "12.1-a~1",
+        "texte": "responsabilité civile « production d’électricité »",
+        "pourquoi": "rare ; le vocabulaire ne distingue pas la production d'électricité"
+      },
+      {
+        "article": "12.1-a~2",
+        "texte": "• le personnel de garde ou d’entretien",
+        "pourquoi": "rare ; lu comme un accident causé par l'habitation"
+      },
+      {
+        "article": "12.1-a~2",
+        "texte": "Toutefois, nous garantissons le recours que la Sécurité Sociale ou tout autre organisme de prévoyance oblig atoire peut être fondé à exercer contre vous",
+        "pourquoi": "un recours d'organisme social, pas une déclaration de sinistre"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (12.1-a~1) : le propriétaire bailleur : le vocabulaire ne distingue pas le bail ; le bâtiment en cause relève de l'accident causé par l'habitation"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (12.1-a~1) : rare ; le vocabulaire ne distingue pas la pollution"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (12.1-a~1) : rare ; le vocabulaire ne distingue pas la production d'électricité"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (12.1-a~2) : rare ; lu comme un accident causé par l'habitation"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (12.1-a~2) : un recours d'organisme social, pas une déclaration de sinistre"
+    }
+  ]
+}

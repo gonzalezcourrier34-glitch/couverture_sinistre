@@ -1,0 +1,102 @@
+{
+  "meta": {
+    "article": "12.2",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-20",
+      "modifications": [
+        "le locataire : le feu ou l'eau partis du logement, envers le propriétaire et les voisins ; `statut_logement` existant"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "responsabilite"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "rc_locataire",
+        "nom": "Responsabilité civile du locataire : incendie, explosion, eau",
+        "article": "12.2-a",
+        "texte": "• Envers le propriétaire La garantie couvre les conséquences financières de votre responsabilité civile de locataire vis-à-vis de votre propriétaire…• Envers les voisins et les tiers La garantie couvre les conséquences financières de votre responsabilité civile à raison des dommages matériels et immatériels consécutifs subis par les voisins et les tiers à la suite d’un incendie, d’une explosion, d’une venue d’eau ayant pris naissance dans l’habitation assurée",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "responsabilite"
+            ]
+          },
+          {
+            "f": [
+              "statut_logement",
+              "locataire"
+            ]
+          },
+          {
+            "f": [
+              "origine_rc",
+              "habitation"
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "origine_rc",
+        "valeurs": [
+          "personne",
+          "animal_compagnie",
+          "animal_autre",
+          "chien_dangereux",
+          "vehicule_moteur",
+          "habitation",
+          "immeuble",
+          "chasse_sport",
+          "contrat",
+          "activite_professionnelle"
+        ],
+        "question": "Qu'est-ce qui a causé le dommage à l'autre personne ?",
+        "pourquoi": "responsabilité civile : ce que les garanties et exclusions distinguent",
+        "aide": {
+          "personne": "l'assuré, un enfant ou une personne de son foyer : maladresse, chute, jeu, sport en loisir, vélo",
+          "animal_compagnie": "un chien, un chat ou un autre animal de compagnie",
+          "animal_autre": "un cheval, un âne, du bétail, des volailles : un animal qui n'est pas de compagnie",
+          "chien_dangereux": "un chien de 1re ou 2e catégorie (chien d'attaque, de garde ou de défense)",
+          "vehicule_moteur": "une voiture, une moto, un scooter, une trottinette ou un vélo électriques rapides",
+          "habitation": "un incendie, une explosion ou une fuite d'eau partis du logement ou des dépendances occupés",
+          "immeuble": "le bâtiment ou le terrain lui-même : une tuile ou une branche qui tombe, une clôture, un mur",
+          "chasse_sport": "la chasse, le ball-trap, un sport aérien, une compétition, un sport en club ou professionnel",
+          "contrat": "un service ou un travail promis à quelqu'un, mal fait ou pas fait",
+          "activite_professionnelle": "le travail ou l'activité professionnelle de l'assuré"
+        },
+        "plus_proche": "auteur : dit qui, pas par quoi (un animal, un véhicule, le logement)"
+      }
+    ],
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "12.2-a",
+        "texte": "La garantie est étendue aux responsabilités liées à l’environnement",
+        "pourquoi": "rare ; le vocabulaire ne distingue pas la pollution"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (12.2-a) : rare ; le vocabulaire ne distingue pas la pollution"
+    }
+  ]
+}

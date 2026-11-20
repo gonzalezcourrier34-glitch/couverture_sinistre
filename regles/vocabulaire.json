@@ -23,7 +23,8 @@
         "heurt",
         "responsabilite",
         "assistance",
-        "accident"
+        "accident",
+        "litige"
       ],
       "question": "Que s'est-il passé (la cause, et le dommage s'il est d'une autre nature) ?",
       "aide": {
@@ -42,7 +43,8 @@
         "heurt": "un véhicule, un arbre ou un objet a percuté le bâtiment ou les biens",
         "responsabilite": "un dommage causé par l'assuré, un proche ou son animal à quelqu'un d'autre, qui en demande réparation : un passant blessé, un objet emprunté cassé, des dégâts chez un voisin",
         "assistance": "un besoin d'aide ou de dépannage sans dommage à indemniser : serrurier après des clés oubliées, intervention d'urgence demandée",
-        "accident": "casse ou dommage accidentel d'un objet (pas d'une vitre, d'un miroir ni d'un verre : c'est « bris ») par l'assuré ou un proche : chute, choc, objet renversé ou tombé ; pas un vol, un incendie, l'eau, la tempête ni l'électricité"
+        "accident": "casse ou dommage accidentel d'un objet (pas d'une vitre, d'un miroir ni d'un verre : c'est « bris ») par l'assuré ou un proche : chute, choc, objet renversé ou tombé ; pas un vol, un incendie, l'eau, la tempête ni l'électricité",
+        "litige": "un différend avec quelqu'un (employeur, vendeur, artisan, voisin, administration) pour lequel l'assuré veut être conseillé, aidé ou défendu ; pas un dommage à indemniser"
       },
       "parents": {
         "accident": [
@@ -51,21 +53,48 @@
         ]
       },
       "preciser": {
-        "accident": {
-          "si": {
-            "bien": [
-              "vitre",
-              "miroir",
-              "panneau_verre_plastique",
-              "table_cuisson_vitroceramique",
-              "sanitaire",
-              "verre_meuble",
-              "objet_verre_non_vitre",
-              "verre_optique"
-            ]
+        "accident": [
+          {
+            "si": {
+              "bien": [
+                "vitre",
+                "miroir",
+                "panneau_verre_plastique",
+                "table_cuisson_vitroceramique",
+                "sanitaire",
+                "verre_meuble",
+                "objet_verre_non_vitre",
+                "verre_optique"
+              ]
+            },
+            "en": "bris"
           },
-          "en": "bris"
-        }
+          {
+            "si": {
+              "evenement": [
+                "vol",
+                "incendie",
+                "explosion",
+                "foudre",
+                "degat_eaux",
+                "tempete",
+                "bris",
+                "electricite",
+                "mazout",
+                "catastrophe_naturelle",
+                "attentat",
+                "fumee",
+                "vandalisme",
+                "merule",
+                "conflit_du_travail",
+                "heurt",
+                "responsabilite",
+                "litige"
+              ]
+            },
+            "en": null
+          }
+        ]
       }
     },
     "bien": {
@@ -738,7 +767,8 @@
       },
       "pour": [
         "vol",
-        "vandalisme"
+        "vandalisme",
+        "responsabilite"
       ],
       "si": {
         "lieu": [
@@ -1229,7 +1259,8 @@
       },
       "pour": [
         "vandalisme",
-        "bris"
+        "bris",
+        "responsabilite"
       ]
     },
     "batiment_endommage_prealablement": {
@@ -2345,6 +2376,144 @@
       },
       "pour": [
         "catastrophe_naturelle"
+      ]
+    },
+    "origine_rc": {
+      "valeurs": [
+        "personne",
+        "animal_compagnie",
+        "animal_autre",
+        "chien_dangereux",
+        "vehicule_moteur",
+        "habitation",
+        "immeuble",
+        "chasse_sport",
+        "contrat",
+        "activite_professionnelle"
+      ],
+      "question": "Qu'est-ce qui a causé le dommage à l'autre personne ?",
+      "aide": {
+        "personne": "l'assuré, un enfant ou une personne de son foyer : maladresse, chute, jeu, sport en loisir, vélo",
+        "animal_compagnie": "un chien, un chat ou un autre animal de compagnie",
+        "animal_autre": "un cheval, un âne, du bétail, des volailles : un animal qui n'est pas de compagnie",
+        "chien_dangereux": "un chien de 1re ou 2e catégorie (chien d'attaque, de garde ou de défense)",
+        "vehicule_moteur": "une voiture, une moto, un scooter, une trottinette ou un vélo électriques rapides",
+        "habitation": "un incendie, une explosion ou une fuite d'eau partis du logement ou des dépendances occupés",
+        "immeuble": "le bâtiment ou le terrain lui-même : une tuile ou une branche qui tombe, une clôture, un mur",
+        "chasse_sport": "la chasse, le ball-trap, un sport aérien, une compétition, un sport en club ou professionnel",
+        "contrat": "un service ou un travail promis à quelqu'un, mal fait ou pas fait",
+        "activite_professionnelle": "le travail ou l'activité professionnelle de l'assuré"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "victime": {
+      "valeurs": [
+        "tiers",
+        "assure",
+        "conjoint",
+        "famille",
+        "prepose"
+      ],
+      "question": "Qui a subi le dommage ?",
+      "aide": {
+        "tiers": "une personne extérieure au foyer : voisin, passant, ami, propriétaire bailleur",
+        "assure": "l'auteur du dommage lui-même ou une personne vivant à son foyer",
+        "conjoint": "le conjoint ou le concubin de l'auteur du dommage",
+        "famille": "les ascendants, descendants, frères et sœurs de l'auteur, ou leurs conjoints",
+        "prepose": "un employé de maison, un gardien, un jardinier, pendant son service"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "dommage_tiers": {
+      "valeurs": [
+        "corporel",
+        "materiel"
+      ],
+      "question": "Le dommage causé est-il corporel (une blessure) ou matériel (un bien abîmé) ?",
+      "aide": {
+        "corporel": "une personne blessée",
+        "materiel": "un objet, un véhicule, un bâtiment abîmé"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "domaine_litige": {
+      "valeurs": [
+        "travail",
+        "logement",
+        "travaux",
+        "sante",
+        "consommation",
+        "administration",
+        "voisinage",
+        "employeur_domestique",
+        "location_vacances",
+        "bateau",
+        "association",
+        "famille",
+        "recours_dommage",
+        "defense_penale",
+        "vehicule_moteur",
+        "activite_professionnelle",
+        "divorce_succession",
+        "autre"
+      ],
+      "question": "Sur quoi porte le litige ?",
+      "aide": {
+        "travail": "avec votre employeur, en tant que salarié",
+        "logement": "votre résidence principale ou secondaire, comme propriétaire, copropriétaire ou locataire",
+        "travaux": "des travaux intérieurs d'entretien, d'embellissement ou de réparation",
+        "sante": "un organisme de soins ou de retraite, un médecin, un hôpital",
+        "consommation": "l'achat, la vente, la location ou la commande d'un bien ou d'un service (pas d'un véhicule à moteur)",
+        "administration": "un service public, une administration, les impôts",
+        "voisinage": "un voisin : servitude, trouble de voisinage",
+        "employeur_domestique": "votre assistante maternelle, femme de ménage ou employé de maison déclarés",
+        "location_vacances": "une location saisonnière de vacances, comme locataire",
+        "bateau": "un petit voilier, un engin nautique, un bateau de plaisance à moteur de 15 CV au plus",
+        "association": "votre participation bénévole à une association",
+        "famille": "succession, legs ou donation en ligne directe ; tutelle, curatelle ; filiation ; violences intrafamiliales",
+        "recours_dommage": "vous réclamez réparation d'un dommage subi lors d'un accident causé par quelqu'un d'autre",
+        "defense_penale": "vous êtes poursuivi devant un tribunal pour une contravention ou un délit après un accident",
+        "vehicule_moteur": "l'achat, la réparation, l'entretien, la conduite ou l'assurance d'une voiture, d'une moto, même avec un garagiste",
+        "activite_professionnelle": "une activité professionnelle non salariée, une entreprise, une société",
+        "divorce_succession": "un divorce, un régime matrimonial, une succession ou une donation hors ligne directe",
+        "autre": "un autre litige"
+      },
+      "pour": [
+        "litige"
+      ]
+    },
+    "option_protection_juridique": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Avez-vous souscrit l'option protection juridique ?",
+      "aide": {
+        "oui": "l'option protection juridique est souscrite",
+        "non": "elle ne l'est pas"
+      },
+      "pour": [
+        "litige"
+      ]
+    },
+    "bien_confie": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le bien abîmé vous avait-il été prêté, loué ou confié ?",
+      "aide": {
+        "oui": "le bien abîmé avait été prêté, loué ou confié à l'assuré",
+        "non": "non"
+      },
+      "pour": [
+        "responsabilite"
       ]
     }
   }

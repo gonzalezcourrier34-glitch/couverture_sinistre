@@ -213,27 +213,5 @@
         "pourquoi": "la vie du contrat, pas un sinistre"
       }
     ]
-  },
-  "controles": [
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (S25) : pas un dommage aux biens"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (S25) : rare ; le vocabulaire ne distingue pas les armes"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (S25) : aucune garantie traduite hors « catastrophes naturelles », que l'exclusion épargne"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (S25) : la vie du contrat, pas un sinistre"
-    }
-  ]
+  }
 }

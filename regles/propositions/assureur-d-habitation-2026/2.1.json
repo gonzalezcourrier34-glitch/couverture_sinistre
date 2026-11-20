@@ -282,7 +282,18 @@
             "texte": "la fumée provenant de cheminées à feu apparent (dits « à l’ouvert »)"
           }
         ],
-        "limites": []
+        "limites": [
+          {
+            "article": "4.3",
+            "texte": "Si vous ne pouvez produire de justificatif établi par ce professionnel datant de moins de deux ans au jour du sinistre, l’indemnisation des dommages subis par le seul conduit de fumée sera réduite de 50 %",
+            "montant": "indemnité réduite de 50 %"
+          },
+          {
+            "article": "4.3",
+            "texte": "Vous devez également vous conformer aux instructions du service public concernant le débroussaillage, à défaut de quoi l’indemnisation sera réduite de 50 %",
+            "montant": "indemnité réduite de 50 %"
+          }
+        ]
       }
     ],
     "exclusions_communes": [],
@@ -335,5 +346,27 @@
         "pourquoi": "un renvoi : l'appareil relève de 2.2"
       }
     ]
-  }
+  },
+  "controles": [
+    {
+      "gravite": "à relire",
+      "controle": "limite",
+      "message": "limite « Si vous ne pouvez produire de justificatif établi par ce pro » (incendie_evenements_annexes) : elle pose une condition ; circonstance ou garantie à part ?"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.1-a) : le vocabulaire ne distingue pas la chute d'un aéronef (« autre » reste incertain)"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.1-a) : le vocabulaire ne distingue pas le mur du son (« autre » reste incertain)"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.1-b) : un renvoi : l'appareil relève de 2.2"
+    }
+  ]
 }

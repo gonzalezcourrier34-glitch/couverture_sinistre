@@ -12,3 +12,4 @@ exclusion(deteriorations_immobilieres, et([ou([f(auteur, famille), f(auteur, per
     "les vols, tentatives de vol ou actes de vandalisme dont seraient auteurs ou complices les membres de votre famille (article 311-12 du Code pénal) ou vos préposés pendant leur service, sauf si une plainte nominative est déposée à leur encontre").
 exclusion(deteriorations_immobilieres, f(graffiti_mur_exterieur, oui), tout, oui, '2.6-b',
     "les graffitis, tags, pochoirs et inscriptions de toute nature, affichages, salissures, rayures commis à l’extérieur de votre local d’habitation et de ses dépendances").
+limite(deteriorations_immobilieres, '4.1', "Si l’introduction a été facilitée ou aggravée par la nonconformité ou l’absence de mise en œuvre des moyens de protection et/ou de fermeture exigés aux conditions particulières, l’indemnité sera réduite de 50 %", "indemnité réduite de 50 %").

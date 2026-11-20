@@ -18,6 +18,7 @@ exclusion(venues_eau_gel, f(evenement, catastrophe_naturelle), tout, non, '2.4-c
     "les dommages relevant de la garantie Catastrophes naturelles").
 exclusion(venues_eau_gel, f(cause_eau, condensation), tout, non, '2.4-c',
     "les dommages dus à l’humidité et/ou à la condensation").
+limite(venues_eau_gel, '4.2', "L’indemnité sera réduite de 50 % si vous ne respectez pas ces prescriptions et qu’un sinistre survient ou est aggravé de ce fait", "indemnité réduite de 50 %").
 garantie(recherche_fuite, "Recherche de fuite", '2.4-a',
     "Sont prises en charge au titre de la recherche de fuite").
 perimetre(recherche_fuite, f(evenement, degat_eaux)).

@@ -1,0 +1,454 @@
+{
+  "meta": {
+    "article": "4.1",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12"
+  },
+  "proposition": {
+    "evenements": [
+      "vol"
+    ],
+    "definitions": [
+      {
+        "concept": "residence_secondaire",
+        "condition": {
+          "non": {
+            "f": [
+              "residence_principale",
+              "oui"
+            ]
+          }
+        },
+        "article": "S10-a/residence-secondaire",
+        "texte": "Habitation à usage privé qui n'est pas votre résidence principale telle qu'elle est définie ci-avant."
+      },
+      {
+        "concept": "dependances",
+        "condition": {
+          "ou": [
+            {
+              "f": [
+                "lieu",
+                "annexe"
+              ]
+            },
+            {
+              "f": [
+                "lieu",
+                "garage"
+              ]
+            },
+            {
+              "f": [
+                "lieu",
+                "cave"
+              ]
+            }
+          ]
+        },
+        "article": "S10-a/dependances",
+        "texte": "Ce sont les locaux destinés à un usage autre que le local d'habitation ou l'exercice d'une profession situés en dehors de la « verticalité » du local d'habitation. Sont également considérés comme dépendances les caves et les garages situés dans les immeubles collectifs."
+      }
+    ],
+    "garanties": [
+      {
+        "id": "protection_vol_4_1",
+        "nom": "Mesures de sécurité contre le vol et détériorations immobilières",
+        "article": "4.1",
+        "texte": "Si vous vous absentez : • moins de 24 heures : les portes doivent être fermées à clé, les fenêtres, portes-fenêtres et autres issues bloquées, • plus de 24 heures : tous les moyens de fermeture et de protection décrits aux conditions particulières doivent être mis en action.",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "vol"
+            ]
+          },
+          {
+            "concept": "batiment"
+          }
+        ],
+        "circonstances": [],
+        "obligations": [
+          {
+            "condition": {
+              "f": [
+                "duree_absence",
+                "moins_24h"
+              ]
+            },
+            "devoir": {
+              "et": [
+                {
+                  "f": [
+                    "portes_fermees",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "fenetres_fermees",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "exception": null,
+            "lien_causal": true,
+            "article": "4.1",
+            "texte": "moins de 24 heures : les portes doivent être fermées à clé, les fenêtres, portes-fenêtres et autres issues bloquées"
+          },
+          {
+            "condition": {
+              "f": [
+                "duree_absence",
+                "plus_24h"
+              ]
+            },
+            "devoir": {
+              "f": [
+                "dispositifs_antivol_installes",
+                "oui"
+              ]
+            },
+            "exception": null,
+            "lien_causal": true,
+            "article": "4.1",
+            "texte": "plus de 24 heures : tous les moyens de fermeture et de protection décrits aux conditions particulières doivent être mis en action"
+          },
+          {
+            "condition": {
+              "concept": "dependances"
+            },
+            "devoir": {
+              "et": [
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "porte_dependance_materiau",
+                        "bois_plein"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "porte_dependance_materiau",
+                        "metal"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "nombre_serrures_surete_dependance",
+                        "une"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "nombre_serrures_surete_dependance",
+                        "deux_ou_plus"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "exception": null,
+            "lien_causal": true,
+            "article": "4.1",
+            "texte": "Les portes d'accès aux dépendances doivent être en bois plein ou en métal munies d'une ou plusieurs serrures de sûreté (cadenas exclu)"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "concept": "dependances"
+                },
+                {
+                  "f": [
+                    "lieu",
+                    "cave"
+                  ]
+                },
+                {
+                  "f": [
+                    "immeuble_collectif",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "devoir": {
+              "et": [
+                {
+                  "f": [
+                    "porte_cave_renforcee",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "nombre_serrures_surete_dependance",
+                    "deux_ou_plus"
+                  ]
+                }
+              ]
+            },
+            "exception": null,
+            "lien_causal": true,
+            "article": "4.1",
+            "texte": "Dans les ensembles collectifs, les portes de cave doivent être renforcées, pleines et munies de deux serrures de sûreté"
+          }
+        ],
+        "exclusions": [
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "duree_inoccupation",
+                    "46_jours_et_plus"
+                  ]
+                },
+                {
+                  "f": [
+                    "residence_principale",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "4.1",
+            "texte": "La garantie Vol des objets de valeur et du contenu est suspendue dès le 46ème jour d'inoccupation jusqu'au retour des occupants autorisés."
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "duree_inoccupation_secondaire",
+                    "2_jours_et_plus"
+                  ]
+                },
+                {
+                  "concept": "residence_secondaire"
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "4.1",
+            "texte": "Cas particulier du vol des objets précieux de la résidence principale dans votre résidence secondaire : la garantie Vol des objets précieux est suspendue dès le 2ème jour d'inoccupation de la résidence secondaire."
+          }
+        ],
+        "limites": [
+          {
+            "article": "4.1",
+            "texte": "Si l'introduction a été facilitée ou aggravée par la non-conformité ou l'absence de mise en œuvre des moyens de protection et/ou de fermeture exigés aux conditions particulières, l'indemnité sera réduite de 50 %.",
+            "montant": "réduction de 50 % de l'indemnité"
+          },
+          {
+            "article": "4.1",
+            "texte": "Pour la garantie Vol des objets précieux, des espèces, titres et valeurs, une franchise de 30 % du montant du sinistre est appliquée dès le 11ème jour d'une période d'inoccupation qui excède 10 jours consécutifs et jusqu'au retour des occupants autorisés, sauf si ces objets sont enfermés dans un coffre-fort ou dans des caches spécialement aménagées dans les murs ou dans le sol.",
+            "montant": "franchise de 30 % du montant du sinistre"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "duree_absence",
+        "valeurs": [
+          "moins_24h",
+          "plus_24h"
+        ],
+        "question": "Depuis combien de temps êtes-vous absent du logement ?",
+        "pourquoi": "distinction des obligations de fermeture selon la durée d'absence (moins ou plus de 24h)",
+        "plus_proche": "absence (oui/non) ne précise pas la durée",
+        "aide": {
+          "moins_24h": "absent depuis moins de 24 heures",
+          "plus_24h": "absent depuis plus de 24 heures"
+        }
+      },
+      {
+        "variable": "porte_dependance_materiau",
+        "valeurs": [
+          "bois_plein",
+          "metal",
+          "autre"
+        ],
+        "question": "De quel matériau est faite la porte d'accès à la dépendance concernée ?",
+        "pourquoi": "obligation que la porte soit en bois plein ou en métal",
+        "plus_proche": "aucune variable ne décrit le matériau des portes",
+        "aide": {
+          "bois_plein": "porte en bois massif/plein",
+          "metal": "porte en métal",
+          "autre": "autre matériau (plastique, etc.)"
+        }
+      },
+      {
+        "variable": "nombre_serrures_surete_dependance",
+        "valeurs": [
+          "une",
+          "deux_ou_plus",
+          "aucune"
+        ],
+        "question": "Combien de serrures de sûreté (hors cadenas) équipent la porte de la dépendance ?",
+        "pourquoi": "obligation d'une ou plusieurs serrures de sûreté, et de deux pour les caves en immeuble collectif",
+        "plus_proche": "serrure_surete (oui/non) ne permet pas de compter le nombre de serrures",
+        "aide": {
+          "une": "une seule serrure de sûreté",
+          "deux_ou_plus": "deux serrures de sûreté ou plus",
+          "aucune": "aucune serrure de sûreté"
+        }
+      },
+      {
+        "variable": "immeuble_collectif",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le bâtiment est-il un immeuble collectif (plusieurs logements) ?",
+        "pourquoi": "obligation spécifique de renforcement des portes de cave dans les ensembles collectifs",
+        "plus_proche": "aucune",
+        "aide": {
+          "oui": "immeuble avec plusieurs appartements",
+          "non": "maison individuelle"
+        }
+      },
+      {
+        "variable": "porte_cave_renforcee",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La porte de cave est-elle renforcée et pleine ?",
+        "pourquoi": "obligation pour les caves situées dans les immeubles collectifs",
+        "plus_proche": "aucune",
+        "aide": {
+          "oui": "porte de cave blindée/renforcée et pleine",
+          "non": "porte de cave standard"
+        }
+      },
+      {
+        "variable": "duree_inoccupation",
+        "valeurs": [
+          "moins_10_jours",
+          "10_a_45_jours",
+          "46_jours_et_plus"
+        ],
+        "question": "Depuis combien de jours consécutifs la résidence principale est-elle inoccupée (aucune nuit passée par vous, famille, employé ou personne autorisée) ?",
+        "pourquoi": "application de la franchise de 30% dès le 11ème jour et suspension de la garantie dès le 46ème jour",
+        "plus_proche": "batiment_vacant_90j (oui/non) ne distingue pas les seuils à 10 et 45 jours",
+        "aide": {
+          "moins_10_jours": "moins de 10 jours consécutifs",
+          "10_a_45_jours": "entre 10 et 45 jours consécutifs",
+          "46_jours_et_plus": "46 jours consécutifs ou plus"
+        }
+      },
+      {
+        "variable": "duree_inoccupation_secondaire",
+        "valeurs": [
+          "moins_2_jours",
+          "2_jours_et_plus"
+        ],
+        "question": "Depuis combien de jours consécutifs la résidence secondaire est-elle inoccupée ?",
+        "pourquoi": "suspension de la garantie Vol des objets précieux dès le 2ème jour d'inoccupation de la résidence secondaire",
+        "plus_proche": "aucune",
+        "aide": {
+          "moins_2_jours": "moins de 2 jours consécutifs",
+          "2_jours_et_plus": "2 jours consécutifs ou plus"
+        }
+      },
+      {
+        "variable": "objets_precieux_coffre",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Les objets précieux, espèces, titres et valeurs sont-ils enfermés dans un coffre-fort ou dans des caches spécialement aménagées dans les murs ou le sol ?",
+        "pourquoi": "exception à l'application de la franchise de 30% en cas d'inoccupation de la résidence principale",
+        "plus_proche": "aucune",
+        "aide": {
+          "oui": "oui, dans un coffre-fort ou cache murale/au sol",
+          "non": "non, ils sont ailleurs"
+        }
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "garantie protection_vol_4_1 : l'obligation « Dans les ensembles collectifs, les portes de cave doivent être renforc » décrit une situation (lieu) au lieu d'un devoir : l'écrire « si situation, alors devoir », ou en faire une exclusion"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "duree_absence = moins_24h : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "duree_absence = plus_24h : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "immeuble_collectif = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "duree_inoccupation = 46_jours_et_plus : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "duree_inoccupation_secondaire = 2_jours_et_plus : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1`) ou à remplacer"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "définition : citation rattachée à S10-a/residence-secondaire (et non S10-a)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "définition : citation rattachée à S10-a/dependances (et non S10-a)"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "citation",
+      "message": "garantie (4.1) : « Si vous vous absentez : • moins de 24 heures : les portes doivent être fermées à » ne figure pas dans la clause"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "citation",
+      "message": "obligation (4.1) : « moins de 24 heures : les portes doivent être fermées à clé, les fenêtres, portes » ne figure pas dans la clause"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "citation",
+      "message": "limite (4.1) : « Si l'introduction a été facilitée ou aggravée par la non-conformité ou l'absence » ne figure pas dans la clause"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "limite",
+      "message": "limite « Si l'introduction a été facilitée ou aggravée par la non-con » (protection_vol_4_1) : elle pose une condition ; circonstance ou garantie à part ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "limite",
+      "message": "limite « Pour la garantie Vol des objets précieux, des espèces, titre » (protection_vol_4_1) : elle pose une condition ; circonstance ou garantie à part ?"
+    }
+  ]
+}

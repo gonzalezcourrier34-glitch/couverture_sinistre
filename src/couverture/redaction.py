@@ -209,7 +209,11 @@ def en_prolog(prop: dict, article: str, entete: str = "") -> str:
         # garantie à lui : ses exclusions visent toutes celles du contrat (`tous`, 7.88).
         cibles = ("[" + ", ".join(atome(g["id"]) for g in prop["garanties"]) + "]") if prop.get("garanties") else "tous"
         for x in prop["exclusions_communes"]:
-            lignes.append(f"exclusion({cibles}, {terme(x['condition'])}, {portee(x.get('portee'))}, "
+            # « cibles » (7.96) : les garanties que l'exclusion vise, quand ce ne sont ni celles de l'article ni toutes.
+            # Les biens exclus du titre « Dommages aux biens » (véhicules, animaux) ne doivent pas exclure la
+            # responsabilité civile, où le bien endommagé est celui d'un tiers (la voiture rayée par le vélo).
+            c = ("[" + ", ".join(atome(i) for i in x["cibles"]) + "]") if x.get("cibles") else cibles
+            lignes.append(f"exclusion({c}, {terme(x['condition'])}, {portee(x.get('portee'))}, "
                           f"{oui_non(x.get('a_demander'))}, {atome(x['article'])},\n    {chaine(x['texte'])}).")
     return "\n".join(lignes) + "\n"
 
@@ -732,6 +736,11 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
             # `batiment_designe`, le modèle écrivait `batiment` comme pour A (7.72).
             noter(BLOQUANT, "concept", f"extension d'un concept inconnu : {x.get('concept')} (concepts de ce contrat : "
                   f"{', '.join(sorted(existants | nouveaux)) or 'aucun'})")
+    connues = set(re.findall(r"^garantie\((\w+),", contrat_pl, re.M)) | {str(g.get("id")) for g in prop.get("garanties", [])}
+    for x in prop.get("exclusions_communes") or []:
+        inconnues = [i for i in x.get("cibles") or [] if i not in connues]
+        if inconnues:
+            noter(BLOQUANT, "identifiant", f"exclusion ({x.get('article')}) : garanties visées inconnues : {', '.join(inconnues)}")
     cycle = cycle_de_concepts(contrat_pl, prop)
     if cycle:
         # 1.5 de l'assureur D : `batiment` étendu au logement de vacances pour le `contenu`, lui-même défini « dans le

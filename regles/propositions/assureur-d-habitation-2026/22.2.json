@@ -1,0 +1,229 @@
+{
+  "meta": {
+    "article": "22.2",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-20",
+      "modifications": [
+        "les domaines couverts par `domaine_litige` ; l'option en circonstance : inconnue, la réponse est incertaine"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "litige"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "protection_juridique",
+        "nom": "Protection juridique (option)",
+        "article": "22.2",
+        "texte": "Nous intervenons quand un litige survient dans votre vie privée ou salariée",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "litige"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "domaine_litige",
+                  "travail"
+                ]
+              },
+              {
+                "f": [
+                  "domaine_litige",
+                  "logement"
+                ]
+              },
+              {
+                "f": [
+                  "domaine_litige",
+                  "travaux"
+                ]
+              },
+              {
+                "f": [
+                  "domaine_litige",
+                  "sante"
+                ]
+              },
+              {
+                "f": [
+                  "domaine_litige",
+                  "consommation"
+                ]
+              },
+              {
+                "f": [
+                  "domaine_litige",
+                  "administration"
+                ]
+              },
+              {
+                "f": [
+                  "domaine_litige",
+                  "voisinage"
+                ]
+              },
+              {
+                "f": [
+                  "domaine_litige",
+                  "employeur_domestique"
+                ]
+              },
+              {
+                "f": [
+                  "domaine_litige",
+                  "location_vacances"
+                ]
+              },
+              {
+                "f": [
+                  "domaine_litige",
+                  "bateau"
+                ]
+              },
+              {
+                "f": [
+                  "domaine_litige",
+                  "association"
+                ]
+              },
+              {
+                "f": [
+                  "domaine_litige",
+                  "famille"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "option_protection_juridique",
+                "oui"
+              ]
+            },
+            "article": "22.2",
+            "texte": "(garantie optionnelle)"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "evenement",
+        "valeurs": [
+          "litige"
+        ],
+        "question": "Que s'est-il passé ?",
+        "pourquoi": "22.1 à 22.3",
+        "aide": {
+          "litige": "un différend avec quelqu'un (employeur, vendeur, artisan, voisin, administration) pour lequel l'assuré veut être conseillé, aidé ou défendu ; pas un dommage à indemniser"
+        },
+        "plus_proche": "assistance : une aide pratique, pas juridique"
+      },
+      {
+        "variable": "domaine_litige",
+        "valeurs": [
+          "travail",
+          "logement",
+          "travaux",
+          "sante",
+          "consommation",
+          "administration",
+          "voisinage",
+          "employeur_domestique",
+          "location_vacances",
+          "bateau",
+          "association",
+          "famille",
+          "recours_dommage",
+          "defense_penale",
+          "vehicule_moteur",
+          "activite_professionnelle",
+          "divorce_succession",
+          "autre"
+        ],
+        "question": "Sur quoi porte le litige ?",
+        "pourquoi": "les domaines de la défense pénale, du recours et de la protection juridique (22.1 à 22.3)",
+        "aide": {
+          "travail": "avec votre employeur, en tant que salarié",
+          "logement": "votre résidence principale ou secondaire, comme propriétaire, copropriétaire ou locataire",
+          "travaux": "des travaux intérieurs d'entretien, d'embellissement ou de réparation",
+          "sante": "un organisme de soins ou de retraite, un médecin, un hôpital",
+          "consommation": "l'achat, la vente, la location ou la commande d'un bien ou d'un service (pas d'un véhicule à moteur)",
+          "administration": "un service public, une administration, les impôts",
+          "voisinage": "un voisin : servitude, trouble de voisinage",
+          "employeur_domestique": "votre assistante maternelle, femme de ménage ou employé de maison déclarés",
+          "location_vacances": "une location saisonnière de vacances, comme locataire",
+          "bateau": "un petit voilier, un engin nautique, un bateau de plaisance à moteur de 15 CV au plus",
+          "association": "votre participation bénévole à une association",
+          "famille": "succession, legs ou donation en ligne directe ; tutelle, curatelle ; filiation ; violences intrafamiliales",
+          "recours_dommage": "vous réclamez réparation d'un dommage subi lors d'un accident causé par quelqu'un d'autre",
+          "defense_penale": "vous êtes poursuivi devant un tribunal pour une contravention ou un délit après un accident",
+          "vehicule_moteur": "l'achat, la réparation, l'entretien, la conduite ou l'assurance d'une voiture, d'une moto, même avec un garagiste",
+          "activite_professionnelle": "une activité professionnelle non salariée, une entreprise, une société",
+          "divorce_succession": "un divorce, un régime matrimonial, une succession ou une donation hors ligne directe",
+          "autre": "un autre litige"
+        },
+        "plus_proche": "aucune : le vocabulaire ne disait que des dommages"
+      },
+      {
+        "variable": "option_protection_juridique",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Avez-vous souscrit l'option protection juridique ?",
+        "pourquoi": "22.2 : une option",
+        "aide": {
+          "oui": "l'option protection juridique est souscrite",
+          "non": "elle ne l'est pas"
+        },
+        "plus_proche": "aucune"
+      }
+    ],
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "22.2",
+        "texte": "à l’exception des questions de bornage",
+        "pourquoi": "le vocabulaire ne distingue pas le bornage"
+      },
+      {
+        "article": "22.2",
+        "texte": "d’un voilier d’une longueur inférieure ou égale à six mètres",
+        "pourquoi": "la taille d'un bateau : rare ; le vocabulaire ne la distingue pas"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (22.2) : le vocabulaire ne distingue pas le bornage"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (22.2) : la taille d'un bateau : rare ; le vocabulaire ne la distingue pas"
+    }
+  ]
+}

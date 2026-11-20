@@ -616,16 +616,27 @@ def preciser(faits: dict, voc: dict) -> tuple[dict, list[str]]:
     n'est pas traduite, la réponse tombait à « incertain » au lieu de « couvert »."""
     notes = []
     for v, regles in ((v, d.get("preciser")) for v, d in voc.items() if d.get("preciser")):
-        for vague, r in regles.items():
-            valeurs = faits.get(v)
-            liste = valeurs if isinstance(valeurs, list) else [valeurs]
-            if vague not in liste:
-                continue
-            if any(set(r["si"].get(w, [])) & set(faits.get(w) if isinstance(faits.get(w), list) else [faits.get(w)])
-                   for w in r["si"]):
-                nouvelles = list(dict.fromkeys(r["en"] if e == vague else e for e in liste))
+        for vague, rs in regles.items():
+            # Plusieurs règles possibles, dans l'ordre (7.97) ; « en » nul : la valeur vague est retirée, quand une
+            # autre valeur lue dit déjà ce qui s'est passé (« accident » à côté de « tempête » ou de « responsabilité »).
+            for r in rs if isinstance(rs, list) else [rs]:
+                valeurs = faits.get(v)
+                liste = valeurs if isinstance(valeurs, list) else [valeurs]
+                if vague not in liste:
+                    break
+                if not any(set(r["si"].get(w, [])) & set(faits.get(w) if isinstance(faits.get(w), list) else [faits.get(w)])
+                           for w in r["si"]):
+                    continue
+                if r.get("en") is None:
+                    nouvelles = [e for e in liste if e != vague]
+                    if not nouvelles:
+                        continue
+                    notes.append(f"{v} = {vague} retiré : {', '.join(nouvelles)} le dit déjà")
+                else:
+                    nouvelles = list(dict.fromkeys(r["en"] if e == vague else e for e in liste))
+                    notes.append(f"{v} = {vague} précisé en {r['en']}")
                 faits = faits | {v: nouvelles if isinstance(valeurs, list) else nouvelles[0]}
-                notes.append(f"{v} = {vague} précisé en {r['en']}")
+                break
     return faits, notes
 
 

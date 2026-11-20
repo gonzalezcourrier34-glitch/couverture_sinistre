@@ -110,6 +110,16 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 
 ## 5. Dernières mesures
 
+**20 nov. 2026, 12 h 33 à 12 h 38, les trois contrats après 7.97** : **Assureur D 100 % justes** (0 couvert à tort,
+0 refus à tort, 0 instable) ; **A 80 %**, 1,67 couvert à tort ; **B 65 %**, 1 couvert à tort. Médiane 3,6 à 4,1 s ;
+95e centile au-dessus de 20 s pour D et B (appels lents). Pour D, mesure optimiste : des écarts de ce jeu ont servi
+à corriger les règles et la lecture (DEMARCHE 7.93 à 7.97) ; un second jeu fermé reste à écrire.
+
+**20 nov. 2026, 12 h 23, assureur D, lot 3 accepté** (responsabilité civile, défense pénale, protection juridique) :
+**92 % justes**, 0 couvert à tort, 0 refus à tort, 0 instable ; médiane 4,2 s, 95e centile 21,8 s (un appel lent).
+Les deux écarts (`f-d09`, `f-d14`) : « accident » lu en trop, corrigé ensuite (DEMARCHE 7.97). Coût total de D :
+3 lots, environ 50 min de rédaction, 417 contrôles bloquants, tout relu.
+
 **20 nov. 2026, 11 h 36 à 11 h 42, jeu fermé, les trois contrats** (chaîne complète, Mistral Small, lecture
 vérifiée) : **Assureur D 88 % justes**, 0 couvert à tort, 0 refus à tort, 0 instable (les 12 % restants : RC et
 protection juridique, non traduites) ; **Assureur A 77 %**, 2 couverts à tort, 4 instables ; **Assureur B 63 %**,

@@ -1,0 +1,741 @@
+{
+  "meta": {
+    "article": "13.2",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12"
+  },
+  "proposition": {
+    "evenements": [
+      "accident",
+      "incendie",
+      "explosion",
+      "degat_eaux",
+      "vol"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "rc_fetes_familiales",
+        "nom": "Responsabilité civile fêtes familiales",
+        "article": "13.2-a",
+        "texte": "La garantie couvre les conséquences financières de la responsabilité civile que vous pouvez encourir à l’égard des tiers lorsque vous louez ou occupez un local en tant qu’organisateur à titre privé et sans but lucratif de manifestations familiales ou privées (fêtes, réceptions, mariage, communions…) d’un maximum de 150 personnes à la suite d’un accident, d’un incendie, d’une explosion ou d’un dégât des eaux causant des dommages corporels, matériels et immatériels à des tiers",
+        "perimetre": [
+          {
+            "f": [
+              "occasion_fete_familiale",
+              "oui"
+            ]
+          },
+          {
+            "f": [
+              "pays",
+              "france"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "evenement",
+                  "accident"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "incendie"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "explosion"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "degat_eaux"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "nombre_personnes_manifestation",
+                "moins_150"
+              ]
+            },
+            "article": "13.2-a",
+            "texte": "d’un maximum de 150 personnes"
+          },
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "defaut_organisation",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "manque_precautions_amenagement",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "article": "13.2-a",
+            "texte": "provenant d’un défaut d’organisation ou d’un manque de précautions dans l’aménagement des lieux où doit se dérouler la manifestation"
+          },
+          {
+            "condition": {
+              "f": [
+                "auteur",
+                "assure"
+              ]
+            },
+            "article": "13.2-a",
+            "texte": "de votre fait ou du fait de toute personne dont vous devez répondre, salariée ou non, participant à l’organisation de cette manifestation"
+          },
+          {
+            "condition": {
+              "f": [
+                "cause_agencements",
+                "oui"
+              ]
+            },
+            "article": "13.2-a",
+            "texte": "du fait des agencements mobiliers ou immobiliers, aménagements ou installations nécessaires, y compris au cours des travaux de montage ou de démontage"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "evenement",
+                        "incendie"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "evenement",
+                        "explosion"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "evenement",
+                        "degat_eaux"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "f": [
+                    "lieu_origine_sinistre",
+                    "batiment_manifestation"
+                  ]
+                }
+              ]
+            },
+            "article": "13.2-a",
+            "texte": "causés par un incendie, une explosion, un dégât des eaux ayant pris naissance dans le bâtiment où se déroule la manifestation et dont vous êtes occupant ou locataire"
+          },
+          {
+            "condition": {
+              "f": [
+                "biens_confies_manifestation",
+                "oui"
+              ]
+            },
+            "article": "13.2-a",
+            "texte": "causés aux biens mobiliers qui vous sont confiés à l’occasion de la manifestation et pendant la durée de celle-ci"
+          },
+          {
+            "condition": {
+              "f": [
+                "intoxication_alimentaire",
+                "oui"
+              ]
+            },
+            "article": "13.2-a",
+            "texte": "dus à des intoxications causées par l’absorption de produits alimentaires offerts lors de la manifestation"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "bien",
+                "vetements_objet_personnel"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "13.2-b",
+            "texte": "le vol ou la disparition des vêtements et objets personnels des participants"
+          },
+          {
+            "condition": {
+              "f": [
+                "bien",
+                "valeurs"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "13.2-b",
+            "texte": "des objets précieux, billets de banque, espèces et titres"
+          },
+          {
+            "condition": {
+              "f": [
+                "batiment_classe_monuments_historiques",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "13.2-b",
+            "texte": "les manifestations ayant lieu dans un château ou dans un bâtiment faisant l’objet d’un classement ou d’une inscription auprès des monuments historiques"
+          },
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "auteur",
+                    "assure"
+                  ]
+                },
+                {
+                  "f": [
+                    "auteur",
+                    "famille"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "13.2-b",
+            "texte": "les dommages subis par toute personne ayant la qualité d’assuré, ses préposés et salariés dans l’exercice de leur fonction"
+          },
+          {
+            "condition": {
+              "f": [
+                "auteur",
+                "responsable_sinistre"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "13.2-b",
+            "texte": "les dommages subis par les personnes responsables du sinistre"
+          },
+          {
+            "condition": {
+              "f": [
+                "usage_professionnel",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "13.2-b",
+            "texte": "les dommages résultant de l’exercice de votre profession, ou de toute fonction publique ou politique"
+          },
+          {
+            "condition": {
+              "f": [
+                "batiment_non_construit_dur",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "13.2-b",
+            "texte": "les dommages causés aux bâtiments et locaux non construits et/ou non couverts en dur (tentes, chapiteaux, structures gonflables)"
+          }
+        ],
+        "limites": [
+          {
+            "article": "13.2-a",
+            "texte": "La garantie prend effet au moment de la remise des clés du local et prend fin à la restitution des clés et ce pour une durée maximum de trois jours",
+            "montant": "3 jours"
+          }
+        ]
+      },
+      {
+        "id": "rc_chambres_hotes",
+        "nom": "Responsabilité civile loueur de chambres d'hôtes",
+        "article": "13.2-c",
+        "texte": "La garantie couvre les conséquences financières de la responsabilité civile que vous pouvez encourir du fait de l’exploitation de chambre(s) d’hôtes dans le local d’habitation assuré en raison : • de dommages corporels, matériels et immatériels consécutifs causés aux locataires de la chambre d’hôtes, y compris en cas d’intoxications alimentaires, • du vol avec effraction ou escalade du local d’habitation assuré des biens des locataires déposés dans la chambre",
+        "perimetre": [
+          {
+            "f": [
+              "lieu",
+              "logement"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "evenement",
+                  "accident"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "vol"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "intoxication_alimentaire",
+                "oui"
+              ]
+            },
+            "article": "13.2-c",
+            "texte": "y compris en cas d’intoxications alimentaires"
+          },
+          {
+            "condition": {
+              "si": [
+                {
+                  "f": [
+                    "evenement",
+                    "vol"
+                  ]
+                },
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "effraction",
+                        "oui"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "acces_voleur",
+                        "escalade"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "article": "13.2-c",
+            "texte": "du vol avec effraction ou escalade du local d’habitation assuré des biens des locataires déposés dans la chambre"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "bien",
+                "vehicule_moteur"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "13.2-d",
+            "texte": "le vol ou la tentative de vol du véhicule des locataires"
+          },
+          {
+            "condition": {
+              "f": [
+                "bien",
+                "valeurs"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "13.2-d",
+            "texte": "le vol des espèces, titres et valeurs"
+          },
+          {
+            "condition": {
+              "f": [
+                "bien",
+                "animal"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "13.2-d",
+            "texte": "des animaux des locataires"
+          },
+          {
+            "condition": {
+              "f": [
+                "type_location",
+                "gite"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "13.2-d",
+            "texte": "la location de gîtes"
+          },
+          {
+            "condition": {
+              "non": {
+                "f": [
+                  "option_chambres_hotes",
+                  "oui"
+                ]
+              }
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "13.2-c",
+            "texte": "La garantie couvre les conséquences financières de la responsabilité civile que vous pouvez encourir du fait de l’exploitation de chambre(s) d’hôtes dans le local d’habitation assuré en raison : • de dommages corporels, matériels et immatériels consécutifs causés aux locataires de la chambre d’hôtes, y compris en cas d’intoxications alimentaires, • du vol avec effraction ou escalade du local d’habitation assuré des biens des locataires déposés dans la chambre"
+          }
+        ],
+        "limites": [
+          {
+            "article": "13.2-c",
+            "texte": "Notre garantie est limitée à 1 chambre d’hôtes si votre habitation est un appartement et 3 chambres d’hôtes s’il s’agit d’une maison",
+            "montant": "1 chambre (appartement) ou 3 chambres (maison)"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "nombre_personnes_manifestation",
+        "valeurs": [
+          "moins_150",
+          "plus_150"
+        ],
+        "question": "Combien de personnes participent à la manifestation ?",
+        "pourquoi": "La garantie est limitée à un maximum de 150 personnes",
+        "plus_proche": "aucune variable ne compte les participants",
+        "aide": {
+          "moins_150": "moins de 150 personnes, une petite fête",
+          "plus_150": "plus de 150 personnes, une grande réception"
+        }
+      },
+      {
+        "variable": "defaut_organisation",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le dommage provient-il d'un défaut d'organisation ?",
+        "pourquoi": "circonstance couverte spécifique",
+        "plus_proche": "aucune",
+        "aide": {
+          "oui": "mauvaise organisation, manque de préparation",
+          "non": "l'organisation était correcte"
+        }
+      },
+      {
+        "variable": "manque_precautions_amenagement",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Y a-t-il eu un manque de précautions dans l'aménagement des lieux ?",
+        "pourquoi": "circonstance couverte spécifique",
+        "plus_proche": "aucune",
+        "aide": {
+          "oui": "aménagement dangereux, précautions insuffisantes",
+          "non": "aménagement conforme et sûr"
+        }
+      },
+      {
+        "variable": "cause_agencements",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le dommage provient-il des agencements mobiliers ou immobiliers ?",
+        "pourquoi": "circonstance couverte spécifique",
+        "plus_proche": "aucune",
+        "aide": {
+          "oui": "dû aux meubles, installations, aménagements",
+          "non": "dû à autre chose"
+        }
+      },
+      {
+        "variable": "lieu_origine_sinistre",
+        "valeurs": [
+          "batiment_manifestation",
+          "autre"
+        ],
+        "question": "L'incendie/explosion/dégât des eaux a-t-il pris naissance dans le bâtiment où se déroule la manifestation ?",
+        "pourquoi": "condition spécifique pour les événements incendie/explosion/dégât des eaux",
+        "plus_proche": "lieu",
+        "aide": {
+          "batiment_manifestation": "dans le local de la fête",
+          "autre": "ailleurs"
+        }
+      },
+      {
+        "variable": "biens_confies_manifestation",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "S'agit-il de dommages causés aux biens mobiliers confiés à l'occasion de la manifestation ?",
+        "pourquoi": "circonstance couverte spécifique",
+        "plus_proche": "bien",
+        "aide": {
+          "oui": "biens confiés pour la fête (décoration, matériel...)",
+          "non": "autres biens"
+        }
+      },
+      {
+        "variable": "intoxication_alimentaire",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "S'agit-il d'une intoxication alimentaire causée par des produits offerts lors de la manifestation ?",
+        "pourquoi": "circonstance couverte spécifique",
+        "plus_proche": "cause_perte_alimentaire",
+        "aide": {
+          "oui": "intoxication due à la nourriture servie",
+          "non": "autre cause"
+        }
+      },
+      {
+        "variable": "batiment_classe_monuments_historiques",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La manifestation a-t-elle lieu dans un château ou un bâtiment classé/inscrit aux monuments historiques ?",
+        "pourquoi": "exclusion spécifique",
+        "plus_proche": "lieu",
+        "aide": {
+          "oui": "dans un monument historique, un château classé",
+          "non": "dans un lieu ordinaire"
+        }
+      },
+      {
+        "variable": "auteur",
+        "valeurs": [
+          "responsable_sinistre"
+        ],
+        "question": "L'auteur du dommage est-il la personne responsable du sinistre ?",
+        "pourquoi": "exclusion spécifique",
+        "plus_proche": "auteur (valeurs existantes : tiers, assure, famille, personnel_prive, locataire)",
+        "parent": "tiers",
+        "aide": {
+          "responsable_sinistre": "c'est la personne qui a causé le sinistre"
+        }
+      },
+      {
+        "variable": "batiment_non_construit_dur",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le bâtiment endommagé est-il non construit et/ou non couvert en dur (tente, chapiteau, structure gonflable) ?",
+        "pourquoi": "exclusion spécifique pour les structures temporaires",
+        "plus_proche": "construction_facilement_deplacable",
+        "aide": {
+          "oui": "tente, chapiteau, structure gonflable, non en dur",
+          "non": "bâtiment en dur, construction solide"
+        }
+      },
+      {
+        "variable": "option_chambres_hotes",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Vos conditions particulières mentionnent-elles la garantie loueur de chambres d'hôtes ?",
+        "pourquoi": "garantie optionnelle devant être spécialement mentionnée",
+        "plus_proche": "option_vol, option_incendie, etc.",
+        "aide": {
+          "oui": "oui, j'ai souscrit cette option",
+          "non": "non, je n'ai pas cette option"
+        }
+      },
+      {
+        "variable": "type_location",
+        "valeurs": [
+          "chambre_hotes",
+          "gite"
+        ],
+        "question": "S'agit-il d'une location de chambre d'hôtes ou d'un gîte ?",
+        "pourquoi": "distinction entre chambre d'hôtes (couvert) et gîte (exclu)",
+        "plus_proche": "aucune",
+        "aide": {
+          "chambre_hotes": "chambre d'hôtes dans mon habitation",
+          "gite": "location de gîte entier"
+        }
+      },
+      {
+        "variable": "type_logement",
+        "valeurs": [
+          "appartement",
+          "maison"
+        ],
+        "question": "Votre habitation est-elle un appartement ou une maison ?",
+        "pourquoi": "limite différente selon le type (1 vs 3 chambres d'hôtes)",
+        "plus_proche": "statut_logement (proprietaire/locataire)",
+        "aide": {
+          "appartement": "appartement en immeuble",
+          "maison": "maison individuelle"
+        }
+      },
+      {
+        "variable": "bien",
+        "valeurs": [
+          "vetements_objet_personnel"
+        ],
+        "question": "Quels biens sont concernés (vêtements, objets personnels des participants) ?",
+        "pourquoi": "exclusion spécifique pour les vêtements et objets personnels",
+        "plus_proche": "bien (valeurs existantes : mobilier, bijoux, etc.)",
+        "parent": "objet_divers",
+        "aide": {
+          "vetements_objet_personnel": "vêtements, objets personnels des invités"
+        }
+      }
+    ],
+    "non_traduit": [
+      {
+        "article": "13.2-b",
+        "texte": "Cette exclusion ne s'applique pas aux recours que la Sécurité Sociale, ou tout autre organisme de prévoyance obligatoire, peut être fondée à exercer contre vous-même en cas de dommages corporels subis : - par votre conjoint, vos ascendants ou descendants, lorsque leur assujettissement ne dépend pas d’un lien de parenté avec vous, - par un préposé et résultant de votre faute inexcusable ou de la faute intentionnelle d’un autre de vos préposés",
+        "pourquoi": "réserve complexe à l'exclusion concernant les recours de la Sécurité Sociale, non traduisible avec les variables actuelles sans créer un concept spécifique de recours subrogatoire"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "garantie rc_chambres_hotes : {\"f\": [\"option_chambres_hotes\", \"oui\"]} retiré du périmètre (conditions particulières) et mis en réserve"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "garantie rc_chambres_hotes : la circonstance propre à « vol » réécrite « si vol, alors… » (les autres événements restent couverts)"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "nombre_personnes_manifestation = moins_150 : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 13.2`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "defaut_organisation = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 13.2`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "manque_precautions_amenagement = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 13.2`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "cause_agencements = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 13.2`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "lieu_origine_sinistre = batiment_manifestation : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 13.2`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "biens_confies_manifestation = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 13.2`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "intoxication_alimentaire = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 13.2`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = vetements_objet_personnel : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 13.2`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "batiment_classe_monuments_historiques = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 13.2`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "auteur = responsable_sinistre : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 13.2`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "batiment_non_construit_dur = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 13.2`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "type_location = gite : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 13.2`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "option_chambres_hotes = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 13.2`) ou à remplacer"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « le vol ou la disparition des vêtements et objets personnels  » : ne vise que vetements_objet_personnel, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « des objets précieux, billets de banque, espèces et titres » : ne vise que valeurs, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « le vol ou la tentative de vol du véhicule des locataires » : ne vise que vehicule_moteur, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « le vol des espèces, titres et valeurs » : ne vise que valeurs, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « des animaux des locataires » : ne vise que animal, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "limite",
+      "message": "limite « Notre garantie est limitée à 1 chambre d’hôtes si votre habi » (rc_chambres_hotes) : elle pose une condition ; circonstance ou garantie à part ?"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (13.2-b) : « Cette exclusion ne s'applique pas aux recours que la Sécurité Sociale, ou tout autre organisme de pr » — réserve complexe à l'exclusion concernant les recours de la Sécurité Sociale, non traduisible avec les variables actuelles sans créer un concept spécifique de recours subrogatoire"
+    }
+  ]
+}

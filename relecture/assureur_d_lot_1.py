@@ -60,7 +60,19 @@ VOC_PAYS = {"variable": "pays", "valeurs": ["royaume_uni", "andorre", "monaco"],
             "aide": {"royaume_uni": "au Royaume-Uni", "andorre": "en Andorre", "monaco": "à Monaco"}}
 
 
-def ecrire(article, prop, modifications):
+# Les garanties du titre I (« Dommages subis par vos biens », lot 2) : les biens exclus de 1.1 et 1.2 (véhicules,
+# animaux, vérandas…) ne sont exclus que d'elles. Écrites « tous », ces exclusions refusaient aussi la responsabilité
+# civile, où le bien endommagé est celui d'un tiers : la voiture rayée par le vélo de l'enfant (f-d09, 7.96).
+DOMMAGES = ["incendie_evenements_annexes", "dommages_electriques", "tempete_grele_neige", "venues_eau_gel",
+            "recherche_fuite", "debordement_cuves", "vol_vandalisme", "vol_cles", "deteriorations_immobilieres",
+            "bris_glaces", "bris_glace_plus", "bris_glace_renforce", "contenu_congelateur", "catastrophes_naturelles",
+            "relogement_catnat", "attentats", "emeutes", "intervention_secours"]
+
+
+def ecrire(article, prop, modifications, cibles=None):
+    if cibles:
+        for x in prop.get("exclusions_communes", []):
+            x["cibles"] = cibles
     chemin = DOSSIER / f"{article}.json"
     d = json.loads(chemin.read_text(encoding="utf-8"))
     base = {"evenements": [], "definitions": [], "garanties": [], "exclusions_communes": [], "extensions": [],
@@ -108,7 +120,7 @@ ecrire("1.1", {
              "le vocabulaire ne distingue pas une clôture d'un autre élément du bâtiment")]},
     ["concept `batiment` (lieux : le logement et ses dépendances), au lieu de `bien_immobilier` et `dependances`",
      "exclusions de biens en portée `bien`, exceptions (option, pack, formule) en réserve, jamais demandées",
-     "chemins, courts de tennis, aires aménagées, électroménager : hors décision"])
+     "chemins, courts de tennis, aires aménagées, électroménager : hors décision"], DOMMAGES)
 
 ecrire("1.2", {
     "definitions": [{"concept": "contenu", "condition": et(ou(*[f("bien", x) for x in (
@@ -155,7 +167,7 @@ ecrire("1.2", {
         hors("1.2-b", "les rayures, les écaillements, les égratignures lorsqu’elles sont sans influence sur le fonctionnement du fauteuil roulant automoteur ou non", "exclusion propre au fauteuil roulant, hors décision comme lui")]},
     ["concept `contenu` : les biens mobiliers, dans les lieux assurés (`batiment`)",
      "exclusions de biens en portée `bien` ; objets précieux exclus sauf l'option « objets de valeur » (1.3)",
-     "fauteuil roulant, bouteilles, bateaux, timbres, matériel professionnel, armes : hors décision"])
+     "fauteuil roulant, bouteilles, bateaux, timbres, matériel professionnel, armes : hors décision"], DOMMAGES)
 
 ecrire("1.5", {
     "extensions": [{"concept": "batiment", "condition": et(

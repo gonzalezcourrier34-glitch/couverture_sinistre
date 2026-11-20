@@ -1,0 +1,101 @@
+{
+  "meta": {
+    "article": "4.3",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12"
+  },
+  "proposition": {
+    "evenements": [
+      "incendie"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "incendie_mesures_securite_4_3",
+        "nom": "Incendie - Mesures de sécurité",
+        "article": "4.3",
+        "texte": "Vous devez faire ramoner chaque année les conduits de fumée par un professionnel.",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "incendie"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "concept": "contenu"
+              },
+              {
+                "f": [
+                  "bien",
+                  "element_batiment"
+                ]
+              }
+            ]
+          },
+          {
+            "concept": "batiment"
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "4.3",
+            "texte": "Vous devez faire ramoner chaque année les conduits de fumée par un professionnel. Si vous ne pouvez produire de justificatif établi par ce professionnel datant de moins de deux ans au jour du sinistre, l’indemnisation des dommages subis par le seul conduit de fumée sera réduite de 50 %.",
+            "montant": "réduction de 50 %"
+          },
+          {
+            "article": "4.3",
+            "texte": "Vous devez également vous conformer aux instructions du service public concernant le débroussaillage, à défaut de quoi l’indemnisation sera réduite de 50 %.",
+            "montant": "réduction de 50 %"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "justificatif_ramonage_moins_2_ans",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Disposez-vous d'un justificatif établi par un professionnel attestant du ramonage des conduits de fumée, datant de moins de deux ans au jour du sinistre ?",
+        "pourquoi": "La clause 4.3 prévoit une réduction de 50 % de l'indemnisation des dommages subis par le seul conduit de fumée si ce justificatif ne peut être produit",
+        "plus_proche": "aucune variable existante ne concerne l'entretien des conduits de fumée ou le ramonage",
+        "aide": {
+          "oui": "j'ai un certificat de ramonage datant de moins de 2 ans",
+          "non": "je n'ai pas de justificatif de ramonage récent (moins de 2 ans)"
+        }
+      },
+      {
+        "variable": "conformite_instructions_debroussaillage",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Vous êtes-vous conformé aux instructions du service public concernant le débroussaillage ?",
+        "pourquoi": "La clause 4.3 prévoit une réduction de 50 % de l'indemnisation en cas de non-conformité aux instructions de débroussaillage",
+        "plus_proche": "aucune variable existante ne concerne le débroussaillage ou les instructions du service public",
+        "aide": {
+          "oui": "j'ai suivi les instructions de débroussaillage du service public",
+          "non": "je ne me suis pas conformé aux instructions de débroussaillage"
+        }
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "à relire",
+      "controle": "limite",
+      "message": "limite « Vous devez faire ramoner chaque année les conduits de fumée  » (incendie_mesures_securite_4_3) : elle pose une condition ; circonstance ou garantie à part ?"
+    }
+  ]
+}

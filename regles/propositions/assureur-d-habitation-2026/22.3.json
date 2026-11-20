@@ -1,0 +1,311 @@
+{
+  "meta": {
+    "article": "22.3",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-20",
+      "modifications": [
+        "véhicule à moteur (f-d16), activité professionnelle, divorce et successions hors ligne directe : par `domaine_litige`"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "litige"
+    ],
+    "definitions": [],
+    "garanties": [],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "f": [
+            "domaine_litige",
+            "activite_professionnelle"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "22.3-a~1",
+        "texte": "d’une activité professionnelle non salariée ou de l’administration d’une entreprise, d’une collectivité ou d’une association lorsque cette dernière emploie un ou des salariés,",
+        "cibles": [
+          "recours_accident",
+          "defense_penale",
+          "protection_juridique"
+        ]
+      },
+      {
+        "condition": {
+          "f": [
+            "domaine_litige",
+            "vehicule_moteur"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "22.3-a~2",
+        "texte": "de l’achat, la vente, la propriété, la location (sauf pour la location de courte durée n’excédant pas deux mois), l’entretien, la réparation, la conduite ou l’assurance d’un véhicule terrestre à moteur (sauf les engins de jardinage et les jouets télécommandés),",
+        "cibles": [
+          "recours_accident",
+          "defense_penale",
+          "protection_juridique"
+        ]
+      },
+      {
+        "condition": {
+          "f": [
+            "domaine_litige",
+            "divorce_succession"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "22.3-a~2",
+        "texte": "de l’application du Livre I du Code civil, excepté les litiges découlant des incapacités (sauvegarde de justice, tutelle, curatelle) et de la filiation (légitime, naturelle, adoptive),",
+        "cibles": [
+          "recours_accident",
+          "defense_penale",
+          "protection_juridique"
+        ]
+      },
+      {
+        "condition": {
+          "f": [
+            "domaine_litige",
+            "divorce_succession"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "22.3-a~2",
+        "texte": "des régimes matrimoniaux, des successions (excepté les litiges découlant des successions en ligne directe), des donations entre vifs et legs (excepté les litiges découlant des donations entre vifs et legs en ligne directe),",
+        "cibles": [
+          "recours_accident",
+          "defense_penale",
+          "protection_juridique"
+        ]
+      }
+    ],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "domaine_litige",
+        "valeurs": [
+          "travail",
+          "logement",
+          "travaux",
+          "sante",
+          "consommation",
+          "administration",
+          "voisinage",
+          "employeur_domestique",
+          "location_vacances",
+          "bateau",
+          "association",
+          "famille",
+          "recours_dommage",
+          "defense_penale",
+          "vehicule_moteur",
+          "activite_professionnelle",
+          "divorce_succession",
+          "autre"
+        ],
+        "question": "Sur quoi porte le litige ?",
+        "pourquoi": "les domaines de la défense pénale, du recours et de la protection juridique (22.1 à 22.3)",
+        "aide": {
+          "travail": "avec votre employeur, en tant que salarié",
+          "logement": "votre résidence principale ou secondaire, comme propriétaire, copropriétaire ou locataire",
+          "travaux": "des travaux intérieurs d'entretien, d'embellissement ou de réparation",
+          "sante": "un organisme de soins ou de retraite, un médecin, un hôpital",
+          "consommation": "l'achat, la vente, la location ou la commande d'un bien ou d'un service (pas d'un véhicule à moteur)",
+          "administration": "un service public, une administration, les impôts",
+          "voisinage": "un voisin : servitude, trouble de voisinage",
+          "employeur_domestique": "votre assistante maternelle, femme de ménage ou employé de maison déclarés",
+          "location_vacances": "une location saisonnière de vacances, comme locataire",
+          "bateau": "un petit voilier, un engin nautique, un bateau de plaisance à moteur de 15 CV au plus",
+          "association": "votre participation bénévole à une association",
+          "famille": "succession, legs ou donation en ligne directe ; tutelle, curatelle ; filiation ; violences intrafamiliales",
+          "recours_dommage": "vous réclamez réparation d'un dommage subi lors d'un accident causé par quelqu'un d'autre",
+          "defense_penale": "vous êtes poursuivi devant un tribunal pour une contravention ou un délit après un accident",
+          "vehicule_moteur": "l'achat, la réparation, l'entretien, la conduite ou l'assurance d'une voiture, d'une moto, même avec un garagiste",
+          "activite_professionnelle": "une activité professionnelle non salariée, une entreprise, une société",
+          "divorce_succession": "un divorce, un régime matrimonial, une succession ou une donation hors ligne directe",
+          "autre": "un autre litige"
+        },
+        "plus_proche": "aucune : le vocabulaire ne disait que des dommages"
+      }
+    ],
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "22.3",
+        "texte": "aux articles 22-1 et 22-2",
+        "pourquoi": "l'intitulé de la liste, pas une exclusion"
+      },
+      {
+        "article": "22.3-a~1",
+        "texte": "lorsque l’événement préjudiciable ou l’acte répréhensible à l’origine du litige est porté à votre connaissance avant la prise d’effet ou après la cessation des effets de votre garantie,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "22.3-a~1",
+        "texte": "lorsque votre demande est juridiquement insoutenable, prescrite ou lorsque son enjeu est inférieur au seuil d’intervention,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "22.3-a~1",
+        "texte": "lorsque le litige découle de votre responsabilité civile quand elle est couverte par un contrat d’assurances,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "22.3-a~1",
+        "texte": "de votre qualité d’employeur n’ayant pas déclaré une assistante maternelle, une femme de ménage ou un(e) employé(e) de maison,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "22.3-a~1",
+        "texte": "de l’application des statuts d’une société ou de l’achat, la vente, la détention de droits sociaux d’une société non cotée officiellement à une Bourse Française de Valeurs,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "22.3-a~1",
+        "texte": "d’un conflit collectif du travail,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "22.3-a~1",
+        "texte": "de l’expression par vous d’opinions politiques, syndicales ou religieuses,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "22.3-a~1",
+        "texte": "de la propriété ou de l’usufruit de biens immobiliers non destinés exclusivement à votre usage privatif,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "22.3-a~1",
+        "texte": "de l’achat, la vente, la propriété, la location, l’entretien, la réparation, la conduite ou l’assurance d’un aéronef,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "22.3-a~1",
+        "texte": "de travaux immobiliers et de leurs prolongements relatifs à votre résidence, lorsque ces travaux sont soumis à la délivrance d’un permis de construire, de démolir ou de déclaration préalable ou encore lorsqu’ils sont soumis à l’obligation d’assurance édictée par l’article L. 242.1 du Code,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "22.3-a~2",
+        "texte": "de la protection de vos brevets, titres de propriété industrielle ou droits d’auteur,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "22.3-a~2",
+        "texte": "de votre qualité de donneur d’aval, de caution ou cessionnaire de droits,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "22.3-a~2",
+        "texte": "de poursuites pénales, mesure d’instruction ou réclamation diligentée à votre encontre pour crime, délit impliquant la volonté de causer un dommage, rixe ou injure,",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "22.3-a~2",
+        "texte": "de l’application de la présente garantie",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "22.3-a~2",
+        "texte": "En matière de copropriété, nous n’intervenons jamais dans le règlement de votre quote-part de charges liée aux procédures opposant un (des) tiers au syndicat des copropriétaires",
+        "pourquoi": "rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "à relire",
+      "controle": "réserve",
+      "message": "exclusion « de l’achat, la vente, la propriété, la location (sauf pour l » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (22.3) : l'intitulé de la liste, pas une exclusion"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (22.3-a~1) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (22.3-a~1) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (22.3-a~1) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (22.3-a~1) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (22.3-a~1) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (22.3-a~1) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (22.3-a~1) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (22.3-a~1) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (22.3-a~1) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (22.3-a~1) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (22.3-a~2) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (22.3-a~2) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (22.3-a~2) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (22.3-a~2) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (22.3-a~2) : rare, ou que la déclaration ne dit pas ; le vocabulaire ne le distingue pas"
+    }
+  ]
+}

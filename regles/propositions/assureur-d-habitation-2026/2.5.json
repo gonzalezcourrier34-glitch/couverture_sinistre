@@ -288,7 +288,13 @@
             "texte": "les vols, tentatives de vol, actes de vandalisme ou actes de sabotage commis sur les terrasses, les balcons, dans les jardins et dans les locaux non entièrement clos ou couverts"
           }
         ],
-        "limites": []
+        "limites": [
+          {
+            "article": "4.1",
+            "texte": "Si l’introduction a été facilitée ou aggravée par la nonconformité ou l’absence de mise en œuvre des moyens de protection et/ou de fermeture exigés aux conditions particulières, l’indemnité sera réduite de 50 %",
+            "montant": "indemnité réduite de 50 %"
+          }
+        ]
       },
       {
         "id": "vol_cles",
@@ -447,8 +453,65 @@
       {
         "article": "2.5-c",
         "texte": "ATTENTION Vous devez respecter certaines mesures de sécurité pour bénéficier pleinement de la garantie (voir ART. 4.1)",
-        "pourquoi": "renvoi au titre IV (mesures de sécurité), traduit avec lui (lot 3)"
+        "pourquoi": "renvoi au titre IV (mesures de sécurité) : ses réductions sont des limites de la garantie (7.96)"
       }
     ]
-  }
+  },
+  "controles": [
+    {
+      "gravite": "à relire",
+      "controle": "limite",
+      "message": "limite « Si l’introduction a été facilitée ou aggravée par la nonconf » (vol_vandalisme) : elle pose une condition ; circonstance ou garantie à part ?"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.5) : la preuve, pas la couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.5-a) : porté par l'effraction"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.5-a) : un délai que le vocabulaire ne mesure pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.5-a) : le vocabulaire ne distingue pas les papiers ni la carte de crédit"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.5-b) : option et formule Excellence ; le vocabulaire ne distingue pas la résidence secondaire"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.5-b) : les clés du véhicule : des frais, le véhicule n'est pas assuré"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.5-b) : le vocabulaire ne distingue pas une plaque professionnelle"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.5-c) : le vocabulaire ne distingue ni les fourrures ni la valeur d'un objet"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.5-c) : le vocabulaire ne distingue pas ces rampes"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.5-c) : renvoi au titre IV (mesures de sécurité) : ses réductions sont des limites de la garantie (7.96)"
+    }
+  ]
 }

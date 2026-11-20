@@ -95,7 +95,27 @@
         },
         "a_demander": false,
         "article": "1.1-b",
-        "texte": "les vérandas, sauf mention aux conditions particulières"
+        "texte": "les vérandas, sauf mention aux conditions particulières",
+        "cibles": [
+          "incendie_evenements_annexes",
+          "dommages_electriques",
+          "tempete_grele_neige",
+          "venues_eau_gel",
+          "recherche_fuite",
+          "debordement_cuves",
+          "vol_vandalisme",
+          "vol_cles",
+          "deteriorations_immobilieres",
+          "bris_glaces",
+          "bris_glace_plus",
+          "bris_glace_renforce",
+          "contenu_congelateur",
+          "catastrophes_naturelles",
+          "relogement_catnat",
+          "attentats",
+          "emeutes",
+          "intervention_secours"
+        ]
       },
       {
         "condition": {
@@ -109,7 +129,27 @@
         },
         "a_demander": false,
         "article": "1.1-b",
-        "texte": "les éoliennes"
+        "texte": "les éoliennes",
+        "cibles": [
+          "incendie_evenements_annexes",
+          "dommages_electriques",
+          "tempete_grele_neige",
+          "venues_eau_gel",
+          "recherche_fuite",
+          "debordement_cuves",
+          "vol_vandalisme",
+          "vol_cles",
+          "deteriorations_immobilieres",
+          "bris_glaces",
+          "bris_glace_plus",
+          "bris_glace_renforce",
+          "contenu_congelateur",
+          "catastrophes_naturelles",
+          "relogement_catnat",
+          "attentats",
+          "emeutes",
+          "intervention_secours"
+        ]
       },
       {
         "condition": {
@@ -135,7 +175,27 @@
         },
         "a_demander": false,
         "article": "1.1-b",
-        "texte": "les panneaux solaires et photovoltaïques si vous avez souscrit les formules Eco et Confort"
+        "texte": "les panneaux solaires et photovoltaïques si vous avez souscrit les formules Eco et Confort",
+        "cibles": [
+          "incendie_evenements_annexes",
+          "dommages_electriques",
+          "tempete_grele_neige",
+          "venues_eau_gel",
+          "recherche_fuite",
+          "debordement_cuves",
+          "vol_vandalisme",
+          "vol_cles",
+          "deteriorations_immobilieres",
+          "bris_glaces",
+          "bris_glace_plus",
+          "bris_glace_renforce",
+          "contenu_congelateur",
+          "catastrophes_naturelles",
+          "relogement_catnat",
+          "attentats",
+          "emeutes",
+          "intervention_secours"
+        ]
       },
       {
         "condition": {
@@ -161,7 +221,27 @@
         },
         "a_demander": false,
         "article": "1.1-b",
-        "texte": "les piscines, spas et jacuzzi"
+        "texte": "les piscines, spas et jacuzzi",
+        "cibles": [
+          "incendie_evenements_annexes",
+          "dommages_electriques",
+          "tempete_grele_neige",
+          "venues_eau_gel",
+          "recherche_fuite",
+          "debordement_cuves",
+          "vol_vandalisme",
+          "vol_cles",
+          "deteriorations_immobilieres",
+          "bris_glaces",
+          "bris_glace_plus",
+          "bris_glace_renforce",
+          "contenu_congelateur",
+          "catastrophes_naturelles",
+          "relogement_catnat",
+          "attentats",
+          "emeutes",
+          "intervention_secours"
+        ]
       },
       {
         "condition": {
@@ -187,7 +267,27 @@
         },
         "a_demander": false,
         "article": "1.1-b",
-        "texte": "les plantations"
+        "texte": "les plantations",
+        "cibles": [
+          "incendie_evenements_annexes",
+          "dommages_electriques",
+          "tempete_grele_neige",
+          "venues_eau_gel",
+          "recherche_fuite",
+          "debordement_cuves",
+          "vol_vandalisme",
+          "vol_cles",
+          "deteriorations_immobilieres",
+          "bris_glaces",
+          "bris_glace_plus",
+          "bris_glace_renforce",
+          "contenu_congelateur",
+          "catastrophes_naturelles",
+          "relogement_catnat",
+          "attentats",
+          "emeutes",
+          "intervention_secours"
+        ]
       },
       {
         "condition": {
@@ -199,7 +299,27 @@
         "portee": "tout",
         "a_demander": false,
         "article": "1.1-b",
-        "texte": "les locaux inoccupés ou inutilisés depuis plus de 12 mois consécutifs"
+        "texte": "les locaux inoccupés ou inutilisés depuis plus de 12 mois consécutifs",
+        "cibles": [
+          "incendie_evenements_annexes",
+          "dommages_electriques",
+          "tempete_grele_neige",
+          "venues_eau_gel",
+          "recherche_fuite",
+          "debordement_cuves",
+          "vol_vandalisme",
+          "vol_cles",
+          "deteriorations_immobilieres",
+          "bris_glaces",
+          "bris_glace_plus",
+          "bris_glace_renforce",
+          "contenu_congelateur",
+          "catastrophes_naturelles",
+          "relogement_catnat",
+          "attentats",
+          "emeutes",
+          "intervention_secours"
+        ]
       }
     ],
     "extensions": [],
@@ -325,5 +445,37 @@
         "pourquoi": "le vocabulaire ne distingue pas une clôture d'un autre élément du bâtiment"
       }
     ]
-  }
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.1-b) : biens extérieurs hors des lieux assurés (`batiment`)"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.1-b) : un renvoi : ils font partie du contenu (1.2)"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.1-b) : aménagements extérieurs, hors des lieux assurés"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.1-b) : aménagements extérieurs, hors des lieux assurés"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.1-b) : le vocabulaire ne distingue pas la taille d'une serre"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (1.1-a) : le vocabulaire ne distingue pas une clôture d'un autre élément du bâtiment"
+    }
+  ]
 }

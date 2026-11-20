@@ -20,6 +20,7 @@ exclusion(vol_vandalisme, et([ou([f(lieu, cave), f(lieu, garage), f(lieu, annexe
     "les vols dans les dépendances, si vous avez souscrit la formule Eco").
 exclusion(vol_vandalisme, f(construction_close, non), tout, non, '2.5-c',
     "les vols, tentatives de vol, actes de vandalisme ou actes de sabotage commis sur les terrasses, les balcons, dans les jardins et dans les locaux non entièrement clos ou couverts").
+limite(vol_vandalisme, '4.1', "Si l’introduction a été facilitée ou aggravée par la nonconformité ou l’absence de mise en œuvre des moyens de protection et/ou de fermeture exigés aux conditions particulières, l’indemnité sera réduite de 50 %", "indemnité réduite de 50 %").
 garantie(vol_cles, "Vol des clés (Confort et Excellence)", '2.5-a',
     "au vol des clés, en tous lieux de l’Union européenne, du Royaume-Uni de Grande-Bretagne et d’Irlande du Nord, de votre local d’habitation et/ou des dépendances assurés dès lors que le dépôt de plainte fait état d’un vol").
 perimetre(vol_cles, f(evenement, vol)).
