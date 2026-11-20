@@ -3,7 +3,15 @@
     "article": "2.7",
     "modele": "mistral:mistral-large-latest",
     "date": "2026-11-20",
-    "consigne": "redaction-regles v12"
+    "consigne": "redaction-regles v12",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-20",
+      "modifications": [
+        "trois garanties : la base, « Bris de glace + » (Confort, Excellence : vitrocéramique, f-d21), « renforcé » (Excellence)",
+        "plus d'extensions sur un concept inconnu ; panneaux de signalisation, taille des serres : hors décision"
+      ]
+    }
   },
   "proposition": {
     "evenements": [
@@ -15,7 +23,7 @@
         "id": "bris_glaces",
         "nom": "Bris de glaces",
         "article": "2.7-a",
-        "texte": "La garantie couvre, lorsqu’ils sont brisés accidentellement, les frais de remplacement : • des miroirs intérieurs, des glaces équipant les meubles et les aquariums, • des vitrages des portes, portes-fenêtres, baies et fenêtres, y compris en toiture, • des parois vitrées intérieures ainsi que celles équipant les balcons, situés dans les locaux que vous occupez à titre privatif, • des panneaux de signalisation, • des serres en verre et matériaux assimilés d’une superficie jusqu’à 5 m2. Les produits en matière plastique remplissant les mêmes fonctions que les produits verriers des biens définis ci-avant sont également pris en charge. La garantie couvre également : • les frais de clôture provisoire lorsque cette dernière est indispensable pour la sécurité des locaux, • les dommages matériels occasionnés par les éclats de verre, • le film occultant ou protecteur.",
+        "texte": "La garantie couvre, lorsqu’ils sont brisés accidentellement, les frais de remplacement : • des miroirs intérieurs, des glaces équipant les meubles et les aquariums, • des vitrages des portes, portes-fenêtres, baies et fenêtres, y compris en toiture",
         "perimetre": [
           {
             "f": [
@@ -25,6 +33,12 @@
           },
           {
             "ou": [
+              {
+                "f": [
+                  "bien",
+                  "vitre"
+                ]
+              },
               {
                 "f": [
                   "bien",
@@ -40,12 +54,6 @@
               {
                 "f": [
                   "bien",
-                  "vitre"
-                ]
-              },
-              {
-                "f": [
-                  "bien",
                   "panneau_verre_plastique"
                 ]
               },
@@ -54,23 +62,48 @@
                   "bien",
                   "serre"
                 ]
-              },
+              }
+            ]
+          },
+          {
+            "concept": "batiment"
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      },
+      {
+        "id": "bris_glace_plus",
+        "nom": "Bris de glace + (Confort et Excellence)",
+        "article": "2.7-a",
+        "texte": "La garantie est étendue pour les formules Confort et Excellence aux : • plaques vitrocéramiques, plaques induction, • vérandas ou loggias (si l’option est souscrite), • vitraux, marquises, • appareils sanitaires",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "bris"
+            ]
+          },
+          {
+            "ou": [
               {
                 "f": [
                   "bien",
-                  "aquarium"
+                  "table_cuisson_vitroceramique"
                 ]
               },
               {
                 "f": [
                   "bien",
-                  "panneau_signalisation"
+                  "sanitaire"
                 ]
               },
               {
                 "f": [
                   "bien",
-                  "objet_verre_non_vitre"
+                  "veranda"
                 ]
               }
             ]
@@ -82,100 +115,6 @@
         "circonstances": [
           {
             "condition": {
-              "non": {
-                "f": [
-                  "intentionnel",
-                  "oui"
-                ]
-              }
-            },
-            "article": "2.7-a",
-            "texte": "lorsqu’ils sont brisés accidentellement"
-          }
-        ],
-        "obligations": [],
-        "exclusions": [
-          {
-            "condition": {
-              "f": [
-                "bien",
-                "appareil_electromenager"
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "2.7-b",
-            "texte": "les appareils électroménagers, sauf ceux garantis dans le « Bris de glace renforcé » ci-dessus"
-          },
-          {
-            "condition": {
-              "et": [
-                {
-                  "f": [
-                    "bien",
-                    "serre"
-                  ]
-                },
-                {
-                  "f": [
-                    "superficie_serre",
-                    "plus_5m2"
-                  ]
-                },
-                {
-                  "non": {
-                    "f": [
-                      "pack_jardin",
-                      "oui"
-                    ]
-                  }
-                }
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "2.7-b",
-            "texte": "les serres d’une superficie de plus de 5 m2, sauf si le Pack Jardin est souscrit"
-          },
-          {
-            "condition": {
-              "ou": [
-                {
-                  "f": [
-                    "type_dommage",
-                    "rayure_ou_ecaillement"
-                  ]
-                },
-                {
-                  "f": [
-                    "manque_entretien",
-                    "oui"
-                  ]
-                },
-                {
-                  "f": [
-                    "impropriete_support",
-                    "oui"
-                  ]
-                }
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "2.7-b",
-            "texte": "les ébréchures ainsi que tous dommages résultant de la vétusté ou de l’impropriété du support"
-          }
-        ],
-        "limites": []
-      }
-    ],
-    "exclusions_communes": [],
-    "extensions": [
-      {
-        "concept": "bris_glaces",
-        "condition": {
-          "et": [
-            {
               "ou": [
                 {
                   "f": [
@@ -191,144 +130,125 @@
                 }
               ]
             },
-            {
-              "si": [
-                {
-                  "f": [
-                    "bien",
-                    "veranda"
-                  ]
-                },
-                {
-                  "f": [
-                    "option_veranda",
-                    "oui"
-                  ]
-                }
+            "article": "2.7-a",
+            "texte": "La garantie est étendue pour les formules Confort et Excellence aux"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      },
+      {
+        "id": "bris_glace_renforce",
+        "nom": "Bris de glace renforcé (Excellence)",
+        "article": "2.7-a",
+        "texte": "La garantie est étendue pour la formule Excellence aux survitrages mobiles, vitres d’insert, vitres d’appareils électroménagers, ainsi que les panneaux solaires et photovoltaïques",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "bris"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "bien",
+                  "appareil_electromenager"
+                ]
+              },
+              {
+                "f": [
+                  "bien",
+                  "panneau_solaire"
+                ]
+              }
+            ]
+          },
+          {
+            "concept": "batiment"
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "formule",
+                "excellence"
               ]
+            },
+            "article": "2.7-a",
+            "texte": "La garantie est étendue pour la formule Excellence aux"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "bien",
+                "appareil_electromenager"
+              ]
+            },
+            {
+              "non": {
+                "f": [
+                  "formule",
+                  "excellence"
+                ]
+              }
             }
           ]
         },
-        "article": "2.7-a",
-        "texte": "La garantie est étendue pour les formules Confort et Excellence aux : • plaques vitrocéramiques, plaques induction, • vérandas ou loggias (si l’option est souscrite), • vitraux, marquises, • appareils sanitaires."
-      },
-      {
-        "concept": "bris_glaces",
-        "condition": {
-          "f": [
-            "formule",
-            "excellence"
-          ]
+        "portee": {
+          "bien": "appareil_electromenager"
         },
-        "article": "2.7-a",
-        "texte": "La garantie est étendue pour la formule Excellence aux survitrages mobiles, vitres d'insert, vitres d'appareils électroménagers, ainsi que les panneaux solaires et photovoltaïques en toiture ou montés sur châssis scellés au sol."
+        "a_demander": false,
+        "article": "2.7-b",
+        "texte": "les appareils électroménagers, sauf ceux garantis dans le « Bris de glace renforcé » ci-dessus"
       }
     ],
-    "vocabulaire_manquant": [
+    "extensions": [],
+    "vocabulaire_manquant": [],
+    "non_traduit": [],
+    "hors_decision": [
       {
-        "variable": "bien",
-        "valeurs": [
-          "aquarium",
-          "panneau_signalisation",
-          "vitrail",
-          "marquise",
-          "survitrage_mobile",
-          "vitre_insert",
-          "vitre_appareil_electromenager"
-        ],
-        "question": "Quel bien est endommagé ?",
-        "pourquoi": "Biens spécifiques mentionnés dans la garantie bris de glaces et non présents dans le vocabulaire existant",
-        "plus_proche": "bien : la liste existante ne contient pas ces biens spécifiques",
-        "aide": {
-          "aquarium": "l'aquarium ou sa glace est endommagé",
-          "panneau_signalisation": "un panneau de signalisation en verre est endommagé",
-          "vitrail": "un vitrail est endommagé",
-          "marquise": "une marquise en verre est endommagée",
-          "survitrage_mobile": "un survitrage mobile est endommagé",
-          "vitre_insert": "la vitre d'un insert est endommagée",
-          "vitre_appareil_electromenager": "la vitre d'un appareil électroménager est endommagée"
-        },
-        "parent": {
-          "aquarium": "objet_divers",
-          "panneau_signalisation": "enseigne",
-          "vitrail": "vitre",
-          "marquise": "veranda",
-          "survitrage_mobile": "vitre",
-          "vitre_insert": "vitre",
-          "vitre_appareil_electromenager": "appareil_electromenager"
-        }
+        "article": "2.7-a",
+        "texte": "des panneaux de signalisation",
+        "pourquoi": "le vocabulaire ne les distingue pas (« enseigne » est autre chose)"
       },
       {
-        "variable": "superficie_serre",
-        "valeurs": [
-          "moins_5m2",
-          "plus_5m2"
-        ],
-        "question": "Quelle est la superficie de la serre endommagée ?",
-        "pourquoi": "La garantie couvre les serres jusqu'à 5 m2 et exclut celles de plus de 5 m2 (sauf Pack Jardin)",
-        "plus_proche": "bien : serre existe mais ne distingue pas la taille",
-        "aide": {
-          "moins_5m2": "la serre fait 5 m2 ou moins",
-          "plus_5m2": "la serre fait plus de 5 m2"
-        }
+        "article": "2.7-a",
+        "texte": "d’une superficie jusqu’à 5 m2",
+        "pourquoi": "le vocabulaire ne distingue pas la taille d'une serre"
       },
       {
-        "variable": "impropriete_support",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Le dommage résulte-t-il de l'impropriété du support (support inadapté, défectueux ou non conforme) ?",
-        "pourquoi": "Exclusion des dommages résultant de l'impropriété du support",
-        "plus_proche": "manque_entretien : couvre l'usure et le manque d'entretien, pas l'inadaptation intrinsèque du support",
-        "aide": {
-          "oui": "le support n'était pas adapté ou était défectueux (ex: cadre trop petit, fixation inadéquate, matériau incompatible)",
-          "non": "le support était conforme et adapté au vitrage"
-        }
+        "article": "2.7-a",
+        "texte": "les frais de clôture provisoire lorsque cette dernière est indispensable pour la sécurité des locaux",
+        "pourquoi": "des frais, compris dans la garantie"
+      },
+      {
+        "article": "2.7-a",
+        "texte": "les dommages matériels occasionnés par les éclats de verre",
+        "pourquoi": "compris dans la garantie"
+      },
+      {
+        "article": "2.7-b",
+        "texte": "les serres d’une superficie de plus de 5 m2, sauf si le Pack Jardin est souscrit",
+        "pourquoi": "le vocabulaire ne distingue pas la taille d'une serre"
+      },
+      {
+        "article": "2.7-b",
+        "texte": "les ébréchures ainsi que tous dommages résultant de la vétusté ou de l’impropriété du support",
+        "pourquoi": "le vocabulaire ne distingue ni l'ébréchure ni le support"
       }
-    ],
-    "non_traduit": []
-  },
-  "controles": [
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "bien = aquarium : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "bien = panneau_signalisation : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "superficie_serre = plus_5m2 : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.7`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "impropriete_support = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.7`) ou à remplacer"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "portée",
-      "message": "exclusion « les appareils électroménagers, sauf ceux garantis dans le «  » : ne vise que appareil_electromenager, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "réserve",
-      "message": "exclusion « les appareils électroménagers, sauf ceux garantis dans le «  » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "concept",
-      "message": "extension d'un concept inconnu : bris_glaces (concepts de ce contrat : batiment)"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "concept",
-      "message": "extension d'un concept inconnu : bris_glaces (concepts de ce contrat : batiment)"
-    }
-  ]
+    ]
+  }
 }

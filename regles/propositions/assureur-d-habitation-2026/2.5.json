@@ -3,75 +3,30 @@
     "article": "2.5",
     "modele": "mistral:mistral-large-latest",
     "date": "2026-11-20",
-    "consigne": "redaction-regles v12"
+    "consigne": "redaction-regles v12",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-20",
+      "modifications": [
+        "effraction (existante) ou `acces_voleur` (escalade, menaces, clés volées, fausse qualité) : sans effraction ni accès garanti, un refus (f-d18)",
+        "famille ou préposés sans plainte (`plainte_deposee`) ; clés laissées dehors (f-d12) ; dépendances en Eco à demander (f-d25) ; objets précieux en dépendance (portée bien)",
+        "vol des clés en tous lieux : une garantie à part, Confort ou Excellence, sur plainte",
+        "terrasses, jardins : hors des lieux assurés ; locaux non clos : `construction_close`"
+      ]
+    }
   },
   "proposition": {
     "evenements": [
       "vol",
       "vandalisme"
     ],
-    "definitions": [
-      {
-        "concept": "dependances",
-        "condition": {
-          "ou": [
-            {
-              "f": [
-                "lieu",
-                "garage"
-              ]
-            },
-            {
-              "f": [
-                "lieu",
-                "cave"
-              ]
-            },
-            {
-              "f": [
-                "lieu",
-                "grenier"
-              ]
-            },
-            {
-              "f": [
-                "lieu",
-                "annexe"
-              ]
-            }
-          ]
-        },
-        "article": "S10-a/dependances",
-        "texte": "Ce sont les locaux destinés à un usage autre que le local d’habitation ou l’exercice d’une profession situés en dehors de la « verticalité » du local d’habitation. Sont également considérés comme dépendances les caves et les garages situés dans les immeubles collectifs."
-      },
-      {
-        "concept": "objets_precieux",
-        "condition": {
-          "ou": [
-            {
-              "f": [
-                "bien",
-                "bijoux"
-              ]
-            },
-            {
-              "f": [
-                "bien",
-                "valeurs"
-              ]
-            }
-          ]
-        },
-        "article": "S10-a/objets-de-valeur",
-        "texte": "Objets précieux (bijoux, pierreries, les perles non montées, argenterie massive, articles d’orfèvrerie et autres ouvrages en métaux précieux), espèces, titres et valeurs, objets d’art et fourrures d’un montant unitaire supérieur à 2 000 € (tapis noués à la main, tapisseries, tableaux, statues et statuettes, sculptures, vases, ménagères en métal argenté, fourrures, vêtements de haute couture), le mobilier précieux, les timbres et les collections de timbres dès lors que vous souhaitez le(s) désigner spécifiquement dans vos conditions particulières, soit en valeur expertisée, soit en valeur déclarée."
-      }
-    ],
+    "definitions": [],
     "garanties": [
       {
         "id": "vol_vandalisme",
-        "nom": "Vol, tentative de vol, vandalisme et sabotage",
+        "nom": "Vol, tentative de vol, vandalisme",
         "article": "2.5-a",
-        "texte": "La garantie couvre la disparition, la destruction ou la détérioration des biens assurés résultant : • d’un vol, • d’une tentative de vol, • d ’un acte de vandalisme ou de sabotage, lorsque ces méfaits sont commis à l’intérieur des locaux assurés, par effraction ou escalade de ces locaux et ayant laissé des traces apparentes.",
+        "texte": "La garantie couvre la disparition, la destruction ou la détérioration des biens assurés résultant : • d’un vol, • d’une tentative de vol, • d ’un acte de vandalisme ou de sabotage",
         "perimetre": [
           {
             "ou": [
@@ -90,14 +45,10 @@
             ]
           },
           {
-            "ou": [
-              {
-                "concept": "batiment"
-              },
-              {
-                "concept": "dependances"
-              }
-            ]
+            "concept": "contenu"
+          },
+          {
+            "concept": "batiment"
           }
         ],
         "circonstances": [
@@ -105,53 +56,39 @@
             "condition": {
               "ou": [
                 {
-                  "et": [
-                    {
-                      "f": [
-                        "effraction",
-                        "oui"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "traces_apparentes",
-                        "oui"
-                      ]
-                    }
-                  ]
-                },
-                {
                   "f": [
-                    "violence",
+                    "effraction",
                     "oui"
                   ]
                 },
                 {
-                  "et": [
-                    {
-                      "f": [
-                        "vol_cles",
-                        "oui"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "dans_48h",
-                        "oui"
-                      ]
-                    }
+                  "f": [
+                    "acces_voleur",
+                    "escalade"
                   ]
                 },
                 {
                   "f": [
-                    "introduction_fausse_qualite",
-                    "oui"
+                    "acces_voleur",
+                    "menaces"
+                  ]
+                },
+                {
+                  "f": [
+                    "acces_voleur",
+                    "cles_volees"
+                  ]
+                },
+                {
+                  "f": [
+                    "acces_voleur",
+                    "fausse_qualite"
                   ]
                 }
               ]
             },
             "article": "2.5-a",
-            "texte": "La garantie est étendue, pour autant que vous puissiez en apporter la preuve : • au vol dans les locaux assurés par menaces physiques ou violences physiques sur vous, • au vol à la suite du vol des clés, exclusivement dans les 48 h qui suivent l’heure à laquelle vous avez eu connaissance du vol des clés, • au vol à la suite d’une introduction par fausse qualité dans les locaux assurés."
+            "texte": "lorsque ces méfaits sont commis à l’intérieur des locaux assurés, par effraction ou escalade de ces locaux…au vol dans les locaux assurés par menaces physiques…au vol à la suite du vol des clés…au vol à la suite d’une introduction par fausse qualité"
           }
         ],
         "obligations": [],
@@ -178,7 +115,7 @@
                 {
                   "non": {
                     "f": [
-                      "plainte_nominative",
+                      "plainte_deposee",
                       "oui"
                     ]
                   }
@@ -198,7 +135,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "2.5-c",
             "texte": "les vols des clés déposées, sans protection, à l’extérieur des locaux y compris dans une boîte à clé ou dans une boîte à lettres ainsi que toutes leurs conséquences"
           },
@@ -206,23 +143,124 @@
             "condition": {
               "et": [
                 {
-                  "concept": "objets_precieux"
+                  "f": [
+                    "bien",
+                    "bijoux"
+                  ]
                 },
                 {
-                  "concept": "dependances"
+                  "ou": [
+                    {
+                      "f": [
+                        "lieu",
+                        "cave"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "lieu",
+                        "garage"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "lieu",
+                        "annexe"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "lieu",
+                        "abri_jardin"
+                      ]
+                    }
+                  ]
                 }
               ]
             },
-            "portee": "tout",
-            "a_demander": true,
+            "portee": {
+              "bien": "bijoux"
+            },
+            "a_demander": false,
             "article": "2.5-c",
-            "texte": "les vols des objets précieux dans les dépendances"
+            "texte": "l es vols des objets précieux dans les dépendances"
           },
           {
             "condition": {
               "et": [
                 {
-                  "concept": "dependances"
+                  "f": [
+                    "bien",
+                    "valeurs"
+                  ]
+                },
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "lieu",
+                        "cave"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "lieu",
+                        "garage"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "lieu",
+                        "annexe"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "lieu",
+                        "abri_jardin"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "portee": {
+              "bien": "valeurs"
+            },
+            "a_demander": false,
+            "article": "2.5-c",
+            "texte": "l es vols des objets précieux dans les dépendances"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "lieu",
+                        "cave"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "lieu",
+                        "garage"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "lieu",
+                        "annexe"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "lieu",
+                        "abri_jardin"
+                      ]
+                    }
+                  ]
                 },
                 {
                   "f": [
@@ -239,375 +277,110 @@
           },
           {
             "condition": {
-              "et": [
-                {
-                  "f": [
-                    "objet_art_fourrure",
-                    "oui"
-                  ]
-                },
-                {
-                  "f": [
-                    "valeur_superieure_2000",
-                    "oui"
-                  ]
-                },
-                {
-                  "ou": [
-                    {
-                      "concept": "dependances"
-                    },
-                    {
-                      "f": [
-                        "lieu",
-                        "residence_secondaire"
-                      ]
-                    }
-                  ]
-                }
+              "f": [
+                "construction_close",
+                "non"
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "2.5-c",
-            "texte": "les vols des objets d’art et de fourrures - lorsque leur valeur excède 2 000 € - dans les dépendances et les résidences secondaires"
+            "texte": "les vols, tentatives de vol, actes de vandalisme ou actes de sabotage commis sur les terrasses, les balcons, dans les jardins et dans les locaux non entièrement clos ou couverts"
+          }
+        ],
+        "limites": []
+      },
+      {
+        "id": "vol_cles",
+        "nom": "Vol des clés (Confort et Excellence)",
+        "article": "2.5-a",
+        "texte": "au vol des clés, en tous lieux de l’Union européenne, du Royaume-Uni de Grande-Bretagne et d’Irlande du Nord, de votre local d’habitation et/ou des dépendances assurés dès lors que le dépôt de plainte fait état d’un vol",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "vol"
+            ]
           },
           {
-            "condition": {
-              "et": [
-                {
-                  "ou": [
-                    {
-                      "f": [
-                        "lieu",
-                        "terrasse"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "lieu",
-                        "jardin"
-                      ]
-                    },
-                    {
-                      "non": {
-                        "f": [
-                          "construction_close",
-                          "oui"
-                        ]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "non": {
-                    "f": [
-                      "pack_jardin",
-                      "oui"
-                    ]
-                  }
-                }
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "2.5-c",
-            "texte": "les vols, tentatives de vol, actes de vandalisme ou actes de sabotage commis sur les terrasses, les balcons, dans les jardins et dans les locaux non entièrement clos ou couverts, sauf si le Pack Jardin est souscrit"
-          },
+            "f": [
+              "bien",
+              "cles"
+            ]
+          }
+        ],
+        "circonstances": [
           {
             "condition": {
               "f": [
-                "bien",
-                "rampe_pmr"
+                "plainte_deposee",
+                "oui"
+              ]
+            },
+            "article": "2.5-a",
+            "texte": "dès lors que le dépôt de plainte fait état d’un vol"
+          },
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "formule",
+                    "confort"
+                  ]
+                },
+                {
+                  "f": [
+                    "formule",
+                    "excellence"
+                  ]
+                }
+              ]
+            },
+            "article": "2.5-a",
+            "texte": "Extensions de garantie pour les formules Confort et Excellence"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "cles_deposees_exterieur",
+                "oui"
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "2.5-c",
-            "texte": "le vol des rampes amovibles d’accès pour personne à mobilité réduite"
+            "texte": "les vols des clés déposées, sans protection, à l’extérieur des locaux y compris dans une boîte à clé ou dans une boîte à lettres"
           }
         ],
         "limites": []
       }
     ],
     "exclusions_communes": [],
-    "extensions": [
-      {
-        "concept": "papiers_identite",
-        "condition": {
-          "ou": [
-            {
-              "f": [
-                "pays",
-                "royaume_uni"
-              ]
-            },
-            {
-              "f": [
-                "pays",
-                "allemagne"
-              ]
-            },
-            {
-              "f": [
-                "pays",
-                "france"
-              ]
-            },
-            {
-              "f": [
-                "pays",
-                "luxembourg"
-              ]
-            },
-            {
-              "f": [
-                "pays",
-                "autre_ue"
-              ]
-            },
-            {
-              "et": [
-                {
-                  "f": [
-                    "lieu",
-                    "logement"
-                  ]
-                },
-                {
-                  "f": [
-                    "effraction",
-                    "oui"
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        "article": "2.5-a",
-        "texte": "au vol des papiers d’identité, du permis de conduire, du certificat d’immatriculation (ex. carte grise) et de la carte de crédit, dans l’une des circonstances suivantes : - survenu à l’intérieur des locaux assurés par effraction ou escalade des locaux, menaces physiques, usage des clés du sociétaire dès lors qu’elles ont fait l’objet d’un vol ou introduction par fausse qualité, - en tous lieux de l’Union européenne, du Royaume-Uni de Grande-Bretagne et d’Irlande du Nord."
-      },
-      {
-        "concept": "cles",
-        "condition": {
-          "et": [
-            {
-              "f": [
-                "plainte_deposee",
-                "oui"
-              ]
-            },
-            {
-              "ou": [
-                {
-                  "f": [
-                    "pays",
-                    "royaume_uni"
-                  ]
-                },
-                {
-                  "f": [
-                    "pays",
-                    "allemagne"
-                  ]
-                },
-                {
-                  "f": [
-                    "pays",
-                    "france"
-                  ]
-                },
-                {
-                  "f": [
-                    "pays",
-                    "luxembourg"
-                  ]
-                },
-                {
-                  "f": [
-                    "pays",
-                    "autre_ue"
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        "article": "2.5-a",
-        "texte": "au vol des clés, en tous lieux de l’Union européenne, du Royaume-Uni de Grande-Bretagne et d’Irlande du Nord, de votre local d’habitation et/ou des dépendances assurés dès lors que le dépôt de plainte fait état d’un vol, pour les frais de remplacement à l’identique des canons de serrure, des verrous équipant les locaux assurés ou des télécommandes permettant d’ouvrir ces derniers et leurs portails d’accès."
-      },
-      {
-        "concept": "objets_precieux",
-        "condition": {
-          "et": [
-            {
-              "f": [
-                "formule",
-                "excellence"
-              ]
-            },
-            {
-              "f": [
-                "option_objets_valeur",
-                "oui"
-              ]
-            },
-            {
-              "f": [
-                "lieu",
-                "residence_secondaire"
-              ]
-            }
-          ]
-        },
-        "article": "2.5-b",
-        "texte": "si l’option « objets de valeur » est souscrite, le vol des objets précieux vous appartenant de la résidence principale dans votre résidence secondaire lorsque vous y séjournez."
-      },
-      {
-        "concept": "cles_vehicule",
-        "condition": {
-          "et": [
-            {
-              "f": [
-                "plainte_deposee",
-                "oui"
-              ]
-            },
-            {
-              "ou": [
-                {
-                  "f": [
-                    "pays",
-                    "royaume_uni"
-                  ]
-                },
-                {
-                  "f": [
-                    "pays",
-                    "allemagne"
-                  ]
-                },
-                {
-                  "f": [
-                    "pays",
-                    "france"
-                  ]
-                },
-                {
-                  "f": [
-                    "pays",
-                    "luxembourg"
-                  ]
-                },
-                {
-                  "f": [
-                    "pays",
-                    "autre_ue"
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        "article": "2.5-b",
-        "texte": "les frais de remplacement des clés, barillets, système de télécommande de véhicule en cas de vol des clés de celui-ci en tous lieux de l’Union européenne, du Royaume-Uni de Grande-Bretagne et d’Irlande du Nord, dès lors que le dépôt de plainte fait état d’un vol"
-      },
-      {
-        "concept": "plaque_signaletique",
-        "condition": {
-          "f": [
-            "lieu",
-            "autre_batiment"
-          ]
-        },
-        "article": "2.5-b",
-        "texte": "le vol de votre plaque signalétique professionnelle située à l’extérieur de votre local d’habitation"
-      }
-    ],
+    "extensions": [],
     "vocabulaire_manquant": [
       {
-        "variable": "traces_apparentes",
+        "variable": "acces_voleur",
         "valeurs": [
-          "oui",
-          "non"
+          "escalade",
+          "menaces",
+          "cles_volees",
+          "fausse_qualite",
+          "sans_effraction"
         ],
-        "question": "Des traces apparentes ont-elles été laissées ?",
-        "pourquoi": "condition effraction/escalade",
-        "plus_proche": "effraction",
+        "question": "Comment le voleur ou l'auteur est-il entré (hors effraction) ?",
+        "pourquoi": "2.5-a, 2.6-a : effraction ou escalade, menaces, vol des clés, introduction par fausse qualité",
         "aide": {
-          "oui": "traces visibles",
-          "non": "pas de traces"
-        }
-      },
-      {
-        "variable": "escalade",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Y a-t-il eu escalade ?",
-        "pourquoi": "mode d'accès",
-        "plus_proche": "effraction",
-        "aide": {
-          "oui": "entrée par escalade",
-          "non": "non"
-        }
-      },
-      {
-        "variable": "vol_cles",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Les clés ont-elles été volées ?",
-        "pourquoi": "extension vol suite vol clés",
-        "plus_proche": "vol_sur_personne",
-        "aide": {
-          "oui": "clés volées",
-          "non": "non"
-        }
-      },
-      {
-        "variable": "dans_48h",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Dans les 48h après connaissance du vol des clés ?",
-        "pourquoi": "délai extension",
-        "plus_proche": "aucune",
-        "aide": {
-          "oui": "oui",
-          "non": "non"
-        }
-      },
-      {
-        "variable": "introduction_fausse_qualite",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Introduction par fausse qualité ?",
-        "pourquoi": "mode d'accès",
-        "plus_proche": "abus_confiance",
-        "aide": {
-          "oui": "usurpation d'identité",
-          "non": "non"
-        }
-      },
-      {
-        "variable": "plainte_nominative",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Plainte nominative déposée contre l'auteur ?",
-        "pourquoi": "réserve exclusion famille",
-        "plus_proche": "plainte_deposee",
-        "aide": {
-          "oui": "oui",
-          "non": "non"
-        }
+          "escalade": "par escalade : mur, balcon, fenêtre en hauteur",
+          "menaces": "par menaces ou violences physiques sur l'assuré ou un proche",
+          "cles_volees": "avec les clés de l'assuré, volées auparavant",
+          "fausse_qualite": "en se faisant passer pour un employé, un agent, un livreur",
+          "sans_effraction": "porte ou fenêtre ouverte ou non verrouillée, aucune trace"
+        },
+        "plus_proche": "effraction, violence : oui/non chacun ; cinq faits oui/non dont un seul inconnu rend tout incertain"
       },
       {
         "variable": "cles_deposees_exterieur",
@@ -615,168 +388,67 @@
           "oui",
           "non"
         ],
-        "question": "Clés déposées sans protection à l'extérieur ?",
-        "pourquoi": "exclusion clés",
-        "plus_proche": "cles_a_proximite",
+        "question": "Les clés avaient-elles été laissées dehors (boîte aux lettres, boîte à clé, sous le paillasson) ?",
+        "pourquoi": "2.5-c",
         "aide": {
-          "oui": "clés dehors sans protection",
+          "oui": "clés laissées sans protection à l'extérieur",
           "non": "non"
-        }
-      },
-      {
-        "variable": "objet_art_fourrure",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Objet d'art ou fourrure ?",
-        "pourquoi": "exclusion >2000€",
-        "plus_proche": "bijoux",
-        "aide": {
-          "oui": "art/fourrure",
-          "non": "autre"
-        }
-      },
-      {
-        "variable": "valeur_superieure_2000",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Valeur > 2000 € ?",
-        "pourquoi": "seuil exclusion",
-        "plus_proche": "aucune",
-        "aide": {
-          "oui": ">2000€",
-          "non": "<2000€"
-        }
-      },
-      {
-        "variable": "rampe_pmr",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Rampe amovible PMR ?",
-        "pourquoi": "exclusion spécifique",
-        "plus_proche": "objet_divers",
-        "aide": {
-          "oui": "rampe PMR",
-          "non": "autre"
-        }
-      },
-      {
-        "variable": "sabotage",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Acte de sabotage ?",
-        "pourquoi": "événement non listé",
-        "plus_proche": "vandalisme",
-        "aide": {
-          "oui": "sabotage",
-          "non": "autre"
-        }
+        },
+        "plus_proche": "cles_a_proximite : des clés laissées près d'une porte, pas dehors sans protection"
       }
     ],
-    "non_traduit": []
-  },
-  "controles": [
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "lieu = residence_secondaire : hors vocabulaire, et non déclaré"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "traces_apparentes = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "vol_cles = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "dans_48h = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "introduction_fausse_qualite = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "plainte_nominative = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "cles_deposees_exterieur = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "objet_art_fourrure = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "valeur_superieure_2000 = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.5`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "bien = rampe_pmr : hors vocabulaire, et non déclaré"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "citation",
-      "message": "définition (S10-a/objets-de-valeur) : « Objets précieux (bijoux, pierreries, les perles non montées, argenterie massive, » ne figure pas dans la clause"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "citation",
-      "message": "extension (2.5-b) : « les frais de remplacement des clés, barillets, système de télécommande de véhicu » ne figure pas dans la clause"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "citation",
-      "message": "exclusion (2.5-c) : « les vols des objets précieux dans les dépendances » ne figure pas dans la clause"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "portée",
-      "message": "exclusion « le vol des rampes amovibles d’accès pour personne à mobilité » : ne vise que rampe_pmr, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (2.5-c) : « l es vols des objets précieux dans les dépendances, »"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "concept",
-      "message": "extension d'un concept inconnu : papiers_identite (concepts de ce contrat : batiment, dependances, objets_precieux)"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "concept",
-      "message": "extension d'un concept inconnu : cles (concepts de ce contrat : batiment, dependances, objets_precieux)"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "concept",
-      "message": "extension d'un concept inconnu : cles_vehicule (concepts de ce contrat : batiment, dependances, objets_precieux)"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "concept",
-      "message": "extension d'un concept inconnu : plaque_signaletique (concepts de ce contrat : batiment, dependances, objets_precieux)"
-    }
-  ]
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "2.5",
+        "texte": "Il vous appartient de réunir tous moyens de preuve",
+        "pourquoi": "la preuve, pas la couverture"
+      },
+      {
+        "article": "2.5-a",
+        "texte": "ayant laissé des traces apparentes",
+        "pourquoi": "porté par l'effraction"
+      },
+      {
+        "article": "2.5-a",
+        "texte": "exclusivement dans les 48 h qui suivent l’heure à laquelle vous avez eu connaissance du vol des clés",
+        "pourquoi": "un délai que le vocabulaire ne mesure pas"
+      },
+      {
+        "article": "2.5-a",
+        "texte": "au vol des papiers d’identité, du permis de conduire, du certificat d’immatriculation (ex. carte grise) et de la carte de crédit",
+        "pourquoi": "le vocabulaire ne distingue pas les papiers ni la carte de crédit"
+      },
+      {
+        "article": "2.5-b",
+        "texte": "le vol des objets précieux vous appartenant de la résidence principale dans votre résidence secondaire lorsque vous y séjournez",
+        "pourquoi": "option et formule Excellence ; le vocabulaire ne distingue pas la résidence secondaire"
+      },
+      {
+        "article": "2.5-b",
+        "texte": "les frais de remplacement des clés, barillets, système de téléc ommande de véhicule",
+        "pourquoi": "les clés du véhicule : des frais, le véhicule n'est pas assuré"
+      },
+      {
+        "article": "2.5-b",
+        "texte": "le vol de votre plaque signalétique professionnelle située à l’extérieur de votre local d’habitation",
+        "pourquoi": "le vocabulaire ne distingue pas une plaque professionnelle"
+      },
+      {
+        "article": "2.5-c",
+        "texte": "les vols des objets d’art et de fourrures - lorsque leur valeur excède 2 000 € - dans les dépendances et les résidences secondaires",
+        "pourquoi": "le vocabulaire ne distingue ni les fourrures ni la valeur d'un objet"
+      },
+      {
+        "article": "2.5-c",
+        "texte": "le vol des rampes amovibles d’accès pour personne à mobilité réduite",
+        "pourquoi": "le vocabulaire ne distingue pas ces rampes"
+      },
+      {
+        "article": "2.5-c",
+        "texte": "ATTENTION Vous devez respecter certaines mesures de sécurité pour bénéficier pleinement de la garantie (voir ART. 4.1)",
+        "pourquoi": "renvoi au titre IV (mesures de sécurité), traduit avec lui (lot 3)"
+      }
+    ]
+  }
 }

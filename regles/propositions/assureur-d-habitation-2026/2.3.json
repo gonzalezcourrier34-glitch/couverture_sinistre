@@ -3,7 +3,16 @@
     "article": "2.3",
     "modele": "mistral:mistral-large-latest",
     "date": "2026-11-20",
-    "consigne": "redaction-regles v12"
+    "consigne": "redaction-regles v12",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-20",
+      "modifications": [
+        "intensité (voisinage, certificat, plus de 100 km/h) pour le vent et pour la neige",
+        "objets en plein air : par le lieu (jardin, terrasse), sauf mobilier de jardin avec Pack Jardin (f-d14)",
+        "ancrage, règles de l'art : la construction non close (variable existante) ; avalanche hors décision"
+      ]
+    }
   },
   "proposition": {
     "evenements": [
@@ -12,71 +21,68 @@
     "definitions": [],
     "garanties": [
       {
-        "id": "tempete_grele_avalanche_neige",
-        "nom": "Tempête, grêle, avalanche, neige sur les toitures",
+        "id": "tempete_grele_neige",
+        "nom": "Tempête, grêle, neige sur les toitures",
         "article": "2.3-a",
-        "texte": "La garantie couvre les dommages matériels causés aux biens assurés par l'action directe : • du vent ou du choc d'un objet renversé ou projeté par le vent (garantie tempête), • des avalanches de toutes natures, • de la grêle sur les toitures y compris sur les gouttières et les chéneaux en métal ou en PVC, les antennes et paraboles, les façades, les portes et fenêtres, les volets, • de la grêle, du poids de la neige ou de la glace sur votre piscine et votre abri de piscine (si l'option est souscrite pour chacun de ces biens dans le Pack Piscine), • du poids de la neige ou de la glace accumulée sur les toitures y compris sur les gouttières et les chéneaux en métal ou en PVC, lorsque ces phénomènes ont une intensité telle qu'ils détruisent ou endommagent d'autres bâtiments de bonne construction dans le voisinage ou que leur caractère exceptionnel est attesté par un certificat de la station météorologique la plus proche (vitesse supérieure à 100 km/h dans le cas du vent). Sont considérés comme constituant un seul et même sinistre les dommages causés par la pluie, la neige ou la grêle pénétrant à l'intérieur du bâtiment, consécutifs à l'événement garanti et survenus dans les 48 heures (dommages de mouille).",
+        "texte": "La garantie couvre les dommages matériels causés aux biens assurés par l’action directe : • du vent ou du choc d’un objet renversé ou projeté par le vent (garantie tempête)",
         "perimetre": [
           {
-            "ou": [
-              {
-                "f": [
-                  "evenement",
-                  "tempete"
-                ]
-              },
-              {
-                "f": [
-                  "evenement",
-                  "avalanche"
-                ]
-              }
+            "f": [
+              "evenement",
+              "tempete"
             ]
           },
           {
             "ou": [
               {
-                "concept": "batiment"
+                "concept": "contenu"
               },
               {
-                "et": [
-                  {
-                    "f": [
-                      "bien",
-                      "piscine"
-                    ]
-                  },
-                  {
-                    "f": [
-                      "pack_piscine",
-                      "oui"
-                    ]
-                  }
-                ]
-              },
-              {
-                "et": [
-                  {
-                    "f": [
-                      "bien",
-                      "abri_piscine"
-                    ]
-                  },
-                  {
-                    "f": [
-                      "pack_piscine",
-                      "oui"
-                    ]
-                  }
+                "f": [
+                  "bien",
+                  "element_batiment"
                 ]
               }
             ]
+          },
+          {
+            "concept": "batiment"
           }
         ],
         "circonstances": [
           {
             "condition": {
-              "et": [
+              "si": [
+                {
+                  "f": [
+                    "alea_tempete",
+                    "vent"
+                  ]
+                },
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "vent_dommages_voisins",
+                        "oui"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "vent_100_kmh",
+                        "oui"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "article": "2.3-a",
+            "texte": "lorsque ces phénomènes ont une intensité telle qu’ils détruisent ou endommagent d’autres bâtiments de bonne construction dans le voisinage ou que leur caractère exceptionnel est attesté par un certificat de la station météorologique la plus proche (vitesse supérieure à 100 km/h dans le cas du vent)"
+          },
+          {
+            "condition": {
+              "si": [
                 {
                   "f": [
                     "alea_tempete",
@@ -87,7 +93,7 @@
                   "ou": [
                     {
                       "f": [
-                        "dommages_voisins",
+                        "neige_dommages_voisins",
                         "oui"
                       ]
                     },
@@ -102,17 +108,7 @@
               ]
             },
             "article": "2.3-a",
-            "texte": "lorsque ces phénomènes ont une intensité telle qu'ils détruisent ou endommagent d'autres bâtiments de bonne construction dans le voisinage ou que leur caractère exceptionnel est attesté par un certificat de la station météorologique la plus proche (vitesse supérieure à 100 km/h dans le cas du vent)"
-          },
-          {
-            "condition": {
-              "f": [
-                "dommages_dans_48h",
-                "oui"
-              ]
-            },
-            "article": "2.3-a",
-            "texte": "Sont considérés comme constituant un seul et même sinistre les dommages causés par la pluie, la neige ou la grêle pénétrant à l'intérieur du bâtiment, consécutifs à l'événement garanti et survenus dans les 48 heures (dommages de mouille)"
+            "texte": "lorsque ces phénomènes ont une intensité telle qu’ils détruisent ou endommagent d’autres bâtiments de bonne construction dans le voisinage ou que leur caractère exceptionnel est attesté par un certificat de la station météorologique la plus proche (vitesse supérieure à 100 km/h dans le cas du vent)"
           }
         ],
         "obligations": [],
@@ -127,25 +123,9 @@
                   ]
                 },
                 {
-                  "ou": [
-                    {
-                      "f": [
-                        "elements_porteurs_ancres",
-                        "non"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "construit_selon_regles_art",
-                        "non"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "construction_close",
-                        "non"
-                      ]
-                    }
+                  "f": [
+                    "construction_close",
+                    "non"
                   ]
                 }
               ]
@@ -153,15 +133,25 @@
             "portee": "tout",
             "a_demander": true,
             "article": "2.3-b",
-            "texte": "les dommages occasionnés par le vent aux bâtiments dont les éléments porteurs ne sont pas ancrés, à ceux qui ne sont pas construits selon les règles de l'art ou qui ne sont pas entièrement clos et couverts, ainsi qu'à leur contenu"
+            "texte": "les dommages occasionnés par le vent aux bâtiments dont les éléments porteurs ne sont pas ancrés, à ceux qui ne sont pas construits selon les règles de l’art ou qui ne sont pas entièrement clos et couverts, ainsi qu’à leur contenu"
           },
           {
             "condition": {
               "et": [
                 {
-                  "f": [
-                    "objet_plein_air",
-                    "oui"
+                  "ou": [
+                    {
+                      "f": [
+                        "lieu",
+                        "jardin"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "lieu",
+                        "terrasse"
+                      ]
+                    }
                   ]
                 },
                 {
@@ -187,7 +177,7 @@
             "portee": "tout",
             "a_demander": true,
             "article": "2.3-b",
-            "texte": "les objets en plein air, sauf pour le mobilier de jardin assuré dans le Pack Jardin s'il est souscrit"
+            "texte": "les objets en plein air, sauf pour le mobilier de jardin assuré dans le Pack Jardin s’il est souscrit"
           }
         ],
         "limites": []
@@ -197,31 +187,32 @@
     "extensions": [],
     "vocabulaire_manquant": [
       {
-        "variable": "evenement",
-        "valeurs": [
-          "avalanche"
-        ],
-        "question": "S'agit-il d'une avalanche ?",
-        "pourquoi": "L'article 2.3 couvre les avalanches de toutes natures, mais la valeur 'avalanche' n'existe pas dans la variable evenement",
-        "plus_proche": "catastrophe_naturelle : ne contient pas l'avalanche",
-        "parent": "catastrophe_naturelle",
-        "aide": {
-          "avalanche": "une avalanche de neige a causé les dommages"
-        }
-      },
-      {
-        "variable": "dommages_voisins",
+        "variable": "vent_100_kmh",
         "valeurs": [
           "oui",
           "non"
         ],
-        "question": "Les phénomènes (neige/glace) ont-ils détruit ou endommagé d'autres bâtiments de bonne construction dans le voisinage ?",
-        "pourquoi": "Condition d'intensité pour la neige/glace sur toitures : dommages à d'autres bâtiments dans le voisinage",
-        "plus_proche": "vent_dommages_voisins : spécifique au vent, pas à la neige/glace",
+        "question": "Le vent a-t-il dépassé 100 km/h selon la station météo la plus proche ?",
+        "pourquoi": "2.3-a",
         "aide": {
-          "oui": "d'autres bâtiments du voisinage ont été endommagés par la neige/glace",
-          "non": "aucun autre bâtiment endommagé dans le voisinage"
-        }
+          "oui": "rafales de plus de 100 km/h relevées ou attestées",
+          "non": "vent moins fort"
+        },
+        "plus_proche": "vent_80_kmh_irm : un autre seuil (80 km/h, IRM belge)"
+      },
+      {
+        "variable": "neige_dommages_voisins",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le poids de la neige ou de la glace a-t-il aussi endommagé d'autres bâtiments du voisinage ?",
+        "pourquoi": "2.3-a",
+        "aide": {
+          "oui": "d'autres toitures du voisinage ont cédé ou sont abîmées",
+          "non": "seul le bâtiment assuré est touché"
+        },
+        "plus_proche": "vent_dommages_voisins : la question parle du vent"
       },
       {
         "variable": "certificat_meteo",
@@ -229,145 +220,32 @@
           "oui",
           "non"
         ],
-        "question": "Un certificat de la station météorologique la plus proche atteste-t-il du caractère exceptionnel du phénomène ?",
-        "pourquoi": "Condition alternative pour la neige/glace sur toitures : caractère exceptionnel attesté par certificat météo",
-        "plus_proche": "vent_80_kmh_irm : concerne une vitesse de 80 km/h, pas le certificat d'exceptionnalité",
+        "question": "Un certificat de la station météorologique atteste-t-il le caractère exceptionnel du phénomène ?",
+        "pourquoi": "2.3-a",
         "aide": {
-          "oui": "un certificat météo atteste du caractère exceptionnel",
-          "non": "pas de certificat météo"
-        }
-      },
-      {
-        "variable": "vent_100_kmh",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Le vent a-t-il atteint une vitesse supérieure à 100 km/h selon la station météorologique la plus proche ?",
-        "pourquoi": "Précision du texte pour le cas du vent dans le certificat (vitesse > 100 km/h)",
-        "plus_proche": "vent_80_kmh_irm : seuil de 80 km/h, pas 100 km/h, et station IRM spécifique",
-        "aide": {
-          "oui": "le vent a dépassé 100 km/h selon la station météo",
-          "non": "le vent était inférieur à 100 km/h"
-        }
-      },
-      {
-        "variable": "elements_porteurs_ancres",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Les éléments porteurs du bâtiment sont-ils ancrés ?",
-        "pourquoi": "Exclusion 2.3-b : dommages par le vent aux bâtiments dont les éléments porteurs ne sont pas ancrés",
-        "plus_proche": "annexe_ancree_beton : concerne uniquement l'annexe, pas le bâtiment principal",
-        "aide": {
-          "oui": "les éléments porteurs sont ancrés au sol",
-          "non": "les éléments porteurs ne sont pas ancrés"
-        }
-      },
-      {
-        "variable": "construit_selon_regles_art",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Le bâtiment est-il construit selon les règles de l'art ?",
-        "pourquoi": "Exclusion 2.3-b : dommages par le vent aux bâtiments non construits selon les règles de l'art",
-        "plus_proche": "aucune variable existante ne couvre la conformité aux règles de l'art de construction",
-        "aide": {
-          "oui": "construit selon les règles de l'art",
-          "non": "non construit selon les règles de l'art"
-        }
-      },
-      {
-        "variable": "objet_plein_air",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "L'objet endommagé se trouvait-il en plein air (à l'extérieur des locaux clos) ?",
-        "pourquoi": "Exclusion 2.3-b : les objets en plein air ne sont pas garantis (sauf mobilier de jardin avec Pack Jardin)",
-        "plus_proche": "lieu : a des valeurs comme jardin, terrasse, voie_publique mais pas 'plein air' général",
-        "aide": {
-          "oui": "l'objet était dehors, en plein air, non abrité",
-          "non": "l'objet était à l'intérieur d'un local"
-        }
-      },
-      {
-        "variable": "dommages_dans_48h",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Les dommages (mouille par pluie/neige/grêle pénétrant à l'intérieur) se sont-ils produits dans les 48 heures suivant l'événement garanti ?",
-        "pourquoi": "Article 2.3-a : dommages de mouille consécutifs à l'événement garanti dans les 48 heures",
-        "plus_proche": "dommages_dans_72h : délai de 72h, pas 48h",
-        "aide": {
-          "oui": "les dommages de mouille sont survenus dans les 48h",
-          "non": "les dommages sont survenus après 48h"
-        }
-      },
-      {
-        "variable": "bien",
-        "valeurs": [
-          "abri_piscine"
-        ],
-        "question": "S'agit-il d'un abri de piscine ?",
-        "pourquoi": "L'article 2.3 mentionne 'votre abri de piscine' comme bien couvert (avec Pack Piscine), mais cette valeur n'existe pas dans la variable bien",
-        "plus_proche": "abri_jardin : abri de jardin, pas spécifiquement abri de piscine",
-        "parent": "abri_jardin",
-        "aide": {
-          "abri_piscine": "c'est un abri de piscine (construction autour de la piscine)"
-        }
+          "oui": "un certificat météo l'atteste",
+          "non": "aucun certificat"
+        },
+        "plus_proche": "vent_80_kmh_irm : un seuil de vent, pas un certificat pour la neige"
       }
     ],
-    "non_traduit": []
-  },
-  "controles": [
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "evenement = avalanche : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.3`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "bien = abri_piscine : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.3`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "dommages_voisins = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.3`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "certificat_meteo = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.3`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "dommages_dans_48h = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.3`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "elements_porteurs_ancres = non : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.3`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "construit_selon_regles_art = non : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.3`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "objet_plein_air = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.3`) ou à remplacer"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "garantie : citation rattachée à 2.3-a (et non 2.3)"
-    }
-  ]
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "2.3-a",
+        "texte": "des avalanches de toutes natures",
+        "pourquoi": "le vocabulaire n'a pas l'avalanche (événement non traduit : incertain)"
+      },
+      {
+        "article": "2.3-a",
+        "texte": "de la grêle, du poids de la neige ou de la glace sur votre piscine et votre abri de piscine (si l’option est souscrite pour chacun de ces biens dans le Pack Piscine)",
+        "pourquoi": "la piscine est exclue sauf Pack Piscine (1.1-b)"
+      },
+      {
+        "article": "2.3-a",
+        "texte": "Sont considérés comme constituant un seul et même sinistre les dommages causés par la pluie, la neige ou la grêle pénétrant à l’intérieur du bâtiment, consécutifs à l’événement garanti et survenus dans les 48 heures",
+        "pourquoi": "le décompte des sinistres, pas la couverture ; la pluie entrée par le toit relève aussi de 2.4"
+      }
+    ]
+  }
 }

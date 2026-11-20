@@ -1,0 +1,1602 @@
+{
+ "date": "2026-11-20T10:48:06",
+ "contrat": "assureur-d-habitation-2026",
+ "methode": "regles",
+ "jeu": "ferme",
+ "golden": {
+  "jeu": "ferme",
+  "version": null,
+  "empreinte": "10ac77778aa67e9a",
+  "fige": true,
+  "n": 25,
+  "valides": 0,
+  "auteurs": {
+   "agent+mistral-large": 25
+  }
+ },
+ "couches": {
+  "chaine": {
+   "metriques": {
+    "exactitude": {
+     "moyenne": 0.667,
+     "min": 0.64,
+     "max": 0.68
+    },
+    "exactitude_stricte": {
+     "moyenne": 0.667,
+     "min": 0.64,
+     "max": 0.68
+    },
+    "faux_couverts": {
+     "moyenne": 1.0,
+     "min": 1,
+     "max": 1
+    },
+    "faux_refus": {
+     "moyenne": 0.0,
+     "min": 0,
+     "max": 0
+    },
+    "taux_incertain": {
+     "moyenne": 0.453,
+     "min": 0.44,
+     "max": 0.48
+    },
+    "n": 25,
+    "executions": 3,
+    "instables": 1,
+    "rappel_clauses": 0.0,
+    "rappel_questions": 0.0,
+    "erreurs_fournisseur": 0,
+    "duree_moyenne_s": 52.1,
+    "latence_mediane_s": 3.01,
+    "latence_p95_s": 37.4,
+    "latence_lecture_mediane_s": 2.37,
+    "latence_lecture_p95_s": 36.28,
+    "latence_decision_mediane_s": 0.01,
+    "latence_decision_p95_s": 0.03,
+    "latence_seule_mediane_s": 3.45,
+    "latence_seule_p95_s": 4.28,
+    "latence_seule_lecture_mediane_s": 2.56,
+    "latence_seule_lecture_p95_s": 3.87,
+    "latence_seule_decision_mediane_s": 0.01,
+    "latence_seule_decision_p95_s": 0.01,
+    "latence_seule_nb": 10
+   },
+   "groupes": {
+    "auteur : agent+mistral-large": {
+     "n": 25,
+     "exactitude": 0.64,
+     "exactitude_stricte": 0.64,
+     "faux_couverts": 1,
+     "faux_refus": 0,
+     "taux_incertain": 0.48
+    },
+    "garantie : ?": {
+     "n": 25,
+     "exactitude": 0.64,
+     "exactitude_stricte": 0.64,
+     "faux_couverts": 1,
+     "faux_refus": 0,
+     "taux_incertain": 0.48
+    },
+    "thème : assistance": {
+     "n": 1,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 1.0
+    },
+    "thème : base": {
+     "n": 6,
+     "exactitude": 0.833,
+     "exactitude_stricte": 0.833,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.167
+    },
+    "thème : exclusion": {
+     "n": 4,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "thème : incertain": {
+     "n": 6,
+     "exactitude": 0.667,
+     "exactitude_stricte": 0.667,
+     "faux_couverts": 1,
+     "faux_refus": 0,
+     "taux_incertain": 0.667
+    },
+    "thème : piege": {
+     "n": 6,
+     "exactitude": 0.333,
+     "exactitude_stricte": 0.333,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.667
+    },
+    "thème : rc": {
+     "n": 2,
+     "exactitude": 0.0,
+     "exactitude_stricte": 0.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 1.0
+    }
+   },
+   "reponses": {
+    "f-d01": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "f-d02": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "f-d03": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "f-d04": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "f-d05": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d06": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d07": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "f-d08": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "f-d09": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d10": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "f-d11": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "f-d12": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "f-d13": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "f-d14": [
+     "INCERTAIN",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "f-d15": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d16": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d17": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "f-d18": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d19": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "f-d20": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d21": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d22": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d23": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "f-d24": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d25": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ]
+   },
+   "instables": [
+    "f-d14"
+   ],
+   "executions": [
+    [
+     {
+      "id": "f-d01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3008,
+       "decision": 8,
+       "total": 3947
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3080,
+       "decision": 111,
+       "total": 4086
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d03",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3496,
+       "decision": 6,
+       "total": 4288
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d04",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2698,
+       "decision": 3,
+       "total": 3489
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d05",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Le dommage a-t-il été causé volontairement par l'assuré (ou avec sa complicité) ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2711,
+       "decision": 3,
+       "total": 3519
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d06",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Le dommage a-t-il été causé volontairement par l'assuré (ou avec sa complicité) ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3688,
+       "decision": 23,
+       "total": 4240
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d07",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3246,
+       "decision": 8,
+       "total": 4122
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d08",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2297,
+       "decision": 4,
+       "total": 3243
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d09",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1773,
+       "decision": 17,
+       "total": 1796
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d10",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 4572,
+       "decision": 3,
+       "total": 5422
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2413,
+       "decision": 7,
+       "total": 2465
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d12",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2590,
+       "decision": 7,
+       "total": 3380
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d13",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2186,
+       "decision": 10,
+       "total": 2950
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d14",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2161,
+       "decision": 17,
+       "total": 2184
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d15",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2390,
+       "decision": 13,
+       "total": 2411
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d16",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2235,
+       "decision": 18,
+       "total": 2258
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d17",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3124,
+       "decision": 3,
+       "total": 3883
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d18",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2910,
+       "decision": 4,
+       "total": 2918
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d19",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2759,
+       "decision": 22,
+       "total": 3554
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d20",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Quelle formule les conditions particulières mentionnent-elles (Privilège, Active, standard) ?",
+       "D'où venait l'eau ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2731,
+       "decision": 29,
+       "total": 2764
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d21",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Quelle formule les conditions particulières mentionnent-elles (Privilège, Active, standard) ? (confort/excellence → couvert ; active/eco/privilege/standard → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1739,
+       "decision": 14,
+       "total": 1756
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d22",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2446,
+       "decision": 14,
+       "total": 2466
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d23",
+      "attendu": "INCERTAIN",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2085,
+       "decision": 10,
+       "total": 2822
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d24",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Une plainte a-t-elle été déposée auprès des autorités ?",
+       "Le véhicule qui a heurté le bâtiment a-t-il été identifié ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1852,
+       "decision": 10,
+       "total": 1866
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d25",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Quelle formule les conditions particulières mentionnent-elles (Privilège, Active, standard) ? (active/confort/excellence/privilege… → couvert ; eco → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3052,
+       "decision": 8,
+       "total": 3063
+      },
+      "rappel_questions": 0.0
+     }
+    ],
+    [
+     {
+      "id": "f-d01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 36280,
+       "decision": 5,
+       "total": 37397
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2368,
+       "decision": 7,
+       "total": 36469
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d03",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1979,
+       "decision": 73,
+       "total": 35971
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d04",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1926,
+       "decision": 4,
+       "total": 37388
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d05",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Le dommage a-t-il été causé volontairement par l'assuré (ou avec sa complicité) ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2954,
+       "decision": 3,
+       "total": 3909
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d06",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Le dommage a-t-il été causé volontairement par l'assuré (ou avec sa complicité) ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2689,
+       "decision": 9,
+       "total": 3897
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d07",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1770,
+       "decision": 10,
+       "total": 2770
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d08",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2075,
+       "decision": 10,
+       "total": 3085
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d09",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1498,
+       "decision": 10,
+       "total": 1514
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d10",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2518,
+       "decision": 5,
+       "total": 3225
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1697,
+       "decision": 3,
+       "total": 1746
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d12",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2367,
+       "decision": 3,
+       "total": 3010
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d13",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1868,
+       "decision": 3,
+       "total": 2716
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d14",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2298,
+       "decision": 10,
+       "total": 2887
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d15",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1662,
+       "decision": 19,
+       "total": 1687
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d16",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2392,
+       "decision": 9,
+       "total": 2406
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d17",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2353,
+       "decision": 7,
+       "total": 3175
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d18",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2142,
+       "decision": 7,
+       "total": 2152
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d19",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3079,
+       "decision": 4,
+       "total": 3836
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d20",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Quelle formule les conditions particulières mentionnent-elles (Privilège, Active, standard) ?",
+       "D'où venait l'eau ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2361,
+       "decision": 90,
+       "total": 2455
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d21",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Quelle formule les conditions particulières mentionnent-elles (Privilège, Active, standard) ? (confort/excellence → couvert ; active/eco/privilege/standard → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1800,
+       "decision": 15,
+       "total": 1818
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d22",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1678,
+       "decision": 14,
+       "total": 1698
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d23",
+      "attendu": "INCERTAIN",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2123,
+       "decision": 6,
+       "total": 2837
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d24",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Une plainte a-t-elle été déposée auprès des autorités ?",
+       "Le véhicule qui a heurté le bâtiment a-t-il été identifié ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2048,
+       "decision": 10,
+       "total": 2062
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d25",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Quelle formule les conditions particulières mentionnent-elles (Privilège, Active, standard) ? (active/confort/excellence/privilege… → couvert ; eco → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2171,
+       "decision": 10,
+       "total": 2185
+      },
+      "rappel_questions": 0.0
+     }
+    ],
+    [
+     {
+      "id": "f-d01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2807,
+       "decision": 4,
+       "total": 3624
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3733,
+       "decision": 13,
+       "total": 4399
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d03",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2301,
+       "decision": 13,
+       "total": 3079
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d04",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2605,
+       "decision": 4,
+       "total": 3456
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d05",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Le dommage a-t-il été causé volontairement par l'assuré (ou avec sa complicité) ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 67919,
+       "decision": 6,
+       "total": 68580
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d06",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Le dommage a-t-il été causé volontairement par l'assuré (ou avec sa complicité) ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 69086,
+       "decision": 4,
+       "total": 69604
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d07",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 67871,
+       "decision": 6,
+       "total": 69024
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d08",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 68723,
+       "decision": 4,
+       "total": 69706
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d09",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2011,
+       "decision": 17,
+       "total": 2033
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d10",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2534,
+       "decision": 7,
+       "total": 3207
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2001,
+       "decision": 9,
+       "total": 2046
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d12",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2894,
+       "decision": 8,
+       "total": 3583
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d13",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1952,
+       "decision": 7,
+       "total": 2564
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d14",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2543,
+       "decision": 10,
+       "total": 3132
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d15",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1555,
+       "decision": 20,
+       "total": 1585
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d16",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2021,
+       "decision": 10,
+       "total": 2037
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d17",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2335,
+       "decision": 7,
+       "total": 3037
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d18",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Y a-t-il eu effraction (accès endommagé ou serrure forcée) ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3075,
+       "decision": 59,
+       "total": 3137
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d19",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2194,
+       "decision": 5,
+       "total": 2841
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d20",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Quelle formule les conditions particulières mentionnent-elles (Privilège, Active, standard) ?",
+       "D'où venait l'eau ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2352,
+       "decision": 31,
+       "total": 2388
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d21",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Quelle formule les conditions particulières mentionnent-elles (Privilège, Active, standard) ? (confort/excellence → couvert ; active/eco/privilege/standard → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1618,
+       "decision": 15,
+       "total": 1636
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d22",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2338,
+       "decision": 17,
+       "total": 2360
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d23",
+      "attendu": "INCERTAIN",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2449,
+       "decision": 6,
+       "total": 3193
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d24",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Une plainte a-t-elle été déposée auprès des autorités ?",
+       "Le véhicule qui a heurté le bâtiment a-t-il été identifié ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2047,
+       "decision": 11,
+       "total": 2063
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d25",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Quelle formule les conditions particulières mentionnent-elles (Privilège, Active, standard) ? (active/confort/excellence/privilege… → couvert ; eco → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2471,
+       "decision": 11,
+       "total": 2486
+      },
+      "rappel_questions": 0.0
+     }
+    ]
+   ]
+  }
+ },
+ "avertissements": [
+  "jeu « ferme » : sans faits idéaux, la chaîne complète seule"
+ ],
+ "modele": "mistral:mistral-small-latest",
+ "lecture": "verifiee",
+ "portes": [
+  {
+   "couche": "chaine",
+   "critere": "faux_couverts",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 1.0,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "faux_refus",
+   "sens": "max",
+   "seuil": 1,
+   "valeur": 0.0,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "exactitude",
+   "sens": "min",
+   "seuil": 0.85,
+   "valeur": 0.667,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "instables",
+   "sens": "max",
+   "seuil": 3,
+   "valeur": 1,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "rappel_questions",
+   "sens": "min",
+   "seuil": 0.8,
+   "valeur": 0.0,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "latence_seule_p95_s",
+   "sens": "max",
+   "seuil": 10,
+   "valeur": 4.28,
+   "ok": true
+  }
+ ],
+ "passe": false
+}

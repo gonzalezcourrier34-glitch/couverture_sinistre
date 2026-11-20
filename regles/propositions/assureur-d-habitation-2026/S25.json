@@ -22,9 +22,21 @@
         "condition": {
           "ou": [
             {
-              "f": [
-                "intentionnel",
-                "oui"
+              "et": [
+                {
+                  "f": [
+                    "intentionnel",
+                    "oui"
+                  ]
+                },
+                {
+                  "non": {
+                    "f": [
+                      "auteur",
+                      "tiers"
+                    ]
+                  }
+                }
               ]
             },
             {
@@ -54,13 +66,37 @@
       },
       {
         "condition": {
-          "f": [
-            "manque_entretien",
-            "oui"
+          "et": [
+            {
+              "f": [
+                "manque_entretien",
+                "oui"
+              ]
+            },
+            {
+              "ou": [
+                {
+                  "non": {
+                    "f": [
+                      "evenement",
+                      "degat_eaux"
+                    ]
+                  }
+                },
+                {
+                  "non": {
+                    "f": [
+                      "cause_eau",
+                      "gel"
+                    ]
+                  }
+                }
+              ]
+            }
           ]
         },
         "portee": "tout",
-        "a_demander": false,
+        "a_demander": true,
         "article": "S25",
         "texte": "ceux qui résultent directement d’un défaut de réparation ou d’entretien indispensables vous incombant et dont vous aviez connaissance"
       },

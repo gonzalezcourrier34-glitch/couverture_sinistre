@@ -419,6 +419,23 @@ def test_article_d_exclusions_generales_vise_toutes_les_garanties():
     assert "exclusion(tous, f(intentionnel, oui), tout, non, 'S25'" in pl and "evenement_traduit" not in pl
 
 
+def test_article_sans_garantie_ses_reserves_ne_sont_pas_lues(voc_etendu):
+    """7.90 : une variable d'un article sans garantie, qui ne sert qu'à une exclusion jamais demandée (une option,
+    une rixe), n'est jamais lue ; un bien sous un « non » n'entame pas une extension."""
+    prop = {"evenements": [], "garanties": [], "definitions": [],
+            "exclusions_communes": [{"condition": {"et": [{"f": ["bien", "velo"]}, {"non": {"f": ["option_x", "oui"]}}]},
+                                     "portee": {"bien": "velo"}, "a_demander": False, "article": "2.2", "texte": "t"}],
+            "extensions": [{"concept": "batiment", "article": "2.2", "texte": "t", "condition": {"et": [
+                {"f": ["lieu", "autre_batiment"]}, {"f": ["pays_y", "lu"]}, {"non": {"f": ["bien", "bijoux"]}}]}}],
+            "vocabulaire_manquant": [{"variable": "option_x", "valeurs": ["oui", "non"], "question": "?"},
+                                     {"variable": "pays_y", "valeurs": ["lu", "autre"], "question": "?"}]}
+    redaction.accepter_vocabulaire(prop, voc_etendu)
+    voc = json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]
+    assert voc["option_x"]["pour"] == [redaction.JAMAIS]
+    assert "option_x" not in prolog.variables_du_temps_2(voc, ["vol"], {"lieu": ["logement"]})
+    assert voc["pays_y"]["si"] == {"lieu": ["autre_batiment"]}, "« sans les bijoux » n'entame pas l'extension"
+
+
 def test_garantie_accessoire_en_prolog():
     prop = copy.deepcopy(BONNE)
     prop["garanties"][0]["accessoire"] = True
@@ -636,3 +653,28 @@ def test_regles_2_9_relues_et_hierarchie(tmp_path):
     assert tele["decision"] == "NON_COUVERT", "la télé est aussi de l'électronique : l'exclusion reste totale"
     deux = Moteur(c, {**vitre, "bien": ["vitre", "appareil_audiovisuel"]}).decider()
     assert deux["decision"] == "COUVERT" and deux["retenues"][0]["partielles"] == ["appareil_audiovisuel"]
+
+
+def test_une_variable_jamais_lue_le_reste(voc_etendu):
+    """7.91 : une option des conditions particulières (« jamais » lue) employée par une garantie reste non lue."""
+    doc = json.loads(voc_etendu.read_text(encoding="utf-8"))
+    doc["variables"]["pack_y"] = {"valeurs": ["oui", "non"], "question": "?", "pour": [redaction.JAMAIS]}
+    voc_etendu.write_text(json.dumps(doc, ensure_ascii=False), encoding="utf-8")
+    prop = {"evenements": ["tempete"], "definitions": [], "garanties": [{
+        "id": "t", "nom": "t", "article": "1", "texte": "t", "perimetre": [{"f": ["evenement", "tempete"]}],
+        "circonstances": [], "obligations": [], "limites": [],
+        "exclusions": [{"condition": {"non": {"f": ["pack_y", "oui"]}}, "portee": "tout", "a_demander": True,
+                        "article": "1", "texte": "t"}]}], "vocabulaire_manquant": []}
+    redaction.accepter_vocabulaire(prop, voc_etendu)
+    assert json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]["pack_y"]["pour"] == [redaction.JAMAIS]
+
+
+def test_concepts_definis_l_un_par_l_autre():
+    """7.91 : une extension de `batiment` qui emploie `contenu`, lui-même défini dans le `batiment`, bouclait."""
+    pl = ('definition(contenu, et([f(bien, mobilier), concept(batiment)]), \'1.2-a\', "c").\n'
+          'definition(batiment, f(lieu, logement), \'1.1-a\', "b").\n')
+    prop = {"extensions": [{"concept": "batiment", "condition": {"et": [{"f": ["lieu", "autre_batiment"]},
+                                                                         {"concept": "contenu"}]}}]}
+    assert redaction.cycle_de_concepts(pl, prop) in (["batiment", "contenu", "batiment"], ["contenu", "batiment", "contenu"])
+    prop["extensions"][0]["condition"]["et"][1] = {"f": ["bien", "mobilier"]}
+    assert redaction.cycle_de_concepts(pl, prop) == []

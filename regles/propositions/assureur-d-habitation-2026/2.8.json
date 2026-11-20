@@ -3,19 +3,35 @@
     "article": "2.8",
     "modele": "mistral:mistral-large-latest",
     "date": "2026-11-20",
-    "consigne": "redaction-regles v12"
+    "consigne": "redaction-regles v12",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-20",
+      "modifications": [
+        "formule Excellence seulement : le tableau des garanties par formule (page 11), pas le texte de l'article (7.92)",
+        "denrées perdues après une coupure du réseau, ou un dommage électrique de l'installation",
+        "grève, ordre des autorités, liquide frigorigène : hors décision ; le justificatif est une preuve"
+      ]
+    }
   },
   "proposition": {
-    "evenements": [],
+    "evenements": [
+      "electricite"
+    ],
     "definitions": [],
     "garanties": [
       {
-        "id": "contenu_congelateur_refrigerateur",
+        "id": "contenu_congelateur",
         "nom": "Contenu du congélateur et/ou réfrigérateur",
-        "article": "2.8",
-        "texte": "Contenu du congélateur et/ou réfrigérateur",
-        "accessoire": true,
+        "article": "2.8-b",
+        "texte": "La garantie couvre les pertes ou détériorations causes aux denrées alimentaires contenues dans les congélateurs et/ou réfrigérateurs endommagés",
         "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "electricite"
+            ]
+          },
           {
             "f": [
               "bien",
@@ -23,113 +39,54 @@
             ]
           },
           {
-            "f": [
-              "appareil_concerne",
-              "congelateur_ou_refrigerateur"
-            ]
+            "concept": "batiment"
           }
         ],
         "circonstances": [
           {
             "condition": {
+              "f": [
+                "formule",
+                "excellence"
+              ]
+            },
+            "article": "2.8-b",
+            "texte": "La garantie couvre les pertes ou détériorations causes aux denrées alimentaires"
+          },
+          {
+            "condition": {
               "ou": [
                 {
-                  "et": [
-                    {
-                      "f": [
-                        "evenement",
-                        "electricite"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "option_degats_electriques",
-                        "oui"
-                      ]
-                    }
+                  "f": [
+                    "cause_perte_alimentaire",
+                    "coupure_soudaine_reseau"
                   ]
                 },
                 {
                   "f": [
-                    "option_panne_electromenager",
-                    "oui"
-                  ]
-                },
-                {
-                  "et": [
-                    {
-                      "f": [
-                        "cause_perte_alimentaire",
-                        "coupure_soudaine_reseau"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "justificatif_fournisseur_electricite",
-                        "oui"
-                      ]
-                    }
+                    "cause_perte_alimentaire",
+                    "derangement_installation"
                   ]
                 }
               ]
             },
             "article": "2.8-b",
-            "texte": "La garantie couvre les pertes ou détériorations causes aux denrées alimentaires contenues dans les congélateurs et/ou réfrigérateurs endommagés à l occasion d un sinistre dommages électrique indemnisé (ART 2-2), à la suite d un sinistre indemnisé au titre de la garantie panne électroménager (TITRE III) ou d une coupure électrique accidentelle avec justificatif de votre fournisseur d électricité."
+            "texte": "à l’occasion d’un sinistre dommages électrique indemnisé (ART 2-2), à la suite d’un sinistre indemnisé au titre de la garantie panne électroménager (TITRE III) ou d’une coupure électrique accidentelle avec justificatif de votre fournisseur d’électricité"
           }
         ],
         "obligations": [],
         "exclusions": [
           {
             "condition": {
-              "ou": [
-                {
-                  "f": [
-                    "cause_arret_electrique",
-                    "greve_fournisseur"
-                  ]
-                },
-                {
-                  "f": [
-                    "cause_arret_electrique",
-                    "ordres_autorites"
-                  ]
-                },
-                {
-                  "f": [
-                    "cause_arret_electrique",
-                    "fait_assure"
-                  ]
-                }
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "2.8-c",
-            "texte": "provenant de l arrêt d un courant électrique, lorsqu il est dû : - à une grève du fournisseur, - à des ordres émanant d un service public ou des autorités civiles ou militaires, - au fait de l assuré"
-          },
-          {
-            "condition": {
               "f": [
-                "entretien_congelateur",
-                "non_conforme"
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "2.8-c",
-            "texte": "dues à un mauvais entretien ou à une utilisation non conforme du congélateur et/ou réfrigérateur aux instructions du fabricant"
-          },
-          {
-            "condition": {
-              "f": [
-                "fuite_liquide_frigorigene",
+                "manque_entretien",
                 "oui"
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "2.8-c",
-            "texte": "consécutives à une fuite du liquide frigorigène"
+            "texte": "dues à un mauvais entretien ou à une utilisation non conforme du congélateur et/ou réfrigérateur aux instructions du fabricant"
           }
         ],
         "limites": []
@@ -137,145 +94,19 @@
     ],
     "exclusions_communes": [],
     "extensions": [],
-    "vocabulaire_manquant": [
+    "vocabulaire_manquant": [],
+    "non_traduit": [],
+    "hors_decision": [
       {
-        "variable": "appareil_concerne",
-        "valeurs": [
-          "congelateur",
-          "refrigerateur",
-          "congelateur_ou_refrigerateur"
-        ],
-        "question": "De quel appareil s'agit-il (congélateur, réfrigérateur, ou les deux) ?",
-        "pourquoi": "Le périmètre de la garantie 2.8 concerne spécifiquement le contenu des congélateurs et/ou réfrigérateurs endommagés",
-        "plus_proche": "bien : la valeur denrees_alimentaires ne précise pas l'appareil conteneur",
-        "aide": {
-          "congelateur": "les denrées étaient dans le congélateur",
-          "refrigerateur": "les denrées étaient dans le réfrigérateur",
-          "congelateur_ou_refrigerateur": "les denrées étaient dans les deux appareils ou l'un d'eux"
-        }
+        "article": "2.8-c",
+        "texte": "provenant de l’arrêt d’un courant électrique, lorsqu’il est dû : - à une grève du fournisseur, - à des ordres émanant d’un service public ou des autorités civiles ou militaires, - au fait de l’assuré",
+        "pourquoi": "rare ; le vocabulaire ne distingue pas l'origine d'une coupure"
       },
       {
-        "variable": "option_panne_electromenager",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Vos conditions particulières mentionnent-elles la garantie « panne électroménager » (TITRE III) ?",
-        "pourquoi": "La clause 2.8-b mentionne un sinistre indemnisé au titre de la garantie panne électroménager",
-        "plus_proche": "option_degats_electriques : couvre les dégâts électriques, pas la panne électroménager",
-        "aide": {
-          "oui": "j'ai souscrit la garantie panne électroménager",
-          "non": "je n'ai pas cette garantie"
-        }
-      },
-      {
-        "variable": "justificatif_fournisseur_electricite",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Avez-vous un justificatif de votre fournisseur d'électricité attestant de la coupure accidentelle ?",
-        "pourquoi": "La clause 2.8-b exige un justificatif pour la coupure électrique accidentelle",
-        "plus_proche": "cause_perte_alimentaire : indique la cause mais pas la preuve documentaire",
-        "aide": {
-          "oui": "j'ai un document du fournisseur prouvant la coupure",
-          "non": "je n'ai pas de justificatif"
-        }
-      },
-      {
-        "variable": "cause_arret_electrique",
-        "valeurs": [
-          "greve_fournisseur",
-          "ordres_autorites",
-          "fait_assure",
-          "autre"
-        ],
-        "question": "Quelle est la cause de l'arrêt du courant électrique ?",
-        "pourquoi": "La clause 2.8-c exclut les arrêts dus à ces causes spécifiques",
-        "plus_proche": "cause_perte_alimentaire : ne distingue pas ces causes spécifiques d'arrêt",
-        "aide": {
-          "greve_fournisseur": "l'arrêt était dû à une grève du fournisseur d'électricité",
-          "ordres_autorites": "l'arrêt était dû à des ordres des autorités ou service public",
-          "fait_assure": "l'arrêt était dû à une action de l'assuré",
-          "autre": "l'arrêt avait une autre cause"
-        }
-      },
-      {
-        "variable": "entretien_congelateur",
-        "valeurs": [
-          "conforme",
-          "non_conforme"
-        ],
-        "question": "Le congélateur/réfrigérateur était-il entretenu et utilisé conformément aux instructions du fabricant ?",
-        "pourquoi": "La clause 2.8-c exclut les pertes dues à un mauvais entretien ou utilisation non conforme de l'appareil",
-        "plus_proche": "manque_entretien : oui/non général, pas spécifique à l'appareil et aux instructions fabricant",
-        "aide": {
-          "conforme": "l'appareil était bien entretenu selon le mode d'emploi du fabricant",
-          "non_conforme": "l'appareil n'était pas entretenu ou utilisé correctement"
-        }
-      },
-      {
-        "variable": "fuite_liquide_frigorigene",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "La perte est-elle consécutive à une fuite du liquide frigorigène ?",
-        "pourquoi": "La clause 2.8-c exclut explicitement les pertes consécutives à une fuite du liquide frigorigène",
-        "plus_proche": "cause_dommage : valeurs gel/autre/virus ne couvrent pas cette cause spécifique",
-        "aide": {
-          "oui": "il y a eu une fuite de gaz réfrigérant dans l'appareil",
-          "non": "pas de fuite de liquide frigorigène"
-        }
+        "article": "2.8-c",
+        "texte": "consécutives à une fuite du liquide frigorigène",
+        "pourquoi": "le vocabulaire ne distingue pas cette panne"
       }
-    ],
-    "non_traduit": []
-  },
-  "controles": [
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "appareil_concerne = congelateur_ou_refrigerateur : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.8`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "option_panne_electromenager = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.8`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "justificatif_fournisseur_electricite = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.8`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "cause_arret_electrique = greve_fournisseur : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.8`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "cause_arret_electrique = ordres_autorites : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.8`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "cause_arret_electrique = fait_assure : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.8`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "entretien_congelateur = non_conforme : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.8`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "fuite_liquide_frigorigene = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.8`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "citation",
-      "message": "garantie (2.8) : « Contenu du congélateur et/ou réfrigérateur » ne figure pas dans la clause"
-    }
-  ]
+    ]
+  }
 }

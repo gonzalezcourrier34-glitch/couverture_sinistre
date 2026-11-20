@@ -3,39 +3,24 @@
     "article": "2.13",
     "modele": "mistral:mistral-large-latest",
     "date": "2026-11-20",
-    "consigne": "redaction-regles v12"
+    "consigne": "redaction-regles v12",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-20",
+      "modifications": [
+        "aucun événement déclaré traduit (le modèle les déclarait tous, responsabilité civile et assistance comprises)"
+      ]
+    }
   },
   "proposition": {
-    "evenements": [
-      "vol",
-      "incendie",
-      "explosion",
-      "foudre",
-      "degat_eaux",
-      "tempete",
-      "bris",
-      "autre",
-      "electricite",
-      "mazout",
-      "catastrophe_naturelle",
-      "attentat",
-      "fumee",
-      "vandalisme",
-      "merule",
-      "conflit_du_travail",
-      "heurt",
-      "responsabilite",
-      "assistance",
-      "accident"
-    ],
+    "evenements": [],
     "definitions": [],
     "garanties": [
       {
-        "id": "intervention_moyens_secours",
+        "id": "intervention_secours",
         "nom": "Intervention des moyens de secours",
         "article": "2.13-a",
-        "texte": "La garantie couvre les dommages matériels occasionnés par l’intervention des services de secours à proximité des locaux assurés à l’occasion d’un événement assuré défini à l’article 2- « Les évènements assurés ».",
-        "accessoire": true,
+        "texte": "La garantie couvre les dommages matériels occasionnés par l’intervention des services de secours à proximité des locaux assurés",
         "perimetre": [
           {
             "concept": "batiment"
@@ -44,13 +29,14 @@
         "circonstances": [],
         "obligations": [],
         "exclusions": [],
-        "limites": []
+        "limites": [],
+        "accessoire": true
       }
     ],
     "exclusions_communes": [],
     "extensions": [],
     "vocabulaire_manquant": [],
-    "non_traduit": []
-  },
-  "controles": []
+    "non_traduit": [],
+    "hors_decision": []
+  }
 }

@@ -1,0 +1,1637 @@
+{
+ "date": "2026-11-20T10:34:22",
+ "contrat": "assureur-d-habitation-2026",
+ "methode": "regles",
+ "jeu": "ferme",
+ "golden": {
+  "jeu": "ferme",
+  "version": null,
+  "empreinte": "10ac77778aa67e9a",
+  "fige": true,
+  "n": 25,
+  "valides": 0,
+  "auteurs": {
+   "agent+mistral-large": 25
+  }
+ },
+ "couches": {
+  "chaine": {
+   "metriques": {
+    "exactitude": {
+     "moyenne": 0.453,
+     "min": 0.44,
+     "max": 0.48
+    },
+    "exactitude_stricte": {
+     "moyenne": 0.453,
+     "min": 0.44,
+     "max": 0.48
+    },
+    "faux_couverts": {
+     "moyenne": 0.0,
+     "min": 0,
+     "max": 0
+    },
+    "faux_refus": {
+     "moyenne": 1.0,
+     "min": 1,
+     "max": 1
+    },
+    "taux_incertain": {
+     "moyenne": 0.707,
+     "min": 0.68,
+     "max": 0.72
+    },
+    "n": 25,
+    "executions": 3,
+    "instables": 1,
+    "rappel_clauses": 0.0,
+    "rappel_questions": 0.0,
+    "erreurs_fournisseur": 0,
+    "duree_moyenne_s": 43.8,
+    "latence_mediane_s": 2.14,
+    "latence_p95_s": 20.16,
+    "latence_lecture_mediane_s": 2.04,
+    "latence_lecture_p95_s": 19.56,
+    "latence_decision_mediane_s": 0.01,
+    "latence_decision_p95_s": 0.01,
+    "latence_seule_mediane_s": 2.27,
+    "latence_seule_p95_s": 3.67,
+    "latence_seule_lecture_mediane_s": 2.26,
+    "latence_seule_lecture_p95_s": 2.79,
+    "latence_seule_decision_mediane_s": 0.01,
+    "latence_seule_decision_p95_s": 0.01,
+    "latence_seule_nb": 10
+   },
+   "groupes": {
+    "auteur : agent+mistral-large": {
+     "n": 25,
+     "exactitude": 0.48,
+     "exactitude_stricte": 0.48,
+     "faux_couverts": 0,
+     "faux_refus": 1,
+     "taux_incertain": 0.68
+    },
+    "garantie : ?": {
+     "n": 25,
+     "exactitude": 0.48,
+     "exactitude_stricte": 0.48,
+     "faux_couverts": 0,
+     "faux_refus": 1,
+     "taux_incertain": 0.68
+    },
+    "thème : assistance": {
+     "n": 1,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 1.0
+    },
+    "thème : base": {
+     "n": 6,
+     "exactitude": 0.333,
+     "exactitude_stricte": 0.333,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.667
+    },
+    "thème : exclusion": {
+     "n": 4,
+     "exactitude": 0.5,
+     "exactitude_stricte": 0.5,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.5
+    },
+    "thème : incertain": {
+     "n": 6,
+     "exactitude": 0.833,
+     "exactitude_stricte": 0.833,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.833
+    },
+    "thème : piege": {
+     "n": 6,
+     "exactitude": 0.333,
+     "exactitude_stricte": 0.333,
+     "faux_couverts": 0,
+     "faux_refus": 1,
+     "taux_incertain": 0.5
+    },
+    "thème : rc": {
+     "n": 2,
+     "exactitude": 0.0,
+     "exactitude_stricte": 0.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 1.0
+    }
+   },
+   "reponses": {
+    "f-d01": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d02": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d03": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d04": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d05": [
+     "COUVERT",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d06": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "f-d07": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "f-d08": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d09": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d10": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "f-d11": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "f-d12": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "f-d13": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d14": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d15": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d16": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d17": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d18": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "f-d19": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d20": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d21": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d22": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d23": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d24": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-d25": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ]
+   },
+   "instables": [
+    "f-d05"
+   ],
+   "executions": [
+    [
+     {
+      "id": "f-d01",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2598,
+       "decision": 5,
+       "total": 2607
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d02",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1949,
+       "decision": 8,
+       "total": 1961
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d03",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1742,
+       "decision": 80,
+       "total": 1824
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d04",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2657,
+       "decision": 6,
+       "total": 2668
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "S'agit-il de graffitis ou autres inscriptions sur les murs extérieurs ? (non → couvert ; oui → non couvert)",
+       "Qui est l'auteur ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2278,
+       "decision": 8,
+       "total": 3347
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d06",
+      "attendu": "COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2560,
+       "decision": 7,
+       "total": 3144
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d07",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1665,
+       "decision": 4,
+       "total": 2486
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d08",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1816,
+       "decision": 6,
+       "total": 1827
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d09",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2354,
+       "decision": 10,
+       "total": 2371
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d10",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2799,
+       "decision": 5,
+       "total": 3566
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2040,
+       "decision": 7,
+       "total": 2094
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d12",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3683,
+       "decision": 9,
+       "total": 4229
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d13",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1874,
+       "decision": 11,
+       "total": 1892
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d14",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2131,
+       "decision": 8,
+       "total": 2144
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d15",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3072,
+       "decision": 9,
+       "total": 3087
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d16",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1723,
+       "decision": 8,
+       "total": 1736
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d17",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1967,
+       "decision": 7,
+       "total": 1979
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d18",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3023,
+       "decision": 11,
+       "total": 3809
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d19",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1461,
+       "decision": 13,
+       "total": 1480
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d20",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2374,
+       "decision": 9,
+       "total": 2389
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d21",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Quelle formule les conditions particulières mentionnent-elles (Privilège, Active, standard) ? (confort/excellence → couvert ; active/eco/privilege/standard → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1786,
+       "decision": 7,
+       "total": 1801
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d22",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2684,
+       "decision": 7,
+       "total": 2696
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d23",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1431,
+       "decision": 7,
+       "total": 1443
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d24",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1641,
+       "decision": 7,
+       "total": 1653
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d25",
+      "attendu": "INCERTAIN",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2314,
+       "decision": 9,
+       "total": 2998
+      },
+      "rappel_questions": 0.0
+     }
+    ],
+    [
+     {
+      "id": "f-d01",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2017,
+       "decision": 8,
+       "total": 2030
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d02",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1234,
+       "decision": 9,
+       "total": 1248
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d03",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1261,
+       "decision": 8,
+       "total": 1275
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d04",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2442,
+       "decision": 10,
+       "total": 2457
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d05",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Le dommage a-t-il été causé volontairement par l'assuré (ou avec sa complicité) ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2861,
+       "decision": 9,
+       "total": 3524
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d06",
+      "attendu": "COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3174,
+       "decision": 8,
+       "total": 19412
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d07",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1848,
+       "decision": 6,
+       "total": 2483
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d08",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1277,
+       "decision": 9,
+       "total": 1290
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d09",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 18640,
+       "decision": 7,
+       "total": 18652
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d10",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 19560,
+       "decision": 7,
+       "total": 20162
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 17944,
+       "decision": 6,
+       "total": 18001
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d12",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3572,
+       "decision": 9,
+       "total": 4233
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d13",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1231,
+       "decision": 7,
+       "total": 1244
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d14",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2066,
+       "decision": 10,
+       "total": 2081
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d15",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1672,
+       "decision": 9,
+       "total": 1687
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d16",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1935,
+       "decision": 11,
+       "total": 1959
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d17",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2756,
+       "decision": 10,
+       "total": 2772
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d18",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3724,
+       "decision": 7,
+       "total": 4493
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d19",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1776,
+       "decision": 6,
+       "total": 1787
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d20",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2912,
+       "decision": 6,
+       "total": 2923
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d21",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Quelle formule les conditions particulières mentionnent-elles (Privilège, Active, standard) ? (confort/excellence → couvert ; active/eco/privilege/standard → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1556,
+       "decision": 9,
+       "total": 1571
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d22",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1502,
+       "decision": 8,
+       "total": 1516
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d23",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1761,
+       "decision": 8,
+       "total": 1774
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d24",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2097,
+       "decision": 9,
+       "total": 2111
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d25",
+      "attendu": "INCERTAIN",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2177,
+       "decision": 10,
+       "total": 2887
+      },
+      "rappel_questions": 0.0
+     }
+    ],
+    [
+     {
+      "id": "f-d01",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1981,
+       "decision": 9,
+       "total": 1996
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d02",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1304,
+       "decision": 11,
+       "total": 1321
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d03",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1253,
+       "decision": 8,
+       "total": 1267
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d04",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1778,
+       "decision": 8,
+       "total": 1791
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d05",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Le dommage a-t-il été causé volontairement par l'assuré (ou avec sa complicité) ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3182,
+       "decision": 6,
+       "total": 4488
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d06",
+      "attendu": "COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2743,
+       "decision": 8,
+       "total": 4212
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d07",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1956,
+       "decision": 6,
+       "total": 2870
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d08",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1433,
+       "decision": 9,
+       "total": 1446
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d09",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1799,
+       "decision": 10,
+       "total": 1815
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d10",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2261,
+       "decision": 7,
+       "total": 2892
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1913,
+       "decision": 9,
+       "total": 1973
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d12",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2127,
+       "decision": 12,
+       "total": 3605
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d13",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1236,
+       "decision": 7,
+       "total": 1248
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d14",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2000,
+       "decision": 9,
+       "total": 2014
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d15",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1873,
+       "decision": 3,
+       "total": 1881
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d16",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 68107,
+       "decision": 8,
+       "total": 68120
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d17",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 68979,
+       "decision": 10,
+       "total": 68996
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d18",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 69012,
+       "decision": 9,
+       "total": 69876
+      },
+      "rappel_questions": null
+     },
+     {
+      "id": "f-d19",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 66929,
+       "decision": 8,
+       "total": 66943
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d20",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2173,
+       "decision": 6,
+       "total": 2182
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d21",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Quelle formule les conditions particulières mentionnent-elles (Privilège, Active, standard) ? (confort/excellence → couvert ; active/eco/privilege/standard → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1705,
+       "decision": 7,
+       "total": 1720
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d22",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1695,
+       "decision": 10,
+       "total": 1710
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d23",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1538,
+       "decision": 8,
+       "total": 1550
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d24",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2510,
+       "decision": 7,
+       "total": 2522
+      },
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-d25",
+      "attendu": "INCERTAIN",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2658,
+       "decision": 9,
+       "total": 3238
+      },
+      "rappel_questions": 0.0
+     }
+    ]
+   ]
+  }
+ },
+ "avertissements": [
+  "jeu « ferme » : sans faits idéaux, la chaîne complète seule"
+ ],
+ "modele": "mistral:mistral-small-latest",
+ "lecture": "verifiee",
+ "portes": [
+  {
+   "couche": "chaine",
+   "critere": "faux_couverts",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 0.0,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "faux_refus",
+   "sens": "max",
+   "seuil": 1,
+   "valeur": 1.0,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "exactitude",
+   "sens": "min",
+   "seuil": 0.85,
+   "valeur": 0.453,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "instables",
+   "sens": "max",
+   "seuil": 3,
+   "valeur": 1,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "rappel_questions",
+   "sens": "min",
+   "seuil": 0.8,
+   "valeur": 0.0,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "latence_seule_p95_s",
+   "sens": "max",
+   "seuil": 10,
+   "valeur": 3.67,
+   "ok": true
+  }
+ ],
+ "passe": false
+}

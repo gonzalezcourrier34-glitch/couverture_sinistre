@@ -894,3 +894,20 @@ def test_je_ne_sais_pas_plutot_qu_une_reponse_fausse(monkeypatch, contrat):
     assert v.decision.value == "INCERTAIN" and "fermeture" in juge.confirmations[-1], \
         "le modèle de confirmation a refusé le cadenas : la réponse est suspendue"
     assert all("fermeture" not in c for c in lecteur.confirmations[1:]), "le lecteur n'a pas confirmé lui-même"
+
+
+def test_un_fait_qui_en_dit_un_autre():
+    """7.94 : « sans effraction » dit « effraction = non », sauf si l'effraction est déjà lue."""
+    voc = {"acces_voleur": {"valeurs": ["sans_effraction", "escalade"], "implique": {"sans_effraction": {"effraction": "non"}}},
+           "effraction": {"valeurs": ["oui", "non"]}}
+    assert prolog.impliquer({"acces_voleur": "sans_effraction"}, voc)[0]["effraction"] == "non"
+    assert prolog.impliquer({"acces_voleur": "sans_effraction", "effraction": "oui"}, voc)[0]["effraction"] == "oui"
+    assert prolog.impliquer({"acces_voleur": "escalade"}, voc)[0] == {"acces_voleur": "escalade"}
+
+
+def test_la_source_d_un_fait_deduit():
+    """7.95 : on confirme « acces_voleur = sans_effraction », d'où vient « effraction = non »."""
+    voc = {"acces_voleur": {"valeurs": ["sans_effraction"], "implique": {"sans_effraction": {"effraction": "non"}}},
+           "effraction": {"valeurs": ["oui", "non"]}}
+    assert prolog.sources_impliquees({"acces_voleur": "sans_effraction", "effraction": "non"}, voc) == {"effraction": "acces_voleur"}
+    assert prolog.sources_impliquees({"acces_voleur": "sans_effraction", "effraction": "oui"}, voc) == {}

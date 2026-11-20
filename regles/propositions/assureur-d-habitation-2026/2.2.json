@@ -3,66 +3,29 @@
     "article": "2.2",
     "modele": "mistral:mistral-large-latest",
     "date": "2026-11-20",
-    "consigne": "redaction-regles v12"
+    "consigne": "redaction-regles v12",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-20",
+      "modifications": [
+        "formule Confort ou Excellence en circonstance : formule inconnue, réponse incertaine (f-d19)",
+        "résistances, fusibles, lampes : `consommable` ; contenu des appareils : `denrees_alimentaires` (portée bien)",
+        "plus de `cause_electrique` : l'événement `electricite` suffit ; la foudre directe relève de 2.1",
+        "la vétusté est une limite (un montant), pas une condition"
+      ]
+    }
   },
   "proposition": {
     "evenements": [
-      "electricite",
-      "foudre"
+      "electricite"
     ],
-    "definitions": [
-      {
-        "concept": "appareil_electrique",
-        "condition": {
-          "ou": [
-            {
-              "f": [
-                "bien",
-                "appareil_electromenager"
-              ]
-            },
-            {
-              "f": [
-                "bien",
-                "appareil_audiovisuel"
-              ]
-            },
-            {
-              "f": [
-                "bien",
-                "appareil_informatique"
-              ]
-            },
-            {
-              "f": [
-                "bien",
-                "equipement_alarme_surveillance"
-              ]
-            },
-            {
-              "f": [
-                "bien",
-                "equipement_domotique"
-              ]
-            },
-            {
-              "f": [
-                "bien",
-                "element_batiment"
-              ]
-            }
-          ]
-        },
-        "article": "2.2-a",
-        "texte": "aux installations ou aux appareils électriques"
-      }
-    ],
+    "definitions": [],
     "garanties": [
       {
         "id": "dommages_electriques",
-        "nom": "Dommages électriques",
+        "nom": "Dommages électriques (Confort et Excellence)",
         "article": "2.2-a",
-        "texte": "La garantie couvre les dommages matériels causés par les effets d'une surtension, d'une sous-tension ou d'une surintensité accidentelle, y compris du fait de la foudre, aux installations ou aux appareils électriques.",
+        "texte": "La garantie couvre les dommages matériels causés par les effets d’une surtension, d’une sous-tension ou d’une surintensité accidentelle, y compris du fait de la foudre, aux installations ou aux appareils électriques",
         "perimetre": [
           {
             "f": [
@@ -71,29 +34,20 @@
             ]
           },
           {
-            "f": [
-              "evenement",
-              "foudre"
-            ]
-          },
-          {
-            "concept": "appareil_electrique"
-          },
-          {
             "ou": [
               {
-                "f": [
-                  "formule",
-                  "confort"
-                ]
+                "concept": "contenu"
               },
               {
                 "f": [
-                  "formule",
-                  "excellence"
+                  "bien",
+                  "element_batiment"
                 ]
               }
             ]
+          },
+          {
+            "concept": "batiment"
           }
         ],
         "circonstances": [
@@ -102,73 +56,35 @@
               "ou": [
                 {
                   "f": [
-                    "cause_electrique",
-                    "surtension"
+                    "formule",
+                    "confort"
                   ]
                 },
                 {
                   "f": [
-                    "cause_electrique",
-                    "sous_tension"
-                  ]
-                },
-                {
-                  "f": [
-                    "cause_electrique",
-                    "surintensite"
-                  ]
-                },
-                {
-                  "f": [
-                    "cause_electrique",
-                    "foudre"
+                    "formule",
+                    "excellence"
                   ]
                 }
               ]
             },
-            "article": "2.2-a",
-            "texte": "causés par les effets d'une surtension, d'une sous-tension ou d'une surintensité accidentelle, y compris du fait de la foudre"
+            "article": "2.2",
+            "texte": "Cette garantie est acquise uniquement pour les formules Confort et Excellence"
           }
         ],
         "obligations": [],
         "exclusions": [
           {
             "condition": {
-              "ou": [
-                {
-                  "f": [
-                    "bien",
-                    "resistance_chauffante"
-                  ]
-                },
-                {
-                  "f": [
-                    "bien",
-                    "fusible"
-                  ]
-                },
-                {
-                  "f": [
-                    "bien",
-                    "disjoncteur"
-                  ]
-                },
-                {
-                  "f": [
-                    "bien",
-                    "lampe_eclairante"
-                  ]
-                },
-                {
-                  "f": [
-                    "bien",
-                    "transformateur"
-                  ]
-                }
+              "f": [
+                "bien",
+                "consommable"
               ]
             },
-            "portee": "tout",
-            "a_demander": true,
+            "portee": {
+              "bien": "consommable"
+            },
+            "a_demander": false,
             "article": "2.2-b",
             "texte": "les résistances chauffantes, les fusibles, les disjoncteurs, les lampes éclairantes, les transformateurs"
           },
@@ -176,252 +92,65 @@
             "condition": {
               "f": [
                 "bien",
-                "contenu_appareil"
+                "denrees_alimentaires"
               ]
             },
-            "portee": "tout",
-            "a_demander": true,
+            "portee": {
+              "bien": "denrees_alimentaires"
+            },
+            "a_demander": false,
             "article": "2.2-b",
             "texte": "le contenu des appareils endommagés"
           },
           {
             "condition": {
               "f": [
-                "frais_reconstitution_fichiers",
+                "garantie_fabricant",
                 "oui"
               ]
             },
             "portee": "tout",
             "a_demander": true,
             "article": "2.2-b",
-            "texte": "les frais de reconstitution des fichiers informatiques"
-          },
-          {
-            "condition": {
-              "f": [
-                "frais_reconstitution_donnees",
-                "oui"
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "2.2-b",
-            "texte": "les frais de reconstitution de données"
-          },
-          {
-            "condition": {
-              "ou": [
-                {
-                  "f": [
-                    "garantie_fabricant",
-                    "oui"
-                  ]
-                },
-                {
-                  "f": [
-                    "contrat_maintenance",
-                    "oui"
-                  ]
-                }
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "2.2-b",
-            "texte": "les dommages sous garantie ou faisant l'objet d'un contrat de maintenance"
+            "texte": "les dommages sous garantie ou faisant l’objet d’un contrat de maintenance"
           }
         ],
         "limites": [
           {
             "article": "2.2-a",
-            "texte": "L'indemnisation est égale au coût de réparation ou de remplacement du sous-ensemble endommagé, dans la limite de la valeur de remplacement, vétusté déduite au taux de 1 % par mois, du bien mobilier endommagé, avec un maximum de 80 % (si l'âge de l'appareil ne peut être justifié, le maximum de vétusté est appliqué).",
-            "montant": "valeur de remplacement, vétusté déduite au taux de 1 % par mois, maximum 80 %"
+            "texte": "L’indemnisation est égale au coût de réparation ou de remplacement du sous-ensemble endommagé, dans la limite de la valeur de remplacement, vétusté déduite au taux de 1 % par mois, du bien mobilier endommagé, avec un maximum de 80 %",
+            "montant": "vétusté 1 % par mois, au plus 80 %"
           }
         ]
       }
     ],
     "exclusions_communes": [],
     "extensions": [],
-    "vocabulaire_manquant": [
+    "vocabulaire_manquant": [],
+    "non_traduit": [],
+    "hors_decision": [
       {
-        "variable": "cause_electrique",
-        "valeurs": [
-          "surtension",
-          "sous_tension",
-          "surintensite",
-          "foudre",
-          "autre"
-        ],
-        "question": "Quelle est la cause électrique du dommage : surtension, sous-tension, surintensité, foudre ?",
-        "pourquoi": "La garantie 2.2-a couvre spécifiquement ces causes électriques",
-        "plus_proche": "cause_dommage : ne couvre que gel, virus, autre",
-        "aide": {
-          "surtension": "le dommage vient d'une surtension (trop de courant, pic de tension)",
-          "sous_tension": "le dommage vient d'une sous-tension (baisse de tension)",
-          "surintensite": "le dommage vient d'une surintensité (surcharge du circuit)",
-          "foudre": "le dommage vient de la foudre",
-          "autre": "autre cause électrique"
-        }
+        "article": "2.2-b",
+        "texte": "les frais de reconstitution des fichiers informatiques",
+        "pourquoi": "des frais, pas le dommage à l'appareil"
       },
       {
-        "variable": "bien",
-        "valeurs": [
-          "resistance_chauffante",
-          "fusible",
-          "disjoncteur",
-          "lampe_eclairante",
-          "transformateur"
-        ],
-        "question": "Quel composant électrique est endommagé ?",
-        "pourquoi": "Exclusions spécifiques de l'article 2.2-b pour ces composants",
-        "plus_proche": "bien : les valeurs existantes ne distinguent pas ces composants spécifiques",
-        "parent": "appareil_electromenager",
-        "aide": {
-          "resistance_chauffante": "la résistance chauffante de l'appareil (ex: résistance du four)",
-          "fusible": "le fusible",
-          "disjoncteur": "le disjoncteur du tableau électrique",
-          "lampe_eclairante": "la lampe ou l'ampoule",
-          "transformateur": "le transformateur"
-        }
-      },
-      {
-        "variable": "bien",
-        "valeurs": [
-          "contenu_appareil"
-        ],
-        "question": "S'agit-il du contenu d'un appareil endommagé ?",
-        "pourquoi": "Exclusion de l'article 2.2-b pour le contenu des appareils",
-        "plus_proche": "bien : aucune valeur ne désigne le contenu d'un appareil",
-        "parent": "objet_divers",
-        "aide": {
-          "contenu_appareil": "le contenu de l'appareil (ex: aliments dans le congélateur, vêtements dans la machine à laver)"
-        }
-      },
-      {
-        "variable": "frais_reconstitution_fichiers",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "S'agit-il de frais de reconstitution de fichiers informatiques ?",
-        "pourquoi": "Exclusion de l'article 2.2-b",
-        "plus_proche": "support_donnees_ou_logiciel : concerne le dommage aux supports de données, pas les frais de reconstitution",
-        "aide": {
-          "oui": "il s'agit de recréer ou restaurer des fichiers informatiques perdus",
-          "non": "pas de frais de reconstitution de fichiers informatiques"
-        }
-      },
-      {
-        "variable": "frais_reconstitution_donnees",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "S'agit-il de frais de reconstitution de données ?",
-        "pourquoi": "Exclusion de l'article 2.2-b",
-        "plus_proche": "support_donnees_ou_logiciel : concerne le dommage aux supports, pas les frais de reconstitution",
-        "aide": {
-          "oui": "il s'agit de recréer ou restaurer des données perdues",
-          "non": "pas de frais de reconstitution de données"
-        }
-      },
-      {
-        "variable": "contrat_maintenance",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "question": "Le dommage fait-il l'objet d'un contrat de maintenance ?",
-        "pourquoi": "Exclusion de l'article 2.2-b pour les dommages couverts par un contrat de maintenance",
-        "plus_proche": "garantie_fabricant : couvre la garantie constructeur/fournisseur, pas le contrat de maintenance",
-        "aide": {
-          "oui": "un contrat de maintenance est en place pour cet appareil et couvre le dommage",
-          "non": "pas de contrat de maintenance"
-        }
+        "article": "2.2-b",
+        "texte": "les frais de reconstitution de données",
+        "pourquoi": "des frais, pas le dommage à l'appareil"
       }
-    ],
-    "non_traduit": []
+    ]
   },
   "controles": [
     {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "cause_electrique = surtension : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.2`) ou à remplacer"
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.2-b) : des frais, pas le dommage à l'appareil"
     },
     {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "cause_electrique = sous_tension : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "cause_electrique = surintensite : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "cause_electrique = foudre : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "bien = resistance_chauffante : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "bien = fusible : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "bien = disjoncteur : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "bien = lampe_eclairante : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "bien = transformateur : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "bien = contenu_appareil : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "frais_reconstitution_fichiers = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "frais_reconstitution_donnees = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "contrat_maintenance = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "portée",
-      "message": "exclusion « les résistances chauffantes, les fusibles, les disjoncteurs, » : ne vise que disjoncteur, fusible, lampe_eclairante, resistance_chauffante, transformateur, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "portée",
-      "message": "exclusion « le contenu des appareils endommagés » : ne vise que contenu_appareil, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "limite",
-      "message": "limite « L'indemnisation est égale au coût de réparation ou de rempla » (dommages_electriques) : elle pose une condition ; circonstance ou garantie à part ?"
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.2-b) : des frais, pas le dommage à l'appareil"
     }
   ]
 }

@@ -3106,6 +3106,164 @@ article. Les pronoms sont ignorés.
 fixent les concepts que tout le reste emploie, et il les invente. C'est là que la relecture humaine compte le
 plus ; les garanties (lot 2) devraient demander moins, si les concepts sont bons.
 
+### 7.90 Lot 1 accepté en deux fois ; des variables qui ne doivent jamais être lues
+
+**Acceptation.** 1.1 et S25 acceptés. 1.2 et 1.5 refusés : « concept inconnu : batiment / contenu ». Le contrôle
+lit les concepts du contrat *avant* l'acceptation du lot : `batiment` naît en 1.1, `contenu` en 1.2. Pas un
+défaut des règles, un ordre : accepter 1.2 (maintenant que 1.1 est écrit), puis 1.5.
+
+**Le temps 2 de la lecture s'allongeait** (test `test_lecture_en_deux_temps` : 7 872 caractères pour moins de
+7 706 permis). Les variables nées d'articles sans garantie (les biens assurés, les exclusions générales) n'ont pas
+d'événement, donc pas de « pour » : l'option véranda, le pack piscine, la rixe, la guerre étaient demandées pour
+chaque vol de vélo. Or elles ne servent qu'à des exclusions que l'assureur prouve (« à demander » faux) : la
+réserve suffit, il n'y a rien à lire. Elles reçoivent `pour: ["jamais"]`, et la lecture les ignore ; la rédaction
+le fait d'elle-même pour un article sans garantie.
+
+Même cause, autre effet : l'extension de 1.5 (« sauf les objets précieux ») déclenchait la lecture du pays et du
+séjour temporaire pour tout vol de bijoux. Un bien sous un « non » n'entame pas une extension ; seuls les faits
+positifs la déclenchent.
+
+**Lot 2 rédigé** (garanties 2.1 à 2.13) : 13 articles en 14 min 01 s, 99 contrôles bloquants (de 0 pour 2.13 à
+18 pour 2.5) ; à relire avant toute acceptation.
+
+### 7.91 Assureur D, lot 2 relu : les garanties, et un concept qui se mordait la queue
+
+**Relecture** (`relecture/assureur_d_lot_2.py`) : 12 articles sur 13 réécrits ; 2.10 (catastrophes technologiques)
+n'est pas traduit, l'événement manque au vocabulaire et reste « à examiner ». Ce que le modèle faisait mal, et que la
+relecture a corrigé :
+- *Les concepts* : `contenu` redéfini (« SUBIS PAR VOS BIENS »), un concept par événement, `dependances`,
+  `objets_precieux`, `bris_glaces` inventés. Les garanties emploient `batiment` et `contenu` du lot 1.
+- *Les formules* : « uniquement pour les formules Confort et Excellence » va dans le périmètre (formule inconnue :
+  incertain, la convention du jeu fermé) ; « les vols dans les dépendances, si formule Eco » est à demander.
+- *Le vol* : « effraction ou escalade, menaces, vol des clés, fausse qualité » était une disjonction de cinq faits
+  oui/non ; un seul inconnu rendait incertain le vol sans effraction (porte non verrouillée), que le contrat refuse.
+  Une variable `acces_voleur` à plusieurs valeurs, avec `effraction` qui existait : le refus redevient possible.
+- *Les valeurs nouvelles* : le modèle en proposait six pour `cause_eau` ; elles auraient pris les lectures de A et
+  B (leçon 96). Les causes de D sont rapportées aux valeurs existantes. Au total, 10 variables nouvelles, aucune
+  valeur nouvelle d'une variable existante.
+- *Ce qui excluait trop* : « les frais de réparation de l'élément à l'origine du dommage » refusaient tout le dégât
+  des eaux (c'est le tuyau qui n'est pas payé) ; 2.13 (intervention des secours) déclarait traduits tous les
+  événements, responsabilité civile comprise, qui aurait été refusée au lieu d'être incertaine.
+- *Les renvois aux mesures de sécurité* (« voir ART. 4.1 ») ne bloquent plus : elles seront traduites avec le
+  titre IV.
+
+**Un concept défini par lui-même.** L'extension de 1.5 (les biens emportés en vacances) élargit le `batiment` pour
+le `contenu` ; or le `contenu` est défini « dans le `batiment` ». Le premier cas de vol essayé a fait boucler
+l'oracle sans fin (Prolog aurait fait de même). Aucun contrôle ne le voyait : chaque concept était connu. Un
+contrôle bloquant cherche désormais les cycles entre définitions et extensions ; 1.5 écrit les biens en faits.
+
+**Une option lue malgré « jamais »** : le Pack Jardin, employé par la tempête, recevait « lue pour la tempête ».
+Une variable « jamais » le reste.
+
+**Mesure, sans modèle** : les 25 cas du jeu fermé de D, avec des faits écrits à la main, passés à l'oracle : 22 sur
+23 hors responsabilité civile et assistance (non traduites, incertaines comme attendu). L'écart, `f-d20`
+(congélateur après une coupure) : les deux annotateurs le rangent dans les « + de la formule Excellence », le texte
+ingéré ne le dit pas (la page du tableau des formules est parmi les pages ignorées). Laissé tel que le texte le dit.
+Ce n'est pas le banc : la lecture des déclarations par Mistral reste à mesurer (`couverture banc --jeu ferme`).
+
+**Coût du lot 2** : 14 min de rédaction, 99 contrôles bloquants ; relecture humaine (avec Claude) de tous les
+articles. Comme au lot 1, le modèle écrit des règles plausibles mais presque toutes à reprendre : le gain est dans
+la structure (articles découpés, citations vérifiées, exclusions toutes comptées), pas dans les conditions.
+
+### 7.92 Un premier banc de D à moitié chargé ; le tableau des formules, lu comme un tableau
+
+**L'acceptation s'est arrêtée à 1.2.** Sa proposition gardait les contrôles faits avant que 1.1 ne soit écrit
+(« concept inconnu : batiment ») ; `--accepter` lit les contrôles enregistrés, il fallait d'abord `--controler`.
+Faute de 1.2, le concept `contenu` manquait, et 8 des 12 garanties du lot 2 ont été refusées ; seules 2.6, 2.7, 2.8
+et 2.13 sont entrées. Le banc lancé dans la foulée mesure donc un contrat à moitié traduit : **45 % justes** (chaîne
+complète, jeu fermé, Mistral Small), 0 couvert à tort, 1 refus à tort. Il n'est pas retenu comme mesure de D.
+
+**Le tableau des formules.** À l'ingestion, les pages 11 à 23 de D sont sautées : lues comme du texte, leurs
+lignes numérotées « 2.1 », « 2.5 » se confondaient avec les articles (7.88). Mais la page 11, « Garanties selon les
+formules », dit ce qu'aucun article ne dit : le contenu du congélateur n'est garanti qu'en formule Excellence
+(`f-d20`, que les deux annotateurs avaient vu et pas le système). Elle est maintenant lue à part, comme un tableau :
+- `couverture formules --contrat … --page 11` lit les mots avec leur position, trouve la ligne d'en-tête (Eco,
+  Confort, Excellence) et rattache chaque « X » ou « option » à la colonne la plus proche (`tableaux.py`). 37 lignes,
+  écrites dans `regles/formules/<contrat>.json` avec la page source.
+- Le relecteur relie chaque ligne aux garanties des règles (« correspondance », conservée si on relit le tableau).
+- `couverture regles` vérifie qu'aucune garantie ne joue, dans les règles, pour une formule que le tableau ne lui
+  donne pas. La règle peut être plus étroite (le vol des clés n'est que pour Confort et Excellence, par l'article),
+  jamais plus large. Sur les règles de D, le contrôle a trouvé le congélateur, et lui seul.
+
+**La formule est une circonstance, pas un terme du périmètre.** Une fois la formule Excellence ajoutée au
+périmètre du congélateur, l'oracle a refusé le cas au lieu de le dire incertain : une garantie au périmètre inconnu
+n'est que « possible », et le refus d'une garantie retenue l'emporte (le contenu des appareils est exclu des
+dommages électriques). C'est voulu par le moteur (une garantie hors sujet n'empêche pas de refuser), mais une
+formule inconnue ne dit pas que la garantie est hors sujet. En circonstance, la garantie est retenue, incertaine
+tant que la formule n'est pas dite. Les six garanties de D liées à une formule sont réécrites ainsi.
+
+Oracle, faits écrits à la main : 23 sur 23 (hors responsabilité civile et assistance, non traduites).
+
+### 7.93 Le premier vrai banc de D : 67 %, et ce qui reste à voir
+
+Lot 1 et lot 2 acceptés (1.2 cette fois contrôlé avant), `couverture regles` en ordre, « Tableau des formules :
+0 écart ». Banc sur le jeu fermé de D (25 cas, chaîne complète, Mistral Small, lecture vérifiée, 3 passages) :
+**67 % justes**, 1 couvert à tort, 0 refus à tort, 1 instable, médiane 3,5 s par cas. C'est la première mesure d'un
+contrat entièrement traduit par le modèle et relu, sans un seul cas de mise au point (A et B ont été réglés sur
+leur jeu d'essai).
+
+Les 8 erreurs :
+- *Non traduit* (3) : `f-d09` et `f-d15` (responsabilité civile), `f-d16` (protection juridique) : « incertain »,
+  comme prévu tant que le lot 3 n'est pas fait.
+- *Couvert à tort* (1) : `f-d19`, la foudre tombée sur un poteau électrique de la rue. La garantie incendie couvre la
+  foudre « y compris aux installations électriques », mais par l'impact direct ; ici c'est une surtension, qui
+  relève des dommages électriques (Confort et Excellence). La relecture ajoute à 2.1 : foudre et électricité lues
+  ensemble, l'appareil relève de 2.2. Oracle : foudre seule → couvert ; foudre et électricité → incertain.
+- *Incertain au lieu d'une réponse* (3) : `f-d05` (porte forcée, rien volé), `f-d06` (vol avec effraction pendant les
+  vacances), `f-d18` (porte non verrouillée). Les règles donnent la bonne réponse sur des faits écrits à la main :
+  l'écart est dans la lecture ou dans la confirmation des faits décisifs (lecture « vérifiée »), et le banc ne
+  gardait pas les faits lus. Il les garde désormais (`faits_lus` et `avertissements` par cas, dans le JSON du banc).
+- *Refusé au lieu d'incertain* (1) : `f-d23`, l'infiltration dans une maison « que nous avons fait construire »,
+  refusée trois fois : le modèle a lu « moins de dix ans » dans « fait construire ». L'aide de la variable dit
+  désormais que « fait construire » ne dit pas quand.
+
+### 7.94 Le banc garde les faits lus : trois erreurs de lecture, trois corrections
+
+Second banc de D après 7.93 : **71 % justes**, 0 couvert à tort, 0,33 refus à tort, 2 instables. Le banc garde
+maintenant ce que le modèle a lu ; les erreurs se lisent au lieu de se deviner :
+- `f-d05` (porte forcée, rien volé) et `f-d06` (vol avec effraction) : le modèle lit **`intentionnel = oui`** pour
+  tout vandalisme et tout vol : le voleur agit exprès. Mais l'exclusion générale vise les dommages causés
+  intentionnellement « par vous ou par un complice ». Selon que la confirmation retenait ou non ce fait, la réponse
+  était « incertain » ou un refus. L'exclusion de S25 ne joue plus quand l'auteur lu est un tiers.
+- `f-d18` (porte non verrouillée, aucune trace) : le modèle lit `acces_voleur = sans_effraction`, la vérification
+  retire `effraction = non` (« non dit »), et le vol reste incertain. Une clé nouvelle du vocabulaire, `implique` :
+  « sans effraction » dit « effraction = non », sauf si l'effraction est déjà lue (`prolog.impliquer`).
+- `f-d19` (foudre sur un poteau) : couvert à tort corrigé (incertain deux fois sur trois) ; la troisième fois, un
+  refus : l'ordinateur lu « avec ses données » déclenchait « les frais de reconstitution des fichiers », écrits en
+  exclusion de tout le sinistre. Ce sont des frais, pas l'appareil : hors décision.
+- `f-d23` (la décennale) : malgré l'aide, le modèle lit encore « moins de dix ans » dans « fait construire ». La
+  variable n'est plus lue (`pour: ["jamais"]`) : l'exclusion, à demander, est entamée par l'infiltration en façade,
+  et la réponse est « incertain », avec la question de l'âge de la maison. C'est ce que le contrat demande :
+  l'assureur vérifie la décennale, la déclaration ne la dit pas.
+
+Oracle, sur les faits que le modèle a réellement lus : les cinq cas donnent la réponse attendue.
+
+### 7.95 Assureur D à 83 % ; deux derniers écarts de lecture
+
+Après 7.94 (S25 et 2.2 réacceptés), banc sur le jeu fermé de D : **83 % justes**, 0 couvert à tort, 0,67 refus à
+tort, 2 instables, médiane 3,1 s. `f-d05`, `f-d06`, `f-d19` et `f-d23` donnent désormais la réponse attendue aux
+trois passages. Restent, hors responsabilité civile et protection juridique (non traduites, 3 cas) :
+- `f-d04` (conduite gelée dans une maison non chauffée, tuyaux non vidés) : le modèle lit `manque_entretien = oui`
+  et l'exclusion générale du défaut d'entretien refuse (deux passages sur trois). Le contrat traite ce cas par ses
+  mesures de prévention (4.2 : l'indemnité réduite de moitié), pas par l'exclusion. L'exclusion ne joue plus sur le
+  gel ; sur une fuite lue sans précision (valeur parente du gel), elle est à demander.
+- `f-d18` (porte non verrouillée) : refusé deux fois sur trois comme attendu ; la troisième, la confirmation des
+  faits décisifs jugeait « non dit » le fait déduit `effraction = non`. On confirme désormais le fait lu qui le dit
+  (`acces_voleur = sans_effraction`), pas sa conséquence (`prolog.sources_impliquees`).
+
+Oracle, sur les faits réellement lus : `f-d04` couvert ; une fuite avec défaut d'entretien, incertain ; une tempête
+sur un toit mal entretenu, toujours refusée.
+
+**Résultat** (banc de 11 h 36) : **88 % justes, 0 couvert à tort, 0 refus à tort, 0 instable** ; médiane 2,9 s.
+Tous les cas traduits sont justes aux trois passages ; les 12 % restants sont les 3 cas de responsabilité civile et
+de protection juridique, incertains tant que le lot 3 n'est pas fait.
+
+**A et B, après les changements du vocabulaire commun** (7.90 à 7.95) : A **77 %** (73 % au banc précédent,
+70 % à la première mesure), 2 couverts à tort, 4 instables ; B **63 %** (65 %), 1 couvert à tort, 2 instables.
+Cas par cas, les écarts avec les bancs précédents sont des changements d'un passage sur trois (instabilité de la
+lecture), sauf `f-a10`, devenu juste aux trois passages ; aucun cas n'a basculé d'une réponse stable à une autre.
+Les changements faits pour D n'ont pas dégradé A ni B.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.
@@ -3233,3 +3391,13 @@ Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les section
 95. Une exclusion peut citer le bon texte et porter la condition de sa voisine : seul un cas qui la met à l'épreuve le montre.
 96. Une nouvelle valeur du vocabulaire peut voler les lectures d'une valeur existante : la rattacher à celles dont elle prend la place.
 97. Un statut « OK » d'ingestion qui ne regarde que la forme laisse passer un contrat illisible : vérifier le texte de quelques articles.
+98. Une variable qui ne sert qu'à une exception prouvée par l'assureur n'a pas à être lue : la lire allonge chaque consigne pour rien.
+99. Un concept peut se définir par lui-même à travers une extension : chercher les cycles, aucun contrôle de nom ne les voit.
+100. Une disjonction de faits oui/non n'est fausse que si tous sont lus « non » : une variable à plusieurs valeurs rend le refus possible.
+101. Une page sautée à l'ingestion peut être la seule à dire une condition : la lire autrement, pas l'oublier.
+102. Ce qui dépend des conditions particulières (la formule) se met en circonstance : au périmètre, un refus voisin l'emporte.
+103. `--accepter` lit les contrôles enregistrés : après un changement du contrat, `--controler` d'abord.
+104. Un banc qui ne garde pas les faits lus oblige à deviner : garder, pour chaque cas, ce que le modèle a lu.
+105. Un fait lu peut en dire un autre : l'écrire dans le vocabulaire (« implique »), au lieu d'espérer que le modèle écrive les deux.
+106. Un fait que le petit modèle infère malgré l'aide (« fait construire » → moins de dix ans) : ne plus le lire, et le demander.
+107. Confirmer un fait déduit, c'est confirmer le fait qui le dit : la conséquence n'est jamais écrite telle quelle.

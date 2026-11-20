@@ -96,6 +96,7 @@ négatifs que la déclaration ne dit pas (« pas de violence »), et la consigne
 | Contrôles passés sans retouche | Structure, vocabulaire, citations, couverture des exclusions, concepts, chargement, non-régression |
 | Vocabulaire nouveau par garantie | Faits que le modèle déclare manquants (indicateur clé : doit baisser d'un contrat à l'autre) |
 | Relecture humaine | Corrections nécessaires avant `--accepter` |
+| Écarts au tableau des formules | Garanties qui jouent, dans les règles, pour une formule que le tableau du contrat ne leur donne pas (`couverture regles`, 7.92) |
 
 ---
 
@@ -108,6 +109,23 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 ---
 
 ## 5. Dernières mesures
+
+**20 nov. 2026, 11 h 36 à 11 h 42, jeu fermé, les trois contrats** (chaîne complète, Mistral Small, lecture
+vérifiée) : **Assureur D 88 % justes**, 0 couvert à tort, 0 refus à tort, 0 instable (les 12 % restants : RC et
+protection juridique, non traduites) ; **Assureur A 77 %**, 2 couverts à tort, 4 instables ; **Assureur B 63 %**,
+1 couvert à tort, 2 instables. A et B : pas de régression due aux changements faits pour D (DEMARCHE 7.95).
+
+**20 nov. 2026, 11 h 16, assureur D après 7.94** : **83 % justes**, 0 couvert à tort, 0,67 refus à tort (f-d04), 2 instables ; médiane 3,1 s. Les 3 cas de responsabilité civile et de protection juridique restent incertains (non traduits).
+
+**20 nov. 2026, 10 h 57, assureur D après 7.93** : **71 % justes**, 0 couvert à tort, 0,33 refus à tort, 2 instables.
+
+**20 nov. 2026, 10 h 51, troisième contrat (assureur D), jeu fermé** (25 cas, chaîne complète, Mistral Small,
+lecture vérifiée) : **67 % justes**, 1 couvert à tort (f-d19, la foudre tombée sur un poteau), 0 refus à tort,
+1 instable ; médiane 3,5 s. Première mesure d'un contrat traduit par le modèle puis relu, sans aucun cas de mise
+au point. 3 des 8 erreurs sont la responsabilité civile et la protection juridique, pas encore traduites ; les
+règles seules, sur des faits écrits à la main, donnent 23 sur 23 hors de ces garanties : le reste de l'écart est
+dans la lecture (DEMARCHE 7.93). Coût de l'ajout : 2 lots, 25 min de rédaction, 179 contrôles bloquants, toutes
+les garanties relues.
 
 **19 nov. 2026, 17 h 58, jeu fermé après les corrections de 7.81** : **Assureur A 77 % justes** (70 %), 1,67 couvert
 à tort (3), 0 refus à tort ; **Assureur B 62 % justes** (57 %), 1 couvert à tort (0), 1 refus à tort (1,33). Mesure

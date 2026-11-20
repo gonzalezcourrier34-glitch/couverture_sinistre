@@ -309,7 +309,13 @@ def couche_chaine(cas: list[dict], rapports: list[dict], durees: list[float]) ->
         lignes = [ligne(index[l["id"]], l["obtenu"]) | {"questions": l.get("questions", []),
                                                          "rappel_clauses": l.get("rappel_clauses"),
                                                          "erreur": l.get("erreur", False),
-                                                         "durees_ms": l.get("durees_ms") or {}} for l in r["cas"]]
+                                                         "durees_ms": l.get("durees_ms") or {},
+                                                         # Ce que le modèle a lu, et pourquoi la réponse a été
+                                                         # suspendue : sans eux, une erreur de la chaîne ne se
+                                                         # diagnostique qu'en rejouant le cas (7.93).
+                                                         "faits_lus": l.get("faits_lus") or {},
+                                                         "avertissements": l.get("avertissements") or []}
+                  for l in r["cas"]]
         for l in lignes:
             # Les questions de la chaîne sont des phrases : la variable attendue est trouvée si sa question est posée.
             attendues = index[l["id"]].get("questions_attendues", [])

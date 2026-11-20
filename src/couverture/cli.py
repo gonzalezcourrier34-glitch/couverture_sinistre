@@ -366,6 +366,17 @@ def regles_cli(base: Base, donnees: Path, contrat_id: str, faits_json: str | Non
     else:
         print(f"Citations : {len(citations)} (contrat absent de la base : `couverture ingerer` pour les vérifier).")
 
+    # Le tableau des garanties par formule, lu à part (7.92) : une garantie ne doit pas jouer, dans les règles, pour
+    # une formule que le tableau ne lui donne pas.
+    from . import tableaux
+
+    pb_formules, notes_formules = tableaux.verifier(contrat_id, prolog.fichier_regles(contrat_id).read_text(encoding="utf-8"))
+    if tableaux.chemin(contrat_id).exists():
+        print(f"Tableau des formules : {len(pb_formules)} écart(s) avec les règles.")
+    problemes += pb_formules
+    for n_ in notes_formules:
+        print(f"  · {n_}")
+
     chemin_cas = prolog.DOSSIER / "cas" / ("" if jeu == "mise_au_point" else jeu) / f"{contrat_id}.jsonl"
     sinistres, annotations = fichiers_jeu(donnees, contrat_id, jeu)
     if chemin_cas.exists() and annotations.exists():
@@ -393,6 +404,31 @@ def regles_cli(base: Base, donnees: Path, contrat_id: str, faits_json: str | Non
         print(f"! {p_}")
     print("Tout est en ordre." if not problemes else f"{len(problemes)} problème(s).")
     return 1 if problemes else 0
+
+
+def formules_cli(donnees: Path, contrat_id: str, page: int) -> int:
+    """Lit le tableau des garanties par formule (7.92) et l'écrit dans regles/formules/<contrat>.json."""
+    from . import prolog, tableaux
+    from .ingestion import charger_catalogue
+
+    fichiers = [f for f, m in charger_catalogue(donnees / "contrats").items()
+                if m.get("id") == contrat_id and (donnees / "contrats" / f).exists()]
+    if not fichiers:
+        print(f"Aucun fichier du catalogue pour {contrat_id} dans {donnees / 'contrats'}.")
+        return 1
+    formules = prolog.vocabulaire()["formule"]["valeurs"]
+    try:
+        doc = tableaux.extraire(donnees / "contrats" / fichiers[0], page, contrat_id, formules)
+    except (ValueError, IndexError) as e:
+        print(f"Tableau illisible page {page} : {e}")
+        return 1
+    print(f"Tableau des formules ({', '.join(doc['formules'])}), page {page} : {len(doc['lignes'])} lignes → "
+          f"{tableaux.chemin(contrat_id)}")
+    for l in doc["lignes"]:
+        lie = doc["correspondance"].get(l["libelle"])
+        print(f"  {l['libelle'][:60]:60} inclus : {', '.join(l['inclus']) or '-':28} option : {', '.join(l['option']) or '-':20}"
+              f"{' → ' + ', '.join(lie) if lie else ''}")
+    return 0
 
 
 def tester_modele() -> int:
@@ -441,6 +477,10 @@ def main(argv: list[str] | None = None) -> int:
     pg.add_argument("--faits", help="Décider un cas : JSON des faits, ex. '{\"evenement\": \"vol\", \"lieu\": [\"cave\"]}'")
     pg.add_argument("--jeu", choices=["mise_au_point", "validation", "redaction", "golden", "ferme"], default="mise_au_point",
                     help="Cas de mise au point (défaut), de validation (data/validation) ou des garanties rédigées par le modèle (data/redaction)")
+
+    pf = sous.add_parser("formules", help="Lire le tableau des garanties par formule d'un contrat (une page du PDF)")
+    pf.add_argument("--contrat", required=True)
+    pf.add_argument("--page", type=int, required=True, help="Page du tableau, numérotée à partir de 1")
 
     pb_ = sous.add_parser("banc", help="Banc d'essai : le golden set rejoué (règles, lecture, chaîne), avec des portes")
     pb_.add_argument("--contrat", required=True)
@@ -502,6 +542,9 @@ def main(argv: list[str] | None = None) -> int:
 
     if a.commande == "regles":
         return regles_cli(base, donnees, a.contrat, a.faits, a.jeu)
+
+    if a.commande == "formules":
+        return formules_cli(donnees, a.contrat, a.page)
 
     if a.commande == "banc":
         return banc_cli(base, donnees, a.contrat, a.methode, a.couches, a.repetitions, a.paralleles, a.figer, a.fiche, a.jeu)

@@ -439,6 +439,45 @@ def feuilles(c) -> list[tuple[str, str]]:
     return []
 
 
+def feuilles_positives(c) -> list[tuple[str, str]]:
+    """Les feuilles d'une condition, sauf celles sous un « non »."""
+    if not isinstance(c, dict) or len(c) != 1:
+        return []
+    (cle, v), = c.items()
+    if cle == "f":
+        return [(str(v[0]), str(v[1]))]
+    if cle in ("et", "ou", "si"):
+        return [f for x in v for f in feuilles_positives(x)]
+    return []
+
+
+def cycle_de_concepts(contrat_pl: str, prop: dict) -> list[str]:
+    """Un cycle entre concepts (définitions et extensions, du contrat et de la proposition), ou []."""
+    graphe: dict[str, set[str]] = {}
+    for bloc in re.split(r"\n(?=[a-z_]+\()", contrat_pl):
+        m = re.match(r"(definition|extension)\((\w+),", bloc)
+        if m:
+            graphe.setdefault(m.group(2), set()).update(re.findall(r"concept\((\w+)\)", bloc))
+    for d in (prop.get("definitions") or []) + (prop.get("extensions") or []):
+        if isinstance(d, dict) and d.get("concept"):
+            graphe.setdefault(str(d["concept"]), set()).update(concepts_employes(d.get("condition")))
+
+    def chercher(n, chemin):
+        if n in chemin:
+            return chemin[chemin.index(n):] + [n]
+        for m in sorted(graphe.get(n, ())):
+            trouve = chercher(m, chemin + [n])
+            if trouve:
+                return trouve
+        return []
+
+    for n in sorted(graphe):
+        trouve = chercher(n, [])
+        if trouve:
+            return trouve
+    return []
+
+
 def concepts_employes(c) -> list[str]:
     if not isinstance(c, dict) or len(c) != 1:
         return []
@@ -693,6 +732,11 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
             # `batiment_designe`, le modèle écrivait `batiment` comme pour A (7.72).
             noter(BLOQUANT, "concept", f"extension d'un concept inconnu : {x.get('concept')} (concepts de ce contrat : "
                   f"{', '.join(sorted(existants | nouveaux)) or 'aucun'})")
+    cycle = cycle_de_concepts(contrat_pl, prop)
+    if cycle:
+        # 1.5 de l'assureur D : `batiment` étendu au logement de vacances pour le `contenu`, lui-même défini « dans le
+        # `batiment` » ; l'oracle et Prolog bouclaient sans fin à la première question sur le lieu (7.91).
+        noter(BLOQUANT, "concept", f"concepts définis l'un par l'autre : {' → '.join(cycle)} ; écrire les faits au lieu du concept")
     deja = set(re.findall(r"^garantie\((\w+),", contrat_pl, re.M))
     ids = [g.get("id", "") for g in prop.get("garanties", [])]
     for i in ids:
@@ -830,6 +874,10 @@ def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
             avant = list(voc[v].get("pour") or [])
             evs = evenements_par_variable(prop).get(v) or list(prop.get("evenements") or [])
             evs = [e for e in evs if e not in PSEUDO_EVENEMENTS]
+            # « jamais » (7.90) : une option des conditions particulières, réserve d'exclusion partout ; qu'une garantie
+            # l'emploie ne la rend pas lisible dans une déclaration (le Pack Jardin pour la tempête, 2.3 de D).
+            if avant == [JAMAIS]:
+                evs = []
             if avant and evs:
                 voc[v]["pour"] = avant + [e for e in evs if e not in avant]
                 ajouts += [f"{v} : lue aussi pour {e}" for e in evs if e not in avant]
@@ -854,6 +902,14 @@ def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
             evs = evenements_par_variable(prop).get(v) or list(prop.get("evenements") or [])
             if evs:
                 voc[v]["pour"] = evs
+            elif not prop.get("garanties") and v in reserve_seulement(prop):
+                # Un article sans garantie (les biens assurés, les exclusions générales) n'a pas d'événement : sa
+                # variable aurait été lue pour chaque sinistre. Quand elle ne sert qu'à des exclusions jamais
+                # demandées (une option, un pack, une rixe), elle n'est pas lue : la réserve suffit (7.90).
+                voc[v]["pour"] = [JAMAIS]
+                ajouts.append(f"{v} : jamais lue (réserve d'une exclusion que l'assureur prouve)")
+                ajouts.append(f"{v} ({', '.join(valeurs)}) : « {voc[v]['question']} »")
+                continue
             if lieux.get(v):
                 voc[v]["seulement_si"] = {"lieu": lieux[v]}
             ajouts.append(f"{v} ({', '.join(valeurs)}) : « {voc[v]['question']} »")
@@ -865,7 +921,9 @@ def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
     for x in prop.get("extensions") or []:
         feuilles_x = feuilles(x.get("condition"))
         declencheurs = {}
-        for v, val in feuilles_x:
+        # Un lieu ou un bien sous un « non » n'entame pas l'extension : « sans les objets précieux » (1.5 de
+        # l'assureur D) faisait lire le pays de chaque vol de bijoux (7.90).
+        for v, val in feuilles_positives(x.get("condition")):
             if v in prolog.SOCLE:
                 declencheurs.setdefault(v, [])
                 if val not in declencheurs[v]:
@@ -896,9 +954,22 @@ def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
 
 ACCESSOIRE = "accessoire"      # « pour » d'une variable que seules des garanties accessoires emploient : pas lue
 EXTENSION = "extension"        # « pour » d'une variable née d'une extension : lue seulement si son lieu est lu
-# Ces deux « pour » ne sont pas des événements : ajoutés à une variable déjà lue pour un vol, ils n'y changent
+JAMAIS = "jamais"              # « pour » d'une variable qui n'est jamais lue dans la déclaration (7.90)
+# Ces « pour » ne sont pas des événements : ajoutés à une variable déjà lue pour un vol, ils n'y changent
 # rien et brouillent le vocabulaire (« option_incendie : lue aussi pour accessoire », 7.73).
-PSEUDO_EVENEMENTS = (ACCESSOIRE, EXTENSION)
+PSEUDO_EVENEMENTS = (ACCESSOIRE, EXTENSION, JAMAIS)
+
+
+def reserve_seulement(prop: dict) -> set[str]:
+    """Les variables qui n'apparaissent que dans des exclusions jamais demandées (« a_demander » faux)."""
+    dans, ailleurs = set(), set()
+    for x in exclusions(prop):
+        (dans if not x.get("a_demander") else ailleurs).update(v for v, _ in feuilles(x.get("condition")))
+    autres = [d.get("condition") for d in (prop.get("definitions") or []) + (prop.get("extensions") or [])]
+    autres += [g.get(k) for g in prop.get("garanties") or [] for k in ("perimetre",)]
+    for c in autres:
+        ailleurs.update(v for v, _ in feuilles(c if isinstance(c, dict) else {"et": c} if isinstance(c, list) else None))
+    return dans - ailleurs
 
 
 def evenements_par_variable(prop: dict) -> dict[str, list[str]]:
@@ -998,7 +1069,7 @@ def etendre_pour(prop: dict, voc: dict) -> list[str]:
     ajouts = []
     for v, evenements in sorted(evenements_par_variable(prop).items()):
         d = voc.get(v)
-        if not d or not d.get("pour") or not evenements:
+        if not d or not d.get("pour") or not evenements or d["pour"] == [JAMAIS]:
             continue
         manquants = [e for e in evenements if e not in d["pour"] and e not in PSEUDO_EVENEMENTS]
         if manquants:

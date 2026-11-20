@@ -463,7 +463,8 @@ def variables_du_temps_2(voc: dict, evenements: list[str], socle: dict | None = 
         lus = {var: set(x if isinstance(x, list) else [x]) for var, x in (socle or {}).items() if x}
         return any(var in lus and not lus[var] & set(vals) for var, vals in (d.get("seulement_si") or {}).items())
 
-    return {v: d for v, d in voc.items() if v not in SOCLE
+    # « jamais » (7.90) : la réserve d'une exclusion que l'assureur prouve (une option, une rixe) ; pas lue.
+    return {v: d for v, d in voc.items() if v not in SOCLE and d.get("pour") != ["jamais"]
             and (not ev or not d.get("pour") or ev & set(d["pour"]) or entamee(d)) and not hors_lieu(d)}
 
 
@@ -574,8 +575,38 @@ def au_vocabulaire(lus: dict, voc: dict) -> tuple[dict, list[str]]:
         if bonnes:
             faits[v] = bonnes if voc[v].get("plusieurs") else bonnes[0]
     faits, precises = preciser(faits, voc)
+    faits, impliques = impliquer(faits, voc)
     faits, retires = filtrer_faits(faits, voc)
-    return faits, ecarts + precises + retires
+    return faits, ecarts + precises + impliques + retires
+
+
+def sources_impliquees(faits: dict, voc: dict) -> dict[str, str]:
+    """{fait déduit : le fait lu qui le dit}, pour les faits que « implique » donne (7.95)."""
+    sources = {}
+    for v, regles in ((v, d.get("implique")) for v, d in voc.items() if d.get("implique")):
+        valeurs = faits.get(v)
+        for x in valeurs if isinstance(valeurs, list) else [valeurs]:
+            for w, y in (regles.get(x) or {}).items():
+                lu = faits.get(w)
+                if lu == y or (isinstance(lu, list) and y in lu):
+                    sources[w] = v
+    return sources
+
+
+def impliquer(faits: dict, voc: dict) -> tuple[dict, list[str]]:
+    """Un fait qui en dit un autre (vocabulaire, clé « implique ») : « entré sans effraction, porte non
+    verrouillée » dit qu'il n'y a pas eu effraction. La vérification retirait « effraction = non » (« non dit ») et
+    gardait « acces_voleur = sans_effraction » ; le vol restait incertain au lieu d'être refusé (f-d18, 7.94). Un
+    fait déjà lu n'est jamais remplacé."""
+    notes = []
+    for v, regles in ((v, d.get("implique")) for v, d in voc.items() if d.get("implique")):
+        valeurs = faits.get(v)
+        for x in valeurs if isinstance(valeurs, list) else [valeurs]:
+            for w, y in (regles.get(x) or {}).items():
+                if w in voc and faits.get(w) in (None, "", []):
+                    faits = faits | {w: [y] if voc[w].get("plusieurs") else y}
+                    notes.append(f"{w} = {y} : dit par {v} = {x}")
+    return faits, notes
 
 
 def preciser(faits: dict, voc: dict) -> tuple[dict, list[str]]:
@@ -690,13 +721,19 @@ class PipelineRegles:
         decisifs = faits_decisifs(faits, self.decideur, d["decision"])
         if not decisifs:
             return d, [], []
+        # Un fait déduit d'un autre (« implique », 7.94) n'est pas écrit tel quel : on confirme le fait qui le dit
+        # (« entré sans effraction »), pas sa conséquence (« effraction = non »), que la confirmation jugeait « non
+        # dite » une fois sur trois (f-d18, 7.95).
+        voc = vocabulaire()
+        sources = sources_impliquees(faits, voc)
+        a_juger = list(dict.fromkeys(sources.get(v, v) for v in decisifs))
         try:
-            verdicts = juger_affirmations(sinistre, {v: faits[v] for v in decisifs}, self.modele_confirmation(), vocabulaire())
+            verdicts = juger_affirmations(sinistre, {v: faits[v] for v in a_juger}, self.modele_confirmation(), voc)
         except ErreurLLM:
             raise
         except Exception as e:  # noqa: BLE001
             return d, [], [f"confirmation des faits décisifs illisible ({e}) : réponse gardée"]
-        doutes = [v for v in decisifs if verdicts.get(v) == "non_dit"]
+        doutes = [v for v in decisifs if verdicts.get(sources.get(v, v)) == "non_dit"]
         if not doutes:
             return d, [], []
         sans = {k: x for k, x in faits.items() if k not in doutes}

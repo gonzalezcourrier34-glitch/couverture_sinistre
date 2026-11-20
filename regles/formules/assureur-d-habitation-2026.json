@@ -1,0 +1,378 @@
+{
+  "contrat": "assureur-d-habitation-2026",
+  "source": {
+    "fichier": "assureur_d_habitation_2026.pdf",
+    "page": 11
+  },
+  "formules": [
+    "eco",
+    "confort",
+    "excellence"
+  ],
+  "lignes": [
+    {
+      "libelle": "Incendie et événements annexes",
+      "inclus": [
+        "eco",
+        "confort",
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "Dommages électriques",
+      "inclus": [
+        "confort",
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "Tempête, grêle, avalanche, neige sur les toitures",
+      "inclus": [
+        "eco",
+        "confort",
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "Venues d’eau et gel",
+      "inclus": [
+        "eco",
+        "confort",
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "Vol, tentative de vol, actes de vandalisme et de sabotage",
+      "inclus": [
+        "eco",
+        "confort",
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "Détériorations immobilières",
+      "inclus": [
+        "eco",
+        "confort",
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "Bris de glaces :",
+      "inclus": [
+        "eco",
+        "confort",
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "- Bris de glaces +",
+      "inclus": [
+        "confort",
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "- Bris de glaces renforcé",
+      "inclus": [
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "Contenu du congélateur et/ou réfrégirateur",
+      "inclus": [
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "Catastrophes naturelles",
+      "inclus": [
+        "eco",
+        "confort",
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "Catastrophes technologiques",
+      "inclus": [
+        "eco",
+        "confort",
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "Attentats et actes de terrorisme",
+      "inclus": [
+        "eco",
+        "confort",
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "Émeutes et mouvements populaires",
+      "inclus": [
+        "eco",
+        "confort",
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "Intervention des moyens de secours",
+      "inclus": [
+        "eco",
+        "confort",
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "Responsabilités civiles liées l’habitation",
+      "inclus": [
+        "eco",
+        "confort",
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "- Responsabilité vie privée",
+      "inclus": [
+        "eco",
+        "confort",
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "- Responsabilité fêtes familiales",
+      "inclus": [
+        "eco",
+        "confort",
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "Protection familiale",
+      "inclus": [
+        "eco",
+        "confort",
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "Défense pénale et recours suite à accident",
+      "inclus": [
+        "eco",
+        "confort",
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "Frais annexes",
+      "inclus": [
+        "eco",
+        "confort",
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "Frais de relogement provisoire",
+      "inclus": [
+        "eco",
+        "confort",
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "Perte de loyers",
+      "inclus": [
+        "eco",
+        "confort",
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "Pertes indirectes",
+      "inclus": [
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "Remboursement de prêt",
+      "inclus": [
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "Remise à neuf",
+      "inclus": [
+        "eco",
+        "confort",
+        "excellence"
+      ],
+      "option": []
+    },
+    {
+      "libelle": "Rééquipement à neuf",
+      "inclus": [
+        "excellence"
+      ],
+      "option": [
+        "confort"
+      ]
+    },
+    {
+      "libelle": "Pack Numérique",
+      "inclus": [],
+      "option": [
+        "confort",
+        "excellence"
+      ]
+    },
+    {
+      "libelle": "- Option abri de piscine",
+      "inclus": [],
+      "option": [
+        "confort",
+        "excellence"
+      ]
+    },
+    {
+      "libelle": "Pack Canalisations enterrées",
+      "inclus": [],
+      "option": [
+        "confort",
+        "excellence"
+      ]
+    },
+    {
+      "libelle": "Pack Jardin",
+      "inclus": [],
+      "option": [
+        "confort",
+        "excellence"
+      ]
+    },
+    {
+      "libelle": "Objets de valeur désigné en valeur déclarée ou expertisée",
+      "inclus": [],
+      "option": [
+        "excellence"
+      ]
+    },
+    {
+      "libelle": "Véranda/loggia",
+      "inclus": [],
+      "option": [
+        "confort",
+        "excellence"
+      ]
+    },
+    {
+      "libelle": "Panne électroménager",
+      "inclus": [],
+      "option": [
+        "eco",
+        "confort",
+        "excellence"
+      ]
+    },
+    {
+      "libelle": "Garantie scolaire, extrascolaire et assistance scolaire",
+      "inclus": [],
+      "option": [
+        "eco",
+        "confort",
+        "excellence"
+      ]
+    },
+    {
+      "libelle": "Protection juridique",
+      "inclus": [],
+      "option": [
+        "eco",
+        "confort",
+        "excellence"
+      ]
+    },
+    {
+      "libelle": "Assistance Multirisque Habitation",
+      "inclus": [],
+      "option": [
+        "eco",
+        "confort",
+        "excellence"
+      ]
+    }
+  ],
+  "correspondance": {
+    "Incendie et événements annexes": [
+      "incendie_evenements_annexes"
+    ],
+    "Dommages électriques": [
+      "dommages_electriques"
+    ],
+    "Tempête, grêle, avalanche, neige sur les toitures": [
+      "tempete_grele_neige"
+    ],
+    "Venues d’eau et gel": [
+      "venues_eau_gel",
+      "recherche_fuite",
+      "debordement_cuves"
+    ],
+    "Vol, tentative de vol, actes de vandalisme et de sabotage": [
+      "vol_vandalisme",
+      "vol_cles"
+    ],
+    "Détériorations immobilières": [
+      "deteriorations_immobilieres"
+    ],
+    "Bris de glaces :": [
+      "bris_glaces"
+    ],
+    "- Bris de glaces +": [
+      "bris_glace_plus"
+    ],
+    "- Bris de glaces renforcé": [
+      "bris_glace_renforce"
+    ],
+    "Contenu du congélateur et/ou réfrégirateur": [
+      "contenu_congelateur"
+    ],
+    "Catastrophes naturelles": [
+      "catastrophes_naturelles",
+      "relogement_catnat"
+    ],
+    "Attentats et actes de terrorisme": [
+      "attentats"
+    ],
+    "Émeutes et mouvements populaires": [
+      "emeutes"
+    ],
+    "Intervention des moyens de secours": [
+      "intervention_secours"
+    ]
+  }
+}

@@ -1,14 +1,15 @@
 % --- Art. 2.3 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-20 ---
 evenement_traduit(tempete).
-garantie(tempete_grele_avalanche_neige, "Tempête, grêle, avalanche, neige sur les toitures", '2.3-a',
-    "La garantie couvre les dommages matériels causés aux biens assurés par l'action directe : • du vent ou du choc d'un objet renversé ou projeté par le vent (garantie tempête), • des avalanches de toutes natures, • de la grêle sur les toitures y compris sur les gouttières et les chéneaux en métal ou en PVC, les antennes et paraboles, les façades, les portes et fenêtres, les volets, • de la grêle, du poids de la neige ou de la glace sur votre piscine et votre abri de piscine (si l'option est souscrite pour chacun de ces biens dans le Pack Piscine), • du poids de la neige ou de la glace accumulée sur les toitures y compris sur les gouttières et les chéneaux en métal ou en PVC, lorsque ces phénomènes ont une intensité telle qu'ils détruisent ou endommagent d'autres bâtiments de bonne construction dans le voisinage ou que leur caractère exceptionnel est attesté par un certificat de la station météorologique la plus proche (vitesse supérieure à 100 km/h dans le cas du vent). Sont considérés comme constituant un seul et même sinistre les dommages causés par la pluie, la neige ou la grêle pénétrant à l'intérieur du bâtiment, consécutifs à l'événement garanti et survenus dans les 48 heures (dommages de mouille).").
-perimetre(tempete_grele_avalanche_neige, ou([f(evenement, tempete), f(evenement, avalanche)])).
-perimetre(tempete_grele_avalanche_neige, ou([concept(batiment), et([f(bien, piscine), f(pack_piscine, oui)]), et([f(bien, abri_piscine), f(pack_piscine, oui)])])).
-circonstance(tempete_grele_avalanche_neige, et([f(alea_tempete, neige_glace), ou([f(dommages_voisins, oui), f(certificat_meteo, oui)])]), '2.3-a',
-    "lorsque ces phénomènes ont une intensité telle qu'ils détruisent ou endommagent d'autres bâtiments de bonne construction dans le voisinage ou que leur caractère exceptionnel est attesté par un certificat de la station météorologique la plus proche (vitesse supérieure à 100 km/h dans le cas du vent)").
-circonstance(tempete_grele_avalanche_neige, f(dommages_dans_48h, oui), '2.3-a',
-    "Sont considérés comme constituant un seul et même sinistre les dommages causés par la pluie, la neige ou la grêle pénétrant à l'intérieur du bâtiment, consécutifs à l'événement garanti et survenus dans les 48 heures (dommages de mouille)").
-exclusion(tempete_grele_avalanche_neige, et([f(alea_tempete, vent), ou([f(elements_porteurs_ancres, non), f(construit_selon_regles_art, non), f(construction_close, non)])]), tout, oui, '2.3-b',
-    "les dommages occasionnés par le vent aux bâtiments dont les éléments porteurs ne sont pas ancrés, à ceux qui ne sont pas construits selon les règles de l'art ou qui ne sont pas entièrement clos et couverts, ainsi qu'à leur contenu").
-exclusion(tempete_grele_avalanche_neige, et([f(objet_plein_air, oui), non(et([f(bien, mobilier_jardin), f(pack_jardin, oui)]))]), tout, oui, '2.3-b',
-    "les objets en plein air, sauf pour le mobilier de jardin assuré dans le Pack Jardin s'il est souscrit").
+garantie(tempete_grele_neige, "Tempête, grêle, neige sur les toitures", '2.3-a',
+    "La garantie couvre les dommages matériels causés aux biens assurés par l’action directe : • du vent ou du choc d’un objet renversé ou projeté par le vent (garantie tempête)").
+perimetre(tempete_grele_neige, f(evenement, tempete)).
+perimetre(tempete_grele_neige, ou([concept(contenu), f(bien, element_batiment)])).
+perimetre(tempete_grele_neige, concept(batiment)).
+circonstance(tempete_grele_neige, si(f(alea_tempete, vent), ou([f(vent_dommages_voisins, oui), f(vent_100_kmh, oui)])), '2.3-a',
+    "lorsque ces phénomènes ont une intensité telle qu’ils détruisent ou endommagent d’autres bâtiments de bonne construction dans le voisinage ou que leur caractère exceptionnel est attesté par un certificat de la station météorologique la plus proche (vitesse supérieure à 100 km/h dans le cas du vent)").
+circonstance(tempete_grele_neige, si(f(alea_tempete, neige_glace), ou([f(neige_dommages_voisins, oui), f(certificat_meteo, oui)])), '2.3-a',
+    "lorsque ces phénomènes ont une intensité telle qu’ils détruisent ou endommagent d’autres bâtiments de bonne construction dans le voisinage ou que leur caractère exceptionnel est attesté par un certificat de la station météorologique la plus proche (vitesse supérieure à 100 km/h dans le cas du vent)").
+exclusion(tempete_grele_neige, et([f(alea_tempete, vent), f(construction_close, non)]), tout, oui, '2.3-b',
+    "les dommages occasionnés par le vent aux bâtiments dont les éléments porteurs ne sont pas ancrés, à ceux qui ne sont pas construits selon les règles de l’art ou qui ne sont pas entièrement clos et couverts, ainsi qu’à leur contenu").
+exclusion(tempete_grele_neige, et([ou([f(lieu, jardin), f(lieu, terrasse)]), non(et([f(bien, mobilier_jardin), f(pack_jardin, oui)]))]), tout, oui, '2.3-b',
+    "les objets en plein air, sauf pour le mobilier de jardin assuré dans le Pack Jardin s’il est souscrit").

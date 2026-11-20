@@ -3,25 +3,48 @@
     "article": "2.12",
     "modele": "mistral:mistral-large-latest",
     "date": "2026-11-20",
-    "consigne": "redaction-regles v12"
+    "consigne": "redaction-regles v12",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-20",
+      "modifications": [
+        "émeutes : l'événement `attentat` (émeute, manifestation qui dégénère)"
+      ]
+    }
   },
   "proposition": {
     "evenements": [
-      "emeute_mouvement_populaire"
+      "attentat"
     ],
     "definitions": [],
     "garanties": [
       {
-        "id": "emeutes_mouvements_populaires",
+        "id": "emeutes",
         "nom": "Émeutes et mouvements populaires",
         "article": "2.12-a",
-        "texte": "La garantie couvre, dans les conditions et limites prévues pour chaque garantie si elle est souscrite, les dommages matériels causés aux biens assurés survenant lors d’émeutes ou de mouvements populaires.",
+        "texte": "La garantie couvre, dans les conditions et limites prévues pour chaque garantie si elle est souscrite, les dommages matériels causés aux biens assurés survenant lors d’émeutes ou de mouvements populaires",
         "perimetre": [
           {
             "f": [
               "evenement",
-              "emeute_mouvement_populaire"
+              "attentat"
             ]
+          },
+          {
+            "ou": [
+              {
+                "concept": "contenu"
+              },
+              {
+                "f": [
+                  "bien",
+                  "element_batiment"
+                ]
+              }
+            ]
+          },
+          {
+            "concept": "batiment"
           }
         ],
         "circonstances": [],
@@ -32,28 +55,8 @@
     ],
     "exclusions_communes": [],
     "extensions": [],
-    "vocabulaire_manquant": [
-      {
-        "variable": "evenement",
-        "valeurs": [
-          "emeute_mouvement_populaire"
-        ],
-        "question": "S'agit-il d'une émeute ou d'un mouvement populaire ?",
-        "pourquoi": "événement couvert par l'article 2.12 (émeutes et mouvements populaires)",
-        "plus_proche": "conflit_du_travail, vandalisme, attentat : aucun ne désigne spécifiquement les émeutes ou mouvements populaires",
-        "parent": "autre",
-        "aide": {
-          "emeute_mouvement_populaire": "il y a eu une émeute, des émeutes, un mouvement populaire, des manifestations violentes dans la rue"
-        }
-      }
-    ],
-    "non_traduit": []
-  },
-  "controles": [
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "evenement = emeute_mouvement_populaire : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.12`) ou à remplacer"
-    }
-  ]
+    "vocabulaire_manquant": [],
+    "non_traduit": [],
+    "hors_decision": []
+  }
 }

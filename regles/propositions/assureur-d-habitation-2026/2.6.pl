@@ -1,17 +1,14 @@
 % --- Art. 2.6 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-20 ---
 evenement_traduit(vandalisme).
 evenement_traduit(vol).
-definition(dependances, ou([f(lieu, cave), f(lieu, grenier), f(lieu, garage), f(lieu, annexe), f(lieu, abri_jardin)]), 'S10-a/dependances',
-    "Ce sont les locaux destinés à un usage autre que le local d’habitation ou l’exercice d’une profession situés en dehors de la « verticalité » du local d’habitation. Sont également considérés comme dépendances les caves et les garages situés dans les immeubles collectifs.").
-garantie(detriorations_immobilieres_vandalisme, "Détériorations immobilières suite à vandalisme ou vol", '2.6-a',
-    "La garantie couvre la détérioration de : - vos biens immobiliers, - votre piscine, spa ou jacuzzi (si l’option du Pack Piscine est souscrite), - votre abri de piscine, spa ou jacuzzi (si l’option du Pack Piscine est souscrite), - votre véranda (si l’option est souscrite), à la suite d’un acte de vandalisme, d’une tentative de vol ou d’un vol. Si les dommages sont commis à l’intérieur de votre habitation ou de ses dépendances, les détériorations doivent être commises à la suite : - de l’effraction ou de l’escalade des locaux assurés, ayant laissé des traces apparentes, - de menaces physiques ou violences physiques, - du vol des clés, - de l’introduction par fausse qualité. La garantie couvre également les frais de remplacement à l’identique des moyens de protection équipant ces locaux.").
-perimetre(detriorations_immobilieres_vandalisme, ou([f(evenement, vandalisme), f(evenement, vol)])).
-perimetre(detriorations_immobilieres_vandalisme, ou([concept(batiment), f(bien, element_batiment), et([f(bien, piscine), f(pack_piscine, oui)]), et([f(bien, abri_piscine), f(pack_piscine, oui)]), et([f(bien, spa), f(pack_piscine, oui)]), et([f(bien, jacuzzi), f(pack_piscine, oui)]), et([f(bien, veranda), f(option_veranda, oui)])])).
-circonstance(detriorations_immobilieres_vandalisme, si(ou([f(lieu, logement), concept(dependances)]), ou([f(effraction, oui), f(escalade, oui), f(violence, oui), f(vol_cles, oui), f(fausse_qualite, oui)])), '2.6-a',
-    "Si les dommages sont commis à l'intérieur de votre habitation ou de ses dépendances, les détériorations doivent être commises à la suite : - de l’effraction ou de l’escalade des locaux assurés, ayant laissé des traces apparentes, - de menaces physiques ou violences physiques, - du vol des clés, - de l’introduction par fausse qualité.").
-exclusion(detriorations_immobilieres_vandalisme, et([ou([f(auteur, famille), et([f(auteur, personnel_prive), f(heures_service, oui)])]), non(f(plainte_nominative, oui))]), tout, oui, '2.6-b',
+garantie(deteriorations_immobilieres, "Détériorations immobilières", '2.6-a',
+    "La garantie couvre la détérioration de : - vos biens immobiliers…à la suite d’un acte de vandalisme, d’une tentative de vol ou d’un vol").
+perimetre(deteriorations_immobilieres, ou([f(evenement, vandalisme), f(evenement, vol)])).
+perimetre(deteriorations_immobilieres, f(bien, element_batiment)).
+perimetre(deteriorations_immobilieres, concept(batiment)).
+circonstance(deteriorations_immobilieres, si(ou([f(lieu, logement), f(lieu, grenier), f(lieu, cave), f(lieu, garage), f(lieu, annexe), f(lieu, abri_jardin)]), ou([f(effraction, oui), f(acces_voleur, escalade), f(acces_voleur, menaces), f(acces_voleur, cles_volees), f(acces_voleur, fausse_qualite)])), '2.6-a',
+    "Si les dommages sont commis à l’intérieur de votre habitation ou de ses dépendances, les détériorations doivent être commises à la suite : - de l’effraction ou de l’escalade des locaux assurés, ayant laissé des traces apparentes, - de menaces physiques ou violences physiques, - du vol des clés, - de l’introduction par fausse qualité").
+exclusion(deteriorations_immobilieres, et([ou([f(auteur, famille), f(auteur, personnel_prive)]), non(f(plainte_deposee, oui))]), tout, oui, '2.6-b',
     "les vols, tentatives de vol ou actes de vandalisme dont seraient auteurs ou complices les membres de votre famille (article 311-12 du Code pénal) ou vos préposés pendant leur service, sauf si une plainte nominative est déposée à leur encontre").
-exclusion(detriorations_immobilieres_vandalisme, et([f(graffiti_mur_exterieur, oui), non(ou([f(lieu, logement), concept(dependances)]))]), tout, oui, '2.6-b',
+exclusion(deteriorations_immobilieres, f(graffiti_mur_exterieur, oui), tout, oui, '2.6-b',
     "les graffitis, tags, pochoirs et inscriptions de toute nature, affichages, salissures, rayures commis à l’extérieur de votre local d’habitation et de ses dépendances").
-exclusion(detriorations_immobilieres_vandalisme, et([f(evenement, vol), ou([concept(batiment), f(bien, element_batiment)])]), tout, non, '2.6-b',
-    "le vol des biens immobiliers").

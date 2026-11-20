@@ -13,7 +13,8 @@ Ce que le modèle avait fait, et ce qui change :
   les limites sont des montants. 1.4 (véranda, option) : l'exclusion des vérandas en 1.1-b porte l'exception. Ni
   1.3 ni 1.4 ne sont acceptés seuls.
 - 1.5 (villégiature) : une extension du lieu assuré, pour le contenu, dans un autre logement occupé en voyage, dans
-  l'Union européenne, au Royaume-Uni, en Andorre ou à Monaco ; sans les objets précieux (1.5-b).
+  l'Union européenne, au Royaume-Uni, en Andorre ou à Monaco ; sans les objets précieux (1.5-b). Le contenu y est
+  écrit en biens, pas par le concept `contenu`, défini à partir du `batiment` qu'elle étend (7.91).
 - S25 : l'exclusion « tremblement de terre, éruption, raz-de-marée » excluait aussi l'événement « catastrophe
   naturelle », c'est-à-dire la garantie qu'elle épargne expressément ; aucune autre garantie traduite ne couvre ces
   phénomènes : hors décision. Les amendes et les armes illégales : sans effet sur les dommages aux biens. Aucune
@@ -158,7 +159,10 @@ ecrire("1.2", {
 
 ecrire("1.5", {
     "extensions": [{"concept": "batiment", "condition": et(
-        f("sejour_temporaire", "oui"), f("lieu", "autre_batiment"), concept("contenu"),
+        f("sejour_temporaire", "oui"), f("lieu", "autre_batiment"),
+        # Les biens du contenu, écrits en faits : `contenu` est défini « dans le `batiment` », que cette extension
+        # élargit ; le concept ici faisait boucler le moteur (7.91).
+        ou(*[f("bien", x) for x in ("mobilier", "electronique", "objet_divers", "velo", "mobilier_jardin")]),
         non(ou(f("bien", "bijoux"), f("bien", "valeurs"))),
         ou(*[f("pays", p) for p in ("france", "belgique", "luxembourg", "allemagne", "autre_ue", "royaume_uni", "andorre", "monaco")])),
         "article": "1.5-a", "texte": "Les objets que vous emportez avec vous dans les différents locaux d’habitation, y "
@@ -179,11 +183,18 @@ ecrire("1.5", {
 
 ecrire("S25", {
     "exclusions_communes": [
-        exc(ou(f("intentionnel", "oui"), et(f("participation_rixe", "oui"), non(f("legitime_defense", "oui")))), "S25",
+        # « par vous ou par un complice » : le voleur ou le vandale agit exprès, mais ce n'est pas l'assuré. Le petit
+        # modèle lisait « intentionnel = oui » pour chaque vandalisme ; l'exclusion refusait (7.94).
+        exc(ou(et(f("intentionnel", "oui"), non(f("auteur", "tiers"))),
+               et(f("participation_rixe", "oui"), non(f("legitime_defense", "oui")))), "S25",
             "les dommages causés intentionnellement ou frauduleusement par vous ou par un complice, ou résultant de votre "
             "ou de sa participation à une action violente ou à une rixe (sauf légitime défense)"),
-        exc(f("manque_entretien", "oui"), "S25", "ceux qui résultent directement d’un défaut de réparation ou d’entretien "
-            "indispensables vous incombant et dont vous aviez connaissance"),
+        # Le gel d'une conduite faute de l'avoir vidée relève des mesures de prévention (4.2 : une réduction de
+        # l'indemnité), pas du défaut d'entretien ; le petit modèle lisait « manque_entretien » et refusait (f-d04, 7.95).
+        # Une fuite lue sans plus de précision peut être du gel (valeur parente) : alors l'exclusion est à demander.
+        exc(et(f("manque_entretien", "oui"), ou(non(f("evenement", "degat_eaux")), non(f("cause_eau", "gel")))), "S25",
+            "ceux qui résultent directement d’un défaut de réparation ou d’entretien indispensables vous incombant et dont "
+            "vous aviez connaissance", demander=True),
         exc(et(ou(f("cause_guerre", "oui"), f("cause_nucleaire", "oui")), non(f("evenement", "attentat"))), "S25",
             "de la guerre civile ou étrangère, - de tout combustible, produit ou déchet radioactif, de tout engin destiné à "
             "irradier ou à exploser par modification du noyau de l’atome ainsi que leur décontamination, sauf pour les "

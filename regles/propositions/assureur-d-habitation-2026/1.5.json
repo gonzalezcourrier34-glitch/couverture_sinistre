@@ -36,7 +36,38 @@
               ]
             },
             {
-              "concept": "contenu"
+              "ou": [
+                {
+                  "f": [
+                    "bien",
+                    "mobilier"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "electronique"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "objet_divers"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "velo"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "mobilier_jardin"
+                  ]
+                }
+              ]
             },
             {
               "non": {
@@ -154,37 +185,5 @@
         "pourquoi": "les objets précieux sont retirés de l'extension ; le reste n'est pas distingué par le vocabulaire"
       }
     ]
-  },
-  "controles": [
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (1.5-b) : hors d'un logement : l'extension ne joue pas"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (1.5-b) : pas un « local d'habitation » occupé en voyage : l'extension ne joue pas"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (1.5-b) : pas un séjour temporaire"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (1.5-b) : les objets précieux sont retirés de l'extension ; le reste n'est pas distingué par le vocabulaire"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "concept",
-      "message": "concept inconnu : contenu"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "concept",
-      "message": "extension d'un concept inconnu : batiment (concepts de ce contrat : aucun)"
-    }
-  ]
+  }
 }
