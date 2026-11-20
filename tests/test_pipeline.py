@@ -173,12 +173,12 @@ def test_jeu_de_test_coherent():
 
 # --- Contrat réel (si le PDF est présent dans data/contrats) -------------------
 
-PDF_ASSUREUR_A = DONNEES / "contrats" / "assureur_a_habitation_2025.pdf"
+FOYER = DONNEES / "contrats" / "foyer_appart123_2025.pdf"
 
 
-@pytest.mark.skipif(not PDF_ASSUREUR_A.exists(), reason="PDF Assureur A Habitation A absent de data/contrats")
-def test_contrat_assureur_a_lu_et_exclusion_parties_communes_trouvee():
-    clauses = segmenter_lignes(charger_lignes(PDF_ASSUREUR_A))
+@pytest.mark.skipif(not FOYER.exists(), reason="PDF Foyer appart 123 absent de data/contrats")
+def test_contrat_foyer_lu_et_exclusion_parties_communes_trouvee():
+    clauses = segmenter_lignes(charger_lignes(FOYER))
     rapport = controler(clauses)
     assert rapport["statut"] == "OK", rapport["alertes"]
     par_id = {c.id: c for c in clauses}
@@ -323,7 +323,7 @@ from couverture.models import Citation, Faits, Resultat, Verdict  # noqa: E402
 MAINTENANT = datetime(2026, 11, 17, 8, 0, tzinfo=timezone.utc)
 
 
-def resultat(decision="NON_COUVERT", evenement="vol", contrat="assureur-a", questions=()):
+def resultat(decision="NON_COUVERT", evenement="vol", contrat="foyer", questions=()):
     v = Verdict(decision=Decision(decision), justification="…", confiance=0.9 if decision != "INCERTAIN" else 0.5,
                 citations=[Citation(clause_id="4.4", extrait="x")], informations_manquantes=list(questions))
     return Resultat(sinistre="Un sinistre décrit en une phrase.", contrat_id=contrat, methode="conditions",
@@ -566,7 +566,7 @@ def test_ingestion_ignore_la_documentation_et_retire_les_contrats_disparus(tmp_p
 
 
 def test_profil_reconnait_un_titre_numerote():
-    """« 3.1.6.1 Etendue de la garantie » (Assureur B) : le profil parle du titre sans son numéro."""
+    """« 3.1.6.1 Etendue de la garantie » (AXA) : le profil parle du titre sans son numéro."""
     from couverture.segmentation import type_du_profil
 
     assert type_du_profil("3.1.6.1 Etendue de la garantie", {"etendue de la garantie": "garantie"}).value == "garantie"
@@ -584,3 +584,60 @@ def test_renvoi_vers_un_sous_point_enumere():
     assert resoudre("3.1", ids) == ["3.1.7", "3.1.7.1", "3.1.7.2"]
     assert resoudre("5.2", ids) == [] and resoudre("4", ids) == ["4.1"]
     assert resoudre("9.9.9", ids) == []
+
+
+# --- 7.87 : un contrat en deux colonnes (assureur D) -------------------------------------------------------------
+
+from couverture.chargement import _deux_colonnes  # noqa: E402
+
+
+class _PageFactice:
+    """Une page pdfplumber réduite à ce que `_deux_colonnes` lit : des mots placés."""
+
+    def __init__(self, mots, largeur=600):
+        self.width, self._mots = largeur, mots
+
+    def extract_words(self, **_):
+        return self._mots
+
+    def extract_text(self, **_):
+        return "une colonne"
+
+
+def _mot(texte, x0, top):
+    return {"text": texte, "x0": x0, "x1": x0 + 8 * len(texte), "top": top}
+
+
+def test_deux_colonnes_lues_colonne_par_colonne():
+    """Le PDF entrelaçait les lignes des deux colonnes (« ART 2.3 Tempête … de débordements et renversements ») ;
+    lue colonne par colonne, la page garde l'ordre du texte. Un titre sur toute la largeur coupe la page en bandes."""
+    mots = [_mot("TITRE I - LES GARANTIES DES DOMMAGES", 40, 10)]
+    for k in range(25):
+        mots += [_mot(f"gauche{k}", 40, 30 + 12 * k), _mot(f"droite{k}", 340, 30 + 12 * k)]
+    lignes = _deux_colonnes(_PageFactice(mots)).splitlines()
+    assert lignes[0].startswith("TITRE I")
+    assert lignes[1:26] == [f"gauche{k}" for k in range(25)] and lignes[26] == "droite0"
+    pleine = [_mot("une phrase qui traverse toute la largeur de la page sans gouttière", 40, 30 + 12 * k) for k in range(45)]
+    assert _deux_colonnes(_PageFactice(pleine)) == "une colonne"
+
+
+def test_articles_a_tirets_lettrine_et_lexique_en_capitales():
+    lignes = [Ligne(1, t) for t in [
+        "LES DÉFINITIONS", "DOMMAGE CORPOREL", "Toute atteinte corporelle subie par une personne.",
+        "FRANCHISE", "Somme qui reste à votre charge.", "ESPÈCES", "Billets et pièces de monnaie.",
+        "ART 2-9 C atastrophes naturelles", "Ce que nous garantissons", "Les dommages matériels directs.",
+        "1 Panne d'un appareil", "Le texte d'un point de liste."]]
+    cl = {c.id: c for c in segmenter_lignes(lignes, {"titres_numerotes": "articles"})}
+    assert {c.titre for c in cl.values() if c.type == TypeClause.DEFINITION} >= {"DOMMAGE CORPOREL", "FRANCHISE", "ESPÈCES"}
+    assert any(c.id.startswith("2.9") and "Article 2.9 Catastrophes naturelles" in c.chemin for c in cl.values())
+    assert not any(c.id.startswith("1") for c in cl.values()), "« 1 Panne » est un point de liste, pas un article"
+    assert "Le texte d'un point de liste." in next(c.texte for c in cl.values() if c.id.startswith("2.9"))
+
+
+def test_profil_colonnes_pages_et_articles():
+    p = valider_profil({"nom": "assureur-d", "colonnes": 2, "pages_ignorees": [[11, 23]], "titres_numerotes": "articles"})
+    assert p["colonnes"] == 2 and p["pages_ignorees"] == [[11, 23]] and p["titres_numerotes"] == "articles"
+    assert "colonnes" not in valider_profil({"nom": "assureur-b"}), "un profil sans ces clés garde son empreinte"
+    for faux in ({"colonnes": 3}, {"pages_ignorees": [[5, 2]]}, {"titres_numerotes": "aucun"}):
+        with pytest.raises(ProfilInvalide):
+            valider_profil({"nom": "x", **faux})

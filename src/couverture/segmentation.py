@@ -19,7 +19,9 @@ from .chargement import Ligne
 from .models import Clause, TypeClause
 from .texte import normaliser
 
-ARTICLE_RE = re.compile(r"^(?:article|art\.)\s+(\d{1,2}(?:\.\d{1,2}){0,3})\s*[—–\-:.)]?\s*(.*)$", re.IGNORECASE)
+# « ART 2-7 Bris de glaces » (assureur D) : « ART » sans point, en capitales, et des numéros à tirets (7.87).
+ARTICLE_RE = re.compile(r"^(?:article|art\.|ART)\s+(\d{1,2}(?:[.\-]\d{1,2}){0,3})(?![\d.\-]?\d)\s*[—–\-:.)]?\s*(.*)$",
+                        re.IGNORECASE)
 NUMERO_RE = re.compile(r"^(\d{1,2}(?:\.\d{1,2}){0,3})\.?\s*[—–\-)]?\s+(\S.{1,110})$")
 CONTENEUR_RE = re.compile(r"^(chapitre|titre|partie)\s+([IVXLC]+|\d+)\b\s*[—–\-:.]?\s*(.*)$", re.IGNORECASE)
 UNITE_RE = re.compile(r"^(%|€|euros?\b|ans?\b|jours?\b|mois\b|heures?\b|h\b|m2|m²|kg|km|fois\b)", re.IGNORECASE)
@@ -62,9 +64,17 @@ def _en_capitales(texte: str) -> bool:
     )
 
 
+def _terme_en_capitales(texte: str) -> bool:
+    """Un terme de lexique en capitales, même d'un seul mot (« FRANCHISE », « CODE »)."""
+    lettres = [c for c in texte if c.isalpha()]
+    return len(lettres) >= 3 and all(c.isupper() for c in lettres) and len(texte) <= 70
+
+
 def _titre_numerote(texte: str) -> tuple[str, str] | None:
     if m := ARTICLE_RE.match(texte):
-        return m.group(1), m.group(2).strip()
+        if texte.startswith("ART ") or re.match(r"(?i)(art\.|article\b)", texte):  # pas « Art 3 de la loi »
+            return m.group(1).replace("-", "."), _lettrine(m.group(2).strip())
+        return None
     m = NUMERO_RE.match(texte)
     if not m:
         return None
@@ -79,6 +89,12 @@ def _titre_numerote(texte: str) -> tuple[str, str] | None:
     elif not titre[:1].isalpha() and titre[:1] not in "«\"":
         return None
     return num, titre
+
+
+def _lettrine(titre: str) -> str:
+    """« C atastrophes naturelles » → « Catastrophes naturelles » : la lettrine d'un titre, détachée par le PDF.
+    Pas pour « A » ni « À », qui sont des mots (« A ttentats » reste tel quel)."""
+    return re.sub(r"^([B-ZÉÈÊ]) ([a-zéèêàçôû]{2,})", r"\1\2", titre)
 
 
 LOI_RE = re.compile(r"\b(loi|code|ar|a\.r|arrete|reglement|rgpd|directive|decret|convention)\b", re.IGNORECASE)
@@ -246,6 +262,9 @@ def segmenter_lignes(lignes: list[Ligne], profil: dict | None = None) -> list[Cl
     ignorees = [re.compile(m) for m in profil.get("lignes_ignorees", [])]
     if ignorees:
         lignes = [l for l in lignes if not any(m.search(l.texte) for m in ignorees)]
+    if pages := profil.get("pages_ignorees"):  # des tableaux récapitulatifs, numérotés comme des articles (7.87)
+        lignes = [l for l in lignes if not any(a <= l.page <= b for a, b in pages)]
+    articles_seuls = profil.get("titres_numerotes") == "articles"
     clauses: list[Clause] = []
     deja: dict[str, int] = {}
     pile: list[_Section] = []
@@ -294,7 +313,7 @@ def segmenter_lignes(lignes: list[Ligne], profil: dict | None = None) -> list[Cl
         if not t:
             continue
 
-        if num_titre := _titre_numerote(t):
+        if (num_titre := _titre_numerote(t)) and (not articles_seuls or ARTICLE_RE.match(t)):
             num, titre = num_titre
             fermer(courante)
             niveau = num.count(".") + 1
@@ -303,6 +322,12 @@ def segmenter_lignes(lignes: list[Ligne], profil: dict | None = None) -> list[Cl
             affiche = f"{'Article ' if ARTICLE_RE.match(t) else ''}{num} {titre}".strip()
             courante = _Section(num, titre, niveau, chemin_de(affiche), "num", num)
             pile.append(courante)
+            continue
+
+        # Dans un lexique, un terme en capitales (« DOMMAGE CORPOREL ») est un terme, pas un titre (7.87).
+        if courante.genre != "num" and re.search(r"definition|lexique|glossaire", normaliser(courante.titre)) \
+                and _terme_en_capitales(t) and not CONTENEUR_RE.match(t):
+            courante.lignes.append(ligne)
             continue
 
         intertitre = _intertitre(t, intertitres_profil)

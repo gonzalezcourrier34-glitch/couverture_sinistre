@@ -10,7 +10,10 @@ Un profil est un fichier JSON dans `<donnees>/profils/<nom>.json` :
   "nom": "assureur-a",
   "intertitres": {"les cas non couverts": "exclusion", "ce que signifient les mots": "definition"},
   "lignes_ignorees": ["^Assureur A S\\.A\\. .*$"],
-  "lexique": "auto"              // "auto", "deux_points" (Terme : définition) ou "terme_seul"
+  "lexique": "auto",             // "auto", "deux_points" (Terme : définition) ou "terme_seul"
+  "colonnes": 2,                 // facultatif : pages en deux colonnes, lues colonne par colonne (7.87)
+  "pages_ignorees": [[11, 23]],  // facultatif : pages sautées (tableaux récapitulatifs)
+  "titres_numerotes": "articles" // facultatif : seuls « Article 3 », « Art. 3 », « ART 3 » ouvrent une clause
 }
 Le catalogue des contrats désigne le profil : "profil": "assureur-a".
 
@@ -59,7 +62,25 @@ def valider_profil(profil: dict) -> dict:
     lexique = profil.get("lexique", "auto")
     if lexique not in FORMATS_LEXIQUE:
         raise ProfilInvalide(f"Format de lexique inconnu : {lexique}.")
-    return {"nom": nom, "intertitres": intertitres, "lignes_ignorees": ignorees, "lexique": lexique}
+    pages = profil.get("pages_ignorees") or []
+    if not all(isinstance(p, list) and len(p) == 2 and all(isinstance(x, int) for x in p) and p[0] <= p[1] for p in pages):
+        raise ProfilInvalide("pages_ignorees : une liste d'intervalles [début, fin].")
+    numeros = profil.get("titres_numerotes", "tous")
+    if numeros not in ("tous", "articles"):
+        raise ProfilInvalide(f"titres_numerotes : « tous » ou « articles », pas « {numeros} ».")
+    colonnes = profil.get("colonnes", 1)
+    if colonnes not in (1, 2):
+        raise ProfilInvalide(f"Nombre de colonnes non pris en charge : {colonnes} (1 ou 2).")
+    sortie = {"nom": nom, "intertitres": intertitres, "lignes_ignorees": ignorees, "lexique": lexique}
+    # Les clés facultatives ne sont écrites que si elles changent quelque chose : l'empreinte des profils
+    # existants (qui fait partie de celle du contrat) ne bouge pas.
+    if colonnes == 2:
+        sortie["colonnes"] = 2
+    if pages:
+        sortie["pages_ignorees"] = pages
+    if numeros == "articles":
+        sortie["titres_numerotes"] = "articles"
+    return sortie
 
 
 def charger_profil(dossier: str | Path, nom: str) -> dict:

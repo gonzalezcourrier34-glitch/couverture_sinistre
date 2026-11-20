@@ -45,7 +45,7 @@ def ingerer_fichier(fichier: str | Path, base: Base, meta: dict | None = None, f
     if not forcer and base.empreinte(contrat_id) == empreinte:
         return base.contrat(contrat_id)  # fichier inchangé : rien à redécouper
 
-    lignes = charger_lignes(fichier)
+    lignes = charger_lignes(fichier, (profil or {}).get("colonnes", 1))
     clauses = segmenter_lignes(lignes, profil)
     rapport = controler(clauses)
     contrat = Contrat(

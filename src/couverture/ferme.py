@@ -22,7 +22,8 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 DOSSIER = Path("data") / "ferme"
-CONTRATS = {"assureur-a": "assureur-a-habitation-2025", "assureur-b": "assureur-b-habitation-2017"}
+CONTRATS = {"assureur-a": "assureur-a-habitation-2025", "assureur-b": "assureur-b-habitation-2017",
+            "assureur-d": "assureur-d-habitation-2026"}
 REPONSES = ("COUVERT", "NON_COUVERT", "INCERTAIN")
 
 SYSTEME_SECOND_AVIS = """Tu es gestionnaire de sinistres. On te donne les conditions générales d'un contrat d'assurance habitation et la déclaration d'un sinistre. Dis si, d'après le seul texte de ces conditions générales, le sinistre est couvert.

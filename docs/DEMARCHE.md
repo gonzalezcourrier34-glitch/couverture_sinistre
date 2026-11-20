@@ -3018,6 +3018,42 @@ Restent en erreur dans le jeu fermé B : la fenêtre de toit (la lecture voit un
 négatifs, sans recours), la chaudière et l'assistance (« incertain », voulu), le congélateur de 18 ans, la remise
 du jardin, la voiture à la gare (f-b18, couvert à tort : à examiner), le double vitrage embué.
 
+### 7.87 Un troisième contrat (assureur D) : d'abord le lire correctement
+
+**Pourquoi D et pas C.** Le plan prévoyait l'assureur C ; son PDF demande un profil lourd (7.51 : numéros de page
+pris pour des numéros d'article, titres aux lettres espacées). D était noté « OK » à l'ingestion de 7.51 : c'est
+lui qu'on traduit, pour mesurer ce que coûte un contrat de plus.
+
+**« OK » ne voulait pas dire « bien lu ».** Les 207 clauses de D portaient des identifiants de section
+(« S19 », « S20 ») et non les articles du contrat (« ART 2-5 Vol »), et leur texte mêlait deux colonnes :
+pdfplumber lit la page ligne à ligne, d'un bord à l'autre (« ART 2.3 Tempête, grêle, avalanche, neige sur • de
+débordements et renversements de récipients »). Impossible de rédiger ou de citer un article dans ces conditions.
+Le contrôle d'ingestion ne vérifiait que la forme (types, renvois), pas que les clauses suivent les articles.
+
+**Trois corrections générales**, activées par le profil d'assureur (`data/profils/assureur-d.json`), sans effet sur
+A ni B (découpage comparé avant et après : identique, 147 et 293 clauses) :
+- *Lecture en colonnes* (`"colonnes": 2`, `chargement._deux_colonnes`) : la gouttière est la verticale, entre 40 et
+  60 % de la largeur, que le moins de mots traversent ; une page où plus de 3 % des mots la traversent est lue
+  d'un bloc ; un titre sur toute la largeur coupe la page en bandes, chaque bande lue colonne gauche puis droite.
+- *Articles « ART 2-7 »* : « ART » sans point et des numéros à tirets (ramenés à « 2.7 ») ; la lettrine détachée
+  des titres (« C atastrophes » → « Catastrophes »). `"titres_numerotes": "articles"` : seuls les « ART n » ouvrent
+  une clause, pas les « 1 Panne d'un appareil » des listes.
+- *Lexique en capitales* : sous « Les définitions », un terme en capitales (« DOMMAGE CORPOREL », « FRANCHISE »)
+  est un terme, pas un titre (41 définitions au lieu de 7).
+- Le profil saute aussi les tableaux récapitulatifs (pages 11 à 23, numérotés « 1 », « 2.1 »… comme des articles)
+  et les lignes de sommaire (« Pack Jardin p 34 »).
+
+Résultat : 267 clauses, rangées par article (2.5-a « Ce que nous garantissons », 2.5-c « Ce qui est exclu »…).
+Tests : `test_deux_colonnes_lues_colonne_par_colonne`, `test_articles_a_tirets_lettrine_et_lexique_en_capitales`,
+`test_profil_colonnes_pages_et_articles`. Fichier de règles vide `regles/assureur-d-habitation-2026.pl`.
+
+**Le jeu fermé d'abord.** Avant toute règle, un agent neuf écrit 25 cas à partir du seul texte de D (extrait en
+colonnes, noms anonymisés), comme en 7.79 : cette fois, le jeu est écrit avant les règles, et aucun de ses cas ne
+servira à les corriger avant la mesure.
+
+**Leçon 97.** Un statut « OK » d'ingestion qui ne regarde que la forme laisse passer un contrat illisible : il faut
+regarder, pour quelques articles, si le texte de la clause est bien celui de l'article.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.
@@ -3144,3 +3180,4 @@ Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les section
 94. Un jeu écrit en voyant les règles ne trouve pas leurs trous : seul un jeu écrit sans elles a montré la responsabilité civile refusée.
 95. Une exclusion peut citer le bon texte et porter la condition de sa voisine : seul un cas qui la met à l'épreuve le montre.
 96. Une nouvelle valeur du vocabulaire peut voler les lectures d'une valeur existante : la rattacher à celles dont elle prend la place.
+97. Un statut « OK » d'ingestion qui ne regarde que la forme laisse passer un contrat illisible : vérifier le texte de quelques articles.

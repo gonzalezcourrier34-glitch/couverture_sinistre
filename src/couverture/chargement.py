@@ -22,8 +22,9 @@ class Ligne:
     texte: str
 
 
-def lire_pages(chemin: str | Path) -> list[str]:
-    """Texte brut page par page."""
+def lire_pages(chemin: str | Path, colonnes: int = 1) -> list[str]:
+    """Texte brut page par page. `colonnes` = 2 (profil d'assureur) : les pages mises en deux colonnes sont lues
+    colonne après colonne, au lieu de ligne à ligne à travers la page (7.87)."""
     chemin = Path(chemin)
     suffixe = chemin.suffix.lower()
     if suffixe in {".md", ".txt"}:
@@ -33,6 +34,8 @@ def lire_pages(chemin: str | Path) -> list[str]:
             import pdfplumber
 
             with pdfplumber.open(str(chemin)) as pdf:
+                if colonnes == 2:
+                    return [_deux_colonnes(p) for p in pdf.pages]
                 return [p.extract_text(x_tolerance=1.5) or "" for p in pdf.pages]
         except ImportError:
             from pypdf import PdfReader
@@ -48,6 +51,49 @@ def lire_pages(chemin: str | Path) -> list[str]:
             lignes.append(prefixe + p.text)
         return ["\n".join(lignes)]
     raise ValueError(f"Format non pris en charge : {suffixe} (attendu .md, .txt, .pdf ou .docx)")
+
+
+def _deux_colonnes(page) -> str:
+    """Une page en deux colonnes, lue colonne par colonne. La gouttière est la verticale, entre 40 et 60 % de la
+    largeur, que le moins de mots traversent ; si plus de 3 % des mots la traversent, ou si une colonne est presque
+    vide, la page est lue comme une seule colonne. Les lignes qui traversent la gouttière (un titre sur toute la
+    largeur) coupent la page en bandes : chaque bande est lue colonne gauche puis colonne droite."""
+    mots = page.extract_words(x_tolerance=1.5, keep_blank_chars=False)
+    if len(mots) < 40:
+        return page.extract_text(x_tolerance=1.5) or ""
+    x, n = min(((page.width * i / 100, sum(1 for m in mots if m["x0"] < page.width * i / 100 < m["x1"]))
+                for i in range(40, 61)), key=lambda t: t[1])
+    gauche = sum(m["x1"] <= x for m in mots)
+    if n > 0.03 * len(mots) or gauche < 0.2 * len(mots) or len(mots) - gauche - n < 0.2 * len(mots):
+        return page.extract_text(x_tolerance=1.5) or ""
+    lignes: list[list[dict]] = []
+    for m in sorted(mots, key=lambda m: (round(m["top"]), m["x0"])):
+        if lignes and abs(lignes[-1][0]["top"] - m["top"]) <= 2:
+            lignes[-1].append(m)
+        else:
+            lignes.append([m])
+    sortie, g, d = [], [], []
+
+    def vider():
+        sortie.extend(g + d)
+        g.clear()
+        d.clear()
+
+    def texte(ms):
+        return " ".join(m["text"] for m in sorted(ms, key=lambda m: m["x0"]))
+
+    for ligne in lignes:
+        if any(m["x0"] < x < m["x1"] for m in ligne):
+            vider()
+            sortie.append(texte(ligne))
+            continue
+        cg, cd = [m for m in ligne if m["x1"] <= x], [m for m in ligne if m["x0"] >= x]
+        if cg:
+            g.append(texte(cg))
+        if cd:
+            d.append(texte(cd))
+    vider()
+    return "\n".join(sortie)
 
 
 _CHIFFRES = re.compile(r"\d+")
@@ -95,6 +141,6 @@ def nettoyer(pages: list[str]) -> list[Ligne]:
     return sortie
 
 
-def charger_lignes(chemin: str | Path) -> list[Ligne]:
-    return nettoyer(lire_pages(chemin))
+def charger_lignes(chemin: str | Path, colonnes: int = 1) -> list[Ligne]:
+    return nettoyer(lire_pages(chemin, colonnes))
 

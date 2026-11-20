@@ -34,6 +34,7 @@
     "id": "assureur-d-habitation-2026",
     "assureur": "Assureur D",
     "produit": "Multirisque Habitation",
-    "version": "04/2026"
+    "version": "04/2026",
+    "profil": "assureur-d"
   }
 }

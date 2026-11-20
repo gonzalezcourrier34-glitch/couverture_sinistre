@@ -1,0 +1,16 @@
+{
+  "nom": "assureur-d",
+  "intertitres": {},
+  "lignes_ignorees": [
+    "\\s[pP]\\s?\\d{1,3}$"
+  ],
+  "lexique": "terme_seul",
+  "colonnes": 2,
+  "pages_ignorees": [
+    [
+      11,
+      23
+    ]
+  ],
+  "titres_numerotes": "articles"
+}
