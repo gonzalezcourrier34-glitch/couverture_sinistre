@@ -10,7 +10,6 @@ from couverture.evaluation import charger_cas
 from couverture.ingestion import ingerer_dossier, ingerer_fichier
 from couverture.llm import extraire_json
 from couverture.models import Decision, TypeClause
-from couverture.pipeline import PipelineDocumentBrut
 from couverture.segmentation import segmenter_lignes
 from couverture.validation import extrait_present
 
@@ -28,20 +27,6 @@ def clauses():
 @pytest.fixture(scope="module")
 def clauses_pdf():
     return segmenter_lignes(charger_lignes(PDF_REEL))
-
-
-class FauxLLM:
-    """Renvoie une réponse préparée et garde le dernier message reçu."""
-
-    nom = "faux"
-
-    def __init__(self, reponse):
-        self.reponse = reponse if isinstance(reponse, str) else json.dumps(reponse, ensure_ascii=False)
-        self.dernier_message = ""
-
-    def completer(self, systeme, message):
-        self.dernier_message = message
-        return self.reponse
 
 
 # --- Lecture et découpage -----------------------------------------------------
@@ -151,18 +136,6 @@ def test_extraire_json_bloc_markdown():
     assert extraire_json('```json\n{"decision": "COUVERT"}\n```') == {"decision": "COUVERT"}
 
 
-# --- Méthode de référence « document brut » ---------------------------------
-
-def test_document_brut_relocalise_les_citations(clauses):
-    faux = FauxLLM({"decision": "NON_COUVERT", "justification": "…", "confiance": 0.9,
-                    "citations": [{"clause_id": "Article 4", "extrait": "y compris dans un local à vélos collectif"}]})
-    p = PipelineDocumentBrut(clauses, CG_FICTIF.read_text(encoding="utf-8"), faux, "x")
-    r = p.analyser("Vélo volé dans le local commun.")
-    assert r.methode == "document-brut"
-    assert r.verdict.citations[0].clause_id == "4.4" and r.verdict.citations[0].valide
-    assert "Habitat Serein" in faux.dernier_message  # le contrat entier est dans le prompt
-
-
 # --- Évaluation ----------------------------------------------------------------
 
 def test_jeu_de_test_coherent():
@@ -195,8 +168,7 @@ import urllib.error  # noqa: E402
 from couverture import llm as module_llm  # noqa: E402
 from couverture.config import charger_env, lire_env  # noqa: E402
 
-VARIABLES = ["MISTRAL_API_KEY", "ANTHROPIC_API_KEY", "COUVERTURE_LLM_URL", "COUVERTURE_FOURNISSEUR", "COUVERTURE_MODELE",
-             "COUVERTURE_REFLEXION", "COUVERTURE_DEBUG"]
+VARIABLES = ["MISTRAL_API_KEY", "COUVERTURE_MODELE", "COUVERTURE_MODELE_CONTRAT", "COUVERTURE_REFLEXION", "COUVERTURE_DEBUG"]
 
 
 @pytest.fixture
@@ -226,14 +198,11 @@ def test_configurer_choisit_mistral(env_vide):
     env_vide.setenv("MISTRAL_API_KEY", "colle-ta-cle-ici")  # valeur d'exemple ignorée
     assert module_llm.configurer() is None
     env_vide.setenv("MISTRAL_API_KEY", "k")
-    env_vide.setenv("ANTHROPIC_API_KEY", "a")
     llm = module_llm.configurer()
     assert isinstance(llm, module_llm.MistralLLM) and llm.nom == "mistral:mistral-large-latest"
-    env_vide.setenv("COUVERTURE_FOURNISSEUR", "anthropic")
-    assert isinstance(module_llm.configurer(), module_llm.AnthropicLLM)
-    env_vide.setenv("COUVERTURE_FOURNISSEUR", "inconnu")
-    with pytest.raises(module_llm.ErreurLLM):
-        module_llm.configurer()
+    env_vide.setenv("COUVERTURE_MODELE_CONTRAT", "mistral-large-2")
+    assert module_llm.configurer("contrat").nom == "mistral:mistral-large-2"
+    assert module_llm.configurer().nom == "mistral:mistral-large-latest"
 
 
 class _Reponse(io.BytesIO):
@@ -364,95 +333,8 @@ def test_manifeste_des_consignes_a_jour():
 
 def test_garde_fou_texte_change_sans_version():
     manifeste = consignes.etat_actuel()
-    manifeste["couverture-faits-regles"] = {**manifeste["couverture-faits-regles"], "empreinte": "0000000000000000"}
+    manifeste["couverture-lecture-socle"] = {**manifeste["couverture-lecture-socle"], "empreinte": "0000000000000000"}
     assert any("pas sa version" in p for p in consignes.verifier(manifeste))
-
-
-class FauxMlflow:
-    """Ce dont le code a besoin du module mlflow, en mémoire."""
-
-    def __init__(self):
-        self.appels = []
-        self.prompts = {}
-        outer = self
-
-        class Genai:
-            def load_prompt(self_, uri):
-                nom = uri.removeprefix("prompts:/").split("@")[0]
-                if nom not in outer.prompts:
-                    raise KeyError(nom)
-                return outer.prompts[nom]
-
-            def register_prompt(self_, name, template, commit_message, tags):
-                outer.appels.append(("register_prompt", name))
-                p = type("P", (), {"template": template, "version": len(outer.appels)})()
-                outer.prompts[name] = p
-                return p
-
-            def set_prompt_alias(self_, name, alias, version):
-                outer.appels.append(("alias", name, alias))
-
-        self.genai = Genai()
-
-    def set_tracking_uri(self, uri): self.appels.append(("uri", uri))
-    def set_experiment(self, nom): self.appels.append(("experience", nom))
-    def start_run(self, run_name): self.appels.append(("debut", run_name)); return object()
-    def end_run(self): self.appels.append(("fin",))
-    def log_params(self, p): self.appels.append(("params", p))
-    def log_metrics(self, m): self.appels.append(("metriques", m))
-    def set_tags(self, t): self.appels.append(("tags", t))
-    def log_artifact(self, chemin): self.appels.append(("artefact", Path(chemin).name, Path(chemin).read_text(encoding="utf-8")))
-
-
-def test_enregistrement_des_consignes_idempotent():
-    m = FauxMlflow()
-    premiere = consignes.enregistrer_dans_mlflow(m)
-    assert sum(a[0] == "register_prompt" for a in m.appels) == len(consignes.CONSIGNES)
-    assert ("alias", "couverture-faits-regles", "production") in m.appels
-    seconde = consignes.enregistrer_dans_mlflow(m)
-    assert all("inchangée" in l for l in seconde) and len(premiere) == len(seconde)
-
-
-# --- Suivi MLflow : jamais bloquant -------------------------------------------------------------------
-
-from couverture import suivi  # noqa: E402
-
-
-def test_metriques_ingestion_et_evaluation(tmp_path):
-    base = Base(tmp_path / "b.sqlite")
-    f = tmp_path / "a.md"
-    f.write_text(CG_FICTIF.read_text(encoding="utf-8"), encoding="utf-8")
-    c = ingerer_fichier(f, base, {"id": "a"})
-    m = suivi.metriques_ingestion([c])
-    assert m["contrat/a/clauses/exclusion"] == 7 and m["contrat/a/ok"] == 1 and m["contrats_a_verifier"] == 0
-    banc = {"couches": {"chaine": {"metriques": {"exactitude": {"moyenne": 0.75, "min": 0.7}, "instables": 14, "note": "x"}}}}
-    assert suivi.metriques_banc(banc) == {"chaine/exactitude": 0.75, "chaine/instables": 14.0}
-    p = suivi.parametres_communs("mistral:mistral-small-latest")
-    assert p["consigne/faits-regles"] == "v4" and p["modele/lecture"] == "mistral:mistral-small-latest"
-
-
-def test_execution_enregistre_et_ne_bloque_jamais(monkeypatch):
-    m = FauxMlflow()
-    monkeypatch.setattr(suivi, "module_mlflow", lambda: m)
-    with suivi.execution("couverture-evaluation", "essai") as s:
-        s.parametres({"methode": "conditions"})
-        s.metriques({"exactitude": 0.5})
-        s.artefact_json("rapport.json", {"n": 1})
-    noms = [a[0] for a in m.appels]
-    assert noms == ["experience", "debut", "params", "metriques", "artefact", "fin"]
-
-    m.log_metrics = lambda _: (_ for _ in ()).throw(RuntimeError("serveur tombé"))
-    with suivi.execution("x", "y") as s:
-        s.metriques({"a": 1})  # l'erreur du suivi ne remonte pas
-
-    monkeypatch.setattr(suivi, "module_mlflow", lambda: None)
-    with suivi.execution("x", "y") as s:
-        s.metriques({"a": 1})  # sans MLflow : rien, sans erreur
-
-
-def test_mlflow_desactive(monkeypatch):
-    monkeypatch.setenv("MLFLOW_ACTIF", "false")
-    assert suivi.module_mlflow() is None
 
 
 # --- Tableaux Grafana : à jour, et chaque requête s'exécute -----------------------------------------

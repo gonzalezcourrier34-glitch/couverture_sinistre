@@ -8,7 +8,7 @@ Dit si un sinistre est couvert par un contrat d'assurance habitation, **pourquoi
 - La démarche dans l'ordre, échecs et remises en question compris : [docs/DEMARCHE.md](docs/DEMARCHE.md)
 - Comment on mesure (jeux de cas, métriques, portes) : [docs/METRIQUES.md](docs/METRIQUES.md)
 - Chaque version des consignes envoyées au modèle : [docs/consignes/](docs/consignes/README.md)
-- Le suivi (MLflow, Grafana) : [monitoring/README.md](monitoring/README.md)
+- Le suivi (bancs, journal, Grafana) : [monitoring/README.md](monitoring/README.md)
 
 ## L'idée
 
@@ -36,14 +36,12 @@ Les règles reprennent le raisonnement d'un gestionnaire, et le contrat lui-mêm
 - une **obligation de prévention** non respectée ne fait refuser que s'il y a un lien causal ;
 - **charge de la preuve** : l'assuré établit la garantie, l'assureur l'exclusion.
 
-La méthode `brut` (le contrat entier dans le prompt, comme un chatbot) reste disponible comme point de comparaison : `couverture banc --methode brut`.
-
 ## Installation
 
 Avec [uv](https://docs.astral.sh/uv/) :
 
 ```bash
-uv sync --extra dev          # ajouter --extra suivi pour MLflow
+uv sync --extra dev
 cp .env.example .env         # puis y mettre la clé Mistral
 uv run pytest -q
 ```
@@ -56,7 +54,7 @@ COUVERTURE_MODELE=mistral-small-latest            # lecture des déclarations
 COUVERTURE_MODELE_CONTRAT=mistral-large-latest    # rédaction des règles : une fois par contrat
 ```
 
-**SWI-Prolog** (gratuit) : `winget install SWI-Prolog.SWI-Prolog` sous Windows, `apt install swi-prolog-nox` sous Linux. Anthropic (`ANTHROPIC_API_KEY`) et tout modèle compatible OpenAI (`COUVERTURE_LLM_URL`) sont aussi pris en charge.
+**SWI-Prolog** (gratuit) : `winget install SWI-Prolog.SWI-Prolog` sous Windows, `apt install swi-prolog-nox` sous Linux.
 
 ## Utilisation
 
@@ -66,9 +64,8 @@ uv run couverture analyser --contrat assureur-a-habitation-2025 "Mon vélo a ét
 uv run couverture regles   --contrat assureur-a-habitation-2025   # vérifie les règles (sans modèle) ; --faits pour un cas
 uv run couverture rediger  --contrat assureur-a-habitation-2025 --article 2.2   # Mistral Large rédige, le code contrôle
 uv run couverture banc     --contrat assureur-a-habitation-2025   # golden set (97 cas) : règles, lecture, chaîne, portes
-uv run couverture legalbench --telecharger                  # second banc, externe (Stanford, CC BY 4.0)
-uv run couverture legalbench
-uv run couverture serveur                                   # page de démonstration sur http://127.0.0.1:8000
+uv run couverture exemples --indexer                               # banque d'exemples de lecture (mistral-embed) ; --proches "…"
+uv run couverture banc     --contrat assureur-a-habitation-2025 --partie test   # les seuls cas de test (data/lecture/partage.json)
 uv run couverture api                                       # l'API (FastAPI), documentation sur http://127.0.0.1:8001/docs
 ```
 
@@ -106,13 +103,14 @@ réponse, se soumettent à `/decisions` : décision immédiate, gratuite, déter
 
 `analyser` donne la décision, le motif, les preuves, les questions à poser et l'**arbre de preuve** du moteur. Autres commandes : `contrats`, `clauses`, `versions`, `modele` (`--help`).
 
-Avec docker : `docker compose up -d --build` lance l'application (8020), MLflow (5010) et Grafana (3011).
+Avec docker : `docker compose up -d --build` lance l'API (8021) et Grafana (3011).
 
 ## Arborescence
 
 ```
-src/couverture/      le code : lecture et décision (prolog.py), rédaction des règles (redaction.py),
-                     bancs (banc.py, legalbench.py), découpage des contrats, base, interface
+src/couverture/      le code : lecture.py (le modèle lit), prolog.py (le moteur décide), chaine.py (la réponse),
+                     redaction/ (Mistral Large rédige les règles), banc.py, exemples.py, cli/ et api/ (une
+                     commande, une route par fichier), découpage des contrats, base
 regles/              vocabulaire commun, moteur Prolog, règles par contrat, faits idéaux des cas
 data/contrats/       conditions générales, catalogue.json, SOURCES.md (liens des CG réelles)
 data/golden/         le golden set : sinistres, réponses attendues, version figée
@@ -143,7 +141,7 @@ Deuxième contrat, **Assureur B Habitation**, garantie vol (8 sous-garanties, 11
 
 Les erreurs trouvées sur Assureur B ont été corrigées dans la méthode (consigne de rédaction, contrôles, moteur), ce qui a aussi amélioré Assureur A. Détail et progression : `docs/DEMARCHE.md`, sections 7.52 à 7.61.
 
-Les règles sont justes ; **toutes les erreurs restantes viennent de la lecture des faits**. La lecture par Small se fait en deux temps (l'événement, puis les questions qui le concernent), puis chaque fait est vérifié ; le moteur empêche qu'un doute fasse couvrir, et avant toute réponse ferme il fait confirmer les faits qui la portent : sinon, la réponse est « je ne sais pas », avec la question. Un cas prend 2,9 s (médiane, un cas à la fois). Mistral Large lit encore mieux, mais 15 minutes par passage du banc contre 2 à 3 avec Small. Le chantier en cours : la vitesse (Prolog chargé une fois) et le recours à Mistral Large pour les cas qui le demandent (DEMARCHE 7.35 à 7.45). Sur LegalBench (133 clauses externes, Mistral Small sans règles), le modèle cite juste mais tranche 90 % des cas que des lecteurs jugent ambigus : c'est ce que les règles évitent. La seule vraie mesure reste à faire : un jeu fermé écrit par l'auteur, sans voir les règles.
+Les règles sont justes ; **toutes les erreurs restantes viennent de la lecture des faits**. La lecture par Small se fait en deux temps (l'événement, puis les questions qui le concernent), puis chaque fait est vérifié ; le moteur empêche qu'un doute fasse couvrir, et avant toute réponse ferme il fait confirmer les faits qui la portent : sinon, la réponse est « je ne sais pas », avec la question. Un cas prend 2,9 s (médiane, un cas à la fois). Mistral Large lit encore mieux, mais 15 minutes par passage du banc contre 2 à 3 avec Small. Le chantier en cours : des exemples de lecture choisis pour chaque déclaration, à la place des cas particuliers écrits dans le vocabulaire (DEMARCHE 7.107, 7.108). Sur LegalBench (133 clauses externes, Mistral Small sans règles), le modèle cite juste mais tranche 90 % des cas que des lecteurs jugent ambigus : c'est ce que les règles évitent. La seule vraie mesure reste à faire : un jeu fermé écrit par l'auteur, sans voir les règles.
 
 ## Limites connues
 

@@ -23,13 +23,12 @@ from __future__ import annotations
 import hashlib
 import json
 import re
-import os
 import time
 from collections import Counter, defaultdict
 from datetime import datetime
 from pathlib import Path
 
-from . import prolog
+from . import lecture, prolog
 from .evaluation import charger_cas, fichiers_jeu, lire_jsonl
 
 JEU = "golden"
@@ -305,6 +304,7 @@ def latences(durees: list[dict]) -> dict:
 def couche_chaine(cas: list[dict], rapports: list[dict], durees: list[float]) -> dict:
     index = {c["id"]: c for c in cas}
     par_execution = []
+    variables = prolog.vocabulaire()
     for r in rapports:
         lignes = [ligne(index[l["id"]], l["obtenu"]) | {"questions": l.get("questions", []),
                                                          "rappel_clauses": l.get("rappel_clauses"),
@@ -318,9 +318,11 @@ def couche_chaine(cas: list[dict], rapports: list[dict], durees: list[float]) ->
                   for l in r["cas"]]
         for l in lignes:
             # Les questions de la chaîne sont des phrases : la variable attendue est trouvée si sa question est posée.
-            attendues = index[l["id"]].get("questions_attendues", [])
+            # Le jeu fermé écrit la question attendue en phrase, sans variable : elle n'est pas mesurable ici, et la
+            # compter faisait échouer la porte à 0 % sur chaque banc (7.106).
+            attendues = [v for v in index[l["id"]].get("questions_attendues", []) if v in variables]
             l["rappel_questions"] = rappel(attendues, {v for v in attendues
-                                                      if any(q.startswith(prolog.question(v)) for q in l["questions"])})
+                                                      if any(q.startswith(lecture.question(v)) for q in l["questions"])})
         par_execution.append(lignes)
 
     def moyenne(cle, filtre=lambda x: x is not None):
@@ -400,14 +402,22 @@ def mesurer_latence(pipeline, cas: list[dict], n: int = CAS_LATENCE) -> dict:
 
 
 def passer(donnees: Path, contrat_id: str, methode: str, couches: list[str], repetitions: int = 3,
-           paralleles: int = 4, pipeline_fabrique=None, decideur=None, evaluer_fn=None, jeu: str = JEU) -> dict:
+           paralleles: int = 4, pipeline_fabrique=None, decideur=None, evaluer_fn=None, jeu: str = JEU,
+           partie: str = "tout") -> dict:
     """Rejoue le golden set. `pipeline_fabrique()` donne une méthode neuve par exécution ; `decideur`
-    remplace SWI-Prolog dans les tests ; `evaluer_fn` remplace evaluation.evaluer."""
+    remplace SWI-Prolog dans les tests ; `evaluer_fn` remplace evaluation.evaluer. `partie` : les seuls cas de mise
+    au point, ou de test (data/lecture/partage.json, 7.107) ; « tout » par défaut."""
     from .evaluation import evaluer
+    from .exemples import filtrer
 
     cas, etat = charger(donnees, contrat_id, jeu)
+    if jeu == JEU and partie != "tout":
+        cas = filtrer(cas, donnees, partie)
+        etat = etat | {"n": len(cas)}
     resultat = {"date": datetime.now().isoformat(timespec="seconds"), "contrat": contrat_id, "methode": methode,
                 "jeu": jeu, "golden": etat, "couches": {}, "avertissements": []}
+    if jeu == JEU and partie != "tout":
+        resultat["partie"] = partie
     if jeu != JEU:
         couches = [c for c in couches if c == "chaine"]
         resultat["avertissements"].append(f"jeu « {jeu} » : sans faits idéaux, la chaîne complète seule")
@@ -425,10 +435,8 @@ def passer(donnees: Path, contrat_id: str, methode: str, couches: list[str], rep
             pipeline = pipeline_fabrique()
             resultat["modele"] = getattr(getattr(pipeline, "llm", None), "nom", None) or resultat.get("modele")
             if resultat["methode"] == "regles":
-                resultat["lecture"] = prolog.mode_lecture().replace("_", " ")
-                confirmation = os.environ.get("COUVERTURE_MODELE_CONFIRMATION", "").strip()
-                if confirmation and prolog.mode_lecture() == "verifiee":
-                    resultat["lecture"] += f", confirmation {confirmation}"
+                from .exemples import actifs
+                resultat["lecture"] = "verifiee" + (", exemples" if actifs() else "")
             rapports.append((evaluer_fn or evaluer)(pipeline, cas, paralleles=paralleles))
             durees.append(time.perf_counter() - debut)
         resultat["couches"]["chaine"] = couche_chaine(cas, rapports, durees)
@@ -452,10 +460,11 @@ def enregistrer(donnees: Path, resultat: dict, dossier: Path | None = None) -> t
     modele = (resultat.get("modele") or "").split(":")[-1].replace("-latest", "")
     nom = f"{datetime.now():%Y%m%d-%H%M%S}-{resultat['contrat']}-{resultat['methode']}" + (f"-{modele}" if modele else "") \
         + (f"-{resultat['jeu']}" if resultat.get("jeu", JEU) != JEU else "") \
+        + (f"-{resultat['partie']}" if resultat.get("partie") else "") \
         + (f"-{re.sub(r'[^a-z0-9-]+', '-', resultat['lecture'])}" if resultat.get("lecture") not in (None, "verifiee") else "")
     js, md = dossier / f"{nom}.json", dossier / f"{nom}.md"
     precedent = dernier(dossier, resultat["contrat"], resultat["methode"], resultat.get("modele"), resultat.get("lecture"),
-                        resultat.get("jeu", JEU))
+                        resultat.get("jeu", JEU), resultat.get("partie"))
     texte = markdown(resultat, precedent)
     sans_cas = {k: v for k, v in resultat.items() if k != "_cas"}
     js.write_text(json.dumps(sans_cas, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
@@ -464,13 +473,14 @@ def enregistrer(donnees: Path, resultat: dict, dossier: Path | None = None) -> t
 
 
 def dernier(dossier: Path, contrat_id: str, methode: str, modele: str | None = None,
-            lecture: str | None = None, jeu: str = JEU) -> dict | None:
+            lecture: str | None = None, jeu: str = JEU, partie: str | None = None) -> dict | None:
     """Le dernier banc de même configuration (modèle et mode de lecture) : comparé à un banc avec confirmation
     par Mistral Large, un banc sans confirmation semblait perdre neuf points sans qu'aucune décision ait changé
     (7.74)."""
     for f in sorted(Path(dossier).glob(f"*-{contrat_id}-{methode}*.json"), reverse=True):
         r = json.loads(f.read_text(encoding="utf-8"))
-        if r.get("modele") == modele and r.get("lecture") == lecture and r.get("jeu", JEU) == jeu:
+        if (r.get("modele") == modele and r.get("lecture") == lecture and r.get("jeu", JEU) == jeu
+                and r.get("partie") == partie):
             return r
     return None
 
@@ -514,6 +524,7 @@ def markdown(r: dict, precedent: dict | None = None) -> str:
          + (f", lecture par `{r['modele']}`" if r.get("modele") else "")
          + (f" ({r['lecture']})" if r.get("lecture") else ""), "",
          f"{r['date']} · " + (f"jeu {r['jeu']}" if r.get("jeu", JEU) != JEU else f"golden set v{g.get('version') or '?'}")
+         + (f", partie « {r['partie']} »" if r.get("partie") else "")
          + f" ({g['n']} cas, empreinte `{g['empreinte']}`"
          f"{'' if g['fige'] else ', **modifié depuis sa version**'}) · cas validés par l'auteur : {g['valides']} sur {g['n']}",
          ""]

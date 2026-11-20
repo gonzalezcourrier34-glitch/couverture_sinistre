@@ -110,6 +110,22 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 
 ## 5. Dernières mesures
 
+**20 nov. 2026, 17 h 01 à 17 h 34, après la simplification (DEMARCHE 7.110, 7.111)** : jeu fermé sans exemples,
+**A 88 %** (0 couvert à tort, 1 refus à tort), **B 90 %** (0, 0), **D 100 %** ; avec exemples, **A 95 %** (0, 1), B 82 %,
+D 97 %. Partie test du golden set (A, 31 cas) : sans exemples 80 % justes, 3,3 couverts à tort, 8 instables ; **avec,
+89 %, 2 couverts à tort, 2 instables**.
+
+**20 nov. 2026, 16 h 19 à 16 h 25, après 7.106** : **Assureur A 85 % justes**, 75 % exactes, 0,67 couvert à tort
+(`f-a02`, `f-a11`, une fois chacun), 0,67 refus à tort (`f-a18`), 4 instables ; **Assureur B 80 %**, 75 % exactes,
+1,33 couvert à tort (`f-b15` et `f-b18`, couverts par une option en réserve), 5 instables ; **Assureur D 99 %**. Banque
+d'exemples : 74 vecteurs ; seuil calibré à 0,85 (DEMARCHE 7.108).
+
+**20 nov. 2026, 15 h 49 à 15 h 58, après les corrections des cent déclarations (DEMARCHE 7.105)** : **Assureur A
+85 % justes**, 75 % exactes, 1,67 couvert à tort (`f-a11`, le vase lu verre de meuble ; `f-a17`, le déménagement non
+traduit), 0,33 refus à tort, 2 instables ; **Assureur B 83 %**, 78 % exactes, 1 couvert à tort (`f-b18`), 0 refus à
+tort ; **Assureur D 100 %**. Les trois couverts à tort sont corrigés en 7.106, sans nouvelle mesure encore. La porte
+« rappel des questions » échouait à 0 % sur le jeu fermé : elle n'y était pas mesurable (7.106).
+
 **20 nov. 2026, 14 h 40 à 14 h 43, après l'aide de la moisissure** : **Assureur A 85 % justes**, 77 % exactes,
 1 couvert à tort, 0 refus à tort, 3 instables ; **Assureur B 82 %**, 77 % exactes, 1 couvert à tort (`f-b18`, la
 voiture fermée à clé, en attente), 0 refus à tort, 2 instables. `f-b12` juste aux trois passages ; l'écart de B

@@ -11,6 +11,7 @@
       exclusion(Cible, Condition, Portee, ADemander, Article, Texte).
       limite(Id, Article, Texte, Montant).
       evenement_traduit(Evenement).                          % événements dont les garanties sont en règles
+      option(Variable).                                      % garantie optionnelle : « à préciser » si seule à couvrir
 
     Une condition est un terme :
       f(Variable, Valeur)   un fait de la déclaration (variables de regles/vocabulaire.json)
@@ -22,7 +23,7 @@
 
     Règles de gestionnaire (les mêmes que la méthode « fiches », voir fiches.py) :
       1. périmètre « non »            -> garantie hors sujet ;
-      2. circonstance « non »         -> la garantie ne joue pas ;
+      2. circonstance « non »         -> la garantie ne joue pas (hors sujet si le périmètre est inconnu) ;
       3. périmètre « inconnu »        -> garantie possible, on demande ce qui manque ; sauf si une
          exclusion totale est certaine : la garantie est écartée sans question ;
       4. exclusion « oui » (tout)     -> refus ; une exclusion ne vise qu'une garantie rattachée ;
@@ -30,6 +31,8 @@
       6. obligation non respectée     -> incertain si le refus exige un lien causal, refus sinon ;
       6 bis. exclusion « à demander » entamée (inconnue, mais un de ses faits positifs est établi :
          les travaux sont en cours, le lien causal est inconnu) -> incertain, on demande ce qui manque ;
+      6 ter. obligation « si A alors B », sans lien causal, inconnue alors que A est établi -> incertain, on demande B (7.106) ;
+      6 quater. couvert sous la seule réserve d'une option du contrat (`option/1`) -> incertain (7.109) ;
       7. sinon couvert ; une exclusion « à demander » inconnue est une réserve (charge de la
          preuve : l'assureur prouve l'exclusion) ; une exclusion qui ne vise qu'un bien
          (Portee = bien(B)) n'exclut que ce bien.
@@ -236,6 +239,8 @@ etat_obligation(C, Exception, E) :-
     ;   eval(C, E)
     ).
 
+obligation_engagee(si(A, _)) :- eval(A, oui).
+
 preuve(A, T, Role, _{article:A, texte:T, role:Role}).
 
 %  issue(+G, +EtatPerimetre, +Ps, +EPs, +Circonstances, +Exclusions, +Obligations, +Art, +Texte, -Issue)
@@ -245,6 +250,14 @@ issue(_, non, Ps, EPs, _, _, _, Art, Texte, I) :- !,
     preuve(Art, Texte, "garantie", PG),
     I = _{rattachement:"hors", decision:"NON_COUVERT", motif:"hors de son périmètre",
           preuves:[PG|Pr], questions:[], reserves:[], partielles:[]}.
+%  Une condition fausse, sur un périmètre seulement inconnu : la garantie ne joue pas, mais rien ne rattache
+%  le sinistre à elle ; son refus ne doit pas l'emporter sur les garanties possibles (« jai une fuite » refusé par
+%  la dégradation du linge, faute de bien lu : 7.105).
+issue(_, inconnu, _, _, Cs, _, _, _, _, I) :-
+    member(c(_, A, T, non), Cs), !,
+    preuve(A, T, "condition", P),
+    I = _{rattachement:"hors", decision:"NON_COUVERT", motif:"une condition n'est pas remplie",
+          preuves:[P], questions:[], reserves:[], partielles:[]}.
 issue(_, _, _, _, Cs, _, _, _, _, I) :-
     member(c(_, A, T, non), Cs), !,
     preuve(A, T, "condition", P),
@@ -295,6 +308,29 @@ issue(_, oui, _, _, _, _, Os, _, _, I) :-
     I = _{rattachement:"rattachée", decision:"NON_COUVERT",
           motif:"une obligation de prévention n'est pas respectée",
           preuves:[P], questions:[], reserves:[], partielles:[]}.
+%  Une obligation conditionnelle dont la condition est établie et l'exigence inconnue est « engagée » : la
+%  déclaration l'a mise en jeu (le vol a eu lieu dans le véhicule ; était-il fermé à clé ?). On la demande au lieu
+%  d'en faire une réserve (7.106). Seulement si son non-respect fait refuser sans lien causal : sinon (fenêtres
+%  fermées pendant l'absence, quand le voleur est passé par la porte) elle reste une réserve, comme une obligation
+%  générale.
+issue(_, oui, _, _, _, _, Os, _, _, I) :-
+    member(o(inconnu, non, A, T, C), Os), obligation_engagee(C), !,
+    findall(V, ( member(o(inconnu, non, _, _, C1), Os), obligation_engagee(C1), inconnues(C1, Vs), member(V, Vs) ), Q0),
+    sort(Q0, Q),
+    preuve(A, T, "obligation", P),
+    I = _{rattachement:"rattachée", decision:"INCERTAIN",
+          motif:"une obligation de prévention est en jeu, selon des faits non précisés",
+          preuves:[P], questions:Q, reserves:[], partielles:[]}.
+%  Une garantie optionnelle (`option/1` du contrat) dont on ne sait pas si elle est souscrite : « à préciser », le
+%  point à vérifier étant les conditions particulières (7.109). Une garantie de base qui couvre l'emporte toujours.
+issue(_, oui, _, _, _, Xs, _, Art, Texte, I) :-
+    findall(V, ( member(x(inconnue, _, _, Vs), Xs), member(V, Vs), regle(option(V)) ), O0),
+    O0 \== [], !,
+    sort(O0, Q),
+    preuve(Art, Texte, "garantie", PG),
+    I = _{rattachement:"rattachée", decision:"INCERTAIN",
+          motif:"s'applique si vos conditions particulières mentionnent cette garantie optionnelle",
+          preuves:[PG], questions:Q, reserves:[], partielles:[]}.
 issue(G, oui, Ps, _, Cs, Xs, Os, Art, Texte, I) :-
     findall(V, ( member(x(inconnue, _, _, Vs), Xs), member(V, Vs) ), R1),
     findall(V, ( member(o(inconnu, _, _, _, C), Os), inconnues(C, Vs), member(V, Vs) ), R2),

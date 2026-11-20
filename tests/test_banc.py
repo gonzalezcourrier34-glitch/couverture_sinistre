@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from couverture import banc, prolog
+from couverture import banc, lecture, prolog
 from couverture.models import Decision, Faits, Resultat, Verdict
 from moteur_reference import Contrat, Moteur
 
@@ -156,7 +156,7 @@ class PipelineSimulee:
         if self.mauvaise and c["id"] == "val-03":
             faits.pop("proprietaire", None)          # la lecture oublie les biens de l'hôte
         d = self.oracle(faits)
-        q = [prolog.question(v) for v in banc.questions_decision(d)]
+        q = [lecture.question(v) for v in banc.questions_decision(d)]
         lus = Faits(evenements=list(faits.get("evenement", []) if isinstance(faits.get("evenement"), list)
                                     else [faits["evenement"]] if "evenement" in faits else []),
                     biens=faits.get("bien", []), lieux=faits.get("lieu", []),
@@ -274,8 +274,8 @@ def test_banc_precedent_de_meme_configuration(tmp_path):
     import json as _json
     from couverture import banc as _banc
     base = {"contrat": "c", "methode": "regles", "modele": "mistral:small"}
-    for nom, lecture in (("20260101-000000", "verifiee"), ("20260102-000000", "verifiee, confirmation large")):
-        (tmp_path / f"{nom}-c-regles-small.json").write_text(_json.dumps({**base, "lecture": lecture, "date": nom}),
+    for nom, mode in (("20260101-000000", "verifiee"), ("20260102-000000", "verifiee, exemples")):
+        (tmp_path / f"{nom}-c-regles-small.json").write_text(_json.dumps({**base, "lecture": mode, "date": nom}),
                                                             encoding="utf-8")
     assert _banc.dernier(tmp_path, "c", "regles", "mistral:small", "verifiee")["date"] == "20260101-000000"
     assert _banc.dernier(tmp_path, "c", "regles", "mistral:large", "verifiee") is None

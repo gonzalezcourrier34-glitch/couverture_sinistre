@@ -1,11 +1,8 @@
 """Clients de modèles de langage. Aucune dépendance : de simples appels HTTP.
 
-N'importe quel modèle peut être branché tant qu'il respecte le protocole `LLM`.
-Fournisseurs pris en charge :
-  - Mistral (fournisseur européen, données hébergées dans l'UE) : `MistralLLM` ;
-  - Anthropic : `AnthropicLLM` ;
-  - toute API compatible OpenAI (vLLM, Ollama, Azure…) : `OpenAICompatibleLLM`.
-Le choix se fait par variables d'environnement, voir `configurer()`.
+Le fournisseur est Mistral (européen, données hébergées dans l'UE) : `MistralLLM`, sur une API au format
+OpenAI (`OpenAICompatibleLLM`). Les tests branchent des modèles factices qui respectent le protocole `LLM`.
+La configuration se fait par variables d'environnement, voir `configurer()`.
 """
 
 from __future__ import annotations
@@ -101,31 +98,6 @@ def _poster(url: str, corps: dict, entetes: dict, timeout: int, tentatives: int 
                 continue
             raise ErreurLLM(f"Fournisseur injoignable : {e.reason}") from e
     raise ErreurLLM("Échec après plusieurs tentatives.")
-
-
-class AnthropicLLM:
-    URL = "https://api.anthropic.com/v1/messages"
-
-    def __init__(self, modele: str | None = None, cle_api: str | None = None, max_tokens: int = 8000, timeout: int = 120):
-        self.modele = modele or os.environ.get("COUVERTURE_MODELE") or "claude-sonnet-5-5"
-        self.cle_api = cle_api or os.environ["ANTHROPIC_API_KEY"]
-        self.max_tokens = max_tokens
-        self.timeout = timeout
-        self.nom = f"anthropic:{self.modele}"
-
-    def completer(self, systeme: str, message: str) -> str:
-        corps = {
-            "model": self.modele,
-            "max_tokens": self.max_tokens,
-            "temperature": 0,
-            "system": systeme,
-            "messages": [{"role": "user", "content": message}],
-        }
-        entetes = {"x-api-key": self.cle_api, "anthropic-version": "2023-06-01"}
-        donnees = _poster(self.URL, corps, entetes, self.timeout)
-        if donnees.get("stop_reason") == "max_tokens":
-            raise ReponseTronquee(f"réponse coupée à {self.max_tokens} tokens")
-        return "".join(bloc.get("text", "") for bloc in donnees.get("content", []))
 
 
 def texte_du_message(contenu) -> str:
@@ -253,66 +225,22 @@ def _reflexion_mistral(modele: str = "", reflexion: str | None = None) -> dict:
     return {} if niveau in {"defaut", "défaut"} else {"reasoning_effort": niveau}
 
 
-FOURNISSEURS = ("mistral", "anthropic", "openai-compatible")
-
-
 def configurer(usage: str = "analyse") -> LLM | None:
-    """Le modèle à utiliser, d'après l'environnement (ou le fichier .env) :
+    """Le modèle à utiliser, d'après l'environnement (ou le fichier .env), ou None sans clé :
 
-    COUVERTURE_FOURNISSEUR=mistral|anthropic|openai-compatible   force le choix (facultatif)
-    MISTRAL_API_KEY=...                                         → Mistral
-    ANTHROPIC_API_KEY=...                                       → Anthropic
-    COUVERTURE_LLM_URL=... (+ COUVERTURE_LLM_CLE)               → API compatible OpenAI
-    COUVERTURE_MODELE=...                                       modèle des analyses (facultatif)
-    COUVERTURE_MODELE_CONFIRMATION=...                          modèle qui confirme les faits portant une
-                                                                réponse ferme (facultatif ; sinon celui de la lecture)
-    COUVERTURE_MODELE_CONTRAT=...                               modèle du travail sur les contrats :
-                                                                compilation, juge de qualité, réparation
-                                                                (facultatif ; par défaut COUVERTURE_MODELE)
+    MISTRAL_API_KEY=...                 la clé
+    COUVERTURE_MODELE=...               modèle des analyses (par défaut mistral-large-latest)
+    COUVERTURE_MODELE_CONTRAT=...       modèle de la rédaction des règles (usage « contrat » ; par défaut le même)
 
     Deux usages, deux besoins : le travail sur un contrat se fait une fois et gagne à un modèle qui
-    réfléchit (Mistral Large) ; l'analyse d'un sinistre se répète et gagne à un modèle rapide.
-
-    Sans fournisseur forcé, l'ordre est : Mistral, Anthropic, compatible OpenAI. Sinon None :
-    la pipeline tourne alors avec le juge heuristique, sans modèle."""
-    choix = os.environ.get("COUVERTURE_FOURNISSEUR", "").strip().lower()
-    if choix and choix not in FOURNISSEURS:
-        raise ErreurLLM(f"COUVERTURE_FOURNISSEUR inconnu : {choix} (attendu : {', '.join(FOURNISSEURS)})")
-
-    def present(variable: str) -> bool:
-        valeur = os.environ.get(variable, "").strip()
-        return bool(valeur) and not valeur.startswith("colle")  # valeur d'exemple du .env laissée telle quelle
-
-    if usage == "confirmation":
-        # La confirmation des faits qui portent une réponse ferme (7.66) : quelques faits, une réponse courte ;
-        # un modèle plus fort que celui de la lecture, s'il est demandé. Sinon None : le modèle de la lecture.
-        modele = os.environ.get("COUVERTURE_MODELE_CONFIRMATION", "").strip()
-        if not modele:
-            return None
-        if choix in ("", "mistral") and present("MISTRAL_API_KEY"):
-            return MistralLLM(modele=modele)
-        if choix in ("", "anthropic") and present("ANTHROPIC_API_KEY"):
-            return AnthropicLLM(modele=modele)
+    réfléchit (Mistral Large) ; l'analyse d'un sinistre se répète et gagne à un modèle rapide."""
+    cle = os.environ.get("MISTRAL_API_KEY", "").strip()
+    if not cle or cle.startswith("colle"):  # valeur d'exemple du .env laissée telle quelle
         return None
     modele_contrat = os.environ.get("COUVERTURE_MODELE_CONTRAT", "").strip() if usage == "contrat" else ""
-    if choix in ("", "mistral") and present("MISTRAL_API_KEY"):
-        if modele_contrat:
-            return MistralLLM(modele=modele_contrat, reflexion=os.environ.get("COUVERTURE_REFLEXION_CONTRAT", "low"))
-        return MistralLLM()
-    if choix in ("", "anthropic") and present("ANTHROPIC_API_KEY"):
-        return AnthropicLLM(modele=modele_contrat or None)
-    if choix in ("", "openai-compatible") and present("COUVERTURE_LLM_URL"):
-        return OpenAICompatibleLLM(
-            modele=modele_contrat or os.environ.get("COUVERTURE_MODELE", "default"),
-            url=os.environ["COUVERTURE_LLM_URL"],
-            cle_api=os.environ.get("COUVERTURE_LLM_CLE", ""),
-        )
-    if choix:
-        raise ErreurLLM(f"Fournisseur « {choix} » demandé, mais sa clé ou son adresse n'est pas renseignée.")
-    return None
-
-
-# --- Embeddings (recherche par le sens) -----------------------------------------------
+    if modele_contrat:
+        return MistralLLM(modele=modele_contrat, reflexion=os.environ.get("COUVERTURE_REFLEXION_CONTRAT", "low"))
+    return MistralLLM()
 
 
 # --- Réponses JSON ------------------------------------------------------------------------------------
@@ -357,8 +285,8 @@ def pour_travail_long(llm: LLM, max_tokens: int = 16000, timeout: int = 300) -> 
 
 
 def completer_avec_schema(llm: LLM, systeme: str, message: str, schema: dict) -> str:
-    """Avec un client qui sait contraindre sa sortie (Mistral, API compatible OpenAI), le schéma est
-    envoyé ; sinon (Anthropic, modèles factices des tests), la consigne seule décrit la forme."""
+    """Avec un client qui sait contraindre sa sortie (Mistral), le schéma est envoyé ; sinon (modèles factices
+    des tests), la consigne seule décrit la forme."""
     if getattr(llm, "accepte_schema", False):
         return llm.completer(systeme, message, schema=schema)
     return llm.completer(systeme, message)

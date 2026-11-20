@@ -16,7 +16,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from couverture import prolog
+from couverture import chaine, lecture, prolog
 from couverture.base import Base, Contrat
 from couverture.models import Clause, Faits, Resultat
 from couverture.validation import valider
@@ -143,13 +143,13 @@ def decider(base: Base, contrat_id: str, faits: dict[str, Any], decideur=None) -
     if not a_des_regles(contrat_id):
         raise LookupError(f"Pas de règles pour {contrat_id} : seule l'analyse documentaire est possible.")
     voc = prolog.vocabulaire()
-    retenus, ecarts = prolog.au_vocabulaire(faits, voc)
+    retenus, ecarts = lecture.au_vocabulaire(faits, voc)
     decideur = decideur or (lambda f: prolog.decider(contrat_id, f))
     d = decideur(retenus)
-    p = prolog.PipelineRegles(contrat_id, clauses, SansModele(), decideur=decideur)
+    p = chaine.PipelineRegles(contrat_id, clauses, SansModele(), decideur=decideur)
     verdict, consultees = p.verdict(d, retenus)
     verdict.avertissements = ecarts + verdict.avertissements
     verdict = valider(verdict, consultees)
-    r = Resultat(sinistre="", contrat_id=contrat_id, methode="regles", faits=prolog.faits_lisibles(retenus),
+    r = Resultat(sinistre="", contrat_id=contrat_id, methode="regles", faits=chaine.faits_lisibles(retenus),
                  clauses_consultees=consultees, verdict=verdict)
     return r, reponse(r, d)

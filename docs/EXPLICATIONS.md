@@ -68,7 +68,7 @@ Sommaire :
 | **Empreinte (hash)** | Un code calculé à partir du contenu d'un fichier. Si le fichier change, l'empreinte change. |
 | **Heuristique** | Une règle simple et approximative, sans modèle. |
 | **Hallucination** | Quand un modèle affirme quelque chose de faux avec assurance, par exemple une clause qui n'existe pas. |
-| **Starlette / Uvicorn** | Un petit framework web Python et le serveur qui le fait tourner. |
+| **FastAPI / Uvicorn** | Un framework web Python pour écrire une API, et le serveur qui la fait tourner. |
 | **API** | Une adresse web qui renvoie des données (ici en JSON) au lieu d'une page. |
 | **Docker** | Un outil pour emballer l'application et ses dépendances, et la déployer à l'identique ailleurs. |
 | **Clé API** | Le mot de passe qui autorise un programme à utiliser un service payant (ici le modèle de Mistral). Elle se garde dans `.env`, jamais dans le code. |
@@ -93,20 +93,17 @@ Sommaire :
 | **Événement non traduit** | Un événement dont aucune garantie n'est encore en règles : le moteur ne refuse jamais, il répond « à examiner ». |
 | **Rédaction** | Mistral Large traduit une garantie en règles (un JSON, que le code écrit en Prolog) ; le code contrôle, un humain relit, puis accepte. |
 | **Proposition** | Une rédaction en attente dans `regles/propositions/<contrat>/`, avec ses contrôles. |
-| **Relecture** | Les corrections de l'auteur sur une proposition, écrites dans un script versionné (`relecture/`) et tracées dans la proposition. |
+| **Relecture** | Les corrections de l'auteur sur une proposition, tracées dans la proposition elle-même (`meta.relecture`). |
 | **Arbre de preuve** | La trace de la déduction : chaque condition évaluée, sa phrase du contrat, son état, jusqu'aux faits déclarés. |
 | **Question décisive** | Une question dont la réponse tranche (« oui → couvert ; non → non couvert »), trouvée par le moteur en essayant chaque réponse. |
 | **Verdict** | La réponse : décision, justification, citations, ce qu'il faut vérifier, confiance. |
 | **COUVERT / NON_COUVERT / INCERTAIN** | Les trois décisions possibles. INCERTAIN est une vraie réponse, accompagnée de ce qu'il faut vérifier. |
 | **Faux « couvert »** | Le système dit « couvert » alors que ce n'est pas le cas. L'erreur la plus grave : c'est une promesse faite au client. |
-| **Document brut** | La méthode de référence : le contrat entier collé dans le prompt, comme dans un chatbot. |
 | **Profil d'assureur** | Les règles de lecture propres à un assureur (ses intertitres et leur type, ses lignes de bruit, le format de son lexique), dans un fichier JSON. |
 | **Golden set** | 112 cas étiquetés (97 pour l'assureur A, 15 pour l'assureur B), figés et versionnés, sur lesquels le banc rejoue tout le système. |
 | **Banc, couches, portes** | Le banc rejoue le golden set en trois couches (règles seules, lecture, chaîne) ; les portes (`data/golden/seuils.json`) disent si c'est présentable. |
 | **Confirmation** | Avant une réponse ferme, le modèle confirme que les faits qui la portent sont bien écrits dans la déclaration ; sinon, la réponse devient INCERTAIN. |
 | **Journal** | La table `analyses` : chaque question posée au système et sa réponse, sans le texte du sinistre. |
-| **MLflow** | Un outil pour suivre des expériences : chaque exécution garde ses paramètres, ses métriques et ses fichiers. Son **Prompt Registry** garde les versions des consignes. |
-| **Exécution** (*run*) | Une ingestion ou un banc enregistré dans MLflow. |
 | **Consigne** (*prompt*) | Le texte d'instructions envoyé au modèle. Le projet n'entraîne pas de modèle : ce qui change d'une version à l'autre, ce sont les consignes. |
 | **Manifeste des consignes** | `config/versions_consignes.json` : la version et l'empreinte de chaque consigne. Sert de garde-fou en CI. |
 | **Grafana** | Un outil de tableaux de bord qui lit une base et affiche des graphiques. Ici, il lit la base SQLite du projet. |
@@ -152,7 +149,7 @@ Sur le contrat Assureur A Habitation A : 48 pages deviennent 147 clauses, dont 6
 
 Exemple : « Mon vélo a été volé dans ma cave, fermée par un cadenas. »
 
-1. **Lecture** (`prolog.py`) : Mistral traduit la déclaration en faits du vocabulaire : `evenement = vol`, `bien = velo`, `lieu = cave`, `fermeture = cadenas`. Les valeurs hors vocabulaire et les faits hors sujet sont retirés.
+1. **Lecture** (`lecture.py`) : Mistral traduit la déclaration en faits du vocabulaire : `evenement = vol`, `bien = velo`, `lieu = cave`, `fermeture = cadenas`. Les valeurs hors vocabulaire et les faits hors sujet sont retirés.
 2. **Décision** (`regles/moteur.pl`) : la garantie « vol du contenu dans le bâtiment » a son périmètre établi, mais sa condition « si ces locaux sont fermés avec une serrure de sûreté » est fausse : un cadenas n'est pas une serrure de sûreté (définition, art. 12). → **NON_COUVERT**.
 3. **Hypothèses** : si la réponse avait été incertaine (fermeture inconnue), le moteur aurait essayé chaque réponse et dit « serrure de sûreté ? oui → couvert ; non → non couvert ».
 4. **Arbre de preuve** : chaque condition évaluée, sa phrase du contrat, son état, jusqu'au fait déclaré `fermeture = cadenas`.
@@ -276,12 +273,10 @@ Méthodes : `enregistrer` (remplace entièrement un contrat), `contrats`, `contr
 
 ### `src/couverture/llm.py` — parler au modèle
 
-**Rôle** : trois clients, sans bibliothèque externe (de simples appels HTTP), qui respectent tous le même protocole `LLM` : une méthode `completer(systeme, message)`.
-- `MistralLLM` (par défaut) : l'API de Mistral, `https://api.mistral.ai/v1`. Clé dans `MISTRAL_API_KEY`, modèle `mistral-large-latest` sauf si `COUVERTURE_MODELE` dit autre chose. Le **mode JSON** de Mistral est activé (`response_format`) : le serveur garantit une réponse JSON valide, ce qui évite les réponses illisibles.
-- `AnthropicLLM` : l'API d'Anthropic, clé dans `ANTHROPIC_API_KEY`.
-- `OpenAICompatibleLLM` : toute API compatible OpenAI (Ollama en local, vLLM, Azure…), adresse dans `COUVERTURE_LLM_URL`. `MistralLLM` en est une variante, puisque l'API de Mistral est compatible OpenAI.
+**Rôle** : le client de Mistral, sans bibliothèque externe (de simples appels HTTP), derrière un protocole `LLM` : une méthode `completer(systeme, message)` (les tests branchent des modèles factices).
+- `MistralLLM` : l'API de Mistral, `https://api.mistral.ai/v1`, au format OpenAI (`OpenAICompatibleLLM`). Clé dans `MISTRAL_API_KEY`, modèle `mistral-large-latest` sauf si `COUVERTURE_MODELE` dit autre chose. Le **mode JSON** de Mistral est activé (`response_format`) : le serveur garantit une réponse JSON valide, ce qui évite les réponses illisibles.
 
-`configurer()` choisit le fournisseur : celui forcé par `COUVERTURE_FOURNISSEUR`, sinon le premier dont la clé est renseignée, dans l'ordre Mistral, Anthropic, compatible OpenAI. Une valeur d'exemple laissée telle quelle (« colle-ta-cle-ici ») est ignorée. Sans rien, il renvoie `None`, et l'analyse demande de configurer une clé.
+`configurer()` renvoie le modèle des analyses, ou celui de la rédaction des règles (`configurer("contrat")`, `COUVERTURE_MODELE_CONTRAT`). Une valeur d'exemple laissée telle quelle (« colle-ta-cle-ici ») est ignorée. Sans clé, il renvoie `None`, et l'analyse demande de configurer une clé. Anthropic et les API compatibles OpenAI ont été retirés le 20 nov. 2026 : jamais employés ni testés sur le projet.
 
 `_poster` envoie les requêtes avec **de nouvelles tentatives** sur les erreurs passagères : 429 (limite de débit atteinte) et erreurs serveur 5xx, en attendant de plus en plus longtemps (ou le délai indiqué par le serveur). Une clé refusée (401, 403) donne un message clair : « Clé API refusée, vérifier la clé dans le fichier .env ». Ces erreurs (`ErreurLLM`) remontent jusqu'à l'utilisateur au lieu d'être confondues avec une réponse illisible du modèle.
 
@@ -289,7 +284,7 @@ Température 0 partout, pour des réponses stables d'une exécution à l'autre.
 
 **Réponses JSON** : `extraire_json` récupère l'objet JSON même entouré de texte ; `appeler_json` redemande une fois une réponse coupée ou illisible ; `pour_travail_long` donne plus de temps et de tokens au travail fait une fois par contrat (rédaction des règles).
 
-**Pourquoi Mistral par défaut** : fournisseur européen, données hébergées dans l'UE, ce qui compte pour un assureur luxembourgeois qui traite des données clients. Contexte long (suffisant pour la méthode « document brut »), prix faible, API compatible OpenAI. **Pourquoi plusieurs fournisseurs** : changer de modèle ne doit rien changer au reste, et un assureur voudra souvent un modèle hébergé chez lui.
+**Pourquoi Mistral par défaut** : fournisseur européen, données hébergées dans l'UE, ce qui compte pour un assureur luxembourgeois qui traite des données clients. Prix faible, API au format OpenAI. **Un autre modèle** (hébergé chez l'assureur, par exemple) se brancherait en une classe qui respecte le protocole `LLM` : rien d'autre ne change.
 
 ### `src/couverture/config.py` — les clés hors du code
 
@@ -302,32 +297,28 @@ MISTRAL_API_KEY=colle-ta-cle-ici
 COUVERTURE_MODELE=mistral-large-latest
 ```
 
-`mistral-small-latest` coûte moins cher. Pour un autre fournisseur : `ANTHROPIC_API_KEY=…`, ou `COUVERTURE_LLM_URL=http://localhost:11434/v1` pour Ollama, et `COUVERTURE_FOURNISSEUR=…` pour forcer le choix si plusieurs sont renseignés. En déploiement, les mêmes variables sont passées au conteneur (`docker run --env-file .env`).
+`mistral-small-latest` coûte moins cher ; `COUVERTURE_MODELE_CONTRAT` choisit le modèle de la rédaction des règles. En déploiement, les mêmes variables sont passées au conteneur (`docker run --env-file .env`).
 
-### `src/couverture/juges.py` et `pipeline.py` — la référence « document brut »
-
-**Rôle** : `JugeDocumentBrut` met le contrat entier dans le prompt, comme un chatbot ; `PipelineDocumentBrut` contrôle ses citations de la même façon que pour les règles, pour que la comparaison soit juste (`verdict.decision_initiale` garde la réponse non contrôlée). `pipeline.llm_configure` choisit le modèle selon l'environnement.
-
-**Pourquoi** : c'est la méthode à battre ; `couverture banc --methode brut` la mesure sur le même golden set.
-
-### `regles/` et `src/couverture/prolog.py` — le contrat en règles Prolog (méthode `regles`)
+### `regles/`, `prolog.py`, `lecture.py` et `chaine.py` — le contrat en règles Prolog
 
 **Rôle** : le contrat est écrit en **règles**, un moteur logique décide, et le modèle ne fait que lire les faits de la déclaration.
 - `regles/vocabulaire.json` : les variables communes à tous les contrats (événement, bien, lieu, fermeture, serrure de sûreté, effraction, violence, flammes, embrasement…), leurs valeurs permises et la question à poser quand elles manquent ;
 - `regles/moteur.pl` : le moteur, commun à tous les contrats. Logique à **trois valeurs** (oui, non, inconnu), pour ne pas confondre « je ne sais pas » avec « faux » (le monde clos de Prolog). Il applique les règles de gestionnaire (périmètre, circonstances, exclusions, obligations avec lien causal, charge de la preuve, exclusions partielles) et combine les garanties ;
 - `regles/<contrat>.pl` : les règles d'un contrat, sous forme de données (`definition`, `garantie`, `perimetre`, `circonstance`, `obligation`, `exclusion`, `limite`), chacune avec la phrase du contrat qu'elle traduit ;
 - `regles/cas/<contrat>.jsonl` : les faits « idéaux » de chaque sinistre de test, pour éprouver les règles sans modèle ;
-- `prolog.py` : trouve SWI-Prolog, lui fait charger le moteur et les règles, pose les faits (vérifiés : rien ne peut être injecté), lit la décision en JSON ; `extraire_faits_regles` fait lire la déclaration par le modèle, dans le vocabulaire, en laissant inconnu ce qu'elle ne dit pas ; `PipelineRegles` assemble et met en forme ;
+- `prolog.py` : trouve SWI-Prolog, lui fait charger le moteur et les règles, pose les faits (vérifiés : rien ne peut être injecté), lit la décision en JSON ;
+- `lecture.py` : `extraire_faits_regles` fait lire la déclaration par le modèle, dans le vocabulaire, en laissant inconnu ce qu'elle ne dit pas, puis ramène les faits au vocabulaire (préciser, impliquer, filtrer) ;
+- `chaine.py` : `PipelineRegles` assemble la lecture, la décision et la confirmation, puis met en forme la réponse et l'arbre de preuve ;
 - `couverture regles --contrat <id>` : vérifie le chargement sans avertissement, le vocabulaire, les citations (mot pour mot dans les clauses), et les cas.
 - **Raisonnement par hypothèses** (`explorer/2` dans `moteur.pl`) : quand la décision dépend de faits inconnus, le moteur essaie chaque réponse possible (assertz, décision, retract) et classe chaque question : décisive (« oui → couvert ; non → non couvert »), utile, ou inutile (plus posée) ; sans question décisive, il cherche une paire qui tranche. Les valeurs possibles viennent de `vocabulaire.json`. L'oracle Python (`Explorateur`) refait le même calcul pour le test différentiel ;
-- **Arbre de preuve** (`arbres_de_preuve/2` dans `moteur.pl`) : pour chaque garantie retenue, l'arbre de ce que le moteur a évalué — périmètre, conditions, obligations, exclusions —, chaque nœud avec sa phrase du contrat et son état (oui, non, inconnu), jusqu'aux faits déclarés. Il est recalculé avec le même `eval/2` que la décision : c'est la trace de la déduction, pas une explication écrite après coup. `arbre_lisible` (prolog.py) l'élague pour la lecture (la branche vraie d'un « ou », les branches fausses d'un « et », les exclusions qui ne jouent pas sont comptées) ; l'oracle Python refait le même arbre pour le test différentiel ;
+- **Arbre de preuve** (`arbres_de_preuve/2` dans `moteur.pl`) : pour chaque garantie retenue, l'arbre de ce que le moteur a évalué — périmètre, conditions, obligations, exclusions —, chaque nœud avec sa phrase du contrat et son état (oui, non, inconnu), jusqu'aux faits déclarés. Il est recalculé avec le même `eval/2` que la décision : c'est la trace de la déduction, pas une explication écrite après coup. `arbre_lisible` (chaine.py) l'élague pour la lecture (la branche vraie d'un « ou », les branches fausses d'un « et », les exclusions qui ne jouent pas sont comptées) ; l'oracle Python refait le même arbre pour le test différentiel ;
 - `regles/<contrat>.pl` déclare aussi `evenement_traduit(...)` : un événement déclaré dont la garantie n'est pas encore traduite (la tempête, par exemple) empêche le moteur de refuser, il répond « à examiner » ;
-- `src/couverture/redaction.py` (`couverture rediger --article 2.2`, plusieurs articles en parallèle) : **Mistral Large rédige les règles d'une garantie**. Il remplit un schéma JSON (le code écrit le Prolog), déclare les faits qui manquent au vocabulaire (avec leur question, leur aide de lecture et la valeur dont ils précisent le sens), ce qu'il ne sait pas traduire (`non_traduit`, bloquant) et ce qui ne change pas la décision (`hors_decision`, cité). Le code remet en forme ce qu'il sait corriger (une condition rendue sans citation, une condition des conditions particulières mise en réserve), puis contrôle : structure, vocabulaire, citations (mot pour mot, rattachées à la bonne clause), couverture de chaque exclusion du contrat, réserves (« à l'exception de »), limites qui posent une condition, portée des exclusions, définition de l'événement couvert, concepts et identifiants, chargement par SWI-Prolog et non-régression sur les cas. Les propositions restent dans `regles/propositions/` jusqu'à `--accepter`, refusé tant qu'un contrôle bloque ; `--accepter-vocabulaire` ajoute les faits nouveaux après lecture ;
-- **trois façons d'étendre une garantie**, distinguées par le moteur : une garantie **accessoire** (`accessoire/1` : frais après un sinistre couvert, jamais dans la décision), une **extension de définition** (`extension/4` : le contenu en séjour temporaire élargit le bâtiment, pour toutes les garanties), et une **réserve** (une option des conditions particulières : « couvert, sous réserve que… »). DEMARCHE 7.68 et 7.69.
+- `src/couverture/redaction/` (`couverture rediger --article 2.2`, plusieurs articles en parallèle) : **Mistral Large rédige les règles d'une garantie**. Il remplit un schéma JSON (le code écrit le Prolog), déclare les faits qui manquent au vocabulaire (avec leur question, leur aide de lecture et la valeur dont ils précisent le sens), ce qu'il ne sait pas traduire (`non_traduit`, bloquant) et ce qui ne change pas la décision (`hors_decision`, cité). Le code remet en forme ce qu'il sait corriger (une condition rendue sans citation, une condition des conditions particulières mise en réserve), puis contrôle : structure, vocabulaire, citations (mot pour mot, rattachées à la bonne clause), couverture de chaque exclusion du contrat, réserves (« à l'exception de »), limites qui posent une condition, portée des exclusions, définition de l'événement couvert, concepts et identifiants, chargement par SWI-Prolog et non-régression sur les cas. Les propositions restent dans `regles/propositions/` jusqu'à `--accepter`, refusé tant qu'un contrôle bloque ; `--accepter-vocabulaire` ajoute les faits nouveaux après lecture. Le paquet : `consigne.py` (la consigne et le contexte), `ecriture.py` (JSON → Prolog), `controles.py`, `vocabulaire.py`, et les commandes dans `__init__.py` ;
+- **trois façons d'étendre une garantie**, distinguées par le moteur : une garantie **accessoire** (`accessoire/1` : frais après un sinistre couvert, jamais dans la décision), une **extension de définition** (`extension/4` : le contenu en séjour temporaire élargit le bâtiment, pour toutes les garanties), et une **réserve** (ce que l'assureur aurait à prouver). Une **garantie optionnelle** (`option/1`) dont on ne sait pas si elle est souscrite donne « à préciser » si elle est seule à couvrir. DEMARCHE 7.68, 7.69 et 7.109.
 
 **Pourquoi** : la première méthode (des fiches de questions) ne savait pas représenter une condition cachée dans un tableau de limites ni une exclusion cachée dans une définition ; une règle les exprime directement. La décision devient un calcul reproductible. Les tests utilisent aussi `tests/moteur_reference.py`, une seconde implémentation du moteur en Python : là où SWI-Prolog est installé, un test vérifie que les deux concordent.
 
-**La lecture** (`extraire_faits_regles`, mode `verifiee` par défaut) : en deux temps, puis vérifiée. Les deux temps : d'abord l'événement, le bien et le lieu ; puis seulement les questions qui concernent cet événement, avec ce qui est déjà établi. Chaque appel envoie un **schéma JSON** qui n'admet que les valeurs du vocabulaire (`schema_faits`), sans rendre aucune variable obligatoire. `COUVERTURE_LECTURE=un_temps` ou `en_parallele` donnent les lectures essayées et écartées, pour comparer (DEMARCHE 7.38 à 7.42). `COUVERTURE_LECTURE=verifiee` ajoute une vérification : chaque fait du temps 2 est soumis au modèle comme une affirmation, et un fait « non dit » redevient inconnu (7.43) ; si retirer ces faits ferait passer la décision à « couvert », le moteur garde la lecture non vérifiée : un doute ne fait jamais couvrir (7.44). Enfin, avant toute réponse ferme, le moteur désigne les faits qui la portent (`faits_decisifs`) et le modèle confirme qu'ils sont écrits ; un seul « non dit » et la réponse devient « incertain », avec la question (`PipelineRegles.confirmer`, 7.49).
+**La lecture** (`extraire_faits_regles`) : en deux temps, puis vérifiée. Les deux temps : d'abord l'événement, le bien et le lieu ; puis seulement les questions qui concernent cet événement, avec ce qui est déjà établi. Chaque appel envoie un **schéma JSON** qui n'admet que les valeurs du vocabulaire (`schema_faits`), sans rendre aucune variable obligatoire. Les lectures en un temps et en parallèle, essayées et écartées (DEMARCHE 7.38 à 7.42), ont été retirées. Puis une vérification : chaque fait du temps 2 est soumis au modèle comme une affirmation, et un fait « non dit » redevient inconnu (7.43) ; si retirer ces faits ferait passer la décision à « couvert », le moteur garde la lecture non vérifiée : un doute ne fait jamais couvrir (7.44). Enfin, avant toute réponse ferme, le moteur désigne les faits qui la portent (`faits_decisifs`) et le modèle confirme qu'ils sont écrits ; un seul « non dit » et la réponse devient « incertain », avec la question (`PipelineRegles.confirmer`, 7.49). Avec `COUVERTURE_EXEMPLES=oui`, chaque appel de lecture reçoit aussi des déclarations proches et leurs faits (`exemples.py`, 7.107 et 7.108).
 
 **Le moteur chargé une fois** (`MoteurPermanent`) : un SWI-Prolog par contrat reste ouvert ; Python lui envoie les faits sur une ligne, il répond une ligne JSON (`servir` dans `moteur.pl`). Il est relancé s'il s'arrête ou si les règles changent sur le disque. `COUVERTURE_PROLOG_PERMANENT=non` revient à un processus par décision (DEMARCHE 7.46).
 
@@ -336,12 +327,6 @@ COUVERTURE_MODELE=mistral-large-latest
 **Rôle** : rejouer tout le système sur un jeu de référence figé (le *golden set* : 112 cas sur deux contrats, étiquetés par garantie, thème, origine et auteur), en trois couches : les **règles** seules sur les faits idéaux, la **lecture** des faits par le modèle comparée aux faits idéaux, la **chaîne** complète sur plusieurs exécutions. Des **portes** (`data/golden/seuils.json`) disent si c'est présentable ; la commande `couverture banc` sort en erreur si une porte échoue. Chaque passage est gardé dans `data/bancs/` et comparé au précédent. `--figer` versionne le golden set ; `--fiche` écrit la fiche de validation des réponses attendues.
 
 **Pourquoi** : un score unique dit qu'il y a une erreur ; trois couches disent si elle vient des règles, de la lecture ou de leur combinaison. Et une référence qui change sans le dire ne mesure plus rien.
-
-### `src/couverture/legalbench.py` — le second banc, externe
-
-**Rôle** : LegalBench (`insurance_policy_interpretation`, Stanford, CC BY 4.0) : une clause en anglais, un sinistre, et la réponse de lecteurs (couvert, non couvert, ambigu). Le modèle répond et cite la phrase de la clause ; le code vérifie la citation ; une réponse ferme sans citation retrouvée devient « incertain ». Le rapport compare la réponse brute et la réponse contrôlée (exactitude, exactitude équilibrée, rappel des ambigus, couverts à tort).
-
-**Pourquoi** : des cas que nous n'avons pas écrits, avec une réponse « ambigu » : une mesure externe du « je ne sais pas ».
 
 ### `src/couverture/journal.py` — le journal des analyses
 
@@ -353,24 +338,13 @@ COUVERTURE_MODELE=mistral-large-latest
 
 ### `src/couverture/consignes.py` — le versionnage des consignes
 
-**Rôle** : `CONSIGNES` liste les sept consignes en service (lecture des faits en un temps, lecture en deux temps : socle puis détails, vérification des faits, rédaction des règles, document brut, LegalBench), le texte qui porte chacune dans le code, et sa version.
+**Rôle** : `CONSIGNES` liste les quatre consignes en service (lecture en deux temps : socle puis détails, vérification des faits, rédaction des règles), le texte qui porte chacune dans le code, et sa version.
 - **archive** : `ecrire_manifeste` écrit aussi le texte intégral de chaque nouvelle version dans `docs/consignes/<consigne>/<version>.txt`, sans jamais réécrire une version archivée. `verifier` échoue si le texte d'une version en service ne correspond plus à son archive. L'histoire des consignes (rédaction des règles v1 à v9, et celles des méthodes retirées) reste ainsi lisible, avec le pourquoi de chaque changement dans `docs/DEMARCHE.md` ;
 - `etat_actuel` calcule la version et l'empreinte de chaque texte ; `ecrire_manifeste` les écrit dans `config/versions_consignes.json` ;
 - `verifier` compare le code au manifeste et signale un texte modifié **sans nouvelle version**, ou un manifeste pas à jour. Un test l'appelle : la CI échoue ;
-- `versions_courtes` (« faits-regles:v4,redaction-regles:v9… ») est notée dans le journal à chaque analyse et dans chaque exécution MLflow ;
-- `enregistrer_dans_mlflow` crée une version au **Prompt Registry** de MLflow pour chaque texte différent, et pose l'alias `production` sur celle en service. Relancé sans changement, il ne crée rien.
+- `versions_courtes` (« lecture-socle:v2,redaction-regles:v12… ») est notée dans le journal à chaque analyse.
 
 **Pourquoi** : une consigne modifiée change les réponses. Pour comparer deux versions, ou comprendre une réponse passée, il faut savoir quelle consigne l'a produite. C'est la même règle que SortirIA (`scripts/versionnage.py`).
-
-### `src/couverture/suivi.py` — le suivi MLflow
-
-**Rôle** :
-- **une ingestion = une exécution** (expérience `couverture-ingestion`) : par contrat, le nombre de clauses par type, les alertes, le statut ; artefact : les rapports de contrôle ;
-- **un banc = une exécution** (expérience `couverture-evaluation`) : contrat, méthode, modèle de lecture, versions des consignes, version du golden set ; les métriques de chaque couche (`regles/exactitude`, `chaine/faux_couverts`…).
-
-Les fonctions qui calculent paramètres et métriques sont pures et testées sans MLflow. `execution` ouvre une exécution et renvoie un objet dont les méthodes **ne lèvent jamais** : sans MLflow, avec `MLFLOW_ACTIF=false`, avec un serveur qui ne répond pas en 3 s, ou en cas d'erreur, le travail continue sans suivi.
-
-**Pourquoi** : c'est ce qui rend les comparaisons sérieuses. Deux exécutions avec la même empreinte de jeu de test et deux versions de consigne différentes se comparent directement ; deux modèles aussi. Et l'empreinte du jeu de test empêche de comparer des chiffres obtenus sur des cas différents.
 
 ### `monitoring/grafana/` — les tableaux de bord
 
@@ -384,7 +358,7 @@ Les requêtes utilisent les macros de période du plugin (`$__unixEpochFrom()`, 
 
 ### `docker-compose.yml` et `.github/workflows/ci.yml`
 
-- **docker compose** lance l'application (ports 8020), MLflow (5010) et Grafana (3011). L'application lit les contrats au démarrage puis sert l'interface ; la base `data/base.sqlite` est partagée avec Grafana, en lecture seule. Les ports évitent ceux de SortirIA.
+- **docker compose** lance l'API (port 8021) et Grafana (3011). L'API lit les contrats au démarrage ; la base `data/base.sqlite` est partagée avec Grafana, en lecture seule. Les ports évitent ceux de SortirIA.
 - **La CI** installe SWI-Prolog et le projet (avec uv), vérifie les versions des consignes, puis lance les tests : le moteur Prolog y est comparé à l'oracle Python.
 
 Le détail est dans `monitoring/README.md`.
@@ -400,7 +374,6 @@ Le détail est dans `monitoring/README.md`.
   - une décision ferme sans aucune citation valide devient INCERTAIN ;
   - INCERTAIN doit toujours dire quoi vérifier ;
   - la décision d'origine est gardée dans `decision_initiale`.
-  - Option `relocaliser` (pour le document brut) : le modèle ne connaît pas nos identifiants, on cherche donc son extrait dans toutes les clauses.
 
 **Pourquoi** : c'est le garde-fou contre les hallucinations, fait par du code, donc fiable. En gardant la décision d'origine, on peut mesurer combien de fois le contrôle a rattrapé le modèle.
 
@@ -408,40 +381,27 @@ Le détail est dans `monitoring/README.md`.
 
 **Rôle** : `charger_cas` croise les sinistres et les réponses attendues ; `evaluer` rejoue une chaîne sur un jeu (le banc s'en sert pour sa couche « chaîne »). Une clause attendue « 4.4 » est considérée comme citée si la clause 4.4 ou l'un de ses morceaux l'est.
 
-### `src/couverture/cli.py` — la ligne de commande
+### `src/couverture/cli/` — la ligne de commande
+
+Une commande par module (`cli/regles.py`, `cli/banc.py`…), comme une route par fichier dans l'API ; `cli/__init__.py` les assemble, `cli/affichage.py` met en forme une analyse.
 
 | Commande | Effet |
 |---|---|
 | `couverture ingerer [--forcer]` | Lit `data/contrats`, remplit la base ; affiche statuts et alertes. |
 | `couverture contrats` / `clauses --contrat ID` | Liste les contrats ; affiche le découpage d'un contrat. |
 | `couverture regles --contrat ID [--faits JSON] [--jeu …]` | Vérifie les règles (chargement, vocabulaire, citations, cas) ; avec `--faits`, décide un cas et montre l'arbre de preuve. Sans modèle. |
+| `couverture formules --contrat ID --page N` | Lit le tableau des garanties par formule d'un contrat. |
 | `couverture rediger --contrat ID --article 2.2` | Mistral Large rédige les règles d'une garantie ; le code les contrôle ; `--accepter` les ajoute. |
-| `couverture analyser --contrat ID "…" [--methode regles\|brut] [--detail] [--json]` | Analyse un sinistre : décision, motif, preuves, questions, arbre de preuve. |
-| `couverture banc --contrat ID [--methode brut] [--couches …]` | Le golden set rejoué : règles, lecture, chaîne ; portes ; rapport dans `data/bancs/` et exécution MLflow. |
-| `couverture legalbench [--telecharger] [--limite N]` | Le second banc, externe (LegalBench). |
-| `couverture serveur [--port 8000]` | Lance l'interface web. |
-| `couverture versions [--manifeste \| --enregistrer]` | Vérifie les versions des consignes ; réécrit le manifeste ; les enregistre dans MLflow. |
+| `couverture analyser --contrat ID "…" [--detail] [--json]` | Analyse un sinistre : décision, motif, preuves, questions, arbre de preuve. |
+| `couverture banc --contrat ID [--jeu ferme] [--partie test] [--couches …]` | Le golden set ou le jeu fermé rejoué : règles, lecture, chaîne ; portes ; rapport dans `data/bancs/`. |
+| `couverture exemples [--partager] [--indexer] [--proches "…"]` | La banque d'exemples de lecture et le partage mise au point / test. |
+| `couverture api [--port 8001]` | Lance l'API FastAPI (documentation sur `/docs`). |
+| `couverture versions [--manifeste]` | Vérifie les versions des consignes ; réécrit le manifeste. |
 | `couverture modele` | Affiche le modèle configuré et teste la connexion. |
 
-### `src/couverture/web.py` et `static/index.html` — l'interface
+### L'API (`src/couverture/api/`) et l'interface (`frontend/`)
 
-**L'API** (Starlette) :
-- `GET /` : la page ;
-- `GET /api/contrats` : contrats, statut, alertes, et le modèle configuré ;
-- `GET /api/contrats/{id}/clauses` : toutes les clauses, pour afficher leur texte complet ;
-- `POST /api/analyser` : `{contrat_id, sinistre, methode}` → le résultat complet. Chaque analyse est notée dans le journal. La description doit faire entre 10 et 2 000 caractères. Les pipelines sont gardés en mémoire par contrat et par méthode.
-
-**La page** (HTML et JavaScript sans framework) :
-- choix du contrat (avec un avertissement s'il est `A_VERIFIER`), de la méthode (règles Prolog ou document brut), description du sinistre, boutons d'exemple avec les deux cas du recruteur ;
-- résultat : la décision en grand avec la confiance, la justification, et un message si le contrôle a corrigé le modèle ;
-- **les vérifications qui ont compté** : chaque garantie, condition, exclusion ou limite, avec un état coloré (« Remplie », « Non remplie », « Inconnu » ; pour une exclusion, « S'applique » ou « Ne s'applique pas »), l'extrait avec l'article et la page, et le texte complet de la clause avec le passage surligné ;
-- « Ce que le contrat ne permet pas de trancher » : les questions à poser et les réserves ;
-- l'arbre de preuve du moteur Prolog, dans un bloc dépliable ;
-- « Comment la réponse a été construite » : chaque clause lue, et les avertissements.
-
-Le contenu est inséré comme du texte, jamais comme du HTML, pour éviter qu'un contenu malveillant s'exécute dans la page.
-
-**Pourquoi** : le recruteur demande une restitution claire et déconseille Streamlit. L'interface montre exactement ce qu'il veut voir : les sources, et les limites.
+L'API FastAPI (une route par fichier, la logique dans `service.py`, la clé dans l'en-tête `x-api-key`) et l'interface Angular aux couleurs du système de design de foyer.lu : voir `README.md`. L'ancienne page (`web.py`, HTML sans framework) a été retirée le 20 nov. 2026.
 
 ### `src/couverture/__init__.py`
 
@@ -451,10 +411,9 @@ Expose `Resultat`, `Verdict`, `Decision` pour un usage en Python, et la version 
 
 | Fichier | Rôle |
 |---|---|
-| `pyproject.toml`, `uv.lock` | Le paquet Python : dépendances (pydantic, pdfplumber, starlette, uvicorn), la commande `couverture`, la configuration de pytest ; les versions exactes, installées avec `uv sync`. |
-| `relecture/` | Les scripts de relecture humaine de chaque lot de propositions : la trace de ce que l'auteur a changé, et pourquoi. Ils ont servi une fois. |
+| `pyproject.toml`, `uv.lock` | Le paquet Python : dépendances (pydantic, pdfplumber, fastapi, uvicorn), la commande `couverture`, la configuration de pytest ; les versions exactes, installées avec `uv sync`. |
 | `perso/` | Les fichiers de l'auteur, non versionnés. |
-| `Dockerfile` | Construit une image qui installe le paquet, ingère les contrats et lance le serveur. La clé du modèle est passée au lancement, jamais écrite dans l'image. |
+| `Dockerfile` | Construit une image qui installe le paquet, ingère les contrats et lance l'API. La clé du modèle est passée au lancement, jamais écrite dans l'image. |
 | `.gitignore` | Exclut la base générée, les caches, le fichier `.env` (les clés) et **les PDF des assureurs** (on ne redistribue pas leurs documents). |
 | `README.md` | La présentation du projet. |
 
@@ -472,7 +431,6 @@ Expose `Resultat`, `Verdict`, `Decision` pour un usage en Python, et la version 
 | `data/sinistres.jsonl`, `data/annotations/` | Le premier jeu (mise au point), écrit avant le code : les deux cas du recruteur et des variations qui changent **un seul fait**. |
 | `data/validation/`, `data/redaction/` | Deux jeux plus petits : des cas écrits après coup pour vérifier une correction, et des cas des garanties rédigées par le modèle. |
 | `data/bancs/` | Chaque passage du banc : un rapport lisible (`.md`) et ses chiffres (`.json`), comparés au passage précédent. |
-| `data/externes/legalbench/` | Le jeu LegalBench `insurance_policy_interpretation` (CC BY 4.0), avec son attribution. |
 | `data/profils/<nom>.json` | Les profils d'assureur. Un seul aujourd'hui (assureur B) : les autres contrats sont lus correctement par les règles générales. |
 | `tests/fixtures/cg_style_reel.pdf` | Un PDF fictif mis en page comme un vrai contrat (sommaire, en-têtes, lexique, intertitres sans numéro, mots coupés), produit par `generer_pdf.py`. |
 
@@ -482,12 +440,11 @@ Expose `Resultat`, `Verdict`, `Decision` pour un usage en Python, et la version 
 
 ## 6. Les tests
 
-`uv run pytest` lance 134 tests, sans appel réel à un modèle (les réponses sont préparées ou la connexion simulée) :
-- **`test_pipeline.py` (37)** — lecture et découpage d'un PDF (sommaire, en-têtes, mots coupés, intertitres, lexique éclaté, renvois), contrôles d'ingestion, base, contrôle des citations (une citation inventée fait passer COUVERT à INCERTAIN), document brut, configuration du modèle (`.env`, nouvelles tentatives, clé refusée, réponses coupées), profils, journal sans le texte du sinistre, versions des consignes et MLflow, tableaux Grafana exécutés sur une vraie base ; le contrat réel A si son PDF est présent.
+`uv run pytest` lance environ 170 tests, sans appel réel à un modèle (les réponses sont préparées ou la connexion simulée) :
+- **`test_pipeline.py` (37)** — lecture et découpage d'un PDF (sommaire, en-têtes, mots coupés, intertitres, lexique éclaté, renvois), contrôles d'ingestion, base, contrôle des citations (une citation inventée fait passer COUVERT à INCERTAIN), configuration du modèle (`.env`, nouvelles tentatives, clé refusée, réponses coupées), profils, journal sans le texte du sinistre, versions des consignes, tableaux Grafana exécutés sur une vraie base ; le contrat réel A si son PDF est présent.
 - **`test_prolog.py` (44)** — le moteur : trois valeurs et questions, exclusions partielles, extensions de définition, garanties accessoires, événement non traduit jamais refusé, obligations, questions décisives et paires, arbre de preuve, faits sans injection possible ; la lecture (vocabulaire, deux temps, vérification, un doute ne fait jamais couvrir, confirmation) ; le moteur permanent ; et, si SWI-Prolog est installé, **Prolog et l'oracle Python concordent** sur tous les cas.
 - **`test_redaction.py` (32)** — la rédaction : Prolog généré et évalué par l'oracle, chaque contrôle (vocabulaire déclaré, fait inventé, citation réparée ou refusée, exclusion oubliée, réserves, conditions des conditions particulières mises en réserve, accessoires, extensions…), la reprise unique sur un écart au schéma, l'acceptation, la hiérarchie des valeurs.
 - **`test_banc.py` (16)** — le golden set (complet, cohérent, figé), les règles seules justes pour chaque contrat, les trois couches, les portes, la latence, la fiche de validation.
-- **`test_legalbench.py` (5)** — lecture du jeu, contrôle des citations, métriques, rapport.
 
 ---
 
@@ -521,17 +478,16 @@ Le banc (`couverture banc`) mesure trois couches sur le golden set, avec des por
 | Vocabulaire commun, lu contrat par contrat | Un même fait se lit pareil partout ; un contrat ne lit que ses variables | Un vocabulaire par contrat |
 | Accessoires, extensions, réserves distinguées | Trois sens d'« étendre » ; mélangés, ils dégradent des décisions qu'ils ne concernent pas | Tout traduire en garanties ordinaires |
 | Un doute ne fait jamais couvrir | Une vérification qui retire un fait ne peut pas rendre la réponse plus favorable | Retirer les faits sans regarder l'effet |
-| Confirmation par un modèle plus fort : option | Moins de couverts à tort, mais plus de « je ne sais pas » et trois fois plus lent : un réglage d'exploitation | L'imposer, ou l'ignorer |
 | Golden set figé, banc en trois couches, portes | Savoir si une erreur vient des règles, de la lecture ou de leur combinaison ; une référence qui change le dit | Une exactitude unique, des cas qui bougent |
 | Profils d'assureur en JSON | Un assureur différent = un fichier, pas du code | Des cas particuliers dans `segmentation.py` |
 | Contrôle des citations par du code | Bloque les hallucinations de façon fiable | Faire confiance au modèle |
 | Archiver le texte de chaque version de consigne, garde-fou en CI | Savoir quelle consigne a produit une réponse ; impossible de changer un texte en silence | Prompts modifiés sans trace |
-| MLflow : une ingestion, un banc = une exécution | Comparer versions et modèles sur un même jeu (même empreinte) | Comparer des chiffres notés à la main |
+| Un rapport par banc, comparé au précédent de même configuration | Comparer versions et modèles sur un même jeu (même empreinte), sans service de plus | Comparer des chiffres notés à la main |
 | Journal sans le texte du sinistre | Mesurer en production sans stocker de données personnelles | Garder les déclarations |
 | Grafana sur SQLite, tableaux générés et testés | Pas de base de plus à faire tourner ; requêtes lisibles et vérifiées | PostgreSQL pour une démonstration ; JSON édité à la main |
 | Pas de LangGraph | La chaîne est linéaire | Un graphe par habitude |
-| Mistral par défaut, modèle interchangeable | Fournisseur européen ; un assureur voudra souvent un modèle chez lui | Dépendre d'un seul fournisseur |
-| Interface HTML simple | Restitution claire ; Streamlit déconseillé par le recruteur | Streamlit |
+| Mistral seul, derrière une interface `LLM` | Fournisseur européen ; un autre modèle se branche en une classe | Garder des fournisseurs qu'on ne teste pas |
+| API FastAPI et interface Angular | Restitution claire, sur le modèle de SortirIA ; Streamlit déconseillé par le recruteur | Streamlit |
 
 ---
 
@@ -547,22 +503,22 @@ L'exclusion qui décide ne ressemble pas à la question (« vol de vélo » ress
 Chaque contrat est lu une fois, contrôlé et stocké dans le même schéma. Ses garanties sont rédigées par Mistral Large (une vingtaine de minutes pour huit garanties, en parallèle), contrôlées par le code, relues, puis acceptées. Le moteur et le vocabulaire sont communs. Le deuxième assureur est passé de zéro règle à 76 % de réponses justes en une journée (82 % avec la confirmation par Mistral Large), et chaque erreur trouvée a amélioré la méthode pour tous.
 
 **Que fait le système quand il ne sait pas ?**
-Il répond INCERTAIN, avec la question qui tranche (« la cave était-elle fermée par une serrure de sûreté ? oui → couvert ; non → non couvert »). Quand une option des conditions particulières manque, il répond « couvert, sous réserve de… ». Et un événement dont la garantie n'est pas encore traduite n'est jamais refusé : il est envoyé à un gestionnaire.
+Il répond INCERTAIN, avec la question qui tranche (« la cave était-elle fermée par une serrure de sûreté ? oui → couvert ; non → non couvert »). Quand seule une option des conditions particulières couvrirait, il répond « à préciser », avec le point à vérifier. Et un événement dont la garantie n'est pas encore traduite n'est jamais refusé : il est envoyé à un gestionnaire.
 
 **Comment savez-vous que les règles sont justes ?**
-Trois filets : les contrôles du code (citations mot pour mot, chaque exclusion du contrat traduite, vocabulaire, chargement), la relecture humaine (tracée dans `relecture/`), et le banc (les règles seules doivent être justes à 100 % sur les cas). Les cas de l'assureur B ont trouvé deux erreurs que la relecture n'avait pas vues.
+Trois filets : les contrôles du code (citations mot pour mot, chaque exclusion du contrat traduite, vocabulaire, chargement), la relecture humaine (tracée dans chaque proposition), et le banc (les règles seules doivent être justes à 100 % sur les cas). Les cas de l'assureur B ont trouvé deux erreurs que la relecture n'avait pas vues.
 
 **Et si la lecture se trompe ?**
 C'est la principale source d'erreurs restantes, et elle est mesurée à part (couche « lecture » du banc). Trois défenses : un schéma qui n'admet que les valeurs du vocabulaire, une vérification des faits, et la confirmation des faits qui portent une réponse ferme. Un doute ne fait jamais couvrir.
 
 **Comment comparez-vous deux versions d'une consigne, ou deux modèles ?**
-Chaque banc est une exécution MLflow qui porte les versions des consignes, les modèles et l'empreinte du golden set. Deux exécutions avec la même empreinte se comparent directement, sur les couverts à tort d'abord. Une consigne ne peut pas changer sans nouvelle version : la CI échoue.
+Chaque banc écrit un rapport qui porte le modèle, le mode de lecture et l'empreinte du jeu de cas, et se compare au précédent de même configuration ; le journal note les versions des consignes. Deux bancs avec la même empreinte se comparent directement, sur les couverts à tort d'abord. Une consigne ne peut pas changer sans nouvelle version : la CI échoue.
 
 **Pourquoi INCERTAIN est-il une bonne réponse ?**
 Parce que c'est la consigne : un « je ne sais pas » étayé vaut mieux qu'une réponse assurée sans justification. Et ici, INCERTAIN dit précisément quoi demander à l'assuré.
 
 **Quel lien avec SortirIA ?**
-Le même problème de fond : des sources hétérogènes à ramener dans un schéma commun et fiable. Ce projet en reprend le versionnage des consignes avec garde-fou en CI, le suivi MLflow, le journal et les tableaux Grafana générés et testés. La différence : SortirIA recommande, une approximation reste utile ; ici le système décide, une erreur est une promesse faite au client, d'où la décision calculée, le contrôle des citations et le droit de répondre INCERTAIN.
+Le même problème de fond : des sources hétérogènes à ramener dans un schéma commun et fiable. Ce projet en reprend le versionnage des consignes avec garde-fou en CI, le journal et les tableaux Grafana générés et testés. La différence : SortirIA recommande, une approximation reste utile ; ici le système décide, une erreur est une promesse faite au client, d'où la décision calculée, le contrôle des citations et le droit de répondre INCERTAIN.
 
 **Comment avez-vous utilisé l'IA ?**
 Pour écrire le code plus vite, comme le recruteur l'encourage, et dans le système lui-même pour lire les déclarations et rédiger les règles. Les choix d'architecture, l'évaluation et la relecture des règles restent les vôtres : vous devez pouvoir expliquer chaque fichier de ce document.

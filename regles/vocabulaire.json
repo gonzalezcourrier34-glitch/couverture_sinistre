@@ -30,7 +30,7 @@
       "aide": {
         "degat_eaux": "eau qui abîme des biens (fuite, débordement, infiltration) ; aussi des moisissures apparues après une fuite, quand la déclaration ne parle que d'elles",
         "tempete": "vent violent, grêle, poids de la neige ou de la glace ; pas la pluie d'un orage : l'eau qui entre ou qui monte, c'est « degat_eaux » ou « catastrophe_naturelle »",
-        "bris": "bris ou fêlure d'une vitre, d'un miroir, d'une table de cuisson vitrocéramique, d'un sanitaire, d'un objet en verre",
+        "bris": "bris ou fêlure d'une vitre, d'un miroir, d'une table de cuisson vitrocéramique, d'un sanitaire, d'un objet en verre de l'assuré ; la vitre d'un voisin cassée par l'assuré ou un proche, c'est « responsabilite »",
         "electricite": "surtension, court-circuit, panne de courant, électrocution",
         "mazout": "fuite de fioul ou de combustible de chauffage",
         "catastrophe_naturelle": "débordement d'une rivière, refoulement des égouts publics, tremblement de terre, glissement de terrain",
@@ -40,10 +40,10 @@
         "vandalisme": "quelqu'un a abîmé exprès : tags, vitres cassées, portes rayées par un tiers ; pas une simple rayure dont on ignore la cause",
         "merule": "champignon (mérule) qui attaque le bois du bâtiment",
         "conflit_du_travail": "grève, lock-out, manifestation de travailleurs",
-        "heurt": "un véhicule, un arbre ou un objet a percuté le bâtiment ou les biens",
-        "responsabilite": "un dommage causé par l'assuré, un proche ou son animal à quelqu'un d'autre, qui en demande réparation : un passant blessé, un objet emprunté cassé, des dégâts chez un voisin",
+        "heurt": "un véhicule, un arbre ou un objet a percuté le bâtiment ou les biens de l'assuré ; une tuile ou une branche de chez l'assuré tombée sur le bien d'un voisin, c'est « responsabilite »",
+        "responsabilite": "un dommage causé par l'assuré, un proche, son animal ou sa maison à quelqu'un d'autre, qui en demande réparation : un passant ou un skieur blessé, un objet emprunté cassé, la vitre ou la voiture d'un voisin abîmée, des dégâts chez un voisin",
         "assistance": "un besoin d'aide ou de dépannage sans dommage à indemniser : serrurier après des clés oubliées, intervention d'urgence demandée",
-        "accident": "casse ou dommage accidentel d'un objet (pas d'une vitre, d'un miroir ni d'un verre : c'est « bris ») par l'assuré ou un proche : chute, choc, objet renversé ou tombé ; pas un vol, un incendie, l'eau, la tempête ni l'électricité",
+        "accident": "casse ou dommage accidentel d'un objet (pas d'une vitre, d'un miroir ni d'un verre : c'est « bris ») par l'assuré ou un proche : chute, choc, objet renversé ou tombé ; pas un vol, un incendie, l'eau, la tempête ni l'électricité ; l'objet de quelqu'un d'autre cassé par l'assuré, c'est « responsabilite »",
         "litige": "un différend avec quelqu'un (employeur, vendeur, artisan, voisin, administration) pour lequel l'assuré veut être conseillé, aidé ou défendu ; pas un dommage à indemniser"
       },
       "parents": {
@@ -241,7 +241,7 @@
         "plantation": "plantes, arbres, arbustes, haies du jardin",
         "mazout": "fioul (mazout) de chauffage, dans la cuve",
         "cles": "les clés elles-mêmes, volées ou perdues (pas les clés dont le voleur s'est servi, ni la serrure)",
-        "vehicule_moteur": "voiture, moto, scooter (pas une tondeuse ni un autre engin de jardinage : objet_divers)",
+        "vehicule_moteur": "voiture, moto, scooter, y compris ses vitres (pas une tondeuse ni un autre engin de jardinage : objet_divers)",
         "citerne": "cuve à mazout, citerne",
         "materiaux_construction": "matériaux de construction pas encore posés : briques, ciment, tuiles sur le chantier",
         "denrees_alimentaires": "aliments du frigo ou du congélateur",
@@ -256,7 +256,9 @@
         "sepulture": "tombe, sépulture dont l'assuré est propriétaire",
         "veranda": "construction vitrée, close et couverte, accolée au logement",
         "eolienne": "éolienne domestique",
-        "piscine": "piscine, spa, jacuzzi, ou leur abri"
+        "piscine": "piscine, spa, jacuzzi, ou leur abri",
+        "vitre": "vitrage du logement : fenêtre, porte vitrée, baie (la vitre d'une voiture : vehicule_moteur)",
+        "verre_meuble": "plateau ou porte en verre faisant partie d'un meuble (un objet posé dessus : objet_verre_non_vitre)"
       }
     },
     "lieu": {
@@ -287,12 +289,12 @@
         "annexe": "dépendance privée sans communication avec le logement : remise, cabanon, garage séparé de la maison",
         "garage": "garage ou box privatif, attenant à la maison ou dans l'immeuble",
         "cave": "cave privative",
-        "terrasse": "un bien laissé sur la terrasse ou le balcon ; un vol dans le logement où l'on est entré par la porte-fenêtre de la terrasse, c'est « logement »",
+        "terrasse": "un bien laissé sur la terrasse ou le balcon ; un vol dans le logement où l'on est entré par la porte-fenêtre de la terrasse, c'est « logement » ; les murs, portes, fenêtres et baies de la maison sont « logement », même côté terrasse",
         "jardin": "en plein air, dans le jardin ; une remise, un cabanon ou un abri fermés au fond du jardin, c'est « annexe »",
-        "voie_publique": "rue, transports, magasin, tout lieu public",
+        "voie_publique": "rue, transports, magasin, tout lieu public, quand le bien n'était pas dans un véhicule",
         "autre_batiment": "un autre bâtiment (club, bureau, chez quelqu'un)",
         "casier": "casier d'un club de sport ou d'une association",
-        "vehicule": "dans une voiture, un véhicule",
+        "vehicule": "dans une voiture ou un autre véhicule, même garé dans la rue ou sur un parking : un objet volé dans la voiture, c'est « vehicule »",
         "chambre_etudiant": "chambre ou studio d'étudiant loué pour les études",
         "maison_repos": "chambre ou appartement en maison de repos",
         "local_fete_privee": "local pris en location pour une fête privée"
@@ -557,6 +559,11 @@
         "degat_eaux",
         "catastrophe_naturelle"
       ],
+      "implique": {
+        "inondation": {
+          "evenement": "catastrophe_naturelle"
+        }
+      },
       "parents": {
         "gel": [
           "fuite_installation"
@@ -763,7 +770,7 @@
       ],
       "question": "Les biens se trouvaient-ils hors de chez vous, lors d'un séjour temporaire (vacances, hôtel, location) ?",
       "aide": {
-        "oui": "les biens étaient avec vous, hors de chez vous, le temps d'un séjour : à l'hôtel, dans une location de vacances, chez quelqu'un",
+        "oui": "les biens étaient avec vous, hors de chez vous, le temps d'un séjour de plusieurs nuits : à l'hôtel, dans une location de vacances, chez quelqu'un",
         "non": "les biens étaient chez vous, même si vous étiez absent ou en vacances"
       },
       "pour": [
@@ -2394,11 +2401,11 @@
       ],
       "question": "Qu'est-ce qui a causé le dommage à l'autre personne ?",
       "aide": {
-        "personne": "l'assuré, un enfant ou une personne de son foyer : maladresse, chute, jeu, sport en loisir, vélo ou trottinette sans moteur (à la force des jambes)",
+        "personne": "l'assuré, un enfant ou une personne de son foyer : maladresse, chute, jeu, sport en loisir (ski, foot, vélo), vélo ou trottinette sans moteur (à la force des jambes)",
         "animal_compagnie": "un chien, un chat ou un autre animal de compagnie",
         "animal_autre": "un cheval, un âne, du bétail, des volailles : un animal qui n'est pas de compagnie",
         "chien_dangereux": "un chien de 1re ou 2e catégorie (chien d'attaque, de garde ou de défense)",
-        "vehicule_moteur": "un véhicule à moteur : voiture, moto, scooter, ou trottinette et vélo électriques rapides ; jamais un vélo ordinaire, qui est « personne »",
+        "vehicule_moteur": "une voiture, une moto ou un scooter que conduisait l'assuré ou un proche : un engin à moteur, qui avance sans qu'on pédale ; pas la voiture abîmée de la victime",
         "habitation": "un incendie, une explosion ou une fuite d'eau partis du logement ou des dépendances occupés",
         "immeuble": "le bâtiment ou le terrain lui-même : une tuile ou une branche qui tombe, une clôture, un mur",
         "chasse_sport": "la chasse, le ball-trap, un sport aérien, une compétition, un sport en club ou professionnel",
@@ -2543,6 +2550,76 @@
       },
       "pour": [
         "responsabilite"
+      ]
+    },
+    "emmenagement": {
+      "valeurs": [
+        "non",
+        "moins_30_jours",
+        "plus_30_jours"
+      ],
+      "question": "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?",
+      "aide": {
+        "non": "pas de déménagement récent",
+        "moins_30_jours": "emménagé il y a moins de 30 jours",
+        "plus_30_jours": "emménagé il y a plus de 30 jours (un, deux mois…)"
+      },
+      "pour": [
+        "vol",
+        "incendie",
+        "explosion",
+        "foudre",
+        "degat_eaux",
+        "tempete",
+        "bris",
+        "autre",
+        "electricite",
+        "mazout",
+        "catastrophe_naturelle",
+        "attentat",
+        "fumee",
+        "vandalisme",
+        "merule",
+        "conflit_du_travail",
+        "heurt",
+        "responsabilite",
+        "assistance",
+        "accident",
+        "litige"
+      ]
+    },
+    "demenagement_signale": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+      "aide": {
+        "oui": "l'assureur a été prévenu de la nouvelle adresse",
+        "non": "l'assureur n'a pas été prévenu"
+      },
+      "pour": [
+        "vol",
+        "incendie",
+        "explosion",
+        "foudre",
+        "degat_eaux",
+        "tempete",
+        "bris",
+        "autre",
+        "electricite",
+        "mazout",
+        "catastrophe_naturelle",
+        "attentat",
+        "fumee",
+        "vandalisme",
+        "merule",
+        "conflit_du_travail",
+        "heurt",
+        "responsabilite",
+        "assistance",
+        "accident",
+        "litige"
       ]
     }
   }

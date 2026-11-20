@@ -1,28 +1,13 @@
 {
-  "couverture-document-brut": {
-    "version": "v1",
-    "empreinte": "2253a1899124ac31",
-    "source": "couverture.juges.SYSTEME_BRUT"
-  },
-  "couverture-faits-regles": {
-    "version": "v4",
-    "empreinte": "b05ed349b373d04f",
-    "source": "couverture.prolog.SYSTEME_FAITS_REGLES"
-  },
   "couverture-lecture-details": {
     "version": "v2",
     "empreinte": "9bc1b48f1eb90c22",
-    "source": "couverture.prolog.SYSTEME_LECTURE_DETAILS"
+    "source": "couverture.lecture.SYSTEME_LECTURE_DETAILS"
   },
   "couverture-lecture-socle": {
     "version": "v2",
     "empreinte": "d18cace97edf3616",
-    "source": "couverture.prolog.SYSTEME_LECTURE_SOCLE"
-  },
-  "couverture-legalbench": {
-    "version": "v1",
-    "empreinte": "0aaba546fd110a0d",
-    "source": "couverture.legalbench.SYSTEME_LEGALBENCH"
+    "source": "couverture.lecture.SYSTEME_LECTURE_SOCLE"
   },
   "couverture-redaction-regles": {
     "version": "v12",
@@ -32,6 +17,6 @@
   "couverture-verification-faits": {
     "version": "v3",
     "empreinte": "3f4c6fd4d53ecc13",
-    "source": "couverture.prolog.SYSTEME_VERIFICATION"
+    "source": "couverture.lecture.SYSTEME_VERIFICATION"
   }
 }

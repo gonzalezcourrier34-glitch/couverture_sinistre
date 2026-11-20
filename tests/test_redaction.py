@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from couverture import prolog, redaction
+from couverture import lecture, prolog, redaction
 from couverture.models import Clause, TypeClause
 from moteur_reference import Contrat, Moteur
 
@@ -322,8 +322,8 @@ def test_variable_d_extension_lue_si_son_lieu_est_lu():
            "flammes": {"valeurs": ["oui", "non"], "pour": ["incendie"]},
            "sejour_temporaire": {"valeurs": ["oui", "non"], "pour": ["vol"], "si": {"lieu": ["autre_batiment"]}},
            "malveillance_auteur": {"valeurs": ["oui", "non"], "pour": [redaction.ACCESSOIRE]}}
-    au_logement = prolog.variables_du_temps_2(voc, ["incendie"], {"lieu": ["logement"]})
-    a_l_hotel = prolog.variables_du_temps_2(voc, ["incendie"], {"lieu": ["autre_batiment"]})
+    au_logement = lecture.variables_du_temps_2(voc, ["incendie"], {"lieu": ["logement"]})
+    a_l_hotel = lecture.variables_du_temps_2(voc, ["incendie"], {"lieu": ["autre_batiment"]})
     assert set(au_logement) == {"flammes"} and set(a_l_hotel) == {"flammes", "sejour_temporaire"}
 
 
@@ -366,8 +366,8 @@ def test_variables_lues_selon_l_evenement_et_le_lieu_qui_les_entourent(voc_etend
     voc = json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]
     assert voc["habitacle_x"]["seulement_si"] == {"lieu": ["vehicule"]} and "seulement_si" not in voc["sans_surveillance_x"]
     assert "periode_x" not in voc and any(a.startswith("! periode_x refusée") and "22h_7h" in a for a in ajouts)
-    a_la_cave = prolog.variables_du_temps_2(voc, ["vol"], {"lieu": ["cave"]})
-    dans_la_voiture = prolog.variables_du_temps_2(voc, ["vol"], {"lieu": ["vehicule"]})
+    a_la_cave = lecture.variables_du_temps_2(voc, ["vol"], {"lieu": ["cave"]})
+    dans_la_voiture = lecture.variables_du_temps_2(voc, ["vol"], {"lieu": ["vehicule"]})
     assert "habitacle_x" not in a_la_cave and "habitacle_x" in dans_la_voiture and "sans_surveillance_x" in a_la_cave
 
 
@@ -393,7 +393,7 @@ def test_vocabulaire_sans_pseudo_evenement_ni_variable_lue_partout(voc_etendu):
     voc = json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]
     assert voc["sejour_temporaire"]["pour"] == avant and redaction.ACCESSOIRE not in avant
     assert voc["delai_x"]["pour"] == [redaction.EXTENSION]
-    assert "delai_x" not in prolog.variables_du_temps_2(voc, ["incendie"], {"lieu": ["logement"]})
+    assert "delai_x" not in lecture.variables_du_temps_2(voc, ["incendie"], {"lieu": ["logement"]})
     assert len(ajouts) == len(set(ajouts)) and sum(a.startswith("pays_x : lue aussi si") for a in ajouts) == 1
 
 
@@ -444,7 +444,7 @@ def test_article_sans_garantie_ses_reserves_ne_sont_pas_lues(voc_etendu):
     redaction.accepter_vocabulaire(prop, voc_etendu)
     voc = json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]
     assert voc["option_x"]["pour"] == [redaction.JAMAIS]
-    assert "option_x" not in prolog.variables_du_temps_2(voc, ["vol"], {"lieu": ["logement"]})
+    assert "option_x" not in lecture.variables_du_temps_2(voc, ["vol"], {"lieu": ["logement"]})
     assert voc["pays_y"]["si"] == {"lieu": ["autre_batiment"]}, "« sans les bijoux » n'entame pas l'extension"
 
 

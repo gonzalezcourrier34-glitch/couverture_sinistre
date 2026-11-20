@@ -27,11 +27,11 @@ def sante(base: Base = Depends(get_base)) -> dict[str, Any]:  # noqa: B008
     dict[str, Any]
         `statut` vaut `ok` si au moins un contrat a des règles et que SWI-Prolog est installé, `degrade` sinon.
     """
-    from couverture.pipeline import llm_configure
+    from couverture.llm import configurer
     from couverture.prolog import swipl
 
     decidables = [c.id for c in base.contrats() if a_des_regles(c.id)]
-    llm = llm_configure()
+    llm = configurer()
     prolog_ok = swipl() is not None
     return {"statut": "ok" if decidables and prolog_ok else "degrade", "version": config.VERSION,
             "contrats_decidables": decidables, "prolog": prolog_ok, "modele": llm.nom if llm else None,

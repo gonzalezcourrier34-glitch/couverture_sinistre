@@ -9,7 +9,7 @@ from couverture.api import service
 from couverture.base import Base, Contrat
 from couverture.models import Clause, Faits, TypeClause
 from moteur_reference import Contrat as Regles, Explorateur
-from couverture import prolog
+from couverture import chaine, prolog
 
 CONTRAT = "assureur-a-habitation-2025"
 
@@ -49,7 +49,7 @@ def base(tmp_path, regles):
 
 def test_faits_aller_retour():
     faits = {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"], "fermeture": "cadenas"}
-    assert service.faits_depuis(prolog.faits_lisibles(faits)) == faits
+    assert service.faits_depuis(chaine.faits_lisibles(faits)) == faits
     assert service.faits_depuis(Faits()) == {}
 
 

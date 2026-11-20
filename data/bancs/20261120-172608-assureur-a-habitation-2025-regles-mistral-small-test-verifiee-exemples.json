@@ -1,0 +1,4548 @@
+{
+ "date": "2026-11-20T17:18:06",
+ "contrat": "assureur-a-habitation-2025",
+ "methode": "regles",
+ "jeu": "golden",
+ "golden": {
+  "version": 12,
+  "empreinte": "0534a0545f66a07d",
+  "fige": true,
+  "n": 31,
+  "valides": 0,
+  "auteurs": {
+   "claude": 97
+  }
+ },
+ "couches": {
+  "chaine": {
+   "metriques": {
+    "exactitude": {
+     "moyenne": 0.892,
+     "min": 0.871,
+     "max": 0.903
+    },
+    "exactitude_stricte": {
+     "moyenne": 0.828,
+     "min": 0.806,
+     "max": 0.839
+    },
+    "faux_couverts": {
+     "moyenne": 2.0,
+     "min": 2,
+     "max": 2
+    },
+    "faux_refus": {
+     "moyenne": 0.0,
+     "min": 0,
+     "max": 0
+    },
+    "taux_incertain": {
+     "moyenne": 0.14,
+     "min": 0.129,
+     "max": 0.161
+    },
+    "n": 31,
+    "executions": 3,
+    "instables": 2,
+    "rappel_clauses": 0.772,
+    "rappel_questions": 1.0,
+    "erreurs_fournisseur": 0,
+    "duree_moyenne_s": 147.9,
+    "latence_mediane_s": 4.21,
+    "latence_p95_s": 70.31,
+    "latence_lecture_mediane_s": 3.12,
+    "latence_lecture_p95_s": 69.16,
+    "latence_decision_mediane_s": 0.02,
+    "latence_decision_p95_s": 0.08,
+    "latence_seule_mediane_s": 3.6,
+    "latence_seule_p95_s": 4.86,
+    "latence_seule_lecture_mediane_s": 2.69,
+    "latence_seule_lecture_p95_s": 3.96,
+    "latence_seule_decision_mediane_s": 0.02,
+    "latence_seule_decision_p95_s": 0.04,
+    "latence_seule_nb": 10
+   },
+   "groupes": {
+    "auteur : claude": {
+     "n": 31,
+     "exactitude": 0.903,
+     "exactitude_stricte": 0.839,
+     "faux_couverts": 2,
+     "faux_refus": 0,
+     "taux_incertain": 0.129
+    },
+    "garantie : 2.1": {
+     "n": 3,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "garantie : 2.10": {
+     "n": 13,
+     "exactitude": 0.923,
+     "exactitude_stricte": 0.769,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.231
+    },
+    "garantie : 2.11": {
+     "n": 1,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "garantie : 2.3": {
+     "n": 2,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "garantie : 2.6": {
+     "n": 2,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "garantie : 2.7": {
+     "n": 5,
+     "exactitude": 0.8,
+     "exactitude_stricte": 0.8,
+     "faux_couverts": 1,
+     "faux_refus": 0,
+     "taux_incertain": 0.2
+    },
+    "garantie : 2.8": {
+     "n": 1,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "garantie : 2.9": {
+     "n": 3,
+     "exactitude": 0.667,
+     "exactitude_stricte": 0.667,
+     "faux_couverts": 1,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "garantie : aucune": {
+     "n": 1,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "thème : base": {
+     "n": 1,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "thème : hors_regles": {
+     "n": 9,
+     "exactitude": 0.889,
+     "exactitude_stricte": 0.889,
+     "faux_couverts": 1,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "thème : info_manquante": {
+     "n": 3,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.333
+    },
+    "thème : langue": {
+     "n": 4,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "thème : multi": {
+     "n": 2,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "thème : piege": {
+     "n": 16,
+     "exactitude": 0.875,
+     "exactitude_stricte": 0.75,
+     "faux_couverts": 2,
+     "faux_refus": 0,
+     "taux_incertain": 0.125
+    },
+    "thème : variante": {
+     "n": 4,
+     "exactitude": 0.75,
+     "exactitude_stricte": 0.75,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.25
+    }
+   },
+   "reponses": {
+    "velo-01": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "velo-02": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "velo-06": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "NON_COUVERT"
+    ],
+    "bougie-05": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "val-01": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "val-02": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "val-06": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "val-08": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "val-09": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "red-b01": [
+     "COUVERT",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "red-b02": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "red-b05": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g-l02": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g-l05": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g-l07": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "g-q04": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g-p03": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "g-p06": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "g-p09": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "g-h01": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g-h03": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g-h04": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g-h05": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g-h07": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g-m01": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g2-i06": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "g2-i17": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g2-p01": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g2-p03": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "g2-p08": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "g2-l01": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ]
+   },
+   "instables": [
+    "red-b01",
+    "velo-06"
+   ],
+   "executions": [
+    [
+     {
+      "id": "velo-01",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2698,
+       "decision": 6,
+       "total": 3560
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "velo"
+       ],
+       "lieux": [
+        "parties_communes"
+       ],
+       "circonstances": [
+        "fermeture=aucune",
+        "violence=non",
+        "vol_sur_personne=non",
+        "acces_voleur=sans_effraction",
+        "effraction=non"
+       ]
+      },
+      "avertissements": [
+       "effraction = non : non dit dans la déclaration, retiré",
+       "effraction = non : dit par acces_voleur = sans_effraction"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2177,
+       "decision": 82,
+       "total": 2868
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "velo"
+       ],
+       "lieux": [
+        "parties_communes"
+       ],
+       "circonstances": [
+        "fermeture=cle",
+        "effraction=oui"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Où se trouvaient les biens ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 4419,
+       "decision": 32,
+       "total": 4456
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "velo"
+       ],
+       "lieux": [],
+       "circonstances": [
+        "effraction=oui",
+        "vol_sur_personne=non",
+        "acces_voleur=sans_effraction",
+        "laisse_sans_surveillance=oui"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "bougie-05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3001,
+       "decision": 21,
+       "total": 4048
+      },
+      "faits_lus": {
+       "evenements": [
+        "incendie"
+       ],
+       "biens": [
+        "element_batiment"
+       ],
+       "lieux": [
+        "terrasse",
+        "logement"
+       ],
+       "circonstances": [
+        "absence=oui",
+        "flammes=oui",
+        "embrasement=oui"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "val-01",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Le non-respect de l'obligation de prévention a-t-il permis ou facilité le sinistre ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2906,
+       "decision": 3,
+       "total": 2911
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "appareil_informatique"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "fermeture=aucune",
+        "fenetres_fermees=non",
+        "portes_fermees=oui",
+        "vol_sur_personne=non",
+        "simple_disparition=non",
+        "absence=oui",
+        "auteur=tiers"
+       ]
+      },
+      "avertissements": [
+       "vérification écartée : retirer ces faits aurait fait couvrir (fermeture = aucune; fenetres_fermees = non)"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "val-02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 5364,
+       "decision": 8,
+       "total": 6755
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "bijoux"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "violence=non",
+        "auteur=personnel_prive",
+        "proprietaire=assure"
+       ]
+      },
+      "avertissements": [
+       "fermeture = cle : non dit dans la déclaration, retiré",
+       "serrure_surete = non : non dit dans la déclaration, retiré",
+       "effraction = non : non dit dans la déclaration, retiré",
+       "vol_sur_personne = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "val-06",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 5522,
+       "decision": 16,
+       "total": 6535
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "appareil_informatique"
+       ],
+       "lieux": [
+        "chez_reparateur"
+       ],
+       "circonstances": [
+        "depot_moins_30j=oui",
+        "effraction=oui"
+       ]
+      },
+      "avertissements": [
+       "vol_sur_personne = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "val-08",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 76764,
+       "decision": 16,
+       "total": 77830
+      },
+      "faits_lus": {
+       "evenements": [
+        "incendie"
+       ],
+       "biens": [
+        "element_batiment",
+        "mobilier",
+        "appareil_electromenager"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "flammes=oui",
+        "embrasement=oui"
+       ]
+      },
+      "avertissements": [
+       "chaleur_sans_feu = non : non dit dans la déclaration, retiré",
+       "intentionnel = non : non dit dans la déclaration, retiré",
+       "bien_a_l_origine_sinistre = oui : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "val-09",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 68882,
+       "decision": 13,
+       "total": 69021
+      },
+      "faits_lus": {
+       "evenements": [
+        "autre"
+       ],
+       "biens": [
+        "mobilier"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "flammes=non",
+        "embrasement=non",
+        "chaleur_sans_feu=oui"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ? (aucun/entretien_reparation → couvert ; autres_que_entretien_reparation → non couvert)",
+       "Des travaux (autres que nettoyage) sont-ils effectués sur les vitres ? (aucun/nettoyage → couvert ; autres_que_nettoyage → non couvert)",
+       "La vitre était-elle placée ? (oui → couvert ; non → non couvert)",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 70484,
+       "decision": 18,
+       "total": 71270
+      },
+      "faits_lus": {
+       "evenements": [
+        "bris"
+       ],
+       "biens": [
+        "vitre"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "type_dommage=bris"
+       ]
+      },
+      "avertissements": [
+       "effraction = non : non dit dans la déclaration, retiré",
+       "auteur = famille : non dit dans la déclaration, retiré",
+       "evenement = accident précisé en bris"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ? (aucun/entretien_reparation → couvert ; autres_que_entretien_reparation → non couvert)",
+       "Des travaux (autres que nettoyage) sont-ils effectués sur les vitres ? (aucun/nettoyage → couvert ; autres_que_nettoyage → non couvert)",
+       "Quel est le type de dommage ? (bris/felure/moisissure → couvert ; opacification_ou_perte_etancheite/rayure_ou_ecaillement → non couvert)",
+       "La vitre était-elle placée ? (oui → couvert ; non → non couvert)",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 70921,
+       "decision": 30,
+       "total": 72104
+      },
+      "faits_lus": {
+       "evenements": [
+        "bris"
+       ],
+       "biens": [
+        "table_cuisson_vitroceramique"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=assure"
+       ]
+      },
+      "avertissements": [
+       "evenement = accident précisé en bris"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b05",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ? (aucun/entretien_reparation → couvert ; autres_que_entretien_reparation → non couvert)",
+       "Des travaux (autres que nettoyage) sont-ils effectués sur les vitres ? (aucun/nettoyage → couvert ; autres_que_nettoyage → non couvert)",
+       "Quel est le type de dommage ? (bris/felure/moisissure → couvert ; opacification_ou_perte_etancheite/rayure_ou_ecaillement → non couvert)",
+       "La vitre était-elle placée ? (oui → couvert ; non → non couvert)",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2590,
+       "decision": 23,
+       "total": 3522
+      },
+      "faits_lus": {
+       "evenements": [
+        "bris"
+       ],
+       "biens": [
+        "miroir"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=assure"
+       ]
+      },
+      "avertissements": [
+       "evenement = accident précisé en bris"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3194,
+       "decision": 34,
+       "total": 4484
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "appareil_audiovisuel",
+        "appareil_informatique",
+        "velo"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "fermeture=cle",
+        "serrure_surete=oui",
+        "effraction=oui",
+        "violence=non",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "proprietaire=assure",
+        "plainte_deposee=oui",
+        "absence=oui"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ?",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?",
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2516,
+       "decision": 16,
+       "total": 3359
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "element_batiment",
+        "mobilier"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "cause_eau=fuite_installation",
+        "type_dommage=opacification_ou_perte_etancheite"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l07",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": null,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2608,
+       "decision": 50,
+       "total": 3413
+      },
+      "faits_lus": {
+       "evenements": [
+        "accident"
+       ],
+       "biens": [
+        "velo"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=famille"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-q04",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ?",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?",
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2083,
+       "decision": 48,
+       "total": 3060
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "element_batiment"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": []
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Quels biens sont endommagés ou volés ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2528,
+       "decision": 49,
+       "total": 2580
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "fermeture=cle",
+        "cles_a_proximite=oui",
+        "absence=oui",
+        "auteur=tiers"
+       ]
+      },
+      "avertissements": [
+       "effraction = non : non dit dans la déclaration, retiré",
+       "violence = non : non dit dans la déclaration, retiré",
+       "vol_sur_personne = non : non dit dans la déclaration, retiré",
+       "simple_disparition = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3049,
+       "decision": 212,
+       "total": 4201
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "element_batiment"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "cause_eau=debordement_recipient",
+        "auteur=assure"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p09",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2584,
+       "decision": 8,
+       "total": 3808
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "velo"
+       ],
+       "lieux": [
+        "casier"
+       ],
+       "circonstances": [
+        "effraction=oui",
+        "vol_sur_personne=non",
+        "acces_voleur=sans_effraction"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3862,
+       "decision": 16,
+       "total": 4804
+      },
+      "faits_lus": {
+       "evenements": [
+        "electricite"
+       ],
+       "biens": [
+        "appareil_electromenager",
+        "equipement_domotique"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "proprietaire=assure",
+        "usage_professionnel=non"
+       ]
+      },
+      "avertissements": [
+       "flammes = non : non dit dans la déclaration, retiré",
+       "embrasement = non : non dit dans la déclaration, retiré",
+       "chaleur_sans_feu = non : non dit dans la déclaration, retiré",
+       "cause_perte_alimentaire = coupure_soudaine_reseau : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h03",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ?",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?",
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3220,
+       "decision": 49,
+       "total": 4166
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "canalisation",
+        "mazout"
+       ],
+       "lieux": [
+        "cave"
+       ],
+       "circonstances": []
+      },
+      "avertissements": [
+       "cause_eau = fuite_installation : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h04",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Le bâtiment a-t-il été construit plus de 18 mois après la publication au Moniteur belge du classement de la zone comme zone à risque ? (non → couvert ; oui → non couvert)",
+       "S'agit-il d'une extension au sol d'un bien existant avant la date de classement de la zone à risque ? (non → couvert ; oui → non couvert)",
+       "La réparation des dommages est-elle organisée par des lois particulières ou conventions internationales ? (non → couvert ; oui → non couvert)",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2462,
+       "decision": 23,
+       "total": 3272
+      },
+      "faits_lus": {
+       "evenements": [
+        "catastrophe_naturelle",
+        "degat_eaux"
+       ],
+       "biens": [
+        "element_batiment",
+        "mobilier"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "cause_eau=inondation",
+        "residence_principale=oui"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Le bâtiment a-t-il été construit plus de 18 mois après la publication au Moniteur belge du classement de la zone comme zone à risque ? (non → couvert ; oui → non couvert)",
+       "S'agit-il d'une extension au sol d'un bien existant avant la date de classement de la zone à risque ? (non → couvert ; oui → non couvert)",
+       "La réparation des dommages est-elle organisée par des lois particulières ou conventions internationales ? (non → couvert ; oui → non couvert)",
+       "La construction était-elle délabrée ou en cours de démolition ?",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2074,
+       "decision": 22,
+       "total": 2935
+      },
+      "faits_lus": {
+       "evenements": [
+        "catastrophe_naturelle",
+        "degat_eaux"
+       ],
+       "biens": [
+        "element_batiment"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "cause_eau=inondation"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h07",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3275,
+       "decision": 29,
+       "total": 4843
+      },
+      "faits_lus": {
+       "evenements": [
+        "electricite"
+       ],
+       "biens": [
+        "animal"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "proprietaire=assure",
+        "usage_professionnel=non"
+       ]
+      },
+      "avertissements": [
+       "flammes = non : non dit dans la déclaration, retiré",
+       "embrasement = non : non dit dans la déclaration, retiré",
+       "chaleur_sans_feu = non : non dit dans la déclaration, retiré",
+       "intentionnel = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-m01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3036,
+       "decision": 39,
+       "total": 3971
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol",
+        "bris"
+       ],
+       "biens": [
+        "electronique",
+        "vitre"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "fermeture=cle",
+        "effraction=oui",
+        "violence=non",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "proprietaire=assure"
+       ]
+      },
+      "avertissements": [
+       "serrure_surete = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i06",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2735,
+       "decision": 7,
+       "total": 2745
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "element_batiment"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "absence=oui",
+        "cause_eau=gel",
+        "travaux_batiment=aucun",
+        "periode_gel=oui"
+       ]
+      },
+      "avertissements": [
+       "prevention_gel = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "g2-i17",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Le bâtiment était-il libre de toute occupation depuis plus de 90 jours au moment du sinistre ? (non → couvert ; oui → non couvert)",
+       "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Les dispositifs de protection antivol imposés ont-ils été installés, maintenus en bon état et utilisés en cas d'absence ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3314,
+       "decision": 22,
+       "total": 4214
+      },
+      "faits_lus": {
+       "evenements": [
+        "vandalisme"
+       ],
+       "biens": [
+        "element_batiment"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=tiers",
+        "intentionnel=oui",
+        "occupation_partielle=oui",
+        "graffiti_mur_exterieur=oui"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré",
+       "effraction = non : non dit dans la déclaration, retiré",
+       "sejour_temporaire = non : non dit dans la déclaration, retiré",
+       "materiel_jardin_range = inapplicable : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Qui est l'auteur ? (tiers → couvert ; assure/famille/locataire/personnel_prive → non couvert)",
+       "Le bâtiment était-il libre de toute occupation depuis plus de 90 jours au moment du sinistre ? (non → couvert ; oui → non couvert)",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Les dispositifs de protection antivol imposés ont-ils été installés, maintenus en bon état et utilisés en cas d'absence ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 36256,
+       "decision": 30,
+       "total": 37419
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "element_batiment"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "fermeture=cle",
+        "effraction=oui",
+        "absence=oui",
+        "portes_fermees=oui"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 21205,
+       "decision": 24,
+       "total": 21920
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "plantation"
+       ],
+       "lieux": [
+        "jardin"
+       ],
+       "circonstances": [
+        "violence=oui",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "proprietaire=assure"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré",
+       "effraction = non : non dit dans la déclaration, retiré",
+       "simple_disparition = non : non dit dans la déclaration, retiré",
+       "sejour_temporaire = non : non dit dans la déclaration, retiré",
+       "construction_close = non : non dit dans la déclaration, retiré",
+       "graffiti_mur_exterieur = non : non dit dans la déclaration, retiré",
+       "materiel_jardin_range = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p08",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 19168,
+       "decision": 18,
+       "total": 20195
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "appareil_electromenager",
+        "mobilier"
+       ],
+       "lieux": [
+        "terrasse",
+        "logement"
+       ],
+       "circonstances": [
+        "cause_eau=debordement_aquarium",
+        "type_dommage=opacification_ou_perte_etancheite"
+       ]
+      },
+      "avertissements": [
+       "travaux_batiment = aucun : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-l01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 19070,
+       "decision": 15,
+       "total": 20093
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "electronique",
+        "denrees_alimentaires"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "effraction=oui",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "plainte_deposee=oui"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     }
+    ],
+    [
+     {
+      "id": "velo-01",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2602,
+       "decision": 49,
+       "total": 3333
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "velo"
+       ],
+       "lieux": [
+        "parties_communes"
+       ],
+       "circonstances": [
+        "fermeture=aucune",
+        "violence=non",
+        "vol_sur_personne=non",
+        "acces_voleur=sans_effraction",
+        "effraction=non"
+       ]
+      },
+      "avertissements": [
+       "effraction = non : non dit dans la déclaration, retiré",
+       "effraction = non : dit par acces_voleur = sans_effraction"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2452,
+       "decision": 9,
+       "total": 3307
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "velo"
+       ],
+       "lieux": [
+        "parties_communes"
+       ],
+       "circonstances": [
+        "fermeture=cle",
+        "effraction=oui"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Où se trouvaient les biens ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2959,
+       "decision": 30,
+       "total": 2994
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "velo"
+       ],
+       "lieux": [],
+       "circonstances": [
+        "effraction=oui",
+        "vol_sur_personne=non",
+        "acces_voleur=sans_effraction"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "bougie-05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3244,
+       "decision": 15,
+       "total": 4669
+      },
+      "faits_lus": {
+       "evenements": [
+        "incendie"
+       ],
+       "biens": [
+        "element_batiment"
+       ],
+       "lieux": [
+        "terrasse",
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=assure",
+        "absence=oui",
+        "flammes=oui",
+        "embrasement=oui",
+        "intentionnel=non",
+        "bien_a_l_origine_sinistre=non"
+       ]
+      },
+      "avertissements": [
+       "chaleur_sans_feu = non : non dit dans la déclaration, retiré",
+       "manque_entretien = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "val-01",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Le non-respect de l'obligation de prévention a-t-il permis ou facilité le sinistre ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3122,
+       "decision": 213,
+       "total": 3336
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "appareil_informatique"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "fermeture=aucune",
+        "fenetres_fermees=non",
+        "portes_fermees=oui",
+        "vol_sur_personne=non",
+        "simple_disparition=non",
+        "absence=oui",
+        "auteur=tiers"
+       ]
+      },
+      "avertissements": [
+       "vérification écartée : retirer ces faits aurait fait couvrir (fermeture = aucune; fenetres_fermees = non; simple_disparition = non)"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "val-02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3026,
+       "decision": 85,
+       "total": 3870
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "bijoux"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=personnel_prive",
+        "proprietaire=assure",
+        "vol_sur_personne=non"
+       ]
+      },
+      "avertissements": [
+       "fermeture = cle : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "val-06",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2737,
+       "decision": 42,
+       "total": 3843
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "appareil_informatique"
+       ],
+       "lieux": [
+        "chez_reparateur"
+       ],
+       "circonstances": [
+        "depot_moins_30j=oui",
+        "effraction=oui"
+       ]
+      },
+      "avertissements": [
+       "vol_sur_personne = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "val-08",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3604,
+       "decision": 16,
+       "total": 4509
+      },
+      "faits_lus": {
+       "evenements": [
+        "incendie"
+       ],
+       "biens": [
+        "element_batiment",
+        "mobilier",
+        "appareil_electromenager"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "flammes=oui",
+        "embrasement=oui"
+       ]
+      },
+      "avertissements": [
+       "chaleur_sans_feu = non : non dit dans la déclaration, retiré",
+       "bien_a_l_origine_sinistre = oui : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "val-09",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3246,
+       "decision": 9,
+       "total": 3713
+      },
+      "faits_lus": {
+       "evenements": [
+        "autre"
+       ],
+       "biens": [
+        "mobilier"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "flammes=non",
+        "embrasement=non",
+        "chaleur_sans_feu=oui"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b01",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Le dommage a-t-il été causé volontairement par l'assuré (ou avec sa complicité) ?",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2888,
+       "decision": 3,
+       "total": 3611
+      },
+      "faits_lus": {
+       "evenements": [
+        "bris"
+       ],
+       "biens": [
+        "vitre"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "effraction=non",
+        "auteur=famille",
+        "proprietaire=assure",
+        "travaux_batiment=aucun",
+        "travaux_vitres=aucun",
+        "vitre_placee=oui",
+        "type_dommage=bris",
+        "intentionnel=oui"
+       ]
+      },
+      "avertissements": [
+       "evenement = accident précisé en bris",
+       "vérification écartée : retirer ces faits aurait fait couvrir (effraction = non; auteur = famille; travaux_batiment = aucun; travaux_vitres = aucun; intentionnel = oui)",
+       "intentionnel : fait décisif non confirmé par la déclaration"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ? (aucun/entretien_reparation → couvert ; autres_que_entretien_reparation → non couvert)",
+       "Des travaux (autres que nettoyage) sont-ils effectués sur les vitres ? (aucun/nettoyage → couvert ; autres_que_nettoyage → non couvert)",
+       "Quel est le type de dommage ? (bris/felure/moisissure → couvert ; opacification_ou_perte_etancheite/rayure_ou_ecaillement → non couvert)",
+       "La vitre était-elle placée ? (oui → couvert ; non → non couvert)",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2406,
+       "decision": 26,
+       "total": 3619
+      },
+      "faits_lus": {
+       "evenements": [
+        "bris"
+       ],
+       "biens": [
+        "table_cuisson_vitroceramique"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=assure"
+       ]
+      },
+      "avertissements": [
+       "evenement = accident précisé en bris"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b05",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ? (aucun/entretien_reparation → couvert ; autres_que_entretien_reparation → non couvert)",
+       "Des travaux (autres que nettoyage) sont-ils effectués sur les vitres ? (aucun/nettoyage → couvert ; autres_que_nettoyage → non couvert)",
+       "Quel est le type de dommage ? (bris/felure/moisissure → couvert ; opacification_ou_perte_etancheite/rayure_ou_ecaillement → non couvert)",
+       "La vitre était-elle placée ? (oui → couvert ; non → non couvert)",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2251,
+       "decision": 26,
+       "total": 3072
+      },
+      "faits_lus": {
+       "evenements": [
+        "bris"
+       ],
+       "biens": [
+        "miroir"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=assure"
+       ]
+      },
+      "avertissements": [
+       "evenement = accident précisé en bris"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3419,
+       "decision": 38,
+       "total": 36809
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "appareil_audiovisuel",
+        "appareil_informatique",
+        "velo"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "fermeture=cle",
+        "serrure_surete=oui",
+        "effraction=oui",
+        "violence=non",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "proprietaire=assure",
+        "plainte_deposee=oui"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ?",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?",
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2370,
+       "decision": 22,
+       "total": 37147
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "element_batiment",
+        "mobilier"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "cause_eau=fuite_installation",
+        "type_dommage=opacification_ou_perte_etancheite"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l07",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": null,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2154,
+       "decision": 8,
+       "total": 3075
+      },
+      "faits_lus": {
+       "evenements": [
+        "accident"
+       ],
+       "biens": [
+        "velo"
+       ],
+       "lieux": [],
+       "circonstances": [
+        "auteur=famille"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-q04",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ?",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?",
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 35211,
+       "decision": 60,
+       "total": 36190
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "element_batiment"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "type_dommage=opacification_ou_perte_etancheite"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Quels biens sont endommagés ou volés ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 36036,
+       "decision": 77,
+       "total": 36116
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "cles_a_proximite=oui",
+        "effraction=non",
+        "absence=oui",
+        "acces_voleur=cles_volees"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2521,
+       "decision": 3,
+       "total": 3239
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "element_batiment"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=assure",
+        "cause_eau=debordement_recipient"
+       ]
+      },
+      "avertissements": [
+       "type_dommage = opacification_ou_perte_etancheite : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p09",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2570,
+       "decision": 9,
+       "total": 3715
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "velo"
+       ],
+       "lieux": [
+        "casier"
+       ],
+       "circonstances": [
+        "effraction=oui",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "proprietaire=assure",
+        "simple_disparition=non"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré",
+       "acces_voleur = sans_effraction : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2971,
+       "decision": 15,
+       "total": 3916
+      },
+      "faits_lus": {
+       "evenements": [
+        "electricite"
+       ],
+       "biens": [
+        "appareil_electromenager",
+        "equipement_domotique"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "proprietaire=assure",
+        "usage_professionnel=non"
+       ]
+      },
+      "avertissements": [
+       "flammes = non : non dit dans la déclaration, retiré",
+       "embrasement = non : non dit dans la déclaration, retiré",
+       "chaleur_sans_feu = non : non dit dans la déclaration, retiré",
+       "intentionnel = non : non dit dans la déclaration, retiré",
+       "manque_entretien = non : non dit dans la déclaration, retiré",
+       "cause_perte_alimentaire = coupure_soudaine_reseau : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h03",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ?",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?",
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2951,
+       "decision": 48,
+       "total": 3702
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "mazout",
+        "canalisation"
+       ],
+       "lieux": [
+        "cave"
+       ],
+       "circonstances": []
+      },
+      "avertissements": [
+       "cause_eau = fuite_installation : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h04",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Le bâtiment a-t-il été construit plus de 18 mois après la publication au Moniteur belge du classement de la zone comme zone à risque ? (non → couvert ; oui → non couvert)",
+       "S'agit-il d'une extension au sol d'un bien existant avant la date de classement de la zone à risque ? (non → couvert ; oui → non couvert)",
+       "La réparation des dommages est-elle organisée par des lois particulières ou conventions internationales ? (non → couvert ; oui → non couvert)",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2481,
+       "decision": 18,
+       "total": 3835
+      },
+      "faits_lus": {
+       "evenements": [
+        "catastrophe_naturelle",
+        "degat_eaux"
+       ],
+       "biens": [
+        "element_batiment",
+        "mobilier"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "cause_eau=inondation",
+        "residence_principale=oui"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Le bâtiment a-t-il été construit plus de 18 mois après la publication au Moniteur belge du classement de la zone comme zone à risque ? (non → couvert ; oui → non couvert)",
+       "S'agit-il d'une extension au sol d'un bien existant avant la date de classement de la zone à risque ? (non → couvert ; oui → non couvert)",
+       "La réparation des dommages est-elle organisée par des lois particulières ou conventions internationales ? (non → couvert ; oui → non couvert)",
+       "La construction était-elle délabrée ou en cours de démolition ?",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2501,
+       "decision": 20,
+       "total": 4094
+      },
+      "faits_lus": {
+       "evenements": [
+        "catastrophe_naturelle",
+        "degat_eaux"
+       ],
+       "biens": [
+        "element_batiment"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "cause_eau=inondation"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h07",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2887,
+       "decision": 14,
+       "total": 3900
+      },
+      "faits_lus": {
+       "evenements": [
+        "electricite"
+       ],
+       "biens": [
+        "animal"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "proprietaire=assure",
+        "usage_professionnel=non"
+       ]
+      },
+      "avertissements": [
+       "flammes = non : non dit dans la déclaration, retiré",
+       "embrasement = non : non dit dans la déclaration, retiré",
+       "chaleur_sans_feu = non : non dit dans la déclaration, retiré",
+       "intentionnel = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-m01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2708,
+       "decision": 16,
+       "total": 10543
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol",
+        "bris"
+       ],
+       "biens": [
+        "electronique",
+        "vitre"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "fermeture=cle",
+        "effraction=oui",
+        "violence=non",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "proprietaire=assure"
+       ]
+      },
+      "avertissements": [
+       "serrure_surete = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i06",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ?",
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 9827,
+       "decision": 4,
+       "total": 10701
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "canalisation",
+        "element_batiment"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "absence=oui",
+        "cause_eau=gel",
+        "periode_gel=oui",
+        "prevention_gel=non"
+       ]
+      },
+      "avertissements": [
+       "prevention_gel : fait décisif non confirmé par la déclaration"
+      ],
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "g2-i17",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Qui est l'auteur ? (tiers → couvert ; assure/famille/locataire/personnel_prive → non couvert)",
+       "Le bâtiment était-il libre de toute occupation depuis plus de 90 jours au moment du sinistre ? (non → couvert ; oui → non couvert)",
+       "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Les dispositifs de protection antivol imposés ont-ils été installés, maintenus en bon état et utilisés en cas d'absence ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 76095,
+       "decision": 39,
+       "total": 77404
+      },
+      "faits_lus": {
+       "evenements": [
+        "vandalisme"
+       ],
+       "biens": [
+        "element_batiment"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "effraction=non",
+        "acces_voleur=sans_effraction",
+        "graffiti_mur_exterieur=oui"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 69154,
+       "decision": 20,
+       "total": 70072
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "objet_divers"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "fermeture=cle",
+        "effraction=oui",
+        "absence=oui",
+        "portes_fermees=oui",
+        "acces_voleur=sans_effraction"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 67951,
+       "decision": 45,
+       "total": 68767
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "plantation"
+       ],
+       "lieux": [
+        "jardin"
+       ],
+       "circonstances": [
+        "simple_disparition=non"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré",
+       "vol_sur_personne = oui : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p08",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 67989,
+       "decision": 22,
+       "total": 69536
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "appareil_electromenager",
+        "mobilier"
+       ],
+       "lieux": [
+        "terrasse",
+        "logement"
+       ],
+       "circonstances": [
+        "cause_eau=debordement_aquarium"
+       ]
+      },
+      "avertissements": [
+       "type_dommage = moisissure : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-l01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3882,
+       "decision": 21,
+       "total": 4862
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "electronique",
+        "valeurs"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "effraction=oui",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "plainte_deposee=oui"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     }
+    ],
+    [
+     {
+      "id": "velo-01",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2854,
+       "decision": 61,
+       "total": 4142
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "velo"
+       ],
+       "lieux": [
+        "parties_communes"
+       ],
+       "circonstances": [
+        "fermeture=aucune",
+        "violence=non",
+        "vol_sur_personne=non",
+        "acces_voleur=sans_effraction",
+        "effraction=non"
+       ]
+      },
+      "avertissements": [
+       "effraction = non : non dit dans la déclaration, retiré",
+       "effraction = non : dit par acces_voleur = sans_effraction"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3133,
+       "decision": 43,
+       "total": 4224
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "velo"
+       ],
+       "lieux": [
+        "parties_communes"
+       ],
+       "circonstances": [
+        "fermeture=cle",
+        "effraction=oui"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "velo-06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2637,
+       "decision": 13,
+       "total": 4425
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "velo"
+       ],
+       "lieux": [
+        "voie_publique"
+       ],
+       "circonstances": [
+        "effraction=oui",
+        "vol_sur_personne=non",
+        "acces_voleur=sans_effraction",
+        "laisse_sans_surveillance=oui"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "bougie-05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3055,
+       "decision": 77,
+       "total": 4378
+      },
+      "faits_lus": {
+       "evenements": [
+        "incendie"
+       ],
+       "biens": [
+        "element_batiment"
+       ],
+       "lieux": [
+        "terrasse",
+        "logement"
+       ],
+       "circonstances": [
+        "absence=oui",
+        "flammes=oui",
+        "embrasement=oui"
+       ]
+      },
+      "avertissements": [
+       "chaleur_sans_feu = non : non dit dans la déclaration, retiré",
+       "intentionnel = non : non dit dans la déclaration, retiré",
+       "manque_entretien = non : non dit dans la déclaration, retiré",
+       "bien_a_l_origine_sinistre = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "val-01",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Le non-respect de l'obligation de prévention a-t-il permis ou facilité le sinistre ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3039,
+       "decision": 21,
+       "total": 3061
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "appareil_informatique"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "fermeture=aucune",
+        "effraction=non",
+        "violence=non",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "proprietaire=assure",
+        "simple_disparition=non",
+        "absence=oui",
+        "portes_fermees=oui",
+        "fenetres_fermees=non",
+        "acces_voleur=sans_effraction"
+       ]
+      },
+      "avertissements": [
+       "vérification écartée : retirer ces faits aurait fait couvrir (fermeture = aucune; effraction = non; violence = non; simple_disparition = non; fenetres_fermees = non)"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "val-02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 4113,
+       "decision": 88,
+       "total": 4933
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "bijoux"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "vol_sur_personne=non",
+        "auteur=personnel_prive",
+        "proprietaire=assure"
+       ]
+      },
+      "avertissements": [
+       "fermeture = cle : non dit dans la déclaration, retiré",
+       "serrure_surete = non : non dit dans la déclaration, retiré",
+       "effraction = non : non dit dans la déclaration, retiré",
+       "violence = non : non dit dans la déclaration, retiré",
+       "simple_disparition = non : non dit dans la déclaration, retiré",
+       "acces_voleur = cles_volees : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "val-06",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2389,
+       "decision": 16,
+       "total": 3439
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "appareil_informatique"
+       ],
+       "lieux": [
+        "chez_reparateur"
+       ],
+       "circonstances": [
+        "depot_moins_30j=oui",
+        "effraction=oui"
+       ]
+      },
+      "avertissements": [
+       "vol_sur_personne = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "val-08",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3745,
+       "decision": 16,
+       "total": 4852
+      },
+      "faits_lus": {
+       "evenements": [
+        "incendie"
+       ],
+       "biens": [
+        "element_batiment",
+        "mobilier",
+        "appareil_electromenager"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "flammes=oui",
+        "embrasement=oui"
+       ]
+      },
+      "avertissements": [
+       "chaleur_sans_feu = non : non dit dans la déclaration, retiré",
+       "intentionnel = non : non dit dans la déclaration, retiré",
+       "bien_a_l_origine_sinistre = oui : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "val-09",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 35652,
+       "decision": 8,
+       "total": 35775
+      },
+      "faits_lus": {
+       "evenements": [
+        "autre"
+       ],
+       "biens": [
+        "mobilier"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "flammes=non",
+        "chaleur_sans_feu=oui"
+       ]
+      },
+      "avertissements": [
+       "embrasement = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b01",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Le dommage a-t-il été causé volontairement par l'assuré (ou avec sa complicité) ?",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 35453,
+       "decision": 3,
+       "total": 36178
+      },
+      "faits_lus": {
+       "evenements": [
+        "bris"
+       ],
+       "biens": [
+        "vitre"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=famille",
+        "proprietaire=assure",
+        "travaux_batiment=aucun",
+        "travaux_vitres=aucun",
+        "vitre_placee=oui",
+        "type_dommage=bris",
+        "intentionnel=oui"
+       ]
+      },
+      "avertissements": [
+       "effraction = non : non dit dans la déclaration, retiré",
+       "evenement = accident précisé en bris",
+       "intentionnel : fait décisif non confirmé par la déclaration"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ? (aucun/entretien_reparation → couvert ; autres_que_entretien_reparation → non couvert)",
+       "Des travaux (autres que nettoyage) sont-ils effectués sur les vitres ? (aucun/nettoyage → couvert ; autres_que_nettoyage → non couvert)",
+       "Quel est le type de dommage ? (bris/felure/moisissure → couvert ; opacification_ou_perte_etancheite/rayure_ou_ecaillement → non couvert)",
+       "La vitre était-elle placée ? (oui → couvert ; non → non couvert)",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 19688,
+       "decision": 27,
+       "total": 20495
+      },
+      "faits_lus": {
+       "evenements": [
+        "bris"
+       ],
+       "biens": [
+        "table_cuisson_vitroceramique"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=assure"
+       ]
+      },
+      "avertissements": [
+       "evenement = accident précisé en bris"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "red-b05",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ? (aucun/entretien_reparation → couvert ; autres_que_entretien_reparation → non couvert)",
+       "Des travaux (autres que nettoyage) sont-ils effectués sur les vitres ? (aucun/nettoyage → couvert ; autres_que_nettoyage → non couvert)",
+       "Quel est le type de dommage ? (bris/felure/moisissure → couvert ; opacification_ou_perte_etancheite/rayure_ou_ecaillement → non couvert)",
+       "La vitre était-elle placée ? (oui → couvert ; non → non couvert)",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 35662,
+       "decision": 33,
+       "total": 36454
+      },
+      "faits_lus": {
+       "evenements": [
+        "bris"
+       ],
+       "biens": [
+        "miroir"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=assure"
+       ]
+      },
+      "avertissements": [
+       "evenement = accident précisé en bris"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l02",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3296,
+       "decision": 21,
+       "total": 4260
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "appareil_audiovisuel",
+        "appareil_informatique",
+        "velo"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "fermeture=cle",
+        "serrure_surete=oui",
+        "effraction=oui",
+        "violence=non",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "proprietaire=assure",
+        "plainte_deposee=oui",
+        "absence=oui"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ?",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?",
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2714,
+       "decision": 20,
+       "total": 3699
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "element_batiment",
+        "mobilier"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "cause_eau=fuite_installation",
+        "type_dommage=opacification_ou_perte_etancheite"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-l07",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": null,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2836,
+       "decision": 13,
+       "total": 3539
+      },
+      "faits_lus": {
+       "evenements": [
+        "accident"
+       ],
+       "biens": [
+        "velo"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=famille"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-q04",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ?",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?",
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2571,
+       "decision": 49,
+       "total": 3799
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "element_batiment"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "type_dommage=opacification_ou_perte_etancheite"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Quels biens sont endommagés ou volés ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3548,
+       "decision": 49,
+       "total": 3600
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "cles_a_proximite=oui",
+        "absence=oui",
+        "acces_voleur=cles_volees"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 5356,
+       "decision": 6,
+       "total": 6009
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "element_batiment"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "cause_eau=debordement_recipient"
+       ]
+      },
+      "avertissements": [
+       "auteur = assure : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-p09",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 43346,
+       "decision": 8,
+       "total": 44375
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "velo"
+       ],
+       "lieux": [
+        "casier"
+       ],
+       "circonstances": [
+        "vol_sur_personne=non",
+        "proprietaire=assure",
+        "simple_disparition=non",
+        "acces_voleur=sans_effraction",
+        "effraction=non"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré",
+       "auteur = tiers : non dit dans la déclaration, retiré",
+       "effraction = non : dit par acces_voleur = sans_effraction"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 43445,
+       "decision": 21,
+       "total": 44256
+      },
+      "faits_lus": {
+       "evenements": [
+        "electricite"
+       ],
+       "biens": [
+        "appareil_electromenager",
+        "equipement_domotique"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "proprietaire=assure",
+        "cause_perte_alimentaire=coupure_soudaine_reseau"
+       ]
+      },
+      "avertissements": [
+       "flammes = non : non dit dans la déclaration, retiré",
+       "embrasement = non : non dit dans la déclaration, retiré",
+       "chaleur_sans_feu = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h03",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ?",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?",
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 130030,
+       "decision": 19,
+       "total": 130972
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "mazout",
+        "element_batiment"
+       ],
+       "lieux": [
+        "cave"
+       ],
+       "circonstances": [
+        "cause_eau=fuite_installation"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h04",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Le bâtiment a-t-il été construit plus de 18 mois après la publication au Moniteur belge du classement de la zone comme zone à risque ? (non → couvert ; oui → non couvert)",
+       "S'agit-il d'une extension au sol d'un bien existant avant la date de classement de la zone à risque ? (non → couvert ; oui → non couvert)",
+       "La réparation des dommages est-elle organisée par des lois particulières ou conventions internationales ? (non → couvert ; oui → non couvert)",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 38786,
+       "decision": 15,
+       "total": 39659
+      },
+      "faits_lus": {
+       "evenements": [
+        "catastrophe_naturelle",
+        "degat_eaux"
+       ],
+       "biens": [
+        "element_batiment",
+        "mobilier"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "cause_eau=inondation",
+        "residence_principale=oui"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Le bâtiment a-t-il été construit plus de 18 mois après la publication au Moniteur belge du classement de la zone comme zone à risque ? (non → couvert ; oui → non couvert)",
+       "S'agit-il d'une extension au sol d'un bien existant avant la date de classement de la zone à risque ? (non → couvert ; oui → non couvert)",
+       "La réparation des dommages est-elle organisée par des lois particulières ou conventions internationales ? (non → couvert ; oui → non couvert)",
+       "La construction était-elle délabrée ou en cours de démolition ?",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2582,
+       "decision": 19,
+       "total": 3296
+      },
+      "faits_lus": {
+       "evenements": [
+        "catastrophe_naturelle",
+        "degat_eaux"
+       ],
+       "biens": [
+        "element_batiment"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "cause_eau=inondation"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-h07",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2693,
+       "decision": 14,
+       "total": 3760
+      },
+      "faits_lus": {
+       "evenements": [
+        "electricite"
+       ],
+       "biens": [
+        "animal"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "proprietaire=assure",
+        "usage_professionnel=non"
+       ]
+      },
+      "avertissements": [
+       "flammes = non : non dit dans la déclaration, retiré",
+       "embrasement = non : non dit dans la déclaration, retiré",
+       "chaleur_sans_feu = non : non dit dans la déclaration, retiré",
+       "intentionnel = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g-m01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2767,
+       "decision": 49,
+       "total": 3660
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol",
+        "bris"
+       ],
+       "biens": [
+        "electronique",
+        "vitre"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "effraction=oui",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "proprietaire=assure"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-i06",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3157,
+       "decision": 10,
+       "total": 3173
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "canalisation",
+        "element_batiment"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "absence=oui",
+        "cause_eau=gel",
+        "travaux_batiment=aucun",
+        "periode_gel=oui"
+       ]
+      },
+      "avertissements": [
+       "prevention_gel = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": 1.0
+     },
+     {
+      "id": "g2-i17",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Le bâtiment était-il libre de toute occupation depuis plus de 90 jours au moment du sinistre ? (non → couvert ; oui → non couvert)",
+       "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?",
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Les dispositifs de protection antivol imposés ont-ils été installés, maintenus en bon état et utilisés en cas d'absence ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3786,
+       "decision": 40,
+       "total": 4946
+      },
+      "faits_lus": {
+       "evenements": [
+        "vandalisme"
+       ],
+       "biens": [
+        "element_batiment"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=tiers",
+        "intentionnel=oui",
+        "occupation_partielle=oui",
+        "graffiti_mur_exterieur=oui"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré",
+       "effraction = non : non dit dans la déclaration, retiré",
+       "manque_entretien = non : non dit dans la déclaration, retiré",
+       "sejour_temporaire = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2970,
+       "decision": 25,
+       "total": 3911
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "objet_divers"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "fermeture=cle",
+        "effraction=oui",
+        "absence=oui",
+        "portes_fermees=oui",
+        "acces_voleur=sans_effraction"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p03",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3929,
+       "decision": 11,
+       "total": 70314
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "plantation"
+       ],
+       "lieux": [
+        "jardin"
+       ],
+       "circonstances": [
+        "violence=oui",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "proprietaire=assure",
+        "type_dommage=bris"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré",
+       "effraction = non : non dit dans la déclaration, retiré",
+       "simple_disparition = non : non dit dans la déclaration, retiré",
+       "sejour_temporaire = non : non dit dans la déclaration, retiré",
+       "construction_close = non : non dit dans la déclaration, retiré",
+       "graffiti_mur_exterieur = non : non dit dans la déclaration, retiré",
+       "materiel_jardin_range = non : non dit dans la déclaration, retiré",
+       "acces_voleur = sans_effraction : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-p08",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2246,
+       "decision": 71,
+       "total": 68783
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "appareil_electromenager",
+        "mobilier"
+       ],
+       "lieux": [
+        "terrasse",
+        "logement"
+       ],
+       "circonstances": [
+        "cause_eau=debordement_aquarium",
+        "type_dommage=moisissure"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "g2-l01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+       "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 69160,
+       "decision": 21,
+       "total": 70008
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "electronique",
+        "valeurs"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "effraction=oui",
+        "violence=non",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "proprietaire=assure",
+        "plainte_deposee=oui"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré",
+       "acces_voleur = sans_effraction : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     }
+    ]
+   ]
+  },
+  "lecture": {
+   "metriques": {
+    "rappel_faits": 0.866,
+    "cas_avec_contradiction": 5,
+    "cas_avec_fait_vague": 1,
+    "cas_avec_fait_en_trop": 27,
+    "cas_avec_fait_sans_appui": 20
+   },
+   "cas": [
+    {
+     "id": "velo-01",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "acces_voleur = sans_effraction",
+      "violence = non"
+     ],
+     "sans_appui": [
+      "effraction = non"
+     ]
+    },
+    {
+     "id": "velo-02",
+     "rappel": 0.833,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": []
+    },
+    {
+     "id": "velo-06",
+     "rappel": 0.556,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "fermeture = cadenas",
+      "lieu = voie_publique",
+      "violence = non"
+     ],
+     "en_trop": [
+      "acces_voleur = sans_effraction",
+      "effraction = oui",
+      "laisse_sans_surveillance = oui"
+     ],
+     "sans_appui": [
+      "fermeture = aucune"
+     ]
+    },
+    {
+     "id": "bougie-05",
+     "rappel": 0.875,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "auteur = assure",
+      "bien_a_l_origine_sinistre = non",
+      "intentionnel = non"
+     ],
+     "sans_appui": [
+      "bien_a_l_origine_sinistre = non",
+      "chaleur_sans_feu = non",
+      "intentionnel = non",
+      "manque_entretien = non"
+     ]
+    },
+    {
+     "id": "val-01",
+     "rappel": 0.917,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "effraction = non"
+     ],
+     "en_trop": [
+      "acces_voleur = sans_effraction",
+      "auteur = tiers",
+      "fermeture = aucune",
+      "proprietaire = assure",
+      "simple_disparition = non",
+      "violence = non"
+     ],
+     "sans_appui": []
+    },
+    {
+     "id": "val-02",
+     "rappel": 0.778,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "effraction = non",
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [
+      "proprietaire = assure",
+      "violence = non"
+     ],
+     "sans_appui": [
+      "acces_voleur = cles_volees",
+      "effraction = non",
+      "fermeture = cle",
+      "serrure_surete = non",
+      "simple_disparition = non",
+      "violence = non",
+      "vol_sur_personne = non"
+     ]
+    },
+    {
+     "id": "val-06",
+     "rappel": 0.833,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "vol_sur_personne = non"
+     ],
+     "en_trop": [],
+     "sans_appui": [
+      "vol_sur_personne = non"
+     ]
+    },
+    {
+     "id": "val-08",
+     "rappel": 0.833,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": [
+      "bien_a_l_origine_sinistre = oui",
+      "chaleur_sans_feu = non",
+      "intentionnel = non"
+     ]
+    },
+    {
+     "id": "val-09",
+     "rappel": 0.733,
+     "contradictions": [
+      "bien : objet_divers lu mobilier"
+     ],
+     "vagues": [],
+     "manques": [
+      "embrasement = non"
+     ],
+     "en_trop": [
+      "chaleur_sans_feu = oui"
+     ],
+     "sans_appui": [
+      "embrasement = non"
+     ]
+    },
+    {
+     "id": "red-b01",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "auteur = famille",
+      "effraction = non",
+      "intentionnel = oui",
+      "proprietaire = assure",
+      "travaux_batiment = aucun",
+      "travaux_vitres = aucun",
+      "type_dommage = bris",
+      "vitre_placee = oui"
+     ],
+     "sans_appui": [
+      "auteur = famille",
+      "effraction = non"
+     ]
+    },
+    {
+     "id": "red-b02",
+     "rappel": 0.75,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "type_dommage = felure"
+     ],
+     "en_trop": [
+      "auteur = assure"
+     ],
+     "sans_appui": []
+    },
+    {
+     "id": "red-b05",
+     "rappel": 0.75,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "vitre_placee = non"
+     ],
+     "en_trop": [
+      "auteur = assure"
+     ],
+     "sans_appui": []
+    },
+    {
+     "id": "g-l02",
+     "rappel": 0.944,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "absence = oui"
+     ],
+     "en_trop": [
+      "auteur = tiers",
+      "fermeture = cle",
+      "plainte_deposee = oui",
+      "proprietaire = assure",
+      "serrure_surete = oui",
+      "violence = non",
+      "vol_sur_personne = non"
+     ],
+     "sans_appui": []
+    },
+    {
+     "id": "g-l05",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "type_dommage = opacification_ou_perte_etancheite"
+     ],
+     "sans_appui": []
+    },
+    {
+     "id": "g-l07",
+     "rappel": 0.667,
+     "contradictions": [
+      "evenement : autre lu accident"
+     ],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "lieu = logement"
+     ],
+     "sans_appui": []
+    },
+    {
+     "id": "g-q04",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "type_dommage = opacification_ou_perte_etancheite"
+     ],
+     "sans_appui": []
+    },
+    {
+     "id": "g-p03",
+     "rappel": 0.619,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [
+      "bien = objet_divers",
+      "effraction = non",
+      "portes_fermees = oui"
+     ],
+     "en_trop": [
+      "acces_voleur = cles_volees",
+      "auteur = tiers",
+      "fermeture = cle"
+     ],
+     "sans_appui": [
+      "effraction = non",
+      "fermeture = aucune",
+      "simple_disparition = non",
+      "violence = non",
+      "vol_sur_personne = non"
+     ]
+    },
+    {
+     "id": "g-p06",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "auteur = assure"
+     ],
+     "sans_appui": [
+      "auteur = assure",
+      "type_dommage = opacification_ou_perte_etancheite"
+     ]
+    },
+    {
+     "id": "g-p09",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "acces_voleur = sans_effraction",
+      "auteur = tiers",
+      "effraction = non",
+      "effraction = oui",
+      "proprietaire = assure",
+      "simple_disparition = non",
+      "vol_sur_personne = non"
+     ],
+     "sans_appui": [
+      "acces_voleur = sans_effraction",
+      "auteur = tiers",
+      "fermeture = aucune"
+     ]
+    },
+    {
+     "id": "g-h01",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "cause_perte_alimentaire = coupure_soudaine_reseau",
+      "proprietaire = assure",
+      "usage_professionnel = non"
+     ],
+     "sans_appui": [
+      "cause_perte_alimentaire = coupure_soudaine_reseau",
+      "chaleur_sans_feu = non",
+      "embrasement = non",
+      "flammes = non",
+      "intentionnel = non",
+      "manque_entretien = non"
+     ]
+    },
+    {
+     "id": "g-h03",
+     "rappel": 0.444,
+     "contradictions": [
+      "bien : element_batiment lu canalisation/mazout",
+      "evenement : mazout lu degat_eaux"
+     ],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "cause_eau = fuite_installation"
+     ],
+     "sans_appui": [
+      "cause_eau = fuite_installation"
+     ]
+    },
+    {
+     "id": "g-h04",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "residence_principale = oui"
+     ],
+     "sans_appui": []
+    },
+    {
+     "id": "g-h05",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [],
+     "sans_appui": []
+    },
+    {
+     "id": "g-h07",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "proprietaire = assure",
+      "usage_professionnel = non"
+     ],
+     "sans_appui": [
+      "chaleur_sans_feu = non",
+      "embrasement = non",
+      "flammes = non",
+      "intentionnel = non"
+     ]
+    },
+    {
+     "id": "g-m01",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "auteur = tiers",
+      "fermeture = cle",
+      "proprietaire = assure",
+      "violence = non",
+      "vol_sur_personne = non"
+     ],
+     "sans_appui": [
+      "fermeture = aucune",
+      "serrure_surete = non"
+     ]
+    },
+    {
+     "id": "g2-i06",
+     "rappel": 0.944,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "periode_gel = oui",
+      "prevention_gel = non",
+      "travaux_batiment = aucun"
+     ],
+     "sans_appui": [
+      "prevention_gel = non"
+     ]
+    },
+    {
+     "id": "g2-i17",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "acces_voleur = sans_effraction",
+      "auteur = tiers",
+      "effraction = non",
+      "graffiti_mur_exterieur = oui",
+      "intentionnel = oui",
+      "occupation_partielle = oui"
+     ],
+     "sans_appui": [
+      "effraction = non",
+      "fermeture = aucune",
+      "manque_entretien = non",
+      "materiel_jardin_range = inapplicable",
+      "sejour_temporaire = non"
+     ]
+    },
+    {
+     "id": "g2-p01",
+     "rappel": 0.778,
+     "contradictions": [
+      "bien : objet_divers lu element_batiment",
+      "effraction : non lu oui"
+     ],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "acces_voleur = sans_effraction",
+      "fermeture = cle"
+     ],
+     "sans_appui": []
+    },
+    {
+     "id": "g2-p03",
+     "rappel": 1.0,
+     "contradictions": [],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "auteur = tiers",
+      "proprietaire = assure",
+      "simple_disparition = non",
+      "type_dommage = bris",
+      "violence = oui",
+      "vol_sur_personne = non"
+     ],
+     "sans_appui": [
+      "acces_voleur = sans_effraction",
+      "construction_close = non",
+      "effraction = non",
+      "fermeture = aucune",
+      "graffiti_mur_exterieur = non",
+      "materiel_jardin_range = non",
+      "sejour_temporaire = non",
+      "simple_disparition = non",
+      "vol_sur_personne = oui"
+     ]
+    },
+    {
+     "id": "g2-p08",
+     "rappel": 0.8,
+     "contradictions": [
+      "cause_eau : piscine_exterieure lu debordement_aquarium"
+     ],
+     "vagues": [],
+     "manques": [],
+     "en_trop": [
+      "type_dommage = moisissure",
+      "type_dommage = opacification_ou_perte_etancheite"
+     ],
+     "sans_appui": [
+      "travaux_batiment = aucun",
+      "type_dommage = moisissure"
+     ]
+    },
+    {
+     "id": "g2-l01",
+     "rappel": 0.778,
+     "contradictions": [],
+     "vagues": [
+      "bien : appareil_audiovisuel lu denrees_alimentaires/electronique",
+      "bien : appareil_audiovisuel lu electronique/valeurs"
+     ],
+     "manques": [],
+     "en_trop": [
+      "auteur = tiers",
+      "plainte_deposee = oui",
+      "proprietaire = assure",
+      "violence = non",
+      "vol_sur_personne = non"
+     ],
+     "sans_appui": [
+      "acces_voleur = sans_effraction",
+      "fermeture = aucune"
+     ]
+    }
+   ]
+  }
+ },
+ "avertissements": [],
+ "partie": "test",
+ "modele": "mistral:mistral-small-latest",
+ "lecture": "verifiee, exemples",
+ "portes": [
+  {
+   "couche": "lecture",
+   "critere": "cas_avec_contradiction",
+   "sens": "max",
+   "seuil": 5,
+   "valeur": 5,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "faux_couverts",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 2.0,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "faux_refus",
+   "sens": "max",
+   "seuil": 1,
+   "valeur": 0.0,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "exactitude",
+   "sens": "min",
+   "seuil": 0.85,
+   "valeur": 0.892,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "instables",
+   "sens": "max",
+   "seuil": 3,
+   "valeur": 2,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "rappel_questions",
+   "sens": "min",
+   "seuil": 0.8,
+   "valeur": 1.0,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "latence_seule_p95_s",
+   "sens": "max",
+   "seuil": 10,
+   "valeur": 4.86,
+   "ok": true
+  }
+ ],
+ "passe": false
+}

@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from couverture import prolog
+from couverture import chaine, lecture, prolog
 from couverture.models import Decision
 from moteur_reference import Explorateur, Contrat, Moteur, Terme
 
@@ -157,9 +157,9 @@ accessoire(complementaires).
 def test_accident_sur_une_vitre_est_un_bris():
     """7.86 : « accident » lu pour un miroir cogné devient « bris » ; un violon tombé reste un accident."""
     voc = prolog.vocabulaire()
-    f, notes = prolog.au_vocabulaire({"evenement": ["accident"], "bien": ["miroir"], "lieu": ["logement"]}, voc)
+    f, notes = lecture.au_vocabulaire({"evenement": ["accident"], "bien": ["miroir"], "lieu": ["logement"]}, voc)
     assert f["evenement"] == ["bris"] and notes
-    f, _ = prolog.au_vocabulaire({"evenement": ["accident"], "bien": ["objet_divers"]}, voc)
+    f, _ = lecture.au_vocabulaire({"evenement": ["accident"], "bien": ["objet_divers"]}, voc)
     assert f["evenement"] == ["accident"]
 
 
@@ -287,14 +287,14 @@ class FauxLLM:
         self.faits = faits
 
     def completer(self, systeme, message):
-        if systeme == prolog.SYSTEME_VERIFICATION:  # la vérification ne retire rien ici
+        if systeme == lecture.SYSTEME_VERIFICATION:  # la vérification ne retire rien ici
             return json.dumps({"verdicts": {}})
         assert "Vocabulaire" in message, "le modèle reçoit le vocabulaire"
         return json.dumps({"faits": self.faits})
 
 
 def test_lecture_des_faits_filtre_le_hors_vocabulaire():
-    faits, ecarts = prolog.extraire_faits_regles(
+    faits, ecarts = lecture.extraire_faits_regles(
         "Vélo volé dans le local commun.",
         FauxLLM({"evenement": "vol", "bien": "velo", "lieu": ["parties_communes", "lune"], "couleur": "rouge",
                  "effraction": None}))
@@ -309,7 +309,7 @@ def test_verdict_mis_en_forme():
         "rattachement": "rattachée", "decision": "NON_COUVERT", "motif": "une exclusion s'applique",
         "preuves": [{"article": "2.10-a", "texte": "le vol ou le vandalisme dans les parties communes du bâtiment",
                      "role": "exclusion"}], "questions": [], "reserves": [], "partielles": []}]}
-    p = prolog.PipelineRegles(CONTRAT, [], FauxLLM({"evenement": "vol", "lieu": ["parties_communes"]}),
+    p = chaine.PipelineRegles(CONTRAT, [], FauxLLM({"evenement": "vol", "lieu": ["parties_communes"]}),
                               decideur=lambda faits: reponse)
     r = p.analyser("Vélo volé dans le local commun.")
     v = r.verdict
@@ -320,7 +320,7 @@ def test_verdict_mis_en_forme():
     clause = Clause(id="2.10-a", article="2.10-a", titre="Exclusions", chemin=["2.10-a"], type=TypeClause.EXCLUSION,
                     texte="nous ne garantissons pas : • le vol ou le vandalisme dans les parties communes du bâtiment",
                     pages=[12])
-    p = prolog.PipelineRegles(CONTRAT, [clause], FauxLLM({"evenement": "vol"}), decideur=lambda faits: reponse)
+    p = chaine.PipelineRegles(CONTRAT, [clause], FauxLLM({"evenement": "vol"}), decideur=lambda faits: reponse)
     v = p.analyser("Vélo volé dans le local commun.").verdict
     assert v.decision == Decision.NON_COUVERT and v.citations[0].valide and v.citations[0].pages == [12]
     assert "2.10-a" not in v.justification or "exclusion" in v.justification
@@ -331,7 +331,7 @@ def test_verdict_evenement_non_traduit():
         "id": "degats_eaux", "garantie": "Dégâts causés par l’eau", "article": "2.7", "rattachement": "rattachée",
         "decision": "NON_COUVERT", "motif": "une exclusion s'applique", "preuves": [], "questions": [],
         "reserves": [], "partielles": []}]}
-    p = prolog.PipelineRegles(CONTRAT, [], FauxLLM({"evenement": ["tempete", "degat_eaux"]}), decideur=lambda f: reponse)
+    p = chaine.PipelineRegles(CONTRAT, [], FauxLLM({"evenement": ["tempete", "degat_eaux"]}), decideur=lambda f: reponse)
     v = p.analyser("La tempête a fait entrer la pluie.").verdict
     assert v.decision == Decision.INCERTAIN and v.confiance <= 0.3
     assert "tempete" in v.justification and "pas encore traduite" in v.justification
@@ -419,23 +419,23 @@ def test_lecture_recoit_le_sens_des_valeurs():
             return json.dumps({"faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["parties_communes"],
                                          "cause_eau": "gel"}})
 
-    faits, ecarts = prolog.extraire_faits_regles("Vélo volé dans le local à vélos de la résidence.", Espion())
+    faits, ecarts = lecture.extraire_faits_regles("Vélo volé dans le local à vélos de la résidence.", Espion())
     assert "parties_communes (locaux partagés de l'immeuble : local à vélos" in Espion.message
     assert "Où se trouvaient les biens ?" in Espion.message
     assert "cause_eau" not in faits and any("hors sujet" in e for e in ecarts)
-    assert "ne donne pas de lieu" in prolog.SYSTEME_FAITS_REGLES
+    assert "ne donne pas de lieu" in lecture.SYSTEME_LECTURE_SOCLE
 
 
 def test_un_contrat_ne_lit_que_ses_variables(tmp_path, monkeypatch):
     """Étanchéité entre assureurs (7.57) : une variable ajoutée pour Assureur B (« plainte déposée ») n'entre pas dans
     la lecture d'un vol chez Assureur A, dont les règles ne l'emploient pas."""
-    contrat_a = prolog.variables_du_contrat("assureur-a-habitation-2025")
+    contrat_a = lecture.variables_du_contrat("assureur-a-habitation-2025")
     assert {"effraction", "cles_a_proximite", "serrure_surete"} <= contrat_a
     regles = tmp_path / "x.pl"
     regles.write_text("% f(commentaire, oui)\n/* f(bloc, oui) */\nperimetre(g, f(effraction, oui)).\n", encoding="utf-8")
     monkeypatch.setattr(prolog, "fichier_regles", lambda c: regles)
     # `acces_voleur` implique `effraction` (« sans_effraction » → « non ») : lue aussi (7.101).
-    assert prolog.variables_du_contrat("x") == {"effraction", "acces_voleur"}
+    assert lecture.variables_du_contrat("x") == {"effraction", "acces_voleur"}
 
     class Espion:
         nom = "espion"
@@ -445,8 +445,7 @@ def test_un_contrat_ne_lit_que_ses_variables(tmp_path, monkeypatch):
             Espion.messages.append(message)
             return json.dumps({"faits": {"evenement": ["vol"], "violence": "oui"}})
 
-    monkeypatch.setenv("COUVERTURE_LECTURE", "deux_temps")
-    faits, _ = prolog.extraire_faits_regles("On m'a volé mon vélo.", Espion(), variables={"effraction"})
+    faits, _ = lecture.extraire_faits_regles("On m'a volé mon vélo.", Espion(), variables={"effraction"}, verifier=False)
     detail = Espion.messages[-1].split("## Déjà établi")[0]
     assert "effraction" in detail and "violence" not in detail and "violence" not in faits
 
@@ -454,7 +453,7 @@ def test_un_contrat_ne_lit_que_ses_variables(tmp_path, monkeypatch):
 def test_consigne_de_lecture_garde_ses_regles():
     """La v3 avait perdu « une pièce du logement → lieu = logement » en en ajoutant une autre : dix cas
     couverts sont devenus incertains (DEMARCHE 7.24 bis). Les règles qui ont fait leurs preuves restent."""
-    c = prolog.SYSTEME_FAITS_REGLES
+    c = lecture.SYSTEME_LECTURE_SOCLE + lecture.SYSTEME_LECTURE_DETAILS
     for regle in ("lieu = logement", "fermeture = cle", "flammes = oui et embrasement = oui", "vol_sur_personne = oui",
                   "depot_moins_30j = oui", "prevention_gel = non", "bien = element_batiment", "bien = canalisation", "[\"tempete\", \"degat_eaux\"]"):
         assert regle in c, regle
@@ -510,10 +509,10 @@ def test_verdict_avec_exploration():
         {"variable": "serrure_surete", "effet": "décisive",
          "issues": [{"decision": "COUVERT", "valeurs": ["oui"]}, {"decision": "NON_COUVERT", "valeurs": ["non"]}]},
         {"variable": "flammes", "effet": "inutile", "issues": [{"decision": "INCERTAIN", "valeurs": ["non", "oui"]}]}]}
-    lignes, motif = prolog.questions_explorees(exploration, ["serrure_surete", "flammes", "lien_causal"], "À préciser.")
-    assert lignes[0].startswith(prolog.question("serrure_surete")) and "oui → couvert ; non → non couvert" in lignes[0]
-    assert prolog.question("flammes") not in " ".join(lignes), "la question inutile n'est pas posée"
-    assert prolog.question("lien_causal") in lignes, "une question sans domaine reste posée"
+    lignes, motif = chaine.questions_explorees(exploration, ["serrure_surete", "flammes", "lien_causal"], "À préciser.")
+    assert lignes[0].startswith(lecture.question("serrure_surete")) and "oui → couvert ; non → non couvert" in lignes[0]
+    assert lecture.question("flammes") not in " ".join(lignes), "la question inutile n'est pas posée"
+    assert lecture.question("lien_causal") in lignes, "une question sans domaine reste posée"
     assert "Une seule question tranche" in motif
 
 
@@ -527,7 +526,7 @@ def test_arbre_de_preuve_cave_au_cadenas(contrat):
     g = d["preuve"][0]
     condition = next(n for n in g["enfants"] if n["type"] == "condition" and n["etat"] == "non")
     assert condition["texte"] == "si ces locaux sont fermés avec une serrure de sûreté"
-    lignes = prolog.arbre_lisible(d["preuve"])
+    lignes = chaine.arbre_lisible(d["preuve"])
     texte = "\n".join(lignes)
     assert lignes[0].startswith("Garantie « Vol du contenu dans le bâtiment » (art. 2.10) → non couvert")
     assert "[non] Condition non remplie — art. 2.10" in texte
@@ -535,7 +534,7 @@ def test_arbre_de_preuve_cave_au_cadenas(contrat):
     assert "[oui] fermeture = cadenas (déclaré : cadenas)" in texte
     assert "sans objet ici" in texte, "la condition du garage ne s'applique pas à une cave"
     assert "l'assureur devrait les prouver" in texte, "les exclusions présumées sont comptées, pas listées"
-    assert len(lignes) < len(prolog.arbre_lisible(d["preuve"], complet=True))
+    assert len(lignes) < len(chaine.arbre_lisible(d["preuve"], complet=True))
 
 
 def test_arbre_de_preuve_suit_chaque_decision(contrat, cas):
@@ -565,13 +564,13 @@ def test_la_reponse_porte_l_arbre_de_preuve(contrat):
             g = next(x for x in contrat.regles("garantie", 4) if x.args[0] == r["id"])
             r.update(garantie=g.args[1], article=g.args[2], motif="…", preuves=[])
         return d
-    p = prolog.PipelineRegles(CONTRAT, [], FauxLLM(faits), decideur=oracle)
+    p = chaine.PipelineRegles(CONTRAT, [], FauxLLM(faits), decideur=oracle)
     v = p.analyser("On m'a volé mon vélo dans ma cave fermée par un cadenas.").verdict
     assert v.preuve and v.raisonnement[0].startswith("Garantie « Vol du contenu dans le bâtiment »")
-    from couverture import cli
+    from couverture.cli.affichage import afficher_court
     from couverture.models import Resultat
-    sortie = cli.afficher_court(Resultat(sinistre="…", contrat_id=CONTRAT, methode="regles", faits=prolog.faits_lisibles(faits),
-                                         clauses_consultees=[], verdict=v))
+    sortie = afficher_court(Resultat(sinistre="…", contrat_id=CONTRAT, methode="regles", faits=chaine.faits_lisibles(faits),
+                                     clauses_consultees=[], verdict=v))
     assert "Arbre de preuve (moteur Prolog) :" in sortie and "[non] Condition non remplie" in sortie
 
 
@@ -592,9 +591,8 @@ def test_lecture_en_deux_temps(monkeypatch):
                 return json.dumps({"faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}})
             return json.dumps({"faits": {"fermeture": "cadenas", "lieu": ["logement"], "cause_eau": "gel"}})
 
-    monkeypatch.setenv("COUVERTURE_LECTURE", "deux_temps")
     m = Modele()
-    faits, ecarts = prolog.extraire_faits_regles("On m'a volé mon vélo dans ma cave fermée par un cadenas.", m)
+    faits, ecarts = lecture.extraire_faits_regles("On m'a volé mon vélo dans ma cave fermée par un cadenas.", m, verifier=False)
     assert faits == {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"], "fermeture": "cadenas"}, \
         "le temps 2 ne réécrit pas le lieu, et une cause d'eau n'est pas demandée pour un vol"
     (s1, m1, sch1), (s2, m2, sch2) = m.appels
@@ -606,32 +604,6 @@ def test_lecture_en_deux_temps(monkeypatch):
     assert "required" not in sch2["properties"]["faits"], "aucune variable obligatoire : le modèle remplirait (7.40)"
     assert "evenement = vol" in m2 and "## Déjà établi" in m2
     assert len(m2) < len(m1) + 3000, "la consigne du temps 2 est courte"
-
-
-def test_les_regles_v4_sont_toutes_dans_les_deux_temps():
-    """Couper la consigne en deux ne doit perdre aucune règle (la leçon de la v3, 7.24 bis)."""
-    import re as _re
-
-    deux = prolog.SYSTEME_LECTURE_SOCLE + prolog.SYSTEME_LECTURE_DETAILS
-    for ligne in prolog.SYSTEME_FAITS_REGLES.splitlines():
-        if ligne.startswith("- "):
-            coeur = _re.sub(r"Sinon, ne la mets pas", "Sinon, réponds", ligne)[:60]
-            assert coeur in deux, ligne
-
-
-def test_lecture_un_temps_toujours_disponible(monkeypatch):
-    monkeypatch.setenv("COUVERTURE_LECTURE", "un_temps")
-    appels = []
-
-    class Modele:
-        nom = "ancien"
-
-        def completer(self, systeme, message):
-            appels.append(systeme)
-            return json.dumps({"faits": {"evenement": ["vol"]}})
-
-    prolog.extraire_faits_regles("Vélo volé.", Modele())
-    assert appels == [prolog.SYSTEME_FAITS_REGLES]
 
 
 def test_schema_refuse_retombe_sur_le_mode_json(monkeypatch):
@@ -665,44 +637,9 @@ def test_inconnu_n_est_pas_un_fait(monkeypatch):
                 return json.dumps({"faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}})
             return json.dumps({"faits": {"fermeture": "inconnu", "serrure_surete": "inconnu", "auteur": "inconnu"}})
 
-    monkeypatch.setenv("COUVERTURE_LECTURE", "deux_temps")
-    faits, _ = prolog.extraire_faits_regles("On m'a volé mon vélo dans ma cave.", Modele())
+    faits, _ = lecture.extraire_faits_regles("On m'a volé mon vélo dans ma cave.", Modele(), verifier=False)
     assert faits == {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}
-    assert "la clé dont le voleur s'est servi" in prolog.SYSTEME_LECTURE_SOCLE
-
-
-def test_lecture_en_parallele(monkeypatch):
-    """Le mode en parallèle (essayé en 7.41, écarté en 7.42) : le socle (courte) et la lecture complète v4,
-    en même temps. Le socle vient de la première ; le reste de la seconde."""
-    import threading
-    import time as _time
-
-    class Modele:
-        nom, accepte_schema = "parallele", True
-
-        def __init__(self):
-            self.en_cours, self.max_simultanes, self.verrou = 0, 0, threading.Lock()
-
-        def completer(self, systeme, message, schema=None):
-            with self.verrou:
-                self.en_cours += 1
-                self.max_simultanes = max(self.max_simultanes, self.en_cours)
-            _time.sleep(0.05)
-            with self.verrou:
-                self.en_cours -= 1
-            if systeme == prolog.SYSTEME_LECTURE_SOCLE:
-                return json.dumps({"faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}})
-            assert systeme == prolog.SYSTEME_FAITS_REGLES and "cause_eau" in schema["properties"]["faits"]["properties"]
-            return json.dumps({"faits": {"evenement": ["vol"], "bien": ["velo", "cles"], "fermeture": "cadenas"}})
-
-    monkeypatch.delenv("COUVERTURE_LECTURE", raising=False)
-    assert prolog.mode_lecture() == "verifiee", "la meilleure lecture mesurée est le défaut (7.45)"
-    monkeypatch.setenv("COUVERTURE_LECTURE", "en_parallele")
-    m = Modele()
-    faits, _ = prolog.extraire_faits_regles("On m'a volé mon vélo dans ma cave fermée par un cadenas.", m)
-    assert faits == {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"], "fermeture": "cadenas"}, \
-        "le socle l'emporte (pas de clés), le lieu vient du socle, le détail de la lecture complète"
-    assert m.max_simultanes == 2, "les deux lectures partent en même temps"
+    assert "la clé dont le voleur s'est servi" in lecture.SYSTEME_LECTURE_SOCLE
 
 
 def test_lecture_verifiee(monkeypatch):
@@ -716,43 +653,20 @@ def test_lecture_verifiee(monkeypatch):
 
         def completer(self, systeme, message, schema=None):
             self.systemes.append(systeme)
-            if systeme == prolog.SYSTEME_LECTURE_SOCLE:
+            if systeme == lecture.SYSTEME_LECTURE_SOCLE:
                 return json.dumps({"faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}})
-            if systeme == prolog.SYSTEME_LECTURE_DETAILS:
+            if systeme == lecture.SYSTEME_LECTURE_DETAILS:
                 return json.dumps({"faits": {"fermeture": "aucune", "auteur": "tiers", "absence": "oui"}})
             self.affirmations = message
             assert set(schema["properties"]["verdicts"]["properties"]) == {"fermeture", "auteur", "absence"}
             return json.dumps({"verdicts": {"fermeture": "non_dit", "auteur": "non_dit", "absence": "dit"}})
 
-    monkeypatch.setenv("COUVERTURE_LECTURE", "verifiee")
     m = Modele()
-    faits, ecarts = prolog.extraire_faits_regles("Pendant mes vacances, on m'a volé mon vélo dans ma cave.", m)
+    faits, ecarts = lecture.extraire_faits_regles("Pendant mes vacances, on m'a volé mon vélo dans ma cave.", m)
     assert faits == {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"], "absence": "oui"}
-    assert m.systemes[-1] == prolog.SYSTEME_VERIFICATION and len(m.systemes) == 3
+    assert m.systemes[-1] == lecture.SYSTEME_VERIFICATION and len(m.systemes) == 3
     assert "Comment le local était-il fermé ?" in m.affirmations and "evenement" not in m.affirmations.split("## Déclaration")[0]
     assert sum("non dit" in e for e in ecarts) == 2
-
-
-def test_recours_retablit_un_fait_retire_qui_tranche():
-    """7.78 : la vérification retire « serrure de sûreté : non » (un cadenas écrit) et la réponse reste
-    « incertain ». Seul un fait retiré qui changerait la décision est soumis au recours ; rétabli s'il est dit."""
-    def decideur(f):
-        return {"decision": "NON_COUVERT" if f.get("serrure_surete") == "non" else "INCERTAIN"}
-
-    soumis = []
-
-    def recours(faits):
-        soumis.append(dict(faits))
-        return {v: "dit" for v in faits}
-
-    voc = prolog.vocabulaire()
-    faits = {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}
-    retires = {"serrure_surete": "non", "absence": "oui"}
-    f2, rappels = prolog.rappeler(faits, retires, voc, decideur, recours)
-    assert rappels == ["serrure_surete"] and f2["serrure_surete"] == "non"
-    assert soumis == [{"serrure_surete": "non"}], "l'absence ne change rien : elle n'est pas soumise"
-    f3, rappels = prolog.rappeler(faits, retires, voc, decideur, lambda fs: {v: "non_dit" for v in fs})
-    assert f3 == faits and rappels == []
 
 
 def test_verification_illisible_ne_retire_rien():
@@ -763,7 +677,7 @@ def test_verification_illisible_ne_retire_rien():
             return "je ne sais pas"
 
     lus = {"evenement": ["vol"], "fermeture": "cle"}
-    gardes, ecarts = prolog.verifier_details("Volé.", lus, Modele(), prolog.vocabulaire())
+    gardes, ecarts = lecture.verifier_details("Volé.", lus, Modele(), prolog.vocabulaire())
     assert gardes == lus and "illisible" in ecarts[0]
 
 
@@ -774,22 +688,21 @@ def test_un_doute_ne_fait_jamais_couvrir(monkeypatch, contrat):
         nom, accepte_schema = "verif", True
 
         def completer(self, systeme, message, schema=None):
-            if systeme == prolog.SYSTEME_LECTURE_SOCLE:
+            if systeme == lecture.SYSTEME_LECTURE_SOCLE:
                 return json.dumps({"faits": {"evenement": ["vol"], "bien": ["appareil_audiovisuel"], "lieu": ["logement"]}})
-            if systeme == prolog.SYSTEME_LECTURE_DETAILS:
+            if systeme == lecture.SYSTEME_LECTURE_DETAILS:
                 return json.dumps({"faits": {"absence": "oui", "effraction": "non", "fenetres_fermees": "non",
                                              "fermeture": "aucune"}})
             return json.dumps({"verdicts": {"absence": "dit", "effraction": "non_dit", "fenetres_fermees": "non_dit",
                                             "fermeture": "non_dit"}})
 
-    monkeypatch.setenv("COUVERTURE_LECTURE", "verifiee")
     oracle = lambda f: Moteur(contrat, f).decider()
     sinistre = "Pendant que j'étais au travail, on est entré par la fenêtre que j'avais laissée ouverte et on a volé la télé."
-    faits, ecarts = prolog.extraire_faits_regles(sinistre, Modele(), oracle)
+    faits, ecarts = lecture.extraire_faits_regles(sinistre, Modele(), oracle)
     assert faits.get("fenetres_fermees") == "non" and any("vérification écartée" in e for e in ecarts)
     assert oracle(faits)["decision"] != "COUVERT"
     # Sans arbitre (ou quand retirer ne fait pas couvrir), la vérification s'applique.
-    faits_sans, _ = prolog.extraire_faits_regles(sinistre, Modele())
+    faits_sans, _ = lecture.extraire_faits_regles(sinistre, Modele())
     assert "fenetres_fermees" not in faits_sans
 
 
@@ -841,7 +754,7 @@ def test_moteur_permanent_decide_comme_un_processus_par_decision(cas):
     prolog._MOTEURS.clear()
 
 
-def test_je_ne_sais_pas_plutot_qu_une_reponse_fausse(monkeypatch, contrat):
+def test_je_ne_sais_pas_plutot_qu_une_reponse_fausse(contrat):
     """Une réponse ferme doit reposer sur des faits confirmés (7.49). Le moteur désigne les faits qui portent
     la décision ; si le modèle ne les retrouve pas dans la déclaration, la réponse devient « incertain »."""
     faits = {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"], "fermeture": "cadenas"}
@@ -854,7 +767,7 @@ def test_je_ne_sais_pas_plutot_qu_une_reponse_fausse(monkeypatch, contrat):
         return d
 
     assert oracle(faits)["decision"] == "NON_COUVERT"
-    assert "fermeture" in prolog.faits_decisifs(faits, oracle, "NON_COUVERT")
+    assert "fermeture" in lecture.faits_decisifs(faits, oracle, "NON_COUVERT")
 
     class Modele:
         nom, accepte_schema = "confirme", True
@@ -863,9 +776,9 @@ def test_je_ne_sais_pas_plutot_qu_une_reponse_fausse(monkeypatch, contrat):
             self.verdict, self.confirmations = verdict, []
 
         def completer(self, systeme, message, schema=None):
-            if systeme == prolog.SYSTEME_LECTURE_SOCLE:
+            if systeme == lecture.SYSTEME_LECTURE_SOCLE:
                 return json.dumps({"faits": {k: faits[k] for k in ("evenement", "bien", "lieu")}})
-            if systeme == prolog.SYSTEME_LECTURE_DETAILS:
+            if systeme == lecture.SYSTEME_LECTURE_DETAILS:
                 return json.dumps({"faits": {"fermeture": "cadenas"}})
             props = set(schema["properties"]["verdicts"]["properties"])
             self.confirmations.append(props)
@@ -874,44 +787,33 @@ def test_je_ne_sais_pas_plutot_qu_une_reponse_fausse(monkeypatch, contrat):
             # la confirmation des faits décisifs, ensuite
             return json.dumps({"verdicts": {v: (self.verdict if v == "fermeture" else "dit") for v in props}})
 
-    monkeypatch.setenv("COUVERTURE_LECTURE", "verifiee")
     sinistre = "On m'a volé mon vélo dans ma cave."
-    doute = prolog.PipelineRegles(CONTRAT, [], Modele("non_dit"), decideur=oracle).analyser(sinistre).verdict
+    doute = chaine.PipelineRegles(CONTRAT, [], Modele("non_dit"), decideur=oracle).analyser(sinistre).verdict
     assert doute.decision.value == "INCERTAIN" and (doute.decision_initiale or doute.decision).value == "INCERTAIN"
-    assert doute.informations_manquantes[0].startswith(prolog.question("fermeture"))
+    assert doute.informations_manquantes[0].startswith(lecture.question("fermeture"))
     assert doute.justification.startswith("Je ne peux pas trancher")
     m = Modele("dit")
-    confirme = prolog.PipelineRegles(CONTRAT, [], m, decideur=oracle).analyser(sinistre).verdict
+    confirme = chaine.PipelineRegles(CONTRAT, [], m, decideur=oracle).analyser(sinistre).verdict
     # (sans clauses fournies, le contrôle des citations rétrograde toute réponse : on lit la réponse avant lui)
     assert (confirme.decision_initiale or confirme.decision).value == "NON_COUVERT", "confirmé : la réponse ferme reste"
     assert "fermeture" in m.confirmations[-1], "le fait décisif est soumis à confirmation"
-
-    # Un modèle plus fort peut confirmer à la place du modèle de lecture (7.66) : c'est lui qui tranche.
-    from couverture import llm as llm_mod
-    lecteur, juge = Modele("dit"), Modele("non_dit")
-    juge.confirmations = [set()]          # le juge ne fait que la confirmation : il répond tout de suite
-    monkeypatch.setattr(llm_mod, "configurer", lambda usage="analyse": juge if usage == "confirmation" else None)
-    v = prolog.PipelineRegles(CONTRAT, [], lecteur, decideur=oracle).analyser(sinistre).verdict
-    assert v.decision.value == "INCERTAIN" and "fermeture" in juge.confirmations[-1], \
-        "le modèle de confirmation a refusé le cadenas : la réponse est suspendue"
-    assert all("fermeture" not in c for c in lecteur.confirmations[1:]), "le lecteur n'a pas confirmé lui-même"
 
 
 def test_un_fait_qui_en_dit_un_autre():
     """7.94 : « sans effraction » dit « effraction = non », sauf si l'effraction est déjà lue."""
     voc = {"acces_voleur": {"valeurs": ["sans_effraction", "escalade"], "implique": {"sans_effraction": {"effraction": "non"}}},
            "effraction": {"valeurs": ["oui", "non"]}}
-    assert prolog.impliquer({"acces_voleur": "sans_effraction"}, voc)[0]["effraction"] == "non"
-    assert prolog.impliquer({"acces_voleur": "sans_effraction", "effraction": "oui"}, voc)[0]["effraction"] == "oui"
-    assert prolog.impliquer({"acces_voleur": "escalade"}, voc)[0] == {"acces_voleur": "escalade"}
+    assert lecture.impliquer({"acces_voleur": "sans_effraction"}, voc)[0]["effraction"] == "non"
+    assert lecture.impliquer({"acces_voleur": "sans_effraction", "effraction": "oui"}, voc)[0]["effraction"] == "oui"
+    assert lecture.impliquer({"acces_voleur": "escalade"}, voc)[0] == {"acces_voleur": "escalade"}
 
 
 def test_la_source_d_un_fait_deduit():
     """7.95 : on confirme « acces_voleur = sans_effraction », d'où vient « effraction = non »."""
     voc = {"acces_voleur": {"valeurs": ["sans_effraction"], "implique": {"sans_effraction": {"effraction": "non"}}},
            "effraction": {"valeurs": ["oui", "non"]}}
-    assert prolog.sources_impliquees({"acces_voleur": "sans_effraction", "effraction": "non"}, voc) == {"effraction": "acces_voleur"}
-    assert prolog.sources_impliquees({"acces_voleur": "sans_effraction", "effraction": "oui"}, voc) == {}
+    assert lecture.sources_impliquees({"acces_voleur": "sans_effraction", "effraction": "non"}, voc) == {"effraction": "acces_voleur"}
+    assert lecture.sources_impliquees({"acces_voleur": "sans_effraction", "effraction": "oui"}, voc) == {}
 
 
 def test_accident_retire_quand_un_autre_evenement_le_dit():
@@ -920,6 +822,80 @@ def test_accident_retire_quand_un_autre_evenement_le_dit():
         {"si": {"bien": ["vitre"]}, "en": "bris"},
         {"si": {"evenement": ["responsabilite", "tempete", "bris"]}, "en": None}]}},
         "bien": {"valeurs": ["vitre", "mobilier"]}}
-    assert prolog.preciser({"evenement": ["accident", "responsabilite"]}, voc)[0]["evenement"] == ["responsabilite"]
-    assert prolog.preciser({"evenement": ["accident"], "bien": "vitre"}, voc)[0]["evenement"] == ["bris"]
-    assert prolog.preciser({"evenement": ["accident"], "bien": "mobilier"}, voc)[0]["evenement"] == ["accident"]
+    assert lecture.preciser({"evenement": ["accident", "responsabilite"]}, voc)[0]["evenement"] == ["responsabilite"]
+    assert lecture.preciser({"evenement": ["accident"], "bien": "vitre"}, voc)[0]["evenement"] == ["bris"]
+    assert lecture.preciser({"evenement": ["accident"], "bien": "mobilier"}, voc)[0]["evenement"] == ["accident"]
+
+
+def test_un_fait_ajoute_une_valeur_a_une_variable_multiple():
+    """7.105 : « les égouts ont refoulé » (`cause_eau = inondation`) est aussi une catastrophe naturelle ; l'eau reste."""
+    voc = {"cause_eau": {"valeurs": ["inondation", "gel"], "implique": {"inondation": {"evenement": "catastrophe_naturelle"}}},
+           "evenement": {"valeurs": ["degat_eaux", "catastrophe_naturelle"], "plusieurs": True}}
+    faits, notes = lecture.impliquer({"evenement": ["degat_eaux"], "cause_eau": "inondation"}, voc)
+    assert faits["evenement"] == ["degat_eaux", "catastrophe_naturelle"] and notes
+    assert lecture.impliquer({"evenement": ["degat_eaux"], "cause_eau": "gel"}, voc)[0]["evenement"] == ["degat_eaux"]
+    deja = {"evenement": ["catastrophe_naturelle"], "cause_eau": "inondation"}
+    assert lecture.impliquer(deja, voc) == (deja, [])
+
+
+def test_condition_fausse_sur_un_perimetre_inconnu_ne_refuse_pas():
+    """7.105 : « jai une fuite » chez B (bien et lieu inconnus). La dégradation du linge et la décongélation ont un
+    périmètre fait d'un bien, inconnu, et une condition fausse (pas d'incendie) : elles ne jouent pas, mais ne sont
+    pas rattachées ; leur refus ne l'emporte plus sur les dégâts des eaux, possibles."""
+    contrat_b = Contrat(prolog.fichier_regles("assureur-b-habitation-2017"))
+    faits = {"evenement": ["degat_eaux"], "cause_eau": "fuite_installation"}
+    d = Moteur(contrat_b, faits).decider()
+    assert d["decision"] == "INCERTAIN"
+    linge = next(r for r in d["garanties"] if r["id"] == "linge")
+    assert linge["rattachement"] == "hors"
+    if prolog.swipl() is not None:
+        assert prolog.decider("assureur-b-habitation-2017", faits)["decision"] == "INCERTAIN"
+
+
+def test_obligation_engagee_sans_lien_causal_se_demande():
+    """7.106 : vol dans la voiture garée (B, `f-b18`). L'obligation « dans un véhicule, fermé à clé et rien en vue »
+    fait refuser sans lien causal ; le lieu est établi, l'exigence inconnue : on la demande, au lieu de couvrir sous
+    réserve. Une obligation à lien causal (A, fenêtres fermées pendant l'absence, le voleur passé par la porte) reste
+    une réserve."""
+    contrat_b = Contrat(prolog.fichier_regles("assureur-b-habitation-2017"))
+    faits = {"evenement": ["vol"], "bien": ["appareil_informatique"], "lieu": ["vehicule"], "effraction": "oui",
+             "plainte_deposee": "oui"}
+    d = Moteur(contrat_b, faits).decider()
+    assert d["decision"] == "INCERTAIN"
+    vol = next(r for r in d["garanties"] if r["id"] == "materiel_multimedia_vol")
+    assert "vehicule_ferme_cle" in vol["questions"]
+    contrat_a = Contrat(prolog.fichier_regles("assureur-a-habitation-2025"))
+    porte = {"evenement": ["vol"], "bien": ["mobilier"], "lieu": ["logement"], "absence": "oui", "portes_fermees": "oui",
+             "effraction": "non", "plainte_deposee": "oui"}
+    vol_a = next(r for r in Moteur(contrat_a, porte).decider()["garanties"] if r["id"] == "vol_batiment")
+    assert vol_a["decision"] != "INCERTAIN" or "fenetres_fermees" not in vol_a["questions"]
+    if prolog.swipl() is not None:
+        assert prolog.decider("assureur-b-habitation-2017", faits)["decision"] == "INCERTAIN"
+
+
+def test_demenagement_non_signale_se_demande():
+    """7.106 : A, art. 9 (`f-a17`). Emménagé depuis plus de 30 jours, sans dire si l'assureur a été prévenu :
+    l'incendie n'est plus couvert d'office, on demande ; sans déménagement dit, il reste couvert."""
+    contrat_a = Contrat(prolog.fichier_regles("assureur-a-habitation-2025"))
+    faits = {"evenement": ["incendie"], "bien": ["mobilier"], "lieu": ["logement"], "flammes": "oui", "embrasement": "oui"}
+    assert Moteur(contrat_a, faits).decider()["decision"] == "COUVERT"
+    d = Moteur(contrat_a, faits | {"emmenagement": "plus_30_jours"}).decider()
+    assert d["decision"] == "INCERTAIN"
+    assert "demenagement_signale" in d["retenues"][0]["questions"]
+    if prolog.swipl() is not None:
+        assert prolog.decider("assureur-a-habitation-2025", faits | {"emmenagement": "plus_30_jours"})["decision"] == "INCERTAIN"
+
+
+def test_une_option_seule_a_couvrir_donne_a_preciser():
+    """7.109 : le ruissellement chez B (`f-b15`) n'est couvert que par l'option « pluies et inondations », dont on ne
+    sait pas si elle est souscrite : « à préciser », avec le point des conditions particulières, et non plus « couvert
+    sous réserve ». Une garantie de base qui couvre l'emporte : l'incendie reste couvert."""
+    contrat_b = Contrat(prolog.fichier_regles("assureur-b-habitation-2017"))
+    faits = {"evenement": ["catastrophe_naturelle"], "bien": ["element_batiment"], "lieu": ["logement"],
+             "catastrophe": "ruissellement", "dommages_dans_72h": "oui"}
+    d = Moteur(contrat_b, faits).decider()
+    assert d["decision"] == "INCERTAIN"
+    pluies = next(r for r in d["garanties"] if r["id"] == "pluies_inondations")
+    assert pluies["questions"] == ["option_pluies_inondations"]
+    if prolog.swipl() is not None:
+        assert prolog.decider("assureur-b-habitation-2017", faits)["decision"] == "INCERTAIN"

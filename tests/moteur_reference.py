@@ -243,6 +243,9 @@ class Moteur:
               and (self.eval(x.args[1]) == OUI or (self.eval(x.args[1]) == INCONNU and self.entamee_propre(x.args[1])))]
         return Terme(("ou", [d.args[1], *xs])) if xs else d.args[1]
 
+    def obligation_engagee(self, c) -> bool:
+        return getattr(c, "nom", None) == "si" and self.eval(c.args[0]) == OUI
+
     def entamee(self, t) -> bool:
         """Une condition inconnue dont un fait positif est établi : la déclaration l'a mise en jeu."""
         return any(self.eval(f) == OUI for f in self.positives(t))
@@ -283,7 +286,8 @@ class Moteur:
         if ep == NON:
             return {"rattachement": "hors", "decision": "NON_COUVERT", "questions": []}
         if any(e == NON for *_, e in cs):
-            return {"rattachement": "rattachée", "decision": "NON_COUVERT", "questions": []}
+            # Périmètre seulement inconnu : la garantie ne joue pas, mais rien ne lui rattache le sinistre (7.105).
+            return {"rattachement": "hors" if ep == INCONNU else "rattachée", "decision": "NON_COUVERT", "questions": []}
         if ep == INCONNU and any(x[0] == "totale" for x in xs):
             return {"rattachement": "rattachée", "decision": "NON_COUVERT", "questions": []}
         if ep == INCONNU:
@@ -304,6 +308,16 @@ class Moteur:
             return {"rattachement": "rattachée", "decision": "INCERTAIN", "questions": ["lien_causal"]}
         if any(e == NON and lien == "non" for e, lien, *_ in os_):
             return {"rattachement": "rattachée", "decision": "NON_COUVERT", "questions": []}
+        # Obligation « si A alors B », sans lien causal, inconnue alors que A est établi : on demande B (7.106).
+        engagees_o = sorted({v for e, lien, _, _, c in os_ if e == INCONNU and lien == "non" and self.obligation_engagee(c)
+                             for v in self.inconnues(c)})
+        if engagees_o:
+            return {"rattachement": "rattachée", "decision": "INCERTAIN", "questions": engagees_o}
+        # Une garantie optionnelle dont on ne sait pas si elle est souscrite : « à préciser » (7.109).
+        options = {o.args[0] for o in self.c.regles("option", 1)}
+        en_option = sorted({v for x in xs if x[0] == "inconnue" for v in x[3] if v in options})
+        if en_option:
+            return {"rattachement": "rattachée", "decision": "INCERTAIN", "questions": en_option}
         reserves = sorted({v for x in xs if x[0] == "inconnue" for v in x[3]}
                           | {v for e, _, _, _, c in os_ if e == INCONNU for v in self.inconnues(c)})
         return {"rattachement": "rattachée", "decision": "COUVERT", "questions": [], "reserves": reserves,

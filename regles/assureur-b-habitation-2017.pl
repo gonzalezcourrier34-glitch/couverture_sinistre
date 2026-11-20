@@ -13,6 +13,13 @@
 
 :- discontiguous definition/4, precision/3, garantie/4, perimetre/2, circonstance/4,
                  obligation/6, exclusion/6, limite/4, evenement_traduit/1, accessoire/1.
+
+%  Les garanties optionnelles (DEMARCHE 7.109) : elles ne jouent que si les conditions particulières les mentionnent,
+%  ce que la déclaration ne dit pas. Seule à couvrir, une option ne donne pas « couvert sous réserve » mais « à
+%  préciser », avec le point à vérifier dans les conditions particulières. Les garanties de base sont présumées souscrites.
+option(option_tremblement_terre).
+option(option_pluies_inondations).
+option(option_pertes_indirectes).
 % --- Art. 3.1.2 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
 evenement_traduit(tempete).
 definition(tempete, et([f(alea_tempete, vent), f(vent_80_kmh_irm, oui)]), '3.1.2.1',

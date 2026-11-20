@@ -9,9 +9,7 @@ donc savoir laquelle était en service quand une réponse a été donnée.
   l'empreinte de son texte ;
 - **garde-fou** (test, donc CI) : il échoue si un texte change sans que sa version change,
   ou si le manifeste n'est pas à jour ;
-- **MLflow Prompt Registry** : `couverture versions --enregistrer` crée une version MLflow
-  par texte différent, et pose l'alias `production` sur la version en service ;
-- les versions en service sont notées dans le journal et dans chaque exécution MLflow.
+- les versions en service sont notées dans le journal des analyses.
 
 Pour modifier une consigne : changer le texte, augmenter sa version ici, puis
 `couverture versions --manifeste`.
@@ -28,23 +26,20 @@ import importlib
 import json
 from pathlib import Path
 
-# nom MLflow → (module, variable, version)
-# Les consignes des méthodes retirées le 18 nov. 2026 (grille de conditions, relecture, fiches, compilation,
-# routage, réparation, juge de qualité) restent archivées dans docs/consignes/ : c'est leur histoire.
+# nom → (module, variable, version)
+# Les consignes des méthodes retirées (grille de conditions, relecture, fiches, compilation, routage, réparation,
+# juge de qualité le 18 nov. 2026 ; lecture en un temps, document brut et LegalBench le 20 nov.) restent archivées
+# dans docs/consignes/ : c'est leur histoire.
 CONSIGNES: dict[str, tuple[str, str, str]] = {
-    "couverture-faits-regles": ("couverture.prolog", "SYSTEME_FAITS_REGLES", "v4"),
-    "couverture-lecture-socle": ("couverture.prolog", "SYSTEME_LECTURE_SOCLE", "v2"),
-    "couverture-lecture-details": ("couverture.prolog", "SYSTEME_LECTURE_DETAILS", "v2"),
-    "couverture-verification-faits": ("couverture.prolog", "SYSTEME_VERIFICATION", "v3"),
+    "couverture-lecture-socle": ("couverture.lecture", "SYSTEME_LECTURE_SOCLE", "v2"),
+    "couverture-lecture-details": ("couverture.lecture", "SYSTEME_LECTURE_DETAILS", "v2"),
+    "couverture-verification-faits": ("couverture.lecture", "SYSTEME_VERIFICATION", "v3"),
     "couverture-redaction-regles": ("couverture.redaction", "SYSTEME_REDACTION", "v12"),
-    "couverture-document-brut": ("couverture.juges", "SYSTEME_BRUT", "v1"),
-    "couverture-legalbench": ("couverture.legalbench", "SYSTEME_LEGALBENCH", "v1"),
 }
 
 RACINE = Path(__file__).resolve().parents[2]
 MANIFESTE = RACINE / "config" / "versions_consignes.json"
 ARCHIVE = RACINE / "docs" / "consignes"
-PRODUCTION = "production"
 
 
 def texte(nom: str) -> str:
@@ -118,26 +113,5 @@ def verifier(manifeste: dict | None = None) -> list[str]:
 
 
 def versions_courtes() -> str:
-    """« conditions:v1,relecture:v1,… » : ce qu'on note dans le journal et dans MLflow."""
+    """« lecture-socle:v2,lecture-details:v2,… » : ce qu'on note dans le journal."""
     return ",".join(f"{nom.removeprefix('couverture-')}:{v}" for nom, (_, _, v) in sorted(CONSIGNES.items()))
-
-
-def enregistrer_dans_mlflow(mlflow) -> list[str]:
-    """Une version MLflow par texte différent ; l'alias `production` sur la version en service.
-    `mlflow` est le module (passé en paramètre pour être remplacé dans les tests)."""
-    lignes = []
-    for nom, info in etat_actuel().items():
-        t = texte(nom)
-        tags = {"version_code": info["version"], "empreinte": info["empreinte"], "source": info["source"]}
-        existant = None
-        try:
-            existant = mlflow.genai.load_prompt(f"prompts:/{nom}@{PRODUCTION}")
-        except Exception:  # noqa: BLE001 (première fois : pas encore d'alias)
-            pass
-        if existant is not None and getattr(existant, "template", None) == t:
-            lignes.append(f"{nom} : inchangée ({info['version']}).")
-            continue
-        p = mlflow.genai.register_prompt(name=nom, template=t, commit_message=f"{info['version']} ({info['empreinte']})", tags=tags)
-        mlflow.genai.set_prompt_alias(nom, alias=PRODUCTION, version=p.version)
-        lignes.append(f"{nom} : version MLflow {p.version} ({info['version']}), alias {PRODUCTION}.")
-    return lignes

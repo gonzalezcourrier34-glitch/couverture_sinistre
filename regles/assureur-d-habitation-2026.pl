@@ -13,6 +13,14 @@
 
 :- discontiguous definition/4, precision/3, garantie/4, perimetre/2, circonstance/4,
                  obligation/6, exclusion/6, limite/4, evenement_traduit/1, accessoire/1.
+
+%  Les garanties optionnelles (DEMARCHE 7.109) : elles ne jouent que si les conditions particulières les mentionnent,
+%  ce que la déclaration ne dit pas. Seule à couvrir, une option ne donne pas « couvert sous réserve » mais « à
+%  préciser », avec le point à vérifier dans les conditions particulières. Les garanties de base sont présumées souscrites.
+option(option_veranda).
+option(option_objets_valeur).
+option(pack_jardin).
+option(pack_piscine).
 % --- Art. 1.5 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-20 ---
 extension(batiment, et([f(sejour_temporaire, oui), f(lieu, autre_batiment), ou([f(bien, mobilier), f(bien, electronique), f(bien, objet_divers), f(bien, velo), f(bien, mobilier_jardin)]), non(ou([f(bien, bijoux), f(bien, valeurs)])), ou([f(pays, france), f(pays, belgique), f(pays, luxembourg), f(pays, allemagne), f(pays, autre_ue), f(pays, royaume_uni), f(pays, andorre), f(pays, monaco)])]), '1.5-a',
     "Les objets que vous emportez avec vous dans les différents locaux d’habitation, y compris les chambres d’hôtel, que vous occupez lors de voyages ou de vacances dans les pays de l’Union européenne, au Royaume-Uni de Grande-Bretagne et d’Irlande du Nord, dans les principautés d’Andorre et de Monaco").

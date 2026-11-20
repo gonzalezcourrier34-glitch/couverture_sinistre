@@ -17,6 +17,11 @@
 :- discontiguous definition/4, precision/3, garantie/4, perimetre/2, circonstance/4,
                  obligation/6, exclusion/6, limite/4, evenement_traduit/1, accessoire/1.
 
+%  Les garanties optionnelles (DEMARCHE 7.109) : elles ne jouent que si les conditions particulières les mentionnent,
+%  ce que la déclaration ne dit pas. Seule à couvrir, une option ne donne pas « couvert sous réserve » mais « à
+%  préciser », avec le point à vérifier dans les conditions particulières. Les garanties de base sont présumées souscrites.
+option(option_materiel_multimedia).
+
 %  Les événements dont les garanties sont traduites ici. Un autre événement déclaré (tempête, bris de
 %  vitrage…) relève d'une garantie qui n'est pas encore en règles : le moteur ne conclut alors pas
 %  à un refus (au plus INCERTAIN). C'est ce qui garde vrai le « je ne sais pas » d'un contrat
@@ -492,3 +497,7 @@ exclusion([action_electricite], et([f(bien, appareil_informatique), non(concept(
     "ainsi que les dommages aux autres appareils informatiques en dehors du bâtiment assuré").
 exclusion([action_electricite], f(garantie_fabricant, oui), tout, non, '2.6-a',
     "les dégâts tombant sous la garantie du fabriquant ou du fournisseur").
+
+% --- Art. 9 : proposition rédigée par le modèle — aucun, 2026-11-20 ---
+exclusion(tous, et([f(emmenagement, plus_30_jours), f(demenagement_signale, non)]), tout, oui, '9.2~8',
+    "Si vous déménagez en Belgique, vous disposez d’un délai de 30 jours pour nous en informer. Si vous ne le faites pas, l’assurance prend fin à l’expiration de ce délai.").

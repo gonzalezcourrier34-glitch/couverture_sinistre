@@ -1,0 +1,60 @@
+{
+  "meta": {
+    "article": "9",
+    "modele": "aucun",
+    "date": "2026-11-20",
+    "consigne": "relecture manuelle",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-20",
+      "modifications": [
+        "déménagement non signalé dans les 30 jours : exclusion commune, à demander"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [],
+    "definitions": [],
+    "garanties": [],
+    "extensions": [],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "emmenagement",
+                "plus_30_jours"
+              ]
+            },
+            {
+              "f": [
+                "demenagement_signale",
+                "non"
+              ]
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "9.2~8",
+        "texte": "Si vous déménagez en Belgique, vous disposez d’un délai de 30 jours pour nous en informer. Si vous ne le faites pas, l’assurance prend fin à l’expiration de ce délai."
+      }
+    ],
+    "vocabulaire_manquant": [],
+    "non_traduit": [],
+    "hors_decision": []
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 9.2~8 (et non 9)"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "prolog",
+      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
+    }
+  ]
+}

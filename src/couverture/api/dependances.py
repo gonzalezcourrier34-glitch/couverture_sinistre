@@ -49,11 +49,11 @@ class Pipelines:
         """
         with self._verrou:
             if contrat_id not in self._chaines:
-                from couverture.pipeline import llm_configure
-                from couverture.prolog import PipelineRegles
+                from couverture.llm import configurer
+                from couverture.chaine import PipelineRegles
 
                 self.base.contrat(contrat_id)
-                llm = llm_configure()
+                llm = configurer()
                 if llm is None:
                     raise RuntimeError("Aucun modèle configuré : MISTRAL_API_KEY dans le .env du serveur.")
                 self._chaines[contrat_id] = PipelineRegles.depuis_base(self.base, contrat_id, llm)

@@ -3491,21 +3491,268 @@ couleurs sont reprises ; ni logo, ni nom, ni contenu de la marque : l'écran res
 La clé de l'API n'entre jamais dans le navigateur : le proxy de développement (`proxy.conf.mjs`) la lit dans le `.env`
 et l'ajoute aux appels ; en production, ce serait le rôle du serveur placé devant l'API.
 
+### 7.104 Cent déclarations écrites « comme les gens écrivent », par l'interface
+
+Cent déclarations inventées, sans regarder les règles (`data/libre/declarations.jsonl`), écrites comme des clients :
+fautes, style oral, détails inutiles, dix réduites à quelques mots (« jai une fuite », « court circuit »). Tous les
+thèmes : eau, vol, incendie, électricité, tempête, catastrophes, bris, responsabilité civile, litiges, assistance, et
+des cas hors contrat (la voiture, les termites, la panne du frigo). Réparties à tour de rôle sur A, B et D, envoyées
+par la page (le proxy de l'interface, la clé côté serveur), trois à la fois. Pas de réponse attendue écrite à
+l'avance : c'est un essai de robustesse, relu ensuite cas par cas par l'auteur et Claude, sans expert du métier.
+
+**Robustesse** : 99 réponses, aucune erreur du serveur ; une seule refusée (« volé vélo », 9 caractères, sous le
+minimum de 10 ; l'interface désactive déjà le bouton, mais l'API répond avec le message anglais de Pydantic). Médiane
+3,7 s, 90e centile 9,9 s, maximum 39,5 s (quelques appels lents au fournisseur). Décisions : 29 couverts, 26 refus,
+44 « à préciser », dont 10 renvoyés à un gestionnaire (assistance, mérule de B, casse accidentelle : non traduites)
+et 9 suspendus par la confirmation d'un fait décisif.
+
+**Relecture** : la grande majorité des réponses est défendable (le chien qui mord, la coupure de courant de 12 h,
+l'ordinateur de l'employeur, la femme de ménage, les litiges hors garantie, le tremblement de terre qui demande
+l'arrêté). Les erreurs se rangent en cinq familles :
+
+1. *La responsabilité civile non reconnue* quand le dommage est décrit par l'objet d'autrui : « mon fils a cassé la
+   vitre du voisin » est lu `bris` sur la voie publique, « une tuile est tombée sur la voiture du voisin » `heurt` :
+   refusés, alors que la responsabilité civile (ou son option) répond. Le skieur percuté est lu `origine_rc =
+   vehicule_moteur` et refusé. Quatre refus à tort.
+2. *Un refus sur presque rien* : « jai une fuite » chez B est refusé (une garantie annexe rattachée par un bien vague,
+   dont une condition est fausse, l'emporte ; le défaut relevé en 7.101). L'égout qui refoule, lu seulement `degat_eaux`
+   avec `cause_eau = inondation`, est refusé par l'exclusion de l'inondation, sans que la catastrophe naturelle soit lue.
+   L'explosion du barbecue sur la terrasse est refusée (aucune garantie rattachée).
+3. *« accident » qui avale l'événement* : l'aquarium fendu, la tablette tombée, les clés perdues (lues `assistance`)
+   partent chez le gestionnaire alors qu'une garantie traduite répond (eau, bris du multimédia, perte des clés de A).
+4. *Des « couvert sous réserve » trop généreux* : « je crois que j'avais oublié de fermer à clé » est couvert sous
+   réserve que les portes aient été fermées ; « degat des eaux cuisine », sans cause, couvert sous réserve de la cause.
+   La réserve est juste en droit, mais la question est déjà répondue dans le premier cas, et décisive dans le second.
+5. *L'orage lu tempête* (la fenêtre de toit restée ouverte) malgré l'aide de 7.101 ; des faits inventés sans effet
+   (`type_dommage = moisissure` ou `opacification` sur de simples fuites).
+
+Un défaut d'affichage : quand la validation rétrograde un « couvert » en « incertain » (le téléphone tombé dans les
+toilettes, citation non vérifiable), la justification commence encore par « Couvert. ».
+
+Ce que cela dit de la mesure : sur des textes libres, les erreurs ne viennent presque plus des règles, mais de la
+lecture de ce qu'est le sinistre (qui est lésé, quel événement) ; le jeu fermé, écrit en phrases complètes, ne le
+montrait pas.
+
+### 7.105 Les refus à tort des cent déclarations, sur les trois contrats
+
+Les deux familles d'erreurs qui coûtent le plus à un assuré (7.104, familles 1 et 2), corrigées pour A, B et D à la
+fois, dans ce qui leur est commun : le moteur, la lecture et le vocabulaire. Aucune règle de contrat n'est touchée.
+
+*Le moteur* (`moteur.pl` et l'oracle `moteur_reference.py`) : une garantie dont le périmètre est seulement inconnu
+(un bien vague, ou pas de bien lu) et dont une condition est fausse ne joue pas, mais n'est plus « rattachée ». Son
+refus l'emportait sur les garanties possibles : « jai une fuite » était refusé chez B par la dégradation du linge
+(« à la suite d'un incendie »), faute de bien lu. C'était le défaut relevé en 7.101 (la décongélation) : corrigé une
+fois pour toutes, au lieu de garantie par garantie. Règle 2 du moteur : « circonstance non → la garantie ne joue pas
+(hors sujet si le périmètre est inconnu) ».
+
+*La lecture* (`prolog.py`) : `implique` peut ajouter une valeur à une variable qui en a plusieurs. `cause_eau =
+inondation` (débordement d'un cours d'eau, refoulement des égouts) ajoute `catastrophe_naturelle` aux événements, sans
+retirer l'eau : l'égout qui refoule n'est plus refusé par l'exclusion de l'inondation du dégât des eaux (A), il relève
+des catastrophes naturelles, qui demandent ce qui manque. Valable pour les trois contrats : B range l'inondation dans
+« pluies & inondations », D dans les catastrophes naturelles (arrêté).
+
+*Le vocabulaire* (les aides) : la responsabilité civile se reconnaît à l'objet d'autrui. `responsabilite` cite la vitre
+ou la voiture d'un voisin, le skieur blessé ; `bris`, `heurt` et `accident` disent que le bien d'un autre, abîmé par
+l'assuré, un proche ou sa maison, est une responsabilité civile ; `origine_rc` range le ski dans les sports de loisir
+(`personne`) et précise que le véhicule à moteur est celui que conduisait l'assuré, pas la voiture abîmée de la victime ;
+`lieu = terrasse` laisse au logement les murs, portes et baies de la maison (l'explosion du barbecue).
+
+**Vérification sans modèle** : les faits des cent déclarations, rejoués par l'oracle avant et après : seuls changent
+« jai une fuite » (refus → à préciser) et l'égout qui refoule (refus → à préciser, catastrophes naturelles) ; aucun
+autre cas ne bouge. Les faits attendus après la nouvelle lecture (la vitre du voisin, la tuile sur la voiture, le
+skieur, sur les trois contrats) donnent la responsabilité civile ou son option. Les 25 cas fermés de D et ceux de A et
+B, inchangés ; deux tests ajoutés. Ce que les aides changent à la lecture, seul un nouveau passage des cent
+déclarations le dira.
+
+### 7.106 Après 7.105, les bancs fermés : trois couverts à tort, et une porte mal mesurée
+
+Bancs fermés après 7.105 (Mistral Small, lecture vérifiée, 3 exécutions) : A **85 %** justes, 1,67 couvert à tort ;
+B **83 %**, 1 couvert à tort ; D **100 %**. 175 tests passent. Les faits lus, gardés par le banc depuis 7.93, disent
+chaque fois où l'erreur naît.
+
+- *`f-b18`, l'ordinateur volé dans la voiture garée* (B, attendu incertain, obtenu couvert 3 fois sur 3). Deux
+  causes. **Le moteur** : le pack multimédia oblige, dans un véhicule, à l'avoir fermé à clé et à ne rien laisser en
+  vue ; non respectée, l'obligation fait refuser sans lien causal. Le lieu était établi, l'exigence inconnue : elle
+  devenait une réserve, et la garantie couvrait. Une obligation « si A alors B », **sans lien causal**, dont A est
+  établi et B inconnu est désormais **engagée** : la réponse est incertaine et on demande B (règle 6 ter, `moteur.pl`
+  et l'oracle). Avec lien causal, elle reste une réserve : les fenêtres pendant l'absence ne se demandent pas quand le
+  voleur est passé par la porte (`g2-p01`, qui l'a montré au premier essai). **La lecture** : la vitre de la voiture
+  était lue `vitre` (un vitrage du bâtiment, couvert par le bris de vitrages) et la journée au parking un
+  `sejour_temporaire` ; les aides disent maintenant que la vitre est celle du logement, celle d'une voiture étant
+  `vehicule_moteur`, et qu'un séjour dure plusieurs nuits.
+- *`f-a17`, l'incendie deux mois après avoir emménagé à Namur* (A, arbitré incertain). L'art. 9 n'était pas traduit :
+  « Si vous déménagez en Belgique, vous disposez d'un délai de 30 jours pour nous en informer. Si vous ne le faites
+  pas, l'assurance prend fin à l'expiration de ce délai. » Il devient une **exclusion commune, à demander**
+  (`relecture/assureur_a_9.py`, proposition `9`) : l'assureur prouve que le déménagement n'a pas été signalé ; si la
+  déclaration dit un emménagement de plus de 30 jours, l'exclusion est entamée, la réponse est incertaine, avec la
+  question. Deux variables : `emmenagement` (non, moins de 30 jours, plus de 30 jours) et `demenagement_signale`. Le
+  déménagement à l'étranger n'est pas traduit (il faudrait savoir où était le logement assuré).
+- *`f-a11`, le vase brisé par le chat* (A, 2 couverts sur 3) : lu `verre_meuble` (couvert) au lieu de
+  `objet_verre_non_vitre`. L'aide de `verre_meuble` dit maintenant ce qu'il est : le plateau ou la porte en verre d'un
+  meuble, pas un objet posé dessus. C'est le genre de confusion que la banque d'exemples (7.107) devra régler sans aide.
+- *La porte « rappel des questions » à 0 %* sur les trois bancs : le jeu fermé écrit la question attendue en phrase,
+  le banc cherche une variable ; rien ne pouvait correspondre. Une question qui n'est pas une variable n'est plus
+  mesurée (la porte n'est plus jugée sur le jeu fermé, au lieu d'échouer à tort).
+
+Restent : `f-a18` (le vélo lu véhicule à moteur une fois sur trois), `f-a14` (le store banne, incertain au lieu de
+refusé), et la latence de D au 95e centile (20 s pour un cas seul, un appel lent du fournisseur sur dix).
+
+**Vérification sans modèle** : les faits lus de `f-b18` et `f-a17`, rejoués par l'oracle, donnent incertain avec les
+bonnes questions ; lus correctement, ils l'auraient donné aussi. Les faits des cent déclarations (7.104), rejoués
+avant et après : aucune décision ne change. Deux tests ajoutés.
+
+### 7.107 La banque d'exemples et le partage mise au point / test
+
+Première étape du plan proposé après 7.105 : remplacer, à terme, les exceptions écrites dans les aides du vocabulaire
+(32 aides en ont) par des exemples choisis pour chaque déclaration. Rien n'est encore branché dans l'analyse.
+
+**Le partage** (`data/lecture/partage.json`, figé) : les 112 cas du golden set qui ont des faits idéaux (A et B) sont
+rangés en **74 de mise au point** et **38 de test**, d'après une empreinte de leur identifiant (le même cas tombe
+toujours du même côté ; un cas ajouté plus tard ne déplace pas les autres). Règle : un cas de test ne sert jamais à
+corriger le vocabulaire ou les règles, et n'entre jamais dans la banque. `couverture banc --partie test` (ou
+`mise_au_point`) passe le golden set sur une seule partie ; ses rapports ne se comparent qu'à ceux de la même partie.
+Honnêteté : ces 38 cas ont déjà servi à corriger avant aujourd'hui. Le partage protège la mesure à partir de
+maintenant ; une mesure vraiment neuve demandera des déclarations neuves (un second lot de cent, écrit par Mistral
+Large, puis validé).
+
+**La banque** (`src/couverture/exemples.py`) : les cas de mise au point, avec leur déclaration et leurs faits idéaux.
+`couverture exemples --indexer` calcule le vecteur de chaque déclaration avec `mistral-embed` (un texte → 1 024
+nombres, pas un appel de lecture), dans la table `exemples` de la base ; seuls les exemples nouveaux ou changés sont
+recalculés. `couverture exemples --proches "…"` donne les plus proches d'une déclaration avec leur score : similarité
+cosinus, un **seuil** sous lequel on n'envoie rien (0,80, à calibrer sur ces scores), la **diversité** (MMR : le plus
+proche, puis le suivant le plus proche qui ne ressemble pas trop aux exemples déjà pris), et, pour les détails, les
+seuls exemples du **même événement**. Pas de base vectorielle : quelques centaines de vecteurs se comparent en Python.
+
+Suite : calibrer le seuil, puis brancher les exemples dans les appels 1 et 2 derrière une option, et comparer sur la
+partie test, avec et sans. S'ils n'améliorent que les cas déjà dans la banque, ils n'ont rien appris au modèle.
+
+### 7.108 Bancs après 7.106, le seuil des exemples, et les exemples dans la lecture
+
+Bancs fermés (16 h 19 à 16 h 25) : A **85 %** justes, 0,67 couvert à tort (contre 1,67), 0,67 refus à tort, 4
+instables ; B **80 %**, 1,33 couvert à tort, 5 instables ; D **99 %**. 184 tests passent. Les faits lus disent :
+
+- `f-b18` n'est plus couvert par la vitre ni par le séjour, mais la voiture garée devant la gare est lue
+  `lieu = voie_publique` deux fois sur trois : l'obligation « dans un véhicule » n'est pas mise en jeu. Aides de
+  `vehicule` et `voie_publique` : un objet volé dans une voiture garée, c'est `vehicule`.
+- `f-a18`, le vélo, est lu `origine_rc = vehicule_moteur` deux fois sur trois. L'aide citait « vélo électrique » :
+  la leçon 113, enfreinte par nous-mêmes. Elle dit maintenant « un engin à moteur, qui avance sans qu'on pédale »,
+  sans le mot. Le vélo électrique rapide (un cyclomoteur) n'y est plus nommé.
+- `f-b15` (le ruissellement) et `f-b18` restent couverts par **une option dont on ne sait pas si elle est
+  souscrite** (pluies et inondations, matériel multimédia), mise en réserve depuis 7.62 (leçon 79). Le jeu fermé, lui,
+  attend « incertain » quand la réponse dépend d'une option. Les deux conventions se contredisent : tranché en 7.109.
+- Effet de bord de 7.106 : la réserve du déménagement (art. 9 de A) s'ajoute aux « à préciser » de chaque réponse
+  couverte de A, comme celle du défaut d'entretien chez D.
+- Le reste est de la variance de lecture (`f-a02`, `f-a11`, `f-a12`, `f-b03`, `f-b07`, `f-b13`) : c'est ce que les
+  exemples doivent réduire.
+
+**Le seuil**, calibré sur la banque (74 exemples, 2 701 paires, vecteurs `mistral-embed`) : deux déclarations du même
+événement ont une similarité médiane de 0,84, deux d'événements différents de 0,80. À 0,85, 42 % des paires du même
+événement passent, 4 % des autres ; à 0,88, 15 % et 0,5 %. Seuil retenu : **0,85** (avec le filtre par événement aux
+détails). Le plus proche voisin de chaque exemple est du même événement 59 fois sur 74.
+
+**Les exemples dans la lecture**, derrière l'option `COUVERTURE_EXEMPLES=oui` (lecture en deux temps ou vérifiée) :
+un vecteur par déclaration, puis trois exemples au plus pour le socle (réduits à événement, bien, lieu) et trois du
+même événement pour les détails (réduits aux variables de l'appel), avec la consigne qu'ils montrent la façon de lire
+et ne sont pas les faits à reprendre. Une déclaration n'est jamais son propre exemple. Si l'appel au vecteur échoue,
+la lecture se fait sans exemples. Le banc l'inscrit dans le mode de lecture (« verifiee, exemples ») : ses rapports ne
+se comparent qu'entre eux. Deux tests ajoutés.
+
+### 7.109 Une option seule à couvrir : « à préciser », plus « couvert sous réserve »
+
+Décision de l'auteur, sur la question de 7.108. Depuis 7.62 (leçon 79), une garantie qui ne joue que si les
+conditions particulières la mentionnent était une **réserve** : « couvert, sous réserve que vos conditions
+particulières mentionnent la garantie ». Le jeu fermé, écrit sans voir les règles, attend « incertain » quand la réponse
+dépend d'une option. Les deux conventions se contredisaient ; c'est la seconde qui est retenue : un « couvert » qui ne
+l'est pas coûte plus cher qu'un « à préciser ». Ce que la leçon 79 disait reste vrai : le déclarant ne connaît pas ses
+options, la question est un **point à vérifier dans les conditions particulières**, pas une question qu'il doit savoir.
+
+Ce qui distingue une option d'une garantie de base est le contrat, pas le vocabulaire : `option_materiel_multimedia`
+est une garantie de base chez B (3.1.7, « garanties de base ») et une garantie optionnelle chez A (6, « les
+garanties optionnelles »). Chaque contrat déclare donc ses options, en tête de ses règles (`option/1`) :
+- A : `option_materiel_multimedia` (le pack multimédia) ;
+- B : `option_tremblement_terre`, `option_pluies_inondations`, `option_pertes_indirectes` (la section 3.2) ; les
+  garanties de la section 3.1 (incendie, tempête, eaux, vol, bris de vitrages, multimédia…) restent présumées
+  souscrites, comme le veut la convention du jeu fermé ;
+- D : `option_veranda`, `option_objets_valeur`, `pack_jardin`, `pack_piscine` (les packs et garanties optionnels).
+
+Le moteur (`moteur.pl` et l'oracle, règle 6 quater) : une garantie rattachée qui couvrirait sous la seule réserve d'une
+option est « à préciser », avec la question de l'option. Une garantie de base qui couvre l'emporte toujours (le
+combinateur prend d'abord un « couvert »).
+
+**Vérification sans modèle**, oracle avant et après : les faits idéaux du golden set (A et B), les faits lus des neuf
+derniers bancs fermés (195 lectures) et ceux des cent déclarations. Changent : `f-b15` (le ruissellement, chez B, 2
+lectures sur 3 : couvert → à préciser, la réponse attendue), `f-a09` (A, 3 sur 3 : couvert → à préciser, la réponse
+attendue ; le banc donnait déjà « incertain » par la confirmation) et, parmi les cent déclarations, le glissement de
+terrain chez B (option pluies et inondations). Aucun cas du golden set ne change : ses réponses attendues n'ont pas à
+être revues. Un test ajouté.
+
+### 7.110 Simplifier : retirer ce qui n'est plus le produit, et une commande, un module par fichier
+
+Décision de l'auteur : retirer tout ce qui servait des méthodes ou des réglages essayés puis écartés, et redécouper les
+gros fichiers. Aucune réponse ne doit changer : les tests passent à l'identique (moins ceux du code retiré), et les
+bancs sont à repasser pour le vérifier.
+
+**Retiré** (le code reste dans l'historique git) :
+- la méthode `brut` (le contrat entier dans le prompt, la référence « chatbot » : `pipeline.py`, `juges.py`) et
+  LegalBench (`legalbench.py`, ses tests ; ses résultats restent dans METRIQUES) ;
+- l'ancienne page web (`web.py`, `static/index.html`) et la commande `serveur`, remplacées par l'API et l'interface
+  Angular (7.102, 7.103) ;
+- MLflow (`suivi.py`, l'extra `suivi`, le service docker, `versions --enregistrer`) : les rapports de `data/bancs/`,
+  comparés au précédent de même configuration, et le manifeste des consignes en tiennent lieu ;
+- les fournisseurs Anthropic et « compatible OpenAI » (`COUVERTURE_FOURNISSEUR`, `COUVERTURE_LLM_URL`) : jamais
+  employés ; Mistral reste derrière le protocole `LLM` ;
+- les lectures en un temps et en parallèle (`COUVERTURE_LECTURE`, la consigne `faits-regles` v4), essayées et écartées
+  en 7.38 à 7.42 ; la lecture est toujours en deux temps puis vérifiée (`verifier=False` sert aux tests) ;
+- le second avis par un autre modèle (`COUVERTURE_MODELE_CONFIRMATION`, le recours de 7.78), jamais retenu : la
+  confirmation des faits décisifs se fait par le modèle de la lecture ;
+- les scripts `relecture/` (18 fichiers) : des corrections déjà appliquées, que chaque proposition trace dans
+  `meta.relecture`.
+
+**Redécoupé** :
+- `prolog.py` (958 lignes) devient `prolog.py` (le moteur : SWI-Prolog, vocabulaire, décision, 266 lignes),
+  `lecture.py` (le modèle lit, le code ramène au vocabulaire) et `chaine.py` (la chaîne et la réponse) ;
+- `cli.py` (700 lignes) devient le paquet `cli/` : une commande par module, comme une route par fichier dans l'API ;
+- `redaction.py` (1 140 lignes) devient le paquet `redaction/` : `consigne.py`, `ecriture.py` (JSON → Prolog),
+  `controles.py`, `vocabulaire.py`, et les commandes dans `__init__.py`.
+
+Bilan : 7 450 lignes de Python dans `src/` avant, 6 700 après, et 4 000 lignes de moins en tout (scripts de relecture et
+page web compris). Le docker lance l'API et Grafana. Les consignes en service passent de sept à quatre ; leurs textes
+archivés restent dans `docs/consignes/`.
+
+### 7.111 Après la simplification, et les exemples mesurés
+
+**La simplification ne change rien** (7.110) : 173 tests passent, `couverture regles` est en ordre pour les trois
+contrats, et le jeu fermé donne, sans exemples, A **88 %** (0 couvert à tort, 1 refus à tort : le vélo), B **90 %** (0 et
+0, portes passées), D **100 %**. Les 95e centiles de latence à 70 s viennent de deux séries de bancs lancées en même temps
+(huit appels à la fois : limites de débit du fournisseur), pas du code.
+
+**Les exemples** (`COUVERTURE_EXEMPLES=oui`, 7.108), mesurés le même après-midi :
+
+| | A fermé | B fermé | D fermé | A, partie test du golden |
+|---|---|---|---|---|
+| Sans exemples (deux séries) | 85 % et 88 % | 83 % et 90 % | 99 % et 100 % | 80 % justes, 3,3 couverts à tort, 8 instables |
+| Avec exemples | **95 %**, 0 couvert à tort, 0 instable | 82 % | 97 % | **89 %**, 2 couverts à tort, 2 instables |
+
+Sur A, le gain est net, et il tient sur la partie test, que la banque ne contient pas : le jeu de clés lu comme un bien
+volé (`g-p03`) et la fenêtre de `val-01` ne font plus couvrir, les instables passent de 8 à 2. Sur B et D, l'écart
+reste dans la variance d'une série à l'autre. La banque ne contient que des cas de A et de B (le golden set) : D n'a pas
+d'exemple à lui. Coût : une demi-seconde de plus par cas (un vecteur, des messages plus longs).
+
+Restent dans les deux modes : `f-a18` (le vélo lu véhicule à moteur), `red-b05` (le miroir) et `g2-p08` (le bain à
+bulles lu « débordement d'aquarium »).
+
 ## 8. Ce qui reste à faire
 
-Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.
+Tenu à jour le 20 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.
 
 **Le plan de lecture (7.35)**
-- La lecture vérifiée est la lecture par défaut (7.45). Mesurer Mistral Large avec elle, pour le recours dans la cascade.
-- Le recours à Mistral Large pour les seuls cas douteux (faits retirés par la vérification, ou « couvert » sur un fait vérifié de justesse).
+- La lecture vérifiée est la seule lecture (7.45, 7.110). Si un recours à Mistral Large revient un jour (cas douteux), il se mesurera sur la partie test.
 - La porte de latence passe (4,7 s pour 10) : la resserrer, par exemple à 8 s.
 - Les erreurs restantes (7.50) : la clé sous le paillasson (cohérence), les oublis (demander, avant de couvrir, si une exclusion présumée absente est évoquée).
-- Étape 2 : double lecture en parallèle comparée par le code, et recours à Mistral Large quand elles divergent ou que la réponse est « couvert ».
 
 **La mesure honnête**
-- Le **jeu fermé**, écrit par l'auteur sans voir les règles (`data/ferme/`, au moins 20 cas, avec des « incertain »).
+- Un jeu fermé écrit par l'auteur lui-même, sans voir les règles (celui de `data/ferme/` est écrit par deux annotateurs automatiques).
 - **Valider le golden set** (`data/golden/A_VALIDER.md`), en particulier la toiture et les clés.
-- LegalBench avec Mistral Large ; et, plus tard, des règles rédigées pour quelques clauses.
 
 **Le passage à l'échelle**
 - Assureur A : lots A et B, pack multimédia, responsabilité civile et défense et recours faits (7.63, 7.69, 7.71, 7.99). Reste : l'assistance (2.13).
@@ -3514,6 +3761,11 @@ Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les section
 - Contrôle mécanique à écrire : aucune exclusion commune ne doit rendre une extension impossible (leçon 70) ; le moteur peut le vérifier en prenant le périmètre de chaque garantie comme faits.
 - Le coût de la confirmation sur Assureur B (deux réponses justes suspendues sur 15) : mesurer si la confirmation peut épargner les faits que la lecture et la vérification donnent tous deux.
 - Faits idéaux Assureur B : retirer les valeurs par défaut que la déclaration ne dit pas (`auteur = tiers`, `proprietaire = assure`), qui sous-estiment le rappel.
+
+**La lecture, sans cas particuliers (7.107)**
+- Les exemples aident nettement sur A (7.111) : les mesurer sur la partie test de B, puis décider s'ils deviennent la lecture par défaut ; des exemples pour D.
+- Un second lot de déclarations, écrit par Mistral Large et validé, pour un test que rien n'a encore corrigé.
+- La question « qui a subi le dommage ? » dans l'appel 1, pour la responsabilité civile.
 
 **Le reste**
 - Les 43 vulnérabilités signalées par GitHub (la mise à jour du verrou n'en a pas réduit le nombre : lire la liste).
@@ -3599,7 +3851,7 @@ Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les section
 76. Une exclusion que rien n'évoque reste une réserve ; une exclusion que la déclaration entame devient une question (précise la leçon 56).
 77. Rédiger en parallèle va trois fois plus vite, mais chaque proposition invente son vocabulaire : la relecture commence par harmoniser les noms.
 78. Chaque garantie traduite ouvre une route de plus vers « couvert » : une valeur nouvelle doit être rattachée à celles que les règles connaissent déjà.
-79. Une garantie optionnelle (« si les conditions particulières le mentionnent ») est une réserve, jamais une question au déclarant.
+79. Une garantie optionnelle (« si les conditions particulières le mentionnent ») est une réserve, jamais une question au déclarant (7.109 : seule à couvrir, elle donne « à préciser », le point à vérifier dans les conditions particulières).
 80. Un juge plus fort corrige les erreurs de fait, pas les erreurs de choix ; un juge plus strict coûte des réponses justes.
 81. Une garantie ne répond pas toujours à « est-ce couvert ? » : certaines disent ce qui s'y ajoute, et ne doivent pas entrer dans la décision.
 82. « Étendre » recouvre trois choses (ajouter des frais, élargir un lieu, couvrir une autre responsabilité) ; la simulation sur le golden les distingue en une minute.
@@ -3636,3 +3888,11 @@ Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les section
 113. Une aide qui cite le mot à exclure (« vélo électrique ») l'attire : dire aussi, en clair, ce que la valeur n'est jamais.
 114. Une limite notée « connue » finit par coûter un cas : celle du typage a annulé une garantie juste.
 115. Un contrat ne lit que ses variables ; il doit lire aussi celles qui les impliquent, sinon un fait dit autrement se perd.
+116. Des déclarations écrites comme les gens écrivent montrent d'autres erreurs que des cas rédigés : l'objet d'autrui cache la responsabilité civile.
+117. Un défaut vu deux fois dans les règles se corrige dans le moteur : une garantie qu'on ne sait pas rattacher ne doit pas refuser.
+118. Une obligation qui fait refuser sans lien causal, mise en jeu par la déclaration, se demande : en faire une réserve couvre à tort.
+119. Un cas de test qui a servi à corriger ne mesure plus rien : partager avant de corriger, et figer le partage.
+120. Une règle qu'on a écrite se relit dans ses propres aides : « vélo électrique » dans l'aide du véhicule à moteur attirait le vélo.
+121. Une garantie optionnelle se déclare dans le contrat, pas dans le vocabulaire : la même variable est une option chez l'un, une garantie de base chez l'autre.
+122. Ce qu'on a essayé et écarté se retire du code : un réglage qu'on ne mesure plus est une branche qu'on ne teste plus.
+123. Deux séries de bancs lancées en même temps se gênent : la latence mesurée devient celle du fournisseur saturé.
