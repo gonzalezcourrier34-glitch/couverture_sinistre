@@ -38,7 +38,7 @@ from .texte import normaliser
 from .validation import _compact, extrait_present, passage_exact
 
 PROPOSITIONS = prolog.DOSSIER / "propositions"
-VERSION = "v11"
+VERSION = "v12"
 IDENT = re.compile(r"^[a-z][a-z0-9_]*$")
 BLOQUANT, A_RELIRE, INFO = "bloquant", "à relire", "info"
 
@@ -56,6 +56,7 @@ Une garantie qui ne joue qu'après un sinistre couvert par une autre (frais de s
 Une extension qui élargit un LIEU ou un BIEN assuré (« le contenu lors d'un séjour temporaire », « pendant son transport lors d'un déménagement ») n'est pas une garantie : elle élargit la définition du contrat que les garanties emploient déjà : prends son nom dans « Concepts déjà définis dans les règles du contrat » (le lieu assuré, le contenu), jamais un nom d'un autre contrat. Mets-la dans "extensions" : {"concept": "<un concept du contrat>", "condition": …, "article", "texte"} ; elle vaut alors pour toutes les garanties du contrat.
 Des dégâts causés PAR un assuré au bien d'un autre (l'hôtel, la chambre louée, la salle de fête) relèvent de sa responsabilité, pas d'une extension : une garantie accessoire tant que la responsabilité civile n'est pas traduite. Une restriction à un pays s'écrit avec une variable pays, une valeur par pays (jamais une valeur « liste de pays »).
 Les exclusions d'un article (« vols exclus ») valent pour TOUTES ses garanties, extensions comprises : mets-les dans "exclusions_communes", pas dans une seule garantie. N'attache à une garantie que les exclusions qui ne valent que pour elle.
+Un article d'exclusions générales (« ce que nous ne garantissons jamais », valable pour tout le contrat) n'a pas de garantie : laisse "garanties" vide et mets ses exclusions dans "exclusions_communes" ; elles viseront toutes les garanties du contrat.
 Une condition est un terme JSON : {"f": ["variable", "valeur"]}, {"et": [c1, c2]}, {"ou": [c1, c2]}, {"non": c}, {"si": [a, b]} (si a alors b), {"concept": "nom"} (une définition).
 La logique a trois valeurs : un fait que la déclaration ne donne pas est « inconnu », et le moteur pose alors la question. N'essaie pas de compenser un fait inconnu.
 
@@ -204,7 +205,9 @@ def en_prolog(prop: dict, article: str, entete: str = "") -> str:
         if g.get("accessoire"):
             lignes.append(f"accessoire({atome(g['id'])}).")
     if prop.get("exclusions_communes"):
-        cibles = "[" + ", ".join(atome(g["id"]) for g in prop.get("garanties", [])) + "]"
+        # Un article d'exclusions générales (« Titre IX : ce que nous ne garantissons jamais ») n'a pas de
+        # garantie à lui : ses exclusions visent toutes celles du contrat (`tous`, 7.88).
+        cibles = ("[" + ", ".join(atome(g["id"]) for g in prop["garanties"]) + "]") if prop.get("garanties") else "tous"
         for x in prop["exclusions_communes"]:
             lignes.append(f"exclusion({cibles}, {terme(x['condition'])}, {portee(x.get('portee'))}, "
                           f"{oui_non(x.get('a_demander'))}, {atome(x['article'])},\n    {chaine(x['texte'])}).")
@@ -406,7 +409,7 @@ def erreurs_schema(prop) -> list[str]:
     champs(prop.get("hors_decision"), "hors_decision", "hors_decision")
     champs(prop.get("exclusions_communes"), "exclusions", "exclusions_communes")
     garanties = prop.get("garanties")
-    if not garanties and not prop.get("extensions"):
+    if not garanties and not prop.get("extensions") and not prop.get("exclusions_communes"):
         erreurs.append("aucune garantie proposée")
     champs(garanties, "garanties", "garanties")
     for g in garanties or []:

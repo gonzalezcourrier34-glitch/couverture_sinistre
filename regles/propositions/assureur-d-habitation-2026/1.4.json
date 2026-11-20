@@ -1,0 +1,173 @@
+{
+  "meta": {
+    "article": "1.4",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12"
+  },
+  "proposition": {
+    "evenements": [],
+    "definitions": [
+      {
+        "concept": "veranda",
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "construction_vitree",
+                "oui"
+              ]
+            },
+            {
+              "f": [
+                "construction_close",
+                "oui"
+              ]
+            },
+            {
+              "f": [
+                "adjacente_habitation",
+                "oui"
+              ]
+            }
+          ]
+        },
+        "article": "1.4",
+        "texte": "Il s'agit d'une construction totalement ou partiellement vitrée entièrement close et couverte, adjacente au local d'habitation ou à ses dépendances."
+      }
+    ],
+    "garanties": [],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "et": [
+            {
+              "concept": "veranda"
+            },
+            {
+              "f": [
+                "bien",
+                "serre"
+              ]
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "1.4-a",
+        "texte": "les serres"
+      },
+      {
+        "condition": {
+          "et": [
+            {
+              "concept": "veranda"
+            },
+            {
+              "f": [
+                "manque_entretien",
+                "oui"
+              ]
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "1.4-a",
+        "texte": "les dommages résultant de la vétusté de la véranda"
+      }
+    ],
+    "extensions": [
+      {
+        "concept": "bien",
+        "condition": {
+          "et": [
+            {
+              "concept": "veranda"
+            },
+            {
+              "f": [
+                "option_veranda",
+                "oui"
+              ]
+            }
+          ]
+        },
+        "article": "1.4",
+        "texte": "Cette garantie doit être spécialement mentionnée aux conditions particulières. Il s'agit d'une construction totalement ou partiellement vitrée entièrement close et couverte, adjacente au local d'habitation ou à ses dépendances."
+      }
+    ],
+    "vocabulaire_manquant": [
+      {
+        "variable": "option_veranda",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Vos conditions particulières mentionnent-elles la garantie « véranda » ?",
+        "pourquoi": "La garantie véranda est optionnelle et doit être spécialement mentionnée aux conditions particulières",
+        "plus_proche": "option_incendie, option_vol, etc. : variables similaires pour d'autres garanties optionnelles",
+        "aide": {
+          "oui": "la garantie véranda est reprise dans les conditions particulières",
+          "non": "la garantie véranda n'est pas mentionnée"
+        }
+      },
+      {
+        "variable": "construction_vitree",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La construction est-elle totalement ou partiellement vitrée ?",
+        "pourquoi": "La définition de la véranda exige qu'elle soit totalement ou partiellement vitrée",
+        "plus_proche": "bien : la valeur 'vitre' désigne un bien vitré, pas une construction vitrée",
+        "aide": {
+          "oui": "la véranda comporte des parois en verre (fenêtres, baies vitrées)",
+          "non": "la construction n'est pas vitrée"
+        }
+      },
+      {
+        "variable": "adjacente_habitation",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La construction est-elle adjacente au local d'habitation ou à ses dépendances ?",
+        "pourquoi": "La définition de la véranda exige qu'elle soit adjacente au logement ou à ses dépendances",
+        "plus_proche": "lieu : 'annexe' désigne un local situé en dehors de la verticalité du logement, pas nécessairement adjacent",
+        "aide": {
+          "oui": "la véranda touche directement la maison ou un de ses dépendances (garage, cave)",
+          "non": "la construction est séparée du logement"
+        }
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "construction_vitree = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "adjacente_habitation = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "option_veranda = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.4`) ou à remplacer"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « les serres » : ne vise que serre, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "concept",
+      "message": "extension d'un concept inconnu : bien (concepts de ce contrat : veranda)"
+    }
+  ]
+}

@@ -19,7 +19,8 @@ from .texte import normaliser
 
 FORMATS = {".pdf", ".md", ".txt", ".docx"}
 # Fichiers de documentation rangés avec les contrats, qui n'en sont pas.
-IGNORES = {"sources.md", "readme.md", "lisezmoi.md"}
+# SOURCES.prive.md (les vrais noms, 7.70) a été ingéré comme un contrat le 20 nov. : tout « sources* » est ignoré.
+IGNORES = {"sources.md", "sources.prive.md", "readme.md", "lisezmoi.md"}
 
 
 def identifiant(fichier: Path) -> str:
@@ -64,7 +65,8 @@ def ingerer_fichier(fichier: str | Path, base: Base, meta: dict | None = None, f
 
 def fichiers_contrats(dossier: Path) -> list[Path]:
     return [f for f in sorted(dossier.iterdir())
-            if f.suffix.lower() in FORMATS and f.name.lower() not in IGNORES and not f.name.startswith((".", "~$"))]
+            if f.suffix.lower() in FORMATS and f.name.lower() not in IGNORES and not f.name.lower().startswith("sources")
+            and not f.name.startswith((".", "~$"))]
 
 
 def ingerer_dossier(dossier: str | Path, base: Base, forcer: bool = False, barre=None) -> list[Contrat]:

@@ -3054,6 +3054,29 @@ servira à les corriger avant la mesure.
 **Leçon 97.** Un statut « OK » d'ingestion qui ne regarde que la forme laisse passer un contrat illisible : il faut
 regarder, pour quelques articles, si le texte de la clause est bien celui de l'article.
 
+### 7.88 Assureur D ingéré ; un incident ; les exclusions générales dans la rédaction
+
+**Ingestion** (20 nov.) : D « OK », 267 clauses comme prévu (41 définitions, 47 garanties, 43 exclusions) ; A et B
+inchangés (147 et 293 clauses).
+
+**Incident.** `SOURCES.prive.md`, le fichier des vrais noms (7.70), rangé avec les contrats, a été ingéré comme
+un contrat (« sources-prive », 1 clause). La base n'est pas versionnée (`.gitignore`) : rien n'est sorti du poste.
+L'ingestion ignore désormais tout fichier `sources*` ; la base reflétant le dossier, la prochaine ingestion le
+retire.
+
+**Les exclusions générales.** Chez A, elles avaient été écrites à la main (1.4) ; chez B, elles ne sont pas
+traduites. La rédaction ne savait pas les produire : un article sans garantie était refusé (« aucune garantie
+proposée ») et ses exclusions communes n'auraient visé personne. Le moteur connaissait pourtant la cible `tous`.
+*Rédaction v12* : un article d'exclusions générales (titre IX de D, « S25 ») se rédige sans garantie, et ses
+exclusions visent `tous` (test `test_article_d_exclusions_generales_vise_toutes_les_garanties`). À faire ensuite
+pour B, par la même voie.
+
+**Plan de rédaction de D.** (1) les biens assurés (1.1 à 1.5 : les concepts du bâtiment et du contenu, dont les
+garanties ont besoin) et les exclusions générales (S25) ; (2) les dommages (2.1 à 2.13) ; (3) les mesures de
+sécurité (4, des réductions d'indemnité et non des refus, 7.81) et les frais (3, accessoires) ; les packs et les
+responsabilités ensuite. Mesures à chaque lot : temps de rédaction, nombre de contrôles bloquants, corrections
+à la main.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.

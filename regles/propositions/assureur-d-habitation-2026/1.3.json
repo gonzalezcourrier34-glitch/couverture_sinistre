@@ -1,0 +1,505 @@
+{
+  "meta": {
+    "article": "1.3",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12"
+  },
+  "proposition": {
+    "evenements": [
+      "vol",
+      "incendie",
+      "explosion",
+      "foudre",
+      "degat_eaux",
+      "tempete",
+      "bris",
+      "electricite",
+      "mazout",
+      "catastrophe_naturelle",
+      "attentat",
+      "fumee",
+      "vandalisme",
+      "merule",
+      "heurt",
+      "accident"
+    ],
+    "definitions": [
+      {
+        "concept": "objet_valeur",
+        "condition": {
+          "ou": [
+            {
+              "concept": "objet_valeur_non_designe"
+            },
+            {
+              "concept": "objet_valeur_designe"
+            }
+          ]
+        },
+        "article": "1.3",
+        "texte": "Il s’agit des : • o bjets de valeur non désignés, c’est-à-dire des objets précieux, espèces, titres et valeurs ainsi que les objets d’art et fourrures d’un montant unitaire supérieur à ceux faisant partie des biens mobiliers. Les garanties sont accordées dans la limite globale par sinistre fixée dans vos conditions particulières et jusqu’aux montants maximum indiqués dans le tableau 2.3 « Les limites particulières ». • o bjets de valeur spécifiquement désignés dans vos conditions particulières, soit en valeur expertisée, soit en valeur déclarée, c’est-à-dire des objets précieux, des timbres, des collections de timbres ainsi que des objets d’art, de fourrures et du mobilier précieux.Les garanties sont accordées dans la limite globale par sinistre fixée dans vos conditions particulières. Cette garantie optionnelle apporte un complément de garantie pour la dépréciation de la collection dont les montants sont fixés au tableau 2.3 « Les limites particulières » et dans la limite de la garantie « objets de valeur » pour les objets de valeur non désignés."
+      },
+      {
+        "concept": "objet_valeur_non_designe",
+        "condition": {
+          "et": [
+            {
+              "ou": [
+                {
+                  "f": [
+                    "bien",
+                    "bijoux"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "especes"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "valeurs"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "objet_precieux"
+                  ]
+                },
+                {
+                  "et": [
+                    {
+                      "f": [
+                        "bien",
+                        "objet_art"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "valeur_unitaire_superieure_2000",
+                        "oui"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "et": [
+                    {
+                      "f": [
+                        "bien",
+                        "fourrure"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "valeur_unitaire_superieure_2000",
+                        "oui"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "f": [
+                "objet_valeur_designe",
+                "non"
+              ]
+            }
+          ]
+        },
+        "article": "1.3",
+        "texte": "objets de valeur non désignés, c’est-à-dire des objets précieux, espèces, titres et valeurs ainsi que les objets d’art et fourrures d’un montant unitaire supérieur à ceux faisant partie des biens mobiliers"
+      },
+      {
+        "concept": "objet_valeur_designe",
+        "condition": {
+          "et": [
+            {
+              "ou": [
+                {
+                  "f": [
+                    "bien",
+                    "bijoux"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "especes"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "valeurs"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "objet_precieux"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "objet_art"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "fourrure"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "timbre"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "collection_timbres"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "mobilier_precieux"
+                  ]
+                }
+              ]
+            },
+            {
+              "f": [
+                "objet_valeur_designe",
+                "oui"
+              ]
+            }
+          ]
+        },
+        "article": "1.3",
+        "texte": "objets de valeur spécifiquement désignés dans vos conditions particulières, soit en valeur expertisée, soit en valeur déclarée, c’est-à-dire des objets précieux, des timbres, des collections de timbres ainsi que des objets d’art, de fourrures et du mobilier précieux"
+      },
+      {
+        "concept": "collection",
+        "condition": {
+          "f": [
+            "bien",
+            "collection_timbres"
+          ]
+        },
+        "article": "S10-a/collection",
+        "texte": "Une collection s’entend du rassemblement d’objets de même nature, choisis pour leur beauté, leur rareté, leur caractère curieux, leur valeur documentaire ou leur prix. La valeur d’une collection comprend d’une part la valeur intrinsèque de chaque objet pris isolément puis d’autre part le complément global de valeur lié à la réunion de ces objets. La disparition totale ou partielle de ce complément est appelée dépréciation de la collection."
+      }
+    ],
+    "garanties": [
+      {
+        "id": "objets_valeur",
+        "nom": "Objets de valeur",
+        "article": "1.3",
+        "texte": "Cette garantie doit être spécialement mentionnée aux conditions particulières. Il s’agit des : • o bjets de valeur non désignés, c’est-à-dire des objets précieux, espèces, titres et valeurs ainsi que les objets d’art et fourrures d’un montant unitaire supérieur à ceux faisant partie des biens mobiliers. Les garanties sont accordées dans la limite globale par sinistre fixée dans vos conditions particulières et jusqu’aux montants maximum indiqués dans le tableau 2.3 « Les limites particulières ». • o bjets de valeur spécifiquement désignés dans vos conditions particulières, soit en valeur expertisée, soit en valeur déclarée, c’est-à-dire des objets précieux, des timbres, des collections de timbres ainsi que des objets d’art, de fourrures et du mobilier précieux.Les garanties sont accordées dans la limite globale par sinistre fixée dans vos conditions particulières. Cette garantie optionnelle apporte un complément de garantie pour la dépréciation de la collection dont les montants sont fixés au tableau 2.3 « Les limites particulières » et dans la limite de la garantie « objets de valeur » pour les objets de valeur non désignés.",
+        "perimetre": [
+          {
+            "ou": [
+              {
+                "f": [
+                  "evenement",
+                  "vol"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "incendie"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "explosion"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "foudre"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "degat_eaux"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "tempete"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "bris"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "electricite"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "mazout"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "catastrophe_naturelle"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "attentat"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "fumee"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "vandalisme"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "merule"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "heurt"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "accident"
+                ]
+              }
+            ]
+          },
+          {
+            "concept": "objet_valeur"
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "non": {
+                "f": [
+                  "option_objets_valeur",
+                  "oui"
+                ]
+              }
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "1.3",
+            "texte": "Cette garantie doit être spécialement mentionnée aux conditions particulières. Il s’agit des : • o bjets de valeur non désignés, c’est-à-dire des objets précieux, espèces, titres et valeurs ainsi que les objets d’art et fourrures d’un montant unitaire supérieur à ceux faisant partie des biens mobiliers. Les garanties sont accordées dans la limite globale par sinistre fixée dans vos conditions particulières et jusqu’aux montants maximum indiqués dans le tableau 2.3 « Les limites particulières ». • o bjets de valeur spécifiquement désignés dans vos conditions particulières, soit en valeur expertisée, soit en valeur déclarée, c’est-à-dire des objets précieux, des timbres, des collections de timbres ainsi que des objets d’art, de fourrures et du mobilier précieux.Les garanties sont accordées dans la limite globale par sinistre fixée dans vos conditions particulières. Cette garantie optionnelle apporte un complément de garantie pour la dépréciation de la collection dont les montants sont fixés au tableau 2.3 « Les limites particulières » et dans la limite de la garantie « objets de valeur » pour les objets de valeur non désignés."
+          }
+        ],
+        "limites": [
+          {
+            "article": "1.3",
+            "texte": "Les garanties sont accordées dans la limite globale par sinistre fixée dans vos conditions particulières et jusqu’aux montants maximum indiqués dans le tableau 2.3 « Les limites particulières ».",
+            "montant": "limite globale par sinistre fixée dans les conditions particulières et montants maximum du tableau 2.3"
+          },
+          {
+            "article": "1.3",
+            "texte": "Les garanties sont accordées dans la limite globale par sinistre fixée dans vos conditions particulières.",
+            "montant": "limite globale par sinistre fixée dans les conditions particulières"
+          },
+          {
+            "article": "1.3",
+            "texte": "Cette garantie optionnelle apporte un complément de garantie pour la dépréciation de la collection dont les montants sont fixés au tableau 2.3 « Les limites particulières » et dans la limite de la garantie « objets de valeur » pour les objets de valeur non désignés.",
+            "montant": "montants fixés au tableau 2.3 dans la limite de la garantie objets de valeur pour les objets non désignés"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "option_objets_valeur",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Vos conditions particulières mentionnent-elles la garantie « objets de valeur » ?",
+        "pourquoi": "La garantie objets de valeur est optionnelle et doit être spécialement mentionnée aux conditions particulières",
+        "plus_proche": "option_vol, option_incendie, etc. : ce sont d'autres options, pas celle-ci",
+        "aide": {
+          "oui": "la garantie objets de valeur est souscrite, mentionnée dans les conditions particulières",
+          "non": "la garantie objets de valeur n'est pas souscrite"
+        }
+      },
+      {
+        "variable": "objet_valeur_designe",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "L'objet de valeur est-il spécifiquement désigné dans vos conditions particulières (en valeur expertisée ou déclarée) ?",
+        "pourquoi": "Distingue les objets de valeur non désignés des objets spécifiquement désignés qui ont des règles de limite différentes",
+        "plus_proche": "aucune variable ne distingue la désignation spécifique dans les conditions particulières",
+        "aide": {
+          "oui": "l'objet est listé individuellement dans les conditions particulières avec sa valeur",
+          "non": "l'objet n'est pas listé individuellement, il relève de la catégorie générale"
+        }
+      },
+      {
+        "variable": "valeur_unitaire_superieure_2000",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La valeur unitaire de l'objet d'art ou de la fourrure dépasse-t-elle 2 000 € ?",
+        "pourquoi": "Seuls les objets d'art et fourrures d'un montant unitaire supérieur à 2 000 € sont des objets de valeur non désignés",
+        "plus_proche": "aucune variable ne mesure la valeur unitaire d'un bien",
+        "aide": {
+          "oui": "l'objet vaut plus de 2000 € à l'unité",
+          "non": "l'objet vaut 2000 € ou moins à l'unité"
+        }
+      },
+      {
+        "variable": "bien",
+        "valeurs": [
+          "especes",
+          "objet_precieux",
+          "objet_art",
+          "fourrure",
+          "timbre",
+          "collection_timbres",
+          "mobilier_precieux"
+        ],
+        "question": "Quels biens sont endommagés ou volés ?",
+        "pourquoi": "La clause 1.3 couvre des types de biens spécifiques (espèces, objets précieux, art, fourrures, timbres, collections, mobilier précieux) non présents dans le vocabulaire existant",
+        "plus_proche": "bijoux et valeurs existent déjà, mais pas les autres catégories d'objets de valeur",
+        "aide": {
+          "especes": "billets de banque, pièces de monnaie, lingots",
+          "objet_precieux": "pierreries, perles non montées, argenterie massive, orfèvrerie",
+          "objet_art": "tableaux, statues, sculptures, vases, tapisseries",
+          "fourrure": "vêtements en fourrure, peaux",
+          "timbre": "timbre-poste individuel",
+          "collection_timbres": "collection de timbres, album de philatélie",
+          "mobilier_precieux": "meuble ancien de valeur, mobilier précieux désigné"
+        }
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "garantie objets_valeur : {\"f\": [\"option_objets_valeur\", \"oui\"]} retiré du périmètre (conditions particulières) et mis en réserve"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = especes : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = objet_precieux : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = objet_art : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "valeur_unitaire_superieure_2000 = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = fourrure : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "objet_valeur_designe = non : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = timbre : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = collection_timbres : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = mobilier_precieux : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "objet_valeur_designe = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "option_objets_valeur = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.3`) ou à remplacer"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "vocabulaire",
+      "message": "bien = especes, objet_precieux, objet_art, fourrure, timbre, collection_timbres, mobilier_precieux : valeur nouvelle sans « parent » ; les règles déjà écrites ne la reconnaîtront pas (un ordinateur qui n'est plus de l'électronique, 7.64)"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "citation",
+      "message": "définition (1.3) : « objets de valeur non désignés, c’est-à-dire des objets précieux, espèces, titres » ne figure pas dans la clause"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "citation",
+      "message": "définition (1.3) : « objets de valeur spécifiquement désignés dans vos conditions particulières, soit » ne figure pas dans la clause"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "la définition S10-a/objets-de-valeur de l'événement couvert n'est pas traduite (elle restreint la garantie) : l'employer ou la déclarer non traduite"
+    }
+  ]
+}

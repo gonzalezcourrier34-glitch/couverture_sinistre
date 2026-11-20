@@ -1,0 +1,454 @@
+{
+  "meta": {
+    "article": "1.1",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12"
+  },
+  "proposition": {
+    "evenements": [],
+    "definitions": [
+      {
+        "concept": "bien_immobilier",
+        "condition": {
+          "ou": [
+            {
+              "f": [
+                "bien",
+                "element_batiment"
+              ]
+            },
+            {
+              "concept": "dependances"
+            },
+            {
+              "f": [
+                "bien",
+                "serre"
+              ]
+            },
+            {
+              "f": [
+                "bien",
+                "borne_recharge"
+              ]
+            },
+            {
+              "f": [
+                "bien",
+                "cloture"
+              ]
+            },
+            {
+              "f": [
+                "bien",
+                "panneau_solaire"
+              ]
+            }
+          ]
+        },
+        "article": "1.1-a",
+        "texte": "votre local d'habitation... les clôtures, murs d'enceinte... les panneaux solaires et photovoltaïques (formule Excellence)"
+      },
+      {
+        "concept": "dependances",
+        "condition": {
+          "f": [
+            "lieu",
+            "annexe"
+          ]
+        },
+        "article": "S10-a/dependances",
+        "texte": "Ce sont les locaux destinés à un usage autre que le local d'habitation... situés en dehors de la « verticalité » du local d'habitation. Sont également considérés comme dépendances les caves et les garages situés dans les immeubles collectifs."
+      }
+    ],
+    "garanties": [],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "ou": [
+            {
+              "f": [
+                "bien",
+                "chemin"
+              ]
+            },
+            {
+              "f": [
+                "bien",
+                "court_tennis"
+              ]
+            },
+            {
+              "f": [
+                "bien",
+                "veranda"
+              ]
+            },
+            {
+              "f": [
+                "bien",
+                "eolienne"
+              ]
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "1.1-b",
+        "texte": "les chemins, les courts de tennis, les vérandas, sauf mention aux conditions particulières, les éoliennes"
+      },
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "local_inoccupe_12_mois"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "1.1-b",
+        "texte": "les locaux inoccupés ou inutilisés depuis plus de 12 mois consécutifs"
+      },
+      {
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "bien",
+                "panneau_solaire"
+              ]
+            },
+            {
+              "f": [
+                "formule",
+                "eco_ou_confort"
+              ]
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "1.1-b",
+        "texte": "les panneaux solaires et photovoltaïques si vous avez souscrit les formules Eco et Confort"
+      },
+      {
+        "condition": {
+          "et": [
+            {
+              "ou": [
+                {
+                  "f": [
+                    "bien",
+                    "piscine"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "spa"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "jacuzzi"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "abri_piscine"
+                  ]
+                }
+              ]
+            },
+            {
+              "non": {
+                "f": [
+                  "pack_piscine",
+                  "oui"
+                ]
+              }
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "1.1-b",
+        "texte": "les piscines, spas et jacuzzi, les abris de piscine, spas et jacuzzi (sauf Pack Piscine)"
+      },
+      {
+        "condition": {
+          "et": [
+            {
+              "ou": [
+                {
+                  "f": [
+                    "bien",
+                    "aire_cimentee"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "plantation"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "cloture_vegetale"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "serre_plus_5m2"
+                  ]
+                }
+              ]
+            },
+            {
+              "non": {
+                "f": [
+                  "pack_jardin",
+                  "oui"
+                ]
+              }
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "1.1-b",
+        "texte": "les aires cimentées, goudronnées, dallées ou gravillonnées, les plantations, les clôtures végétales, les serres d'une superficie de plus de 5 m2 (sauf Pack Jardin)"
+      }
+    ],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "bien",
+        "valeurs": [
+          "chemin",
+          "court_tennis",
+          "veranda",
+          "eolienne",
+          "piscine",
+          "spa",
+          "jacuzzi",
+          "abri_piscine",
+          "aire_cimentee",
+          "cloture_vegetale",
+          "borne_recharge",
+          "cloture",
+          "serre_plus_5m2",
+          "local_inoccupe_12_mois"
+        ],
+        "question": "De quel bien s'agit-il ?",
+        "pourquoi": "biens exclus à l'article 1.1-b absents du vocabulaire",
+        "plus_proche": "bien",
+        "aide": {
+          "chemin": "c'est un chemin",
+          "court_tennis": "c'est un court de tennis",
+          "veranda": "c'est une véranda",
+          "eolienne": "c'est une éolienne",
+          "piscine": "c'est une piscine",
+          "spa": "c'est un spa",
+          "jacuzzi": "c'est un jacuzzi",
+          "abri_piscine": "c'est un abri de piscine",
+          "aire_cimentee": "c'est une aire cimentée",
+          "cloture_vegetale": "c'est une clôture végétale",
+          "borne_recharge": "c'est une borne de recharge",
+          "cloture": "c'est une clôture ou portail",
+          "serre_plus_5m2": "c'est une serre de plus de 5m2",
+          "local_inoccupe_12_mois": "c'est un local inoccupé depuis plus de 12 mois"
+        }
+      },
+      {
+        "variable": "formule",
+        "valeurs": [
+          "eco",
+          "confort",
+          "excellence",
+          "eco_ou_confort"
+        ],
+        "question": "Quelle formule avez-vous souscrite ?",
+        "pourquoi": "formules Eco, Confort et Excellence citées à l'article 1.1",
+        "plus_proche": "formule",
+        "aide": {
+          "eco": "formule Eco",
+          "confort": "formule Confort",
+          "excellence": "formule Excellence",
+          "eco_ou_confort": "formule Eco ou Confort"
+        }
+      },
+      {
+        "variable": "pack_piscine",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Avez-vous souscrit le Pack Piscine ?",
+        "pourquoi": "réserve d'exclusion piscines/spas",
+        "plus_proche": "formule",
+        "aide": {
+          "oui": "j'ai le Pack Piscine",
+          "non": "je n'ai pas le Pack Piscine"
+        }
+      },
+      {
+        "variable": "pack_jardin",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Avez-vous souscrit le Pack Jardin ?",
+        "pourquoi": "réserve d'exclusion plantations/aires/serres >5m2",
+        "plus_proche": "formule",
+        "aide": {
+          "oui": "j'ai le Pack Jardin",
+          "non": "je n'ai pas le Pack Jardin"
+        }
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = borne_recharge : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = cloture : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = chemin : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = court_tennis : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = veranda : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = eolienne : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = local_inoccupe_12_mois : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "formule = eco_ou_confort : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = piscine : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = spa : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = jacuzzi : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = abri_piscine : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "pack_piscine = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = aire_cimentee : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = cloture_vegetale : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = serre_plus_5m2 : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "pack_jardin = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.1`) ou à remplacer"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "vocabulaire",
+      "message": "bien = chemin, court_tennis, veranda, eolienne, piscine, spa, jacuzzi, abri_piscine, aire_cimentee, cloture_vegetale, borne_recharge, cloture, serre_plus_5m2, local_inoccupe_12_mois : valeur nouvelle sans « parent » ; les règles déjà écrites ne la reconnaîtront pas (un ordinateur qui n'est plus de l'électronique, 7.64)"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "citation",
+      "message": "définition (1.1-a) : « votre local d'habitation... les clôtures, murs d'enceinte... les panneaux solair » ne figure pas dans la clause"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "citation",
+      "message": "exclusion (1.1-b) : « les chemins, les courts de tennis, les vérandas, sauf mention aux conditions par » ne figure pas dans la clause"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "citation",
+      "message": "exclusion (1.1-b) : « les piscines, spas et jacuzzi, les abris de piscine, spas et jacuzzi (sauf Pack  » ne figure pas dans la clause"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "citation",
+      "message": "exclusion (1.1-b) : « les aires cimentées, goudronnées, dallées ou gravillonnées, les plantations, les » ne figure pas dans la clause"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « les chemins, les courts de tennis, les vérandas, sauf mentio » : ne vise que chemin, court_tennis, eolienne, veranda, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « les locaux inoccupés ou inutilisés depuis plus de 12 mois co » : ne vise que local_inoccupe_12_mois, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "réserve",
+      "message": "exclusion « les chemins, les courts de tennis, les vérandas, sauf mentio » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (1.1-b) : « les appareils électroménagers, ces biens sont garantis au titre des « biens mobiliers », »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "la définition S10-a/nous de l'événement couvert n'est pas traduite (elle restreint la garantie) : l'employer ou la déclarer non traduite"
+    }
+  ]
+}

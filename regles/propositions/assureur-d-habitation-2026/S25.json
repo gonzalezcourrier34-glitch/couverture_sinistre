@@ -1,0 +1,320 @@
+{
+  "meta": {
+    "article": "S25",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12"
+  },
+  "proposition": {
+    "evenements": [],
+    "definitions": [],
+    "garanties": [],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "ou": [
+            {
+              "f": [
+                "intentionnel",
+                "oui"
+              ]
+            },
+            {
+              "et": [
+                {
+                  "f": [
+                    "participation_rixe",
+                    "oui"
+                  ]
+                },
+                {
+                  "non": {
+                    "f": [
+                      "legitime_defense",
+                      "oui"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "S25",
+        "texte": "les dommages causés intentionnellement ou frauduleusement par vous ou par un complice, ou résultant de votre ou de sa participation à une action violente ou à une rixe (sauf légitime défense) et sous réserves des dispositions de l'article L. 121-2 du Code"
+      },
+      {
+        "condition": {
+          "f": [
+            "amende",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "S25",
+        "texte": "les paiements des amendes auxquelles vous pourriez être condamné"
+      },
+      {
+        "condition": {
+          "f": [
+            "manque_entretien",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "S25",
+        "texte": "de la garantie des dommages subis par vos biens, ceux qui résultent directement d'un défaut de réparation ou d'entretien indispensables vous incombant et dont vous aviez connaissance"
+      },
+      {
+        "condition": {
+          "f": [
+            "armes_illegales",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "S25",
+        "texte": "les dommages causés par les armes détenues illégalement"
+      },
+      {
+        "condition": {
+          "ou": [
+            {
+              "f": [
+                "catastrophe",
+                "tremblement_terre"
+              ]
+            },
+            {
+              "f": [
+                "catastrophe",
+                "eruption_volcanique"
+              ]
+            },
+            {
+              "f": [
+                "catastrophe",
+                "raz_de_maree"
+              ]
+            },
+            {
+              "f": [
+                "evenement",
+                "catastrophe_naturelle"
+              ]
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "S25",
+        "texte": "les dommages occasionnés par un tremblement de terre, une éruption volcanique, un raz-de-marée ou cataclysme naturel. Cette exclusion ne s'applique pas à la garantie « Catastrophes naturelles »"
+      },
+      {
+        "condition": {
+          "et": [
+            {
+              "ou": [
+                {
+                  "f": [
+                    "cause_guerre",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "cause_nucleaire",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            {
+              "non": {
+                "f": [
+                  "evenement",
+                  "attentat"
+                ]
+              }
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "S25",
+        "texte": "les dommages résultant : - de la guerre civile ou étrangère, - de tout combustible, produit ou déchet radioactif, de tout engin destiné à irradier ou à exploser par modification du noyau de l'atome ainsi que leur décontamination, sauf pour les dommages matériels directs causés par un attentat ou un acte de terrorisme."
+      }
+    ],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "participation_rixe",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Avez-vous participé à une rixe ou à une action violente ?",
+        "pourquoi": "exclusion des dommages résultant de la participation de l'assuré à une rixe ou action violente",
+        "plus_proche": "violence : indique s'il y a eu des violences physiques, pas si l'assuré y a participé",
+        "aide": {
+          "oui": "j'ai participé à une bagarre, une rixe, une manifestation violente",
+          "non": "je n'ai pas participé à une rixe ou action violente"
+        }
+      },
+      {
+        "variable": "legitime_defense",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "S'agissait-il d'une légitime défense ?",
+        "pourquoi": "réserve de l'exclusion pour participation à une rixe (sauf légitime défense)",
+        "plus_proche": "aucune variable existante ne couvre la notion de légitime défense",
+        "aide": {
+          "oui": "c'était pour me défendre, j'ai agi en légitime défense",
+          "non": "ce n'était pas de la légitime défense"
+        }
+      },
+      {
+        "variable": "amende",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "S'agit-il du paiement d'une amende à laquelle vous avez été condamné ?",
+        "pourquoi": "exclusion des paiements d'amendes",
+        "plus_proche": "aucune variable ne distingue les amendes des autres types de dommages",
+        "aide": {
+          "oui": "c'est une amende, une condamnation pénale pécuniaire",
+          "non": "ce n'est pas une amende"
+        }
+      },
+      {
+        "variable": "armes_illegales",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Les dommages ont-ils été causés par des armes détenues illégalement ?",
+        "pourquoi": "exclusion des dommages causés par des armes détenues illégalement",
+        "plus_proche": "cause_nucleaire : ne concerne que les armes nucléaires, pas toutes les armes illégales",
+        "aide": {
+          "oui": "l'arme était détenue illégalement, sans autorisation légale",
+          "non": "l'arme était détenue légalement"
+        }
+      },
+      {
+        "variable": "cause_guerre",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Les dommages résultent-ils d'une guerre civile ou étrangère, ou de troubles civils ?",
+        "pourquoi": "exclusion des dommages résultant de la guerre ou de troubles civils",
+        "plus_proche": "conflit_du_travail : ne concerne que les conflits du travail, pas la guerre ou les troubles civils généraux",
+        "aide": {
+          "oui": "les dommages viennent d'une guerre, d'émeutes, de troubles civils",
+          "non": "pas de guerre ni de troubles civils à l'origine des dommages"
+        }
+      },
+      {
+        "variable": "catastrophe",
+        "valeurs": [
+          "eruption_volcanique",
+          "raz_de_maree"
+        ],
+        "question": "Quel phénomène naturel a causé les dégâts : le vent, la grêle, ou le poids de la neige ou de la glace ?",
+        "pourquoi": "exclusion des éruptions volcaniques et raz-de-marée (tsunamis)",
+        "plus_proche": "catastrophe existe déjà avec tremblement_terre, inondation, ruissellement, glissement_terrain mais pas ces valeurs",
+        "parent": "catastrophe",
+        "aide": {
+          "eruption_volcanique": "c'est une éruption volcanique",
+          "raz_de_maree": "c'est un raz-de-marée, un tsunami"
+        }
+      }
+    ],
+    "non_traduit": [
+      {
+        "article": "S25",
+        "texte": "Cette exclusion ne s'applique pas à la garantie « Catastrophes naturelles »",
+        "pourquoi": "impossible d'exprimer dans une exclusion commune qu'elle ne s'applique pas à une garantie spécifique sans variable indiquant la garantie concernée par le sinistre"
+      },
+      {
+        "article": "S25",
+        "texte": "Les effets du contrat seront suspendus (sous réserve des dispositions de l'article L. 160-7 du Code) pendant la durée de l'évacuation des locaux assurés ordonnée par les autorités, ou nécessitée par des faits de guerre ou des troubles civils.",
+        "pourquoi": "clause de suspension du contrat et non exclusion d'un dommage spécifique; nécessite des variables sur l'évacuation ordonnée et la période de suspension non disponibles dans le vocabulaire"
+      },
+      {
+        "article": "S25",
+        "texte": "sous réserves des dispositions de l'article L. 121-2 du Code",
+        "pourquoi": "référence légale externe non traduisible en condition logique"
+      },
+      {
+        "article": "S25",
+        "texte": "sous réserve des dispositions de l'article L. 160-7 du Code",
+        "pourquoi": "référence légale externe non traduisible en condition logique"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "participation_rixe = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire S25`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "legitime_defense = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire S25`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "amende = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire S25`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "armes_illegales = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire S25`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "catastrophe = eruption_volcanique : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire S25`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "catastrophe = raz_de_maree : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire S25`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "cause_guerre = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire S25`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (S25) : « Cette exclusion ne s'applique pas à la garantie « Catastrophes naturelles » » — impossible d'exprimer dans une exclusion commune qu'elle ne s'applique pas à une garantie spécifique sans variable indiquant la garantie concernée par le sinistre"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (S25) : « Les effets du contrat seront suspendus (sous réserve des dispositions de l'article L. 160-7 du Code) » — clause de suspension du contrat et non exclusion d'un dommage spécifique; nécessite des variables sur l'évacuation ordonnée et la période de suspension non disponibles dans le vocabulaire"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (S25) : « sous réserves des dispositions de l'article L. 121-2 du Code » — référence légale externe non traduisible en condition logique"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (S25) : « sous réserve des dispositions de l'article L. 160-7 du Code » — référence légale externe non traduisible en condition logique"
+    }
+  ]
+}

@@ -1,0 +1,364 @@
+{
+  "meta": {
+    "article": "1.2",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12"
+  },
+  "proposition": {
+    "evenements": [],
+    "definitions": [
+      {
+        "concept": "contenu",
+        "condition": {
+          "et": [
+            {
+              "ou": [
+                {
+                  "f": [
+                    "lieu",
+                    "logement"
+                  ]
+                },
+                {
+                  "concept": "dependances"
+                }
+              ]
+            },
+            {
+              "ou": [
+                {
+                  "f": [
+                    "proprietaire",
+                    "assure"
+                  ]
+                },
+                {
+                  "f": [
+                    "auteur",
+                    "famille"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "article": "1.2-a",
+        "texte": "Tous les objets d’usage courant et les vêtements vous appartenant ou qui vous sont confiés ou appartenant à toute personne résidant avec vous ou en simple visite, contenus à l’intérieur du local d’habitation et des dépendances assurés."
+      }
+    ],
+    "garanties": [],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "et": [
+            {
+              "concept": "dependances"
+            },
+            {
+              "f": [
+                "formule",
+                "eco"
+              ]
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "1.2-b",
+        "texte": "les biens mobiliers se trouvant dans les dépendances si vous avez souscrit la formule Eco"
+      },
+      {
+        "condition": {
+          "ou": [
+            {
+              "f": [
+                "bien",
+                "bijoux"
+              ]
+            },
+            {
+              "f": [
+                "bien",
+                "valeurs"
+              ]
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "1.2-b",
+        "texte": "les objets précieux, les espèces, titres et valeurs, les objets de valeur désignés"
+      },
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "vehicule_moteur"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "1.2-b",
+        "texte": "les véhicules terrestres à moteur (y compris les vélos électriques circulant à plus de 25 km/h et les engins de déplacement personnel motorisés), les remorques, les caravanes, les véhicules aériens"
+      },
+      {
+        "condition": {
+          "ou": [
+            {
+              "f": [
+                "bien",
+                "animal"
+              ]
+            },
+            {
+              "f": [
+                "bien",
+                "plantation"
+              ]
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "1.2-b",
+        "texte": "les animaux et les végétaux"
+      },
+      {
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "fauteuil_roulant",
+                "oui"
+              ]
+            },
+            {
+              "f": [
+                "evenement",
+                "vol"
+              ]
+            },
+            {
+              "f": [
+                "auteur",
+                "famille"
+              ]
+            },
+            {
+              "non": {
+                "f": [
+                  "plainte_deposee",
+                  "oui"
+                ]
+              }
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "1.2-b",
+        "texte": "les vols, tentatives de vol ou actes de vandalisme dont seraient auteurs ou complices les membres de votre famille (article 311-12 du Code pénal) ou vos préposés pendant leur service, sauf si une plainte nominative est déposée à leur encontre"
+      }
+    ],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "formule",
+        "valeurs": [
+          "eco"
+        ],
+        "question": "Avez-vous souscrit la formule Eco ?",
+        "pourquoi": "exclusion des biens dans les dépendances en formule Eco",
+        "plus_proche": "formule : privilege, active, standard",
+        "parent": "standard",
+        "aide": {
+          "eco": "formule Eco, formule économique"
+        }
+      },
+      {
+        "variable": "fauteuil_roulant",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le bien endommagé est-il un fauteuil roulant (automoteur ou non) ?",
+        "pourquoi": "exclusions spécifiques au fauteuil roulant",
+        "plus_proche": "bien : aucun type ne correspond",
+        "aide": {
+          "oui": "fauteuil roulant, chaise roulante",
+          "non": "autre bien"
+        }
+      }
+    ],
+    "non_traduit": [
+      {
+        "article": "1.2-a",
+        "texte": "le fauteuil roulant automoteur ou non est assuré pour les garanties mentionnées dans vos conditions particulières et en cas de bris accidentel en tous lieux",
+        "pourquoi": "extension de lieu non traduite (tous lieux)"
+      },
+      {
+        "article": "1.2-a",
+        "texte": "le matériel professionnel lié à votre activité professionnelle exercée en dehors du local d’habitation",
+        "pourquoi": "notion de matériel professionnel non dans le vocabulaire"
+      },
+      {
+        "article": "1.2-a",
+        "texte": "les objets d’art et les fourrures",
+        "pourquoi": "types de biens non dans le vocabulaire"
+      },
+      {
+        "article": "1.2-a",
+        "texte": "les vins, alcools et spiritueux en bouteille entreposés dans le local d’habitation et les dépendances assurés. Un livre de cave régulièrement tenu à jour, enregistrant les entrées et les sorties, devra être présenté en cas de sinistre.",
+        "pourquoi": "catégorie de biens et obligation de livre de cave non traduites"
+      },
+      {
+        "article": "1.2-b",
+        "texte": "les timbres et les collections de timbres, ces biens sont garantis au titre de la garantie optionnelle « objets de valeur » si elle est souscrite",
+        "pourquoi": "renvoi à une autre garantie optionnelle"
+      },
+      {
+        "article": "1.2-b",
+        "texte": "les bateaux de plus de 5,5 m de longueur ou avec un moteur de plus de 6 CV",
+        "pourquoi": "bateaux non dans le vocabulaire bien"
+      },
+      {
+        "article": "1.2-b",
+        "texte": "la dépréciation des bouteilles par suite du décollement ou détérioration des étiquettes",
+        "pourquoi": "type de dommage spécifique non traduit"
+      },
+      {
+        "article": "1.2-b",
+        "texte": "les dommages résultant de la manutention et/ou de la casse des bouteilles",
+        "pourquoi": "cause spécifique non traduite"
+      },
+      {
+        "article": "1.2-b",
+        "texte": "les armes détenues illégalement",
+        "pourquoi": "armes non dans le vocabulaire bien"
+      },
+      {
+        "article": "1.2-b",
+        "texte": "la panne du fauteuil roulant automoteur",
+        "pourquoi": "panne non couverte, événement non dans la liste"
+      },
+      {
+        "article": "1.2-b",
+        "texte": "les dommages entrant dans le cadre des engagements légaux ou contractuels du vendeur, régulièrement pris en charge dans un contrat d’entretien ou de maintenance, dus à des défauts existants et connus de vous au moment de la souscription du présent contrat, dus à une utilisation non conforme aux prescriptions du constructeur, causés par l’usure, le défaut d’entretien, résultant d’interventions effectuées par un non professionnel de la réparation du fauteuil roulant automoteur, dus à l’humidité ou à la condensation",
+        "pourquoi": "exclusions détaillées du fauteuil roulant non traduites individuellement"
+      },
+      {
+        "article": "1.2-b",
+        "texte": "les rayures, les écaillements, les égratignures lorsqu’elles sont sans influence sur le fonctionnement du fauteuil roulant automoteur ou non",
+        "pourquoi": "exclusion esthétique conditionnelle non traduite"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "formule = eco : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.2`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "fauteuil_roulant = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.2`) ou à remplacer"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « les objets précieux, les espèces, titres et valeurs, les obj » : ne vise que bijoux, valeurs, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « les véhicules terrestres à moteur (y compris les vélos élect » : ne vise que vehicule_moteur, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « les animaux et les végétaux » : ne vise que animal, plantation, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (1.2-b) : « le matériel professionnel lié à votre activité professionnelle se trouvant dans les dépendances, »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (1.2-a) : « le fauteuil roulant automoteur ou non est assuré pour les garanties mentionnées dans vos conditions  » — extension de lieu non traduite (tous lieux)"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (1.2-a) : « le matériel professionnel lié à votre activité professionnelle exercée en dehors du local d’habitati » — notion de matériel professionnel non dans le vocabulaire"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (1.2-a) : « les objets d’art et les fourrures » — types de biens non dans le vocabulaire"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (1.2-a) : « les vins, alcools et spiritueux en bouteille entreposés dans le local d’habitation et les dépendance » — catégorie de biens et obligation de livre de cave non traduites"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (1.2-b) : « les timbres et les collections de timbres, ces biens sont garantis au titre de la garantie optionnel » — renvoi à une autre garantie optionnelle"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (1.2-b) : « les bateaux de plus de 5,5 m de longueur ou avec un moteur de plus de 6 CV » — bateaux non dans le vocabulaire bien"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (1.2-b) : « la dépréciation des bouteilles par suite du décollement ou détérioration des étiquettes » — type de dommage spécifique non traduit"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (1.2-b) : « les dommages résultant de la manutention et/ou de la casse des bouteilles » — cause spécifique non traduite"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (1.2-b) : « les armes détenues illégalement » — armes non dans le vocabulaire bien"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (1.2-b) : « la panne du fauteuil roulant automoteur » — panne non couverte, événement non dans la liste"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (1.2-b) : « les dommages entrant dans le cadre des engagements légaux ou contractuels du vendeur, régulièrement  » — exclusions détaillées du fauteuil roulant non traduites individuellement"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (1.2-b) : « les rayures, les écaillements, les égratignures lorsqu’elles sont sans influence sur le fonctionneme » — exclusion esthétique conditionnelle non traduite"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "la définition S10-a/nous de l'événement couvert n'est pas traduite (elle restreint la garantie) : l'employer ou la déclarer non traduite"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "concept",
+      "message": "concept inconnu : dependances"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "concept",
+      "message": "concept inconnu : dependances"
+    }
+  ]
+}

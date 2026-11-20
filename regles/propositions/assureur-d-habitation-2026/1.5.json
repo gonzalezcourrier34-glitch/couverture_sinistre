@@ -1,0 +1,335 @@
+{
+  "meta": {
+    "article": "1.5",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12"
+  },
+  "proposition": {
+    "evenements": [],
+    "definitions": [
+      {
+        "concept": "depreciation_collection",
+        "condition": {
+          "f": [
+            "depreciation",
+            "oui"
+          ]
+        },
+        "article": "S10-a/collection",
+        "texte": "La disparition totale ou partielle de ce complément est appelée dépréciation de la collection."
+      }
+    ],
+    "garanties": [],
+    "exclusions_communes": [],
+    "extensions": [
+      {
+        "concept": "contenu",
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "sejour_temporaire",
+                "oui"
+              ]
+            },
+            {
+              "ou": [
+                {
+                  "f": [
+                    "pays",
+                    "belgique"
+                  ]
+                },
+                {
+                  "f": [
+                    "pays",
+                    "luxembourg"
+                  ]
+                },
+                {
+                  "f": [
+                    "pays",
+                    "allemagne"
+                  ]
+                },
+                {
+                  "f": [
+                    "pays",
+                    "france"
+                  ]
+                },
+                {
+                  "f": [
+                    "pays",
+                    "autre_ue"
+                  ]
+                },
+                {
+                  "f": [
+                    "pays",
+                    "royaume_uni"
+                  ]
+                },
+                {
+                  "f": [
+                    "pays",
+                    "andorre"
+                  ]
+                },
+                {
+                  "f": [
+                    "pays",
+                    "monaco"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "article": "1.5-a",
+        "texte": "Les objets que vous emportez avec vous dans les différents locaux d'habitation, y compris les chambres d'hôtel, que vous occupez lors de voyages ou de vacances dans les pays de l'Union européenne, au Royaume-Uni de Grande-Bretagne et d'Irlande du Nord, dans les principautés d'Andorre et de Monaco.",
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "en_transport",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "1.5-b",
+            "texte": "les dommages occasionnés en cours de transport"
+          },
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "lieu",
+                    "caravane"
+                  ]
+                },
+                {
+                  "f": [
+                    "lieu",
+                    "bateau"
+                  ]
+                },
+                {
+                  "f": [
+                    "lieu",
+                    "camping_car"
+                  ]
+                },
+                {
+                  "f": [
+                    "lieu",
+                    "tente"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "1.5-b",
+            "texte": "les dommages occasionnés dans une caravane, un bateau, un camping-car ou une tente de camping"
+          },
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "bien",
+                    "objet_precieux_art"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "fourrure"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "timbre"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "collection_timbres"
+                  ]
+                },
+                {
+                  "concept": "depreciation_collection"
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "1.5-b",
+            "texte": "les objets précieux, d'art et les fourrures, les timbres, les collections de timbres, la dépréciation des collections"
+          },
+          {
+            "condition": {
+              "f": [
+                "jouissance_permanente",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "1.5-b",
+            "texte": "les biens contenus dans une résidence dont vous avez la jouissance permanente"
+          }
+        ]
+      }
+    ],
+    "vocabulaire_manquant": [
+      {
+        "variable": "pays",
+        "valeurs": [
+          "royaume_uni",
+          "andorre",
+          "monaco"
+        ],
+        "question": "Dans quel pays se trouvait le lieu du sinistre ?",
+        "pourquoi": "pays de l'article 1.5-a absents du vocabulaire",
+        "plus_proche": "autre_ue",
+        "aide": {
+          "royaume_uni": "Royaume-Uni",
+          "andorre": "Andorre",
+          "monaco": "Monaco"
+        },
+        "parent": "hors_europe"
+      },
+      {
+        "variable": "en_transport",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Les dommages ont-ils été occasionnés en cours de transport ?",
+        "pourquoi": "exclusion 1.5-b",
+        "plus_proche": "aucune",
+        "aide": {
+          "oui": "pendant le transport",
+          "non": "hors transport"
+        }
+      },
+      {
+        "variable": "lieu",
+        "valeurs": [
+          "caravane",
+          "bateau",
+          "camping_car",
+          "tente"
+        ],
+        "question": "Où se trouvaient les biens ?",
+        "pourquoi": "exclusion 1.5-b",
+        "plus_proche": "autre_batiment",
+        "aide": {
+          "caravane": "caravane",
+          "bateau": "bateau",
+          "camping_car": "camping-car",
+          "tente": "tente"
+        },
+        "parent": "autre_batiment"
+      },
+      {
+        "variable": "bien",
+        "valeurs": [
+          "objet_precieux_art",
+          "fourrure",
+          "timbre",
+          "collection_timbres"
+        ],
+        "question": "Quels biens sont endommagés ?",
+        "pourquoi": "exclusion 1.5-b",
+        "plus_proche": "bijoux",
+        "aide": {
+          "objet_precieux_art": "objet précieux ou d'art",
+          "fourrure": "fourrure",
+          "timbre": "timbre",
+          "collection_timbres": "collection de timbres"
+        },
+        "parent": "valeurs"
+      },
+      {
+        "variable": "jouissance_permanente",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Avez-vous la jouissance permanente de cette résidence ?",
+        "pourquoi": "exclusion 1.5-b",
+        "plus_proche": "sejour_temporaire",
+        "aide": {
+          "oui": "résidence permanente ou seconde résidence habituelle",
+          "non": "séjour temporaire"
+        }
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "depreciation = oui : hors vocabulaire, et non déclaré"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "pays = royaume_uni : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "pays = andorre : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "pays = monaco : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 1.5`) ou à remplacer"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "définition : citation rattachée à S10-a/collection (et non S10-a)"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (1.5-b) : « les dommages occasionnés en cours de transport, »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (1.5-b) : « les dommages occasionnés dans une caravane, un bateau, un camping-car ou une tente de camping, »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (1.5-b) : « les objets précieux, d’art et les fourrures, les timbres, les collections de timbres, la dépréciatio »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (1.5-b) : « les biens contenus dans une résidence dont vous avez la jouissance permanente »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "la définition S10-a/nous de l'événement couvert n'est pas traduite (elle restreint la garantie) : l'employer ou la déclarer non traduite"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "concept",
+      "message": "extension d'un concept inconnu : contenu (concepts de ce contrat : depreciation_collection)"
+    }
+  ]
+}

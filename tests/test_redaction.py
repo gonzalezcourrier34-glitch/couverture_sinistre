@@ -409,6 +409,16 @@ def test_une_reduction_d_indemnite_n_est_pas_une_obligation():
     assert any(c["gravite"] == redaction.BLOQUANT and "réduit l'indemnité" in c["message"] for c in ctl)
 
 
+def test_article_d_exclusions_generales_vise_toutes_les_garanties():
+    """7.88 : un article sans garantie, fait d'exclusions générales, les applique à tout le contrat (`tous`)."""
+    prop = {"evenements": [], "garanties": [], "definitions": [], "exclusions_communes": [
+        {"condition": {"f": ["intentionnel", "oui"]}, "portee": "tout", "a_demander": False, "article": "S25",
+         "texte": "les dommages intentionnellement causés"}]}
+    assert not any("aucune garantie" in e for e in redaction.erreurs_schema(prop))
+    pl = redaction.en_prolog(prop, "S25")
+    assert "exclusion(tous, f(intentionnel, oui), tout, non, 'S25'" in pl and "evenement_traduit" not in pl
+
+
 def test_garantie_accessoire_en_prolog():
     prop = copy.deepcopy(BONNE)
     prop["garanties"][0]["accessoire"] = True
@@ -503,7 +513,7 @@ def test_jeu_redaction_coherent():
 def test_consigne_de_redaction_versionnee():
     from couverture.consignes import CONSIGNES
 
-    assert CONSIGNES["couverture-redaction-regles"][2] == "v11"
+    assert CONSIGNES["couverture-redaction-regles"][2] == "v12"
 
 
 # --- Après la première rédaction réelle (Mistral Large, 17 nov. 2026, docs/DEMARCHE.md 7.20) ---------------
