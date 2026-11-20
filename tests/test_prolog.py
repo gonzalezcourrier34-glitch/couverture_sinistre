@@ -899,3 +899,36 @@ def test_une_option_seule_a_couvrir_donne_a_preciser():
     assert pluies["questions"] == ["option_pluies_inondations"]
     if prolog.swipl() is not None:
         assert prolog.decider("assureur-b-habitation-2017", faits)["decision"] == "INCERTAIN"
+
+
+def test_l_evenement_est_precise_avant_les_questions_du_temps_2():
+    """7.113 : « accident » sur un miroir est un bris (7.86). Précisé après la lecture, il l'était trop tard : le
+    temps 2 posait les questions de l'« accident » et ne demandait jamais si le miroir était posé (`red-b05`)."""
+    class Modele:
+        nom, accepte_schema = "schema", True
+
+        def __init__(self):
+            self.appels = []
+
+        def completer(self, systeme, message, schema=None):
+            self.appels.append(message)
+            if len(self.appels) == 1:
+                return json.dumps({"faits": {"evenement": ["accident"], "bien": ["miroir"], "lieu": ["logement"]}})
+            return json.dumps({"faits": {"vitre_placee": "non"}})
+
+    m = Modele()
+    faits, notes = lecture.extraire_faits_regles("Le miroir, pas encore accroché, s'est brisé en tombant.", m,
+                                                 verifier=False)
+    assert "vitre_placee" in m.appels[1]
+    assert faits["evenement"] == ["bris"] and faits["vitre_placee"] == "non"
+
+
+def test_un_velo_n_est_pas_un_vehicule_a_moteur():
+    """7.113 : le vélo avait sa place dans l'aide de « personne », et Small lisait quand même « véhicule à moteur »
+    (`f-a18`). Il a sa valeur, `velo_trottinette`, qui précise « personne » : les règles qui visent « personne »
+    s'y appliquent sans changer."""
+    contrat_a = Contrat(prolog.fichier_regles("assureur-a-habitation-2025"))
+    faits = {"evenement": ["responsabilite"], "auteur": "assure", "victime": "tiers", "origine_rc": "velo_trottinette"}
+    assert Moteur(contrat_a, faits).decider()["decision"] == "COUVERT"
+    if prolog.swipl() is not None:
+        assert prolog.decider("assureur-a-habitation-2025", faits)["decision"] == "COUVERT"

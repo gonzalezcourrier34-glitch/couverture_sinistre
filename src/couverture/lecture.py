@@ -199,6 +199,10 @@ def extraire_faits_regles(sinistre: str, llm: LLM, decideur=None, variables: set
     declaration = f"## Déclaration\n{sinistre}"
     ex_socle = bloc(exemples(), SOCLE) if exemples else ""
     lus = _lire(llm, SYSTEME_LECTURE_SOCLE, {v: voc[v] for v in SOCLE}, ex_socle + declaration)
+    # L'événement précisé avant de choisir les questions du temps 2 : un « accident » sur un miroir est un bris
+    # (7.86), et c'est pour le bris qu'on demande si le miroir était posé (7.113). Précisé après, trop tard : le
+    # temps 2 posait les questions de l'« accident », qui n'en a pas.
+    lus = preciser(lus, voc)[0]
     evenements = [str(e) for e in (lus.get("evenement") or []) if str(e) in voc["evenement"]["valeurs"]]
     details = variables_du_temps_2(voc, evenements, lus)
     if details:

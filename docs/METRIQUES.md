@@ -110,6 +110,10 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 
 ## 5. Dernières mesures
 
+**21 nov. 2026, 0 h 08 et 0 h 12, Assureur A, avec exemples, après 7.113** : jeu fermé **93 %** justes, 83 % exactes,
+0,33 couvert à tort (le vase), 0 refus à tort ; partie test **89 %**, 83 % exactes, 2 couverts à tort (`g-p03`,
+`g2-p08`), 0,33 refus à tort. Le vélo couvert 3 fois sur 3 ; le miroir « à préciser » au lieu de couvert.
+
 **20 nov. 2026, 23 h 50 et 23 h 57, partie test du golden set, Assureur B (7 cas)** : sans exemples **81 %** justes,
 71 % exactes ; avec exemples **81 %**, 76 % exactes ; 0 couvert à tort et 0 refus à tort dans les deux cas. Les exemples
 deviennent la lecture par défaut (DEMARCHE 7.112).

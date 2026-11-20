@@ -2389,6 +2389,7 @@
     "origine_rc": {
       "valeurs": [
         "personne",
+        "velo_trottinette",
         "animal_compagnie",
         "animal_autre",
         "chien_dangereux",
@@ -2401,7 +2402,7 @@
       ],
       "question": "Qu'est-ce qui a causé le dommage à l'autre personne ?",
       "aide": {
-        "personne": "l'assuré, un enfant ou une personne de son foyer : maladresse, chute, jeu, sport en loisir (ski, foot, vélo), vélo ou trottinette sans moteur (à la force des jambes)",
+        "personne": "l'assuré, un enfant ou une personne de son foyer : maladresse, chute, jeu, sport en loisir (ski, foot)",
         "animal_compagnie": "un chien, un chat ou un autre animal de compagnie",
         "animal_autre": "un cheval, un âne, du bétail, des volailles : un animal qui n'est pas de compagnie",
         "chien_dangereux": "un chien de 1re ou 2e catégorie (chien d'attaque, de garde ou de défense)",
@@ -2410,11 +2411,17 @@
         "immeuble": "le bâtiment ou le terrain lui-même : une tuile ou une branche qui tombe, une clôture, un mur",
         "chasse_sport": "la chasse, le ball-trap, un sport aérien, une compétition, un sport en club ou professionnel",
         "contrat": "un service ou un travail promis à quelqu'un, mal fait ou pas fait",
-        "activite_professionnelle": "le travail ou l'activité professionnelle de l'assuré"
+        "activite_professionnelle": "le travail ou l'activité professionnelle de l'assuré",
+        "velo_trottinette": "un vélo ou une trottinette sans moteur, à la force des jambes"
       },
       "pour": [
         "responsabilite"
-      ]
+      ],
+      "parents": {
+        "velo_trottinette": [
+          "personne"
+        ]
+      }
     },
     "victime": {
       "valeurs": [

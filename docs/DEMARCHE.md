@@ -3756,6 +3756,37 @@ donc pas, et A gagne nettement (7.111) : les exemples deviennent la lecture par 
 
 Un test ajouté. Suite : le vélo (`f-a18`), le miroir (`red-b05`) et le bain à bulles (`g2-p08`), puis des exemples pour D.
 
+### 7.113 Les trois erreurs qui restaient, et la règle du partage
+
+Les trois erreurs qui résistaient aux exemples (7.111), lues dans les faits gardés par les bancs :
+
+- **`red-b05`, le miroir pas encore accroché** (couvert au lieu de refusé, 3 fois sur 3). Small lit « accident » ; le
+  code le précise en « bris » sur un miroir (7.86), mais **après** la lecture. Le temps 2 avait donc posé les questions
+  de l'« accident », qui n'en a presque pas, et jamais « la vitre était-elle placée ? ». Ce n'est pas une erreur de
+  lecture mais de **la chaîne** : l'événement est maintenant précisé dès la fin du temps 1, avant de choisir les
+  questions du temps 2 (`lecture.py`). Tout « accident » sur une vitre, un miroir ou un sanitaire en profite.
+- **`f-a18`, le vélo** (refusé au lieu de couvert, 3 fois sur 3, malgré deux aides et les exemples). Le vélo était caché
+  dans l'aide de `personne` (« maladresse, chute, jeu, sport… vélo ou trottinette sans moteur ») ; Small cherchait un
+  engin, il prenait le seul qui existait : le véhicule à moteur. Le vélo a maintenant **sa valeur**,
+  `velo_trottinette`, rangée sous `personne` (`parents`, comme le gel sous la fuite d'installation) : les règles des
+  trois contrats qui visent « personne » s'y appliquent sans être touchées (vérifié par l'oracle : couvert chez A et D,
+  à préciser chez B comme pour « personne »).
+- **`g2-p08`, le bain à bulles lu « débordement d'aquarium »** : non corrigé, à dessein. Le cas est dans la **partie
+  test** (7.107) ; l'aide de `piscine_exterieure` nomme déjà le bain à bulles, et la retoucher pour lui serait corriger
+  sur un cas de test. La vérification aurait dû dire « non dit » (la déclaration ne parle d'aucun aquarium) : c'est elle
+  qu'il faut renforcer, sur des cas de mise au point qui montrent la même confusion.
+
+`red-b05` est aussi un cas de test. La correction n'y touche ni aux règles ni au vocabulaire : c'est un défaut de la
+chaîne, que ce cas a montré et qui vaut pour tous. Il faut le dire : sur ce cas, la partie test ne mesure plus une
+lecture neuve. Deux tests ajoutés.
+
+**Mesure** (21 nov., 0 h 08 et 0 h 12, avec exemples) : 176 tests passent. Le vélo est couvert 3 fois sur 3. Le miroir
+n'est plus couvert : `vitre_placee = non` est lu, mais la confirmation des faits décisifs ne le juge pas écrit (« encore
+dans son carton et pas encore accroché ») et la réponse reste « à préciser », réponse acceptable, du côté prudent. Jeu
+fermé de A : **93 %** justes, 0,33 couvert à tort (le vase, une fois sur trois). Partie test de A : **89 %**, 2 couverts
+à tort : le bain à bulles, et le jeu de clés (`g-p03`) qui revient (corrigé par les exemples en 7.111, la lecture
+d'une série à l'autre varie sur ce cas).
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 20 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.
@@ -3778,7 +3809,7 @@ Tenu à jour le 20 nov. 2026, après-midi ; ce qui est fait est dans les section
 - Faits idéaux Assureur B : retirer les valeurs par défaut que la déclaration ne dit pas (`auteur = tiers`, `proprietaire = assure`), qui sous-estiment le rappel.
 
 **La lecture, sans cas particuliers (7.107)**
-- Les exemples sont la lecture par défaut (7.112) : des exemples pour D (son jeu fermé, une fois validé, ne doit pas y entrer) ; le vélo, le miroir, le bain à bulles.
+- Les exemples sont la lecture par défaut (7.112) : des exemples pour D. Renforcer la vérification contre une valeur voisine mais fausse (le bain à bulles lu aquarium, 7.113), sur des cas de mise au point.
 - Un second lot de déclarations, écrit par Mistral Large et validé, pour un test que rien n'a encore corrigé.
 - La question « qui a subi le dommage ? » dans l'appel 1, pour la responsabilité civile.
 
@@ -3911,3 +3942,5 @@ Tenu à jour le 20 nov. 2026, après-midi ; ce qui est fait est dans les section
 121. Une garantie optionnelle se déclare dans le contrat, pas dans le vocabulaire : la même variable est une option chez l'un, une garantie de base chez l'autre.
 122. Ce qu'on a essayé et écarté se retire du code : un réglage qu'on ne mesure plus est une branche qu'on ne teste plus.
 123. Deux séries de bancs lancées en même temps se gênent : la latence mesurée devient celle du fournisseur saturé.
+124. Quand le modèle s'obstine sur une valeur fausse, lui donner la valeur qu'il cherche (le vélo), plutôt qu'une aide de plus.
+125. Une précision du code faite après la lecture arrive trop tard si elle décide des questions suivantes.
