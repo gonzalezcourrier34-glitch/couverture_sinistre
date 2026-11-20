@@ -1,0 +1,474 @@
+{
+  "meta": {
+    "article": "2.6",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12"
+  },
+  "proposition": {
+    "evenements": [
+      "vandalisme",
+      "vol"
+    ],
+    "definitions": [
+      {
+        "concept": "dependances",
+        "condition": {
+          "ou": [
+            {
+              "f": [
+                "lieu",
+                "cave"
+              ]
+            },
+            {
+              "f": [
+                "lieu",
+                "grenier"
+              ]
+            },
+            {
+              "f": [
+                "lieu",
+                "garage"
+              ]
+            },
+            {
+              "f": [
+                "lieu",
+                "annexe"
+              ]
+            },
+            {
+              "f": [
+                "lieu",
+                "abri_jardin"
+              ]
+            }
+          ]
+        },
+        "article": "S10-a/dependances",
+        "texte": "Ce sont les locaux destinés à un usage autre que le local d’habitation ou l’exercice d’une profession situés en dehors de la « verticalité » du local d’habitation. Sont également considérés comme dépendances les caves et les garages situés dans les immeubles collectifs."
+      }
+    ],
+    "garanties": [
+      {
+        "id": "detriorations_immobilieres_vandalisme",
+        "nom": "Détériorations immobilières suite à vandalisme ou vol",
+        "article": "2.6-a",
+        "texte": "La garantie couvre la détérioration de : - vos biens immobiliers, - votre piscine, spa ou jacuzzi (si l’option du Pack Piscine est souscrite), - votre abri de piscine, spa ou jacuzzi (si l’option du Pack Piscine est souscrite), - votre véranda (si l’option est souscrite), à la suite d’un acte de vandalisme, d’une tentative de vol ou d’un vol. Si les dommages sont commis à l’intérieur de votre habitation ou de ses dépendances, les détériorations doivent être commises à la suite : - de l’effraction ou de l’escalade des locaux assurés, ayant laissé des traces apparentes, - de menaces physiques ou violences physiques, - du vol des clés, - de l’introduction par fausse qualité. La garantie couvre également les frais de remplacement à l’identique des moyens de protection équipant ces locaux.",
+        "perimetre": [
+          {
+            "ou": [
+              {
+                "f": [
+                  "evenement",
+                  "vandalisme"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "vol"
+                ]
+              }
+            ]
+          },
+          {
+            "ou": [
+              {
+                "concept": "batiment"
+              },
+              {
+                "f": [
+                  "bien",
+                  "element_batiment"
+                ]
+              },
+              {
+                "et": [
+                  {
+                    "f": [
+                      "bien",
+                      "piscine"
+                    ]
+                  },
+                  {
+                    "f": [
+                      "pack_piscine",
+                      "oui"
+                    ]
+                  }
+                ]
+              },
+              {
+                "et": [
+                  {
+                    "f": [
+                      "bien",
+                      "abri_piscine"
+                    ]
+                  },
+                  {
+                    "f": [
+                      "pack_piscine",
+                      "oui"
+                    ]
+                  }
+                ]
+              },
+              {
+                "et": [
+                  {
+                    "f": [
+                      "bien",
+                      "spa"
+                    ]
+                  },
+                  {
+                    "f": [
+                      "pack_piscine",
+                      "oui"
+                    ]
+                  }
+                ]
+              },
+              {
+                "et": [
+                  {
+                    "f": [
+                      "bien",
+                      "jacuzzi"
+                    ]
+                  },
+                  {
+                    "f": [
+                      "pack_piscine",
+                      "oui"
+                    ]
+                  }
+                ]
+              },
+              {
+                "et": [
+                  {
+                    "f": [
+                      "bien",
+                      "veranda"
+                    ]
+                  },
+                  {
+                    "f": [
+                      "option_veranda",
+                      "oui"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "si": [
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "lieu",
+                        "logement"
+                      ]
+                    },
+                    {
+                      "concept": "dependances"
+                    }
+                  ]
+                },
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "effraction",
+                        "oui"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "escalade",
+                        "oui"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "violence",
+                        "oui"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "vol_cles",
+                        "oui"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "fausse_qualite",
+                        "oui"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "article": "2.6-a",
+            "texte": "Si les dommages sont commis à l'intérieur de votre habitation ou de ses dépendances, les détériorations doivent être commises à la suite : - de l’effraction ou de l’escalade des locaux assurés, ayant laissé des traces apparentes, - de menaces physiques ou violences physiques, - du vol des clés, - de l’introduction par fausse qualité."
+          }
+        ],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "et": [
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "auteur",
+                        "famille"
+                      ]
+                    },
+                    {
+                      "et": [
+                        {
+                          "f": [
+                            "auteur",
+                            "personnel_prive"
+                          ]
+                        },
+                        {
+                          "f": [
+                            "heures_service",
+                            "oui"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "non": {
+                    "f": [
+                      "plainte_nominative",
+                      "oui"
+                    ]
+                  }
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.6-b",
+            "texte": "les vols, tentatives de vol ou actes de vandalisme dont seraient auteurs ou complices les membres de votre famille (article 311-12 du Code pénal) ou vos préposés pendant leur service, sauf si une plainte nominative est déposée à leur encontre"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "graffiti_mur_exterieur",
+                    "oui"
+                  ]
+                },
+                {
+                  "non": {
+                    "ou": [
+                      {
+                        "f": [
+                          "lieu",
+                          "logement"
+                        ]
+                      },
+                      {
+                        "concept": "dependances"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.6-b",
+            "texte": "les graffitis, tags, pochoirs et inscriptions de toute nature, affichages, salissures, rayures commis à l’extérieur de votre local d’habitation et de ses dépendances"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "evenement",
+                    "vol"
+                  ]
+                },
+                {
+                  "ou": [
+                    {
+                      "concept": "batiment"
+                    },
+                    {
+                      "f": [
+                        "bien",
+                        "element_batiment"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "2.6-b",
+            "texte": "le vol des biens immobiliers"
+          }
+        ],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "bien",
+        "valeurs": [
+          "abri_piscine",
+          "spa",
+          "jacuzzi"
+        ],
+        "question": "De quel bien s'agit-il (abri de piscine, spa, jacuzzi) ?",
+        "pourquoi": "Le texte mentionne l'abri de piscine, le spa et le jacuzzi comme biens distincts de la piscine, non présents dans le vocabulaire.",
+        "plus_proche": "bien : piscine, abri_jardin",
+        "aide": {
+          "abri_piscine": "il s'agit de l'abri couvrant la piscine",
+          "spa": "il s'agit d'un spa",
+          "jacuzzi": "il s'agit d'un jacuzzi"
+        }
+      },
+      {
+        "variable": "escalade",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Y a-t-il eu escalade des locaux assurés ?",
+        "pourquoi": "Le texte mentionne l'escalade comme circonstance d'accès, non présente dans le vocabulaire (effraction existe mais pas escalade).",
+        "plus_proche": "effraction",
+        "aide": {
+          "oui": "les auteurs sont entrés par escalade (mur, clôture, fenêtre non protégée)",
+          "non": "pas d'escalade constatée"
+        }
+      },
+      {
+        "variable": "vol_cles",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Les clés ont-elles été volées ?",
+        "pourquoi": "Le texte mentionne le vol des clés comme circonstance, non présent dans le vocabulaire.",
+        "plus_proche": "cles (bien)",
+        "aide": {
+          "oui": "les clés d'accès ont été volées",
+          "non": "les clés n'ont pas été volées"
+        }
+      },
+      {
+        "variable": "fausse_qualite",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Y a-t-il eu introduction par fausse qualité (usurpation d'identité) ?",
+        "pourquoi": "Le texte mentionne l'introduction par fausse qualité, non présente dans le vocabulaire.",
+        "plus_proche": "abus_confiance",
+        "aide": {
+          "oui": "l'auteur s'est fait passer pour une autre personne (policier, technicien, etc.)",
+          "non": "pas d'introduction par fausse qualité"
+        }
+      },
+      {
+        "variable": "plainte_nominative",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Une plainte nominative (contre une personne désignée) a-t-elle été déposée ?",
+        "pourquoi": "Le texte exige une plainte nominative pour lever l'exclusion famille/préposés, le vocabulaire a seulement plainte_deposee sans précision nominative.",
+        "plus_proche": "plainte_deposee",
+        "aide": {
+          "oui": "une plainte a été déposée en nommant l'auteur",
+          "non": "aucune plainte nominative déposée"
+        }
+      }
+    ],
+    "non_traduit": [
+      {
+        "article": "2.6-b",
+        "texte": "ATTENTION Vous devez respecter certaines mesures de sécurité pour bénéficier pleinement de la garantie (voir ART. 4.1).",
+        "pourquoi": "Le texte de l'article 4.1 détaillant les mesures de sécurité n'est pas fourni, les obligations de prévention ne peuvent être traduites."
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = abri_piscine : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.6`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = spa : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.6`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = jacuzzi : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.6`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "escalade = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.6`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "vol_cles = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.6`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "fausse_qualite = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.6`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "plainte_nominative = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.6`) ou à remplacer"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "vocabulaire",
+      "message": "bien = abri_piscine, spa, jacuzzi : valeur nouvelle sans « parent » ; les règles déjà écrites ne la reconnaîtront pas (un ordinateur qui n'est plus de l'électronique, 7.64)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "garantie : citation rattachée à 2.6-a (et non 2.6)"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (2.6-b) : « ATTENTION Vous devez respecter certaines mesures de sécurité pour bénéficier pleinement de la garant » — Le texte de l'article 4.1 détaillant les mesures de sécurité n'est pas fourni, les obligations de prévention ne peuvent être traduites."
+    }
+  ]
+}

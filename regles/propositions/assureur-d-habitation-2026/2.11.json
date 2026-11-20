@@ -1,0 +1,81 @@
+{
+  "meta": {
+    "article": "2.11",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12"
+  },
+  "proposition": {
+    "evenements": [
+      "attentat"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "attentat_biens",
+        "nom": "Attentats et actes de terrorisme",
+        "article": "2.11-a",
+        "texte": "La garantie couvre les dommages matériels directs (y compris les frais de décontamination), subis sur le territoire national, causés aux biens assurés par un attentat ou un acte de terrorisme tels que définis aux articles 421-1 et 421-2 du Code pénal.",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "attentat"
+            ]
+          },
+          {
+            "f": [
+              "pays",
+              "france"
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "nature_frais",
+                "decontamination_deblais_confinement"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.11-b",
+            "texte": "les frais de décontamination des déblais ainsi que leur confinement"
+          }
+        ],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "nature_frais",
+        "valeurs": [
+          "decontamination_biens",
+          "decontamination_deblais_confinement",
+          "autre"
+        ],
+        "question": "S'agit-il de frais de décontamination des déblais ou de leur confinement ?",
+        "pourquoi": "L'article 2.11-b exclut spécifiquement les frais de décontamination des déblais et leur confinement, distincts des autres frais de décontamination couverts par la garantie",
+        "plus_proche": "bien : aucune valeur ne désigne les déblais ou les frais de décontamination spécifiques",
+        "aide": {
+          "decontamination_deblais_confinement": "il s'agit de la décontamination des décombres/déblais ou de leur confinement",
+          "decontamination_biens": "il s'agit de la décontamination des biens eux-mêmes",
+          "autre": "autre type de frais"
+        }
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "nature_frais = decontamination_deblais_confinement : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.11`) ou à remplacer"
+    }
+  ]
+}

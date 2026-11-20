@@ -3077,6 +3077,35 @@ sécurité (4, des réductions d'indemnité et non des refus, 7.81) et les frais
 responsabilités ensuite. Mesures à chaque lot : temps de rédaction, nombre de contrôles bloquants, corrections
 à la main.
 
+### 7.89 Assureur D, lot 1 : ce que coûte un contrat de plus (premières mesures)
+
+**Second avis du jeu fermé de D** : 25 cas ; 24 accords (dont un souple), 1 désaccord. `f-d23` (l'eau traverse la
+façade d'une maison « que nous avons fait construire ») : Mistral Large répond « refusé » (la garantie décennale du
+constructeur) ; l'agent, « incertain » : la décennale ne joue que dix ans, et l'âge de la maison n'est pas dit.
+Arbitré pour l'agent, sur la citation.
+
+**Rédaction du lot 1** (biens assurés 1.1 à 1.5, exclusions générales « S25 » ; 6 articles, 3 à la fois) :
+11 min 15 s, **80 contrôles bloquants**. La relecture (`relecture/assureur_d_lot_1.py`) a réécrit presque tout :
+- *Les concepts* : le modèle inventait `bien_immobilier`, `dependances`, `depreciation_collection`, et étendait un
+  concept `bien` qui n'existe pas. Comme chez A : `batiment` (les lieux : le logement, ses dépendances) et
+  `contenu` (les biens mobiliers qui s'y trouvent).
+- *Les exclusions de biens* (vérandas, éoliennes, piscines, véhicules, animaux…) excluaient tout le sinistre :
+  elles n'excluent que le bien (portée `bien`). Leurs exceptions (option, pack, formule) restent en réserve.
+- *Les exclusions générales* : celle du tremblement de terre excluait l'événement « catastrophe naturelle », donc
+  la garantie qu'elle épargne expressément ; retirée (aucune autre garantie ne couvre ces phénomènes). Aucune
+  n'est demandée à l'assuré.
+- 1.3 et 1.4 (objets de valeur, véranda : des options) ne sont pas acceptés seuls ; leurs exceptions sont portées
+  par les exclusions de 1.1 et 1.2.
+Après relecture : 0 contrôle bloquant hors vocabulaire (16 valeurs nouvelles à accepter).
+
+**Un contrôle trop bavard.** Le lexique de D définit « NOUS » et « VOUS » ; chaque garantie s'intitule « Ce que
+nous garantissons » ; le contrôle « définition de l'événement couvert non traduite » se déclenchait à chaque
+article. Les pronoms sont ignorés.
+
+**Ce que le lot dit du coût.** Les articles de définition des biens sont les plus durs pour le modèle : ils
+fixent les concepts que tout le reste emploie, et il les invente. C'est là que la relecture humaine compte le
+plus ; les garanties (lot 2) devraient demander moins, si les concepts sont bons.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.

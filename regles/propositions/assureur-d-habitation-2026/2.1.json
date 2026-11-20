@@ -1,0 +1,354 @@
+{
+  "meta": {
+    "article": "2.1",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12"
+  },
+  "proposition": {
+    "evenements": [
+      "incendie",
+      "explosion",
+      "fumee",
+      "foudre",
+      "heurt",
+      "autre"
+    ],
+    "definitions": [
+      {
+        "concept": "contenu",
+        "condition": {
+          "non": {
+            "f": [
+              "bien",
+              "element_batiment"
+            ]
+          }
+        },
+        "article": "2.1-a",
+        "texte": "SUBIS PAR VOS BIENS"
+      },
+      {
+        "concept": "incendie",
+        "condition": {
+          "f": [
+            "flammes",
+            "oui"
+          ]
+        },
+        "article": "2.1-a",
+        "texte": "l ’incendie, c’est-à-dire la combustion avec flammes en dehors d’un foyer normal, y compris ceux occasionnés par la fumée et les émanations qui s’en dégagent, ainsi que par l’intervention des services de secours à cette occasion"
+      },
+      {
+        "concept": "explosion",
+        "condition": {
+          "f": [
+            "evenement",
+            "explosion"
+          ]
+        },
+        "article": "2.1-a",
+        "texte": "l ’explosion, c’est-à-dire l’action subite et violente d’une surpression ou d’une dépression"
+      },
+      {
+        "concept": "enfumage_accidentel",
+        "condition": {
+          "f": [
+            "evenement",
+            "fumee"
+          ]
+        },
+        "article": "2.1-a",
+        "texte": "l ’enfumage accidentel, c’est-à-dire l’émission accidentelle de fumées ou de vapeurs corrosives à l’intérieur des locaux assurés"
+      },
+      {
+        "concept": "foudre",
+        "condition": {
+          "f": [
+            "evenement",
+            "foudre"
+          ]
+        },
+        "article": "2.1-a",
+        "texte": "la chute de la foudre, c’est-à-dire du fait de l’ébranlement ou de la calcination causés directement par l’impact de la foudre ou encore du fait de la chute d’un objet causée par la foudre, y compris aux installations électriques équipant les locaux"
+      },
+      {
+        "concept": "choc_vehicule",
+        "condition": {
+          "f": [
+            "evenement",
+            "heurt"
+          ]
+        },
+        "article": "2.1-a",
+        "texte": "le choc d’un véhicule, c’est-à-dire le choc d’un véhicule dont ni vous, ni votre conjoint ou concubin, ni vos enfants, n’avez la propriété, la conduite ou la garde"
+      },
+      {
+        "concept": "chute_engins_volants",
+        "condition": {
+          "f": [
+            "evenement",
+            "autre"
+          ]
+        },
+        "article": "2.1-a",
+        "texte": "la chute d’engins volants ou d’objets provenant de ces derniers"
+      },
+      {
+        "concept": "mur_du_son",
+        "condition": {
+          "f": [
+            "evenement",
+            "autre"
+          ]
+        },
+        "article": "2.1-a",
+        "texte": "le mur du son, c’est-à-dire l’ébranlement consécutif au franchissement du mur du son"
+      }
+    ],
+    "garanties": [
+      {
+        "id": "incendie_evenements_annexes",
+        "nom": "Incendie et événements annexes",
+        "article": "2.1-a",
+        "texte": "La garantie couvre les dommages matériels causés par : • l ’incendie, c’est-à-dire la combustion avec flammes en dehors d’un foyer normal, y compris ceux occasionnés par la fumée et les émanations qui s’en dégagent, ainsi que par l’intervention des services de secours à cette occasion, • l ’explosion, c’est-à-dire l’action subite et violente d’une surpression ou d’une dépression, • l ’enfumage accidentel, c’est-à-dire l’émission accidentelle de fumées ou de vapeurs corrosives à l’intérieur des locaux assurés, • la chute de la foudre, c’est-à-dire du fait de l’ébranlement ou de la calcination causés directement par l’impact de la foudre ou encore du fait de la chute d’un objet causée par la foudre, y compris aux installations électriques équipant les locaux, • le choc d’un véhicule, c’est-à-dire le choc d’un véhicule dont ni vous, ni votre conjoint ou concubin, ni vos enfants, n’avez la propriété, la conduite ou la garde. Le véhicule doit être identifié, sinon vous devez déposer une plainte auprès des autorités.La garantie couvre également les dommages matériels causés par la chute d’engins volants ou d’objets provenant de ces derniers, • le mur du son, c’est-à-dire l’ébranlement consécutif au franchissement du mur du son.",
+        "perimetre": [
+          {
+            "ou": [
+              {
+                "f": [
+                  "evenement",
+                  "incendie"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "explosion"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "fumee"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "foudre"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "heurt"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "autre"
+                ]
+              }
+            ]
+          },
+          {
+            "ou": [
+              {
+                "concept": "contenu"
+              },
+              {
+                "f": [
+                  "bien",
+                  "element_batiment"
+                ]
+              }
+            ]
+          },
+          {
+            "concept": "batiment"
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "si": [
+                {
+                  "f": [
+                    "evenement",
+                    "heurt"
+                  ]
+                },
+                {
+                  "et": [
+                    {
+                      "f": [
+                        "auteur",
+                        "tiers"
+                      ]
+                    },
+                    {
+                      "ou": [
+                        {
+                          "f": [
+                            "vehicule_identifie",
+                            "oui"
+                          ]
+                        },
+                        {
+                          "f": [
+                            "plainte_deposee",
+                            "oui"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "article": "2.1-a",
+            "texte": "le choc d’un véhicule, c’est-à-dire le choc d’un véhicule dont ni vous, ni votre conjoint ou concubin, ni vos enfants, n’avez la propriété, la conduite ou la garde. Le véhicule doit être identifié, sinon vous devez déposer une plainte auprès des autorités."
+          }
+        ],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "et": [
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "evenement",
+                        "incendie"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "evenement",
+                        "explosion"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "bien",
+                        "electronique"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "bien",
+                        "appareil_electromenager"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "bien",
+                        "appareil_audiovisuel"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "bien",
+                        "appareil_informatique"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "f": [
+                    "bien_a_l_origine_sinistre",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.1-b",
+            "texte": "les dommages aux appareils électriques ou électroniques qui ont pour origine l’incendie ou l’explosion prenant naissance dans l’appareil. Ces dommages sont indemnisés au titre de la garantie dommages électriques."
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "evenement",
+                    "fumee"
+                  ]
+                },
+                {
+                  "f": [
+                    "cheminee_ouverte",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.1-b",
+            "texte": "la fumée provenant de cheminées à feu apparent (dits « à l’ouvert »)."
+          }
+        ],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "vehicule_identifie",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le véhicule responsable du choc a-t-il été identifié ?",
+        "pourquoi": "condition pour le choc d'un véhicule : le véhicule doit être identifié ou une plainte déposée auprès des autorités",
+        "plus_proche": "plainte_deposee : couvre le cas où le véhicule n'est pas identifié mais une plainte est déposée",
+        "aide": {
+          "oui": "le véhicule a été identifié (immatriculation, conducteur connu)",
+          "non": "le véhicule n'a pas été identifié"
+        }
+      },
+      {
+        "variable": "cheminee_ouverte",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La fumée provenait-elle d'une cheminée à feu apparent (à l'ouvert) ?",
+        "pourquoi": "exclusion de la fumée provenant de cheminées à feu apparent pour l'enfumage accidentel",
+        "plus_proche": "contact_incandescent : décrit le contact avec un foyer ou une substance incandescente mais ne précise pas la cheminée à feu apparent",
+        "aide": {
+          "oui": "la fumée venait d'une cheminée ouverte, à feu apparent",
+          "non": "la fumée venait d'ailleurs (pas d'une cheminée à feu apparent)"
+        }
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "vehicule_identifie = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "cheminee_ouverte = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.1`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "citation",
+      "message": "définition (2.1-a) : « SUBIS PAR VOS BIENS » ne figure pas dans la clause"
+    }
+  ]
+}

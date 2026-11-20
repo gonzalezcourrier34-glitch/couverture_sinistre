@@ -671,7 +671,10 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
                  if n in employes_c}
     for d in definitions_utiles(clauses, clauses_article(clauses, article)):
         terme_defini = normaliser((d.chemin[-1] if d.chemin else d.id.split("/")[-1]).replace("-", " "))
-        if terme_defini and re.search(rf"\b{re.escape(terme_defini)}", titres) and d.id not in employes:
+        # « NOUS », « VOUS » : le lexique de l'assureur D les définit, et « Ce que nous garantissons » est le titre
+        # de chaque garantie ; ce ne sont pas des restrictions (7.89).
+        if terme_defini and terme_defini not in ("nous", "vous") and re.search(rf"\b{re.escape(terme_defini)}", titres) \
+                and d.id not in employes:
             noter(BLOQUANT, "couverture", f"la définition {d.id} de l'événement couvert n'est pas traduite "
                   f"(elle restreint la garantie) : l'employer ou la déclarer non traduite")
 

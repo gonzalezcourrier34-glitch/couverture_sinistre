@@ -1,0 +1,107 @@
+{
+  "meta": {
+    "article": "2.10",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12"
+  },
+  "proposition": {
+    "evenements": [
+      "catastrophe_technologique"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "catastrophe_technologique",
+        "nom": "Catastrophes technologiques",
+        "article": "2.10-a",
+        "texte": "La garantie couvre les conséquences pécuniaires des dommages à vos biens à usage d'habitation ou placés dans les locaux à usage d'habitation résultant de l'état de catastrophe technologique conformément à la loi n°2003-699 du 30 juillet 2003.",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "catastrophe_technologique"
+            ]
+          },
+          {
+            "concept": "batiment"
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "publication_jo_catastrophe_technologique",
+                "oui"
+              ]
+            },
+            "article": "2.10-a",
+            "texte": "La garantie ne peut être mise en jeu qu'après publication au Journal officiel de la République Française de la décision de l'autorité administrative ayant constaté l'état de catastrophe technologique."
+          }
+        ],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "evenement",
+        "valeurs": [
+          "catastrophe_technologique"
+        ],
+        "question": "S'agit-il d'une catastrophe technologique au sens de la loi n°2003-699 du 30 juillet 2003 ?",
+        "pourquoi": "L'article 2.10 couvre spécifiquement les catastrophes technologiques, distinctes des catastrophes naturelles déjà dans le vocabulaire",
+        "plus_proche": "evenement : catastrophe_naturelle existe mais désigne les phénomènes naturels (tremblement de terre, inondation, ruissellement, glissement de terrain), pas les accidents technologiques industriels",
+        "aide": {
+          "catastrophe_technologique": "l'événement résulte d'un accident industriel ou technologique reconnu comme catastrophe technologique par arrêté ministériel publié au Journal officiel"
+        }
+      },
+      {
+        "variable": "publication_jo_catastrophe_technologique",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La décision administrative constatant l'état de catastrophe technologique a-t-elle été publiée au Journal officiel de la République Française ?",
+        "pourquoi": "La garantie ne peut être mise en jeu qu'après cette publication (article 2.10-a)",
+        "plus_proche": "aucune variable existante ne couvre la publication au Journal officiel d'une décision administrative relative à une catastrophe",
+        "aide": {
+          "oui": "l'arrêté constatant l'état de catastrophe technologique a été publié au Journal officiel",
+          "non": "l'arrêté n'a pas encore été publié au Journal officiel"
+        }
+      }
+    ],
+    "non_traduit": [
+      {
+        "article": "2.10-a",
+        "texte": "Nos obligations L'indemnité vous sera versée dans un délai de trois mois à compter de la date de remise de l'état estimatif des biens endommagés ou de la date de la publication de la décision administrative constatant l'état de catastrophe technologique lorsque celle-ci est postérieure.",
+        "pourquoi": "Il s'agit d'une obligation de l'assureur concernant le délai de paiement, sans incidence sur la couverture du sinistre"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "evenement = catastrophe_technologique : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.10`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "publication_jo_catastrophe_technologique = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.10`) ou à remplacer"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "vocabulaire",
+      "message": "evenement = catastrophe_technologique : valeur nouvelle sans « parent » ; les règles déjà écrites ne la reconnaîtront pas (un ordinateur qui n'est plus de l'électronique, 7.64)"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (2.10-a) : « Nos obligations L'indemnité vous sera versée dans un délai de trois mois à compter de la date de rem » — Il s'agit d'une obligation de l'assureur concernant le délai de paiement, sans incidence sur la couverture du sinistre"
+    }
+  ]
+}

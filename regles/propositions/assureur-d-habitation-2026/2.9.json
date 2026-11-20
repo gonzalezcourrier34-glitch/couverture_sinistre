@@ -1,0 +1,491 @@
+{
+  "meta": {
+    "article": "2.9",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12"
+  },
+  "proposition": {
+    "evenements": [
+      "catastrophe_naturelle"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "catastrophe_naturelle_dommages_materiels",
+        "nom": "Dommages matériels directs par catastrophe naturelle",
+        "article": "2.9-a",
+        "texte": "La garantie couvre les dommages matériels directs non assurables ayant eu pour cause déterminante l’intensité anormale d’un agent naturel, lorsque les mesures habituelles à prendre pour prévenir ces dommages n’ont pu empêcher leur survenance ou n’ont pu être prises.",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "catastrophe_naturelle"
+            ]
+          },
+          {
+            "concept": "batiment"
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "dommage_non_assurable_ailleurs",
+                "oui"
+              ]
+            },
+            "article": "2.9-a",
+            "texte": "dommages matériels directs non assurables"
+          },
+          {
+            "condition": {
+              "f": [
+                "mesures_prevention_habituelles_non_efficaces",
+                "oui"
+              ]
+            },
+            "article": "2.9-a",
+            "texte": "lorsque les mesures habituelles à prendre pour prévenir ces dommages n’ont pu empêcher leur survenance ou n’ont pu être prises"
+          },
+          {
+            "condition": {
+              "f": [
+                "declaration_dans_30j_apres_arrete",
+                "oui"
+              ]
+            },
+            "article": "2.9-a",
+            "texte": "La garantie est mise en jeu par une déclaration faite au plus tard trente jours après publication au Journal Officiel d’un arrêté interministériel constatant l’état de catastrophe naturelle"
+          },
+          {
+            "condition": {
+              "si": [
+                {
+                  "f": [
+                    "catastrophe",
+                    "secheresse_rehydratation"
+                  ]
+                },
+                {
+                  "ou": [
+                    {
+                      "ou": [
+                        {
+                          "f": [
+                            "affecte_solidite_bati",
+                            "oui"
+                          ]
+                        },
+                        {
+                          "f": [
+                            "entrave_usage_normal",
+                            "oui"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "f": [
+                        "evolution_defavorable_probable",
+                        "oui"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "article": "2.9-a",
+            "texte": "pour les dommages ayant eu pour cause déterminante les mouvements de terrain différentiels consécutifs à la sécheresse et à la réhydratation des sols, la garantie prévue à l’article L. 125-1 du Code couvre l’ensemble des dommages qui affectent la solidité du bâti ou entravent l’usage normal des bâtiments. Les dommages ne présentant pas ces caractéristiques au moment du constat des désordres sont également couverts par la garantie dès lors qu’ils sont de nature à évoluer défavorablement et à affecter la solidité du bâti ou à entraver l’usage normal des bâtiments (Article R. 125-7 du Code)"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "terrain_non_constructible",
+                    "oui"
+                  ]
+                },
+                {
+                  "non": {
+                    "f": [
+                      "bien_existant_avant_publication_plan",
+                      "oui"
+                    ]
+                  }
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.9-b",
+            "texte": "les biens assurés construits sur des terrains classés inconstructibles par un plan de prévention des risques à l’exception toutefois des biens existants antérieurement à la publication de ce plan (article L. 125-6 du Code)"
+          },
+          {
+            "condition": {
+              "f": [
+                "construction_violation_regles_administratives",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.9-b",
+            "texte": "les biens immobiliers construits en violation des règles administratives en vigueur lors de leur mise en place et tendant à prévenir les dommages causés par une catastrophe naturelle (article L. 125-6 du Code)"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "catastrophe",
+                    "secheresse_rehydratation"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien_annexe_habitation",
+                    "oui"
+                  ]
+                },
+                {
+                  "non": {
+                    "f": [
+                      "element_indissociable_ouvrages_principaux",
+                      "oui"
+                    ]
+                  }
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.9-b",
+            "texte": "en cas de dommages ayant eu pour cause déterminante les mouvements de terrain différentiels consécutifs à la sécheresse et à la réhydratation des sols, les dommages survenus sur les constructions constitutives d’éléments annexes aux parties à usage d’habitation, tels que notamment les remises, les garages et parkings, les terrasses, les murs de clôture extérieurs, les serres, les terrains de jeux ou les piscines et leurs éléments architecturaux connexes, sauf lorsque ces éléments font indissociablement corps avec les ouvrages de viabilité, de fondation, d’ossature, de clos ou de couvert (Article R. 125-7 du Code)"
+          }
+        ],
+        "limites": []
+      },
+      {
+        "id": "catastrophe_naturelle_relogement_urgence",
+        "nom": "Frais de relogement d'urgence",
+        "article": "2.9-a",
+        "texte": "Sont également considérés comme les effets des catastrophes naturelles les frais de relogement d’urgence des personnes sinistrées dont la résidence principale est rendue impropre à l’habitation pour des raisons de sécurité, de salubrité ou d’hygiène qui résultent de ces dommages matériels directs non assurables ayant eu pour cause déterminante l’intensité anormale d’un agent naturel.",
+        "accessoire": true,
+        "perimetre": [],
+        "circonstances": [
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "residence_principale_inhabitable",
+                    "oui"
+                  ]
+                },
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "raison_inhabitabilite",
+                        "securite"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "raison_inhabitabilite",
+                        "salubrite"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "raison_inhabitabilite",
+                        "hygiene"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "article": "2.9-a",
+            "texte": "dont la résidence principale est rendue impropre à l’habitation pour des raisons de sécurité, de salubrité ou d’hygiène qui résultent de ces dommages matériels directs non assurables ayant eu pour cause déterminante l’intensité anormale d’un agent naturel"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "dommage_non_assurable_ailleurs",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le dommage est-il non assurable par une autre assurance ?",
+        "pourquoi": "condition de la garantie catastrophe naturelle (dommages matériels directs non assurables)",
+        "plus_proche": "aucune",
+        "aide": {
+          "oui": "le dommage n'est couvert par aucune autre assurance",
+          "non": "le dommage est couvert par une autre assurance"
+        }
+      },
+      {
+        "variable": "mesures_prevention_habituelles_non_efficaces",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Les mesures habituelles de prévention n'ont-elles pu empêcher le sinistre ou n'ont-elles pu être prises ?",
+        "pourquoi": "condition de la garantie catastrophe naturelle",
+        "plus_proche": "prevention_gel",
+        "aide": {
+          "oui": "les mesures habituelles n'ont pas pu être prises ou ont échoué",
+          "non": "les mesures habituelles ont été prises et efficaces"
+        }
+      },
+      {
+        "variable": "declaration_dans_30j_apres_arrete",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La déclaration a-t-elle été faite au plus tard 30 jours après la publication de l'arrêté interministériel constatant l'état de catastrophe naturelle ?",
+        "pourquoi": "condition de mise en jeu de la garantie",
+        "plus_proche": "aucune",
+        "aide": {
+          "oui": "déclaration faite dans les 30 jours suivant la publication de l'arrêté",
+          "non": "déclaration faite après 30 jours ou pas d'arrêté publié"
+        }
+      },
+      {
+        "variable": "catastrophe",
+        "valeurs": [
+          "secheresse_rehydratation"
+        ],
+        "question": "S'agit-il de mouvements de terrain différentiels consécutifs à la sécheresse et à la réhydratation des sols ?",
+        "pourquoi": "type spécifique de catastrophe naturelle pour lequel des règles particulières s'appliquent (solidité du bâti, exclusion des annexes)",
+        "plus_proche": "glissement_terrain",
+        "parent": "glissement_terrain",
+        "aide": {
+          "secheresse_rehydratation": "mouvements de terrain dus à la sécheresse suivie de réhydratation des sols (retrait-gonflement des argiles)"
+        }
+      },
+      {
+        "variable": "affecte_solidite_bati",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Les dommages affectent-ils la solidité du bâti ?",
+        "pourquoi": "condition pour la couverture en cas de sécheresse/réhydratation",
+        "plus_proche": "construction_delabree",
+        "aide": {
+          "oui": "fissures structurelles, affaissement, atteinte à la solidité",
+          "non": "dommages superficiels sans atteinte à la structure"
+        }
+      },
+      {
+        "variable": "entrave_usage_normal",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Les dommages entravent-ils l'usage normal des bâtiments ?",
+        "pourquoi": "condition pour la couverture en cas de sécheresse/réhydratation",
+        "plus_proche": "residence_principale_inhabitable",
+        "aide": {
+          "oui": "impossibilité d'utiliser normalement les locaux",
+          "non": "usage normal possible malgré les dommages"
+        }
+      },
+      {
+        "variable": "evolution_defavorable_probable",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Les dommages sont-ils de nature à évoluer défavorablement et à affecter la solidité du bâti ou à entraver l'usage normal ?",
+        "pourquoi": "condition alternative pour la couverture en cas de sécheresse/réhydratation",
+        "plus_proche": "aucune",
+        "aide": {
+          "oui": "risque d'aggravation pouvant conduire à une atteinte structurelle",
+          "non": "pas de risque d'aggravation structurelle"
+        }
+      },
+      {
+        "variable": "bien_existant_avant_publication_plan",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le bien existait-il antérieurement à la publication du plan de prévention des risques classant le terrain comme inconstructible ?",
+        "pourquoi": "réserve à l'exclusion des biens sur terrains inconstructibles",
+        "plus_proche": "batiment_construit_plus_18_mois_apres_classement",
+        "aide": {
+          "oui": "le bien était déjà construit avant la publication du plan",
+          "non": "le bien a été construit après la publication du plan"
+        }
+      },
+      {
+        "variable": "construction_violation_regles_administratives",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le bien a-t-il été construit en violation des règles administratives en vigueur lors de sa mise en place et tendant à prévenir les dommages par catastrophe naturelle ?",
+        "pourquoi": "exclusion des biens construits en violation des règles de prévention",
+        "plus_proche": "autorisation_gestion_eau_non_respectee",
+        "aide": {
+          "oui": "construction non conforme aux règles administratives de prévention des risques",
+          "non": "construction conforme aux règles administratives"
+        }
+      },
+      {
+        "variable": "bien_annexe_habitation",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le bien endommagé constitue-t-il un élément annexe aux parties à usage d'habitation (remise, garage, terrasse, serre, piscine, etc.) ?",
+        "pourquoi": "exclusion des annexes en cas de sécheresse/réhydratation",
+        "plus_proche": "garage",
+        "aide": {
+          "oui": "il s'agit d'une construction annexe (garage, terrasse, serre, piscine, abri, etc.)",
+          "non": "il s'agit de la partie principale du bâtiment"
+        }
+      },
+      {
+        "variable": "element_indissociable_ouvrages_principaux",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "L'élément fait-il indissociablement corps avec les ouvrages de viabilité, de fondation, d'ossature, de clos ou de couvert ?",
+        "pourquoi": "réserve à l'exclusion des annexes en cas de sécheresse/réhydratation",
+        "plus_proche": "annexe_ancree_beton",
+        "aide": {
+          "oui": "l'élément est structurellement intégré à la construction principale (fondations communes, etc.)",
+          "non": "l'élément est séparé de la structure principale"
+        }
+      },
+      {
+        "variable": "raison_inhabitabilite",
+        "valeurs": [
+          "securite",
+          "salubrite",
+          "hygiene"
+        ],
+        "question": "Pour quelle raison la résidence principale est-elle impropre à l'habitation ?",
+        "pourquoi": "condition du relogement d'urgence après catastrophe naturelle",
+        "plus_proche": "aucune",
+        "aide": {
+          "securite": "danger pour la sécurité des occupants",
+          "salubrite": "insalubrité (moisissures, etc.)",
+          "hygiene": "problèmes d'hygiène"
+        }
+      }
+    ],
+    "non_traduit": [
+      {
+        "article": "2.9-a",
+        "texte": "Vous devez également nous faire savoir, dans le même délai, si d’autres assurances sont concernées par le même événement.",
+        "pourquoi": "obligation d'information de l'assuré, non condition de refus de garantie"
+      },
+      {
+        "article": "2.9-a",
+        "texte": "Nos obligations A compter de la réception de la déclaration du sinistre ou de la date de publication, lorsque celle-ci est postérieure, de la décision administrative constatant l’état de catastrophe naturelle, nous disposons d’un délai d’un mois pour vous informer des modalités de mise en jeu des garanties prévues au contrat et pour ordonner une expertise lorsque nous le jugeons nécessaire. Nous faisons une proposition d’indemnisation ou de réparation en nature résultant de cette garantie, dans un délai d’un mois à compter soit de la réception de l’état estimatif transmis par vos soins en l’absence d’expertise, soit de la réception du rapport d’expertise définitif. À compter de la réception de votre accord sur la proposition d’indemnisation, nous disposons d’un délai d’un mois pour missionner l’entreprise de réparation ou d’un délai de vingt et un jours pour verser l’indemnisation due. À défaut, et sauf cas fortuit ou de force majeure, notre indemnité porte, à compter de l’expiration de ce dernier délai, intérêt au taux de l’intérêt légal. En tout état de cause, une provision sur les indemnités dues au titre de cette garantie vous sera versée dans les deux mois qui suivent la date de remise de l’état estimatif des biens endommagés ou la date de publication de l’arrêté interministériel lorsque celle-ci est postérieure.",
+        "pourquoi": "délais procéduraux de l'assureur, non conditions de couverture pour l'assuré"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "dommage_non_assurable_ailleurs = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.9`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "mesures_prevention_habituelles_non_efficaces = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.9`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "declaration_dans_30j_apres_arrete = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.9`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "catastrophe = secheresse_rehydratation : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.9`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "affecte_solidite_bati = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.9`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "entrave_usage_normal = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.9`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "evolution_defavorable_probable = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.9`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien_existant_avant_publication_plan = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.9`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "construction_violation_regles_administratives = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.9`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien_annexe_habitation = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.9`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "element_indissociable_ouvrages_principaux = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.9`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "raison_inhabitabilite = securite : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.9`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "raison_inhabitabilite = salubrite : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.9`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "raison_inhabitabilite = hygiene : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.9`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (2.9-a) : « Vous devez également nous faire savoir, dans le même délai, si d’autres assurances sont concernées p » — obligation d'information de l'assuré, non condition de refus de garantie"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (2.9-a) : « Nos obligations A compter de la réception de la déclaration du sinistre ou de la date de publication » — délais procéduraux de l'assureur, non conditions de couverture pour l'assuré"
+    }
+  ]
+}

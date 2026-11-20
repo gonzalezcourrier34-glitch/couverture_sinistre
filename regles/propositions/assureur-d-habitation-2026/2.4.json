@@ -1,0 +1,512 @@
+{
+  "meta": {
+    "article": "2.4",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12"
+  },
+  "proposition": {
+    "evenements": [
+      "degat_eaux"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "venues_eau_gel_base_2_4_a",
+        "nom": "Venues d'eau et gel - garantie de base",
+        "article": "2.4-a",
+        "texte": "La garantie couvre les dommages résultant : • d’eaux de ruissellement à la surface du sol, • du refoulement des égouts, • d’infiltrations par les toitures, ciels vitrés, terrasses formant toiture, • de fuites d’eau ou débordements provenant des conduites non enterrées, des piscines, de tous appareils à effet d’eau et d’installations de chauffage ou de sécurité, • d’infiltrations au travers des murs non enterrés et façades extérieurs. Dès la constatation de l’origine du sinistre et pour ce type d’événement, la garantie sera suspendue de plein droit et ne sera remise en vigueur que lorsque les travaux nécessaires à l’étanchéité des murs extérieurs et façades auront été effectués, • du gel des conduites et des appareils à effet d’eau à l’intérieur de vos locaux isolés, • d’infiltrations par les gaines d’aération ou de ventilation, • de débordements et renversements de récipients ou d’aquariums.",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "degat_eaux"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "concept": "contenu"
+              },
+              {
+                "f": [
+                  "bien",
+                  "element_batiment"
+                ]
+              }
+            ]
+          },
+          {
+            "concept": "batiment"
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "cause_eau",
+                    "ruissellement"
+                  ]
+                },
+                {
+                  "f": [
+                    "cause_eau",
+                    "refoulement_egouts"
+                  ]
+                },
+                {
+                  "f": [
+                    "cause_eau",
+                    "infiltration_toiture"
+                  ]
+                },
+                {
+                  "et": [
+                    {
+                      "f": [
+                        "cause_eau",
+                        "fuite_installation"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "canalisation_encastree",
+                        "non"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "f": [
+                    "cause_eau",
+                    "piscine"
+                  ]
+                },
+                {
+                  "f": [
+                    "cause_eau",
+                    "fuite_appareil_eau"
+                  ]
+                },
+                {
+                  "f": [
+                    "cause_eau",
+                    "infiltration_exterieure"
+                  ]
+                },
+                {
+                  "f": [
+                    "cause_eau",
+                    "gel"
+                  ]
+                },
+                {
+                  "f": [
+                    "cause_eau",
+                    "infiltration_gaines_aeration"
+                  ]
+                },
+                {
+                  "f": [
+                    "cause_eau",
+                    "debordement_recipient"
+                  ]
+                },
+                {
+                  "f": [
+                    "cause_eau",
+                    "debordement_aquarium"
+                  ]
+                }
+              ]
+            },
+            "article": "2.4-a",
+            "texte": "La garantie couvre les dommages résultant : • d’eaux de ruissellement à la surface du sol, • du refoulement des égouts, • d’infiltrations par les toitures, ciels vitrés, terrasses formant toiture, • de fuites d’eau ou débordements provenant des conduites non enterrées, des piscines, de tous appareils à effet d’eau et d’installations de chauffage ou de sécurité, • d’infiltrations au travers des murs non enterrés et façades extérieurs, • du gel des conduites et des appareils à effet d’eau à l’intérieur de vos locaux isolés, • d’infiltrations par les gaines d’aération ou de ventilation, • de débordements et renversements de récipients ou d’aquariums."
+          }
+        ],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "cause_eau",
+                    "fuite_installation"
+                  ]
+                },
+                {
+                  "f": [
+                    "canalisation_encastree",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.4-c",
+            "texte": "les dommages consécutifs à des fuites d’eau ou débordements provenant des canalisations enterrées"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "bien",
+                    "canalisation"
+                  ]
+                },
+                {
+                  "f": [
+                    "canalisation_encastree",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": {
+              "bien": "canalisation"
+            },
+            "a_demander": true,
+            "article": "2.4-c",
+            "texte": "les dommages sur les canalisations enterrées"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "cause_eau",
+                    "infiltration_exterieure"
+                  ]
+                },
+                {
+                  "f": [
+                    "garantie_decennale_constructeur",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.4-c",
+            "texte": "les dommages résultant d’infiltrations à travers les murs et façades extérieurs lorsque la garantie décennale du constructeur doit s’appliquer"
+          },
+          {
+            "condition": {
+              "f": [
+                "releve_garantie_catastrophes_naturelles",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.4-c",
+            "texte": "les dommages relevant de la garantie Catastrophes naturelles"
+          },
+          {
+            "condition": {
+              "f": [
+                "cause_eau",
+                "condensation"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.4-c",
+            "texte": "les dommages dus à l’humidité et/ou à la condensation"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "bien_a_l_origine_sinistre",
+                    "oui"
+                  ]
+                },
+                {
+                  "non": {
+                    "f": [
+                      "cause_eau",
+                      "gel"
+                    ]
+                  }
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.4-c",
+            "texte": "les frais de réparation ou de remplacement de l’élément à l’origine du dommage couvert par le contrat. Cette exclusion ne s’applique pas lorsque le dommage résulte du gel"
+          }
+        ],
+        "limites": []
+      },
+      {
+        "id": "recherche_fuite_2_4_a",
+        "nom": "Recherche de fuite",
+        "article": "2.4-a",
+        "texte": "Sont prises en charge au titre de la recherche de fuite : • la recherche de fuite destructrice ou non destructrice à l’intérieur dans des locaux assurés, • les détériorations immobilières nécessitées par la recherche de la fuite dans les locaux assurés en cas de dommages consécutifs à une origine garantie définie ci-dessus.",
+        "accessoire": true,
+        "perimetre": [
+          {
+            "concept": "batiment"
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      },
+      {
+        "id": "debordement_cuve_combustible_excellence_2_4_b",
+        "nom": "Débordement accidentel des cuves de combustible - Formule Excellence",
+        "article": "2.4-b",
+        "texte": "les dommages résultant du débordement accidentel des cuves situées à l’intérieur des bâtiments principaux d’habitation et de leurs dépendances et contenant le combustible nécessaire à l’alimentation du chauffage",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "degat_eaux"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "concept": "contenu"
+              },
+              {
+                "f": [
+                  "bien",
+                  "element_batiment"
+                ]
+              }
+            ]
+          },
+          {
+            "concept": "batiment"
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "cause_eau",
+                    "debordement_cuve_combustible"
+                  ]
+                },
+                {
+                  "f": [
+                    "formule",
+                    "excellence"
+                  ]
+                }
+              ]
+            },
+            "article": "2.4-b",
+            "texte": "les dommages résultant du débordement accidentel des cuves situées à l’intérieur des bâtiments principaux d’habitation et de leurs dépendances et contenant le combustible nécessaire à l’alimentation du chauffage"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "bien",
+                    "mazout"
+                  ]
+                },
+                {
+                  "f": [
+                    "cause_eau",
+                    "debordement_cuve_combustible"
+                  ]
+                }
+              ]
+            },
+            "portee": {
+              "bien": "mazout"
+            },
+            "a_demander": true,
+            "article": "2.4-c",
+            "texte": "le coût du combustible perdu, en cas de débordement accidentel des cuves"
+          }
+        ],
+        "limites": []
+      },
+      {
+        "id": "surconsommation_eau_excellence_2_4_b",
+        "nom": "Frais de surconsommation d'eau - Formule Excellence",
+        "article": "2.4-b",
+        "texte": "les frais de surconsommation d’eau consécutifs à une venue d’eaux ayant causé des dommages mobiliers ou immobiliers indemnisés au titre du présent contrat. Ces frais devront être justifiés par la production de factures attestant de la surconsommation d’eau.",
+        "accessoire": true,
+        "perimetre": [],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "formule",
+                "excellence"
+              ]
+            },
+            "article": "2.4-b",
+            "texte": "les frais de surconsommation d’eau consécutifs à une venue d’eaux ayant causé des dommages mobiliers ou immobiliers indemnisés au titre du présent contrat"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "cause_eau",
+        "valeurs": [
+          "ruissellement",
+          "refoulement_egouts",
+          "piscine",
+          "fuite_appareil_eau",
+          "infiltration_gaines_aeration",
+          "debordement_cuve_combustible"
+        ],
+        "question": "D'où venait exactement l'eau ?",
+        "pourquoi": "Plusieurs causes d'eau mentionnées à l'article 2.4 n'existent pas dans le vocabulaire existant",
+        "plus_proche": "cause_eau : les valeurs existantes ne couvrent pas le ruissellement de surface, le refoulement d'égouts, les fuites d'appareils à effet d'eau, les infiltrations par gaines d'aération, ou le débordement de cuves de combustible",
+        "aide": {
+          "ruissellement": "l'eau venait du ruissellement à la surface du sol",
+          "refoulement_egouts": "l'eau venait du refoulement des égouts",
+          "piscine": "l'eau venait d'une piscine (intérieure ou extérieure)",
+          "fuite_appareil_eau": "l'eau venait d'un appareil à effet d'eau (lave-linge, lave-vaisselle, etc.)",
+          "infiltration_gaines_aeration": "l'eau venait des gaines d'aération ou de ventilation",
+          "debordement_cuve_combustible": "le sinistre venait du débordement d'une cuve contenant du combustible"
+        },
+        "parent": {
+          "ruissellement": "inondation",
+          "refoulement_egouts": "inondation",
+          "piscine": "piscine_exterieure",
+          "fuite_appareil_eau": "fuite_installation",
+          "infiltration_gaines_aeration": "infiltration_exterieure",
+          "debordement_cuve_combustible": "debordement_recipient"
+        }
+      },
+      {
+        "variable": "garantie_decennale_constructeur",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La garantie décennale du constructeur s'applique-t-elle à ces dommages ?",
+        "pourquoi": "Exclusion des infiltrations à travers murs et façades lorsque la garantie décennale s'applique",
+        "plus_proche": "aucune variable existante ne couvre l'application de la garantie décennale du constructeur",
+        "aide": {
+          "oui": "le constructeur est responsable au titre de la garantie décennale",
+          "non": "la garantie décennale ne s'applique pas"
+        }
+      },
+      {
+        "variable": "releve_garantie_catastrophes_naturelles",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Ces dommages relèvent-ils de la garantie Catastrophes naturelles ?",
+        "pourquoi": "Exclusion des dommages couverts par la garantie Catastrophes naturelles",
+        "plus_proche": "catastrophe : indique le phénomène naturel, mais ne dit pas si le sinistre est couvert par cette garantie spécifique",
+        "aide": {
+          "oui": "le sinistre est couvert par la garantie Catastrophes naturelles",
+          "non": "le sinistre n'est pas couvert par la garantie Catastrophes naturelles"
+        }
+      }
+    ],
+    "non_traduit": [
+      {
+        "article": "2.4-c",
+        "texte": "ATTENTION Vous devez respecter certaines mesures de sécurité pour bénéficier pleinement de la garantie (voir ART. 4.2).",
+        "pourquoi": "Référence à l'article 4.2 pour les mesures de sécurité obligatoires, mais le texte de l'article 4.2 n'est pas fourni, impossible de copier les obligations spécifiques"
+      },
+      {
+        "article": "2.4-a",
+        "texte": "Dès la constatation de l’origine du sinistre et pour ce type d’événement, la garantie sera suspendue de plein droit et ne sera remise en vigueur que lorsque les travaux nécessaires à l’étanchéité des murs extérieurs et façades auront été effectués",
+        "pourquoi": "Suspension de la garantie pour les infiltrations par murs non enterrés après constatation, jusqu'à réalisation des travaux d'étanchéité. Il s'agit d'une conséquence post-sinistre, pas d'une condition de couverture du sinistre actuel."
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "cause_eau = ruissellement : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "cause_eau = refoulement_egouts : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "cause_eau = piscine : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "cause_eau = fuite_appareil_eau : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "cause_eau = infiltration_gaines_aeration : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "garantie_decennale_constructeur = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "releve_garantie_catastrophes_naturelles = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "cause_eau = debordement_cuve_combustible : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 2.4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "citation",
+      "message": "circonstance (2.4-a) : « La garantie couvre les dommages résultant : • d’eaux de ruissellement à la surfa » ne figure pas dans la clause"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (2.4-c) : « ATTENTION Vous devez respecter certaines mesures de sécurité pour bénéficier pleinement de la garant » — Référence à l'article 4.2 pour les mesures de sécurité obligatoires, mais le texte de l'article 4.2 n'est pas fourni, impossible de copier les obligations spécifiques"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (2.4-a) : « Dès la constatation de l’origine du sinistre et pour ce type d’événement, la garantie sera suspendue » — Suspension de la garantie pour les infiltrations par murs non enterrés après constatation, jusqu'à réalisation des travaux d'étanchéité. Il s'agit d'une conséquence post-sinistre, pas d'une condition de couverture du sinistre actuel."
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "concept",
+      "message": "concept inconnu : contenu"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "concept",
+      "message": "concept inconnu : contenu"
+    }
+  ]
+}

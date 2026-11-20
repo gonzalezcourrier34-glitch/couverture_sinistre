@@ -113,7 +113,10 @@
         "equipement_alarme_surveillance",
         "equipement_domotique",
         "consommable",
-        "sepulture"
+        "sepulture",
+        "veranda",
+        "eolienne",
+        "piscine"
       ],
       "question": "Quels biens sont endommagés ou volés ?",
       "parents": {
@@ -188,6 +191,15 @@
         ],
         "consommable": [
           "objet_divers"
+        ],
+        "veranda": [
+          "element_batiment"
+        ],
+        "eolienne": [
+          "element_batiment"
+        ],
+        "piscine": [
+          "element_batiment"
         ]
       },
       "aide": {
@@ -212,7 +224,10 @@
         "equipement_alarme_surveillance": "alarme, caméra de surveillance, détecteurs",
         "equipement_domotique": "box domotique, volets ou éclairage pilotés",
         "consommable": "lampe, tube, fusible, joint, courroie, chaîne",
-        "sepulture": "tombe, sépulture dont l'assuré est propriétaire"
+        "sepulture": "tombe, sépulture dont l'assuré est propriétaire",
+        "veranda": "construction vitrée, close et couverte, accolée au logement",
+        "eolienne": "éolienne domestique",
+        "piscine": "piscine, spa, jacuzzi, ou leur abri"
       }
     },
     "lieu": {
@@ -663,13 +678,21 @@
       "valeurs": [
         "privilege",
         "active",
-        "standard"
+        "standard",
+        "eco",
+        "confort",
+        "excellence"
       ],
       "question": "Quelle formule les conditions particulières mentionnent-elles (Privilège, Active, standard) ?",
       "pour": [
         "vol",
         "vandalisme"
-      ]
+      ],
+      "aide": {
+        "eco": "formule Eco",
+        "confort": "formule Confort",
+        "excellence": "formule Excellence"
+      }
     },
     "occupation_partielle": {
       "valeurs": [
@@ -716,6 +739,10 @@
       "si": {
         "lieu": [
           "autre_batiment"
+        ],
+        "bien": [
+          "bijoux",
+          "valeurs"
         ]
       }
     },
@@ -1940,7 +1967,10 @@
         "autre_ue",
         "suisse",
         "norvege",
-        "hors_europe"
+        "hors_europe",
+        "royaume_uni",
+        "andorre",
+        "monaco"
       ],
       "question": "Dans quel pays se trouvait le lieu du sinistre ?",
       "aide": {
@@ -1951,7 +1981,10 @@
         "autre_ue": "dans un autre pays de l'Union européenne",
         "suisse": "en Suisse",
         "norvege": "en Norvège",
-        "hors_europe": "hors de l'Union européenne, de la Suisse et de la Norvège"
+        "hors_europe": "hors de l'Union européenne, de la Suisse et de la Norvège",
+        "royaume_uni": "au Royaume-Uni",
+        "andorre": "en Andorre",
+        "monaco": "à Monaco"
       },
       "pour": [
         "extension"
@@ -1962,7 +1995,9 @@
           "chambre_etudiant"
         ],
         "bien": [
-          "sepulture"
+          "sepulture",
+          "bijoux",
+          "valeurs"
         ]
       }
     },
@@ -2039,6 +2074,94 @@
       "aide": {
         "oui": "une braise, une bûche, un mégot ou un objet brûlant a touché et abîmé le bien",
         "non": "aucun contact avec quelque chose d'incandescent"
+      }
+    },
+    "option_veranda": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Vos conditions particulières mentionnent-elles la garantie « véranda » ?",
+      "aide": {
+        "oui": "la véranda est assurée aux conditions particulières",
+        "non": "elle ne l'est pas"
+      }
+    },
+    "pack_piscine": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Avez-vous souscrit le Pack Piscine ?",
+      "aide": {
+        "oui": "le Pack Piscine figure aux conditions particulières",
+        "non": "il n'y figure pas"
+      }
+    },
+    "pack_jardin": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Avez-vous souscrit le Pack Jardin ?",
+      "aide": {
+        "oui": "le Pack Jardin figure aux conditions particulières",
+        "non": "il n'y figure pas"
+      }
+    },
+    "local_inoccupe_12_mois": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les locaux étaient-ils inoccupés ou inutilisés depuis plus de 12 mois ?",
+      "aide": {
+        "oui": "personne n'y vivait ni ne les utilisait depuis plus d'un an",
+        "non": "ils étaient occupés ou utilisés"
+      }
+    },
+    "option_objets_valeur": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Vos conditions particulières mentionnent-elles la garantie « objets de valeur » ?",
+      "aide": {
+        "oui": "la garantie objets de valeur est souscrite",
+        "non": "elle ne l'est pas"
+      }
+    },
+    "participation_rixe": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les dommages résultent-ils de votre participation à une rixe ou à une action violente ?",
+      "aide": {
+        "oui": "l'assuré a pris part à une bagarre ou à une action violente",
+        "non": "non"
+      }
+    },
+    "legitime_defense": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Était-ce de la légitime défense ?",
+      "aide": {
+        "oui": "l'assuré se défendait",
+        "non": "non"
+      }
+    },
+    "cause_guerre": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les dommages résultent-ils d'une guerre ?",
+      "aide": {
+        "oui": "guerre civile ou étrangère",
+        "non": "non"
       }
     }
   }
