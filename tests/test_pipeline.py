@@ -306,6 +306,15 @@ def test_profil_change_le_typage():
     assert avec["2-a"] == TypeClause.EXCLUSION and avec["5-a"] == TypeClause.EXCLUSION
 
 
+def test_nous_vous_assurons_est_une_garantie():
+    from couverture.segmentation import classer
+    from couverture.models import TypeClause
+    chemin = ["5 La responsabilité civile vie privée", "5.1 Les dispositions générales et votre responsabilité civile"]
+    assert classer(chemin, "Nous vous assurons dans le monde entier lorsque votre responsabilité est mise en cause") \
+        == TypeClause.GARANTIE
+    assert classer(chemin, "Nous assurons votre responsabilité contractuelle") == TypeClause.GARANTIE
+
+
 def test_profil_invalide():
     with pytest.raises(ProfilInvalide):
         valider_profil({"nom": "x", "intertitres": {"Les cas": "peut-etre"}})

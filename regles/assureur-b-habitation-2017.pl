@@ -81,35 +81,6 @@ exclusion(degats_electriques, ou([f(manque_entretien, oui), f(fonctionnement_def
 limite(degats_electriques, '3.1.3.1', "Les dommages matériels occasionnés aux panneaux solaires et/ou installations photovoltaïques sont couverts à concurrence de 50.000 € par sinistre.", "50000").
 exclusion([degats_electriques], f(option_degats_electriques, non), tout, oui, '3.1.3',
     "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ dégâts électriques” est souscrite.").
-% --- Art. 3.1.5 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
-evenement_traduit(bris).
-garantie(bris_vitrages, "Bris de vitrages", '3.1.5.1',
-    "La Compagnie assure les biens désignés, contre les bris et fêlures accidentels des vitrages, des glaces et des miroirs.").
-perimetre(bris_vitrages, f(evenement, bris)).
-perimetre(bris_vitrages, ou([f(bien, vitre), f(bien, miroir), f(bien, panneau_solaire), f(bien, sanitaire), f(bien, serre), f(bien, table_cuisson_vitroceramique), f(bien, appareil_electromenager), f(bien, cadre), f(bien, chassis), f(bien, soubassement), f(cause_projection_debris, oui)])).
-circonstance(bris_vitrages, si(f(type_dommage, opacification_ou_perte_etancheite), non(ou([f(garantie_fabricant, oui), f(statut_logement, locataire)]))), '3.1.5.1',
-    "à la perte d’étanchéité des vitrages isolants sauf s’ils sont sous garantie ou si l’Assuré est locataire").
-exclusion(bris_vitrages, f(type_dommage, rayure_ou_ecaillement), tout, non, '3.1.5.2',
-    "Les rayures, égratignures et écaillements ne sont jamais assurés.").
-exclusion(bris_vitrages, f(bien, appareil_audiovisuel), bien(appareil_audiovisuel), non, '3.1.5.2',
-    "aux parties vitrées du matériel multimédia").
-exclusion(bris_vitrages, et([f(travaux_construction, oui), non(f(lien_causal_travaux, non))]), tout, oui, '3.1.5.2',
-    "au bâtiment désigné lorsqu’il est en cours de construction, de transformation ou de rénovation, à moins que l’Assuré ne démontre que cette circonstance n’a pas contribué à la survenance ou à l’aggravation des conséquences du sinistre").
-exclusion(bris_vitrages, f(bien, verre_optique), bien(verre_optique), non, '3.1.5.2',
-    "aux verres optiques et lunettes").
-exclusion(bris_vitrages, f(bien, enseigne), bien(enseigne), non, '3.1.5.2',
-    "aux châssis de couche et aux enseignes").
-exclusion(bris_vitrages, ou([f(vitre_placee, non), f(vitrage_en_deplacement, oui)]), tout, oui, '3.1.5.2',
-    "aux vitrages non encore placés ou pendant leur déplacement").
-exclusion(bris_vitrages, et([f(lieu, parties_communes), f(occupation_partielle, oui)]), tout, oui, '3.1.5.2',
-    "aux vitrages relevant des parties communes du bâtiment désigné lorsque l’Assuré est propriétaire, locataire ou occupant partiel").
-exclusion(bris_vitrages, f(bien, objet_verre_non_vitre), bien(objet_verre_non_vitre), non, '3.1.5.2',
-    "aux objets en verre, par exemple lustres, vases, vaisselle").
-exclusion(bris_vitrages, f(manque_entretien, oui), tout, non, '3.1.5.2',
-    "par un défaut de réparation ou d’entretien des châssis, soubassements et support de vitres, glaces et miroirs").
-limite(bris_vitrages, '3.1.5.1', "Les dommages matériels occasionnés aux vitrages des panneaux solaires et/ou installations photovoltaïques sont couverts à concurrence de 50.000€ par sinistre.", "50000").
-exclusion([bris_vitrages], f(option_bris_vitrages, non), tout, oui, '3.1.5',
-    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ bris de vitrages ” est souscrite.").
 % --- Art. 3.2.1 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
 evenement_traduit(catastrophe_naturelle).
 garantie(tremblement_terre, "Tremblement de terre", '3.2.1.1',
@@ -456,6 +427,54 @@ limite(pluies_inondations, '3.2.2.3', "Lorsque les conditions particulières men
 limite(pluies_inondations, '3.2.2.4', "Dans ce cas, la prise en charge des dommages se fait sans application de la règle proportionnelle à concurrence de 5.000€ par sinistre", "5000").
 exclusion([pluies_inondations], f(option_pluies_inondations, non), tout, oui, '3.2.2',
     "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “Pluies & inondations” est accordée.").
+% --- Art. 3.1.10 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-20 ---
+evenement_traduit(responsabilite).
+garantie(rc_immeuble, "Responsabilité civile immeuble (option)", '3.1.10.1',
+    "La Compagnie garantit la responsabilité civile qu’un Assuré pourrait encourir sur la base des articles 1382 à 1386 du Code civil, à l’égard d’un tiers, en raison de dommages causés par le fait").
+perimetre(rc_immeuble, f(evenement, responsabilite)).
+perimetre(rc_immeuble, f(origine_rc, immeuble)).
+circonstance(rc_immeuble, f(option_rc_immeuble, oui), '3.1.10',
+    "la garantie “ responsabilité civile immeuble ” est accordée").
+exclusion(rc_immeuble, ou([f(victime, assure), f(victime, conjoint)]), tout, non, '3.1.10.2',
+    "Toute personne autre que celle ayant la qualité d’Assuré.").
+exclusion(rc_immeuble, f(bien_confie, oui), tout, non, '3.1.10.3',
+    "à des biens dont l’assuré est locataire ou occupant à titre gratuit, ainsi qu’à ceux qui lui ont été confiés").
+exclusion(rc_immeuble, f(origine_rc, activite_professionnelle), tout, non, '3.1.10.3',
+    "par le fait de l’exercice d’une profession").
+limite(rc_immeuble, '3.1.10.1', "15.554.864 € par sinistre au titre des dommages corporels", "15554864").
+limite(rc_immeuble, '3.1.10.1', "896.823 € par sinistre au titre des dommages matériels et des dommages immatériels", "896823").
+
+% --- Art. 4.1.1 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-20 ---
+evenement_traduit(responsabilite).
+garantie(rc_vie_privee, "Responsabilité civile vie privée (option)", '4.1.1.5',
+    "La garantie s’applique aux conséquences pécuniaires de la responsabilité civile pouvant incomber à l’Assuré en vertu des articles 1382 à 1386 du Code civil, en raison des dommages corporels, des dommages matériels et des dommages immatériels, causés accidentellement à des tiers au cours de sa vie familiale et privée").
+perimetre(rc_vie_privee, f(evenement, responsabilite)).
+circonstance(rc_vie_privee, f(option_rc_vie_privee, oui), '4.1.1',
+    "la garantie “ responsabilité civile vie privée ” est accordée").
+exclusion(rc_vie_privee, ou([f(victime, assure), f(victime, conjoint)]), tout, non, '4.1.1.2',
+    "Toute personne autre que celle ayant la qualité d’Assuré.").
+exclusion(rc_vie_privee, f(origine_rc, activite_professionnelle), tout, non, '4.1.1.8',
+    "de l’exercice de l’activité professionnelle de l’Assuré").
+exclusion(rc_vie_privee, f(origine_rc, contrat), tout, non, '4.1.1.8',
+    "d’obligations contractuelles de l’Assuré, sauf s’il s’agit d’un contrat bénévole visé au point 4.1.1.5.4 ci-avant").
+exclusion(rc_vie_privee, f(origine_rc, vehicule_moteur), tout, non, '4.1.1.8',
+    "les véhicules ou appareils ci-après, si l’assuré ou les personnes dont il est civilement responsable en ont la propriété, la conduite, la garde ou l’usage").
+exclusion(rc_vie_privee, f(bien_confie, oui), tout, non, '4.1.1.8',
+    "les dommages survenant aux objets, immeubles ou animaux qui sont confiés à l’Assuré à un titre quelconque").
+exclusion(rc_vie_privee, f(origine_rc, habitation), tout, non, '4.1.1.8',
+    "les dommages matériels et immatériels d’incendie, d’explosion, ou d’eau, lorsque l’événement dommageable a son origine dans les locaux ou immeubles appartenant à l’Assuré ou occupés par lui à quelque titre que ce soit").
+limite(rc_vie_privee, '4.1.1.5', "8.658.260 € par sinistre au titre des dommages corporels", "8658260").
+limite(rc_vie_privee, '4.1.1.5', "865.826 € par sinistre au titre des dommages matériels et des dommages immatériels", "865826").
+
+% --- Art. 4.1.3 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-20 ---
+evenement_traduit(litige).
+garantie(protection_juridique, "Protection juridique (option)", '4.1.3.1',
+    "La Compagnie s’engage : 4.1.3.1.1 à assurer la défense pénale de l’Assuré devant les tribunaux répressifs").
+perimetre(protection_juridique, f(evenement, litige)).
+perimetre(protection_juridique, ou([f(domaine_litige, defense_penale), f(domaine_litige, recours_dommage), f(domaine_litige, voisinage)])).
+circonstance(protection_juridique, f(option_protection_juridique, oui), '4.1.3',
+    "la garantie “ protection juridique ” est accordée").
+limite(protection_juridique, '4.1.3.3', "Les frais énoncés au point 4.1.3.2 sont pris en charge par la Compagnie à concurrence de 8.658 € par sinistre", "8658").
 
 % --- Art. 3.1.1 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
 evenement_traduit(incendie).
@@ -479,8 +498,7 @@ circonstance(incendie_base, si(f(evenement, incendie), ou([concept(incendie), ou
 garantie(decongelation, "Décongélation denrées", '3.1.1.2',
     "à la décongélation de denrées alimentaires périssables contenues dans un surgélateur, congélateur ou réfrigérateur à usage domestique suite à un changement de température résultant d'un arrêt dans la production du froid imputable à la survenance d'un sinistre couvert par les présentes conditions spéciales ou par les conditions spéciales de la garantie \"dégâts électriques\"").
 perimetre(decongelation, f(bien, denrees_alimentaires)).
-circonstance(decongelation, ou([f(evenement, incendie), f(evenement, explosion), f(evenement, foudre), f(evenement, electricite)]), '3.1.1.2',
-    "imputable à la survenance d'un sinistre couvert par les présentes conditions spéciales ou par les conditions spéciales de la garantie \"dégâts électriques\"").
+perimetre(decongelation, ou([f(evenement, incendie), f(evenement, explosion), f(evenement, foudre), f(evenement, electricite)])).
 garantie(linge, "Dégradation linge", '3.1.1.2',
     "à la dégradation du contenu des sèche-linge ou lave-linge à la suite d'un sinistre relevant de l'un des périls prévus aux présentes conditions spéciales de la garantie \"incendie et périls assimilés\" et aux conditions spéciales de la garantie \"dégâts électriques\"").
 perimetre(linge, f(bien, objet_divers)).
@@ -532,3 +550,33 @@ obligation(attentats, f(plainte_deposee, oui), faux, non, '3.1.1.2',
 limite(attentats, '3.1.1.2', "La Compagnie prend en charge à concurrence de 745.000 € par sinistre les dégâts causés directement aux biens désignés", "745000 EUR").
 exclusion([incendie_base, decongelation, linge, heurt, degradations_vol, vandalisme, attentats], f(option_incendie, non), tout, oui, '3.1.1',
     "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ incendie et périls assimilés ” est accordée.").
+
+% --- Art. 3.1.5 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
+evenement_traduit(bris).
+garantie(bris_vitrages, "Bris de vitrages", '3.1.5.1',
+    "La Compagnie assure les biens désignés, contre les bris et fêlures accidentels des vitrages, des glaces et des miroirs.").
+perimetre(bris_vitrages, f(evenement, bris)).
+perimetre(bris_vitrages, ou([f(bien, vitre), f(bien, miroir), f(bien, panneau_solaire), f(bien, sanitaire), f(bien, serre), f(bien, table_cuisson_vitroceramique), f(bien, appareil_electromenager), f(bien, cadre), f(bien, chassis), f(bien, soubassement), f(cause_projection_debris, oui)])).
+exclusion(bris_vitrages, f(type_dommage, rayure_ou_ecaillement), tout, non, '3.1.5.2',
+    "Les rayures, égratignures et écaillements ne sont jamais assurés.").
+exclusion(bris_vitrages, f(bien, appareil_audiovisuel), bien(appareil_audiovisuel), non, '3.1.5.2',
+    "aux parties vitrées du matériel multimédia").
+exclusion(bris_vitrages, et([f(travaux_construction, oui), non(f(lien_causal_travaux, non))]), tout, oui, '3.1.5.2',
+    "au bâtiment désigné lorsqu’il est en cours de construction, de transformation ou de rénovation, à moins que l’Assuré ne démontre que cette circonstance n’a pas contribué à la survenance ou à l’aggravation des conséquences du sinistre").
+exclusion(bris_vitrages, f(bien, verre_optique), bien(verre_optique), non, '3.1.5.2',
+    "aux verres optiques et lunettes").
+exclusion(bris_vitrages, f(bien, enseigne), bien(enseigne), non, '3.1.5.2',
+    "aux châssis de couche et aux enseignes").
+exclusion(bris_vitrages, ou([f(vitre_placee, non), f(vitrage_en_deplacement, oui)]), tout, oui, '3.1.5.2',
+    "aux vitrages non encore placés ou pendant leur déplacement").
+exclusion(bris_vitrages, et([f(lieu, parties_communes), f(occupation_partielle, oui)]), tout, oui, '3.1.5.2',
+    "aux vitrages relevant des parties communes du bâtiment désigné lorsque l’Assuré est propriétaire, locataire ou occupant partiel").
+exclusion(bris_vitrages, f(bien, objet_verre_non_vitre), bien(objet_verre_non_vitre), non, '3.1.5.2',
+    "aux objets en verre, par exemple lustres, vases, vaisselle").
+exclusion(bris_vitrages, f(manque_entretien, oui), tout, non, '3.1.5.2',
+    "par un défaut de réparation ou d’entretien des châssis, soubassements et support de vitres, glaces et miroirs").
+exclusion(bris_vitrages, et([f(type_dommage, opacification_ou_perte_etancheite), ou([f(garantie_fabricant, oui), f(statut_logement, locataire)])]), tout, oui, '3.1.5.1',
+    "à la perte d’étanchéité des vitrages isolants sauf s’ils sont sous garantie ou si l’Assuré est locataire").
+limite(bris_vitrages, '3.1.5.1', "Les dommages matériels occasionnés aux vitrages des panneaux solaires et/ou installations photovoltaïques sont couverts à concurrence de 50.000€ par sinistre.", "50000").
+exclusion([bris_vitrages], f(option_bris_vitrages, non), tout, oui, '3.1.5',
+    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ bris de vitrages ” est souscrite.").

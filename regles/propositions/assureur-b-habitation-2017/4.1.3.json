@@ -1,0 +1,129 @@
+{
+  "meta": {
+    "article": "4.1.3",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-20",
+      "modifications": [
+        "la défense pénale, le recours après un dommage, le trouble de voisinage : `domaine_litige` ; l'option en circonstance",
+        "les treize variables proposées : aucune retenue ; les restrictions (animaux, immeubles, environnement) hors décision"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "litige"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "protection_juridique",
+        "nom": "Protection juridique (option)",
+        "article": "4.1.3.1",
+        "texte": "La Compagnie s’engage : 4.1.3.1.1 à assurer la défense pénale de l’Assuré devant les tribunaux répressifs",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "litige"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "domaine_litige",
+                  "defense_penale"
+                ]
+              },
+              {
+                "f": [
+                  "domaine_litige",
+                  "recours_dommage"
+                ]
+              },
+              {
+                "f": [
+                  "domaine_litige",
+                  "voisinage"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "option_protection_juridique",
+                "oui"
+              ]
+            },
+            "article": "4.1.3",
+            "texte": "la garantie “ protection juridique ” est accordée"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "4.1.3.3",
+            "texte": "Les frais énoncés au point 4.1.3.2 sont pris en charge par la Compagnie à concurrence de 8.658 € par sinistre",
+            "montant": "8658"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [],
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "4.1.3.1",
+        "texte": "Toutefois, en ce qui concerne les animaux, la Compagnie ne couvre pas les sinistres relatifs aux animaux non domestiques dont l’Assuré est propriétaire ou gardien",
+        "pourquoi": "rare ; le vocabulaire ne distingue pas les animaux non domestiques"
+      },
+      {
+        "article": "4.1.3.1",
+        "texte": "En ce qui concerne les immeubles, la Compagnie ne couvre que les litiges relatifs",
+        "pourquoi": "les litiges immobiliers ne sont pas dans le périmètre (défense pénale, recours, voisinage)"
+      },
+      {
+        "article": "4.1.3.1",
+        "texte": "En ce qui concerne l’environnement, la Compagnie ne couvre pas les dommages subis par l’Assuré",
+        "pourquoi": "rare ; le vocabulaire ne distingue pas l'environnement"
+      },
+      {
+        "article": "4.1.3.4",
+        "texte": "La Compagnie accorde sa garantie lorsqu’il résulte des renseignements obtenus que le tiers considéré comme responsable est insolvable",
+        "pourquoi": "le vocabulaire ne distingue pas l'insolvabilité du tiers"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (4.1.3.1) : rare ; le vocabulaire ne distingue pas les animaux non domestiques"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (4.1.3.1) : les litiges immobiliers ne sont pas dans le périmètre (défense pénale, recours, voisinage)"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (4.1.3.1) : rare ; le vocabulaire ne distingue pas l'environnement"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (4.1.3.4) : le vocabulaire ne distingue pas l'insolvabilité du tiers"
+    }
+  ]
+}

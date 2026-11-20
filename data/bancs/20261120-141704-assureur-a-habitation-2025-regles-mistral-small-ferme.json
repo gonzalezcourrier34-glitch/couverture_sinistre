@@ -1,0 +1,2552 @@
+{
+ "date": "2026-11-20T14:14:35",
+ "contrat": "assureur-a-habitation-2025",
+ "methode": "regles",
+ "jeu": "ferme",
+ "golden": {
+  "jeu": "ferme",
+  "version": null,
+  "empreinte": "6997c9e1e2012a80",
+  "fige": true,
+  "n": 20,
+  "valides": 0,
+  "auteurs": {
+   "agent+mistral-large": 20
+  }
+ },
+ "couches": {
+  "chaine": {
+   "metriques": {
+    "exactitude": {
+     "moyenne": 0.783,
+     "min": 0.75,
+     "max": 0.8
+    },
+    "exactitude_stricte": {
+     "moyenne": 0.7,
+     "min": 0.7,
+     "max": 0.7
+    },
+    "faux_couverts": {
+     "moyenne": 2.0,
+     "min": 2,
+     "max": 2
+    },
+    "faux_refus": {
+     "moyenne": 0.333,
+     "min": 0,
+     "max": 1
+    },
+    "taux_incertain": {
+     "moyenne": 0.333,
+     "min": 0.25,
+     "max": 0.4
+    },
+    "n": 20,
+    "executions": 3,
+    "instables": 4,
+    "rappel_clauses": 0.433,
+    "rappel_questions": 0.0,
+    "erreurs_fournisseur": 0,
+    "duree_moyenne_s": 39.3,
+    "latence_mediane_s": 3.12,
+    "latence_p95_s": 67.66,
+    "latence_lecture_mediane_s": 2.57,
+    "latence_lecture_p95_s": 67.63,
+    "latence_decision_mediane_s": 0.01,
+    "latence_decision_p95_s": 0.08,
+    "latence_seule_mediane_s": 2.98,
+    "latence_seule_p95_s": 4.4,
+    "latence_seule_lecture_mediane_s": 2.3,
+    "latence_seule_lecture_p95_s": 3.6,
+    "latence_seule_decision_mediane_s": 0.01,
+    "latence_seule_decision_p95_s": 0.03,
+    "latence_seule_nb": 10
+   },
+   "groupes": {
+    "auteur : agent+mistral-large": {
+     "n": 20,
+     "exactitude": 0.8,
+     "exactitude_stricte": 0.7,
+     "faux_couverts": 2,
+     "faux_refus": 0,
+     "taux_incertain": 0.25
+    },
+    "garantie : ?": {
+     "n": 20,
+     "exactitude": 0.8,
+     "exactitude_stricte": 0.7,
+     "faux_couverts": 2,
+     "faux_refus": 0,
+     "taux_incertain": 0.25
+    },
+    "thème : assistance": {
+     "n": 1,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 1.0
+    },
+    "thème : base": {
+     "n": 3,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "thème : exclusion": {
+     "n": 3,
+     "exactitude": 0.667,
+     "exactitude_stricte": 0.667,
+     "faux_couverts": 1,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "thème : extension": {
+     "n": 2,
+     "exactitude": 0.5,
+     "exactitude_stricte": 0.5,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.5
+    },
+    "thème : incertain": {
+     "n": 5,
+     "exactitude": 0.6,
+     "exactitude_stricte": 0.4,
+     "faux_couverts": 1,
+     "faux_refus": 0,
+     "taux_incertain": 0.4
+    },
+    "thème : piege": {
+     "n": 4,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.75,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.25
+    },
+    "thème : rc": {
+     "n": 2,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    }
+   },
+   "reponses": {
+    "f-a01": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "f-a02": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "f-a03": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "f-a04": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-a05": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "f-a06": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "f-a07": [
+     "NON_COUVERT",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-a08": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "f-a09": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-a10": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "f-a11": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "f-a12": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-a13": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "f-a14": [
+     "NON_COUVERT",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-a15": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ],
+    "f-a16": [
+     "COUVERT",
+     "INCERTAIN",
+     "COUVERT"
+    ],
+    "f-a17": [
+     "COUVERT",
+     "COUVERT",
+     "COUVERT"
+    ],
+    "f-a18": [
+     "COUVERT",
+     "NON_COUVERT",
+     "COUVERT"
+    ],
+    "f-a19": [
+     "NON_COUVERT",
+     "NON_COUVERT",
+     "NON_COUVERT"
+    ],
+    "f-a20": [
+     "INCERTAIN",
+     "INCERTAIN",
+     "INCERTAIN"
+    ]
+   },
+   "instables": [
+    "f-a07",
+    "f-a14",
+    "f-a16",
+    "f-a18"
+   ],
+   "executions": [
+    [
+     {
+      "id": "f-a01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3003,
+       "decision": 12,
+       "total": 4257
+      },
+      "faits_lus": {
+       "evenements": [
+        "incendie",
+        "fumee"
+       ],
+       "biens": [
+        "element_batiment",
+        "appareil_electromenager"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=assure",
+        "flammes=oui",
+        "embrasement=oui"
+       ]
+      },
+      "avertissements": [
+       "bien_a_l_origine_sinistre = oui : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.33,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3312,
+       "decision": 48,
+       "total": 4261
+      },
+      "faits_lus": {
+       "evenements": [
+        "incendie",
+        "fumee"
+       ],
+       "biens": [
+        "electronique",
+        "mobilier"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=assure",
+        "flammes=non",
+        "embrasement=non",
+        "chaleur_sans_feu=oui",
+        "intentionnel=non",
+        "manque_entretien=non",
+        "bien_a_l_origine_sinistre=non"
+       ]
+      },
+      "avertissements": [
+       "vérification écartée : retirer ces faits aurait fait couvrir (chaleur_sans_feu = oui; manque_entretien = non)"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a03",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ?",
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ?"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2997,
+       "decision": 11,
+       "total": 4590
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "canalisation",
+        "element_batiment",
+        "mobilier"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "cause_eau=fuite_installation",
+        "type_dommage=moisissure"
+       ]
+      },
+      "avertissements": [
+       "travaux_batiment = aucun : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a04",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ?",
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3385,
+       "decision": 94,
+       "total": 4278
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "element_batiment",
+        "mobilier"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "absence=oui",
+        "prevention_gel=non",
+        "cause_eau=gel",
+        "travaux_batiment=aucun",
+        "periode_gel=oui"
+       ]
+      },
+      "avertissements": [
+       "type_dommage = opacification_ou_perte_etancheite : non dit dans la déclaration, retiré",
+       "prevention_gel : fait décisif non confirmé par la déclaration"
+      ],
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-a05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2534,
+       "decision": 3,
+       "total": 3442
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol",
+        "bris"
+       ],
+       "biens": [
+        "appareil_informatique",
+        "appareil_audiovisuel",
+        "cles"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "fermeture=cle",
+        "effraction=oui",
+        "violence=non",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "proprietaire=assure",
+        "plainte_deposee=oui"
+       ]
+      },
+      "avertissements": [
+       "serrure_surete = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3336,
+       "decision": 3,
+       "total": 4384
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "velo"
+       ],
+       "lieux": [
+        "parties_communes"
+       ],
+       "circonstances": [
+        "proprietaire=assure",
+        "simple_disparition=non",
+        "occupation_partielle=oui"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré",
+       "vol_sur_personne = non : non dit dans la déclaration, retiré",
+       "auteur = tiers : non dit dans la déclaration, retiré",
+       "sejour_temporaire = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a07",
+      "attendu": "INCERTAIN",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2732,
+       "decision": 3,
+       "total": 3510
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "velo",
+        "mobilier",
+        "objet_divers"
+       ],
+       "lieux": [
+        "cave"
+       ],
+       "circonstances": [
+        "fermeture=aucune",
+        "effraction=oui",
+        "violence=non",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "proprietaire=assure",
+        "simple_disparition=non"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-a08",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3184,
+       "decision": 6,
+       "total": 4734
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "cles"
+       ],
+       "lieux": [
+        "voie_publique"
+       ],
+       "circonstances": [
+        "violence=oui",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "proprietaire=assure",
+        "simple_disparition=non",
+        "plainte_deposee=oui",
+        "laisse_sans_surveillance=oui"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré",
+       "effraction = non : non dit dans la déclaration, retiré",
+       "bien = portefeuille : valeur hors vocabulaire, ignorée"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a09",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Vos conditions particulières mentionnent-elles la garantie « matériel multimédia » ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2397,
+       "decision": 7,
+       "total": 3025
+      },
+      "faits_lus": {
+       "evenements": [
+        "accident"
+       ],
+       "biens": [
+        "appareil_informatique"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=assure"
+       ]
+      },
+      "avertissements": [
+       "COUVERT rétrogradé en INCERTAIN : aucune garantie citée de façon vérifiable."
+      ],
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-a10",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ? (aucun/entretien_reparation → couvert ; autres_que_entretien_reparation → non couvert)",
+       "Des travaux (autres que nettoyage) sont-ils effectués sur les vitres ? (aucun/nettoyage → couvert ; autres_que_nettoyage → non couvert)",
+       "Quel est le type de dommage ? (bris/felure/moisissure → couvert ; opacification_ou_perte_etancheite/rayure_ou_ecaillement → non couvert)",
+       "La vitre était-elle placée ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1752,
+       "decision": 17,
+       "total": 2391
+      },
+      "faits_lus": {
+       "evenements": [
+        "bris"
+       ],
+       "biens": [
+        "table_cuisson_vitroceramique"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=assure"
+       ]
+      },
+      "avertissements": [
+       "evenement = accident précisé en bris"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1679,
+       "decision": 17,
+       "total": 2329
+      },
+      "faits_lus": {
+       "evenements": [
+        "bris"
+       ],
+       "biens": [
+        "objet_verre_non_vitre"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=famille"
+       ]
+      },
+      "avertissements": [
+       "evenement = accident précisé en bris"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a12",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Quelle est la cause de la perte des denrées alimentaires ? (arret_6h/coupure_soudaine_reseau/derangement_installation → couvert ; autre → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2749,
+       "decision": 8,
+       "total": 2760
+      },
+      "faits_lus": {
+       "evenements": [
+        "electricite"
+       ],
+       "biens": [
+        "denrees_alimentaires"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "proprietaire=assure",
+        "chaleur_sans_feu=oui",
+        "usage_professionnel=non"
+       ]
+      },
+      "avertissements": [
+       "flammes = non : non dit dans la déclaration, retiré",
+       "embrasement = non : non dit dans la déclaration, retiré",
+       "manque_entretien = non : non dit dans la déclaration, retiré",
+       "cause_perte_alimentaire = coupure_soudaine_reseau : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a13",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2821,
+       "decision": 5,
+       "total": 3753
+      },
+      "faits_lus": {
+       "evenements": [
+        "electricite"
+       ],
+       "biens": [
+        "appareil_informatique",
+        "appareil_audiovisuel"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "proprietaire=assure",
+        "chaleur_sans_feu=non",
+        "usage_professionnel=oui"
+       ]
+      },
+      "avertissements": [
+       "flammes = non : non dit dans la déclaration, retiré",
+       "embrasement = non : non dit dans la déclaration, retiré",
+       "intentionnel = non : non dit dans la déclaration, retiré",
+       "manque_entretien = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a14",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2464,
+       "decision": 84,
+       "total": 3392
+      },
+      "faits_lus": {
+       "evenements": [
+        "tempete"
+       ],
+       "biens": [
+        "mobilier_jardin"
+       ],
+       "lieux": [
+        "terrasse"
+       ],
+       "circonstances": [
+        "alea_tempete=vent"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a15",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Quel phénomène a causé les dégâts : le vent, la grêle, ou le poids de la neige ou de la glace ?",
+       "Le vent a-t-il atteint une vitesse de pointe d'au moins 80 km/h selon la station IRM la plus proche du bâtiment ?",
+       "Le vent a-t-il endommagé d'autres biens situés dans les 10 km du bâtiment (assurables contre le vent ou de résistance équivalente) ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2464,
+       "decision": 24,
+       "total": 2493
+      },
+      "faits_lus": {
+       "evenements": [
+        "tempete",
+        "degat_eaux"
+       ],
+       "biens": [
+        "materiaux_construction",
+        "objet_divers"
+       ],
+       "lieux": [
+        "cave"
+       ],
+       "circonstances": [
+        "cause_eau=inondation"
+       ]
+      },
+      "avertissements": [
+       "type_dommage = moisissure : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a16",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Le bâtiment a-t-il été construit plus de 18 mois après la publication au Moniteur belge du classement de la zone comme zone à risque ? (non → couvert ; oui → non couvert)",
+       "S'agit-il d'une extension au sol d'un bien existant avant la date de classement de la zone à risque ? (non → couvert ; oui → non couvert)",
+       "La réparation des dommages est-elle organisée par des lois particulières ou conventions internationales ? (non → couvert ; oui → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2079,
+       "decision": 13,
+       "total": 2795
+      },
+      "faits_lus": {
+       "evenements": [
+        "catastrophe_naturelle",
+        "degat_eaux"
+       ],
+       "biens": [
+        "mobilier",
+        "appareil_electromenager"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "cause_eau=inondation",
+        "residence_principale=oui",
+        "occupation_partielle=oui"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-a17",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.33,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2754,
+       "decision": 15,
+       "total": 3469
+      },
+      "faits_lus": {
+       "evenements": [
+        "incendie",
+        "electricite"
+       ],
+       "biens": [
+        "mobilier",
+        "element_batiment"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "proprietaire=assure",
+        "flammes=oui",
+        "embrasement=oui"
+       ]
+      },
+      "avertissements": [
+       "chaleur_sans_feu = non : non dit dans la déclaration, retiré",
+       "intentionnel = non : non dit dans la déclaration, retiré",
+       "usage_professionnel = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-a18",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1951,
+       "decision": 10,
+       "total": 2910
+      },
+      "faits_lus": {
+       "evenements": [
+        "responsabilite"
+       ],
+       "biens": [],
+       "lieux": [],
+       "circonstances": [
+        "auteur=assure",
+        "origine_rc=personne",
+        "victime=tiers"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a19",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1762,
+       "decision": 13,
+       "total": 2719
+      },
+      "faits_lus": {
+       "evenements": [
+        "accident"
+       ],
+       "biens": [
+        "objet_divers"
+       ],
+       "lieux": [],
+       "circonstances": [
+        "auteur=assure"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a20",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1087,
+       "decision": 188,
+       "total": 1284
+      },
+      "faits_lus": {
+       "evenements": [
+        "assistance"
+       ],
+       "biens": [
+        "cles"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": []
+      },
+      "avertissements": [],
+      "rappel_questions": 0.0
+     }
+    ],
+    [
+     {
+      "id": "f-a01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2136,
+       "decision": 7,
+       "total": 2934
+      },
+      "faits_lus": {
+       "evenements": [
+        "incendie",
+        "fumee"
+       ],
+       "biens": [
+        "appareil_electromenager",
+        "element_batiment"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=assure",
+        "flammes=oui",
+        "embrasement=oui"
+       ]
+      },
+      "avertissements": [
+       "bien_a_l_origine_sinistre = oui : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.33,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2420,
+       "decision": 3,
+       "total": 3078
+      },
+      "faits_lus": {
+       "evenements": [
+        "incendie",
+        "fumee"
+       ],
+       "biens": [
+        "electronique",
+        "mobilier"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=assure",
+        "absence=oui",
+        "flammes=non",
+        "embrasement=non",
+        "chaleur_sans_feu=oui",
+        "intentionnel=non",
+        "manque_entretien=non",
+        "bien_a_l_origine_sinistre=oui"
+       ]
+      },
+      "avertissements": [
+       "vérification écartée : retirer ces faits aurait fait couvrir (chaleur_sans_feu = oui; manque_entretien = non; bien_a_l_origine_sinistre = oui)"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a03",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ?",
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ?"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3126,
+       "decision": 11,
+       "total": 3959
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "canalisation",
+        "element_batiment",
+        "mobilier"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "cause_eau=fuite_installation",
+        "type_dommage=opacification_ou_perte_etancheite"
+       ]
+      },
+      "avertissements": [
+       "travaux_batiment = aucun : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a04",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ?",
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3009,
+       "decision": 3,
+       "total": 4445
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "element_batiment",
+        "mobilier"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "absence=oui",
+        "prevention_gel=non",
+        "cause_eau=gel",
+        "travaux_batiment=aucun",
+        "periode_gel=oui"
+       ]
+      },
+      "avertissements": [
+       "type_dommage = opacification_ou_perte_etancheite : non dit dans la déclaration, retiré",
+       "prevention_gel : fait décisif non confirmé par la déclaration"
+      ],
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-a05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2112,
+       "decision": 4,
+       "total": 5609
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol",
+        "bris"
+       ],
+       "biens": [
+        "appareil_informatique",
+        "appareil_audiovisuel",
+        "cles"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "fermeture=serrure",
+        "effraction=oui",
+        "violence=non",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "plainte_deposee=oui"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 6712,
+       "decision": 8,
+       "total": 7821
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "velo"
+       ],
+       "lieux": [
+        "parties_communes"
+       ],
+       "circonstances": [
+        "auteur=tiers",
+        "proprietaire=assure",
+        "simple_disparition=non",
+        "occupation_partielle=oui"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré",
+       "sejour_temporaire = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a07",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Comment le local était-il fermé ?",
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ?"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 6113,
+       "decision": 15,
+       "total": 6133
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "mobilier",
+        "velo",
+        "objet_divers"
+       ],
+       "lieux": [
+        "cave"
+       ],
+       "circonstances": [
+        "effraction=oui",
+        "violence=non",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "proprietaire=assure",
+        "occupation_partielle=oui"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré",
+       "simple_disparition = non : non dit dans la déclaration, retiré",
+       "sejour_temporaire = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-a08",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 4827,
+       "decision": 4,
+       "total": 5799
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "cles"
+       ],
+       "lieux": [
+        "voie_publique"
+       ],
+       "circonstances": [
+        "violence=oui",
+        "vol_sur_personne=oui",
+        "auteur=tiers",
+        "plainte_deposee=oui"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré",
+       "bien = portefeuille : valeur hors vocabulaire, ignorée"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a09",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Vos conditions particulières mentionnent-elles la garantie « matériel multimédia » ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2331,
+       "decision": 5,
+       "total": 2985
+      },
+      "faits_lus": {
+       "evenements": [
+        "accident"
+       ],
+       "biens": [
+        "appareil_informatique"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=assure"
+       ]
+      },
+      "avertissements": [
+       "COUVERT rétrogradé en INCERTAIN : aucune garantie citée de façon vérifiable."
+      ],
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-a10",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ? (aucun/entretien_reparation → couvert ; autres_que_entretien_reparation → non couvert)",
+       "Des travaux (autres que nettoyage) sont-ils effectués sur les vitres ? (aucun/nettoyage → couvert ; autres_que_nettoyage → non couvert)",
+       "Quel est le type de dommage ? (bris/felure/moisissure → couvert ; opacification_ou_perte_etancheite/rayure_ou_ecaillement → non couvert)",
+       "La vitre était-elle placée ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2317,
+       "decision": 27,
+       "total": 3116
+      },
+      "faits_lus": {
+       "evenements": [
+        "bris"
+       ],
+       "biens": [
+        "table_cuisson_vitroceramique"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=assure"
+       ]
+      },
+      "avertissements": [
+       "evenement = accident précisé en bris"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2175,
+       "decision": 22,
+       "total": 3004
+      },
+      "faits_lus": {
+       "evenements": [
+        "bris"
+       ],
+       "biens": [
+        "objet_verre_non_vitre"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=famille"
+       ]
+      },
+      "avertissements": [
+       "evenement = accident précisé en bris"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a12",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Quelle est la cause de la perte des denrées alimentaires ? (arret_6h/coupure_soudaine_reseau/derangement_installation → couvert ; autre → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2876,
+       "decision": 6,
+       "total": 2885
+      },
+      "faits_lus": {
+       "evenements": [
+        "electricite"
+       ],
+       "biens": [
+        "denrees_alimentaires"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "proprietaire=assure",
+        "chaleur_sans_feu=oui",
+        "intentionnel=non",
+        "usage_professionnel=non"
+       ]
+      },
+      "avertissements": [
+       "flammes = non : non dit dans la déclaration, retiré",
+       "embrasement = non : non dit dans la déclaration, retiré",
+       "manque_entretien = non : non dit dans la déclaration, retiré",
+       "cause_perte_alimentaire = coupure_soudaine_reseau : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a13",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2707,
+       "decision": 3,
+       "total": 3610
+      },
+      "faits_lus": {
+       "evenements": [
+        "electricite"
+       ],
+       "biens": [
+        "appareil_informatique",
+        "appareil_audiovisuel"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "proprietaire=assure",
+        "chaleur_sans_feu=non",
+        "usage_professionnel=oui"
+       ]
+      },
+      "avertissements": [
+       "flammes = non : non dit dans la déclaration, retiré",
+       "embrasement = non : non dit dans la déclaration, retiré",
+       "intentionnel = non : non dit dans la déclaration, retiré",
+       "manque_entretien = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a14",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Le vent a-t-il atteint une vitesse de pointe d'au moins 80 km/h selon la station IRM la plus proche du bâtiment ?",
+       "Le vent a-t-il endommagé d'autres biens situés dans les 10 km du bâtiment (assurables contre le vent ou de résistance équivalente) ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2785,
+       "decision": 16,
+       "total": 2805
+      },
+      "faits_lus": {
+       "evenements": [
+        "tempete"
+       ],
+       "biens": [
+        "element_batiment"
+       ],
+       "lieux": [
+        "terrasse"
+       ],
+       "circonstances": [
+        "alea_tempete=vent"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a15",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Quel phénomène a causé les dégâts : le vent, la grêle, ou le poids de la neige ou de la glace ?",
+       "Le vent a-t-il atteint une vitesse de pointe d'au moins 80 km/h selon la station IRM la plus proche du bâtiment ?",
+       "Le vent a-t-il endommagé d'autres biens situés dans les 10 km du bâtiment (assurables contre le vent ou de résistance équivalente) ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2780,
+       "decision": 21,
+       "total": 2805
+      },
+      "faits_lus": {
+       "evenements": [
+        "tempete",
+        "degat_eaux"
+       ],
+       "biens": [
+        "materiaux_construction",
+        "objet_divers"
+       ],
+       "lieux": [
+        "cave"
+       ],
+       "circonstances": [
+        "cause_eau=inondation"
+       ]
+      },
+      "avertissements": [
+       "type_dommage = moisissure : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a16",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Quel phénomène a causé les dégâts : le vent, la grêle, ou le poids de la neige ou de la glace ?",
+       "Le vent a-t-il atteint une vitesse de pointe d'au moins 80 km/h selon la station IRM la plus proche du bâtiment ?",
+       "Le vent a-t-il endommagé d'autres biens situés dans les 10 km du bâtiment (assurables contre le vent ou de résistance équivalente) ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1760,
+       "decision": 25,
+       "total": 1789
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux",
+        "tempete"
+       ],
+       "biens": [
+        "mobilier",
+        "appareil_electromenager"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "cause_eau=inondation",
+        "residence_principale=oui"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-a17",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.33,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3084,
+       "decision": 5,
+       "total": 3899
+      },
+      "faits_lus": {
+       "evenements": [
+        "electricite",
+        "incendie"
+       ],
+       "biens": [
+        "mobilier",
+        "element_batiment"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "proprietaire=assure",
+        "flammes=oui",
+        "embrasement=oui",
+        "intentionnel=non",
+        "usage_professionnel=non"
+       ]
+      },
+      "avertissements": [
+       "chaleur_sans_feu = non : non dit dans la déclaration, retiré",
+       "bien_a_l_origine_sinistre = oui : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-a18",
+      "attendu": "COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1924,
+       "decision": 7,
+       "total": 2753
+      },
+      "faits_lus": {
+       "evenements": [
+        "responsabilite"
+       ],
+       "biens": [],
+       "lieux": [],
+       "circonstances": [
+        "auteur=assure",
+        "origine_rc=vehicule_moteur",
+        "victime=tiers"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a19",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1558,
+       "decision": 78,
+       "total": 2232
+      },
+      "faits_lus": {
+       "evenements": [
+        "accident"
+       ],
+       "biens": [
+        "objet_divers"
+       ],
+       "lieux": [],
+       "circonstances": [
+        "auteur=assure"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a20",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1258,
+       "decision": 12,
+       "total": 1279
+      },
+      "faits_lus": {
+       "evenements": [
+        "assistance"
+       ],
+       "biens": [
+        "cles"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": []
+      },
+      "avertissements": [],
+      "rappel_questions": 0.0
+     }
+    ],
+    [
+     {
+      "id": "f-a01",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2049,
+       "decision": 5,
+       "total": 2825
+      },
+      "faits_lus": {
+       "evenements": [
+        "incendie",
+        "fumee"
+       ],
+       "biens": [
+        "element_batiment",
+        "appareil_electromenager"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=assure",
+        "flammes=oui",
+        "embrasement=oui"
+       ]
+      },
+      "avertissements": [
+       "bien_a_l_origine_sinistre = oui : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a02",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.33,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2234,
+       "decision": 6,
+       "total": 3068
+      },
+      "faits_lus": {
+       "evenements": [
+        "incendie",
+        "fumee"
+       ],
+       "biens": [
+        "electronique",
+        "mobilier"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=assure",
+        "flammes=non",
+        "embrasement=non",
+        "chaleur_sans_feu=oui",
+        "intentionnel=non",
+        "manque_entretien=non",
+        "bien_a_l_origine_sinistre=oui"
+       ]
+      },
+      "avertissements": [
+       "vérification écartée : retirer ces faits aurait fait couvrir (chaleur_sans_feu = oui; manque_entretien = non; bien_a_l_origine_sinistre = oui)"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a03",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "D'où venait l'eau ?",
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ?"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3325,
+       "decision": 9,
+       "total": 4050
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "canalisation",
+        "element_batiment",
+        "mobilier"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "cause_eau=fuite_installation",
+        "type_dommage=moisissure"
+       ]
+      },
+      "avertissements": [
+       "periode_gel = non : non dit dans la déclaration, retiré",
+       "travaux_batiment = aucun : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a04",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ?",
+       "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2326,
+       "decision": 6,
+       "total": 3104
+      },
+      "faits_lus": {
+       "evenements": [
+        "degat_eaux"
+       ],
+       "biens": [
+        "element_batiment",
+        "mobilier"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "absence=oui",
+        "prevention_gel=non",
+        "cause_eau=gel",
+        "travaux_batiment=aucun",
+        "periode_gel=oui"
+       ]
+      },
+      "avertissements": [
+       "type_dommage = opacification_ou_perte_etancheite : non dit dans la déclaration, retiré",
+       "prevention_gel : fait décisif non confirmé par la déclaration"
+      ],
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-a05",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2570,
+       "decision": 5,
+       "total": 3779
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol",
+        "bris"
+       ],
+       "biens": [
+        "appareil_informatique",
+        "appareil_audiovisuel",
+        "chassis"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "fermeture=cle",
+        "effraction=oui",
+        "violence=non",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "plainte_deposee=oui"
+       ]
+      },
+      "avertissements": [
+       "portes_fermees = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a06",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2484,
+       "decision": 36,
+       "total": 3426
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "velo"
+       ],
+       "lieux": [
+        "parties_communes"
+       ],
+       "circonstances": [
+        "effraction=oui",
+        "violence=non",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "proprietaire=assure",
+        "simple_disparition=non",
+        "occupation_partielle=oui"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a07",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Comment le local était-il fermé ?",
+       "Le local était-il fermé par une serrure de sûreté (serrure à double tour à cylindre ou à pompe, pas un cadenas) ?"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2692,
+       "decision": 19,
+       "total": 2716
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "velo",
+        "mobilier",
+        "objet_divers"
+       ],
+       "lieux": [
+        "cave"
+       ],
+       "circonstances": [
+        "effraction=oui",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "proprietaire=assure",
+        "simple_disparition=non"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré",
+       "intentionnel = oui : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-a08",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3498,
+       "decision": 6,
+       "total": 4367
+      },
+      "faits_lus": {
+       "evenements": [
+        "vol"
+       ],
+       "biens": [
+        "cles"
+       ],
+       "lieux": [
+        "voie_publique"
+       ],
+       "circonstances": [
+        "violence=oui",
+        "vol_sur_personne=non",
+        "auteur=tiers",
+        "proprietaire=assure",
+        "simple_disparition=non",
+        "plainte_deposee=oui",
+        "laisse_sans_surveillance=oui"
+       ]
+      },
+      "avertissements": [
+       "fermeture = aucune : non dit dans la déclaration, retiré",
+       "effraction = non : non dit dans la déclaration, retiré",
+       "sejour_temporaire = non : non dit dans la déclaration, retiré",
+       "bien = portefeuille : valeur hors vocabulaire, ignorée"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a09",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Vos conditions particulières mentionnent-elles la garantie « matériel multimédia » ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2175,
+       "decision": 7,
+       "total": 2925
+      },
+      "faits_lus": {
+       "evenements": [
+        "accident"
+       ],
+       "biens": [
+        "appareil_informatique"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=assure"
+       ]
+      },
+      "avertissements": [
+       "COUVERT rétrogradé en INCERTAIN : aucune garantie citée de façon vérifiable."
+      ],
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-a10",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ? (aucun/entretien_reparation → couvert ; autres_que_entretien_reparation → non couvert)",
+       "Des travaux (autres que nettoyage) sont-ils effectués sur les vitres ? (aucun/nettoyage → couvert ; autres_que_nettoyage → non couvert)",
+       "Quel est le type de dommage ? (bris/felure/moisissure → couvert ; opacification_ou_perte_etancheite/rayure_ou_ecaillement → non couvert)",
+       "La vitre était-elle placée ? (oui → couvert ; non → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1808,
+       "decision": 19,
+       "total": 2495
+      },
+      "faits_lus": {
+       "evenements": [
+        "bris"
+       ],
+       "biens": [
+        "table_cuisson_vitroceramique"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "auteur=assure"
+       ]
+      },
+      "avertissements": [
+       "evenement = accident précisé en bris"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a11",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2683,
+       "decision": 9,
+       "total": 3399
+      },
+      "faits_lus": {
+       "evenements": [
+        "bris"
+       ],
+       "biens": [
+        "objet_verre_non_vitre"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": []
+      },
+      "avertissements": [
+       "auteur = famille : non dit dans la déclaration, retiré",
+       "evenement = accident précisé en bris"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a12",
+      "attendu": "COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Quelle est la cause de la perte des denrées alimentaires ? (arret_6h/coupure_soudaine_reseau/derangement_installation → couvert ; autre → non couvert)"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 2571,
+       "decision": 6,
+       "total": 2580
+      },
+      "faits_lus": {
+       "evenements": [
+        "electricite"
+       ],
+       "biens": [
+        "denrees_alimentaires"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "proprietaire=assure",
+        "chaleur_sans_feu=non",
+        "intentionnel=non",
+        "manque_entretien=non"
+       ]
+      },
+      "avertissements": [
+       "flammes = non : non dit dans la déclaration, retiré",
+       "embrasement = non : non dit dans la déclaration, retiré",
+       "usage_professionnel = non : non dit dans la déclaration, retiré",
+       "cause_perte_alimentaire = coupure_soudaine_reseau : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a13",
+      "attendu": "NON_COUVERT",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 69767,
+       "decision": 5,
+       "total": 70727
+      },
+      "faits_lus": {
+       "evenements": [
+        "electricite"
+       ],
+       "biens": [
+        "appareil_informatique",
+        "appareil_audiovisuel"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "proprietaire=assure",
+        "chaleur_sans_feu=non",
+        "usage_professionnel=oui"
+       ]
+      },
+      "avertissements": [
+       "flammes = non : non dit dans la déclaration, retiré",
+       "embrasement = non : non dit dans la déclaration, retiré",
+       "intentionnel = non : non dit dans la déclaration, retiré",
+       "manque_entretien = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a14",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": false,
+      "exact": false,
+      "questions": [
+       "Le vent a-t-il atteint une vitesse de pointe d'au moins 80 km/h selon la station IRM la plus proche du bâtiment ?",
+       "Le vent a-t-il endommagé d'autres biens situés dans les 10 km du bâtiment (assurables contre le vent ou de résistance équivalente) ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 67632,
+       "decision": 20,
+       "total": 67657
+      },
+      "faits_lus": {
+       "evenements": [
+        "tempete"
+       ],
+       "biens": [
+        "element_batiment"
+       ],
+       "lieux": [
+        "terrasse"
+       ],
+       "circonstances": [
+        "alea_tempete=vent"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a15",
+      "attendu": "NON_COUVERT",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Quel phénomène a causé les dégâts : le vent, la grêle, ou le poids de la neige ou de la glace ?",
+       "Le vent a-t-il atteint une vitesse de pointe d'au moins 80 km/h selon la station IRM la plus proche du bâtiment ?",
+       "Le vent a-t-il endommagé d'autres biens situés dans les 10 km du bâtiment (assurables contre le vent ou de résistance équivalente) ?"
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 68416,
+       "decision": 27,
+       "total": 68448
+      },
+      "faits_lus": {
+       "evenements": [
+        "tempete",
+        "degat_eaux"
+       ],
+       "biens": [
+        "materiaux_construction",
+        "denrees_alimentaires",
+        "objet_divers"
+       ],
+       "lieux": [
+        "cave"
+       ],
+       "circonstances": [
+        "cause_eau=inondation"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a16",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": false,
+      "questions": [
+       "Le bâtiment a-t-il été construit plus de 18 mois après la publication au Moniteur belge du classement de la zone comme zone à risque ? (non → couvert ; oui → non couvert)",
+       "S'agit-il d'une extension au sol d'un bien existant avant la date de classement de la zone à risque ? (non → couvert ; oui → non couvert)",
+       "La réparation des dommages est-elle organisée par des lois particulières ou conventions internationales ? (non → couvert ; oui → non couvert)",
+       "La construction était-elle délabrée ou en cours de démolition ?"
+      ],
+      "rappel_clauses": 1.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 67850,
+       "decision": 12,
+       "total": 68649
+      },
+      "faits_lus": {
+       "evenements": [
+        "catastrophe_naturelle",
+        "degat_eaux"
+       ],
+       "biens": [
+        "mobilier",
+        "appareil_electromenager"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "cause_eau=inondation",
+        "occupation_partielle=oui"
+       ]
+      },
+      "avertissements": [
+       "residence_principale = oui : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-a17",
+      "attendu": "INCERTAIN",
+      "obtenu": "COUVERT",
+      "ok": false,
+      "exact": false,
+      "questions": [],
+      "rappel_clauses": 0.33,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 3023,
+       "decision": 3,
+       "total": 4580
+      },
+      "faits_lus": {
+       "evenements": [
+        "incendie",
+        "electricite"
+       ],
+       "biens": [
+        "mobilier",
+        "element_batiment"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": [
+        "proprietaire=assure",
+        "flammes=oui",
+        "embrasement=oui",
+        "intentionnel=non",
+        "usage_professionnel=non",
+        "bien_a_l_origine_sinistre=non"
+       ]
+      },
+      "avertissements": [
+       "chaleur_sans_feu = non : non dit dans la déclaration, retiré",
+       "manque_entretien = non : non dit dans la déclaration, retiré"
+      ],
+      "rappel_questions": 0.0
+     },
+     {
+      "id": "f-a18",
+      "attendu": "COUVERT",
+      "obtenu": "COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.5,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1767,
+       "decision": 4,
+       "total": 2426
+      },
+      "faits_lus": {
+       "evenements": [
+        "responsabilite"
+       ],
+       "biens": [],
+       "lieux": [],
+       "circonstances": [
+        "auteur=assure",
+        "origine_rc=personne",
+        "victime=tiers"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a19",
+      "attendu": "NON_COUVERT",
+      "obtenu": "NON_COUVERT",
+      "ok": true,
+      "exact": true,
+      "questions": [],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1807,
+       "decision": 14,
+       "total": 2500
+      },
+      "faits_lus": {
+       "evenements": [
+        "accident"
+       ],
+       "biens": [
+        "objet_divers"
+       ],
+       "lieux": [],
+       "circonstances": [
+        "auteur=assure"
+       ]
+      },
+      "avertissements": [],
+      "rappel_questions": null
+     },
+     {
+      "id": "f-a20",
+      "attendu": "INCERTAIN",
+      "obtenu": "INCERTAIN",
+      "ok": true,
+      "exact": true,
+      "questions": [
+       "Faire examiner le dossier par un gestionnaire."
+      ],
+      "rappel_clauses": 0.0,
+      "erreur": false,
+      "durees_ms": {
+       "lecture": 1037,
+       "decision": 12,
+       "total": 1057
+      },
+      "faits_lus": {
+       "evenements": [
+        "assistance"
+       ],
+       "biens": [
+        "cles"
+       ],
+       "lieux": [
+        "logement"
+       ],
+       "circonstances": []
+      },
+      "avertissements": [],
+      "rappel_questions": 0.0
+     }
+    ]
+   ]
+  }
+ },
+ "avertissements": [
+  "jeu « ferme » : sans faits idéaux, la chaîne complète seule"
+ ],
+ "modele": "mistral:mistral-small-latest",
+ "lecture": "verifiee",
+ "portes": [
+  {
+   "couche": "chaine",
+   "critere": "faux_couverts",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 2.0,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "faux_refus",
+   "sens": "max",
+   "seuil": 1,
+   "valeur": 0.333,
+   "ok": true
+  },
+  {
+   "couche": "chaine",
+   "critere": "exactitude",
+   "sens": "min",
+   "seuil": 0.85,
+   "valeur": 0.783,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "instables",
+   "sens": "max",
+   "seuil": 3,
+   "valeur": 4,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "rappel_questions",
+   "sens": "min",
+   "seuil": 0.8,
+   "valeur": 0.0,
+   "ok": false
+  },
+  {
+   "couche": "chaine",
+   "critere": "latence_seule_p95_s",
+   "sens": "max",
+   "seuil": 10,
+   "valeur": 4.4,
+   "ok": true
+  }
+ ],
+ "passe": false
+}

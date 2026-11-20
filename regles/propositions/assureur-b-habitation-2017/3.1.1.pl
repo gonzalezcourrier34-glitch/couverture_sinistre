@@ -20,8 +20,7 @@ circonstance(incendie_base, si(f(evenement, incendie), ou([concept(incendie), ou
 garantie(decongelation, "Décongélation denrées", '3.1.1.2',
     "à la décongélation de denrées alimentaires périssables contenues dans un surgélateur, congélateur ou réfrigérateur à usage domestique suite à un changement de température résultant d'un arrêt dans la production du froid imputable à la survenance d'un sinistre couvert par les présentes conditions spéciales ou par les conditions spéciales de la garantie \"dégâts électriques\"").
 perimetre(decongelation, f(bien, denrees_alimentaires)).
-circonstance(decongelation, ou([f(evenement, incendie), f(evenement, explosion), f(evenement, foudre), f(evenement, electricite)]), '3.1.1.2',
-    "imputable à la survenance d'un sinistre couvert par les présentes conditions spéciales ou par les conditions spéciales de la garantie \"dégâts électriques\"").
+perimetre(decongelation, ou([f(evenement, incendie), f(evenement, explosion), f(evenement, foudre), f(evenement, electricite)])).
 garantie(linge, "Dégradation linge", '3.1.1.2',
     "à la dégradation du contenu des sèche-linge ou lave-linge à la suite d'un sinistre relevant de l'un des périls prévus aux présentes conditions spéciales de la garantie \"incendie et périls assimilés\" et aux conditions spéciales de la garantie \"dégâts électriques\"").
 perimetre(linge, f(bien, objet_divers)).

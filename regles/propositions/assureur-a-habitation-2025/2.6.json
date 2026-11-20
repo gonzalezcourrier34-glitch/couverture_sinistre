@@ -6,12 +6,13 @@
     "consigne": "redaction-regles v6",
     "relecture": {
       "par": "auteur + Claude",
-      "date": "2026-11-19",
+      "date": "2026-11-20",
       "modifications": [
         "usage professionnel : la variable directement, pas le concept « materiel » (une définition du lexique qui ne dit pas l'usage)",
         "hors_batiment → non(concept batiment), déjà défini",
         "exclusions des appareils : portée limitée au bien (un congélateur et un ordinateur grillés : le congélateur reste couvert)",
-        "garantie du fabricant : a_demander false ; c'est à l'assureur de l'établir (comme la corrosion en 2.7)"
+        "garantie du fabricant : a_demander false ; c'est à l'assureur de l'établir (comme la corrosion en 2.7)",
+        "usage professionnel : l'exclusion vise chaque appareil électronique (informatique, audiovisuel, électronique)"
       ]
     }
   },
@@ -91,19 +92,9 @@
         "condition": {
           "et": [
             {
-              "ou": [
-                {
-                  "f": [
-                    "bien",
-                    "electronique"
-                  ]
-                },
-                {
-                  "f": [
-                    "bien",
-                    "appareil_informatique"
-                  ]
-                }
+              "f": [
+                "bien",
+                "appareil_informatique"
               ]
             },
             {
@@ -116,6 +107,54 @@
         },
         "portee": {
           "bien": "appareil_informatique"
+        },
+        "a_demander": false,
+        "article": "2.6-a",
+        "texte": "les dommages aux appareils électroniques et informatiques dont l’usage est professionnel"
+      },
+      {
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "bien",
+                "electronique"
+              ]
+            },
+            {
+              "f": [
+                "usage_professionnel",
+                "oui"
+              ]
+            }
+          ]
+        },
+        "portee": {
+          "bien": "electronique"
+        },
+        "a_demander": false,
+        "article": "2.6-a",
+        "texte": "les dommages aux appareils électroniques et informatiques dont l’usage est professionnel"
+      },
+      {
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "bien",
+                "appareil_audiovisuel"
+              ]
+            },
+            {
+              "f": [
+                "usage_professionnel",
+                "oui"
+              ]
+            }
+          ]
+        },
+        "portee": {
+          "bien": "appareil_audiovisuel"
         },
         "a_demander": false,
         "article": "2.6-a",

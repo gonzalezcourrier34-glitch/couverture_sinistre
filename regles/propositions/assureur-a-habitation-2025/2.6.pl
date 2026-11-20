@@ -7,7 +7,11 @@ perimetre(action_electricite, concept(batiment)).
 circonstance(action_electricite, si(f(bien, denrees_alimentaires), ou([f(cause_perte_alimentaire, arret_6h), f(cause_perte_alimentaire, derangement_installation), f(cause_perte_alimentaire, coupure_soudaine_reseau)])), '2.6',
     "suite à l’arrêt d’une durée de 6 heures ou au dérangement d’une installation de réfrigération ou de congélation provoqué par l’action de l’électricité ou par une coupure de courant soudaine et imprévisible suite à un dysfonctionnement du réseau de distribution d’électricité").
 limite(action_electricite, '2.6', "Perte de denrées alimentaires suite à une variation de température due à une panne 500 EUR de courant d’au moins 6 heures (y compris blackout", "500 EUR").
-exclusion([action_electricite], et([ou([f(bien, electronique), f(bien, appareil_informatique)]), f(usage_professionnel, oui)]), bien(appareil_informatique), non, '2.6-a',
+exclusion([action_electricite], et([f(bien, appareil_informatique), f(usage_professionnel, oui)]), bien(appareil_informatique), non, '2.6-a',
+    "les dommages aux appareils électroniques et informatiques dont l’usage est professionnel").
+exclusion([action_electricite], et([f(bien, electronique), f(usage_professionnel, oui)]), bien(electronique), non, '2.6-a',
+    "les dommages aux appareils électroniques et informatiques dont l’usage est professionnel").
+exclusion([action_electricite], et([f(bien, appareil_audiovisuel), f(usage_professionnel, oui)]), bien(appareil_audiovisuel), non, '2.6-a',
     "les dommages aux appareils électroniques et informatiques dont l’usage est professionnel").
 exclusion([action_electricite], et([f(bien, appareil_informatique), non(concept(batiment)), non(f(usage_professionnel, oui))]), bien(appareil_informatique), non, '2.6-a',
     "ainsi que les dommages aux autres appareils informatiques en dehors du bâtiment assuré").

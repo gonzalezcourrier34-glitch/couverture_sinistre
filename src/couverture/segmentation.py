@@ -163,7 +163,10 @@ def classer(chemin: list[str], texte: str, profil: dict | None = None) -> TypeCl
     corps = normaliser(texte)
     if re.search(r"ne sont (pas|jamais) (garanti|couvert)|n'est pas (garanti|couvert)|ne garantissons pas|ne couvrons pas|sont exclu|est exclu", corps):
         return TypeClause.EXCLUSION
-    if re.search(r"nous garantissons|nous couvrons|nous prenons en charge|sont (garanti|couvert)|est (garanti|couvert)", corps):
+    # « Nous vous assurons pour les dommages causés… » : la formule des garanties de responsabilité civile
+    # d'Assureur A (section 5), typées « autre » jusqu'ici ; la vérification refusait alors de les citer (7.100).
+    if re.search(r"nous garantissons|nous couvrons|nous prenons en charge|nous (vous )?assurons|sont (garanti|couvert)"
+                 r"|est (garanti|couvert)", corps):
         return TypeClause.GARANTIE
     if re.search(r"sous reserve|a condition|vous devez|doit ", corps):
         return TypeClause.CONDITION

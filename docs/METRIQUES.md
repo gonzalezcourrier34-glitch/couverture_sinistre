@@ -110,6 +110,30 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 
 ## 5. Dernières mesures
 
+**20 nov. 2026, 14 h 40 à 14 h 43, après l'aide de la moisissure** : **Assureur A 85 % justes**, 77 % exactes,
+1 couvert à tort, 0 refus à tort, 3 instables ; **Assureur B 82 %**, 77 % exactes, 1 couvert à tort (`f-b18`, la
+voiture fermée à clé, en attente), 0 refus à tort, 2 instables. `f-b12` juste aux trois passages ; l'écart de B
+(85 → 82 %) tient aux cas instables (`f-b03`, `f-b07`).
+
+**20 nov. 2026, 14 h 30 à 14 h 36, après la relecture des erreurs de A et B (DEMARCHE 7.101)** : **Assureur A 85 %
+justes**, 75 % exactes, 1 couvert à tort, 0,33 refus à tort, 2 instables ; **Assureur B 85 %**, 78 % exactes, 0,33
+couvert à tort, 0 refus à tort, 5 instables ; **Assureur D 100 %**, 0 instable. Mesure de mise au point : les écarts
+corrigés viennent de ce jeu.
+
+**20 nov. 2026, 14 h 17, A après la relecture des contrats (typage de la section 5)** : **78 % justes**, 70 %
+exactes, 2 couverts à tort, 0,33 refus à tort, 4 instables ; médiane 3,0 s. `f-a18` couvert 2 fois sur 3 (le vélo
+encore lu véhicule à moteur une fois). DEMARCHE 7.100.
+
+**20 nov. 2026, 14 h 10, A après la correction des aides** : **77 % justes**, 2 couverts à tort, 0 refus à tort,
+2 instables. `f-a18` : le vélo lu `personne`, la règle couvre, la validation rétrograde en « incertain » (5.1 typée
+« autre » par le découpage, DEMARCHE 7.100).
+
+**20 nov. 2026, 14 h 02 à 14 h 05, A et B après leur responsabilité civile** (chaîne complète, jeu fermé) :
+**Assureur A 78 % justes** (80 % avant), 2 couverts à tort, 1 refus à tort, 3 instables ; **Assureur B 63 %** (65 %),
+1 couvert à tort, 0,67 refus à tort, 2 instables ; médiane 3,2 à 3,4 s. `f-b12`, `f-b16` et `f-a19` justes aux trois
+passages ; `f-a18` (le piéton renversé à vélo) refusé aux trois : le vélo lu `vehicule_moteur` (DEMARCHE 7.99). Les
+autres écarts avec le banc de 11 h 40 sont des cas instables hors responsabilité civile.
+
 **20 nov. 2026, 12 h 33 à 12 h 38, les trois contrats après 7.97** : **Assureur D 100 % justes** (0 couvert à tort,
 0 refus à tort, 0 instable) ; **A 80 %**, 1,67 couvert à tort ; **B 65 %**, 1 couvert à tort. Médiane 3,6 à 4,1 s ;
 95e centile au-dessus de 20 s pour D et B (appels lents). Pour D, mesure optimiste : des écarts de ce jeu ont servi

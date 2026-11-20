@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "article": "3.1.9.10",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12"
+  },
+  "proposition": {
+    "evenements": [],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "recours_tiers",
+        "nom": "Recours des tiers",
+        "article": "3.1.9.10",
+        "texte": "La Compagnie couvre les frais que l’Assuré peut encourir en vertu des articles 1382 à 1386 du Code civil pour les dommages matériels causés par un sinistre garanti se communiquant à des biens qui sont la propriété de tiers.",
+        "accessoire": true,
+        "perimetre": [
+          {
+            "f": [
+              "victime",
+              "tiers"
+            ]
+          },
+          {
+            "f": [
+              "dommage_tiers",
+              "materiel"
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "identifiant",
+      "message": "la garantie recours_tiers existe déjà dans les règles du contrat"
+    }
+  ]
+}

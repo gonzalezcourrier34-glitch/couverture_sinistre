@@ -68,8 +68,29 @@ uv run couverture rediger  --contrat assureur-a-habitation-2025 --article 2.2   
 uv run couverture banc     --contrat assureur-a-habitation-2025   # golden set (97 cas) : règles, lecture, chaîne, portes
 uv run couverture legalbench --telecharger                  # second banc, externe (Stanford, CC BY 4.0)
 uv run couverture legalbench
-uv run couverture serveur                                   # interface sur http://127.0.0.1:8000
+uv run couverture serveur                                   # page de démonstration sur http://127.0.0.1:8000
+uv run couverture api                                       # l'API (FastAPI), documentation sur http://127.0.0.1:8001/docs
 ```
+
+### L'API
+
+```bash
+uv run couverture api                                       # http://127.0.0.1:8001/docs
+```
+
+Une API FastAPI, une route par fichier (`src/couverture/api/routes/`), sur le modèle de celle de SortirIA. Clé dans
+l'en-tête `x-api-key` (`COUVERTURE_API_KEY` dans `.env` ; sans elle, les routes protégées refusent tout) :
+
+| Route | Rôle |
+|---|---|
+| `GET /api/v1/sante` | l'API, le moteur et le modèle répondent (publique) |
+| `GET /api/v1/contrats`, `/contrats/{id}`, `/contrats/{id}/clauses` | les contrats et leur texte |
+| `GET /api/v1/vocabulaire` | les faits que le moteur comprend |
+| `POST /api/v1/analyses` | une déclaration → couvert, non couvert ou incertain, avec les citations |
+| `POST /api/v1/decisions` | des faits → la décision, sans modèle (résout un « incertain ») |
+
+Une réponse « incertain » dit, dans `a_preciser`, quoi demander au client ; ses réponses, ajoutées aux `faits` de la
+réponse, se soumettent à `/decisions` : décision immédiate, gratuite, déterministe.
 
 `analyser` donne la décision, le motif, les preuves, les questions à poser et l'**arbre de preuve** du moteur. Autres commandes : `contrats`, `clauses`, `versions`, `modele` (`--help`).
 

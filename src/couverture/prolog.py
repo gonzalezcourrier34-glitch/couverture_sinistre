@@ -476,7 +476,11 @@ def variables_du_contrat(contrat_id: str) -> set[str] | None:
         return None
     texte = chemin.read_text(encoding="utf-8")
     texte = re.sub(r"%[^\n]*", "", re.sub(r"/\*.*?\*/", "", texte, flags=re.S))
-    return set(re.findall(r"\bf\(\s*'?([a-z][a-z0-9_]*)'?\s*,", texte))
+    employees = set(re.findall(r"\bf\(\s*'?([a-z][a-z0-9_]*)'?\s*,", texte))
+    # Une variable qui implique un fait employé se lit aussi (7.101) : « la porte était ouverte » (`acces_voleur =
+    # sans_effraction`) dit l'absence d'effraction, que la déclaration n'écrit jamais en ces termes.
+    return employees | {v for v, d in vocabulaire().items()
+                        if any(var in employees for faits in (d.get("implique") or {}).values() for var in faits)}
 
 
 def extraire_faits_regles(sinistre: str, llm: LLM, decideur=None,

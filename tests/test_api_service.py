@@ -1,0 +1,100 @@
+"""La logique de l'API (`couverture/api/service.py`), sans serveur ni FastAPI : l'oracle Python tient lieu de
+moteur, une base temporaire tient lieu de base des contrats (20/11/2026)."""
+
+from __future__ import annotations
+
+import pytest
+
+from couverture.api import service
+from couverture.base import Base, Contrat
+from couverture.models import Clause, Faits, TypeClause
+from moteur_reference import Contrat as Regles, Explorateur
+from couverture import prolog
+
+CONTRAT = "assureur-a-habitation-2025"
+
+
+@pytest.fixture(scope="module")
+def regles():
+    return Regles(prolog.fichier_regles(CONTRAT))
+
+
+@pytest.fixture
+def oracle(regles):
+    def decider(f):  # comme moteur.pl : libellés et preuves des garanties retenues
+        d = Explorateur(regles, f).decider()
+        for r in d["retenues"] + d.get("possibles", []) + d.get("accessoires", []):
+            g = next(x for x in regles.regles("garantie", 4) if x.args[0] == r["id"])
+            r.update(garantie=g.args[1], article=g.args[2], motif="…",
+                     preuves=[{"article": g.args[2], "texte": g.args[3], "role": "garantie"}])
+        return d
+    return decider
+
+
+@pytest.fixture
+def base(tmp_path, regles):
+    """Une base avec le contrat A et, pour chaque garantie des règles, une clause qui porte son texte."""
+    b = Base(tmp_path / "b.sqlite")
+    clauses, vus = [], set()
+    for g in regles.regles("garantie", 4):
+        article, texte = str(g.args[2]), str(g.args[3])
+        if article in vus:
+            continue
+        vus.add(article)
+        clauses.append(Clause(id=article, article=article, titre=str(g.args[1]), chemin=[article], texte=texte,
+                              type=TypeClause.GARANTIE))
+    b.enregistrer(Contrat(id=CONTRAT, assureur="A", statut="OK"), clauses, "")
+    return b
+
+
+def test_faits_aller_retour():
+    faits = {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"], "fermeture": "cadenas"}
+    assert service.faits_depuis(prolog.faits_lisibles(faits)) == faits
+    assert service.faits_depuis(Faits()) == {}
+
+
+def test_decision_couverte_avec_citation(base, oracle):
+    faits = {"evenement": ["responsabilite"], "origine_rc": "personne", "victime": "tiers"}
+    _, r = service.decider(base, CONTRAT, faits, oracle)
+    assert r["decision"] == "COUVERT" and r["citations"] and r["mode"].startswith("regles:aucun")
+    assert r["faits"]["origine_rc"] == "personne"
+
+
+def test_incertain_puis_reponse_du_client(base, oracle):
+    """Un « incertain » dit quoi demander ; la réponse ajoutée aux faits tranche (le vélo dans la cave)."""
+    _, r = service.decider(base, CONTRAT, {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}, oracle)
+    assert r["decision"] == "INCERTAIN"
+    fermeture = next(q for q in r["a_preciser"] if q["variable"] == "fermeture")
+    assert fermeture["nature"] == "question" and "cadenas" in fermeture["valeurs"]
+    _, r2 = service.decider(base, CONTRAT, r["faits"] | {"fermeture": "cadenas"}, oracle)
+    assert r2["decision"] == "NON_COUVERT"
+
+
+def test_faits_hors_vocabulaire_signales(base, oracle):
+    _, r = service.decider(base, CONTRAT, {"evenement": ["responsabilite"], "couleur": "bleu",
+                                          "origine_rc": "soucoupe"}, oracle)
+    assert any("couleur" in a for a in r["avertissements"]) and any("soucoupe" in a for a in r["avertissements"])
+    assert "couleur" not in r["faits"]
+
+
+def test_contrat_inconnu_ou_sans_regles(base, oracle):
+    with pytest.raises(KeyError):
+        service.decider(base, "inconnu", {"evenement": ["vol"]}, oracle)
+    base.enregistrer(Contrat(id="sans-regles"), [], "")
+    with pytest.raises(LookupError):
+        service.decider(base, "sans-regles", {"evenement": ["vol"]}, oracle)
+
+
+def test_analyse_un_fait_non_confirme_devient_la_question(base, oracle):
+    """Un fait décisif que la confirmation n'a pas retrouvé (7.49) : retiré des faits rendus, première question."""
+    class Chaine:
+        decideur = staticmethod(oracle)
+
+        def analyser(self, sinistre):
+            resultat, _ = service.decider(base, CONTRAT, {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"],
+                                                          "fermeture": "cadenas"}, oracle)
+            resultat.verdict.avertissements.append("fermeture" + service.NON_CONFIRME)
+            return resultat
+
+    _, r = service.analyser(Chaine(), "On m'a volé mon vélo dans la cave.")
+    assert "fermeture" not in r["faits"] and r["a_preciser"][0]["variable"] == "fermeture"

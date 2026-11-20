@@ -1,0 +1,200 @@
+{
+  "meta": {
+    "article": "3.1.10",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-20",
+      "modifications": [
+        "l'option en circonstance ; le bâtiment et le terrain : `origine_rc = immeuble` ; le tiers, les biens confiés, la profession",
+        "les vingt-six variables proposées (soudain, imprévu, conjoint cohabitant, superficie…) : aucune retenue"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "responsabilite"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "rc_immeuble",
+        "nom": "Responsabilité civile immeuble (option)",
+        "article": "3.1.10.1",
+        "texte": "La Compagnie garantit la responsabilité civile qu’un Assuré pourrait encourir sur la base des articles 1382 à 1386 du Code civil, à l’égard d’un tiers, en raison de dommages causés par le fait",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "responsabilite"
+            ]
+          },
+          {
+            "f": [
+              "origine_rc",
+              "immeuble"
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "option_rc_immeuble",
+                "oui"
+              ]
+            },
+            "article": "3.1.10",
+            "texte": "la garantie “ responsabilité civile immeuble ” est accordée"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "victime",
+                    "assure"
+                  ]
+                },
+                {
+                  "f": [
+                    "victime",
+                    "conjoint"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.1.10.2",
+            "texte": "Toute personne autre que celle ayant la qualité d’Assuré."
+          },
+          {
+            "condition": {
+              "f": [
+                "bien_confie",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.1.10.3",
+            "texte": "à des biens dont l’assuré est locataire ou occupant à titre gratuit, ainsi qu’à ceux qui lui ont été confiés"
+          },
+          {
+            "condition": {
+              "f": [
+                "origine_rc",
+                "activite_professionnelle"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.1.10.3",
+            "texte": "par le fait de l’exercice d’une profession"
+          }
+        ],
+        "limites": [
+          {
+            "article": "3.1.10.1",
+            "texte": "15.554.864 € par sinistre au titre des dommages corporels",
+            "montant": "15554864"
+          },
+          {
+            "article": "3.1.10.1",
+            "texte": "896.823 € par sinistre au titre des dommages matériels et des dommages immatériels",
+            "montant": "896823"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "option_rc_immeuble",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Avez-vous souscrit l'option responsabilité civile immeuble ?",
+        "pourquoi": "3.1.10 : une option",
+        "aide": {
+          "oui": "l'option responsabilité civile immeuble est souscrite",
+          "non": "elle ne l'est pas"
+        },
+        "plus_proche": "aucune"
+      }
+    ],
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "3.1.10",
+        "texte": "Cette garantie ne produit aucun effet si seul le contenu et/ou la responsabilité civile locative sont assurés.",
+        "pourquoi": "lu par l'option : sans elle, la garantie ne joue pas"
+      },
+      {
+        "article": "3.1.10.1",
+        "texte": "d ’ascenseurs et d’appareils élévateurs à moteur du bâtiment désigné pour autant qu’ils soient conformes à la réglementation en vigueur et fassent l’objet d’un entretien annuel",
+        "pourquoi": "lu comme le bâtiment ; la conformité : rare, le vocabulaire ne la distingue pas"
+      },
+      {
+        "article": "3.1.10.1",
+        "texte": "d es terrains y attenant pour autant qu’ils ne dépassent pas un hectare",
+        "pourquoi": "la superficie du terrain : rare ; le vocabulaire ne la distingue pas"
+      },
+      {
+        "article": "3.1.10.3",
+        "texte": "aux biens par le feu, la fumée, l’eau, l’explosion, l’implosion, le déplacement du sol ou du bâtiment",
+        "pourquoi": "hors du périmètre : la garantie ne vise que le bâtiment ou le terrain lui-même (`origine_rc = immeuble`)"
+      },
+      {
+        "article": "3.1.10.3",
+        "texte": "par la présence ou la dispersion d’amiante, de fibres d’amiante ou de produits contenant de l’amiante",
+        "pourquoi": "rare ; le vocabulaire ne distingue pas l'amiante"
+      },
+      {
+        "article": "3.1.10.3",
+        "texte": "par le fait des terrains non attenant dont l’Assuré est propriétaire",
+        "pourquoi": "rare ; le vocabulaire ne distingue pas les terrains non attenants"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.1.10) : lu par l'option : sans elle, la garantie ne joue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.1.10.1) : lu comme le bâtiment ; la conformité : rare, le vocabulaire ne la distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.1.10.1) : la superficie du terrain : rare ; le vocabulaire ne la distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.1.10.3) : hors du périmètre : la garantie ne vise que le bâtiment ou le terrain lui-même (`origine_rc = immeuble`)"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.1.10.3) : rare ; le vocabulaire ne distingue pas l'amiante"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.1.10.3) : rare ; le vocabulaire ne distingue pas les terrains non attenants"
+    }
+  ]
+}

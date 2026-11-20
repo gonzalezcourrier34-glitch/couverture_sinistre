@@ -707,6 +707,9 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
     # 4 bis. La définition de l'événement couvert (« tempête ») est une condition de la garantie.
     titres = normaliser(" ".join(c.chemin[-1] for c in clauses_article(clauses, article) if c.chemin))
     employes = {x.get("article") for _, x in elements_cites(prop)} | {n.get("article") for n in non_traduits(prop)}
+    # Une définition classée « hors décision » par le relecteur, citée, compte aussi : le contenu assuré (12/contenu)
+    # ne restreint pas une responsabilité civile, que « contenu » figure dans un titre de l'article ou non (7.99).
+    employes |= {n.get("article") for n in prop.get("hors_decision") or []}
     # Un concept déjà défini dans les règles du contrat, et employé par la proposition, compte aussi (7.63) :
     # `concept(vol)` renvoie à la définition 12/vol acceptée avec la garantie vol.
     employes_c = {n for c in conditions(prop) for n in re.findall(r'"concept":\s*"([a-z0-9_]+)"', json.dumps(c))}

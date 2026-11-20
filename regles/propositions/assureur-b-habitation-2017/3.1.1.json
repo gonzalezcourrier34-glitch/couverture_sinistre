@@ -6,7 +6,7 @@
     "consigne": "redaction-regles v6",
     "relecture": {
       "par": "auteur + Claude",
-      "date": "2026-11-19",
+      "date": "2026-11-20",
       "modifications": [
         "« applicables si les conditions particulières mentionnent la garantie » : réserve (option_incendie), retirée du périmètre où elle faisait poser une question à chaque incendie",
         "la définition de l'incendie (flammes qui se propagent) ne vaut que pour l'incendie : circonstance si(incendie, …) ; l'explosion, la foudre, la fumée n'en dépendent pas",
@@ -16,7 +16,8 @@
         "vandalisme : « l'assuré est propriétaire » n'est pas `proprietaire = assure` (à qui sont les biens) : variable statut_logement ; les trois conditions en réserves",
         "occupation régulière, choc entre corps durs, déménagement : des faits que l'assureur établit, pas des questions à chaque sinistre",
         "attentat : « auteur = tiers » retiré du périmètre (inconnu, il faisait demander qui sont les terroristes)",
-        "3.1.1.1.6 : contact direct avec un foyer ou une substance incandescente (contact_incandescent) ; un tel dégât n'a pas à être un incendie au sens de 3.1.1.1.1 (7.83)"
+        "3.1.1.1.6 : contact direct avec un foyer ou une substance incandescente (contact_incandescent) ; un tel dégât n'a pas à être un incendie au sens de 3.1.1.1.1 (7.83)",
+        "décongélation : l'événement (incendie, explosion, foudre, électricité) au périmètre, plus en circonstance"
       ]
     }
   },
@@ -211,42 +212,37 @@
               "bien",
               "denrees_alimentaires"
             ]
-          }
-        ],
-        "circonstances": [
+          },
           {
-            "condition": {
-              "ou": [
-                {
-                  "f": [
-                    "evenement",
-                    "incendie"
-                  ]
-                },
-                {
-                  "f": [
-                    "evenement",
-                    "explosion"
-                  ]
-                },
-                {
-                  "f": [
-                    "evenement",
-                    "foudre"
-                  ]
-                },
-                {
-                  "f": [
-                    "evenement",
-                    "electricite"
-                  ]
-                }
-              ]
-            },
-            "article": "3.1.1.2",
-            "texte": "imputable à la survenance d'un sinistre couvert par les présentes conditions spéciales ou par les conditions spéciales de la garantie \"dégâts électriques\""
+            "ou": [
+              {
+                "f": [
+                  "evenement",
+                  "incendie"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "explosion"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "foudre"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "electricite"
+                ]
+              }
+            ]
           }
         ],
+        "circonstances": [],
         "obligations": [],
         "exclusions": [],
         "limites": []

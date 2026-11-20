@@ -1,0 +1,398 @@
+{
+  "meta": {
+    "article": "5",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-20",
+      "modifications": [
+        "une garantie de vie privée au lieu de huit : seul ce qui a causé le dommage les distinguait (`origine_rc`)",
+        "les exclusions : le tiers, la profession, le contrat, les biens gardés, les véhicules à moteur, le feu parti du bâtiment assuré, l'intention ; le reste hors décision, cité",
+        "les seize variables proposées (âge, faute lourde, nombre d'enfants gardés…) : aucune retenue"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "responsabilite"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "rc_vie_privee",
+        "nom": "Responsabilité civile vie privée",
+        "article": "5.1",
+        "texte": "Nous vous assurons dans le monde entier lorsque votre responsabilité est mise en cause pour des dommages occasionnés à un tiers dans le cadre de votre vie privée et en dehors de tout contrat",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "responsabilite"
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "victime",
+                    "assure"
+                  ]
+                },
+                {
+                  "f": [
+                    "victime",
+                    "conjoint"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "12/tiers",
+            "texte": "Toute personne qui n’est pas considérée comme assurée."
+          },
+          {
+            "condition": {
+              "f": [
+                "origine_rc",
+                "activite_professionnelle"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "5.1",
+            "texte": "dans le cadre de votre vie privée"
+          },
+          {
+            "condition": {
+              "f": [
+                "origine_rc",
+                "contrat"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "5.1",
+            "texte": "en dehors de tout contrat"
+          },
+          {
+            "condition": {
+              "f": [
+                "bien_confie",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "5.10",
+            "texte": "les dommages causés aux biens mobiliers et immobiliers dont vous avez la garde"
+          },
+          {
+            "condition": {
+              "f": [
+                "origine_rc",
+                "vehicule_moteur"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "5.4-a",
+            "texte": "des véhicules automoteurs ou équipés d’un moteur même non autonomes autres que ceux cités au point 2.4"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "origine_rc",
+                    "habitation"
+                  ]
+                },
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "evenement",
+                        "incendie"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "evenement",
+                        "explosion"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "evenement",
+                        "fumee"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "5.2-a",
+            "texte": "les dommages matériels causés par le feu, par l’incendie, l’explosion ou la fumée consécutive à un feu ou à un incendie prenant naissance dans ou communiqué par un bâtiment assuré par le présent contrat"
+          },
+          {
+            "condition": {
+              "f": [
+                "intentionnel",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "5.10",
+            "texte": "pour les sinistres intentionnels"
+          }
+        ],
+        "limites": [
+          {
+            "article": "5.1",
+            "texte": "les dommages résultant de lésions corporelles à concurrence de 24.763.874,96 EUR",
+            "montant": "24763874.96"
+          },
+          {
+            "article": "5.1",
+            "texte": "les dommages matériels à concurrence de 7.131.995,99 EUR",
+            "montant": "7131995.99"
+          },
+          {
+            "article": "5.1",
+            "texte": "Une franchise de 258,70 EUR est d’application pour les dommages matériels",
+            "montant": "franchise 258.70"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [],
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "5.3",
+        "texte": "La garantie est acquise pour 5 chevaux de selle dont vous êtes propriétaire, ou plus si leur nombre est mentionné en conditions particulières",
+        "pourquoi": "le nombre de chevaux : rare ; le vocabulaire ne le distingue pas"
+      },
+      {
+        "article": "5.3-a",
+        "texte": "causés par le gibier ou les animaux sauvages, domptés ou non, à l’exception des cervidés",
+        "pourquoi": "rare ; le vocabulaire ne distingue pas les animaux sauvages"
+      },
+      {
+        "article": "5.4~1",
+        "texte": "pour les dommages causés par des chaises roulantes électriques pour personnes à mobilité réduite",
+        "pourquoi": "pas une exclusion : un engin que la garantie couvre ; le vocabulaire range les engins lents avec la personne et les rapides avec les véhicules à moteur (`origine_rc`)"
+      },
+      {
+        "article": "5.4~1",
+        "texte": "pour les dommages causés par des cycles électriques à maximum 3 roues",
+        "pourquoi": "pas une exclusion : un engin que la garantie couvre ; le vocabulaire range les engins lents avec la personne et les rapides avec les véhicules à moteur (`origine_rc`)"
+      },
+      {
+        "article": "5.4~1",
+        "texte": "pour les dommages causés par des engins de déplacement motorisés",
+        "pourquoi": "pas une exclusion : un engin que la garantie couvre ; le vocabulaire range les engins lents avec la personne et les rapides avec les véhicules à moteur (`origine_rc`)"
+      },
+      {
+        "article": "5.4~1",
+        "texte": "pour les dommages causés par les outils motorisés utilisés à des fins privées sur un terrain privé",
+        "pourquoi": "pas une exclusion : un engin que la garantie couvre ; le vocabulaire range les engins lents avec la personne et les rapides avec les véhicules à moteur (`origine_rc`)"
+      },
+      {
+        "article": "5.4~1",
+        "texte": "pour les dommages corporels causés à un tiers (au sens du présent contrat) en conduisant conformément à la loi un véhicule automoteur qui vous est confié occasionnellement",
+        "pourquoi": "une extension rare ; le vocabulaire ne distingue pas le véhicule confié"
+      },
+      {
+        "article": "5.4~2",
+        "texte": "âgé de 16 ans minimum, qui a causé intentionnellement le sinistre",
+        "pourquoi": "le recours de l'assureur contre l'assuré après avoir indemnisé la victime : pas un refus du sinistre"
+      },
+      {
+        "article": "5.4~3",
+        "texte": "âgé de 18 ans minimum, qui a causé le sinistre en raison de l’une des fautes lourdes suivantes",
+        "pourquoi": "le recours de l'assureur contre l'assuré après avoir indemnisé la victime : pas un refus du sinistre"
+      },
+      {
+        "article": "5.10",
+        "texte": "pour les actes de terrorisme",
+        "pourquoi": "rare en responsabilité civile ; le vocabulaire ne distingue pas le terrorisme"
+      },
+      {
+        "article": "5.10",
+        "texte": "les dommages ou l’aggravation des dommages causés par la modification de la structure du noyau de l’atome",
+        "pourquoi": "rare ; le vocabulaire ne distingue pas le nucléaire"
+      },
+      {
+        "article": "5.10",
+        "texte": "les dommages découlant de la responsabilité civile soumise à une assurance légalement obligatoire",
+        "pourquoi": "lu par les véhicules à moteur ; le reste (chasse…) rare"
+      },
+      {
+        "article": "12/contenu",
+        "texte": "Il s’agit des biens meubles qui se trouvent dans le bâtiment et qui vous appartiennent ou vous sont confiés",
+        "pourquoi": "le contenu assuré en dommages ; en responsabilité civile, ce qui a causé le dommage est lu par `origine_rc`"
+      },
+      {
+        "article": "5.4-a",
+        "texte": "l’emploi de jet-skis ainsi que l’emploi de véhicules aériens",
+        "pourquoi": "lu comme un véhicule à moteur ; sinon rare"
+      },
+      {
+        "article": "5.5-a",
+        "texte": "Nous n’indemnisons pas les dommages causés par la pratique de la chasse.",
+        "pourquoi": "le vocabulaire range la chasse avec les sports en club et les compétitions, que A couvre (5.5)"
+      },
+      {
+        "article": "5.6",
+        "texte": "lorsque vous assurez la garde, contre rémunération, de maximum 5 enfants de tiers",
+        "pourquoi": "une activité rémunérée tenue pour privée : rare ; le vocabulaire ne la distingue pas"
+      },
+      {
+        "article": "5.7",
+        "texte": "Dans le cadre de l’économie de partage",
+        "pourquoi": "rare ; le vocabulaire ne distingue pas l'économie de partage"
+      },
+      {
+        "article": "5.8",
+        "texte": "Nous vous assurons pour les dommages subis par un tiers qui aurait participé, dans le cadre de votre vie privée et en cas de danger imminent, à votre sauvetage",
+        "pourquoi": "rare ; le vocabulaire ne distingue pas le sauvetage"
+      },
+      {
+        "article": "5.10",
+        "texte": "ivresse ou état analogue résultant de l’utilisation de produits autres que des boissons alcoolisées, actes de violence commis sur les personnes",
+        "pourquoi": "l'ivresse et la violence : le vocabulaire ne les distingue pas"
+      },
+      {
+        "article": "5.10",
+        "texte": "les dommages découlant de la pollution graduelle",
+        "pourquoi": "rare ; le vocabulaire ne distingue pas la pollution"
+      },
+      {
+        "article": "5.10",
+        "texte": "Les dommages résultant d’actes collectifs de violence, d’émeute, de sabotage, de mouvement populaire, de conflit de travail ou de terrorisme.",
+        "pourquoi": "rare en responsabilité civile ; lu par l'événement pour les dommages aux biens"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (5.3) : le nombre de chevaux : rare ; le vocabulaire ne le distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (5.3-a) : rare ; le vocabulaire ne distingue pas les animaux sauvages"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (5.4~1) : pas une exclusion : un engin que la garantie couvre ; le vocabulaire range les engins lents avec la personne et les rapides avec les véhicules à moteur (`origine_rc`)"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (5.4~1) : pas une exclusion : un engin que la garantie couvre ; le vocabulaire range les engins lents avec la personne et les rapides avec les véhicules à moteur (`origine_rc`)"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (5.4~1) : pas une exclusion : un engin que la garantie couvre ; le vocabulaire range les engins lents avec la personne et les rapides avec les véhicules à moteur (`origine_rc`)"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (5.4~1) : pas une exclusion : un engin que la garantie couvre ; le vocabulaire range les engins lents avec la personne et les rapides avec les véhicules à moteur (`origine_rc`)"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (5.4~1) : une extension rare ; le vocabulaire ne distingue pas le véhicule confié"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (5.4~2) : le recours de l'assureur contre l'assuré après avoir indemnisé la victime : pas un refus du sinistre"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (5.4~3) : le recours de l'assureur contre l'assuré après avoir indemnisé la victime : pas un refus du sinistre"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (5.10) : rare en responsabilité civile ; le vocabulaire ne distingue pas le terrorisme"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (5.10) : rare ; le vocabulaire ne distingue pas le nucléaire"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (5.10) : lu par les véhicules à moteur ; le reste (chasse…) rare"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (12/contenu) : le contenu assuré en dommages ; en responsabilité civile, ce qui a causé le dommage est lu par `origine_rc`"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (5.4-a) : lu comme un véhicule à moteur ; sinon rare"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (5.5-a) : le vocabulaire range la chasse avec les sports en club et les compétitions, que A couvre (5.5)"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (5.6) : une activité rémunérée tenue pour privée : rare ; le vocabulaire ne la distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (5.7) : rare ; le vocabulaire ne distingue pas l'économie de partage"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (5.8) : rare ; le vocabulaire ne distingue pas le sauvetage"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (5.10) : l'ivresse et la violence : le vocabulaire ne les distingue pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (5.10) : rare ; le vocabulaire ne distingue pas la pollution"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (5.10) : rare en responsabilité civile ; lu par l'événement pour les dommages aux biens"
+    }
+  ]
+}

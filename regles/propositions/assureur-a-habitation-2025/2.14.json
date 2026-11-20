@@ -1,0 +1,152 @@
+{
+  "meta": {
+    "article": "2.14",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-20",
+    "consigne": "redaction-regles v12",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-20",
+      "modifications": [
+        "l'événement `litige` et `domaine_litige` (vocabulaire de D) : la défense pénale et le recours après un dommage",
+        "`tiers_insolvable` : hors décision"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "litige"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "defense_penale",
+        "nom": "Défense pénale",
+        "article": "2.14~1",
+        "texte": "que vous et toutes les personnes assurées auront exposés pour leur défense devant une juridiction pénale où ils sont cités à la suite d’un événement garanti par la présente assurance",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "litige"
+            ]
+          },
+          {
+            "f": [
+              "domaine_litige",
+              "defense_penale"
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "2.14~2",
+            "texte": "Défense et recours 6.500 EUR",
+            "montant": "6500"
+          }
+        ]
+      },
+      {
+        "id": "recours",
+        "nom": "Recours contre les tiers responsables",
+        "article": "2.14~1",
+        "texte": "que les assurés, à l’exception du personnel même occasionnel à leur service privé auront exposés pour l’exercice de recours contre les tiers responsables de dommages",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "litige"
+            ]
+          },
+          {
+            "f": [
+              "domaine_litige",
+              "recours_dommage"
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "2.14~2",
+            "texte": "Défense et recours 6.500 EUR",
+            "montant": "6500"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [],
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "2.14~1",
+        "texte": "Nous couvrons également l’insolvabilité des tiers",
+        "pourquoi": "le vocabulaire ne distingue pas l'insolvabilité du tiers"
+      },
+      {
+        "article": "2.14~1",
+        "texte": "les amendes et les dépens de l’instance pénale, ainsi que pour les frais de poursuites pénales",
+        "pourquoi": "des frais non remboursés, pas un refus du sinistre"
+      },
+      {
+        "article": "2.14~2",
+        "texte": "les recours entre assurés",
+        "pourquoi": "le vocabulaire ne dit pas contre qui le recours est exercé"
+      },
+      {
+        "article": "2.14~2",
+        "texte": "les demandes en réparation de dommages exclus aux termes de la garantie « Responsabilité Civile », ainsi que pour les dommages inférieurs à 250 EUR",
+        "pourquoi": "le montant et le renvoi à la responsabilité civile : hors décision"
+      },
+      {
+        "article": "2.14~2",
+        "texte": "pour un pourvoi en Cassation ou devant une juridiction supranationale, si les intérêts en cause n’atteignent pas 1.250 EUR en principal",
+        "pourquoi": "une étape de la procédure, pas la déclaration"
+      },
+      {
+        "article": "2.14~2",
+        "texte": "une action ou procédure menée à l’étranger sans notre accord écrit préalable",
+        "pourquoi": "le vocabulaire ne distingue pas le pays de la procédure"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.14~1) : le vocabulaire ne distingue pas l'insolvabilité du tiers"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.14~1) : des frais non remboursés, pas un refus du sinistre"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.14~2) : le vocabulaire ne dit pas contre qui le recours est exercé"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.14~2) : le montant et le renvoi à la responsabilité civile : hors décision"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.14~2) : une étape de la procédure, pas la déclaration"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.14~2) : le vocabulaire ne distingue pas le pays de la procédure"
+    }
+  ]
+}

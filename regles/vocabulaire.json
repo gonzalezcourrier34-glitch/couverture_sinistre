@@ -28,8 +28,8 @@
       ],
       "question": "Que s'est-il passé (la cause, et le dommage s'il est d'une autre nature) ?",
       "aide": {
-        "degat_eaux": "eau qui abîme des biens (fuite, débordement, infiltration)",
-        "tempete": "vent violent, grêle, poids de la neige ou de la glace",
+        "degat_eaux": "eau qui abîme des biens (fuite, débordement, infiltration) ; aussi des moisissures apparues après une fuite, quand la déclaration ne parle que d'elles",
+        "tempete": "vent violent, grêle, poids de la neige ou de la glace ; pas la pluie d'un orage : l'eau qui entre ou qui monte, c'est « degat_eaux » ou « catastrophe_naturelle »",
         "bris": "bris ou fêlure d'une vitre, d'un miroir, d'une table de cuisson vitrocéramique, d'un sanitaire, d'un objet en verre",
         "electricite": "surtension, court-circuit, panne de courant, électrocution",
         "mazout": "fuite de fioul ou de combustible de chauffage",
@@ -236,7 +236,7 @@
         "appareil_audiovisuel": "télévision, écran, chaîne hi-fi",
         "objet_verre_non_vitre": "vase, verre, bibelot en verre",
         "mobilier_jardin": "table, chaises, salon de jardin, même posés sur une terrasse",
-        "element_batiment": "murs, sols, plafonds, portes, placards fixés",
+        "element_batiment": "murs, sols, plafonds, portes, placards fixés ; pas un store banne, une marquise ni une antenne fixés dehors : « objet_divers »",
         "objet_divers": "tout autre objet",
         "plantation": "plantes, arbres, arbustes, haies du jardin",
         "mazout": "fioul (mazout) de chauffage, dans la cuve",
@@ -287,7 +287,8 @@
         "annexe": "dépendance privée sans communication avec le logement : remise, cabanon, garage séparé de la maison",
         "garage": "garage ou box privatif, attenant à la maison ou dans l'immeuble",
         "cave": "cave privative",
-        "terrasse": "terrasse ou balcon attenant au logement",
+        "terrasse": "un bien laissé sur la terrasse ou le balcon ; un vol dans le logement où l'on est entré par la porte-fenêtre de la terrasse, c'est « logement »",
+        "jardin": "en plein air, dans le jardin ; une remise, un cabanon ou un abri fermés au fond du jardin, c'est « annexe »",
         "voie_publique": "rue, transports, magasin, tout lieu public",
         "autre_batiment": "un autre bâtiment (club, bureau, chez quelqu'un)",
         "casier": "casier d'un club de sport ou d'une association",
@@ -614,7 +615,7 @@
         "catastrophe_naturelle"
       ],
       "aide": {
-        "moisissure": "champignons, moisissures, taches noires d'humidité"
+        "moisissure": "champignons, moisissures, taches noires d'humidité, seulement si la déclaration en parle ; l'eau seule ne suffit pas"
       }
     },
     "cause_dommage": {
@@ -1090,7 +1091,7 @@
       "aide": {
         "arret_6h": "coupure de courant ou arrêt de l'installation d'au moins 6 heures",
         "derangement_installation": "dérangement de l'installation de réfrigération ou congélation provoqué par l'électricité",
-        "coupure_soudaine_reseau": "coupure de courant soudaine et imprévisible due à un dysfonctionnement du réseau de distribution",
+        "coupure_soudaine_reseau": "coupure de courant soudaine et imprévisible due à un dysfonctionnement du réseau de distribution : panne de courant du quartier ou de la rue",
         "autre": "autre cause liée à l'action de l'électricité"
       },
       "pour": [
@@ -2393,11 +2394,11 @@
       ],
       "question": "Qu'est-ce qui a causé le dommage à l'autre personne ?",
       "aide": {
-        "personne": "l'assuré, un enfant ou une personne de son foyer : maladresse, chute, jeu, sport en loisir, vélo",
+        "personne": "l'assuré, un enfant ou une personne de son foyer : maladresse, chute, jeu, sport en loisir, vélo ou trottinette sans moteur (à la force des jambes)",
         "animal_compagnie": "un chien, un chat ou un autre animal de compagnie",
         "animal_autre": "un cheval, un âne, du bétail, des volailles : un animal qui n'est pas de compagnie",
         "chien_dangereux": "un chien de 1re ou 2e catégorie (chien d'attaque, de garde ou de défense)",
-        "vehicule_moteur": "une voiture, une moto, un scooter, une trottinette ou un vélo électriques rapides",
+        "vehicule_moteur": "un véhicule à moteur : voiture, moto, scooter, ou trottinette et vélo électriques rapides ; jamais un vélo ordinaire, qui est « personne »",
         "habitation": "un incendie, une explosion ou une fuite d'eau partis du logement ou des dépendances occupés",
         "immeuble": "le bâtiment ou le terrain lui-même : une tuile ou une branche qui tombe, une clôture, un mur",
         "chasse_sport": "la chasse, le ball-trap, un sport aérien, une compétition, un sport en club ou professionnel",
@@ -2511,6 +2512,34 @@
       "aide": {
         "oui": "le bien abîmé avait été prêté, loué ou confié à l'assuré",
         "non": "non"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "option_rc_immeuble": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Avez-vous souscrit l'option responsabilité civile immeuble ?",
+      "aide": {
+        "oui": "l'option responsabilité civile immeuble est souscrite",
+        "non": "elle ne l'est pas"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "option_rc_vie_privee": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Avez-vous souscrit l'option responsabilité civile vie privée ?",
+      "aide": {
+        "oui": "l'option responsabilité civile vie privée est souscrite",
+        "non": "elle ne l'est pas"
       },
       "pour": [
         "responsabilite"

@@ -8,7 +8,8 @@
   couverture analyser --contrat assureur-a-habitation-2025 "Mon vélo a été volé dans le local commun…"
   couverture banc     --contrat assureur-a-habitation-2025 [--methode brut]                  # golden set, portes
   couverture legalbench [--telecharger]                                                # second banc, externe
-  couverture serveur  --port 8000
+  couverture serveur  --port 8000                  # l'ancienne page de démonstration
+  couverture api      --port 8001                  # l'API FastAPI (/docs), clé COUVERTURE_API_KEY
   couverture versions [--manifeste | --enregistrer] # consignes versionnées (manifeste, MLflow)
   couverture modele                                # modèle configuré, test de connexion
 """
@@ -531,6 +532,9 @@ def main(argv: list[str] | None = None) -> int:
     ps = sous.add_parser("serveur", help="Lancer l'interface web")
     ps.add_argument("--hote", default="127.0.0.1")
     ps.add_argument("--port", type=int, default=8000)
+    pa = sous.add_parser("api", help="Lancer l'API FastAPI (documentation sur /docs)")
+    pa.add_argument("--hote", default="127.0.0.1")
+    pa.add_argument("--port", type=int, default=8001)
 
     a = p.parse_args(argv)
     charger_env(".env")  # clés API : fichier .env à la racine du projet
@@ -592,6 +596,16 @@ def main(argv: list[str] | None = None) -> int:
     if a.commande == "clauses":
         for c in base.clauses(a.contrat):
             print(f"{c.id:>24}  {c.type.value:<10}  p.{','.join(map(str, c.pages)):<6}  {c.titre}")
+        return 0
+
+    if a.commande == "api":
+        import os
+
+        import uvicorn
+
+        # L'API lit sa base dans COUVERTURE_BASE : celle de la ligne de commande, si on l'a donnée.
+        os.environ.setdefault("COUVERTURE_BASE", str(a.base or donnees / "base.sqlite"))
+        uvicorn.run("couverture.api.main:app", host=a.hote, port=a.port)
         return 0
 
     if a.commande == "serveur":

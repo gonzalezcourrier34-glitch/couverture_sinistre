@@ -250,6 +250,18 @@ def test_hors_decision_cite_et_non_bloquant():
     assert any("hors décision" in p["message"] for p in bloquants(controles(prop), "citation"))
 
 
+def test_definition_classee_hors_decision_ne_bloque_pas():
+    # 12/tempete restreint la garantie (le titre de l'article dit « Tempête ») : non employée, elle bloque ; citée
+    # « hors décision » par le relecteur, elle compte comme employée (7.99, le contenu de A en responsabilité civile).
+    prop = copy.deepcopy(BONNE)
+    prop["definitions"] = []
+    prop["garanties"][0]["circonstances"] = []
+    assert any("12/tempete" in p["message"] for p in bloquants(controles(prop)))
+    prop["hors_decision"] = [{"article": "12/tempete", "texte": "L’action du vent mesurée à une vitesse de pointe",
+                              "pourquoi": "essai"}]
+    assert not any("12/tempete" in p["message"] for p in bloquants(controles(prop)))
+
+
 def test_condition_des_conditions_particulieres_mise_en_reserve():
     """7.69 : « en fonction des couvertures mentionnées dans vos conditions particulières » devient une réserve
     (exclusion « non condition », à demander), pour tout contrat ; une formule à plusieurs valeurs reste posée."""

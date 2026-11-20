@@ -3335,6 +3335,144 @@ CI et l'image Docker sont en 3.12, le poste de développement en 3.14 : ces vers
 semaine les mises à jour de `uv.lock`, chaque mois celles des actions de la CI. Le nombre d'alertes restantes se
 lira sur GitHub après le push (Dependabot refait son analyse).
 
+### 7.99 La responsabilité civile de A et B : le vocabulaire de D suffit
+
+**Rédaction** (Mistral Large, consigne v12, 20 nov.) : A 2.5 (responsabilité de l'immeuble), 2.14 (défense et
+recours), 5 (vie privée) ; B 3.1.9.10, 3.1.10 (immeuble), 4.1.1 (vie privée), 4.1.3 (protection juridique). **121
+contrôles bloquants**, une soixantaine de variables nouvelles proposées (`soudain`, `imprevu`, `exterieur_victime`,
+`age_assure`, `nombre_enfants_gardes`, `plateforme_agreee`…), et huit garanties pour la seule section 5 de A (biens
+immeubles, animaux, déplacements, sports, garde d'enfants…), qui ne différaient que par ce qui a causé le dommage.
+
+**Relecture** (`relecture/assureur_a_rc.py`, `relecture/assureur_b_rc.py`) :
+- *Aucune variable nouvelle pour A, deux pour B* (les options). Le vocabulaire écrit pour D (`origine_rc`, `victime`,
+  `bien_confie`, `litige`, `domaine_litige`) dit ce que les deux contrats distinguent. C'est la vérification qu'on
+  attendait de 7.96 : sept variables tenaient pour un contrat français ; elles tiennent pour un contrat belge et un
+  contrat luxembourgeois.
+- *Une garantie de vie privée par contrat*, ses exclusions disent ce qui n'en relève pas : la profession, le contrat,
+  les biens gardés ou confiés, les véhicules à moteur, le feu parti du bâtiment assuré (A 5.2), le feu, l'explosion
+  ou l'eau partis des locaux de l'assuré (B 4.1.1.8.6), le sinistre intentionnel (A). La chasse reste hors décision
+  chez A : le vocabulaire la range avec les sports en club et les compétitions, que A couvre.
+- *Les options de B* (immeuble, vie privée, protection juridique : « si les conditions particulières mentionnent que
+  la garantie … est accordée ») sont des circonstances dont la question ne cite pas les conditions particulières.
+  Sinon le code en fait une réserve (7.62) : « couvert, sous réserve », comme pour les garanties de base de B. La
+  convention du jeu fermé veut « incertain » pour une option inconnue (`f-b16`, le chien qui mord le facteur).
+- 3.1.9.10 (le recours des tiers) était déjà traduit avec les frais annexes de l'incendie : la proposition n'est pas
+  acceptée. `f-b12` (la fuite chez le voisin) reste couvert par lui, et la vie privée le refuserait (4.1.1.8.6).
+- *Un contrôle assoupli* : la définition du contenu (12/contenu de A) bloquait la section 5, dont un titre dit « les
+  biens immeubles et leur contenu ». Une définition citée « hors décision » par le relecteur compte désormais comme
+  employée (le contrôle l'acceptait déjà déclarée non traduite) ; un test le vérifie.
+- Hors décision, chaque élément cité : le trouble de voisinage, l'amiante, les seuils en euros, l'insolvabilité du
+  tiers, le recours de l'assureur contre l'assuré (A 5.4), les engins lents que A couvre (fauteuils roulants, vélos
+  électriques), les faits rares (paris, étangs, concours hippiques).
+
+**Oracle**, faits écrits à la main : `f-a18` (le piéton renversé à vélo) couvert, `f-a19` (la tondeuse empruntée)
+refusé, `f-b16` incertain, `f-b12` couvert ; le chien, la tuile, la voiture, le recours et le litige de consommation
+donnent la réponse attendue sur les deux contrats ; les 25 cas de D inchangés ; 157 tests verts. Seul risque relevé :
+si la lecture de `f-b12` ne donne que `responsabilite` (sans `degat_eaux`), la réponse devient un refus.
+
+**Banc** (14 h 02 à 14 h 05, jeu fermé) : **A 78 %**, **B 63 %**, contre 80 % et 65 % avant ; pas de progrès. Le
+risque relevé ne s'est pas réalisé : `f-b12`, `f-b16` et `f-a19` sont justes aux trois passages. Mais `f-a18`, le cas
+que la responsabilité civile devait gagner, passe d'« incertain » à **refusé à tort** aux trois passages : le modèle
+lit le vélo `origine_rc = vehicule_moteur`. L'aide de la valeur disait « une trottinette ou un vélo électriques
+rapides » ; le petit modèle a retenu « vélo ». La vérification ne l'a pas retiré : le fait est vraisemblable, c'est sa
+valeur qui est fausse. Les aides disent désormais « vélo ou trottinette sans moteur (à la force des jambes) » pour
+`personne`, et « jamais un vélo ordinaire, qui est « personne » » pour `vehicule_moteur`. Les autres écarts entre les
+deux bancs sont des cas instables hors responsabilité civile (`f-a13`, `f-a16`, `f-b05`, `f-b08`).
+
+### 7.100 Le piéton renversé : la lecture était juste, la garantie n'était pas « une garantie »
+
+Second banc de A après la correction des aides (14 h 10) : **77 %**. Le vélo est bien lu `origine_rc = personne`,
+`victime = tiers`, aux trois passages, et le moteur répond « couvert »… que la validation rétrograde aussitôt :
+« COUVERT rétrogradé en INCERTAIN : aucune garantie citée de façon vérifiable ». La règle de l'étape 5 (un
+« couvert » doit citer une clause de type garantie) est juste ; le type ne l'était pas. Le découpage typait 5.1,
+5.2, 5.5, 5.6 et 5.8 de A « autre » : la section 5 écrit « Nous vous assurons pour les dommages causés… », formule que
+le classement ne connaissait pas (« nous garantissons », « nous couvrons », « nous prenons en charge »). La limite
+était notée au chapitre 8 depuis le 18 nov. ; elle a coûté le seul cas que la responsabilité civile devait gagner.
+
+« nous (vous) assurons » rejoint les formules de garantie. Simulé sur la base : seules ces cinq clauses de A changent
+de type, aucune de B, C ou D ; un test le fixe. Le type est écrit dans la base au découpage : il faut relire les
+contrats (`couverture ingerer --forcer`), puis vérifier que les citations des trois contrats tiennent.
+
+Le reste du banc ne bouge pas : les écarts de A (`f-a13` l'ordinateur de l'employeur, `f-a15`, `f-a16` l'eau lue
+tempête, `f-a17`) sont des erreurs de lecture connues ou des cas instables.
+
+**Après relecture des contrats** (14 h 17) : base relue, 5.1, 5.2, 5.5, 5.6 et 5.8 de A typées « garantie », rien
+d'autre ne bouge ; citations de A et D toutes retrouvées. Banc de A : **78 % justes**, 2 couverts à tort, 0,33 refus
+à tort, 4 instables. `f-a18` est **couvert à deux passages sur trois** ; au troisième, le vélo est encore lu
+`vehicule_moteur` malgré l'aide corrigée. La responsabilité civile est en place sur les trois contrats ; ce qui
+reste en dessous de 85 % pour A et B, ce sont des erreurs de lecture hors responsabilité civile (l'ordinateur de
+l'employeur, l'inondation lue tempête, l'incendie d'un appartement neuf), déjà relevées en 7.81.
+
+### 7.101 Les erreurs du jeu fermé de A et B : cinq de lecture, trois de règles
+
+Relecture de chaque écart des derniers bancs de A et B, faits lus en regard. Trois cas ne sont pas des erreurs
+(`f-a15`, `f-a16`, `f-b14` : toute réponse y est acceptable). `f-b13` attend l'assistance (non traduite), `f-a17` le
+délai de 30 jours après un déménagement (9.2, non traduit), `f-b18` la voiture fermée à clé (une obligation que le
+moteur met en réserve, et la vitre de la voiture prise pour un vitrage assuré) : à reprendre plus tard. Le reste :
+
+*Lecture, par l'aide des valeurs* (`regles/vocabulaire.json`) :
+- `tempete` : « pas la pluie d'un orage ». L'orage faisait lire une tempête (`f-a15`, `f-a16`, `f-b03`), qui posait la
+  question du vent à 80 km/h au lieu de refuser l'eau entrée par la fenêtre de toit.
+- `degat_eaux` : « y compris les moisissures ». La moisissure était lue `autre` (`f-b04`), que B renvoie à l'incendie.
+- `lieu` : « vol dans le logement entré par la terrasse » est `logement` (`f-b05`, lu `terrasse`, refusé) ; la remise
+  au fond du jardin est une `annexe` (`f-b17`, lu `jardin`, refusé).
+- `element_batiment` : pas un store banne (`f-a14`). `coupure_soudaine_reseau` : « panne de courant du quartier »
+  (`f-a12`, jamais lue).
+
+*Lecture, par le choix des variables* (`prolog.py`) : un contrat ne lit que les variables de ses règles (7.57). B
+n'emploie pas `acces_voleur`, seulement `effraction` ; or « j'avais laissé ma porte ouverte » (`f-b06`) ne dit jamais
+« sans effraction », et la vérification retirait `effraction = non` comme non dit. Une variable qui implique un fait
+employé (`acces_voleur = sans_effraction` → `effraction = non`, 7.94) est désormais lue aussi.
+
+*Règles* (`relecture/lecture_ab.py`) :
+- A 2.6 : l'exclusion du matériel professionnel ne visait que l'ordinateur ; l'écran fourni par l'employeur restait
+  couvert (`f-a13`). Elle vise chaque appareil électronique.
+- B 3.1.5 : la perte d'étanchéité des vitrages était une circonstance « si… alors » ; le type de dommage inconnu la
+  laissait inconnue, et le miroir fendu (`f-b08`) devenait incertain. Une exclusion à demander : le double vitrage embué
+  (`f-b20`) reste incertain.
+- B 3.1.1 : la décongélation rattachée à un vol, parce qu'un bien vague (`objet_divers`) pouvait être une denrée, et
+  refusée faute d'incendie : ce refus l'emportait sur les garanties possibles du vol dans la remise. L'événement passe
+  au périmètre. Le défaut est plus général (un périmètre fait d'un seul bien se rattache à tout bien vague) : à
+  surveiller.
+
+**Oracle**, faits attendus écrits à la main : les onze cas écrits donnent la réponse attendue ; les 25 cas de D et
+les cas de responsabilité civile inchangés ; tests verts. Méthode : ces cas ont servi à corriger, le banc qui suit
+mesure la mise au point, pas la généralisation.
+
+**Banc** (14 h 30 à 14 h 36, jeu fermé) : **A 85 %** (78 %), 1 couvert à tort ; **B 85 %** (63 %), 0,33 couvert à
+tort, 0 refus à tort, 5 instables ; **D 100 %**, inchangé. Les portes de justesse passent pour A et B pour la première
+fois ; restent le rappel des questions et, selon les passages, la latence ou un couvert à tort.
+
+Un effet de bord : l'aide de `degat_eaux` (« y compris les moisissures ») fait lire `type_dommage = moisissure` dans
+des fuites qui n'en parlent pas (`f-b02`, `f-b03`, `f-b12`, `f-a15`) ; la confirmation le retient comme fait décisif
+non confirmé, et `f-b12` devient incertain une fois sur trois. Les aides disent désormais : la moisissure « seulement
+si la déclaration en parle ; l'eau seule ne suffit pas ». Restent, hors des cas en attente (assistance, déménagement,
+voiture fermée à clé) : le store banne encore lu dans le logement (`f-a14`), le vélo lu véhicule à moteur une fois sur
+trois (`f-a18`), le classement de la zone inondable (`f-a16`, couvert au lieu d'incertain).
+
+Banc suivant (14 h 40) : **A 85 %**, **B 82 %** ; la fuite chez le voisin redevient juste aux trois passages. La porte
+laissée ouverte (`f-b06`) est maintenant lue `acces_voleur = sans_effraction`, et l'absence d'effraction en découle ;
+la réponse reste incertaine parce que la violence n'est pas lue (le vol simple exige l'une et l'autre absentes). Le
+seul couvert à tort de B est `f-b18` (voiture fermée à clé, en attente).
+
+### 7.102 Une API qui englobe le produit
+
+L'ancienne interface (`web.py`, Starlette) servait la page de démonstration : trois routes, ni clé, ni
+documentation, et la seule analyse par le modèle. Le produit a maintenant son API, en FastAPI, sur le modèle de
+celle de SortirIA : préfixe `/api/v1`, clé dans l'en-tête `x-api-key` (`COUVERTURE_API_KEY` ; sans clé configurée,
+les routes protégées refusent tout plutôt que de rester ouvertes), **une route par fichier** (`api/routes/`), la
+logique hors des routes (`api/service.py`, testée sans serveur), documentation interactive sur `/docs`.
+
+Ce qu'elle ajoute au produit : **`POST /decisions`**, la décision sur des faits, sans modèle. Une analyse qui répond
+« incertain » rend ses `faits` et, dans `a_preciser`, chaque variable à demander au client avec ses valeurs
+possibles ; les réponses, ajoutées aux faits, se soumettent à `/decisions` : la décision tombe en quelques
+millisecondes, gratuite et déterministe. C'est le circuit d'un gestionnaire (ou d'un formulaire) : le modèle ne lit
+qu'une fois. Un fait décisif que la confirmation n'a pas retrouvé (7.49) est retiré des faits rendus et devient la
+première question : renvoyés tels quels, ils ne redonneraient pas la réponse que la confirmation a suspendue.
+
+Tests : la logique (6 tests, oracle Python, base temporaire) et les routes par HTTP (`TestClient`, dépendances
+remplacées : clé, codes d'erreur, aller-retour « incertain » → réponse → décision, une route par fichier vérifiée).
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.
@@ -3352,8 +3490,8 @@ Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les section
 - LegalBench avec Mistral Large ; et, plus tard, des règles rédigées pour quelques clauses.
 
 **Le passage à l'échelle**
-- Assureur A : lots A et B et pack multimédia faits (7.63, 7.69, 7.71). Reste : la responsabilité civile (2.5, section 5), l'assistance (2.13), la défense en justice (2.14).
-- Assureur B : vol, lot A et lot B faits (7.53 à 7.65, 7.72 à 7.74). Reste : la responsabilité de l'immeuble (3.1.10), la protection juridique (3.1.11), l'assistance (3.1.12), les sections 3.3 et 4. Puis un **jeu Assureur B écrit par l'auteur sans voir les règles**, et la **question métier** du vol simple au jardin (7.55).
+- Assureur A : lots A et B, pack multimédia, responsabilité civile et défense et recours faits (7.63, 7.69, 7.71, 7.99). Reste : l'assistance (2.13).
+- Assureur B : vol, lot A et lot B faits (7.53 à 7.65, 7.72 à 7.74). La responsabilité de l'immeuble, la vie privée et la protection juridique faites (7.99). Reste : l'assistance (3.1.12), la section 3.3 et le reste de la section 4. Puis un **jeu Assureur B écrit par l'auteur sans voir les règles**, et la **question métier** du vol simple au jardin (7.55).
 - Lecture : l'aide de `sejour_temporaire` (les biens hors de chez soi, pas le déclarant en vacances) ; ne lire les variables d'une accessoire que pour son domaine (7.70).
 - Contrôle mécanique à écrire : aucune exclusion commune ne doit rendre une extension impossible (leçon 70) ; le moteur peut le vérifier en prenant le périmètre de chaque garantie comme faits.
 - Le coût de la confirmation sur Assureur B (deux réponses justes suspendues sur 15) : mesurer si la confirmation peut épargner les faits que la lecture et la vérification donnent tous deux.
@@ -3361,7 +3499,7 @@ Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les section
 
 **Le reste**
 - Les 43 vulnérabilités signalées par GitHub (la mise à jour du verrou n'en a pas réduit le nombre : lire la liste).
-- Limites connues : la perte de clés (sans vol) n'est pas traduite ; la responsabilité civile (section 5) est typée « autre » par le découpage ; les conditions particulières ne sont pas lues.
+- Limites connues : la perte de clés (sans vol) n'est pas traduite ; les conditions particulières ne sont pas lues.
 
 ## 9. Les leçons, en une ligne chacune
 
@@ -3476,3 +3614,7 @@ Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les section
 109. « Tous » est dangereux pour une exclusion de biens : une exclusion nomme les garanties qu'elle vise.
 110. Une valeur fourre-tout lue à côté d'une valeur précise doit s'effacer : sinon elle suspend toute décision.
 111. Accepter une version de Python qu'on ne teste pas, c'est garder dans le verrou des dépendances qu'on ne met jamais à jour.
+112. Un vocabulaire juste se vérifie sur le contrat suivant : celui de D a suffi pour A et B sans une variable de plus.
+113. Une aide qui cite le mot à exclure (« vélo électrique ») l'attire : dire aussi, en clair, ce que la valeur n'est jamais.
+114. Une limite notée « connue » finit par coûter un cas : celle du typage a annulé une garantie juste.
+115. Un contrat ne lit que ses variables ; il doit lire aussi celles qui les impliquent, sinon un fait dit autrement se perd.

@@ -434,7 +434,8 @@ def test_un_contrat_ne_lit_que_ses_variables(tmp_path, monkeypatch):
     regles = tmp_path / "x.pl"
     regles.write_text("% f(commentaire, oui)\n/* f(bloc, oui) */\nperimetre(g, f(effraction, oui)).\n", encoding="utf-8")
     monkeypatch.setattr(prolog, "fichier_regles", lambda c: regles)
-    assert prolog.variables_du_contrat("x") == {"effraction"}
+    # `acces_voleur` implique `effraction` (« sans_effraction » → « non ») : lue aussi (7.101).
+    assert prolog.variables_du_contrat("x") == {"effraction", "acces_voleur"}
 
     class Espion:
         nom = "espion"

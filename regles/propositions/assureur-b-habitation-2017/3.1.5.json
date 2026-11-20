@@ -6,12 +6,13 @@
     "consigne": "redaction-regles v6",
     "relecture": {
       "par": "auteur + Claude",
-      "date": "2026-11-19",
+      "date": "2026-11-20",
       "modifications": [
         "statut_assure_batiment → statut_logement (partagé avec 3.1.1) ; occupant partiel → occupation_partielle (variable existante)",
         "exclusions de biens (lunettes, objets en verre, enseignes, multimédia) : portée limitée au bien ; châssis de couche : la valeur proposée désignait un cadre de lit, retirée",
         "lien_causal_travaux_sinistre → lien_causal_travaux ; parties communes : quand l'assuré n'occupe qu'une partie du bâtiment",
-        "« applicables si… » : réserve (option_bris_vitrages) ; valeurs nouvelles rattachées à leur parent"
+        "« applicables si… » : réserve (option_bris_vitrages) ; valeurs nouvelles rattachées à leur parent",
+        "perte d'étanchéité : une exclusion à demander, plus une circonstance (le type de dommage inconnu ne suspend plus)"
       ]
     }
   },
@@ -104,40 +105,7 @@
             ]
           }
         ],
-        "circonstances": [
-          {
-            "condition": {
-              "si": [
-                {
-                  "f": [
-                    "type_dommage",
-                    "opacification_ou_perte_etancheite"
-                  ]
-                },
-                {
-                  "non": {
-                    "ou": [
-                      {
-                        "f": [
-                          "garantie_fabricant",
-                          "oui"
-                        ]
-                      },
-                      {
-                        "f": [
-                          "statut_logement",
-                          "locataire"
-                        ]
-                      }
-                    ]
-                  }
-                }
-              ]
-            },
-            "article": "3.1.5.1",
-            "texte": "à la perte d’étanchéité des vitrages isolants sauf s’ils sont sous garantie ou si l’Assuré est locataire"
-          }
-        ],
+        "circonstances": [],
         "obligations": [],
         "exclusions": [
           {
@@ -287,6 +255,38 @@
             "a_demander": false,
             "article": "3.1.5.2",
             "texte": "par un défaut de réparation ou d’entretien des châssis, soubassements et support de vitres, glaces et miroirs"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "type_dommage",
+                    "opacification_ou_perte_etancheite"
+                  ]
+                },
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "garantie_fabricant",
+                        "oui"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "statut_logement",
+                        "locataire"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.5.1",
+            "texte": "à la perte d’étanchéité des vitrages isolants sauf s’ils sont sous garantie ou si l’Assuré est locataire"
           }
         ],
         "limites": [
@@ -393,5 +393,11 @@
     ],
     "non_traduit": []
   },
-  "controles": []
+  "controles": [
+    {
+      "gravite": "à relire",
+      "controle": "réserve",
+      "message": "exclusion « à la perte d’étanchéité des vitrages isolants sauf s’ils son » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
+    }
+  ]
 }

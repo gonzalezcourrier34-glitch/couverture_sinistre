@@ -304,23 +304,6 @@ exclusion([attentat_conflit_travail], f(graffiti_mur_exterieur, oui), tout, oui,
     "les graffitis et autres inscriptions sur les murs extérieurs").
 exclusion([attentat_conflit_travail], et([f(evenement, vandalisme), ou([f(bien, mobilier_jardin), f(bien, serre), f(bien, plantation)])]), tout, non, '2.4-a',
     "le vandalisme au mobilier extérieur, serres, plantations").
-
-% --- Art. 2.6 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-18 ---
-evenement_traduit(electricite).
-garantie(action_electricite, "Action de l'électricité", '2.6',
-    "Nous couvrons les dommages matériels directement causés par l’action de l’électricité, y compris : • l’électrocution des animaux domestiques, • la décongélation ou détérioration des denrées alimentaires utilisées dans le cadre de votre vie privée, suite à l’arrêt d’une durée de 6 heures ou au dérangement d’une installation de réfrigération ou de congélation provoqué par l’action de l’électricité ou par une coupure de courant soudaine et imprévisible suite à un dysfonctionnement du réseau de distribution d’électricité. Nous prenons également en charge les frais liés à la recherche, la réparation ou le remplacement de la pièce défectueuse à l'origine du sinistre, ainsi que la remise en état consécutive.").
-perimetre(action_electricite, f(evenement, electricite)).
-perimetre(action_electricite, concept(batiment)).
-circonstance(action_electricite, si(f(bien, denrees_alimentaires), ou([f(cause_perte_alimentaire, arret_6h), f(cause_perte_alimentaire, derangement_installation), f(cause_perte_alimentaire, coupure_soudaine_reseau)])), '2.6',
-    "suite à l’arrêt d’une durée de 6 heures ou au dérangement d’une installation de réfrigération ou de congélation provoqué par l’action de l’électricité ou par une coupure de courant soudaine et imprévisible suite à un dysfonctionnement du réseau de distribution d’électricité").
-limite(action_electricite, '2.6', "Perte de denrées alimentaires suite à une variation de température due à une panne 500 EUR de courant d’au moins 6 heures (y compris blackout", "500 EUR").
-exclusion([action_electricite], et([ou([f(bien, electronique), f(bien, appareil_informatique)]), f(usage_professionnel, oui)]), bien(appareil_informatique), non, '2.6-a',
-    "les dommages aux appareils électroniques et informatiques dont l’usage est professionnel").
-exclusion([action_electricite], et([f(bien, appareil_informatique), non(concept(batiment)), non(f(usage_professionnel, oui))]), bien(appareil_informatique), non, '2.6-a',
-    "ainsi que les dommages aux autres appareils informatiques en dehors du bâtiment assuré").
-exclusion([action_electricite], f(garantie_fabricant, oui), tout, non, '2.6-a',
-    "les dégâts tombant sous la garantie du fabriquant ou du fournisseur").
-
 % --- Art. 2.8 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-18 ---
 evenement_traduit(mazout).
 garantie(degats_mazout, "Dégâts causés par le mazout", '2.8',
@@ -440,3 +423,72 @@ exclusion(pack_multimedia, et([f(evenement, vol), f(simple_disparition, oui)]), 
 exclusion(pack_multimedia, non(f(option_materiel_multimedia, oui)), tout, oui, '6.1',
     "Pour autant que vos conditions particulières en fassent mention, vos garanties sont étendues au matériel informatique. Dans ce cadre, nous prenons en charge les dommages causés par : • la chute, le heurt et l’introduction d’un corps étrangers • le vol survenu à l’extérieur du bâtiment assuré, pour autant qu’une plainte soit déposée auprès des autorités judiciaires ou de polices compétentes. Il faut noter que ces couvertures sont acquises dans le monde entier.").
 limite(pack_multimedia, '6.1-a', "Limite par sinistre (à l’indice ABEX 775) 5.750 EUR", "5750 EUR à l'indice ABEX 775").
+
+% --- Art. 2.5 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-20 ---
+evenement_traduit(responsabilite).
+garantie(rc_immeuble, "Responsabilité civile immeuble", '2.5',
+    "Nous prenons en charge la responsabilité civile que vous pouvez encourir sur base : • du livre 6 du Code civil • de l’article 1721 du Code civil c'est-à-dire le recours des locataires pour les dommages causés aux tiers du fait : • du bâtiment, du contenu").
+perimetre(rc_immeuble, f(evenement, responsabilite)).
+perimetre(rc_immeuble, ou([f(origine_rc, immeuble), f(origine_rc, habitation)])).
+exclusion(rc_immeuble, ou([f(victime, assure), f(victime, conjoint)]), tout, non, '12/tiers',
+    "Toute personne qui n’est pas considérée comme assurée.").
+exclusion(rc_immeuble, f(bien_confie, oui), tout, non, '2.5-a',
+    "à des biens dont vous avez la garde").
+limite(rc_immeuble, '2.5', "18.425.000 EUR pour l’indemnisation des dommages résultant de lésions corporelles", "18425000").
+limite(rc_immeuble, '2.5', "3.685.000 EUR pour l’indemnisation des dommages résultant de dégâts matériels", "3685000").
+
+% --- Art. 2.14 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-20 ---
+evenement_traduit(litige).
+garantie(defense_penale, "Défense pénale", '2.14~1',
+    "que vous et toutes les personnes assurées auront exposés pour leur défense devant une juridiction pénale où ils sont cités à la suite d’un événement garanti par la présente assurance").
+perimetre(defense_penale, f(evenement, litige)).
+perimetre(defense_penale, f(domaine_litige, defense_penale)).
+limite(defense_penale, '2.14~2', "Défense et recours 6.500 EUR", "6500").
+garantie(recours, "Recours contre les tiers responsables", '2.14~1',
+    "que les assurés, à l’exception du personnel même occasionnel à leur service privé auront exposés pour l’exercice de recours contre les tiers responsables de dommages").
+perimetre(recours, f(evenement, litige)).
+perimetre(recours, f(domaine_litige, recours_dommage)).
+limite(recours, '2.14~2', "Défense et recours 6.500 EUR", "6500").
+
+% --- Art. 5 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-20 ---
+evenement_traduit(responsabilite).
+garantie(rc_vie_privee, "Responsabilité civile vie privée", '5.1',
+    "Nous vous assurons dans le monde entier lorsque votre responsabilité est mise en cause pour des dommages occasionnés à un tiers dans le cadre de votre vie privée et en dehors de tout contrat").
+perimetre(rc_vie_privee, f(evenement, responsabilite)).
+exclusion(rc_vie_privee, ou([f(victime, assure), f(victime, conjoint)]), tout, non, '12/tiers',
+    "Toute personne qui n’est pas considérée comme assurée.").
+exclusion(rc_vie_privee, f(origine_rc, activite_professionnelle), tout, non, '5.1',
+    "dans le cadre de votre vie privée").
+exclusion(rc_vie_privee, f(origine_rc, contrat), tout, non, '5.1',
+    "en dehors de tout contrat").
+exclusion(rc_vie_privee, f(bien_confie, oui), tout, non, '5.10',
+    "les dommages causés aux biens mobiliers et immobiliers dont vous avez la garde").
+exclusion(rc_vie_privee, f(origine_rc, vehicule_moteur), tout, non, '5.4-a',
+    "des véhicules automoteurs ou équipés d’un moteur même non autonomes autres que ceux cités au point 2.4").
+exclusion(rc_vie_privee, et([f(origine_rc, habitation), ou([f(evenement, incendie), f(evenement, explosion), f(evenement, fumee)])]), tout, non, '5.2-a',
+    "les dommages matériels causés par le feu, par l’incendie, l’explosion ou la fumée consécutive à un feu ou à un incendie prenant naissance dans ou communiqué par un bâtiment assuré par le présent contrat").
+exclusion(rc_vie_privee, f(intentionnel, oui), tout, non, '5.10',
+    "pour les sinistres intentionnels").
+limite(rc_vie_privee, '5.1', "les dommages résultant de lésions corporelles à concurrence de 24.763.874,96 EUR", "24763874.96").
+limite(rc_vie_privee, '5.1', "les dommages matériels à concurrence de 7.131.995,99 EUR", "7131995.99").
+limite(rc_vie_privee, '5.1', "Une franchise de 258,70 EUR est d’application pour les dommages matériels", "franchise 258.70").
+
+% --- Art. 2.6 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-18 ---
+evenement_traduit(electricite).
+garantie(action_electricite, "Action de l'électricité", '2.6',
+    "Nous couvrons les dommages matériels directement causés par l’action de l’électricité, y compris : • l’électrocution des animaux domestiques, • la décongélation ou détérioration des denrées alimentaires utilisées dans le cadre de votre vie privée, suite à l’arrêt d’une durée de 6 heures ou au dérangement d’une installation de réfrigération ou de congélation provoqué par l’action de l’électricité ou par une coupure de courant soudaine et imprévisible suite à un dysfonctionnement du réseau de distribution d’électricité. Nous prenons également en charge les frais liés à la recherche, la réparation ou le remplacement de la pièce défectueuse à l'origine du sinistre, ainsi que la remise en état consécutive.").
+perimetre(action_electricite, f(evenement, electricite)).
+perimetre(action_electricite, concept(batiment)).
+circonstance(action_electricite, si(f(bien, denrees_alimentaires), ou([f(cause_perte_alimentaire, arret_6h), f(cause_perte_alimentaire, derangement_installation), f(cause_perte_alimentaire, coupure_soudaine_reseau)])), '2.6',
+    "suite à l’arrêt d’une durée de 6 heures ou au dérangement d’une installation de réfrigération ou de congélation provoqué par l’action de l’électricité ou par une coupure de courant soudaine et imprévisible suite à un dysfonctionnement du réseau de distribution d’électricité").
+limite(action_electricite, '2.6', "Perte de denrées alimentaires suite à une variation de température due à une panne 500 EUR de courant d’au moins 6 heures (y compris blackout", "500 EUR").
+exclusion([action_electricite], et([f(bien, appareil_informatique), f(usage_professionnel, oui)]), bien(appareil_informatique), non, '2.6-a',
+    "les dommages aux appareils électroniques et informatiques dont l’usage est professionnel").
+exclusion([action_electricite], et([f(bien, electronique), f(usage_professionnel, oui)]), bien(electronique), non, '2.6-a',
+    "les dommages aux appareils électroniques et informatiques dont l’usage est professionnel").
+exclusion([action_electricite], et([f(bien, appareil_audiovisuel), f(usage_professionnel, oui)]), bien(appareil_audiovisuel), non, '2.6-a',
+    "les dommages aux appareils électroniques et informatiques dont l’usage est professionnel").
+exclusion([action_electricite], et([f(bien, appareil_informatique), non(concept(batiment)), non(f(usage_professionnel, oui))]), bien(appareil_informatique), non, '2.6-a',
+    "ainsi que les dommages aux autres appareils informatiques en dehors du bâtiment assuré").
+exclusion([action_electricite], f(garantie_fabricant, oui), tout, non, '2.6-a',
+    "les dégâts tombant sous la garantie du fabriquant ou du fournisseur").
