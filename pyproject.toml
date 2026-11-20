@@ -6,7 +6,9 @@ build-backend = "setuptools.build_meta"
 name = "couverture-sinistre"
 version = "0.4.0"
 description = "Dire si un sinistre est couvert par des conditions générales d'assurance, en citant les clauses"
-requires-python = ">=3.10"
+# 3.12 au moins : la CI et l'image Docker sont en 3.12, le poste de dev en 3.14. Accepter 3.10 gardait dans
+# uv.lock des versions anciennes (et vulnérables) de dépendances pour ces seules versions de Python (DEMARCHE 7.98).
+requires-python = ">=3.12"
 dependencies = [
     "pydantic>=2",
     "pdfplumber>=0.10",

@@ -3322,6 +3322,19 @@ Limite de la mesure : 25 cas, écrits par un agent et un second avis, arbitrés 
 banc ont été corrigés en regardant ces cas (7.93 à 7.97) : le 100 % est un résultat de mise au point, plus une
 mesure à l'aveugle. Un second jeu fermé de D, écrit sans voir les règles, dirait ce qu'il vaut.
 
+### 7.98 Les dépendances : 43 alertes Dependabot, et un verrou qui gardait le passé
+
+GitHub signalait 43 alertes de sécurité sur `uv.lock`. Deux causes. Le verrou datait de quelques jours, et une
+partie des paquets (MLflow et ce qu'il tire : Flask, SQLAlchemy, aiohttp, pyarrow…) avait été corrigée depuis.
+Surtout, `pyproject.toml` acceptait Python 3.10 : `uv` gardait, pour 3.10 et 3.11, une seconde version plus ancienne
+de 17 paquets (pillow, fastapi, starlette, python-multipart, numpy, pandas…), celles que les alertes visent. Or la
+CI et l'image Docker sont en 3.12, le poste de développement en 3.14 : ces versions ne servaient à rien.
+
+`requires-python = ">=3.12"`, puis `uv lock --upgrade` : **129 paquets → 104**, une seule version de chacun, toutes
+à leur dernière version compatible ; 156 tests verts. Un fichier `.github/dependabot.yml` fait proposer chaque
+semaine les mises à jour de `uv.lock`, chaque mois celles des actions de la CI. Le nombre d'alertes restantes se
+lira sur GitHub après le push (Dependabot refait son analyse).
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.
@@ -3462,3 +3475,4 @@ Tenu à jour le 19 nov. 2026, après-midi ; ce qui est fait est dans les section
 108. Le modèle traduit une condition par une variable : relu, le vocabulaire se resserre en quelques variables à plusieurs valeurs.
 109. « Tous » est dangereux pour une exclusion de biens : une exclusion nomme les garanties qu'elle vise.
 110. Une valeur fourre-tout lue à côté d'une valeur précise doit s'effacer : sinon elle suspend toute décision.
+111. Accepter une version de Python qu'on ne teste pas, c'est garder dans le verrou des dépendances qu'on ne met jamais à jour.
