@@ -452,9 +452,11 @@ def test_un_contrat_ne_lit_que_ses_variables(tmp_path, monkeypatch):
 
 def test_consigne_de_lecture_garde_ses_regles():
     """La v3 avait perdu « une pièce du logement → lieu = logement » en en ajoutant une autre : dix cas
-    couverts sont devenus incertains (DEMARCHE 7.24 bis). Les règles qui ont fait leurs preuves restent."""
+    couverts sont devenus incertains (DEMARCHE 7.24 bis). Les règles qui ont fait leurs preuves restent, sauf
+    celles qu'on retire exprès, une par une et banc à l'appui, quand la banque d'exemples les montre (7.120 : le vol
+    sur la personne)."""
     c = lecture.SYSTEME_LECTURE_SOCLE + lecture.SYSTEME_LECTURE_DETAILS
-    for regle in ("lieu = logement", "fermeture = cle", "flammes = oui et embrasement = oui", "vol_sur_personne = oui",
+    for regle in ("lieu = logement", "fermeture = cle", "flammes = oui et embrasement = oui",
                   "depot_moins_30j = oui", "prevention_gel = non", "bien = element_batiment", "bien = canalisation", "[\"tempete\", \"degat_eaux\"]"):
         assert regle in c, regle
 

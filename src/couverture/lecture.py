@@ -47,7 +47,6 @@ Règles :
 - Ne renseigne pas une variable sans rapport avec ce qui s'est passé.
 - « fermé à clé » sans autre précision : fermeture = cle, et ne renseigne pas serrure_surete.
 - Des flammes qui brûlent ou se propagent à d'autres objets : flammes = oui et embrasement = oui. « Avec la chaleur » sans flamme décrite : flammes = non.
-- vol_sur_personne = oui seulement si le bien a été pris sur la personne (arraché, dérobé sur soi).
 - Une durée dite se traduit : déposé « il y a deux semaines » donne depot_moins_30j = oui.
 - Les précautions décrites se traduisent : une fenêtre laissée ouverte donne fenetres_fermees = non ; un chauffage coupé pendant le gel, sans vidange ni isolation, donne prevention_gel = non.
 

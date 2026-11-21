@@ -3960,6 +3960,25 @@ vocabulaire). Partie test de A **85 %** (87 % avant), B **88 %** (82 à 88 %), D
 variation habituelle, le nouvel ordre des questions ne se voit pas. (D : un appel lent du fournisseur porte le 95e
 centile à 37 s ; la médiane reste à 3,5 s.)
 
+### 7.120 Les cas particuliers quittent la consigne, un par un
+
+La consigne du temps 2 porte cinq phrases écrites pour un cas (le vol sur la personne, les flammes, « fermé à clé »,
+le gel, « il y a deux semaines »). C'est ce qui attache le plus la lecture à l'habitation, et la banque d'exemples a
+été faite pour les remplacer. Elles sortent une par une, avec un banc à chaque fois ; seulement celles que la banque
+montre déjà (le vol sur la personne : 6 exemples ; les flammes : 5 et 3 ; « fermé à clé » : 3). Le gel (1 exemple), la
+fenêtre ouverte et le dépôt chez un réparateur (0) attendent des déclarations validées. Les phrases du temps 1 restent :
+il ne reçoit plus d'exemples (7.116).
+
+**Première phrase retirée** (`lecture-details` v3) : « vol_sur_personne = oui seulement si le bien a été pris sur la
+personne ». L'aide du vocabulaire le dit déjà mot pour mot (« objet arraché, ou pris dans une poche ou un sac que
+vous portiez »), et 6 exemples le montrent. À mesurer.
+
+**Mesure (21 nov., 14 h 41 à 14 h 49) : retrait gardé.** Partie test de A **86 %** (85 % avant), jeu fermé de A 88 %
+(92 %), B **88 %** (88 %), D **100 %** (100 %). La lecture de `vol_sur_personne` ne change pas : les mêmes cas, à une
+lecture sur trois près dans les deux sens, et aucun « oui » perdu (`f-b07`, le sac pris dans le bus, en gagne un). Les
+4 points du jeu fermé de A viennent d'autres cas (`f-a02`, le fer à repasser ; `f-a12`, le congélateur), sans vol :
+variation de lecture.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 20 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.

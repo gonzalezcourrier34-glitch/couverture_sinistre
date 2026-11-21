@@ -32,7 +32,7 @@ from pathlib import Path
 # dans docs/consignes/ : c'est leur histoire.
 CONSIGNES: dict[str, tuple[str, str, str]] = {
     "couverture-lecture-socle": ("couverture.lecture", "SYSTEME_LECTURE_SOCLE", "v2"),
-    "couverture-lecture-details": ("couverture.lecture", "SYSTEME_LECTURE_DETAILS", "v2"),
+    "couverture-lecture-details": ("couverture.lecture", "SYSTEME_LECTURE_DETAILS", "v3"),
     "couverture-verification-faits": ("couverture.lecture", "SYSTEME_VERIFICATION", "v3"),
     "couverture-redaction-regles": ("couverture.redaction", "SYSTEME_REDACTION", "v12"),
 }

@@ -110,6 +110,9 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 
 ## 5. Dernières mesures
 
+**21 nov. 2026, 14 h 41 à 14 h 49** (`lecture-details` v3 : la phrase sur le vol sur la personne retirée, 7.120) :
+partie test de A **86 %**, jeu fermé de A **88 %**, B **88 %**, D **100 %**. Lecture de `vol_sur_personne` inchangée.
+
 **21 nov. 2026, 14 h 26 à 14 h 32** (vocabulaire rangé en commun + un fichier par contrat, 7.119) : partie test de A
 **85 %** (2 couverts à tort), jeu fermé de B **88 %** (0, 0), jeu fermé de D **100 %**. Référence actuelle.
 
