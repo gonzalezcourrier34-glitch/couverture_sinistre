@@ -4154,6 +4154,14 @@ Reste : « pendant le gel… » figure encore dans les réserves d'une fuite de 
 moteur (une fuite peut venir du gel), peu parlant pour un lecteur ; le vocabulaire ne sait pas dire « une fuite, mais
 pas le gel ».
 
+### 7.129 La note de conception en tête du README
+
+L'énoncé attend surtout « vous l'avez déjà fait, et vous racontez ce que ça a donné ». Le récit existait, mais dans
+ce fichier de plus de 4 000 lignes. Le README s'ouvre maintenant sur une note de deux pages : le besoin, le choix, les
+deux questions de l'énoncé, les mesures du jour, un tableau des essais avec leur mesure et la décision prise (échecs
+compris), ce que coûte un contrat de plus, les limites ; puis un déroulé de démonstration en 5 minutes. Les anciens
+résultats (97 cas, 15 cas pour B) en sont retirés : ils dataient d'avant les jeux fermés.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 20 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.
