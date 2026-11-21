@@ -89,9 +89,10 @@ def test_indexer_ne_recalcule_que_ce_qui_a_change(donnees, tmp_path):
     assert proches and proches[0][1] == pytest.approx(1.0, abs=1e-6)
 
 
-def test_les_exemples_vont_au_socle_puis_aux_details_du_meme_evenement(monkeypatch):
-    """7.108 : le socle reçoit les exemples proches réduits à événement, bien, lieu ; les détails, ceux du même
-    événement réduits aux variables de l'appel. Sans exemples, les messages restent ceux d'avant."""
+def test_les_exemples_vont_aux_details_du_meme_evenement(monkeypatch):
+    """7.108, 7.116 : les détails reçoivent les exemples du même événement, réduits aux variables de l'appel ; le
+    socle n'en reçoit plus (Small y recopiait les biens des exemples). Sans exemples, les messages restent ceux
+    d'avant."""
 
     class Modele:
         nom, accepte_schema = "schema", True
@@ -116,8 +117,8 @@ def test_les_exemples_vont_au_socle_puis_aux_details_du_meme_evenement(monkeypat
     m = Modele()
     lecture.extraire_faits_regles("On m'a volé mon vélo dans ma cave fermée par un cadenas.", m, exemples=choix, verifier=False)
     socle, details = m.appels
-    assert vus == [None, "vol"]
-    assert "## Exemples de lecture" in socle and "lieu = cave" in socle and "fermeture" not in socle.split("## Déclaration")[0].split("## Exemples")[1]
+    assert vus == ["vol"]
+    assert "## Exemples" not in socle
     assert "fermeture = cle" in details and "cause_eau = gel" not in details
     m2 = Modele()
     lecture.extraire_faits_regles("On m'a volé mon vélo dans ma cave fermée par un cadenas.", m2, verifier=False)

@@ -110,6 +110,14 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 
 ## 5. Dernières mesures
 
+**21 nov. 2026, 12 h 42 et 12 h 45** : partie test de A avec exemples **90 %** (2 couverts à tort) ; jeu fermé de B sans
+exemples **88 %** (0, 0, portes passées), contre 82 % et 78 % avec exemples : les exemples étaient recopiés au socle
+(DEMARCHE 7.116).
+
+**21 nov. 2026, 0 h 27 à 0 h 38, avec exemples, après 7.114** : jeu fermé **A 92 %** (0,33 couvert à tort, 0,33 refus
+à tort), **B 78 %** (0, 0), **D 99 %** ; partie test de A **89 %**, 1,33 couvert à tort. **Latence d'un cas seul au 95e
+centile : 3,8 à 6,1 s** (contre 20 à 70 s), porte passée partout. La vérification v4 est retirée (DEMARCHE 7.115).
+
 **21 nov. 2026, 0 h 08 et 0 h 12, Assureur A, avec exemples, après 7.113** : jeu fermé **93 %** justes, 83 % exactes,
 0,33 couvert à tort (le vase), 0 refus à tort ; partie test **89 %**, 83 % exactes, 2 couverts à tort (`g-p03`,
 `g2-p08`), 0,33 refus à tort. Le vélo couvert 3 fois sur 3 ; le miroir « à préciser » au lieu de couvert.

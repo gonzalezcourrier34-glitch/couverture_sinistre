@@ -68,23 +68,12 @@ def a_preciser(d: dict, voc: dict | None = None) -> list[dict[str, Any]]:
     """Ce qu'il faut demander au client, variable par variable, avec les valeurs possibles.
 
     `question` : sans la réponse, la garantie ne tranche pas (la décision est « incertain ») ; `reserve` : la
-    garantie couvre, sous réserve de ce point (une option des conditions particulières, une exclusion que
-    l'assureur aurait à prouver). Mêmes variables que les questions du verdict (`PipelineRegles.verdict`)."""
+    garantie couvre, sous réserve de ce point (une exclusion que l'assureur aurait à prouver). Le choix est celui
+    de `chaine.points_a_preciser`, le même que pour les questions du verdict."""
     voc = voc if voc is not None else prolog.vocabulaire()
-    retenues, possibles = d.get("retenues", []), d.get("possibles", [])
-    natures: dict[str, str] = {}
-    for r in retenues:
-        for v in r.get("questions", []):
-            natures.setdefault(v, "question")
-        for v in r.get("reserves", []):
-            natures.setdefault(v, "reserve")
-    if d.get("decision") == "NON_COUVERT":
-        for r in possibles:
-            for v in r.get("questions", []):
-                natures.setdefault(v, "question")
     return [{"variable": v, "nature": n, "question": voc.get(v, {}).get("question", f"Préciser : {v}"),
              "valeurs": voc.get(v, {}).get("valeurs", []), "aide": voc.get(v, {}).get("aide", {})}
-            for v, n in natures.items()]
+            for v, n in chaine.points_a_preciser(d, voc)]
 
 
 def reponse(r: Resultat, d: dict | None = None) -> dict[str, Any]:

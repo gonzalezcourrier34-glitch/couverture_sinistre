@@ -226,7 +226,7 @@ def actifs() -> bool:
 
 class Banque:
     """Les exemples d'une analyse : un seul vecteur par déclaration (un appel à mistral-embed), puis un choix pour
-    le socle (tous les exemples) et un pour les détails (ceux du même événement). La déclaration elle-même n'est
+    les détails, parmi ceux du même événement (le socle n'en reçoit plus, 7.116). La déclaration elle-même n'est
     jamais son propre exemple (sur un cas de mise au point, elle est dans la banque)."""
 
     def __init__(self, chemin_base: str | Path, embed, k: int = 3, seuil: float = SEUIL):

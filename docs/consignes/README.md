@@ -10,7 +10,7 @@ version garde ici son **texte intégral**, dans `<consigne>/<version>.txt`.
 
 ## Historique
 
-En service : `faits-regles` v4, `lecture-socle` v2, `lecture-details` v2, `verification-faits` v3, `redaction-regles` v12, `document-brut` v1, `legalbench` v1 (voir `config/versions_consignes.json`). Les autres sont celles des méthodes retirées le 18 nov. 2026 (DEMARCHE 7.36).
+En service : `lecture-socle` v2, `lecture-details` v2, `verification-faits` v3, `redaction-regles` v12 (voir `config/versions_consignes.json`). Les autres sont celles des méthodes retirées le 18 nov. 2026 (DEMARCHE 7.36) et le 20 nov. 2026 (`faits-regles`, `document-brut`, `legalbench` : 7.110).
 
 | Consigne | Version | Date | Pourquoi |
 |---|---|---|---|
@@ -46,6 +46,7 @@ En service : `faits-regles` v4, `lecture-socle` v2, `lecture-details` v2, `verif
 | `verification-faits` | v1 | 18 nov. 2026 | Chaque fait lu soumis au modèle comme une affirmation ; un fait « non dit » redevient inconnu (7.43) |
 | `verification-faits` | v2 | 19 nov. 2026 | Une négation écrite, ou un détail qui correspond au sens donné de la valeur (« un simple cadenas »), est « dit » (7.75) |
 | `verification-faits` | v3 | 19 nov. 2026 | La souplesse de v2 limitée aux « non » ; pour les autres valeurs, le sens et ce qu'il écarte, pas un mot commun (7.77) |
+| `verification-faits` | v4 | 21 nov. 2026 | Une valeur voisine n'est pas la bonne → non dit (7.114). **Retirée le jour même** : elle ne corrigeait pas le cas visé et rendait la confirmation trop stricte (7.115) ; v3 reprise |
 | `legalbench` | v1 | 18 nov. 2026 | Second banc, externe : répondre et citer la phrase de la clause (7.34) |
 | `faits` | v1 | 17 nov. 2026 | Événement, bien et lieu extraits par le modèle, pour choisir les fiches |
 | `routage` | v1 | 17 nov. 2026 | Choisir les fiches quand l'événement n'est pas reconnu dans la déclaration |

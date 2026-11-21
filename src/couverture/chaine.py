@@ -67,8 +67,11 @@ class PipelineRegles:
             verdict.justification = ("Je ne peux pas trancher : la déclaration ne dit pas clairement "
                                      + " ; ni ".join(f"« {affirmation(v, faits[v], prolog.vocabulaire())[2:]} »" for v in doutes)
                                      + ". " + verdict.justification)
-            verdict.informations_manquantes = list(dict.fromkeys(
-                [question(v) for v in doutes] + verdict.informations_manquantes))
+            # Une seule ligne par question : la version classée par le moteur (« oui → couvert ; non → … »)
+            # remplace la question nue, au lieu de s'y ajouter.
+            deja = verdict.informations_manquantes
+            verdict.informations_manquantes = [question(v) for v in doutes
+                                               if not any(q.startswith(question(v)) for q in deja)] + deja
             verdict.raisonnement = [f"Réponse suspendue : fait décisif non confirmé ({', '.join(doutes)}) ; "
                                     "ci-dessous, le raisonnement sans ce fait."] + verdict.raisonnement
         verdict.avertissements = ecarts + verdict.avertissements
@@ -104,7 +107,7 @@ class PipelineRegles:
 
     def verdict(self, d: dict, faits: dict) -> tuple[Verdict, list[ClauseRetenue]]:
         decision = Decision(d["decision"])
-        retenues, possibles = d.get("retenues", []), d.get("possibles", [])
+        retenues = d.get("retenues", [])
         motifs = [f"« {r['garantie']} » ({r['article']}) : {r['motif']}" for r in retenues]
         non_traduits = d.get("non_traduits") or []
         if d.get("aucune"):
@@ -122,9 +125,7 @@ class PipelineRegles:
             evts = ", ".join(non_traduits)
             motif = (f"À examiner par un gestionnaire : l'événement « {evts} » relève d'une garantie qui n'est pas "
                      f"encore traduite en règles. Ce que disent les garanties traduites : " + (" ; ".join(motifs[:3]) or "rien") + ".")
-        vars_ = list(dict.fromkeys(v for r in retenues for v in r.get("questions", []) + r.get("reserves", [])))
-        if decision == Decision.NON_COUVERT:
-            vars_ += [v for r in possibles for v in r.get("questions", [])]
+        vars_ = [v for v, _ in points_a_preciser(d, prolog.vocabulaire())]
         demander = list(dict.fromkeys(question(v) for v in vars_))
         exploration = d.get("exploration")
         if exploration:
@@ -257,14 +258,45 @@ def arbre_lisible(preuve: list[dict], complet: bool = False) -> list[str]:
 ISSUE = {"COUVERT": "couvert", "NON_COUVERT": "non couvert", "INCERTAIN": "encore incertain", "ERREUR": "?"}
 
 
+def points_a_preciser(d: dict, voc: dict) -> list[tuple[str, str]]:
+    """Ce qu'on dit au client de préciser, variable par variable : (variable, "question" | "reserve"). Le même
+    choix pour le texte du verdict et pour l'API (7.114).
+
+    - `question` : sans la réponse, la garantie ne tranche pas ; pour un refus, aussi les questions des garanties
+      possibles (une autre pourrait couvrir) ;
+    - `reserve` : seulement quand c'est couvert, ce que l'assureur pourra vérifier (une exclusion qu'il aurait à
+      prouver). Pour une réponse à préciser ou un refus, une réserve ne change rien : elle n'est pas posée ;
+    - jamais une réserve qui vaut pour tous les sinistres (« pour » couvre tous les événements : le déménagement
+      non signalé) : elle n'apprend rien sur celui-ci. Si la déclaration la met en jeu, le moteur en fait une
+      question (exclusion entamée), et elle est posée."""
+    tous = set(voc.get("evenement", {}).get("valeurs", []))
+    retenues, possibles = d.get("retenues", []), d.get("possibles", [])
+    points: dict[str, str] = {}
+    for r in retenues:
+        for v in r.get("questions", []):
+            points.setdefault(v, "question")
+    if d.get("decision") == "NON_COUVERT":
+        for r in possibles:
+            for v in r.get("questions", []):
+                points.setdefault(v, "question")
+    if d.get("decision") == "COUVERT":
+        for r in retenues:
+            for v in r.get("reserves", []):
+                if not (tous and set(voc.get(v, {}).get("pour", [])) >= tous):
+                    points.setdefault(v, "reserve")
+    return list(points.items())
+
+
 def questions_explorees(exploration: dict, vars_: list[str], motif: str) -> tuple[list[str], str]:
     """Les questions classées par le raisonnement par hypothèses du moteur (moteur.pl, explorer/2) :
     décisives d'abord, avec ce que chaque réponse entraîne ; les inutiles ne sont pas posées.
-    Les questions sans domaine (le lien de causalité, une appréciation) sont gardées telles quelles."""
+    Les questions sans domaine (le lien de causalité, une appréciation) sont gardées telles quelles. Seules les
+    variables choisies par `points_a_preciser` sont posées : l'exploration ne réintroduit pas une réserve écartée
+    (le déménagement sur une réponse couverte, 7.115)."""
     explorees = {q["variable"]: q for q in exploration.get("questions", [])}
     lignes = []
     for q in exploration.get("questions", []):
-        if q["effet"] == "inutile":
+        if q["effet"] == "inutile" or q["variable"] not in vars_:
             continue
         texte = question(q["variable"])
         if q["effet"] == "décisive":

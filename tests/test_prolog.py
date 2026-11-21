@@ -611,7 +611,7 @@ def test_schema_refuse_retombe_sur_le_mode_json(monkeypatch):
 
     envois = []
 
-    def poster(url, corps, entetes, timeout):
+    def poster(url, corps, entetes, timeout, **_):
         envois.append(corps.get("response_format"))
         if corps["response_format"]["type"] == "json_schema":
             raise module_llm.ErreurLLM("Erreur 422 du fournisseur : schema", code=422)
@@ -932,3 +932,26 @@ def test_un_velo_n_est_pas_un_vehicule_a_moteur():
     assert Moteur(contrat_a, faits).decider()["decision"] == "COUVERT"
     if prolog.swipl() is not None:
         assert prolog.decider("assureur-a-habitation-2025", faits)["decision"] == "COUVERT"
+
+
+def test_on_ne_demande_au_client_que_ce_qui_compte():
+    """7.114 : une réserve n'est montrée que pour une réponse couverte, et jamais une réserve qui vaut pour tous
+    les sinistres (le déménagement non signalé) ; les questions restent posées, une seule fois chacune."""
+    voc = prolog.vocabulaire()
+    incertain = {"decision": "INCERTAIN", "retenues": [{"questions": ["vitre_placee"],
+                                                        "reserves": ["emmenagement", "travaux_vitres"]}]}
+    assert chaine.points_a_preciser(incertain, voc) == [("vitre_placee", "question")]
+    couvert = {"decision": "COUVERT", "retenues": [{"questions": [], "reserves": ["emmenagement", "travaux_vitres"]}]}
+    assert chaine.points_a_preciser(couvert, voc) == [("travaux_vitres", "reserve")]
+    refus = {"decision": "NON_COUVERT", "retenues": [{"questions": []}], "possibles": [{"questions": ["fermeture"]}]}
+    assert chaine.points_a_preciser(refus, voc) == [("fermeture", "question")]
+
+
+def test_l_exploration_ne_reintroduit_pas_une_reserve_ecartee():
+    """7.115 : sur une réponse couverte, l'exploration du moteur classait aussi le déménagement (une réserve qui vaut
+    pour tous les sinistres), que `points_a_preciser` avait écarté : il revenait par là dans les questions."""
+    exploration = {"questions": [
+        {"variable": "emmenagement", "effet": "décisive", "issues": [{"valeurs": ["plus_30_jours"], "decision": "INCERTAIN"}]},
+        {"variable": "travaux_vitres", "effet": "possible", "issues": []}]}
+    lignes, _ = chaine.questions_explorees(exploration, ["travaux_vitres"], "")
+    assert lignes == [lecture.question("travaux_vitres")]

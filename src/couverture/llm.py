@@ -65,11 +65,15 @@ class ReponseLente(ReponseTronquee):
     """Pas de réponse dans le délai : presque toujours un modèle qui réfléchit ou écrit trop longtemps."""
 
 
-def _poster(url: str, corps: dict, entetes: dict, timeout: int, tentatives: int = 7) -> dict:
+def _poster(url: str, corps: dict, entetes: dict, timeout: int, tentatives: int = 7, relances_lentes: int = 0) -> dict:
     """POST JSON avec nouvelles tentatives sur les erreurs passagères : 429 (limite de débit) et
     5xx, en attendant de plus en plus longtemps (2, 4, 8… jusqu'à 60 s, un peu d'aléa pour que les
     appels parallèles ne repartent pas ensemble). Au plus `APPELS_SIMULTANES` appels à la fois ;
-    l'attente entre deux tentatives ne bloque pas les autres appels."""
+    l'attente entre deux tentatives ne bloque pas les autres appels.
+
+    `relances_lentes` : une requête sans réponse dans le délai est relancée autant de fois (7.114). Pour une lecture,
+    courte, un appel qui ne répond pas en 15 s est presque toujours bloqué chez le fournisseur ; relancé, il répond en
+    2 ou 3 s. Pour un travail long (la rédaction), on ne relance pas : le modèle écrivait encore."""
     donnees = json.dumps(corps).encode("utf-8")
     attente = 2.0
     for essai in range(1, tentatives + 1):
@@ -78,6 +82,9 @@ def _poster(url: str, corps: dict, entetes: dict, timeout: int, tentatives: int 
             with APPELS_SIMULTANES, urllib.request.urlopen(requete, timeout=timeout) as reponse:
                 return json.loads(reponse.read())
         except TimeoutError as e:
+            if relances_lentes > 0:
+                relances_lentes -= 1
+                continue
             raise ReponseLente(f"pas de réponse après {timeout} s") from e
         except urllib.error.HTTPError as e:
             detail = e.read().decode("utf-8", "replace")[:300]
@@ -91,6 +98,9 @@ def _poster(url: str, corps: dict, entetes: dict, timeout: int, tentatives: int 
             raise ErreurLLM(f"Erreur {e.code} du fournisseur : {detail}", code=e.code) from e
         except urllib.error.URLError as e:
             if isinstance(e.reason, TimeoutError):
+                if relances_lentes > 0:
+                    relances_lentes -= 1
+                    continue
                 raise ReponseLente(f"pas de réponse après {timeout} s") from e
             if essai < tentatives:
                 time.sleep(attente)
@@ -134,8 +144,10 @@ class OpenAICompatibleLLM:
     `json_mode` demande au serveur de garantir une réponse JSON valide, s'il le permet."""
 
     def __init__(self, modele: str, url: str, cle_api: str = "", max_tokens: int = 8000, timeout: int = 120,
-                 json_mode: bool = False, fournisseur: str = "openai-compatible", extra: dict | None = None):
-        """`extra` : paramètres propres à un fournisseur, ajoutés à chaque requête."""
+                 json_mode: bool = False, fournisseur: str = "openai-compatible", extra: dict | None = None,
+                 relances_lentes: int = 0):
+        """`extra` : paramètres propres à un fournisseur, ajoutés à chaque requête. `relances_lentes` : voir `_poster`."""
+        self.relances_lentes = relances_lentes
         self.modele, self.url, self.cle_api = modele, url.rstrip("/"), cle_api
         self.max_tokens, self.timeout, self.json_mode = max_tokens, timeout, json_mode
         self.extra = extra or {}
@@ -165,7 +177,8 @@ class OpenAICompatibleLLM:
         corps.update(self.extra)
         entetes = {"authorization": f"Bearer {self.cle_api}"} if self.cle_api else {}
         try:
-            donnees = _poster(f"{self.url}/chat/completions", corps, entetes, self.timeout)
+            donnees = _poster(f"{self.url}/chat/completions", corps, entetes, self.timeout,
+                              relances_lentes=self.relances_lentes)
         except ErreurLLM as e:
             # Serveur qui refuse le schéma : on revient au simple mode JSON, et on n'y revient plus.
             if corps.get("response_format", {}).get("type") == "json_schema" and e.code in (400, 422):
@@ -177,7 +190,8 @@ class OpenAICompatibleLLM:
             self.extra.pop("reasoning_effort", None)
             corps.pop("reasoning_effort")
             self.reflexion_refusee = True
-            donnees = _poster(f"{self.url}/chat/completions", corps, entetes, self.timeout)
+            donnees = _poster(f"{self.url}/chat/completions", corps, entetes, self.timeout,
+                              relances_lentes=self.relances_lentes)
         choix = donnees["choices"][0]
         self.derniere_reflexion = len(reflexion_du_message(choix["message"].get("content")))
         if choix.get("finish_reason") == "length":
@@ -240,7 +254,10 @@ def configurer(usage: str = "analyse") -> LLM | None:
     modele_contrat = os.environ.get("COUVERTURE_MODELE_CONTRAT", "").strip() if usage == "contrat" else ""
     if modele_contrat:
         return MistralLLM(modele=modele_contrat, reflexion=os.environ.get("COUVERTURE_REFLEXION_CONTRAT", "low"))
-    return MistralLLM()
+    if usage == "contrat":
+        return MistralLLM()
+    # L'analyse : des lectures courtes ; un appel bloqué chez le fournisseur est relancé au bout de 15 s (7.114).
+    return MistralLLM(timeout=15, relances_lentes=1)
 
 
 # --- Réponses JSON ------------------------------------------------------------------------------------
@@ -281,6 +298,8 @@ def pour_travail_long(llm: LLM, max_tokens: int = 16000, timeout: int = 300) -> 
         copie.timeout = max(getattr(copie, "timeout", 0), timeout)
     if hasattr(copie, "extra"):
         copie.extra = dict(copie.extra)
+    if hasattr(copie, "relances_lentes"):
+        copie.relances_lentes = 0     # un travail long n'est pas bloqué : il écrit encore
     return copie
 
 

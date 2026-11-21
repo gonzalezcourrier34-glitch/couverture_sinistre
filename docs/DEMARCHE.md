@@ -3787,6 +3787,76 @@ fermé de A : **93 %** justes, 0,33 couvert à tort (le vase, une fois sur trois
 à tort : le bain à bulles, et le jeu de clés (`g-p03`) qui revient (corrigé par les exemples en 7.111, la lecture
 d'une série à l'autre varie sur ce cas).
 
+### 7.114 Ce qu'on montre au client, la vérification, la latence
+
+**Les questions au client.** Le rapport de 7.113 montrait deux défauts visibles dans l'interface : la même question
+deux fois (la question nue ajoutée par la confirmation, et la version classée par le moteur, « oui → couvert ; non →
+non couvert ») ; et « avez-vous déménagé ? » ajouté à presque toutes les réponses d'Assureur A (7.106). Une seule
+fonction choisit maintenant ce qu'on dit au client, pour le texte du verdict comme pour l'API
+(`chaine.points_a_preciser`) :
+- une **question** : sans la réponse, la garantie ne tranche pas (et, pour un refus, celles des garanties possibles) ;
+- une **réserve** n'est montrée que pour une réponse couverte : pour « à préciser » ou un refus, elle ne change rien ;
+- jamais une réserve qui vaut pour **tous les sinistres** (« pour » couvre tous les événements : le déménagement non
+  signalé) : elle n'apprend rien sur celui-ci. Si la déclaration la met en jeu, le moteur en fait une question ;
+- la confirmation n'ajoute plus une question que le moteur pose déjà.
+
+**La vérification** (consigne `verification-faits` v4) : une valeur voisine n'est pas la bonne. Quand la déclaration
+nomme une autre chose que ce que décrit le sens de la valeur, c'est « non dit », même si les deux se ressemblent ;
+l'exemple de la consigne est un seau renversé lu comme un aquarium. C'est la confusion du bain à bulles (`g2-p08`),
+traitée sans ce cas de test : ni son texte, ni l'aide de sa valeur ne changent.
+
+**La latence.** Le 95e centile d'un cas seul montait à 20 s, et jusqu'à 70 s : un appel sur dix restait bloqué chez
+le fournisseur jusqu'au délai de 120 s. Pour l'analyse, le délai passe à **15 s**, avec une relance : une lecture
+répond en 2 ou 3 s, un appel sans réponse en 15 s est bloqué, relancé il répond. La rédaction (Mistral Large, des
+minutes) garde son délai long, sans relance. Les deux séries de bancs lancées en même temps (7.111) restent à éviter.
+
+**Pas fait** : des exemples pour D. La banque est faite des faits idéaux validés du golden set, qui n'a pas de cas de D ;
+il faut d'abord écrire et valider des cas de D (avec l'auteur), comme pour un nouveau jeu de test. Les alertes de
+sécurité de GitHub : à relire après le push, MLflow et ses dépendances retirées (7.110) devraient en faire disparaître
+la plupart.
+
+Trois tests ajoutés.
+
+### 7.115 Mesure de 7.114 : la latence réglée, la vérification v4 retirée
+
+Bancs du 21 nov. (0 h 27 à 0 h 38), avec exemples : 178 tests passent ; jeu fermé A **92 %** (0,33 couvert à tort, le
+vase ; 0,33 refus à tort, le vélo une fois), B **78 %** (0 couvert à tort), D **99 %** ; partie test de A **89 %**,
+1,33 couvert à tort.
+
+- **La latence est réglée** : 95e centile d'un cas seul 3,75 s (A), 6,14 s (B), 4,55 s (D), 5,89 s (test), contre
+  20 à 70 s avant. La porte de latence passe partout. Le délai de 15 s avec une relance (7.114) fait ce qu'on attendait.
+- **La vérification v4 est retirée.** Elle ne corrige pas le cas visé (`g2-p08`, le bain à bulles, toujours couvert
+  3 fois sur 3) et elle sert aussi à la confirmation des faits décisifs, devenue trop stricte : deux cas de test,
+  justes jusque-là, passent à « à préciser » 3 fois sur 3 (`red-b01`, l'intention ; `g2-p01`, le bien volé). La
+  consigne revient en v3 (même texte, même empreinte) ; v4 reste archivée, notée retirée. Une consigne partagée par
+  deux étapes se mesure sur les deux.
+- **Une réserve revenait par l'exploration** : sur `g2-p08`, couvert, le déménagement était encore demandé. Le moteur
+  classe toutes les variables inconnues qui pourraient changer la réponse ; ses questions sont maintenant réduites à
+  celles que `points_a_preciser` a retenues. Un test ajouté.
+- B à 78 % : les refus de `f-b10` et `f-b13` sont « à préciser » 3 fois sur 3, comme dans la série avec exemples de
+  7.111 (82 %), alors que la série sans exemples donnait 90 %. Les exemples pourraient coûter à B sur ces deux cas :
+  à vérifier sur une série sans exemples, après ces corrections.
+
+### 7.116 Les exemples recopiés au socle : plus d'exemples au temps 1
+
+Bancs du 21 nov. (12 h 42 et 12 h 45) : 179 tests passent ; partie test de A, avec exemples, **90 %**, 2 couverts à
+tort ; jeu fermé de B **sans** exemples **88 %**, 0 couvert à tort, portes passées. Avec exemples, B faisait 82 % puis
+78 % : l'écart se répète.
+
+Les faits lus disent pourquoi. Sans exemples, `f-b10` (« la surtension a grillé mon vieux congélateur ») est lu bien =
+électroménager, et refusé 3 fois sur 3 ; avec exemples, bien = électroménager **et denrées alimentaires**. `f-b13` (« ma
+chaudière s'est mise à fuir, j'ai appelé l'assistance ») gagne l'événement **assistance** et un appareil. Small
+recopiait au **socle** les biens et les événements des exemples proches (un congélateur dont les aliments sont perdus,
+une chaudière dépannée). Or le socle n'est pas vérifié : seuls les faits du temps 2 passent par la vérification, qui
+retire un fait recopié que la déclaration ne dit pas.
+
+Correction : **le socle ne reçoit plus d'exemples** ; le temps 2 garde les siens (ceux du même événement), et ses
+copies passent par la vérification. Reste à mesurer que le gain de A (7.111) ne venait pas du socle.
+
+Restent sur la partie test de A, avec ou sans cette correction : `g2-p08` (le bain à bulles), `red-b01` (« mon fils a
+cassé la vitre avec un ballon » lu intentionnel, gardé par la garde de 7.44 parce que le retirer ferait couvrir), et
+`val-01`, `g-p03` d'une série à l'autre.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 20 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.
@@ -3809,12 +3879,12 @@ Tenu à jour le 20 nov. 2026, après-midi ; ce qui est fait est dans les section
 - Faits idéaux Assureur B : retirer les valeurs par défaut que la déclaration ne dit pas (`auteur = tiers`, `proprietaire = assure`), qui sous-estiment le rappel.
 
 **La lecture, sans cas particuliers (7.107)**
-- Les exemples sont la lecture par défaut (7.112) : des exemples pour D. Renforcer la vérification contre une valeur voisine mais fausse (le bain à bulles lu aquarium, 7.113), sur des cas de mise au point.
+- Les exemples sont la lecture par défaut (7.112), au temps 2 seulement (7.116) : le mesurer sur A et B. La valeur voisine mais fausse (le bain à bulles) reste à traiter, sans toucher à la consigne partagée avec la confirmation. Des exemples pour D : écrire et valider d'abord des cas de D.
 - Un second lot de déclarations, écrit par Mistral Large et validé, pour un test que rien n'a encore corrigé.
 - La question « qui a subi le dommage ? » dans l'appel 1, pour la responsabilité civile.
 
 **Le reste**
-- Les 43 vulnérabilités signalées par GitHub (la mise à jour du verrou n'en a pas réduit le nombre : lire la liste).
+- Les vulnérabilités signalées par GitHub : relire la liste après le retrait de MLflow (7.110).
 - Limites connues : la perte de clés (sans vol) n'est pas traduite ; les conditions particulières ne sont pas lues.
 
 ## 9. Les leçons, en une ligne chacune
@@ -3944,3 +4014,6 @@ Tenu à jour le 20 nov. 2026, après-midi ; ce qui est fait est dans les section
 123. Deux séries de bancs lancées en même temps se gênent : la latence mesurée devient celle du fournisseur saturé.
 124. Quand le modèle s'obstine sur une valeur fausse, lui donner la valeur qu'il cherche (le vélo), plutôt qu'une aide de plus.
 125. Une précision du code faite après la lecture arrive trop tard si elle décide des questions suivantes.
+126. Ce qu'on demande au client se choisit en un seul endroit : deux listes construites séparément finissent par se répéter.
+127. Une consigne qui sert à deux étapes (la vérification et la confirmation) se mesure sur les deux : la rendre plus stricte pour l'une a fait douter l'autre.
+128. Un exemple montré à une étape qu'on ne vérifie pas est recopié sans contrôle : n'en montrer qu'aux étapes vérifiées.

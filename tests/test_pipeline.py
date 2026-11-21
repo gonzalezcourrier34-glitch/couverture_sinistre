@@ -532,3 +532,22 @@ def test_profil_colonnes_pages_et_articles():
     for faux in ({"colonnes": 3}, {"pages_ignorees": [[5, 2]]}, {"titres_numerotes": "aucun"}):
         with pytest.raises(ProfilInvalide):
             valider_profil({"nom": "x", **faux})
+
+
+def test_une_lecture_sans_reponse_est_relancee_une_fois(env_vide, monkeypatch):
+    """7.114 : l'analyse relance une fois un appel sans réponse en 15 s (un appel bloqué chez le fournisseur faisait
+    monter le 95e centile à 20 s et plus) ; la rédaction, longue, ne relance pas."""
+    env_vide.setenv("MISTRAL_API_KEY", "k")
+    appels = []
+
+    def une_fois_lent(requete, timeout):
+        appels.append(timeout)
+        if len(appels) == 1:
+            raise TimeoutError("The read operation timed out")
+        return _Reponse(json.dumps({"choices": [{"message": {"content": "{}"}, "finish_reason": "stop"}]}).encode())
+
+    monkeypatch.setattr(module_llm.urllib.request, "urlopen", une_fois_lent)
+    assert module_llm.configurer().completer("s", "m") == "{}"
+    assert appels == [15, 15]
+    long_ = module_llm.pour_travail_long(module_llm.configurer())
+    assert long_.relances_lentes == 0 and long_.timeout == 300

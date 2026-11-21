@@ -197,8 +197,10 @@ def extraire_faits_regles(sinistre: str, llm: LLM, decideur=None, variables: set
         # « Privilège » n'ont rien à faire dans la lecture d'un vol chez Assureur A (7.57).
         voc = {v: d for v, d in voc.items() if v in SOCLE or v in variables}
     declaration = f"## Déclaration\n{sinistre}"
-    ex_socle = bloc(exemples(), SOCLE) if exemples else ""
-    lus = _lire(llm, SYSTEME_LECTURE_SOCLE, {v: voc[v] for v in SOCLE}, ex_socle + declaration)
+    # Pas d'exemples au socle (7.116) : Small y recopiait les biens et les événements des exemples (le congélateur
+    # d'un exemple ajoutait des denrées, la chaudière d'un autre l'assistance), et le socle n'est pas vérifié. Au
+    # temps 2, chaque fait recopié passe par la vérification.
+    lus = _lire(llm, SYSTEME_LECTURE_SOCLE, {v: voc[v] for v in SOCLE}, declaration)
     # L'événement précisé avant de choisir les questions du temps 2 : un « accident » sur un miroir est un bris
     # (7.86), et c'est pour le bris qu'on demande si le miroir était posé (7.113). Précisé après, trop tard : le
     # temps 2 posait les questions de l'« accident », qui n'en a pas.
