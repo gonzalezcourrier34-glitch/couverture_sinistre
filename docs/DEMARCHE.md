@@ -3853,9 +3853,112 @@ retire un fait recopié que la déclaration ne dit pas.
 Correction : **le socle ne reçoit plus d'exemples** ; le temps 2 garde les siens (ceux du même événement), et ses
 copies passent par la vérification. Reste à mesurer que le gain de A (7.111) ne venait pas du socle.
 
+**Mesure (21 nov., 12 h 51 à 12 h 58).** 179 tests passent. Jeu fermé de B avec exemples : **82 %**, comme avant, mais
+pas pour les mêmes cas. `f-b10` (le congélateur) est juste 3 fois sur 3 : la correction fait ce qu'elle visait. L'écart
+avec la lecture sans exemples (88 %) tient à deux cas qui n'en viennent plus :
+- `f-b13` (la chaudière, « contrat signé il y a deux semaines ») est maintenant lu avec l'événement **assistance**,
+  alors que le socle ne voit plus d'exemples. Cette lecture est la bonne : la réponse attendue repose sur le délai
+  d'attente de 30 jours de l'assistance (art. 3.1.12.6), que les règles de B ne codent pas. Sans exemples, le refus
+  venait d'une autre lecture, juste par chance. C'est une règle qui manque, pas une erreur de lecture.
+- `f-b06` (la porte laissée ouverte) a les mêmes faits lus avec et sans exemples ; il oscille à la confirmation des
+  faits décisifs (« violence » non confirmée).
+
+Jeu fermé de A : **92 %**, inchangé. Un couvert à tort sur trois passages (`f-a11`, un vase lu « verre de meuble »)
+et un refus à tort (`f-a18`, le vélo lu une fois « véhicule à moteur ») : variance de lecture.
+
+Partie test de A : **87 %** (90 % avant). Deux cas ont bougé :
+- `g2-p01` (cambriolage sans dire ce qui a été volé) passe de couvert à « à préciser », 3 fois sur 3. Le bien volé
+  venait des exemples du socle (« objet divers », « élément du bâtiment ») : la déclaration ne le dit pas. La réponse
+  est maintenant honnête, mais elle n'est plus celle qu'attend le golden set.
+- `g-p03` (la clé sous le paillasson) est couvert à tort 3 fois sur 3, contre 1 avant : Small lit bien = clés (les clés
+  ont servi à entrer, elles n'ont pas été volées). C'est une erreur de lecture du bien, qui ne vient pas des exemples.
+
+Bilan : pas de gain net mesurable sur 20 et 31 cas. La correction reste, parce qu'un bien deviné d'après un exemple est
+exactement la recopie qu'on veut éviter.
+
 Restent sur la partie test de A, avec ou sans cette correction : `g2-p08` (le bain à bulles), `red-b01` (« mon fils a
 cassé la vitre avec un ballon » lu intentionnel, gardé par la garde de 7.44 parce que le retirer ferait couvrir), et
 `val-01`, `g-p03` d'une série à l'autre.
+
+### 7.117 Les biens et les événements vérifiés un par un
+
+Après 7.116, les couverts à tort qui restent viennent du **bien** lu au temps 1 : des clés lues comme le bien volé
+alors qu'elles ont servi à entrer, un vase lu « verre de meuble ». Deux trous dans le contrôle :
+- la **vérification** ne regardait aucun fait du temps 1 (7.26 : retirés, ils rendaient tout incertain) ;
+- la **confirmation** des faits décisifs jugeait une liste en bloc (« bien → canalisation, électroménager »), avec la
+  question du vocabulaire (« quels biens sont endommagés ou volés ? »). Un bien seulement cité passait.
+
+Ce qui change, sans appel de plus et sans toucher à la consigne de vérification (v3) :
+- un bien ou un événement se juge **valeur par valeur** (`bien=cles`), et pour un bien la phrase à vérifier devient
+  « ce bien a lui-même été volé, perdu ou abîmé (il n'est pas seulement cité, utilisé, ou à l'origine du dommage) » ;
+- à la **vérification**, les biens et les événements lus **à plusieurs** sont soumis : la valeur en trop est retirée,
+  **jamais la dernière** (c'est ce qui rendait tout incertain). Un bien seul n'y passe pas ;
+- à la **confirmation**, un bien ou un événement qui porte la décision est jugé de la même façon ; non confirmé, la
+  réponse devient « à préciser », comme pour tout fait décisif.
+
+À dire avant de mesurer : la phrase sur le bien « seulement cité » est générale, mais l'idée vient de `g-p03` (la clé
+sous le paillasson), un cas de la partie test, et de `f-a11`, du jeu fermé. Ces deux cas ne sont plus une mesure
+indépendante de ce changement (leçon 119). Rien ne dit non plus que Small jugera mieux avec cette phrase : à mesurer.
+
+**Mesure (21 nov., 13 h 18 à 13 h 26) : essai retiré.** Partie test de A **82 %** (87 % avant), couverts à tort 1,67
+(2 avant) mais 1 refus à tort nouveau ; jeu fermé de A 93 %, couverts à tort 0,67 (0,33 avant) ; B 88 % ; D **96 %**
+(99 à 100 % avant). Les faits lus disent pourquoi : Small, comme juge, se trompe autant que Small, comme lecteur.
+- `g-h03` (« le fioul a imprégné le sol de ma cave ») : le bien « élément du bâtiment » est jugé non dit et retiré, d'où
+  un refus à tort 3 fois sur 3.
+- `f-d05` (porte forcée au pied-de-biche) : l'événement « vandalisme » et le « châssis » sont retirés, faux 3 fois sur 3.
+- `bougie-05`, `g-l05` : le bien n'est plus confirmé, la réponse juste devient « à préciser ».
+- En face, le gain est mince : `g-p03` n'est rattrapé qu'une fois sur trois, et `f-a11` (le vase) pas du tout.
+
+Le code de 7.117 est donc retiré, comme la vérification v4 (7.115) : la lecture revient à l'état de 7.116. Ce que
+l'essai apprend : la vérification sait dire si un fait est **écrit** ; elle ne sait pas dire si une **catégorie** est
+la bonne (le sol est-il un « élément du bâtiment » ?). Ce choix-là ne se corrige pas par un second avis du même
+modèle : il faut un meilleur lecteur (Mistral Large au temps 1, à mesurer) ou des exemples.
+
+### 7.118 Un meilleur lecteur pour le seul temps 1 (à mesurer)
+
+7.117 a montré que Small ne se corrige pas lui-même sur un choix de catégorie. Or les couverts à tort qui restent
+viennent du temps 1 (le bien : des clés, un « verre de meuble »). L'essai : donner **ce seul appel** à Mistral Large
+(`COUVERTURE_MODELE_SOCLE=mistral-large-latest`), les détails, la vérification et la confirmation restant à Small.
+Un appel sur quatre : le surcoût en temps est à mesurer (Large en entier prenait 15 minutes par passage du banc).
+
+Rien ne change sans la variable. Le rapport du banc porte « socle mistral-large-latest » dans son nom, pour ne pas
+être comparé aux rapports de Small seul.
+
+**Mesure (21 nov., 13 h 42 à 14 h 14) : trop lent, non retenu.** Les chiffres bruts (A test 83 %, A fermé 65 %, B 65 %,
+D 64 %) ne mesurent pas la lecture : Mistral Large ne répond pas dans les 15 s accordées, même relancé (« pas de
+réponse après 15 s » : 12 analyses sur 93 sur la partie test de A, 18 sur 60 sur le jeu fermé), et l'analyse rend alors
+« à préciser ». Un cas seul prend 17 à 31 s en médiane, contre 4 s : la porte des 10 s est hors d'atteinte, quel que
+soit le délai accordé.
+
+Sur les seules analyses où Large a répondu : partie test de A, 73 justes sur 81 (90 %) et `g-p03` (la clé sous le
+paillasson) n'est plus couvert à tort ; jeu fermé de A, 35 sur 42 (83 %). Sous-ensembles biaisés, sans conclusion
+sur la qualité. La variable `COUVERTURE_MODELE_SOCLE` reste, éteinte par défaut, pour essayer un modèle intermédiaire.
+
+### 7.119 Le vocabulaire en deux étages : le commun, et un fichier par contrat
+
+Mesuré sur les trois contrats : les questions de départ sont presque communes (16 à 18 événements sur 21, 29 à 34
+biens sur 46), mais sur les 145 variables de détail employées, 17 servent aux trois assureurs, 30 à deux, et 98 à un
+seul. Tout était pourtant dans un seul fichier, `regles/vocabulaire.json` : on ne voyait pas ce qui est général.
+
+`regles/vocabulaire/` le montre maintenant :
+- `commun.json` : le socle (événement, bien, lieu) et les variables que plusieurs contrats emploient (50) ;
+- `assureur-a-….json` (32), `assureur-b-….json` (48), `assureur-d-….json` (19) : celles qu'un seul emploie.
+
+La règle de rangement est calculée, pas choisie : `repartir` lit les règles de chaque contrat. Accepter du vocabulaire
+ou des règles range tout seul ; après des règles écrites à la main, `couverture regles --contrat … --ranger`. Un test
+échoue si une variable n'est pas dans son fichier. Le reste du code voit toujours un seul vocabulaire
+(`prolog.vocabulaire()`), et le moteur Prolog n'a pas changé : il reçoit les valeurs dans un fichier fusionné.
+
+Deux choses à savoir :
+- le contenu est identique, mais **l'ordre des variables change** (le commun d'abord, puis celles du contrat), donc
+  l'ordre des questions dans la consigne du temps 2 aussi : à vérifier par un banc ;
+- les 98 variables « d'un seul contrat » sont sans doute trop nombreuses : Mistral Large les a proposées contrat par
+  contrat, et deux assureurs peuvent dire la même chose sous deux noms. Les doublons restent à chercher.
+
+**Mesure (21 nov., 14 h 26 à 14 h 32).** 181 tests passent, les règles de A se chargent (298 couples employés, 0 hors
+vocabulaire). Partie test de A **85 %** (87 % avant), B **88 %** (82 à 88 %), D **100 %** (99 à 100 %) : dans la
+variation habituelle, le nouvel ordre des questions ne se voit pas. (D : un appel lent du fournisseur porte le 95e
+centile à 37 s ; la médiane reste à 3,5 s.)
 
 ## 8. Ce qui reste à faire
 
@@ -4017,3 +4120,5 @@ Tenu à jour le 20 nov. 2026, après-midi ; ce qui est fait est dans les section
 126. Ce qu'on demande au client se choisit en un seul endroit : deux listes construites séparément finissent par se répéter.
 127. Une consigne qui sert à deux étapes (la vérification et la confirmation) se mesure sur les deux : la rendre plus stricte pour l'une a fait douter l'autre.
 128. Un exemple montré à une étape qu'on ne vérifie pas est recopié sans contrôle : n'en montrer qu'aux étapes vérifiées.
+129. Le même modèle ne se corrige pas lui-même sur un choix de catégorie : sa vérification vaut pour « est-ce écrit ? », pas pour « est-ce le bon mot ? ».
+130. Avant de comparer deux lectures, compter les appels sans réponse : un délai dépassé se lit comme une mauvaise lecture.

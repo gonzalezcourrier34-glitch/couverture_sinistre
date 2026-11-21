@@ -551,3 +551,36 @@ def test_une_lecture_sans_reponse_est_relancee_une_fois(env_vide, monkeypatch):
     assert appels == [15, 15]
     long_ = module_llm.pour_travail_long(module_llm.configurer())
     assert long_.relances_lentes == 0 and long_.timeout == 300
+
+
+def test_un_autre_modele_pour_le_temps_1(monkeypatch):
+    """7.118 : COUVERTURE_MODELE_SOCLE donne le temps 1 (événement, bien, lieu) à un autre modèle ; les détails
+    et la vérification restent au modèle de l'analyse. Sans la variable, rien ne change."""
+    import json
+
+    from couverture import lecture, llm
+
+    class Modele:
+        accepte_schema = True
+
+        def __init__(self, nom):
+            self.nom, self.systemes = nom, []
+
+        def completer(self, systeme, message, schema=None):
+            self.systemes.append(systeme)
+            if systeme == lecture.SYSTEME_LECTURE_SOCLE:
+                return json.dumps({"faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}})
+            return json.dumps({"faits": {"fermeture": "cadenas"}})
+
+    petit, grand = Modele("petit"), Modele("grand")
+    faits, _ = lecture.extraire_faits_regles("On m'a volé mon vélo dans ma cave fermée par un cadenas.", petit,
+                                             verifier=False, llm_socle=grand)
+    assert grand.systemes == [lecture.SYSTEME_LECTURE_SOCLE] and petit.systemes == [lecture.SYSTEME_LECTURE_DETAILS]
+    assert faits["bien"] == ["velo"] and faits["fermeture"] == "cadenas"
+    monkeypatch.delenv("COUVERTURE_MODELE_SOCLE", raising=False)
+    assert llm.modele_du_socle() is None
+    monkeypatch.setenv("MISTRAL_API_KEY", "cle-de-test")
+    monkeypatch.setenv("COUVERTURE_MODELE_SOCLE", "mistral-large-latest")
+    assert llm.modele_du_socle().modele == "mistral-large-latest"
+    monkeypatch.setenv("COUVERTURE_MODELE", "mistral-large-latest")
+    assert llm.modele_du_socle(llm.MistralLLM()) is None, "déjà le modèle de l'analyse"

@@ -9,7 +9,7 @@ champ par champ ; une syntaxe Prolog inventée ne se contrôle qu'en la chargean
 
 Les contrôles, tous automatiques :
   1. structure : chaque condition est un terme connu (f, et, ou, non, si, concept) ;
-  2. vocabulaire : chaque fait est dans regles/vocabulaire.json ; un fait nouveau doit être
+  2. vocabulaire : chaque fait est dans regles/vocabulaire/ ; un fait nouveau doit être
      **déclaré** par le modèle (vocabulaire_manquant), et c'est un humain qui l'accepte ;
   3. citations : chaque phrase figure mot pour mot dans la clause citée (réparée si les mots sont
      dans l'ordre, refusée sinon) ;
@@ -39,12 +39,12 @@ from .controles import (A_RELIRE, BLOQUANT, INFO, circonstances_par_evenement, c
                         controler, controler_avec_prolog, cycle_de_concepts, envelopper_conditions_nues, erreurs_schema,
                         items_exclusion, non_traduits, obligations_mal_formees)
 from .ecriture import atome, chaine, en_prolog, fusionner, terme
-from .vocabulaire import (ACCESSOIRE, EXTENSION, JAMAIS, accepter_vocabulaire, evenements_par_variable,
+from .vocabulaire import (ACCESSOIRE, EXTENSION, JAMAIS, accepter_vocabulaire, mal_rangees, ranger, evenements_par_variable,
                           lieux_par_variable)
 
 # Ce que le reste du code et les tests emploient, d'où qu'il vienne dans le paquet.
 __all__ = ["ACCESSOIRE", "A_RELIRE", "BLOQUANT", "EXTENSION", "INFO", "JAMAIS", "PROPOSITIONS", "SYSTEME_REDACTION",
-           "VERSION", "ErreurProposition", "accepter", "accepter_vocabulaire", "articles_proposes", "atome", "chaine",
+           "VERSION", "ErreurProposition", "accepter", "accepter_vocabulaire", "articles_proposes", "mal_rangees", "ranger", "atome", "chaine",
            "chemins", "circonstances_par_evenement", "conditions_particulieres_en_reserve", "controler",
            "controler_avec_prolog", "cycle_de_concepts", "en_prolog", "enregistrer", "erreurs_schema",
            "evenements_par_variable", "fusionner", "items_exclusion", "lieux_par_variable", "message_redaction",
@@ -139,6 +139,7 @@ def accepter(contrat_id: str, article: str, dossier: Path | None = None) -> Path
     cible = prolog.fichier_regles(contrat_id)
     cible.write_text(fusionner(retirer_article(cible.read_text(encoding="utf-8"), article), pl.read_text(encoding="utf-8")),
                      encoding="utf-8")
+    ranger()   # les variables que ces règles sont seules à employer vont dans le fichier du contrat (7.119)
     return cible
 
 

@@ -1,4 +1,4 @@
-"""Le vocabulaire commun complété par une proposition : les faits nouveaux, et les événements pour lesquels on lit chaque variable."""
+"""Le vocabulaire complété par une proposition, et rangé (le commun, puis un fichier par contrat) : les faits nouveaux, et les événements pour lesquels on lit chaque variable."""
 
 from __future__ import annotations
 
@@ -11,12 +11,59 @@ from .controles import feuilles, feuilles_positives
 from .ecriture import exclusions
 
 
-def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
-    """Ajoute au vocabulaire commun les faits déclarés par le modèle. Décision humaine : c'est la commande
+DESCRIPTIONS = {
+    True: "Vocabulaire commun : le socle (événement, bien, lieu) et les variables que plusieurs contrats emploient. "
+          "« plusieurs » : la variable prend une liste. « parents » : la hiérarchie des valeurs (une vitre est un "
+          "élément du bâtiment). « pour » : les événements auxquels une variable s'applique. « aide » : le sens des "
+          "valeurs proches, donné au modèle qui lit. Rangé par `couverture regles --ranger`.",
+    False: "Variables que seules les règles de ce contrat emploient (regles/{contrat}.pl). Même format que "
+           "commun.json. Rangé par `couverture regles --ranger` : une variable qu'un autre contrat se met à employer "
+           "passe dans commun.json.",
+}
+
+
+def repartir(voc: dict) -> dict[str, dict]:
+    """{fichier : ses variables}, dans l'ordre du vocabulaire. Une variable que les règles d'un seul contrat
+    emploient va dans le fichier de ce contrat ; le socle, celles que plusieurs emploient et celles qu'aucun
+    n'emploie encore restent dans le commun (7.119)."""
+    contrats = prolog.contrats_regles()
+    emplois = {c: prolog.variables_employees(c) for c in contrats}
+    fichiers: dict[str, dict] = {prolog.COMMUN: {}, **{c: {} for c in contrats}}
+    for v, d in voc.items():
+        qui = [c for c in contrats if v in emplois[c]]
+        fichiers[qui[0] if len(qui) == 1 and v not in lecture.SOCLE else prolog.COMMUN][v] = d
+    return fichiers
+
+
+def ranger(voc: dict | None = None, dossier: Path | None = None) -> list[str]:
+    """Écrit le vocabulaire rangé (`repartir`). Rend les variables qui ont changé de fichier."""
+    dossier = dossier or prolog.VOCABULAIRE
+    avant = {v: f.stem for f in prolog.fichiers_vocabulaire(dossier) if f.exists()
+             for v in json.loads(f.read_text(encoding="utf-8"))["variables"]}
+    voc = prolog.vocabulaire(dossier) if voc is None else voc
+    deplacees = []
+    for nom, variables in repartir(voc).items():
+        deplacees += [f"{v} : {avant[v]} → {nom}" for v in variables if avant.get(v, nom) != nom]
+        doc = {"_description": DESCRIPTIONS[nom == prolog.COMMUN].replace("{contrat}", nom), "variables": variables}
+        (dossier / f"{nom}.json").write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8",
+                                            newline="\n")
+    return deplacees
+
+
+def mal_rangees(dossier: Path | None = None) -> list[str]:
+    """Les variables qui ne sont pas dans le fichier que `repartir` leur donne (après des règles écrites à la main)."""
+    dossier = dossier or prolog.VOCABULAIRE
+    ou = {v: f.stem for f in prolog.fichiers_vocabulaire(dossier)
+          for v in json.loads(f.read_text(encoding="utf-8"))["variables"]}
+    return [f"{v} : dans {ou[v]}, attendue dans {nom}" for nom, variables in repartir(prolog.vocabulaire(dossier)).items()
+            for v in variables if ou[v] != nom]
+
+
+def accepter_vocabulaire(prop: dict, dossier: Path | None = None) -> list[str]:
+    """Ajoute au vocabulaire les faits déclarés par le modèle, puis le range. Décision humaine : c'est la commande
     qu'on lance après avoir lu les questions proposées."""
-    chemin = chemin or prolog.DOSSIER / "vocabulaire.json"
-    doc = json.loads(chemin.read_text(encoding="utf-8"))
-    voc, ajouts = doc["variables"], []
+    dossier = dossier or prolog.VOCABULAIRE
+    voc, ajouts = prolog.vocabulaire(dossier), []
     nouvelles_variables = {m.get("variable") for m in prop.get("vocabulaire_manquant", []) if m.get("variable") not in voc}
     lieux = lieux_par_variable(prop)
     for m in prop.get("vocabulaire_manquant", []):
@@ -106,7 +153,7 @@ def accepter_vocabulaire(prop: dict, chemin: Path | None = None) -> list[str]:
                           + f" (extension de « {x.get('concept')} »)")
     ajouts = list(dict.fromkeys(ajouts))  # une ligne par fait, pas une par extension qui l'emploie
     if ajouts:
-        chemin.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        ranger(voc, dossier)
     return ajouts
 
 

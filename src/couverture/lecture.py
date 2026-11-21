@@ -7,7 +7,6 @@ ensuite ces faits au vocabulaire (préciser, impliquer, filtrer).
 
 from __future__ import annotations
 
-import re
 
 from . import prolog
 from .llm import LLM, ErreurLLM, completer_avec_schema, extraire_json
@@ -169,12 +168,9 @@ def variables_du_temps_2(voc: dict, evenements: list[str], socle: dict | None = 
 def variables_du_contrat(contrat_id: str) -> set[str] | None:
     """Les variables que les règles du contrat emploient (`f(variable, …)`), ou None sans fichier de règles.
     Le vocabulaire est commun à tous les assureurs ; un contrat n'en lit que ce qu'il emploie (7.57)."""
-    chemin = prolog.fichier_regles(contrat_id)
-    if not chemin.exists():
+    if not prolog.fichier_regles(contrat_id).exists():
         return None
-    texte = chemin.read_text(encoding="utf-8")
-    texte = re.sub(r"%[^\n]*", "", re.sub(r"/\*.*?\*/", "", texte, flags=re.S))
-    employees = set(re.findall(r"\bf\(\s*'?([a-z][a-z0-9_]*)'?\s*,", texte))
+    employees = prolog.variables_employees(contrat_id)
     # Une variable qui implique un fait employé se lit aussi (7.101) : « la porte était ouverte » (`acces_voleur =
     # sans_effraction`) dit l'absence d'effraction, que la déclaration n'écrit jamais en ces termes.
     return employees | {v for v, d in prolog.vocabulaire().items()
@@ -182,13 +178,14 @@ def variables_du_contrat(contrat_id: str) -> set[str] | None:
 
 
 def extraire_faits_regles(sinistre: str, llm: LLM, decideur=None, variables: set[str] | None = None,
-                          exemples=None, verifier: bool = True) -> tuple[dict, list[str]]:
+                          exemples=None, verifier: bool = True, llm_socle: LLM | None = None) -> tuple[dict, list[str]]:
     """Les faits lus par le modèle, et les écarts au vocabulaire (retirés). Deux temps (le socle, puis les
     questions de cet événement), puis la vérification fait par fait (`verifier=False` : sans, pour les tests).
     `decideur(faits) -> dict` (le moteur) arbitre la vérification (7.44).
     `variables` : celles du contrat (le socle est toujours lu) ; None : tout le vocabulaire.
     `exemples(evenement=None) -> [exemple]` : des déclarations proches et leurs faits, montrés au socle puis aux
-    détails (ceux du même événement) (7.108). None : pas d'exemples."""
+    détails (ceux du même événement) (7.108). None : pas d'exemples.
+    `llm_socle` : un autre modèle pour le seul temps 1 (7.118) ; None : le même."""
     from .exemples import bloc
 
     voc = prolog.vocabulaire()
@@ -200,7 +197,7 @@ def extraire_faits_regles(sinistre: str, llm: LLM, decideur=None, variables: set
     # Pas d'exemples au socle (7.116) : Small y recopiait les biens et les événements des exemples (le congélateur
     # d'un exemple ajoutait des denrées, la chaudière d'un autre l'assistance), et le socle n'est pas vérifié. Au
     # temps 2, chaque fait recopié passe par la vérification.
-    lus = _lire(llm, SYSTEME_LECTURE_SOCLE, {v: voc[v] for v in SOCLE}, declaration)
+    lus = _lire(llm_socle or llm, SYSTEME_LECTURE_SOCLE, {v: voc[v] for v in SOCLE}, declaration)
     # L'événement précisé avant de choisir les questions du temps 2 : un « accident » sur un miroir est un bris
     # (7.86), et c'est pour le bris qu'on demande si le miroir était posé (7.113). Précisé après, trop tard : le
     # temps 2 posait les questions de l'« accident », qui n'en a pas.

@@ -1,0 +1,495 @@
+{
+  "_description": "Variables que seules les règles de ce contrat emploient (regles/assureur-a-habitation-2025.pl). Même format que commun.json. Rangé par `couverture regles --ranger` : une variable qu'un autre contrat se met à employer passe dans commun.json.",
+  "variables": {
+    "fermeture": {
+      "valeurs": [
+        "serrure",
+        "cle",
+        "cadenas",
+        "aucune"
+      ],
+      "question": "Comment le local était-il fermé ?",
+      "pour": [
+        "vol",
+        "vandalisme"
+      ]
+    },
+    "simple_disparition": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "S'agit-il d'une simple disparition, sans trace de vol ?",
+      "pour": [
+        "vol"
+      ],
+      "aide": {
+        "oui": "l'objet a disparu et rien ne montre qu'il a été volé (on ne sait pas où il est)",
+        "non": "il y a des signes de vol : effraction, voleur vu, objets fouillés"
+      }
+    },
+    "depot_moins_30j": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le bien était-il déposé chez le réparateur depuis 30 jours au plus ?",
+      "pour": [
+        "vol"
+      ]
+    },
+    "absence": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Étiez-vous absent au moment des faits ?"
+    },
+    "portes_fermees": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les portes extérieures étaient-elles fermées à clé ?",
+      "pour": [
+        "vol",
+        "vandalisme"
+      ]
+    },
+    "fenetres_fermees": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les fenêtres et autres ouvertures facilement accessibles étaient-elles fermées ?",
+      "pour": [
+        "vol",
+        "vandalisme"
+      ]
+    },
+    "cles_a_proximite": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?",
+      "pour": [
+        "vol",
+        "vandalisme"
+      ]
+    },
+    "prevention_gel": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Pendant le gel, le chauffage était-il maintenu, ou les installations vidangées ou isolées ?",
+      "pour": [
+        "degat_eaux",
+        "mazout"
+      ]
+    },
+    "travaux_vitres": {
+      "valeurs": [
+        "nettoyage",
+        "autres_que_nettoyage",
+        "aucun"
+      ],
+      "question": "Des travaux (autres que nettoyage) sont-ils effectués sur les vitres ?",
+      "pour": [
+        "bris"
+      ]
+    },
+    "merule_apres_prise_effet": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La mérule est-elle survenue après la prise d'effet de la garantie ?",
+      "aide": {
+        "oui": "la mérule est apparue après le début du contrat, après la date de prise d'effet",
+        "non": "la mérule existait déjà avant la prise d'effet du contrat"
+      },
+      "pour": [
+        "merule"
+      ]
+    },
+    "residence_principale": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Ce bâtiment est-il votre logement principal ?",
+      "aide": {
+        "oui": "vous y habitez à l'année",
+        "non": "seconde résidence, bien loué, dépendance"
+      },
+      "pour": [
+        "tempete",
+        "catastrophe_naturelle"
+      ]
+    },
+    "reparation_loi_particuliere": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La réparation des dommages est-elle organisée par des lois particulières ou conventions internationales ?",
+      "aide": {
+        "oui": "oui, couvert par loi spéciale ou convention internationale",
+        "non": "non"
+      },
+      "pour": [
+        "catastrophe_naturelle"
+      ]
+    },
+    "batiment_construit_plus_18_mois_apres_classement": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le bâtiment a-t-il été construit plus de 18 mois après la publication au Moniteur belge du classement de la zone comme zone à risque ?",
+      "aide": {
+        "oui": "construit plus de 18 mois après le classement",
+        "non": "construit avant ou dans les 18 mois suivant le classement"
+      },
+      "pour": [
+        "catastrophe_naturelle"
+      ]
+    },
+    "extension_sol_avant_classement": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "S'agit-il d'une extension au sol d'un bien existant avant la date de classement de la zone à risque ?",
+      "aide": {
+        "oui": "extension au sol construite avant le classement",
+        "non": "autre cas"
+      },
+      "pour": [
+        "catastrophe_naturelle"
+      ]
+    },
+    "contenu_moins_10cm_sol": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le contenu était-il entreposé à moins de 10 cm du sol ?",
+      "aide": {
+        "oui": "posé à moins de 10 cm du sol",
+        "non": "surélevé à plus de 10 cm du sol"
+      },
+      "pour": [
+        "catastrophe_naturelle"
+      ]
+    },
+    "periode_gel": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le sinistre s'est-il produit en période de gel ?",
+      "aide": {
+        "oui": "il gelait au moment des faits",
+        "non": "il ne gelait pas au moment des faits"
+      },
+      "pour": [
+        "mazout",
+        "degat_eaux"
+      ]
+    },
+    "controle_citerne_conforme": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La citerne avait-elle passé les contrôles réglementaires ?",
+      "aide": {
+        "oui": "contrôle périodique fait, attestation",
+        "non": "contrôle non fait ou citerne non conforme"
+      },
+      "pour": [
+        "mazout"
+      ]
+    },
+    "batiment_vacant_90j": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le bâtiment était-il libre de toute occupation depuis plus de 90 jours au moment du sinistre ?",
+      "aide": {
+        "oui": "bâtiment vide/inoccupé depuis plus de 90 jours",
+        "non": "occupé ou vacant depuis moins de 90 jours"
+      },
+      "pour": [
+        "vol",
+        "vandalisme"
+      ]
+    },
+    "dispositifs_antivol_installes": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les dispositifs de protection antivol imposés ont-ils été installés, maintenus en bon état et utilisés en cas d'absence ?",
+      "aide": {
+        "oui": "alarme installée, entretenue et activée",
+        "non": "absence ou non-utilisation"
+      },
+      "pour": [
+        "vol",
+        "vandalisme"
+      ]
+    },
+    "materiel_jardin_range": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le matériel de jardin était-il rangé dans un local fermé à clé ?",
+      "aide": {
+        "oui": "tondeuse, outils rangés dans l'abri ou le garage fermé",
+        "non": "laissés dehors ou dans un local ouvert"
+      },
+      "pour": [
+        "vol",
+        "vandalisme"
+      ]
+    },
+    "couverture_rc_locative": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Vos conditions particulières couvrent-elles la responsabilité locative (RC locative) ?",
+      "aide": {
+        "oui": "le contrat couvre la responsabilité locative",
+        "non": "le contrat ne couvre pas la RC locative"
+      },
+      "pour": [
+        "accessoire"
+      ]
+    },
+    "detenteur_vehicule": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Êtes-vous le détenteur du véhicule dans lequel le contenu est transporté pendant le déménagement ?",
+      "aide": {
+        "oui": "l'assuré est le détenteur du véhicule (propriétaire, locataire, emprunteur...)",
+        "non": "l'assuré n'est pas le détenteur du véhicule"
+      },
+      "pour": [
+        "extension"
+      ],
+      "si": {
+        "lieu": [
+          "vehicule"
+        ]
+      }
+    },
+    "occasion_fete_familiale": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "S'agit-il d'une fête de famille (festivité privée à caractère familial) ?",
+      "aide": {
+        "oui": "l'assuré occupe un local pour une fête de famille (mariage, anniversaire familial, réception familiale...)",
+        "non": "ce n'est pas une fête de famille"
+      },
+      "pour": [
+        "accessoire"
+      ]
+    },
+    "pret_ou_location_habitation": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Avez-vous prêté ou loué votre habitation à cette personne (parent ou allié en ligne directe) ?",
+      "aide": {
+        "oui": "l'assuré a prêté ou loué son habitation à ce membre de la famille",
+        "non": "l'assuré n'a pas prêté ou loué son habitation à cette personne"
+      },
+      "pour": [
+        "accessoire"
+      ]
+    },
+    "malveillance_auteur": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'auteur du dommage (parent ou allié) a-t-il agi avec malveillance ?",
+      "aide": {
+        "oui": "le parent/allié a causé le dommage volontairement, avec malveillance",
+        "non": "le dommage n'est pas dû à une malveillance volontaire"
+      },
+      "pour": [
+        "accessoire"
+      ]
+    },
+    "assurance_responsabilite_tiers": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Cette personne (parent ou allié en ligne directe) dispose-t-elle d'une assurance garantissant sa responsabilité civile ?",
+      "aide": {
+        "oui": "le parent/allié dispose d'une assurance responsabilité civile",
+        "non": "le parent/allié ne dispose pas d'assurance responsabilité civile"
+      },
+      "pour": [
+        "accessoire"
+      ]
+    },
+    "laisse_sans_surveillance": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'objet avait-il été laissé sans surveillance dans un lieu public (gare, café, rue…) ?",
+      "aide": {
+        "oui": "personne ne surveillait l'objet, il était laissé seul",
+        "non": "l'objet était avec vous ou sous surveillance"
+      },
+      "pour": [
+        "vol"
+      ]
+    },
+    "habitacle_ferme": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'habitacle du véhicule était-il entièrement fermé ?",
+      "aide": {
+        "oui": "toutes les portières et le coffre étaient fermés",
+        "non": "une portière, le coffre ou une fenêtre était ouvert"
+      },
+      "pour": [
+        "vol"
+      ],
+      "seulement_si": {
+        "lieu": [
+          "vehicule"
+        ]
+      }
+    },
+    "vehicule_voie_publique": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le véhicule était-il stationné sur la voie publique ?",
+      "aide": {
+        "oui": "la voiture était garée dans la rue, sur la voie publique",
+        "non": "la voiture était dans un garage, une allée privée ou un parking privé"
+      },
+      "pour": [
+        "vol"
+      ],
+      "seulement_si": {
+        "lieu": [
+          "vehicule"
+        ]
+      }
+    },
+    "periode_horaire": {
+      "valeurs": [
+        "nuit_22h_7h",
+        "jour_7h_22h",
+        "autre"
+      ],
+      "question": "À quelle période horaire le véhicule était-il stationné sur la voie publique ?",
+      "aide": {
+        "nuit_22h_7h": "entre 22 heures et 7 heures du matin",
+        "jour_7h_22h": "entre 7 heures et 22 heures",
+        "autre": "en dehors de ces plages horaires"
+      },
+      "pour": [
+        "vol"
+      ],
+      "seulement_si": {
+        "lieu": [
+          "vehicule"
+        ]
+      }
+    },
+    "emmenagement": {
+      "valeurs": [
+        "non",
+        "moins_30_jours",
+        "plus_30_jours"
+      ],
+      "question": "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?",
+      "aide": {
+        "non": "pas de déménagement récent",
+        "moins_30_jours": "emménagé il y a moins de 30 jours",
+        "plus_30_jours": "emménagé il y a plus de 30 jours (un, deux mois…)"
+      },
+      "pour": [
+        "vol",
+        "incendie",
+        "explosion",
+        "foudre",
+        "degat_eaux",
+        "tempete",
+        "bris",
+        "autre",
+        "electricite",
+        "mazout",
+        "catastrophe_naturelle",
+        "attentat",
+        "fumee",
+        "vandalisme",
+        "merule",
+        "conflit_du_travail",
+        "heurt",
+        "responsabilite",
+        "assistance",
+        "accident",
+        "litige"
+      ]
+    },
+    "demenagement_signale": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Avez-vous informé votre assureur de votre déménagement dans les 30 jours ?",
+      "aide": {
+        "oui": "l'assureur a été prévenu de la nouvelle adresse",
+        "non": "l'assureur n'a pas été prévenu"
+      },
+      "pour": [
+        "vol",
+        "incendie",
+        "explosion",
+        "foudre",
+        "degat_eaux",
+        "tempete",
+        "bris",
+        "autre",
+        "electricite",
+        "mazout",
+        "catastrophe_naturelle",
+        "attentat",
+        "fumee",
+        "vandalisme",
+        "merule",
+        "conflit_du_travail",
+        "heurt",
+        "responsabilite",
+        "assistance",
+        "accident",
+        "litige"
+      ]
+    }
+  }
+}

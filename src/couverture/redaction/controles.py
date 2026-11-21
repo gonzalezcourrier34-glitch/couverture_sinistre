@@ -58,7 +58,7 @@ def questions_connues(prop: dict) -> dict:
     """La question de chaque variable : celles que propose le modèle, puis celles du vocabulaire commun."""
     qs = {}
     try:
-        voc = json.loads((prolog.DOSSIER / "vocabulaire.json").read_text(encoding="utf-8"))["variables"]
+        voc = prolog.vocabulaire()
         qs.update({v: d.get("question", "") for v, d in voc.items()})
     except (OSError, ValueError, KeyError):
         pass

@@ -260,6 +260,21 @@ def configurer(usage: str = "analyse") -> LLM | None:
     return MistralLLM(timeout=15, relances_lentes=1)
 
 
+def modele_du_socle(llm: LLM | None = None) -> LLM | None:
+    """Un autre modèle pour le seul temps 1 de la lecture (l'événement, le bien, le lieu), ou None :
+
+    COUVERTURE_MODELE_SOCLE=mistral-large-latest
+
+    Le temps 1 choisit des catégories (le sol est-il un « élément du bâtiment » ?), et Small ne se corrige pas
+    lui-même sur ce choix (7.117) : on essaie un meilleur lecteur pour cet appel seulement (7.118). Rien si la
+    variable est vide, s'il n'y a pas de clé, ou si c'est déjà le modèle de l'analyse."""
+    modele = os.environ.get("COUVERTURE_MODELE_SOCLE", "").strip()
+    cle = os.environ.get("MISTRAL_API_KEY", "").strip()
+    if not modele or not cle or cle.startswith("colle") or modele == getattr(llm, "modele", None):
+        return None
+    return MistralLLM(modele=modele, timeout=15, relances_lentes=1)
+
+
 # --- Réponses JSON ------------------------------------------------------------------------------------
 
 def extraire_json(texte: str) -> dict:

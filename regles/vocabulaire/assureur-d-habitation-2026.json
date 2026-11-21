@@ -1,0 +1,284 @@
+{
+  "_description": "Variables que seules les règles de ce contrat emploient (regles/assureur-d-habitation-2026.pl). Même format que commun.json. Rangé par `couverture regles --ranger` : une variable qu'un autre contrat se met à employer passe dans commun.json.",
+  "variables": {
+    "option_veranda": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Vos conditions particulières mentionnent-elles la garantie « véranda » ?",
+      "aide": {
+        "oui": "la véranda est assurée aux conditions particulières",
+        "non": "elle ne l'est pas"
+      },
+      "pour": [
+        "jamais"
+      ]
+    },
+    "pack_piscine": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Avez-vous souscrit le Pack Piscine ?",
+      "aide": {
+        "oui": "le Pack Piscine figure aux conditions particulières",
+        "non": "il n'y figure pas"
+      },
+      "pour": [
+        "jamais"
+      ]
+    },
+    "pack_jardin": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Avez-vous souscrit le Pack Jardin ?",
+      "aide": {
+        "oui": "le Pack Jardin figure aux conditions particulières",
+        "non": "il n'y figure pas"
+      },
+      "pour": [
+        "jamais"
+      ]
+    },
+    "local_inoccupe_12_mois": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les locaux étaient-ils inoccupés ou inutilisés depuis plus de 12 mois ?",
+      "aide": {
+        "oui": "personne n'y vivait ni ne les utilisait depuis plus d'un an",
+        "non": "ils étaient occupés ou utilisés"
+      },
+      "pour": [
+        "jamais"
+      ]
+    },
+    "option_objets_valeur": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Vos conditions particulières mentionnent-elles la garantie « objets de valeur » ?",
+      "aide": {
+        "oui": "la garantie objets de valeur est souscrite",
+        "non": "elle ne l'est pas"
+      },
+      "pour": [
+        "jamais"
+      ]
+    },
+    "participation_rixe": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les dommages résultent-ils de votre participation à une rixe ou à une action violente ?",
+      "aide": {
+        "oui": "l'assuré a pris part à une bagarre ou à une action violente",
+        "non": "non"
+      },
+      "pour": [
+        "jamais"
+      ]
+    },
+    "legitime_defense": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Était-ce de la légitime défense ?",
+      "aide": {
+        "oui": "l'assuré se défendait",
+        "non": "non"
+      },
+      "pour": [
+        "jamais"
+      ]
+    },
+    "cause_guerre": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les dommages résultent-ils d'une guerre ?",
+      "aide": {
+        "oui": "guerre civile ou étrangère",
+        "non": "non"
+      },
+      "pour": [
+        "jamais"
+      ]
+    },
+    "vehicule_identifie": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le véhicule qui a heurté le bâtiment a-t-il été identifié ?",
+      "aide": {
+        "oui": "le conducteur ou la plaque sont connus",
+        "non": "le véhicule est reparti sans être identifié"
+      },
+      "pour": [
+        "heurt"
+      ]
+    },
+    "cheminee_ouverte": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La fumée venait-elle d'une cheminée à feu ouvert ?",
+      "aide": {
+        "oui": "cheminée à foyer ouvert, feu apparent",
+        "non": "autre origine (poêle, incendie, appareil)"
+      },
+      "pour": [
+        "fumee"
+      ]
+    },
+    "vent_100_kmh": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le vent a-t-il dépassé 100 km/h selon la station météo la plus proche ?",
+      "aide": {
+        "oui": "rafales de plus de 100 km/h relevées ou attestées",
+        "non": "vent moins fort"
+      },
+      "pour": [
+        "tempete"
+      ]
+    },
+    "neige_dommages_voisins": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le poids de la neige ou de la glace a-t-il aussi endommagé d'autres bâtiments du voisinage ?",
+      "aide": {
+        "oui": "d'autres toitures du voisinage ont cédé ou sont abîmées",
+        "non": "seul le bâtiment assuré est touché"
+      },
+      "pour": [
+        "tempete"
+      ]
+    },
+    "certificat_meteo": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Un certificat de la station météorologique atteste-t-il le caractère exceptionnel du phénomène ?",
+      "aide": {
+        "oui": "un certificat météo l'atteste",
+        "non": "aucun certificat"
+      },
+      "pour": [
+        "tempete"
+      ]
+    },
+    "canalisation_enterree": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La canalisation qui fuit est-elle enterrée (dans le sol, hors du bâtiment) ?",
+      "aide": {
+        "oui": "tuyau enterré dans le jardin ou sous la dalle",
+        "non": "tuyau apparent, ou dans les murs"
+      },
+      "pour": [
+        "degat_eaux"
+      ]
+    },
+    "batiment_moins_10_ans": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La construction a-t-elle été réceptionnée il y a moins de dix ans ?",
+      "aide": {
+        "oui": "la déclaration dit la maison neuve, récente, ou achevée il y a moins de dix ans (« fait construire » ne dit pas quand)",
+        "non": "construction plus ancienne"
+      },
+      "pour": [
+        "jamais"
+      ]
+    },
+    "acces_voleur": {
+      "valeurs": [
+        "escalade",
+        "menaces",
+        "cles_volees",
+        "fausse_qualite",
+        "sans_effraction"
+      ],
+      "question": "Comment le voleur ou l'auteur est-il entré (hors effraction) ?",
+      "aide": {
+        "escalade": "par escalade : mur, balcon, fenêtre en hauteur",
+        "menaces": "par menaces ou violences physiques sur l'assuré ou un proche",
+        "cles_volees": "avec les clés de l'assuré, volées auparavant",
+        "fausse_qualite": "en se faisant passer pour un employé, un agent, un livreur",
+        "sans_effraction": "porte ou fenêtre ouverte ou non verrouillée, aucune trace"
+      },
+      "pour": [
+        "vol",
+        "vandalisme"
+      ],
+      "implique": {
+        "sans_effraction": {
+          "effraction": "non"
+        }
+      }
+    },
+    "cles_deposees_exterieur": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les clés avaient-elles été laissées dehors (boîte aux lettres, boîte à clé, sous le paillasson) ?",
+      "aide": {
+        "oui": "clés laissées sans protection à l'extérieur",
+        "non": "non"
+      },
+      "pour": [
+        "vol",
+        "vandalisme"
+      ]
+    },
+    "arrete_catnat_30j": {
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Un arrêté de catastrophe naturelle a-t-il été publié, et déclarez-vous le sinistre au plus tard 30 jours après ?",
+      "aide": {
+        "oui": "l'arrêté est paru au Journal officiel et la déclaration suit de moins de 30 jours",
+        "non": "pas d'arrêté, ou déclaration plus tardive"
+      },
+      "pour": [
+        "catastrophe_naturelle"
+      ]
+    },
+    "dommage_tiers": {
+      "valeurs": [
+        "corporel",
+        "materiel"
+      ],
+      "question": "Le dommage causé est-il corporel (une blessure) ou matériel (un bien abîmé) ?",
+      "aide": {
+        "corporel": "une personne blessée",
+        "materiel": "un objet, un véhicule, un bâtiment abîmé"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    }
+  }
+}

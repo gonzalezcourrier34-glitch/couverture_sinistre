@@ -52,6 +52,7 @@ uv run pytest -q
 MISTRAL_API_KEY=votre-clé
 COUVERTURE_MODELE=mistral-small-latest            # lecture des déclarations
 COUVERTURE_MODELE_CONTRAT=mistral-large-latest    # rédaction des règles : une fois par contrat
+# COUVERTURE_MODELE_SOCLE=mistral-large-latest    # essai (7.118) : un autre modèle pour le seul temps 1 de la lecture
 ```
 
 **SWI-Prolog** (gratuit) : `winget install SWI-Prolog.SWI-Prolog` sous Windows, `apt install swi-prolog-nox` sous Linux.
@@ -111,7 +112,7 @@ Avec docker : `docker compose up -d --build` lance l'API (8021) et Grafana (3011
 src/couverture/      le code : lecture.py (le modèle lit), prolog.py (le moteur décide), chaine.py (la réponse),
                      redaction/ (Mistral Large rédige les règles), banc.py, exemples.py, cli/ et api/ (une
                      commande, une route par fichier), découpage des contrats, base
-regles/              vocabulaire commun, moteur Prolog, règles par contrat, faits idéaux des cas
+regles/              moteur Prolog, règles par contrat, vocabulaire (commun.json + un fichier par contrat), faits idéaux des cas
 data/contrats/       conditions générales, catalogue.json, SOURCES.md (liens des CG réelles)
 data/golden/         le golden set : sinistres, réponses attendues, version figée
 config/              manifeste des versions des consignes

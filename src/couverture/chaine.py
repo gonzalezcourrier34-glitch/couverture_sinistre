@@ -23,6 +23,7 @@ class PipelineRegles:
         self.decideur = decideur or (lambda faits: prolog.decider(contrat_id, faits))
         self.variables = variables_du_contrat(contrat_id)
         self.exemples = None                  # la banque d'exemples (7.108, par défaut depuis 7.112)
+        self.llm_socle = None                 # un autre modèle pour le temps 1 (COUVERTURE_MODELE_SOCLE, 7.118)
 
     @classmethod
     def depuis_base(cls, base, contrat_id: str, llm: LLM) -> "PipelineRegles":
@@ -32,6 +33,8 @@ class PipelineRegles:
             raise LookupError("SWI-Prolog introuvable : `winget install SWI-Prolog.SWI-Prolog` (Windows).")
         p = cls(contrat_id, base.clauses(contrat_id), llm)
         from . import exemples
+        from .llm import modele_du_socle
+        p.llm_socle = modele_du_socle(llm)
         # Les exemples demandent la clé (un vecteur par déclaration) et une banque indexée (`couverture exemples
         # --indexer`) ; sans l'une ou l'autre, la lecture se fait sans exemples, comme avant 7.108.
         if exemples.actifs() and os.environ.get("MISTRAL_API_KEY", "").strip():
@@ -44,7 +47,8 @@ class PipelineRegles:
         debut = time.perf_counter()
         try:
             choix = self.exemples.pour(sinistre) if self.exemples is not None else None
-            faits, ecarts = extraire_faits_regles(sinistre, self.llm, self.decideur, self.variables, choix)
+            faits, ecarts = extraire_faits_regles(sinistre, self.llm, self.decideur, self.variables, choix,
+                                                  llm_socle=self.llm_socle)
         except ErreurLLM:
             raise
         except Exception as e:  # noqa: BLE001

@@ -74,10 +74,10 @@ class FauxModele:
 
 @pytest.fixture
 def voc_etendu(tmp_path, monkeypatch):
-    """Un vocabulaire copié, que l'acceptation peut modifier sans toucher au vrai."""
-    copie = tmp_path / "vocabulaire.json"
-    copie.write_text((prolog.DOSSIER / "vocabulaire.json").read_text(encoding="utf-8"), encoding="utf-8")
-    monkeypatch.setattr(prolog, "vocabulaire", lambda: json.loads(copie.read_text(encoding="utf-8"))["variables"])
+    """Un vocabulaire copié (le dossier entier), que l'acceptation peut modifier sans toucher au vrai."""
+    import shutil
+    copie = shutil.copytree(prolog.VOCABULAIRE, tmp_path / "vocabulaire")
+    monkeypatch.setattr(prolog, "VOCABULAIRE", copie)
     return copie
 
 
@@ -131,17 +131,17 @@ def test_vocabulaire_nouveau_declare_bloque_jusqu_a_acceptation(voc_etendu):
     ajouts = redaction.accepter_vocabulaire(BONNE, voc_etendu)
     assert any(x.startswith("vent_fort (oui, non)") for x in ajouts) and not bloquants(controles(BONNE), "vocabulaire")
     assert redaction.accepter_vocabulaire(BONNE, voc_etendu) == [], "pas de doublon"
-    assert json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]["vent_fort"]["pour"] == ["tempete"], \
+    assert prolog.vocabulaire(voc_etendu)["vent_fort"]["pour"] == ["tempete"], \
         "une variable nouvelle ne vaut que pour les événements de sa garantie (7.56)"
     prop = copy.deepcopy(BONNE)
     prop["vocabulaire_manquant"] = [{"variable": "grele", "valeurs": ["oui", "non"], "question": "Grêle ?",
                                      "aide": {"oui": "grêlons, impacts de grêle", "peut-etre": "ignorée"}}]
     redaction.accepter_vocabulaire(prop, voc_etendu)
-    assert json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]["grele"]["aide"] == \
+    assert prolog.vocabulaire(voc_etendu)["grele"]["aide"] == \
         {"oui": "grêlons, impacts de grêle"}, "l'aide est reprise, pour les seules valeurs déclarées (7.62)"
     prop["vocabulaire_manquant"] = [{"variable": "bien", "valeurs": ["tablette"], "parent": "electronique"}]
     redaction.accepter_vocabulaire(prop, voc_etendu)
-    assert json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]["bien"]["parents"]["tablette"] == ["electronique"], \
+    assert prolog.vocabulaire(voc_etendu)["bien"]["parents"]["tablette"] == ["electronique"], \
         "une valeur plus fine est rattachée à sa valeur existante (7.64)"
     sans = copy.deepcopy(BONNE)
     sans["vocabulaire_manquant"] = [{"variable": "bien", "valeurs": ["liseuse"], "question": "?"}]
@@ -304,12 +304,12 @@ def test_extension_de_definition_en_prolog_et_controles(voc_etendu):
                and "batiment" in p["message"] for p in bloquants(controles(prop), "concept")), \
         "le message donne les concepts du contrat (7.72 : le modèle employait ceux d'un autre assureur)"
     prop["extensions"][0]["concept"] = "batiment"
-    doc = json.loads(voc_etendu.read_text(encoding="utf-8"))
-    doc["variables"]["sejour_temporaire"]["pour"] = ["vol"]
-    doc["variables"]["sejour_temporaire"].pop("si", None)
-    voc_etendu.write_text(json.dumps(doc, ensure_ascii=False), encoding="utf-8")
+    voc = prolog.vocabulaire(voc_etendu)
+    voc["sejour_temporaire"]["pour"] = ["vol"]
+    voc["sejour_temporaire"].pop("si", None)
+    redaction.ranger(voc, voc_etendu)
     ajouts = redaction.accepter_vocabulaire(prop, voc_etendu)
-    sejour = json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]["sejour_temporaire"]
+    sejour = prolog.vocabulaire(voc_etendu)["sejour_temporaire"]
     assert sejour["pour"] == ["vol"] and sejour["si"] == {"lieu": ["autre_batiment"]}, \
         "lue pour le vol comme avant, et aussi quand le lieu lu est un autre bâtiment (7.70)"
     assert any("sejour_temporaire : lue aussi si lieu = autre_batiment" in a for a in ajouts)
@@ -363,7 +363,7 @@ def test_variables_lues_selon_l_evenement_et_le_lieu_qui_les_entourent(voc_etend
     assert redaction.evenements_par_variable(prop)["sans_surveillance_x"] == ["vol"]
     assert redaction.lieux_par_variable(prop) == {"habitacle_x": ["vehicule"]}
     ajouts = redaction.accepter_vocabulaire(prop, voc_etendu)
-    voc = json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]
+    voc = prolog.vocabulaire(voc_etendu)
     assert voc["habitacle_x"]["seulement_si"] == {"lieu": ["vehicule"]} and "seulement_si" not in voc["sans_surveillance_x"]
     assert "periode_x" not in voc and any(a.startswith("! periode_x refusée") and "22h_7h" in a for a in ajouts)
     a_la_cave = lecture.variables_du_temps_2(voc, ["vol"], {"lieu": ["cave"]})
@@ -388,9 +388,9 @@ def test_vocabulaire_sans_pseudo_evenement_ni_variable_lue_partout(voc_etendu):
          "article": "2.2", "texte": "t"}]
     prop["vocabulaire_manquant"] = [{"variable": "delai_x", "valeurs": ["court", "long"], "question": "?"},
                                     {"variable": "pays_x", "valeurs": ["lu", "autre"], "question": "?"}]
-    avant = json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]["sejour_temporaire"]["pour"]
+    avant = prolog.vocabulaire(voc_etendu)["sejour_temporaire"]["pour"]
     ajouts = redaction.accepter_vocabulaire(prop, voc_etendu)
-    voc = json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]
+    voc = prolog.vocabulaire(voc_etendu)
     assert voc["sejour_temporaire"]["pour"] == avant and redaction.ACCESSOIRE not in avant
     assert voc["delai_x"]["pour"] == [redaction.EXTENSION]
     assert "delai_x" not in lecture.variables_du_temps_2(voc, ["incendie"], {"lieu": ["logement"]})
@@ -442,7 +442,7 @@ def test_article_sans_garantie_ses_reserves_ne_sont_pas_lues(voc_etendu):
             "vocabulaire_manquant": [{"variable": "option_x", "valeurs": ["oui", "non"], "question": "?"},
                                      {"variable": "pays_y", "valeurs": ["lu", "autre"], "question": "?"}]}
     redaction.accepter_vocabulaire(prop, voc_etendu)
-    voc = json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]
+    voc = prolog.vocabulaire(voc_etendu)
     assert voc["option_x"]["pour"] == [redaction.JAMAIS]
     assert "option_x" not in lecture.variables_du_temps_2(voc, ["vol"], {"lieu": ["logement"]})
     assert voc["pays_y"]["si"] == {"lieu": ["autre_batiment"]}, "« sans les bijoux » n'entame pas l'extension"
@@ -669,16 +669,16 @@ def test_regles_2_9_relues_et_hierarchie(tmp_path):
 
 def test_une_variable_jamais_lue_le_reste(voc_etendu):
     """7.91 : une option des conditions particulières (« jamais » lue) employée par une garantie reste non lue."""
-    doc = json.loads(voc_etendu.read_text(encoding="utf-8"))
-    doc["variables"]["pack_y"] = {"valeurs": ["oui", "non"], "question": "?", "pour": [redaction.JAMAIS]}
-    voc_etendu.write_text(json.dumps(doc, ensure_ascii=False), encoding="utf-8")
+    voc = prolog.vocabulaire(voc_etendu)
+    voc["pack_y"] = {"valeurs": ["oui", "non"], "question": "?", "pour": [redaction.JAMAIS]}
+    redaction.ranger(voc, voc_etendu)
     prop = {"evenements": ["tempete"], "definitions": [], "garanties": [{
         "id": "t", "nom": "t", "article": "1", "texte": "t", "perimetre": [{"f": ["evenement", "tempete"]}],
         "circonstances": [], "obligations": [], "limites": [],
         "exclusions": [{"condition": {"non": {"f": ["pack_y", "oui"]}}, "portee": "tout", "a_demander": True,
                         "article": "1", "texte": "t"}]}], "vocabulaire_manquant": []}
     redaction.accepter_vocabulaire(prop, voc_etendu)
-    assert json.loads(voc_etendu.read_text(encoding="utf-8"))["variables"]["pack_y"]["pour"] == [redaction.JAMAIS]
+    assert prolog.vocabulaire(voc_etendu)["pack_y"]["pour"] == [redaction.JAMAIS]
 
 
 def test_concepts_definis_l_un_par_l_autre():
@@ -701,3 +701,15 @@ def test_exclusion_commune_qui_nomme_ses_garanties():
     pl = redaction.en_prolog(prop, "1.2")
     assert "exclusion([vol_vandalisme, bris_glaces], f(bien, vehicule_moteur)" in pl
     assert "exclusion(tous, f(intentionnel, oui)" in pl
+
+
+def test_le_vocabulaire_est_range():
+    """7.119 : le socle et les variables que plusieurs contrats emploient sont dans commun.json ; celles qu'un
+    seul emploie, dans son fichier. Après des règles écrites à la main : `couverture regles --contrat … --ranger`."""
+    assert redaction.mal_rangees() == []
+    voc = prolog.vocabulaire()
+    assert list(voc)[:3] == ["evenement", "bien", "lieu"]
+    for contrat in prolog.contrats_regles():
+        propres = json.loads((prolog.VOCABULAIRE / f"{contrat}.json").read_text(encoding="utf-8"))["variables"]
+        assert propres and set(propres) <= prolog.variables_employees(contrat)
+        assert not any(set(propres) & prolog.variables_employees(c) for c in prolog.contrats_regles() if c != contrat)

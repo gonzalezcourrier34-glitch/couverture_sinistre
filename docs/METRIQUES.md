@@ -110,6 +110,20 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 
 ## 5. Dernières mesures
 
+**21 nov. 2026, 14 h 26 à 14 h 32** (vocabulaire rangé en commun + un fichier par contrat, 7.119) : partie test de A
+**85 %** (2 couverts à tort), jeu fermé de B **88 %** (0, 0), jeu fermé de D **100 %**. Référence actuelle.
+
+**21 nov. 2026, 13 h 42 à 14 h 14** (temps 1 par Mistral Large, essai **non retenu**) : 17 à 31 s par cas, et 13 à 30 %
+des analyses sans réponse dans le délai ; les taux (83 %, 65 %, 65 %, 64 %) ne mesurent donc pas la lecture
+(DEMARCHE 7.118). L'état de référence reste celui de 12 h 51.
+
+**21 nov. 2026, 13 h 18 à 13 h 26** (biens et événements vérifiés un par un, essai **retiré**) : partie test de A 82 %,
+jeu fermé de A 93 %, B 88 %, D 96 %. Le juge retirait des biens justes (DEMARCHE 7.117). L'état de référence reste
+celui de 12 h 51.
+
+**21 nov. 2026, 12 h 51 à 12 h 58** (sans exemples au socle) : jeu fermé de B **82 %** (0, 0) ; jeu fermé de A **92 %**
+(0,33 couvert à tort) ; partie test de A **87 %** (2 couverts à tort). Détail en DEMARCHE 7.116.
+
 **21 nov. 2026, 12 h 42 et 12 h 45** : partie test de A avec exemples **90 %** (2 couverts à tort) ; jeu fermé de B sans
 exemples **88 %** (0, 0, portes passées), contre 82 % et 78 % avec exemples : les exemples étaient recopiés au socle
 (DEMARCHE 7.116).

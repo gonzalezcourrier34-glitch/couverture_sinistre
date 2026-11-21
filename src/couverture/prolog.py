@@ -1,6 +1,6 @@
 """Le moteur : les règles Prolog d'un contrat, le vocabulaire commun, et SWI-Prolog qui décide.
 
-    déclaration ─► lecture.py (Mistral) : faits dans le vocabulaire commun (regles/vocabulaire.json)
+    déclaration ─► lecture.py (Mistral) : faits dans le vocabulaire (regles/vocabulaire/)
                 ─► prolog.py (SWI-Prolog) : regles/moteur.pl + regles/<contrat>.pl ─► décision, preuves, questions
                 ─► chaine.py : la réponse (décision, citations vérifiées, questions)
 
@@ -14,6 +14,7 @@ COUVERTURE_SWIPL, ou l'emplacement d'installation habituel sous Windows.
 from __future__ import annotations
 
 import atexit
+import hashlib
 import json
 import os
 import queue
@@ -48,8 +49,50 @@ def fichier_regles(contrat_id: str) -> Path:
     return DOSSIER / f"{contrat_id}.pl"
 
 
-def vocabulaire() -> dict:
-    return json.loads((DOSSIER / "vocabulaire.json").read_text(encoding="utf-8"))["variables"]
+VOCABULAIRE = DOSSIER / "vocabulaire"
+COMMUN = "commun"
+
+
+def fichiers_vocabulaire(dossier: Path | None = None) -> list[Path]:
+    """`commun.json` (le socle et les variables que plusieurs contrats emploient), puis un fichier par contrat
+    (les variables que lui seul emploie) (7.119)."""
+    dossier = dossier or VOCABULAIRE
+    return [dossier / f"{COMMUN}.json", *sorted(f for f in dossier.glob("*.json") if f.stem != COMMUN)]
+
+
+def vocabulaire(dossier: Path | None = None) -> dict:
+    """Tout le vocabulaire : le commun, puis les variables propres à chaque contrat. Les règles d'un contrat
+    n'emploient que le commun et les siennes ; la lecture ne lui demande que celles-là (`variables_du_contrat`)."""
+    voc: dict = {}
+    for f in fichiers_vocabulaire(dossier):
+        for v, d in json.loads(f.read_text(encoding="utf-8"))["variables"].items():
+            if v in voc:
+                raise ErreurRegles(f"vocabulaire : « {v} » est défini deux fois ({f.name})")
+            voc[v] = d
+    return voc
+
+
+def contrats_regles() -> list[str]:
+    return sorted(f.stem for f in DOSSIER.glob("*.pl") if f != MOTEUR)
+
+
+def variables_employees(contrat_id: str) -> set[str]:
+    """Les variables que les règles du contrat emploient (`f(variable, …)`), commentaires retirés."""
+    texte = fichier_regles(contrat_id).read_text(encoding="utf-8")
+    texte = re.sub(r"%[^\n]*", "", re.sub(r"/\*.*?\*/", "", texte, flags=re.S))
+    return set(re.findall(r"\bf\(\s*'?([a-z][a-z0-9_]*)'?\s*,", texte))
+
+
+def fichier_domaines() -> Path:
+    """Les valeurs de chaque variable, en un seul fichier pour le moteur (`charger_domaines` de moteur.pl), écrit
+    dans le dossier temporaire et nommé d'après son contenu : réécrit seulement quand le vocabulaire change."""
+    contenu = json.dumps({"variables": {v: {"valeurs": d["valeurs"]} for v, d in vocabulaire().items()}}, ensure_ascii=False)
+    chemin = Path(tempfile.gettempdir()) / f"couverture-domaines-{hashlib.sha256(contenu.encode()).hexdigest()[:16]}.json"
+    if not chemin.exists():
+        provisoire = chemin.with_suffix(f".{os.getpid()}.tmp")
+        provisoire.write_text(contenu, encoding="utf-8")
+        os.replace(provisoire, chemin)
+    return chemin
 
 
 def hierarchie(voc: dict | None = None) -> list[tuple[str, str, str]]:
@@ -119,7 +162,7 @@ def but(faits: dict, point: str = "decider_json", fichiers: tuple = ()) -> str:
         poses.append(f"assertz(parent_valeur({v}, {x}, {p}))")
     if point == "decider_json":
         # Les valeurs possibles de chaque variable, pour le raisonnement par hypothèses (moteur.pl).
-        poses.append(f"charger_domaines({atome_chemin(DOSSIER / 'vocabulaire.json')})")
+        poses.append(f"charger_domaines({atome_chemin(fichier_domaines())})")
     corps = ", ".join(["set_stream(user_output, encoding(utf8))", *charges, "retractall(fait(_, _))",
                        "retractall(parent_valeur(_, _, _))", *poses, point])
     return f"catch(({corps}), E, (print_message(error, E), halt(2)))"
@@ -167,7 +210,7 @@ class MoteurPermanent:
                  if all(ATOME.match(str(t)) for t in (v, x, p))]
         corps = ", ".join([f"consult({atome_chemin(MOTEUR)})", f"consult({atome_chemin(regles)})",
                            "retractall(parent_valeur(_, _, _))", *poses,
-                           f"charger_domaines({atome_chemin(DOSSIER / 'vocabulaire.json')})", "servir"])
+                           f"charger_domaines({atome_chemin(fichier_domaines())})", "servir"])
         self.journal = tempfile.TemporaryFile(mode="w+b")   # messages de SWI-Prolog (avertissements au chargement)
         self.p = subprocess.Popen([exe, "-q", "-g", f"catch(({corps}), E, (print_message(error, E), halt(2)))",
                                    "-t", "halt"], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
@@ -185,7 +228,7 @@ class MoteurPermanent:
 
     @staticmethod
     def empreinte_fichiers(regles: Path) -> tuple:
-        return tuple(f.stat().st_mtime_ns for f in (MOTEUR, regles, DOSSIER / "vocabulaire.json"))
+        return tuple(f.stat().st_mtime_ns for f in (MOTEUR, regles, *fichiers_vocabulaire()))
 
     def _lire(self) -> None:
         for ligne in self.p.stdout:

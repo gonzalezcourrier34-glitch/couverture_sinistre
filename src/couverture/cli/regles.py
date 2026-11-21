@@ -18,6 +18,8 @@ def ajouter(sous) -> None:
     p.add_argument("--faits", help="Décider un cas : JSON des faits, ex. '{\"evenement\": \"vol\", \"lieu\": [\"cave\"]}'")
     p.add_argument("--jeu", choices=["mise_au_point", "validation", "redaction", "golden", "ferme"], default="mise_au_point",
                    help="Cas de mise au point (défaut), de validation (data/validation) ou des garanties rédigées par le modèle (data/redaction)")
+    p.add_argument("--ranger", action="store_true",
+                   help="Ranger le vocabulaire : commun.json, et un fichier par contrat pour ce que lui seul emploie")
     p.set_defaults(executer=executer)
 
 
@@ -29,6 +31,13 @@ def executer(a, base: Base, donnees: Path) -> int:
     4. les cas de regles/cas/<contrat>.jsonl (faits « idéaux ») donnent la réponse attendue.
     Avec --faits '{"evenement": "vol", …}' : décide un seul cas."""
     contrat_id, faits_json, jeu = a.contrat, a.faits, a.jeu
+    if a.ranger:
+        from .. import redaction
+        deplacees = redaction.ranger()
+        print("Vocabulaire rangé (regles/vocabulaire/)." + ("" if deplacees else " Rien n'a bougé."))
+        for x in deplacees:
+            print(f"  {x}")
+        return 0
     exe = prolog.swipl()
     if exe is None:
         print("SWI-Prolog introuvable. Windows : `winget install SWI-Prolog.SWI-Prolog`, puis rouvrir PowerShell.")

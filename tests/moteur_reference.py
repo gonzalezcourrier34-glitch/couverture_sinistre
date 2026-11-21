@@ -117,8 +117,17 @@ class Contrat:
         return next((d for d in self.regles("definition", 4) if d.args[0] == n), None)
 
 
+def vocabulaire() -> dict:
+    """Toutes les variables : regles/vocabulaire/commun.json, puis un fichier par contrat (7.119)."""
+    dossier = Path(__file__).resolve().parents[1] / "regles" / "vocabulaire"
+    voc = {}
+    for f in sorted(dossier.glob("*.json"), key=lambda f: (f.stem != "commun", f.name)):
+        voc.update(json.loads(f.read_text(encoding="utf-8"))["variables"])
+    return voc
+
+
 def hierarchie_du_vocabulaire() -> list[tuple]:
-    voc = json.loads((Path(__file__).resolve().parents[1] / "regles" / "vocabulaire.json").read_text(encoding="utf-8"))
+    voc = {"variables": vocabulaire()}
     return [(v, x, p) for v, d in voc["variables"].items() for x, ps in d.get("parents", {}).items() for p in ps]
 
 
@@ -427,7 +436,7 @@ def ou3(es):
 # --- Raisonnement par hypothèses (miroir de explorer/2 dans moteur.pl) ---------------------------------------
 
 def domaines_du_vocabulaire() -> dict:
-    voc = json.loads((Path(__file__).resolve().parents[1] / "regles" / "vocabulaire.json").read_text(encoding="utf-8"))
+    voc = {"variables": vocabulaire()}
     return {v: list(d["valeurs"]) for v, d in voc["variables"].items()}
 
 
