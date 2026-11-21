@@ -55,19 +55,19 @@
 
             <form class="saisie" (submit)="$event.preventDefault(); analyser()">
                 <label class="etiquette" for="sinistre">2. La déclaration du client</label>
-                <textarea id="sinistre" rows="6" [attr.maxlength]="longueurMax"
+                <textarea id="sinistre" rows="4" [attr.maxlength]="longueurMax"
                     placeholder="Décrivez le sinistre comme le client l’écrirait : ce qui s’est passé, où, ce qui est abîmé…"
                     [value]="sinistre()" (input)="saisir($event)"></textarea>
-                <div class="compteur">{{ sinistre().length }} / {{ longueurMax }}</div>
 
                 <div class="exemples">
                     <span class="small">Exemples :</span>
-                    @for (e of exemples; track e) {
-                        <button type="button" class="chip" (click)="exemple(e)">{{ e.length > 48 ? e.slice(0, 48) + '…' : e }}</button>
+                    @for (e of exemples; track e.titre) {
+                        <button type="button" class="chip" [attr.title]="e.texte" (click)="exemple(e.texte)">{{ e.titre }}</button>
                     }
                 </div>
 
                 <div class="actions">
+                    <span class="compteur">{{ sinistre().length }} / {{ longueurMax }}</span>
                     @if (etapes().length) {
                         <button type="button" class="bouton bouton-secondaire" (click)="nouvelleDeclaration()">Nouvelle déclaration</button>
                     }
@@ -76,12 +76,6 @@
                     </button>
                 </div>
             </form>
-
-            <ol class="principe">
-                <li><strong>Lire</strong> : un modèle de langue traduit la déclaration en faits d’un vocabulaire fermé.</li>
-                <li><strong>Décider</strong> : un moteur logique applique les règles tirées des conditions générales.</li>
-                <li><strong>Vérifier</strong> : chaque citation est retrouvée mot pour mot dans le contrat ; un fait douteux suspend la réponse.</li>
-            </ol>
         </section>
 
 
@@ -123,17 +117,12 @@
 
                     <!-- ### Ce qu'il faut demander au client (dernière étape seulement) -->
 
-                    @if (last && aPreciser().length) {
+                    @if (last && questions().length) {
                         <div class="bloc a-preciser">
                             <div class="bloc-titre">À demander au client</div>
-                            @for (p of aPreciser(); track p.variable) {
+                            @for (p of questions(); track p.variable) {
                                 <div class="question">
-                                    <div class="question-texte">
-                                        @if (p.nature === 'reserve') {
-                                            <span class="etiquette-reserve">Réserve</span>
-                                        }
-                                        {{ p.question }}
-                                    </div>
+                                    <div class="question-texte">{{ p.question }}</div>
                                     <div class="valeurs" role="group" [attr.aria-label]="p.question">
                                         @for (v of p.valeurs; track v) {
                                             <button type="button" class="chip"
@@ -155,32 +144,37 @@
                         </div>
                     }
 
+                    <!-- ### Les réserves : ce que l'assureur pourra vérifier (rien à demander au client) -->
+
+                    @if (last && reserves().length) {
+                        <div class="bloc">
+                            <div class="bloc-titre">Sous réserve · ce que l’assureur pourra vérifier</div>
+                            <ul class="limites">
+                                @for (p of reserves(); track p.variable) {
+                                    <li>{{ p.question }}</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
                     <!-- ### Ce qui fonde la décision -->
 
                     @if (etape.reponse.citations.length) {
                         <div class="bloc">
                             <div class="bloc-titre">Clauses citées</div>
-                            @for (c of etape.reponse.citations; track $index) {
-                                @let k = cle(i, c);
-                                <div class="citation" [class]="'role-' + c.role">
-                                    <button type="button" class="citation-tete" [attr.aria-expanded]="estOuverte(k)" (click)="basculer(k)">
-                                        <span class="citation-article">Art. {{ c.clause_id }}</span>
-                                        <span class="citation-role">{{ c.role }}</span>
-                                        @if (c.pages.length) {
-                                            <span class="small">p. {{ c.pages.join(', ') }}</span>
+                            @for (a of citationsParArticle(etape.reponse.citations); track a.clauseId) {
+                                <div class="citation" [class]="'role-' + a.role">
+                                    <div class="citation-tete">
+                                        <button type="button" class="lien citation-article"
+                                            [attr.aria-label]="'Lire l’article ' + a.clauseId + ' en entier'"
+                                            (click)="ouvrirArticle(a.clauseId, a.extraits)">Art. {{ a.clauseId }}</button>
+                                        <span class="citation-role">{{ a.role }}</span>
+                                        @if (a.pages.length) {
+                                            <span class="small">p. {{ a.pages.join(', ') }}</span>
                                         }
-                                    </button>
-                                    <q class="citation-extrait">{{ c.extrait }}</q>
-                                    @if (estOuverte(k)) {
-                                        @let cl = clause(c.clause_id);
-                                        @if (cl) {
-                                            <div class="clause">
-                                                <div class="clause-titre">{{ cl.chemin.join(' › ') }}</div>
-                                                <p>{{ cl.texte }}</p>
-                                            </div>
-                                        } @else {
-                                            <div class="clause small">Chargement du texte…</div>
-                                        }
+                                    </div>
+                                    @for (extrait of a.extraits; track extrait) {
+                                        <q class="citation-extrait">{{ extrait }}</q>
                                     }
                                 </div>
                             }
@@ -224,6 +218,11 @@
                     <p class="muted">La réponse dit <strong>couvert</strong>, <strong>non couvert</strong> ou <strong>à préciser</strong>,
                         avec les clauses du contrat qui la fondent. Quand il manque une information, elle dit quoi demander au client :
                         ses réponses donnent la décision tout de suite.</p>
+                    <ol class="principe">
+                        <li><strong>Lire</strong> Un modèle de langue traduit la déclaration en faits d’un vocabulaire fermé.</li>
+                        <li><strong>Décider</strong> Un moteur logique applique les règles tirées des conditions générales.</li>
+                        <li><strong>Vérifier</strong> Chaque citation est retrouvée mot pour mot dans le contrat ; un fait douteux suspend la réponse.</li>
+                    </ol>
                     <div class="legende">
                         <span class="verdict ton-succes"><span class="verdict-libelle">Couvert</span></span>
                         <span class="verdict ton-danger"><span class="verdict-libelle">Non couvert</span></span>
@@ -240,6 +239,34 @@
             }
         </section>
     </section>
+
+    <!-- # L'article entier, dans une fenêtre -->
+
+    @if (articleOuvert(); as ouvert) {
+        @let cl = clause(ouvert.clauseId);
+        <div class="voile" (click)="fermerArticle()">
+            <div class="fenetre" role="dialog" aria-modal="true" [attr.aria-label]="'Article ' + ouvert.clauseId"
+                (click)="$event.stopPropagation()">
+                <header class="fenetre-tete">
+                    <div>
+                        <div class="fenetre-titre">Art. {{ ouvert.clauseId }}</div>
+                        @if (cl) {
+                            <div class="small">{{ cl.chemin.join(' › ') }}@if (cl.pages.length) { · p. {{ cl.pages.join(', ') }} }</div>
+                        }
+                    </div>
+                    <button type="button" class="bouton bouton-secondaire" (click)="fermerArticle()">Fermer</button>
+                </header>
+                <div class="fenetre-corps">
+                    @if (cl) {
+                        <p class="article">@for (m of surligner(cl.texte, ouvert.extraits); track $index) {<span [class.cite]="m.cite">{{ m.texte }}</span>}</p>
+                        <p class="small">Surligné : les passages sur lesquels la décision s’appuie.</p>
+                    } @else {
+                        <p class="small">Chargement de l’article…</p>
+                    }
+                </div>
+            </div>
+        </div>
+    }
 
     <footer class="pied small">
         Démonstration · conditions générales d’assureurs anonymisés · la décision ne remplace pas l’examen du dossier par un gestionnaire.

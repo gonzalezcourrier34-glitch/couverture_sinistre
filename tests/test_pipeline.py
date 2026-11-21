@@ -584,3 +584,16 @@ def test_un_autre_modele_pour_le_temps_1(monkeypatch):
     assert llm.modele_du_socle().modele == "mistral-large-latest"
     monkeypatch.setenv("COUVERTURE_MODELE", "mistral-large-latest")
     assert llm.modele_du_socle(llm.MistralLLM()) is None, "déjà le modèle de l'analyse"
+
+
+def test_la_graine_du_tirage(monkeypatch):
+    """7.123 : chaque appel à Mistral porte une graine fixe, pour que la même déclaration donne la même lecture."""
+    from couverture import llm
+
+    monkeypatch.setenv("MISTRAL_API_KEY", "cle-de-test")
+    monkeypatch.delenv("COUVERTURE_GRAINE", raising=False)
+    assert llm.MistralLLM(modele="mistral-small-latest").extra["random_seed"] == 0
+    monkeypatch.setenv("COUVERTURE_GRAINE", "7")
+    assert llm.MistralLLM(modele="mistral-small-latest").extra["random_seed"] == 7
+    monkeypatch.setenv("COUVERTURE_GRAINE", "non")
+    assert "random_seed" not in llm.MistralLLM(modele="mistral-small-latest").extra

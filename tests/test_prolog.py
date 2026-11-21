@@ -794,6 +794,9 @@ def test_je_ne_sais_pas_plutot_qu_une_reponse_fausse(contrat):
     assert doute.decision.value == "INCERTAIN" and (doute.decision_initiale or doute.decision).value == "INCERTAIN"
     assert doute.informations_manquantes[0].startswith(lecture.question("fermeture"))
     assert doute.justification.startswith("Je ne peux pas trancher")
+    # 7.127 : en mots du client (la question), sans nom de variable, et sans annoncer la décision d'après.
+    assert lecture.question("fermeture") in doute.justification and "fermeture :" not in doute.justification
+    assert "Garantie en jeu" in doute.justification and ". Non couvert." not in doute.justification
     m = Modele("dit")
     confirme = chaine.PipelineRegles(CONTRAT, [], m, decideur=oracle).analyser(sinistre).verdict
     # (sans clauses fournies, le contrôle des citations rétrograde toute réponse : on lit la réponse avant lui)
@@ -947,6 +950,27 @@ def test_on_ne_demande_au_client_que_ce_qui_compte():
     assert chaine.points_a_preciser(couvert, voc) == [("travaux_vitres", "reserve")]
     refus = {"decision": "NON_COUVERT", "retenues": [{"questions": []}], "possibles": [{"questions": ["fermeture"]}]}
     assert chaine.points_a_preciser(refus, voc) == [("fermeture", "question")]
+    # 7.124 : une réserve hors sujet pour l'événement lu n'est pas posée (l'eau pour un piéton renversé à vélo).
+    rc = {"decision": "COUVERT", "retenues": [{"questions": [], "reserves": ["cause_eau", "manque_entretien", "travaux_vitres"]}]}
+    assert chaine.points_a_preciser(rc, voc, {"evenement": ["responsabilite"]}) == []
+    assert ("cause_eau", "reserve") in chaine.points_a_preciser(rc, voc, {"evenement": ["degat_eaux"]})
+    assert ("cause_eau", "reserve") in chaine.points_a_preciser(rc, voc), "sans événement connu, la réserve reste"
+    # 7.125 : la cause de l'eau déjà dite ne se redemande pas ; un « accident » compte comme un heurt.
+    assert ("cause_eau", "reserve") not in chaine.points_a_preciser(rc, voc, {"evenement": ["degat_eaux"], "cause_eau": "gel"})
+    # 7.128 : même connue en gros (« une fuite », qui pourrait être le gel), la réserve ne se redemande pas ; une
+    # question sur un fait vague ne propose que ses précisions ; « couvert » n'annonce pas de question qui tranche.
+    assert ("cause_eau", "reserve") not in chaine.points_a_preciser(
+        rc, voc, {"evenement": ["degat_eaux"], "cause_eau": "fuite_installation"})
+    from couverture.api import service
+    assert service.valeurs_proposees("cause_eau", voc, {"cause_eau": "fuite_installation"}) == ["gel"]
+    assert "gel" in service.valeurs_proposees("cause_eau", voc, {}) and "fuite_installation" in service.valeurs_proposees("cause_eau", voc, {})
+    _, m = chaine.questions_explorees({"questions": [], "ensemble": ["travaux_vitres"]}, ["travaux_vitres"], "Couvert. « Bris ».")
+    assert "tranche" not in m
+    assert prolog.evenements_etendus(["accident"]) == {"accident", "heurt", "bris"}
+    heurt = next(v for v, d in voc.items() if d.get("pour") and "heurt" in d["pour"] and "accident" not in d["pour"])
+    assert heurt in prolog.filtrer_faits({"evenement": ["accident"], heurt: voc[heurt]["valeurs"][0]})[0]
+    _, motif = chaine.questions_explorees({"questions": [], "ensemble": ["manque_entretien"]}, [], "Couvert.")
+    assert motif == "Couvert."
 
 
 def test_l_exploration_ne_reintroduit_pas_une_reserve_ecartee():

@@ -279,3 +279,12 @@ def test_banc_precedent_de_meme_configuration(tmp_path):
                                                             encoding="utf-8")
     assert _banc.dernier(tmp_path, "c", "regles", "mistral:small", "verifiee")["date"] == "20260101-000000"
     assert _banc.dernier(tmp_path, "c", "regles", "mistral:large", "verifiee") is None
+
+
+def test_les_reponses_justes_et_fausses_par_type():
+    """7.121 : le banc dit, pour chaque réponse donnée, combien sont justes et combien fausses."""
+    a = [{"obtenu": "COUVERT", "ok": True}, {"obtenu": "INCERTAIN", "ok": False}, {"obtenu": "NON_COUVERT", "ok": True}]
+    b = [{"obtenu": "COUVERT", "ok": True}, {"obtenu": "INCERTAIN", "ok": True}, {"obtenu": "COUVERT", "ok": False}]
+    assert banc.par_reponse([a, b]) == {"COUVERT": {"justes": 1.0, "fausses": 0.5},
+                                        "NON_COUVERT": {"justes": 0.5, "fausses": 0.0},
+                                        "INCERTAIN": {"justes": 0.5, "fausses": 0.5}}

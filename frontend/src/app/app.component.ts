@@ -21,7 +21,6 @@ import {
 
 import {
     APreciser,
-    Citation,
     Clause,
     Contrat,
     Decision,
@@ -36,21 +35,32 @@ import {
 import {
     LIBELLES,
     TONS,
+    citationsParArticle,
     fusionner,
     lignesDeFaits,
     lisible,
     pourcent,
+    surligner,
     trierAPreciser
 } from './presentation';
 
 
 // # Constantes
 
-/** Exemples de déclarations, proposés sous la saisie. */
-const EXEMPLES = [
-    'En faisant du vélo dans le parc, je n’ai pas vu un piéton et je l’ai renversé. Il s’est cassé le poignet.',
-    'Le tuyau de ma machine à laver a éclaté : l’eau a traversé le plancher et abîmé le plafond du voisin du dessous.',
-    'On a forcé la porte de ma cave et on m’a volé mon vélo.'
+/** Exemples de déclarations, proposés sous la saisie : un titre court sur le bouton, le texte dans la zone de saisie. */
+const EXEMPLES: readonly { titre: string; texte: string }[] = [
+    {
+        titre: 'Piéton renversé à vélo',
+        texte: 'En faisant du vélo dans le parc, je n’ai pas vu un piéton et je l’ai renversé. Il s’est cassé le poignet.'
+    },
+    {
+        titre: 'Fuite de machine à laver',
+        texte: 'Le tuyau de ma machine à laver a éclaté : l’eau a traversé le plancher et abîmé le plafond du voisin du dessous.'
+    },
+    {
+        titre: 'Vélo volé dans la cave',
+        texte: 'On a forcé la porte de ma cave et on m’a volé mon vélo.'
+    }
 ];
 
 const LONGUEUR_MIN = 10;
@@ -87,10 +97,12 @@ function messageErreur(
 
 @Component({
     selector: 'app-root',
-    standalone: true,
     imports: [KeyValuePipe],
     templateUrl: './app.component.html',
-    styleUrl: './app.component.scss'
+    styleUrl: './app.component.scss',
+    host: {
+        '(document:keydown.escape)': 'fermerArticle()'
+    }
 })
 export class AppComponent implements OnInit {
 
@@ -114,6 +126,10 @@ export class AppComponent implements OnInit {
     readonly pourcent = pourcent;
 
     readonly lignesDeFaits = lignesDeFaits;
+
+    readonly citationsParArticle = citationsParArticle;
+
+    readonly surligner = surligner;
 
 
     // # État
@@ -141,11 +157,11 @@ export class AppComponent implements OnInit {
     /** Réponses du client aux points à préciser de la dernière étape. */
     readonly reponses = signal<Record<string, string>>({});
 
-    /** Clauses du contrat choisi, chargées à la première citation ouverte. */
+    /** Clauses du contrat choisi, chargées au premier article ouvert. */
     private readonly clausesParContrat = signal<Record<string, Record<string, Clause>>>({});
 
-    /** Citations dont le texte complet est déplié (clé : étape-citation). */
-    readonly ouvertes = signal<Set<string>>(new Set());
+    /** L'article affiché en entier dans la fenêtre, avec les extraits à y surligner. */
+    readonly articleOuvert = signal<{ clauseId: string; extraits: string[] } | null>(null);
 
 
     // # Dérivés
@@ -165,6 +181,16 @@ export class AppComponent implements OnInit {
 
     readonly aPreciser = computed<APreciser[]>(
         () => trierAPreciser(this.derniere()?.reponse.a_preciser ?? [])
+    );
+
+    /** Sans la réponse, pas de décision : ce sont les seules questions posées au client. */
+    readonly questions = computed<APreciser[]>(
+        () => this.aPreciser().filter((p) => p.nature === 'question')
+    );
+
+    /** La réponse est « couvert » ; l'assureur pourra vérifier ces points : affichés, pas demandés. */
+    readonly reserves = computed<APreciser[]>(
+        () => this.aPreciser().filter((p) => p.nature === 'reserve')
     );
 
     readonly peutAnalyser = computed(() => {
@@ -234,7 +260,7 @@ export class AppComponent implements OnInit {
         }
         this.etapes.set([]);
         this.reponses.set({});
-        this.ouvertes.set(new Set());
+        this.articleOuvert.set(null);
         this.erreur.set(null);
     }
 
@@ -287,34 +313,14 @@ export class AppComponent implements OnInit {
     }
 
 
-    // # Citations : le texte complet de la clause
+    // # Clauses citées : l'article entier, dans une fenêtre
 
-    cle(
-        indexEtape: number,
-        citation: Citation
-    ): string {
-        return `${indexEtape}:${citation.clause_id}:${citation.extrait.slice(0, 40)}`;
-    }
-
-    estOuverte(
-        cle: string
-    ): boolean {
-        return this.ouvertes().has(cle);
-    }
-
-    basculer(
-        cle: string
+    ouvrirArticle(
+        clauseId: string,
+        extraits: string[]
     ): void {
         const contratId = this.contratId();
-        this.ouvertes.update((o) => {
-            const copie = new Set(o);
-            if (copie.has(cle)) {
-                copie.delete(cle);
-            } else {
-                copie.add(cle);
-            }
-            return copie;
-        });
+        this.articleOuvert.set({ clauseId, extraits });
         if (contratId && !this.clausesParContrat()[contratId]) {
             this.service.clauses(contratId)
                 .pipe(takeUntilDestroyed(this.destroyRef))
@@ -323,9 +329,16 @@ export class AppComponent implements OnInit {
                         ...c,
                         [contratId]: Object.fromEntries(clauses.map((x) => [x.id, x]))
                     })),
-                    error: (e) => this.erreur.set(messageErreur(e))
+                    error: (e) => {
+                        this.articleOuvert.set(null);
+                        this.erreur.set(messageErreur(e));
+                    }
                 });
         }
+    }
+
+    fermerArticle(): void {
+        this.articleOuvert.set(null);
     }
 
     clause(
@@ -352,9 +365,6 @@ export class AppComponent implements OnInit {
     ): void {
         this.etapes.update((etapes) => (nouvelle ? [etape] : [...etapes, etape]));
         this.reponses.set({});
-        if (nouvelle) {
-            this.ouvertes.set(new Set());
-        }
         this.chargement.set(false);
     }
 

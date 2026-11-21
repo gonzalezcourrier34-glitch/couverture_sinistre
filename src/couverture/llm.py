@@ -221,9 +221,23 @@ class MistralLLM(OpenAICompatibleLLM):
             json_mode=True,
             fournisseur="mistral",
             # Mistral refuse temperature=0 (décodage glouton) si top_p n'est pas exactement 1.
-            extra={"top_p": 1, **_reflexion_mistral(modele, reflexion)},
+            # `random_seed` : même à température 0, la même déclaration ne donnait pas toujours la même lecture
+            # (le vélo lu « véhicule à moteur » une fois sur quatre, 7.123) ; la graine fixe demande des réponses
+            # reproductibles. COUVERTURE_GRAINE=non pour s'en passer.
+            extra={"top_p": 1, **_graine(), **_reflexion_mistral(modele, reflexion)},
             **kwargs,
         )
+
+
+def _graine() -> dict:
+    """La graine du tirage (`random_seed`), 0 par défaut ; COUVERTURE_GRAINE=non : aucune ; un entier : celui-là."""
+    valeur = os.environ.get("COUVERTURE_GRAINE", "0").strip().lower()
+    if valeur in {"non", "no", "false", "aucune", ""}:
+        return {}
+    try:
+        return {"random_seed": int(valeur)}
+    except ValueError:
+        return {"random_seed": 0}
 
 
 def _reflexion_mistral(modele: str = "", reflexion: str | None = None) -> dict:

@@ -3979,6 +3979,181 @@ lecture sur trois près dans les deux sens, et aucun « oui » perdu (`f-b07`, l
 4 points du jeu fermé de A viennent d'autres cas (`f-a02`, le fer à repasser ; `f-a12`, le congélateur), sans vol :
 variation de lecture.
 
+**Deuxième phrase retirée** (`lecture-details` v4) : « des flammes qui brûlent ou se propagent : flammes = oui et
+embrasement = oui ; avec la chaleur, sans flamme décrite : flammes = non ». Plus risquée que la première : le
+vocabulaire n'a **pas d'aide** pour ces deux variables, seuls 8 exemples le montrent (5 avec flammes, 3 sans), et le
+fer à repasser (`f-a02`) comme les bougies bougent déjà d'un passage à l'autre. Si la lecture se dégrade, le repli
+est de porter ce sens dans l'aide du vocabulaire, pas de remettre la phrase. À mesurer.
+
+**Mesure (21 nov., 15 h 18 à 15 h 26) : ce retrait-là est annulé**, retour à la v3. Partie test de A 85 %, jeu fermé de
+A 90 %, B 90 % : inchangés, et la lecture de `flammes` et d'`embrasement` est la même cas par cas. Mais D passe de 100 %
+à **95 %**, pour un seul cas faux 3 fois sur 3 : `f-d01` (« une poêle d'huile s'est enflammée, la hotte et les
+placards ont brûlé ») est maintenant lu `chaleur_sans_feu = oui`, alors qu'avant le modèle lisait « non ».
+
+La phrase faisait donc plus que ce qu'elle dit : elle ancrait la différence entre le feu et la chaleur pour une
+variable qu'elle ne nomme pas. D n'emploie ni `flammes` ni `embrasement`, seulement `chaleur_sans_feu`, qui n'a aucune
+aide dans le vocabulaire, et la banque n'a pas d'exemple de D. Les exemples ne remplacent une phrase que là où ils
+existent.
+
+Le repli prévu (porter le sens dans l'aide du vocabulaire) reste la bonne voie, mais pas en le réglant sur `f-d01`,
+qui est un cas du jeu fermé (leçon 119) : une aide pour `chaleur_sans_feu`, puis la mesure sur des déclarations
+nouvelles. D'ici là, la phrase reste. Bilan de 7.120 : une phrase retirée sur deux essayées ; « fermé à clé » attend
+la même précaution (regarder d'abord quelles variables la phrase touche, chez les trois assureurs).
+
+### 7.121 Le banc dit d'où vient son taux : justes et fausses par réponse
+
+Un taux de 88 % ne dit pas s'il vient d'une chaîne qui tranche bien ou d'une chaîne qui répond « à préciser » partout.
+Le banc affiche maintenant, pour chaque réponse donnée, combien sont justes et combien fausses (moyenne par
+exécution), en console (« Par réponse ») et dans le rapport. Sur les bancs de 14 h 41 :
+
+| Banc | Couvert (justes / faux) | Non couvert | À préciser |
+|---|---|---|---|
+| A, partie test (31) | 14 / 2 | 9 / 0 | 3,7 / 2,3 |
+| A, jeu fermé (20) | 7,3 / 0,7 | 4,3 / 0 | 6 / 1,7 |
+| B, jeu fermé (20) | 8 / 0 | 3,7 / 0 | 6 / 2,3 |
+| D, jeu fermé (25) | 9 / 0 | 9 / 0 | 7 / 0 |
+
+Un « non couvert » n'est jamais faux. Les erreurs sont des « couvert » de trop chez A (la clé sous le paillasson, le
+bain à bulles) et des « à préciser » de trop ; la chaîne tranche dans deux tiers des cas environ.
+
+### 7.122 L'écran tient dans la fenêtre
+
+Sur un portable (fenêtre de 1366 × 650 ou 1536 × 730), la colonne de gauche débordait : le bouton « Analyser » était
+sous le bas de l'écran, il fallait faire défiler pour le trouver. Mesuré sur une maquette statique de l'écran (le
+gabarit et les styles, rendus par Chromium à trois tailles) : 1017 px de contenu pour 421 px de hauteur.
+
+Ce qui change : la zone de saisie prend la hauteur qui reste au lieu d'une hauteur fixe ; les trois temps (lire,
+décider, vérifier) passent dans l'accueil, à droite, où la place existe ; les exemples ont un titre court sur le
+bouton (le texte complet va dans la saisie) ; le compteur rejoint la ligne des boutons ; les tailles de texte
+descendent d'un cran (16 px de base). Fenêtre étroite ou très basse : une colonne, et la page défile. Après : la
+colonne de gauche tient aux trois tailles, « Analyser » toujours visible. Non vérifié ici : la compilation Angular
+(`npm run build`, `npm test`) et le rendu réel avec la police Barlow.
+
+### 7.123 La même déclaration, des lectures différentes : une graine fixe (à mesurer)
+
+Vu par l'auteur dans l'interface, et retrouvé dans le journal des analyses (21 nov., 15 h 31 à 15 h 35) : le premier
+exemple proposé à l'écran (« en faisant du vélo dans le parc, j'ai renversé un piéton »), soumis cinq fois au contrat
+A, a donné **non couvert** deux fois, **couvert** une fois et **à préciser** deux fois ; l'événement est lu tantôt
+« responsabilité », tantôt « heurt ». Les bancs le disaient déjà pour le cas voisin `f-a18` : sur 15 lectures du jour,
+4 lisent le vélo « véhicule à moteur » (d'où un refus à tort), alors que l'aide du vocabulaire dit l'inverse en
+toutes lettres.
+
+La température est à 0, mais les appels ne portaient pas de graine. Mistral documente `random_seed` : avec lui, des
+appels identiques doivent donner des résultats reproductibles. Chaque appel porte maintenant `random_seed = 0`
+(`COUVERTURE_GRAINE` pour changer la valeur ou s'en passer).
+
+Ce que la graine peut et ne peut pas faire : elle peut rendre la réponse **stable** (la même déclaration, la même
+lecture), pas **juste** : une lecture fausse deviendrait fausse à chaque fois. À regarder au banc : la ligne
+« instables », et les cas qui se figent du mauvais côté. Si l'instabilité demeure, la piste suivante est de lire deux
+fois et de répondre « à préciser » quand les deux lectures divergent sur un fait qui porte la décision.
+
+**Mesure (21 nov., 16 h 20 à 16 h 30) : la graine ne stabilise pas la lecture.** Jeu fermé de A 87 %, partie test de
+A 85 %, B 85 %, D 100 % : dans la variation habituelle. Instables : 2, 1, 3, 0 (avant : 3 à 4, 2, 1 à 5, 0 à 1). Et
+la mesure directe, les faits lus aux trois passages d'un même banc : identiques pour 35 déclarations sur 96 avec la
+graine, 30 sur 96 sans. Deux lectures sur trois de la même phrase diffèrent donc toujours, le plus souvent sur un
+fait qui ne change pas la décision. `random_seed` reste envoyé (il ne coûte rien), mais il ne faut pas en attendre la
+reproductibilité.
+
+Ce que ces passages apprennent de plus utile : les erreurs qui restent ne sont **pas** de l'instabilité. `f-a11` (le
+vase lu « verre de meuble »), `g-p03` (la clé), `g2-p08` (le bain à bulles), `red-b01`, `g2-p01`, `f-a14`, `f-b06`
+sont faux **trois fois sur trois**, avec la même lecture. Lire deux fois et comparer ne les verrait pas : les deux
+lectures seraient d'accord sur l'erreur. La piste de la double lecture est donc écartée sans être codée ; ce qu'il
+faut, c'est un lecteur qui choisit mieux la catégorie, donc plus d'exemples validés.
+
+### 7.124 « D'où venait l'eau ? » pour un piéton renversé à vélo
+
+Vu par l'auteur à l'écran, contrat D : la déclaration du vélo et du piéton est couverte par la responsabilité civile
+vie privée, mais « à demander au client » proposait deux réserves sans rapport : « d'où venait l'eau ? » et « le
+dommage vient-il de l'usure ou d'un manque d'entretien ? ». Elles viennent d'exclusions que les règles rattachent à
+la garantie ; le moteur les rend en réserves (l'assureur aurait à les prouver), et l'écran les montrait toutes.
+
+Or le vocabulaire sait déjà qu'elles sont hors sujet : `cause_eau` ne vaut que pour un dégât des eaux ou une
+catastrophe naturelle (« pour »), et la lecture retire un tel fait quand l'événement est autre
+(`prolog.filtrer_faits`). La réponse du client aurait donc été jetée. La même règle s'applique maintenant aux
+réserves : `points_a_preciser` reçoit les événements lus et ne pose pas une réserve hors sujet ; « une seule question
+tranche » ne cite plus une question qu'on ne pose pas ; et quand il ne reste aucune réserve à montrer, la réponse ne
+dit plus « sous réserve des vérifications à faire » et la confiance reste à 85 %.
+
+La règle de D est juste : c'est une exclusion générale du contrat (le manque d'entretien, sauf pour un dégât des
+eaux dû au gel), rattachée à toutes les garanties, d'où `cause_eau` dans ses conditions. C'est l'affichage qui
+manquait de discernement, pas les règles.
+
+### 7.125 Deux défauts vus à l'écran : la revue de tout ce qu'on demande au client
+
+Deux défauts trouvés par l'auteur en dix minutes d'essais (7.123, 7.124) : les bancs ne les voyaient pas, parce
+qu'ils notent la décision, pas ce que l'écran demande. La revue est donc faite par le code, et elle reste en test
+(`tests/test_questions.py`) : pour chaque contrat, sur chaque événement seul, sur chaque événement avec un bien et un
+lieu, et sur les faits idéaux de tous les cas (267 situations), l'oracle décide et on vérifie que chaque point demandé
+peut servir. Trois défauts de plus :
+
+- **Une réponse jetée** (6 situations, contrats B et D) : pour un « accident », la plainte déposée ou le véhicule
+  identifié étaient demandés, mais ces questions ne valent que pour un « heurt », et la réponse du client était retirée
+  comme hors sujet. Le vocabulaire dit pourtant qu'un accident compte comme un heurt ou un bris : `filtrer_faits`
+  suit maintenant cette hiérarchie (`evenements_etendus`).
+- **Une question déjà répondue** (8 situations, contrat A) : « d'où venait l'eau ? » en réserve, alors que la
+  déclaration avait dit la cause. Une réserve sur un fait connu avec précision n'est plus posée.
+- **Une question sans bouton** (3 situations, contrat A) : le lien de causalité d'une obligation de prévention
+  arrivait dans les points à préciser sans réponses possibles. Il reste dans les questions en phrase, pour le
+  gestionnaire ; il n'est plus proposé comme point à cliquer.
+
+Ce que la revue ne corrige pas : sur un événement donné seul, certains contrats posent jusqu'à 12 questions (un vol
+chez B). Une vraie déclaration en dit plus, et le moteur classe les questions décisives en tête ; à surveiller.
+
+Ce que la revue ne couvre pas : la lecture par le modèle (c'est le rôle des bancs), et l'écran lui-même.
+
+L'écran dit maintenant « Lire l'article entier » sur chaque clause citée : le texte complet était déjà en base et
+s'ouvrait au clic, mais rien ne l'indiquait.
+
+### 7.126 Les clauses citées : une ligne par article, l'article entier dans une fenêtre
+
+À l'écran, la liste des clauses citées répétait le même article autant de fois qu'il avait d'extraits (trois lignes
+« Art. 12/contenu », trois « Art. 12/batiment »), et le texte complet s'ouvrait dans la liste, qui s'allongeait encore.
+Demande de l'auteur : un lien qui ouvre l'article entier dans une fenêtre.
+
+- Les citations sont regroupées par article (`citationsParArticle`) : un article, une ligne, ses extraits dessous.
+- Le numéro de l'article est un lien : il ouvre une fenêtre avec le chemin dans le contrat, les pages et le texte
+  entier de la clause, tel qu'il est en base ; les extraits cités y sont surlignés (`surligner`). Échap, le bouton
+  « Fermer » ou un clic hors de la fenêtre la referment.
+- Si un extrait n'est pas retrouvé tel quel dans le texte (espaces ou retours à la ligne différents), l'article
+  s'affiche sans surlignage pour cet extrait.
+
+Les deux fonctions sont testées (vitest). Non vérifié ici : la compilation Angular et le rendu réel.
+
+### 7.127 « Je ne peux pas trancher », dit dans les mots du client
+
+Vu à l'écran, contrat A, le vélo et le piéton : le modèle a lu « véhicule à moteur », la confirmation ne l'a pas
+retrouvé dans la déclaration, et la réponse est passée à « à préciser » avec la bonne question (qu'est-ce qui a causé
+le dommage ?). Le garde-fou a donc fait son travail : sans lui, la réponse était un refus à tort. Mais la phrase
+affichée était illisible : « la déclaration ne dit pas clairement « origine_rc : … → vehicule_moteur (une voiture…) ».
+Couvert. … », soit un nom de variable, la valeur écartée, puis « Couvert. » juste après « je ne peux pas trancher ».
+
+La phrase devient : « Je ne peux pas trancher : la déclaration ne répond pas clairement à « Qu'est-ce qui a causé le
+dommage à l'autre personne ? » Selon la réponse, la décision change. Garantie en jeu : … ». La question, pas la
+variable ; et plus de décision annoncée à contresens.
+
+### 7.128 Une réponse « couvert » ne pose pas de question
+
+Vu à l'écran, contrat A, « le tuyau de ma machine à laver a éclaté » : couvert, et pourtant un encadré « à demander
+au client » avec « d'où venait l'eau ? » (déjà lu : une fuite d'installation) et « pendant le gel, le chauffage
+était-il maintenu ? ». Et la question revenait après la réponse. Deux causes :
+
+- une **réserve** n'est pas une question : la réponse est donnée, ce sont des points que l'assureur pourra vérifier
+  (une exclusion qu'il aurait à prouver). L'écran les présentait pourtant comme des questions à cliquer ;
+- « fuite d'installation » est une valeur large, qui regroupe « gel » : le moteur voulait la préciser, l'écran
+  reproposait toutes les valeurs, le client recliquait « fuite d'installation », et rien n'avait changé.
+
+Ce qui change :
+- l'écran sépare les deux : « à demander au client » ne contient que les **questions** (sans elles, pas de décision) ;
+  les réserves sont une liste à lire, « ce que l'assureur pourra vérifier », sans bouton ;
+- une réserve sur un fait déjà connu, même en gros, n'est plus listée ;
+- une question sur un fait connu en gros ne propose que ses précisions (`valeurs_proposees`), jamais la valeur déjà
+  connue : la revue de 7.125 le vérifie maintenant sur toutes les situations ;
+- une réponse « couvert » n'annonce plus « ces deux questions tranchent ».
+
+Reste : « pendant le gel… » figure encore dans les réserves d'une fuite de machine à laver. C'est logique pour le
+moteur (une fuite peut venir du gel), peu parlant pour un lecteur ; le vocabulaire ne sait pas dire « une fuite, mais
+pas le gel ».
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 20 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.
@@ -4141,3 +4316,8 @@ Tenu à jour le 20 nov. 2026, après-midi ; ce qui est fait est dans les section
 128. Un exemple montré à une étape qu'on ne vérifie pas est recopié sans contrôle : n'en montrer qu'aux étapes vérifiées.
 129. Le même modèle ne se corrige pas lui-même sur un choix de catégorie : sa vérification vaut pour « est-ce écrit ? », pas pour « est-ce le bon mot ? ».
 130. Avant de comparer deux lectures, compter les appels sans réponse : un délai dépassé se lit comme une mauvaise lecture.
+131. Avant de retirer une phrase d'une consigne, chercher les variables qu'elle influence sans les nommer, chez chaque contrat.
+132. Une question n'est posée que si sa réponse peut servir : la règle qui retire un fait hors sujet vaut aussi pour les questions.
+133. Un banc note la décision, pas ce que l'écran demande : tester à part que chaque question posée peut servir.
+134. Une réserve n'est pas une question : ce que l'assureur vérifiera s'affiche, ce que le client doit dire se demande.
+135. Distinguer l'erreur instable de l'erreur répétée avant de choisir le remède : relire ne corrige que la première.

@@ -301,6 +301,19 @@ def latences(durees: list[dict]) -> dict:
     return sortie
 
 
+def par_reponse(par_execution: list[list[dict]]) -> dict:
+    """Pour chaque réponse donnée (couvert, non couvert, à préciser) : combien de justes et de fausses, en moyenne
+    par exécution. Un taux de réponses justes ne dit pas d'où il vient : d'une chaîne qui tranche bien, ou d'une
+    chaîne qui répond « à préciser » partout (7.121)."""
+    n = max(1, len(par_execution))
+    return {d: {"justes": round(sum(l["obtenu"] == d and l["ok"] for ls in par_execution for l in ls) / n, 2),
+                "fausses": round(sum(l["obtenu"] == d and not l["ok"] for ls in par_execution for l in ls) / n, 2)}
+            for d in ("COUVERT", "NON_COUVERT", "INCERTAIN")}
+
+
+LIBELLES_REPONSES = {"COUVERT": "couvert", "NON_COUVERT": "non couvert", "INCERTAIN": "à préciser"}
+
+
 def couche_chaine(cas: list[dict], rapports: list[dict], durees: list[float]) -> dict:
     index = {c["id"]: c for c in cas}
     par_execution = []
@@ -341,6 +354,7 @@ def couche_chaine(cas: list[dict], rapports: list[dict], durees: list[float]) ->
     reponses = {l["id"]: [lignes[i]["obtenu"] for lignes in par_execution]
                 for i, l in enumerate(par_execution[0])} if par_execution else {}
     instables = sorted(i for i, rs in reponses.items() if len(set(rs)) > 1)
+    agreg["par_reponse"] = par_reponse(par_execution)
     agreg.update(n=len(reponses), executions=len(rapports), instables=len(instables),
                  rappel_clauses=moyenne("rappel_clauses"), rappel_questions=moyenne("rappel_questions"),
                  erreurs_fournisseur=sum(l["erreur"] for lignes in par_execution for l in lignes),
@@ -591,6 +605,9 @@ def markdown(r: dict, precedent: dict | None = None) -> str:
     if ch:
         m = ch["metriques"]
         L += ["", f"## Couche 3 — chaîne complète ({m['executions']} exécutions)", "", *tableau_metriques(m), "",
+              *(["Par réponse donnée (moyenne par exécution) :", "", "| Réponse | Justes | Fausses |", "|---|---|---|",
+                 *[f"| {LIBELLES_REPONSES[d].capitalize()} | {x['justes']:g} | {x['fausses']:g} |"
+                   for d, x in m["par_reponse"].items()], ""] if m.get("par_reponse") else []),
               f"Instables : **{m['instables']}** sur {m['n']} · rappel des clauses : {pct(m['rappel_clauses'])} · "
               f"rappel des questions : {pct(m['rappel_questions'])} · erreurs du fournisseur : {m['erreurs_fournisseur']}"
               f" · durée moyenne d'une exécution : {m['duree_moyenne_s']} s"
@@ -650,6 +667,9 @@ def resume_console(r: dict, md: Path | None = None) -> str:
         L.append(f"{titre}{pct(v('exactitude'))} justes · {pct(v('exactitude_stricte'))} exactes · "
                  f"couverts à tort {v('faux_couverts'):g} · refus à tort {v('faux_refus'):g}"
                  + (f" · instables {m['instables']}" if nom == "chaine" else ""))
+        if nom == "chaine" and m.get("par_reponse"):
+            L.append("Par réponse    " + " · ".join(f"{LIBELLES_REPONSES[d]} : {x['justes']:g} justes, {x['fausses']:g} faux"
+                                                    for d, x in m["par_reponse"].items()))
         if nom == "chaine" and m.get("latence_seule_mediane_s") is not None:
             L.append(f"Temps par cas  un à la fois : médiane {m['latence_seule_mediane_s']:g} s · 95e centile "
                      f"{m['latence_seule_p95_s']:g} s (lecture {m.get('latence_seule_lecture_mediane_s', 0):g} s, "

@@ -103,6 +103,21 @@ def hierarchie(voc: dict | None = None) -> list[tuple[str, str, str]]:
     return [(v, x, p) for v, d in voc.items() for x, ps in d.get("parents", {}).items() for p in ps]
 
 
+def evenements_etendus(evenements, voc: dict | None = None) -> set[str]:
+    """Les événements, et ceux dont ils relèvent dans la hiérarchie : un « accident » compte comme un heurt et
+    comme un bris (« parents »). Sans cela, la plainte après un heurt était hors sujet pour un accident : la
+    question était posée, et la réponse du client retirée (7.125)."""
+    voc = voc or vocabulaire()
+    parents = voc.get("evenement", {}).get("parents", {})
+    vus, pile = set(), [str(e) for e in evenements or ()]
+    while pile:
+        e = pile.pop()
+        if e not in vus:
+            vus.add(e)
+            pile += parents.get(e, [])
+    return vus
+
+
 def filtrer_faits(faits: dict, voc: dict | None = None) -> tuple[dict, list[str]]:
     """Retire les faits hors sujet : une variable qui déclare les événements auxquels elle s'applique
     (« pour ») n'est gardée que si l'un d'eux est lu. Une cause d'eau pour une bougie, des travaux pour
@@ -110,7 +125,7 @@ def filtrer_faits(faits: dict, voc: dict | None = None) -> tuple[dict, list[str]
     lu, on ne peut pas juger : tout est gardé."""
     voc = voc or vocabulaire()
     ev = faits.get("evenement")
-    evenements = set(ev if isinstance(ev, list) else [ev]) if ev else set()
+    evenements = evenements_etendus(ev if isinstance(ev, list) else [ev], voc) if ev else set()
     if not evenements:
         return dict(faits), []
     gardes, retires = {}, []
@@ -118,7 +133,7 @@ def filtrer_faits(faits: dict, voc: dict | None = None) -> tuple[dict, list[str]
         pour = voc.get(v, {}).get("pour")
         if pour and not evenements & set(pour):
             retires.append(f"{v} = {x if not isinstance(x, list) else '/'.join(x)} : hors sujet pour "
-                           f"{'/'.join(sorted(evenements))}, retiré")
+                           f"{'/'.join(sorted(set(ev if isinstance(ev, list) else [ev])))}, retiré")
         else:
             gardes[v] = x
     return gardes, retires

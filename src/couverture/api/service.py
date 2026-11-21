@@ -64,16 +64,31 @@ def faits_depuis(faits: Faits) -> dict[str, Any]:
     return sortie
 
 
-def a_preciser(d: dict, voc: dict | None = None) -> list[dict[str, Any]]:
+def a_preciser(d: dict, voc: dict | None = None, faits: dict | None = None) -> list[dict[str, Any]]:
     """Ce qu'il faut demander au client, variable par variable, avec les valeurs possibles.
 
     `question` : sans la réponse, la garantie ne tranche pas (la décision est « incertain ») ; `reserve` : la
     garantie couvre, sous réserve de ce point (une exclusion que l'assureur aurait à prouver). Le choix est celui
-    de `chaine.points_a_preciser`, le même que pour les questions du verdict."""
+    de `chaine.points_a_preciser`, le même que pour les questions du verdict. Seules les variables du vocabulaire
+    y figurent : une question sans réponses possibles (le lien de causalité, une appréciation) ne se répond pas par
+    un bouton, et `/decisions` l'ignorerait ; elle reste dans `questions`, en phrase (7.125)."""
     voc = voc if voc is not None else prolog.vocabulaire()
     return [{"variable": v, "nature": n, "question": voc.get(v, {}).get("question", f"Préciser : {v}"),
-             "valeurs": voc.get(v, {}).get("valeurs", []), "aide": voc.get(v, {}).get("aide", {})}
-            for v, n in chaine.points_a_preciser(d, voc)]
+             "valeurs": valeurs_proposees(v, voc, faits or {}), "aide": voc.get(v, {}).get("aide", {})}
+            for v, n in chaine.points_a_preciser(d, voc, faits) if v in voc]
+
+
+def valeurs_proposees(variable: str, voc: dict, faits: dict) -> list[str]:
+    """Les réponses possibles à une question. Si le fait est déjà connu en gros (« une fuite »), seules ses
+    précisions sont proposées (« le gel ») : reproposer la valeur déjà connue ramenait la même question (7.128)."""
+    valeurs = list(voc.get(variable, {}).get("valeurs", []))
+    connu = faits.get(variable)
+    connues = set(connu if isinstance(connu, list) else [connu]) if connu not in (None, "", []) else set()
+    if not connues:
+        return valeurs
+    parents = voc.get(variable, {}).get("parents", {})
+    precisions = [x for x in valeurs if x not in connues and connues & set(parents.get(x, []))]
+    return precisions or [x for x in valeurs if x not in connues]
 
 
 def reponse(r: Resultat, d: dict | None = None) -> dict[str, Any]:
@@ -84,7 +99,7 @@ def reponse(r: Resultat, d: dict | None = None) -> dict[str, Any]:
         "decision": v.decision.value,
         "justification": v.justification,
         "confiance": v.confiance,
-        "a_preciser": a_preciser(d) if d else [],
+        "a_preciser": a_preciser(d, faits=faits_depuis(r.faits)) if d else [],
         "questions": v.informations_manquantes,
         "citations": [c.model_dump(mode="json") for c in v.citations if c.valide],
         "limites": [{"clause_id": c.clause_id, "extrait": c.extrait, "montant": c.enonce}

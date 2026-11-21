@@ -110,6 +110,15 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 
 ## 5. Dernières mesures
 
+**21 nov. 2026, 16 h 20 à 16 h 30** (graine fixe ; questions et réserves revues, 7.123 à 7.128) : jeu fermé de A
+**87 %** (1 couvert à tort), partie test de A **85 %** (2), B **85 %** (0), D **100 %** (0). Par réponse, un « non
+couvert » n'est jamais faux. Faits lus identiques aux trois passages : 35 déclarations sur 96 (30 sans graine).
+Référence actuelle.
+
+**21 nov. 2026, 15 h 18 à 15 h 26** (`lecture-details` v4, sans la phrase sur les flammes : **retirée**, retour à la
+v3) : partie test de A 85 %, jeu fermé de A 90 %, B 90 %, D **95 %** (`f-d01`, la poêle en feu lue « chaleur sans
+feu »). La référence reste celle de 14 h 41.
+
 **21 nov. 2026, 14 h 41 à 14 h 49** (`lecture-details` v3 : la phrase sur le vol sur la personne retirée, 7.120) :
 partie test de A **86 %**, jeu fermé de A **88 %**, B **88 %**, D **100 %**. Lecture de `vol_sur_personne` inchangée.
 

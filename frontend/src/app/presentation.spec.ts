@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { fusionner, lignesDeFaits, lisible, pourcent, trierAPreciser } from './presentation';
+import { citationsParArticle, fusionner, lignesDeFaits, lisible, pourcent, surligner, trierAPreciser } from './presentation';
 
 
 describe('présentation des décisions', () => {
@@ -28,5 +28,21 @@ describe('présentation des décisions', () => {
 
     it('arrondit la confiance', () => {
         expect(pourcent(0.854)).toBe('85 %');
+    });
+
+    it('regroupe les citations par article, sans répéter un extrait', () => {
+        const citation = (clause_id: string, extrait: string) => ({ clause_id, extrait, role: 'garantie', valide: true, pages: [11] });
+        const articles = citationsParArticle([citation('2.10', 'a'), citation('12/vol', 'b'), citation('2.10', 'c'), citation('2.10', 'a')]);
+        expect(articles.map((a) => a.clauseId)).toEqual(['2.10', '12/vol']);
+        expect(articles[0].extraits).toEqual(['a', 'c']);
+    });
+
+    it('surligne les extraits cités dans le texte de l’article', () => {
+        expect(surligner('Le vol du contenu, sauf la disparition.', ['vol du contenu', 'absent'])).toEqual([
+            { texte: 'Le ', cite: false },
+            { texte: 'vol du contenu', cite: true },
+            { texte: ', sauf la disparition.', cite: false }
+        ]);
+        expect(surligner('abc', [])).toEqual([{ texte: 'abc', cite: false }]);
     });
 });

@@ -7,7 +7,7 @@ import os
 import time
 
 from . import prolog
-from .lecture import (affirmation, extraire_faits_regles, faits_decisifs, juger_affirmations, question,
+from .lecture import (extraire_faits_regles, faits_decisifs, juger_affirmations, question,
                       sources_impliquees, variables_du_contrat)
 from .llm import LLM, ErreurLLM
 from .models import Citation, Clause, ClauseRetenue, Condition, Decision, EtatCondition, Faits, Resultat, Verdict
@@ -68,9 +68,15 @@ class PipelineRegles:
             # « Je ne sais pas » plutôt qu'une réponse fausse : un fait qui porte la décision n'est pas confirmé.
             verdict.decision = Decision.INCERTAIN
             verdict.confiance = min(verdict.confiance, 0.4)
-            verdict.justification = ("Je ne peux pas trancher : la déclaration ne dit pas clairement "
-                                     + " ; ni ".join(f"« {affirmation(v, faits[v], prolog.vocabulaire())[2:]} »" for v in doutes)
-                                     + ". " + verdict.justification)
+            # En mots du client (7.127) : la question, pas le nom de la variable ni la valeur écartée ; et la
+            # décision sans ce fait n'est pas annoncée comme la réponse (« Couvert. » après « je ne peux pas
+            # trancher » se contredisait).
+            reste = verdict.justification
+            for prefixe in ("Couvert. ", "Non couvert. ", "À préciser. "):
+                reste = reste.removeprefix(prefixe)
+            verdict.justification = ("Je ne peux pas trancher : la déclaration ne répond pas clairement à "
+                                     + " ; ni à ".join(f"« {question(v)} »" for v in doutes)
+                                     + " Selon la réponse, la décision change. Garantie en jeu : " + reste)
             # Une seule ligne par question : la version classée par le moteur (« oui → couvert ; non → … »)
             # remplace la question nue, au lieu de s'y ajouter.
             deja = verdict.informations_manquantes
@@ -129,7 +135,7 @@ class PipelineRegles:
             evts = ", ".join(non_traduits)
             motif = (f"À examiner par un gestionnaire : l'événement « {evts} » relève d'une garantie qui n'est pas "
                      f"encore traduite en règles. Ce que disent les garanties traduites : " + (" ; ".join(motifs[:3]) or "rien") + ".")
-        vars_ = [v for v, _ in points_a_preciser(d, prolog.vocabulaire())]
+        vars_ = [v for v, _ in points_a_preciser(d, prolog.vocabulaire(), faits)]
         demander = list(dict.fromkeys(question(v) for v in vars_))
         exploration = d.get("exploration")
         if exploration:
@@ -138,7 +144,11 @@ class PipelineRegles:
         if non_traduits:
             confiance = 0.3
         if decision == Decision.COUVERT and any(r.get("reserves") for r in retenues):
-            confiance = 0.7
+            if vars_:
+                confiance = 0.7
+            else:
+                # Les seules réserves sont hors sujet pour ce sinistre (7.124) : rien n'est à vérifier.
+                motif = motif.replace(" ; sous réserve des vérifications à faire", "")
         if decision == Decision.NON_COUVERT and demander:
             confiance = 0.6
 
@@ -262,7 +272,7 @@ def arbre_lisible(preuve: list[dict], complet: bool = False) -> list[str]:
 ISSUE = {"COUVERT": "couvert", "NON_COUVERT": "non couvert", "INCERTAIN": "encore incertain", "ERREUR": "?"}
 
 
-def points_a_preciser(d: dict, voc: dict) -> list[tuple[str, str]]:
+def points_a_preciser(d: dict, voc: dict, faits: dict | None = None) -> list[tuple[str, str]]:
     """Ce qu'on dit au client de préciser, variable par variable : (variable, "question" | "reserve"). Le même
     choix pour le texte du verdict et pour l'API (7.114).
 
@@ -272,8 +282,25 @@ def points_a_preciser(d: dict, voc: dict) -> list[tuple[str, str]]:
       prouver). Pour une réponse à préciser ou un refus, une réserve ne change rien : elle n'est pas posée ;
     - jamais une réserve qui vaut pour tous les sinistres (« pour » couvre tous les événements : le déménagement
       non signalé) : elle n'apprend rien sur celui-ci. Si la déclaration la met en jeu, le moteur en fait une
-      question (exclusion entamée), et elle est posée."""
+      question (exclusion entamée), et elle est posée ;
+    - jamais une réserve hors sujet pour les événements des `faits` (7.124) : « d'où venait l'eau ? » ne se
+      demande pas pour un piéton renversé à vélo. C'est la règle de `prolog.filtrer_faits` : la réponse du client
+      serait retirée des faits comme hors sujet. Sans événement connu, on ne peut pas juger : la réserve reste ;
+    - jamais une réserve sur un fait déjà connu (7.125, 7.128) : la cause de l'eau ne se redemande pas quand la
+      déclaration l'a dite, même en gros (« une fuite », qui pourrait être le gel) : redemandée, elle revenait
+      après chaque réponse."""
     tous = set(voc.get("evenement", {}).get("valeurs", []))
+    faits = faits or {}
+    ev = faits.get("evenement") or []
+    lus = prolog.evenements_etendus(ev if isinstance(ev, list) else [ev], voc)
+
+    def hors_sujet(v):
+        pour = set(voc.get(v, {}).get("pour", [])) & tous
+        return bool(lus and pour and not pour & lus)
+
+    def deja_connu(v):
+        return faits.get(v) not in (None, "", [])
+
     retenues, possibles = d.get("retenues", []), d.get("possibles", [])
     points: dict[str, str] = {}
     for r in retenues:
@@ -286,7 +313,8 @@ def points_a_preciser(d: dict, voc: dict) -> list[tuple[str, str]]:
     if d.get("decision") == "COUVERT":
         for r in retenues:
             for v in r.get("reserves", []):
-                if not (tous and set(voc.get(v, {}).get("pour", [])) >= tous):
+                if not (tous and set(voc.get(v, {}).get("pour", [])) >= tous) and not hors_sujet(v) \
+                        and not deja_connu(v):
                     points.setdefault(v, "reserve")
     return list(points.items())
 
@@ -309,8 +337,10 @@ def questions_explorees(exploration: dict, vars_: list[str], motif: str) -> tupl
             texte += f" ({issues})"
         lignes.append(texte)
     lignes += [question(v) for v in vars_ if v not in explorees]
-    ensemble = exploration.get("ensemble") or []
-    if ensemble:
+    # « Une seule question tranche » ne cite que des questions qu'on pose : pas une réserve écartée (7.124). Et
+    # rien ne reste à trancher quand la réponse est « couvert » : ce sont des réserves, pas des questions (7.128).
+    ensemble = [v for v in exploration.get("ensemble") or [] if v in vars_]
+    if ensemble and not motif.startswith("Couvert"):
         motif += (" Une seule question tranche : " if len(ensemble) == 1 else " Ces deux questions tranchent : ") \
             + " ; ".join(f"« {question(v)} »" for v in ensemble) + "."
     return list(dict.fromkeys(lignes)), motif
