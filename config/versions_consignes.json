@@ -10,8 +10,8 @@
     "source": "couverture.lecture.SYSTEME_LECTURE_SOCLE"
   },
   "couverture-redaction-regles": {
-    "version": "v12",
-    "empreinte": "c71412fe0984f75b",
+    "version": "v13",
+    "empreinte": "511d06be955170aa",
     "source": "couverture.redaction.SYSTEME_REDACTION"
   },
   "couverture-verification-faits": {

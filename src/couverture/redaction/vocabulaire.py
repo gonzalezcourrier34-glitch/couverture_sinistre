@@ -76,6 +76,67 @@ def bilan(dossier: Path | None = None) -> dict:
             "propres_lues_dans_la_declaration": [v for v in propres if v not in souscription and v not in non_lues]}
 
 
+def fusionner_variables(ancienne: str, nouvelle: str, donnees: Path | None = None, dossier: Path | None = None,
+              regles: Path | None = None) -> list[str]:
+    """Deux variables qui posent la même question deviennent une seule (7.147) : `ancienne` disparaît, `nouvelle`
+    reste, avec sa question et son aide inchangées (les contrats qui l'employaient déjà lisent la même chose).
+    Renommée partout où elle sert : les règles de chaque contrat, le vocabulaire (« pour » réunis, « implique »),
+    les faits idéaux des cas et les exemples de lecture. Puis le vocabulaire est rangé : employée par plusieurs
+    contrats, la variable passe au commun. Rend ce qui a changé, ligne par ligne.
+
+    Refusée si les deux variables n'ont pas les mêmes valeurs : ce n'est plus un doublon, c'est une refonte (un
+    seuil de 80 km/h et un de 100 ne se fusionnent pas en renommant), qui demande de réécrire les règles."""
+    import re
+    dossier, regles = dossier or prolog.VOCABULAIRE, regles or prolog.DOSSIER
+    voc = prolog.vocabulaire(dossier)
+    for v in (ancienne, nouvelle):
+        if v not in voc or v in lecture.SOCLE:
+            raise ValueError(f"« {v} » n'est pas une variable de détail du vocabulaire.")
+    if ancienne == nouvelle or sorted(voc[ancienne]["valeurs"]) != sorted(voc[nouvelle]["valeurs"]):
+        raise ValueError(f"« {ancienne} » et « {nouvelle} » n'ont pas les mêmes valeurs : ce n'est pas un doublon, "
+                         "les règles sont à réécrire.")
+    mot, faits_changes = re.compile(rf"\b{re.escape(ancienne)}\b"), []
+    for f in sorted(Path(regles).glob("*.pl")):
+        if f == prolog.MOTEUR:
+            continue
+        texte = f.read_bytes().decode("utf-8")
+        if mot.search(texte):
+            f.write_bytes(mot.sub(nouvelle, texte).encode("utf-8"))     # octets : les fins de ligne ne bougent pas
+            faits_changes.append(f"règles {f.stem} : {len(mot.findall(texte))} emploi(s) renommé(s)")
+    pour = list(voc[nouvelle].get("pour") or [])
+    if pour or voc[ancienne].get("pour"):
+        ajoutes = [e for e in (voc[ancienne].get("pour") or []) if e not in pour and e not in PSEUDO_EVENEMENTS]
+        if ajoutes and pour and not set(pour) <= set(PSEUDO_EVENEMENTS):
+            voc[nouvelle]["pour"] = pour + ajoutes
+            faits_changes.append(f"{nouvelle} : lue aussi pour {', '.join(ajoutes)}")
+    del voc[ancienne]
+    for v, d in voc.items():
+        for x, impliques in (d.get("implique") or {}).items():
+            if ancienne in impliques:
+                impliques[nouvelle] = impliques.pop(ancienne)
+                faits_changes.append(f"{v} = {x} : implique {nouvelle}")
+    fichiers = sorted((Path(regles) / "cas").rglob("*.jsonl"))
+    if donnees is not None and (Path(donnees) / "lecture" / "exemples.jsonl").exists():
+        fichiers.append(Path(donnees) / "lecture" / "exemples.jsonl")
+    for f in fichiers:
+        lignes, n = [], 0
+        brut = f.read_bytes().decode("utf-8")
+        fin = "\r\n" if "\r\n" in brut else "\n"
+        for ligne in brut.split(fin):
+            if f'"{ancienne}"' in ligne:
+                d = json.loads(ligne)
+                if isinstance(d.get("faits"), dict) and ancienne in d["faits"]:
+                    valeur = d["faits"].pop(ancienne)
+                    d["faits"].setdefault(nouvelle, valeur)
+                    ligne, n = json.dumps(d, ensure_ascii=False), n + 1
+            lignes.append(ligne)
+        if n:
+            f.write_bytes(fin.join(lignes).encode("utf-8"))
+            faits_changes.append(f"{f.parent.name}/{f.name} : {n} cas")
+    ranger(voc, dossier)
+    return [f"{ancienne} → {nouvelle}", *faits_changes]
+
+
 def mal_rangees(dossier: Path | None = None) -> list[str]:
     """Les variables qui ne sont pas dans le fichier que `repartir` leur donne (après des règles écrites à la main)."""
     dossier = dossier or prolog.VOCABULAIRE
@@ -113,6 +174,8 @@ def accepter_vocabulaire(prop: dict, dossier: Path | None = None) -> list[str]:
                 voc[v]["pour"] = avant + [e for e in evs if e not in avant]
                 ajouts += [f"{v} : lue aussi pour {e}" for e in evs if e not in avant]
             for x in nouvelles:
+                if (m.get("libelles") or {}).get(x):
+                    voc[v].setdefault("libelles", {})[x] = str(m["libelles"][x])
                 if (m.get("aide") or {}).get(x):
                     voc[v].setdefault("aide", {})[x] = str(m["aide"][x])
                 # Une valeur plus fine qu'une valeur existante doit y être rattachée : sans cela, un ordinateur lu
@@ -122,7 +185,16 @@ def accepter_vocabulaire(prop: dict, dossier: Path | None = None) -> list[str]:
                     voc[v].setdefault("parents", {})[x] = [parent]
             ajouts += [f"{v} = {x}" for x in nouvelles]
         else:
-            voc[v] = {"valeurs": valeurs, "question": m.get("question") or f"Préciser : {v}"}
+            # Le libellé (7.146) : le nom à montrer, proposé avec la variable ; sans lui, l'écran montrerait
+            # l'identifiant, et le test des libellés du vocabulaire échoue : il reste à l'écrire à la main.
+            libelle = str(m.get("libelle") or "").strip()
+            voc[v] = ({"libelle": libelle} if libelle else {}) | {"valeurs": valeurs,
+                                                                 "question": m.get("question") or f"Préciser : {v}"}
+            libelles = {str(k): str(x) for k, x in (m.get("libelles") or {}).items() if str(k) in valeurs and str(x).strip()}
+            if libelles:
+                voc[v]["libelles"] = libelles
+            if not libelle:
+                ajouts.append(f"! {v} : sans libellé ; à écrire dans le vocabulaire (« libelle »)")
             # Une variable nouvelle doit apprendre à être lue : sans aide, le premier banc Assureur B a lu « hôte »
             # comme « hôtel » (7.59). La rédaction propose l'aide, le relecteur l'accepte avec la variable.
             aide = {str(k): str(x) for k, x in (m.get("aide") or {}).items() if str(k) in valeurs}

@@ -542,7 +542,7 @@ def test_jeu_redaction_coherent():
 def test_consigne_de_redaction_versionnee():
     from couverture.consignes import CONSIGNES
 
-    assert CONSIGNES["couverture-redaction-regles"][2] == "v12"
+    assert CONSIGNES["couverture-redaction-regles"][2] == "v13"
 
 
 # --- Après la première rédaction réelle (Mistral Large, 17 nov. 2026, docs/DEMARCHE.md 7.20) ---------------
@@ -724,3 +724,57 @@ def test_bilan_du_vocabulaire():
     assert sum(n["propres"] for n in b["contrats"].values()) == len(b["propres"])
     assert set(b["propres_lues_dans_la_declaration"]) <= set(b["propres"])
     assert "formule" in b["souscription"] and "evenement" not in b["sans_regle"]
+
+
+def test_libelle_propose_avec_la_variable(voc_etendu):
+    """La rédaction propose le nom à montrer avec la variable (7.146) ; sans lui, l'acceptation le signale et le
+    contrôle le note, au lieu de laisser l'écran montrer un identifiant."""
+    prop = copy.deepcopy(BONNE)
+    prop["vocabulaire_manquant"] = [
+        {"variable": "toit_vegetalise", "valeurs": ["oui", "non", "en_cours_de_pose"], "libelle": "Toit végétalisé",
+         "libelles": {"en_cours_de_pose": "en cours de pose", "inconnue": "ignorée"}, "question": "Le toit est-il végétalisé ?"},
+        {"variable": "cuve_enterree", "valeurs": ["oui", "non"], "question": "La cuve est-elle enterrée ?"}]
+    ajouts = redaction.accepter_vocabulaire(prop, voc_etendu)
+    voc = prolog.vocabulaire(voc_etendu)
+    assert voc["toit_vegetalise"]["libelle"] == "Toit végétalisé"
+    assert voc["toit_vegetalise"]["libelles"] == {"en_cours_de_pose": "en cours de pose"}, "pas de libellé pour une valeur absente"
+    assert "libelle" not in voc["cuve_enterree"] and any(a.startswith("! cuve_enterree : sans libellé") for a in ajouts)
+    assert prolog.libelle("cuve_enterree", voc) == "cuve enterree", "sans libellé : l'identifiant, en attendant"
+
+
+def test_fusionner_deux_variables_qui_posent_la_meme_question(tmp_path, monkeypatch):
+    """7.147 : l'ancienne variable est renommée dans les règles, le vocabulaire, les cas et les exemples ; la variable
+    gardée ne change pas de question ; employée par deux contrats, elle passe au commun. Deux variables aux valeurs
+    différentes ne se fusionnent pas. Sur une copie : ces deux seuils de vent ne sont pas un vrai doublon, seul le
+    mécanisme est testé ; dire que deux questions sont la même reste le jugement d'une personne."""
+    import shutil
+    regles = tmp_path / "regles"
+    shutil.copytree(prolog.DOSSIER, regles, ignore=shutil.ignore_patterns("propositions"))
+    monkeypatch.setattr(prolog, "DOSSIER", regles)
+    monkeypatch.setattr(prolog, "MOTEUR", regles / "moteur.pl")
+    monkeypatch.setattr(prolog, "VOCABULAIRE", regles / "vocabulaire")
+    donnees = tmp_path / "data"
+    (donnees / "lecture").mkdir(parents=True)
+    (donnees / "lecture" / "exemples.jsonl").write_text(
+        json.dumps({"id": "x", "faits": {"evenement": ["tempete"], "vent_100_kmh": "oui"}}) + "\n", encoding="utf-8")
+    voc = prolog.vocabulaire()
+    b, d = "assureur-b-habitation-2017", "assureur-d-habitation-2026"
+    assert "vent_100_kmh" in prolog.variables_employees(d) and "vent_80_kmh_irm" in prolog.variables_employees(b)
+    question = voc["vent_80_kmh_irm"]["question"]
+    octets_avant = (regles / f"{d}.pl").read_bytes()
+
+    rapport = redaction.fusionner_variables("vent_100_kmh", "vent_80_kmh_irm", donnees=donnees)
+
+    assert rapport[0] == "vent_100_kmh → vent_80_kmh_irm" and any(d in ligne for ligne in rapport)
+    apres = prolog.vocabulaire()
+    assert "vent_100_kmh" not in apres and apres["vent_80_kmh_irm"]["question"] == question
+    assert "vent_80_kmh_irm" in prolog.variables_employees(d) and "vent_100_kmh" not in prolog.variables_employees(d)
+    octets_apres = (regles / f"{d}.pl").read_bytes()
+    assert octets_apres.count(b"\r\n") == octets_avant.count(b"\r\n"), "les fins de ligne des règles ne bougent pas"
+    assert json.loads((donnees / "lecture" / "exemples.jsonl").read_text(encoding="utf-8"))["faits"] == {
+        "evenement": ["tempete"], "vent_80_kmh_irm": "oui"}
+    assert redaction.mal_rangees() == []
+    with pytest.raises(ValueError, match="mêmes valeurs"):
+        redaction.fusionner_variables("alea_tempete", "vent_80_kmh_irm", donnees=donnees)
+    with pytest.raises(ValueError):
+        redaction.fusionner_variables("evenement", "vent_80_kmh_irm", donnees=donnees)

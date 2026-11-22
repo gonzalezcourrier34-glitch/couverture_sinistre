@@ -132,7 +132,7 @@ Ce qui est fait :
 
 Ce que coûte un contrat de plus, honnêtement : la rédaction automatique est rapide (11 minutes pour un premier lot de six articles), mais la **relecture humaine reste lourde** sur les articles qui définissent les biens assurés : le modèle y invente des concepts, et ce lot a déclenché 80 contrôles bloquants. Les garanties demandent moins. Le temps complet par contrat n'a pas été mesuré.
 
-Ce qui manque pour des centaines : chaque contrat réemploie la moitié de ses variables ou plus (48 à 60 %), mais 70 variables lues dans la déclaration restent propres à un seul, dont une dizaine de doublons repérés et pas encore fusionnés (`couverture regles --contrat … --bilan`) ; trois contrats ne prouvent pas cent ; tout est en habitation.
+Ce qui manque pour des centaines : chaque contrat réemploie la moitié de ses variables ou plus (48 à 60 %), mais 68 variables lues dans la déclaration restent propres à un seul (`couverture regles --contrat … --bilan`) ; un vrai doublon a été fusionné, sept autres rapprochements demanderaient de réécrire des règles pour un gain plus petit que le bruit des mesures ; trois contrats ne prouvent pas cent ; tout est en habitation.
 
 ### 7. Limites
 

@@ -39,12 +39,12 @@ from .controles import (A_RELIRE, BLOQUANT, INFO, circonstances_par_evenement, c
                         controler, controler_avec_prolog, cycle_de_concepts, envelopper_conditions_nues, erreurs_schema,
                         items_exclusion, non_traduits, obligations_mal_formees)
 from .ecriture import atome, chaine, en_prolog, fusionner, terme
-from .vocabulaire import (ACCESSOIRE, EXTENSION, JAMAIS, accepter_vocabulaire, bilan, mal_rangees, ranger, evenements_par_variable,
+from .vocabulaire import (ACCESSOIRE, EXTENSION, JAMAIS, accepter_vocabulaire, bilan, fusionner_variables, mal_rangees, ranger, evenements_par_variable,
                           lieux_par_variable)
 
 # Ce que le reste du code et les tests emploient, d'où qu'il vienne dans le paquet.
 __all__ = ["ACCESSOIRE", "A_RELIRE", "BLOQUANT", "EXTENSION", "INFO", "JAMAIS", "PROPOSITIONS", "SYSTEME_REDACTION",
-           "VERSION", "ErreurProposition", "accepter", "accepter_vocabulaire", "articles_proposes", "bilan", "mal_rangees", "ranger", "atome", "chaine",
+           "VERSION", "ErreurProposition", "accepter", "accepter_vocabulaire", "articles_proposes", "bilan", "fusionner_variables", "mal_rangees", "ranger", "atome", "chaine",
            "chemins", "circonstances_par_evenement", "conditions_particulieres_en_reserve", "controler",
            "controler_avec_prolog", "cycle_de_concepts", "en_prolog", "enregistrer", "erreurs_schema",
            "evenements_par_variable", "fusionner", "items_exclusion", "lieux_par_variable", "message_redaction",

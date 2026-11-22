@@ -20,6 +20,9 @@ def ajouter(sous) -> None:
                    help="Cas de mise au point (défaut), de validation (data/validation) ou des garanties rédigées par le modèle (data/redaction)")
     p.add_argument("--ranger", action="store_true",
                    help="Ranger le vocabulaire : commun.json, et un fichier par contrat pour ce que lui seul emploie")
+    p.add_argument("--fusionner", metavar="ANCIENNE:NOUVELLE",
+                   help="Deux variables qui posent la même question : l'ancienne est renommée partout (règles, "
+                        "vocabulaire, cas, exemples) ; refusé si leurs valeurs diffèrent")
     p.add_argument("--bilan", action="store_true",
                    help="Le vocabulaire en chiffres : ce que chaque contrat partage, ce qu'il est seul à employer")
     p.set_defaults(executer=executer)
@@ -39,6 +42,18 @@ def executer(a, base: Base, donnees: Path) -> int:
         print("Vocabulaire rangé (regles/vocabulaire/)." + ("" if deplacees else " Rien n'a bougé."))
         for x in deplacees:
             print(f"  {x}")
+        return 0
+    if a.fusionner:
+        from .. import redaction
+        ancienne, _, nouvelle = a.fusionner.partition(":")
+        try:
+            for ligne in redaction.fusionner_variables(ancienne.strip(), nouvelle.strip(), donnees=donnees):
+                print(ligne)
+        except ValueError as e:
+            print(f"Refusé : {e}")
+            return 1
+        print("Puis : `couverture banc --contrat … --figer \"raison\"` si le golden set a changé, "
+              "`couverture exemples --indexer`, et les bancs des contrats dont les règles ont changé.")
         return 0
     if a.bilan:
         from .. import redaction

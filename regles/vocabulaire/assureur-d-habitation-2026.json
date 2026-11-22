@@ -262,22 +262,6 @@
         }
       }
     },
-    "cles_deposees_exterieur": {
-      "libelle": "Clés laissées dehors",
-      "valeurs": [
-        "oui",
-        "non"
-      ],
-      "question": "Les clés avaient-elles été laissées dehors (boîte aux lettres, boîte à clé, sous le paillasson) ?",
-      "aide": {
-        "oui": "clés laissées sans protection à l'extérieur",
-        "non": "non"
-      },
-      "pour": [
-        "vol",
-        "vandalisme"
-      ]
-    },
     "arrete_catnat_30j": {
       "libelle": "Arrêté de catastrophe naturelle et déclaration dans les 30 jours",
       "valeurs": [

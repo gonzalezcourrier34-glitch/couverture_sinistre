@@ -34,7 +34,7 @@ CONSIGNES: dict[str, tuple[str, str, str]] = {
     "couverture-lecture-socle": ("couverture.lecture", "SYSTEME_LECTURE_SOCLE", "v2"),
     "couverture-lecture-details": ("couverture.lecture", "SYSTEME_LECTURE_DETAILS", "v3"),
     "couverture-verification-faits": ("couverture.lecture", "SYSTEME_VERIFICATION", "v3"),
-    "couverture-redaction-regles": ("couverture.redaction", "SYSTEME_REDACTION", "v12"),
+    "couverture-redaction-regles": ("couverture.redaction", "SYSTEME_REDACTION", "v13"),
 }
 
 RACINE = Path(__file__).resolve().parents[2]

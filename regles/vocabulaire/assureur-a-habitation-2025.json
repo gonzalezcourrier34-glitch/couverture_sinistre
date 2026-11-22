@@ -80,18 +80,6 @@
         "vandalisme"
       ]
     },
-    "cles_a_proximite": {
-      "libelle": "Clés laissées à proximité",
-      "valeurs": [
-        "oui",
-        "non"
-      ],
-      "question": "Les clés d'accès étaient-elles laissées à proximité des locaux (sous le paillasson, dans une boîte aux lettres, un pot de fleurs) ?",
-      "pour": [
-        "vol",
-        "vandalisme"
-      ]
-    },
     "prevention_gel": {
       "libelle": "Précautions contre le gel",
       "valeurs": [

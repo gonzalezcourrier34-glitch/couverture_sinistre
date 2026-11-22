@@ -10,7 +10,7 @@ version garde ici son **texte intégral**, dans `<consigne>/<version>.txt`.
 
 ## Historique
 
-En service : `lecture-socle` v2, `lecture-details` v3, `verification-faits` v3, `redaction-regles` v12 (voir `config/versions_consignes.json`). Les autres sont celles des méthodes retirées le 18 nov. 2026 (DEMARCHE 7.36) et le 20 nov. 2026 (`faits-regles`, `document-brut`, `legalbench` : 7.110).
+En service : `lecture-socle` v2, `lecture-details` v3, `verification-faits` v3, `redaction-regles` v13 (voir `config/versions_consignes.json`). Les autres sont celles des méthodes retirées le 18 nov. 2026 (DEMARCHE 7.36) et le 20 nov. 2026 (`faits-regles`, `document-brut`, `legalbench` : 7.110).
 
 | Consigne | Version | Date | Pourquoi |
 |---|---|---|---|
@@ -41,6 +41,7 @@ En service : `lecture-socle` v2, `lecture-details` v3, `verification-faits` v3, 
 | `redaction-regles` | v10 | 19 nov. 2026 | Le concept d'une extension vient de ce contrat ; les dégâts causés par l'assuré au bien d'un autre sont de la responsabilité ; un pays par valeur (7.72) |
 | `redaction-regles` | v11 | 19 nov. 2026 | Une sanction qui réduit l'indemnité est une limite, pas une obligation (7.81) |
 | `redaction-regles` | v12 | 20 nov. 2026 | Un article d'exclusions générales, sans garantie, vise tout le contrat (7.88) |
+| `redaction-regles` | v13 | 22 nov. 2026 | Chaque variable nouvelle est proposée avec son libellé (le nom montré à l'écran) et, s'il le faut, celui de ses valeurs (7.146) ; non rejouée sur les contrats déjà rédigés |
 | `lecture-socle`, `lecture-details` | v1 | 18 nov. 2026 | La lecture v4 coupée en deux temps : l'événement, le bien et le lieu, puis les seules questions de cet événement (7.38) |
 | `lecture-socle`, `lecture-details` | v2 | 18 nov. 2026 | Chaque variable propose d'abord la valeur « inconnu » : le schéma poussait à remplir (7.40) |
 | `lecture-socle` | v3 | 21 nov. 2026 | Une règle de plus pour un cas (le piéton renversé à vélo lu « heurt ») ; **retirée le jour même**, retour à la v2 : une rustine, pas une règle (7.133) |

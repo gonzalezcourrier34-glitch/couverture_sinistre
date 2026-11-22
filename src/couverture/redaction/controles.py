@@ -385,6 +385,9 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
         if m.get("variable") not in voc and not m.get("aide"):
             noter(A_RELIRE, "vocabulaire", f"{m.get('variable')} : variable nouvelle sans « aide » par valeur ; "
                   f"elle sera mal lue (7.59)")
+        if m.get("variable") not in voc and not str(m.get("libelle") or "").strip():
+            noter(A_RELIRE, "vocabulaire", f"{m.get('variable')} : variable nouvelle sans « libelle » ; l'écran et la "
+                  f"fiche montreraient l'identifiant (7.146)")
         if m.get("variable") not in voc and not m.get("plus_proche"):
             noter(A_RELIRE, "vocabulaire", f"{m.get('variable')} : variable nouvelle sans « plus_proche » ; "
                   f"vérifier qu'un fait existant ne la dit pas déjà")

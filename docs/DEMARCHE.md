@@ -4456,6 +4456,36 @@ Comparée à la série de 16 h 20, sur les 288 lectures : 267 réponses justes c
 
 **Ce qui change.** La configuration nomme les versions datées (`mistral-medium-2604`, `mistral-small-2603`) : ce sont les mêmes modèles que ceux mesurés, donc les mesures restent valables, et le jour où « latest » changera, le projet ne changera pas avec lui. Deux choses à savoir pour une mise en service : le modèle de lecture est déprécié (à remplacer avant avril 2027, bancs à rejouer), et un zéro mesuré un jour ne garantit pas le lendemain : les bancs se rejouent à intervalle régulier, pas seulement quand on change quelque chose.
 
+### 7.146 La rédaction propose les libellés
+
+**Le manque (7.137).** Les 149 libellés ont été écrits à la main. Un contrat de plus aurait demandé de recommencer, et une variable acceptée sans libellé aurait montré son identifiant à l'écran.
+
+**La règle.** Le libellé naît avec la variable, là où elle est proposée :
+
+- la consigne de rédaction (v13) demande, pour chaque variable nouvelle, son `libelle` (le nom court à montrer) et, pour les seules valeurs dont l'identifiant s'écrit mal, leurs `libelles` ;
+- `accepter_vocabulaire` les range avec la variable ; un libellé de valeur qui ne vise aucune valeur est ignoré ;
+- sans libellé, la proposition est notée « à relire » par le contrôle, l'acceptation le signale (« sans libellé ; à écrire »), et le test des libellés du vocabulaire échoue tant qu'il n'est pas écrit : trois filets pour un oubli.
+
+**Ce qui n'est pas mesuré.** La consigne v13 n'a pas été rejouée sur les trois contrats : leurs règles sont déjà rédigées et relues. Elle servira au prochain contrat (point 6 du plan), qui dira si Mistral Large propose des libellés utilisables.
+
+### 7.147 Fusionner un doublon : un outil, et une limite
+
+**L'outil.** `couverture regles --contrat … --fusionner ancienne:nouvelle` (`redaction.fusionner_variables`) : l'ancienne variable est renommée partout où elle sert (les règles de chaque contrat, octet pour octet ; le vocabulaire ; les faits idéaux des cas ; les exemples de lecture), la variable gardée conserve sa question et son aide, et le rangement la fait passer au commun si deux contrats l'emploient. Les contrats qui employaient déjà la variable gardée lisent exactement la même chose : seul celui dont la variable disparaît est à mesurer.
+
+**Ce que l'outil vérifie, et ce qu'il ne vérifie pas.** Il refuse deux variables qui n'ont pas les mêmes valeurs. Il ne sait pas si deux questions veulent dire la même chose : « vent d'au moins 80 km/h » et « vent de plus de 100 km/h » ont les mêmes valeurs (oui, non) et ne sont pas un doublon. Le jugement reste celui d'une personne.
+
+**Ce qui est fusionné.** Un seul des huit groupes de 7.140 est un vrai doublon, à valeurs et à sens identiques : les clés laissées dehors (`cles_deposees_exterieur` de D devient `cles_a_proximite` de A). Le vocabulaire passe de 149 à 148 variables, les propres lues dans la déclaration de 70 à 68 (la variable gardée devient commune).
+
+**Ce qui ne l'est pas, et pourquoi.** Les sept autres groupes ne se renomment pas : ce sont des refontes.
+
+- Trois sont des seuils (le vent, l'inoccupation, le déménagement) : une variable graduée à la place de deux oui/non, et chaque règle réécrite pour dire son seuil.
+- Deux sont des variables à valeurs (la fermeture, la canalisation) : trois questions à réunir en une, avec des valeurs à définir.
+- Deux demandent un avis de métier (les travaux « autres que d'entretien » sont-ils un bâtiment « en construction » ? les dégâts du vent et ceux de la neige aux alentours sont-ils la même condition ?).
+
+Chacune changerait la lecture de deux contrats, pour un gain d'une variable. Or les trois séries du 22 nov. montrent qu'à consigne identique un banc varie de trois points et d'un couvert à tort : l'effet d'une refonte serait sous le bruit, donc impossible à valider. Elles restent décrites, pas faites.
+
+**La mesure (22 nov., 18 h 11).** Jeu fermé de D : 96 %, aucun couvert à tort, 1 refus à tort (`f-d08`, le même), aucun cas instable : dans la fourchette du jour (93 à 96 %). Les règles de D se chargent dans SWI-Prolog, 117 citations retrouvées, aucun fait hors vocabulaire.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
@@ -4466,8 +4496,8 @@ Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
 |---|---|---|
 | 1 | Les variables sans événements contrôlées d'après les règles | **Fait et mesuré (7.138).** |
 | 2 | La victime demandée pour tout sinistre | **Écartée (7.139)** : aucune erreur mesurée n'en relève, et le risque est réel. |
-| 3 | Les doublons du vocabulaire entre contrats | **Bilan fait (7.140)** : 70 variables propres lues dans la déclaration, huit groupes de doublons. Reste à fusionner et mesurer, et à faire proposer les doublons par la rédaction. |
-| 4 | Les libellés proposés par la rédaction | Chaque nouveau contrat demande aujourd'hui de les écrire à la main (7.137). |
+| 3 | Les doublons du vocabulaire entre contrats | **Fait pour le seul vrai doublon (7.147)**, avec l'outil pour les suivants. Les sept autres groupes sont des refontes, sous le bruit de mesure : décrites, pas faites. |
+| 4 | Les libellés proposés par la rédaction | **Fait (7.146)** : consigne v13. Reste à voir ce que le modèle propose, sur le prochain contrat. |
 | 5 | Des exemples validés pour B et D | **Fait (7.144)** : 28 exemples validés ; effet non mesurable sur les bancs, par construction. Reste : des déclarations nouvelles pour le mesurer. |
 | 6 | Un contrat ajouté à froid, hors habitation si possible | Trois contrats, tous en habitation, ne prouvent pas cent. |
 | 7 | Les conditions particulières lues dans le contrat du client | **Fait pour la saisie (7.141)** : la formule et les options se donnent avec la déclaration. Reste : lire le document du client. |
@@ -4650,3 +4680,4 @@ Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
 147. Un exemple écrit loin des cas de mesure ne peut pas améliorer la mesure : choisir d'avance entre protéger le banc et le voir bouger.
 148. Une hypothèse sur le fournisseur se vérifie auprès du fournisseur : « latest » n'avait pas changé de version ; c'est la même version qui lit le même texte autrement d'une heure à l'autre.
 149. Nommer la version datée du modèle : les mesures restent attachées à ce qu'on a mesuré, et les bancs se rejouent à date fixe, pas seulement après un changement.
+150. Ne pas entreprendre un changement dont l'effet attendu est plus petit que le bruit de la mesure : on ne saurait pas dire s'il a marché.
