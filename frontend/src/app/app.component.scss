@@ -200,6 +200,50 @@ $rayon: 12px;
 
 // ## Saisie
 
+// ## Conditions particulières
+
+.souscription {
+    border: 1px solid var(--plume-clair);
+    border-radius: 10px;
+    background: var(--plume-pale);
+    padding: 6px 10px;
+    font-size: 14px;
+
+    > summary {
+        cursor: pointer;
+        font-weight: 600;
+        color: var(--primaire-fonce);
+    }
+}
+
+.souscription-aide {
+    margin: 6px 0;
+    font-size: 13px;
+    color: var(--texte-doux, var(--texte));
+}
+
+.souscription-grille {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 6px 12px;
+    max-height: 26dvh;
+    overflow-y: auto;
+}
+
+.souscription-ligne {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 13px;
+
+    > .liste {
+        align-self: stretch;
+        padding: 4px 8px;
+        font-size: 13px;
+    }
+}
+
+
 .saisie {
     display: flex;
     flex-direction: column;

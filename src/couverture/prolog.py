@@ -81,6 +81,35 @@ def libelle(variable: str, voc: dict, valeur: str | None = None) -> str:
     return (d.get("libelles") or {}).get(valeur) or str(valeur).replace("_", " ")
 
 
+CONDITIONS_PARTICULIERES = "conditions_particulieres"
+
+
+def souscription(contrat_id: str, voc: dict | None = None) -> dict:
+    """Ce que le contrat du client précise, et que la déclaration ne dit que parfois (7.141) : les variables
+    de « source » conditions particulières (la formule, une option, un pack) que les règles de ce contrat
+    emploient. Les valeurs sont celles du contrat quand la variable les déclare (« par_contrat » : les formules
+    de B ne sont pas celles de D)."""
+    voc = voc if voc is not None else vocabulaire()
+    employees = variables_employees(contrat_id) if fichier_regles(contrat_id).exists() else set()
+    return {v: d | {"valeurs": list((d.get("par_contrat") or {}).get(contrat_id) or d["valeurs"])}
+            for v, d in voc.items() if v in employees and d.get("source") == CONDITIONS_PARTICULIERES}
+
+
+def retenir_souscription(contrat_id: str, donnee: dict | None, voc: dict | None = None) -> tuple[dict, list[str]]:
+    """La souscription donnée avec la déclaration, ramenée à ce que le contrat connaît : (faits, écarts)."""
+    connues, faits, ecarts = souscription(contrat_id, voc), {}, []
+    for v, x in (donnee or {}).items():
+        if x in (None, ""):
+            continue
+        if v not in connues:
+            ecarts.append(f"conditions particulières : « {v} » n'est pas une option de ce contrat, ignorée")
+        elif str(x) not in connues[v]["valeurs"]:
+            ecarts.append(f"conditions particulières : {v} = {x}, valeur inconnue de ce contrat, ignorée")
+        else:
+            faits[v] = str(x)
+    return faits, ecarts
+
+
 SOCLE_AFFICHE = ["evenement", "bien", "lieu"]
 
 
@@ -89,7 +118,9 @@ def faits_affiches(faits: dict, voc: dict | None = None) -> list[dict[str, str]]
     (événement, bien, lieu) d'abord. L'écran et la fiche affichent cette liste ; `faits` reste la forme que
     `/decisions` accepte."""
     voc = voc if voc is not None else vocabulaire()
-    cles = sorted(faits, key=lambda v: (SOCLE_AFFICHE.index(v) if v in SOCLE_AFFICHE else len(SOCLE_AFFICHE), v))
+    # Le socle, puis les faits de la déclaration, puis ceux des conditions particulières.
+    cles = sorted(faits, key=lambda v: (SOCLE_AFFICHE.index(v) if v in SOCLE_AFFICHE else len(SOCLE_AFFICHE),
+                                        voc.get(v, {}).get("source") == CONDITIONS_PARTICULIERES, v))
     return [{"variable": v, "libelle": libelle(v, voc),
              "valeur": ", ".join(libelle(v, voc, x) for x in (faits[v] if isinstance(faits[v], list) else [faits[v]]))}
             for v in cles]

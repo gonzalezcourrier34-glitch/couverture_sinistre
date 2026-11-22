@@ -63,7 +63,7 @@ def analyser_avec_suivi(demande: AnalyseRequest, pipelines: Pipelines = Depends(
     def travailler() -> None:
         debut = time.perf_counter()
         try:
-            resultat, reponse = service.analyser(chaine, sinistre, suivi=suivre)
+            resultat, reponse = service.analyser(chaine, sinistre, suivi=suivre, souscription=demande.souscription)
             journal.noter(resultat, duree_ms=int((time.perf_counter() - debut) * 1000))
             file.put({"etape": "fin", "reponse": reponse})
         except ErreurLLM as e:

@@ -84,6 +84,7 @@
     },
     "option_incendie": {
       "libelle": "Garantie « incendie » souscrite",
+      "source": "conditions_particulieres",
       "valeurs": [
         "oui",
         "non"
@@ -259,6 +260,7 @@
     },
     "option_tempete": {
       "libelle": "Garantie « tempête » souscrite",
+      "source": "conditions_particulieres",
       "valeurs": [
         "oui",
         "non"
@@ -336,6 +338,7 @@
     },
     "option_degats_electriques": {
       "libelle": "Garantie « dégâts électriques » souscrite",
+      "source": "conditions_particulieres",
       "valeurs": [
         "oui",
         "non"
@@ -366,6 +369,7 @@
     },
     "option_degats_eaux": {
       "libelle": "Garantie « dégâts des eaux » souscrite",
+      "source": "conditions_particulieres",
       "valeurs": [
         "oui",
         "non"
@@ -381,6 +385,7 @@
     },
     "option_bris_vitrages": {
       "libelle": "Garantie « bris de vitrages » souscrite",
+      "source": "conditions_particulieres",
       "valeurs": [
         "oui",
         "non"
@@ -472,6 +477,7 @@
     },
     "option_vol": {
       "libelle": "Garantie « vol » souscrite",
+      "source": "conditions_particulieres",
       "valeurs": [
         "oui",
         "non"
@@ -510,6 +516,7 @@
     },
     "option_tremblement_terre": {
       "libelle": "Garantie « tremblement de terre » souscrite",
+      "source": "conditions_particulieres",
       "valeurs": [
         "oui",
         "non"
@@ -555,6 +562,7 @@
     },
     "option_pluies_inondations": {
       "libelle": "Garantie « pluies et inondations » souscrite",
+      "source": "conditions_particulieres",
       "valeurs": [
         "oui",
         "non"
@@ -667,6 +675,7 @@
     },
     "option_pertes_indirectes": {
       "libelle": "Garantie « pertes indirectes » souscrite",
+      "source": "conditions_particulieres",
       "valeurs": [
         "oui",
         "non"
@@ -717,6 +726,7 @@
     },
     "option_rc_immeuble": {
       "libelle": "Option responsabilité civile immeuble souscrite",
+      "source": "conditions_particulieres",
       "valeurs": [
         "oui",
         "non"
@@ -732,6 +742,7 @@
     },
     "option_rc_vie_privee": {
       "libelle": "Option responsabilité civile vie privée souscrite",
+      "source": "conditions_particulieres",
       "valeurs": [
         "oui",
         "non"

@@ -61,11 +61,12 @@ export class CouvertureService {
     /** Une déclaration : le modèle lit les faits, le moteur décide (quelques secondes). */
     analyser(
         contratId: string,
-        sinistre: string
+        sinistre: string,
+        souscription: Record<string, string> = {}
     ): Observable<Decision> {
         return this.http.post<Decision>(
             `${API}/analyses`,
-            { contrat_id: contratId, sinistre }
+            { contrat_id: contratId, sinistre, souscription }
         );
     }
 
@@ -76,7 +77,8 @@ export class CouvertureService {
      */
     analyserAvecSuivi(
         contratId: string,
-        sinistre: string
+        sinistre: string,
+        souscription: Record<string, string> = {}
     ): Observable<Suivi> {
         return new Observable<Suivi>((abonne) => {
             const arret = new AbortController();
@@ -84,7 +86,7 @@ export class CouvertureService {
                 const reponse = await fetch(`${API}/analyses/suivi`, {
                     method: 'POST',
                     headers: { 'content-type': 'application/json' },
-                    body: JSON.stringify({ contrat_id: contratId, sinistre }),
+                    body: JSON.stringify({ contrat_id: contratId, sinistre, souscription }),
                     signal: arret.signal
                 });
                 if (!reponse.ok || !reponse.body) {

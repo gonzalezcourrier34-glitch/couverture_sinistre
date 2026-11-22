@@ -44,7 +44,7 @@ def analyser(demande: AnalyseRequest, pipelines: Pipelines = Depends(get_pipelin
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(e)) from e
     debut = time.perf_counter()
     try:
-        resultat, reponse = service.analyser(chaine, demande.sinistre.strip())
+        resultat, reponse = service.analyser(chaine, demande.sinistre.strip(), souscription=demande.souscription)
     except ErreurLLM as e:
         journal.noter_erreur(demande.contrat_id, "regles", str(e))
         raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=f"Le modèle n'a pas répondu : {e}") from e

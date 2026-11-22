@@ -57,9 +57,18 @@ def passage_exact(extrait: str, texte_clause: str, ecart_max: int = 6, mots_min:
     return texte_clause[jetons[meilleur[0]][0].start():jetons[meilleur[1]][0].end()]
 
 
-def valider(verdict: Verdict, retenues: list[ClauseRetenue], relocaliser: bool = False) -> Verdict:
+RETROGRADE = ("À préciser : la réponse « couvert » ne s'appuie sur aucune garantie citée de façon vérifiable ; "
+              "à faire examiner par un gestionnaire. Ce que disent les règles : ")
+
+
+def valider(verdict: Verdict, retenues: list[ClauseRetenue], relocaliser: bool = False,
+            roles_des_regles: bool = False) -> Verdict:
     """`relocaliser` : si l'extrait n'est pas dans la clause annoncée, le chercher dans les autres.
-    Utilisé pour la méthode « document brut », où le modèle ne connaît pas nos identifiants."""
+    Utilisé pour la méthode « document brut », où le modèle ne connaît pas nos identifiants.
+    `roles_des_regles` : le rôle d'une citation est celui que la règle lui donne (la phrase d'une garantie, d'une
+    exclusion), pas le type de la clause entière. Pour la méthode « règles » (7.143) : la phrase citée est
+    retrouvée mot pour mot, et une clause typée à l'ingestion « exclusion » ou « autre » peut contenir la phrase
+    qui accorde la garantie. Sans cela (le modèle cite), le rôle vient du contrat, pas du modèle."""
     v = verdict.model_copy(deep=True)
     v.decision_initiale = verdict.decision
     clauses = {r.clause.id: r.clause for r in retenues}
@@ -78,7 +87,8 @@ def valider(verdict: Verdict, retenues: list[ClauseRetenue], relocaliser: bool =
             c.valide = False
             v.avertissements.append(f"Extrait introuvable dans l'art. {c.clause_id} : « {c.extrait[:60]} »")
             continue
-        c.role = clause.type.value  # le rôle vient du contrat, pas du modèle
+        if not roles_des_regles:
+            c.role = clause.type.value  # le rôle vient du contrat, pas du modèle
         c.pages = clause.pages
 
     valides = [c for c in v.citations if c.valide]
@@ -86,6 +96,9 @@ def valider(verdict: Verdict, retenues: list[ClauseRetenue], relocaliser: bool =
     if v.decision == Decision.COUVERT and not any(c.role == TypeClause.GARANTIE.value for c in valides):
         v.decision = Decision.INCERTAIN
         v.avertissements.append("COUVERT rétrogradé en INCERTAIN : aucune garantie citée de façon vérifiable.")
+        # La justification ne doit pas dire « Couvert. » sous une réponse « à préciser » (7.143).
+        v.justification = RETROGRADE + v.justification
+        v.confiance = min(v.confiance, 0.4)
     if v.decision != Decision.INCERTAIN and not valides:
         v.decision = Decision.INCERTAIN
         v.avertissements.append("Décision rétrogradée en INCERTAIN : aucune citation vérifiable.")

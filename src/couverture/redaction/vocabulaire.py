@@ -16,7 +16,9 @@ DESCRIPTIONS = {
           "« plusieurs » : la variable prend une liste. « parents » : la hiérarchie des valeurs (une vitre est un "
           "élément du bâtiment). « pour » : les événements auxquels une variable s'applique. « aide » : le sens des "
           "valeurs proches, donné au modèle qui lit. « libelle » : le nom montré d'une variable ; « libelles » : "
-          "celui d'une valeur, quand l'identifiant s'écrit mal. Rangé par `couverture regles --ranger`.",
+          "celui d'une valeur, quand l'identifiant s'écrit mal. « source » : conditions_particulieres quand le "
+          "contrat du client fait foi (la formule, une option) ; « par_contrat » : les valeurs propres à un "
+          "contrat. Rangé par `couverture regles --ranger`.",
     False: "Variables que seules les règles de ce contrat emploient (regles/{contrat}.pl). Même format que "
            "commun.json. Rangé par `couverture regles --ranger` : une variable qu'un autre contrat se met à employer "
            "passe dans commun.json.",
@@ -51,19 +53,16 @@ def ranger(voc: dict | None = None, dossier: Path | None = None) -> list[str]:
     return deplacees
 
 
-SOUSCRIPTION = ("conditions particulières", "souscrit")
-
-
 def bilan(dossier: Path | None = None) -> dict:
     """Ce que le vocabulaire coûte à chaque contrat, calculé d'après les règles (7.140) : par contrat, les
     variables qu'il emploie, celles qu'il partage avec un autre et celles qu'il est seul à employer ; et, dans
-    tout le vocabulaire, les faits de souscription (la question porte sur les conditions particulières ou sur
-    ce qui est souscrit : ce n'est pas la déclaration qui le dit), les variables jamais lues dans une
+    tout le vocabulaire, les faits de souscription (« source » : conditions particulières ; la déclaration
+    ne les dit que parfois), les variables jamais lues dans une
     déclaration (« pour » : jamais, accessoire, extension) et celles qu'aucune règle n'emploie encore."""
     voc = prolog.vocabulaire(dossier)
     emplois = {c: prolog.variables_employees(c) & set(voc) for c in prolog.contrats_regles()}
     nb = {v: sum(v in e for e in emplois.values()) for v in voc}
-    souscription = [v for v, d in voc.items() if any(m in d.get("question", "") for m in SOUSCRIPTION)]
+    souscription = [v for v, d in voc.items() if d.get("source") == prolog.CONDITIONS_PARTICULIERES]
     non_lues = [v for v, d in voc.items() if d.get("pour") and set(d["pour"]) <= set(PSEUDO_EVENEMENTS)]
     propres = [v for v in voc if nb[v] == 1 and v not in lecture.SOCLE]
     return {"variables": len(voc),

@@ -1,5 +1,5 @@
 {
-  "_description": "Vocabulaire commun : le socle (événement, bien, lieu) et les variables que plusieurs contrats emploient. « plusieurs » : la variable prend une liste. « parents » : la hiérarchie des valeurs (une vitre est un élément du bâtiment). « pour » : les événements auxquels une variable s'applique. « aide » : le sens des valeurs proches, donné au modèle qui lit. « libelle » : le nom montré d'une variable ; « libelles » : celui d'une valeur, quand l'identifiant s'écrit mal. Rangé par `couverture regles --ranger`.",
+  "_description": "Vocabulaire commun : le socle (événement, bien, lieu) et les variables que plusieurs contrats emploient. « plusieurs » : la variable prend une liste. « parents » : la hiérarchie des valeurs (une vitre est un élément du bâtiment). « pour » : les événements auxquels une variable s'applique. « aide » : le sens des valeurs proches, donné au modèle qui lit. « libelle » : le nom montré d'une variable ; « libelles » : celui d'une valeur, quand l'identifiant s'écrit mal. « source » : conditions_particulieres quand le contrat du client fait foi (la formule, une option) ; « par_contrat » : les valeurs propres à un contrat. Rangé par `couverture regles --ranger`.",
   "variables": {
     "evenement": {
       "libelle": "Événement",
@@ -713,6 +713,7 @@
     },
     "formule": {
       "libelle": "Formule",
+      "source": "conditions_particulieres",
       "valeurs": [
         "privilege",
         "active",
@@ -740,6 +741,18 @@
         "eco": "formule Eco",
         "confort": "formule Confort",
         "excellence": "formule Excellence"
+      },
+      "par_contrat": {
+        "assureur-b-habitation-2017": [
+          "privilege",
+          "active",
+          "standard"
+        ],
+        "assureur-d-habitation-2026": [
+          "eco",
+          "confort",
+          "excellence"
+        ]
       }
     },
     "occupation_partielle": {
@@ -1093,6 +1106,7 @@
     },
     "option_materiel_multimedia": {
       "libelle": "Garantie « matériel multimédia » souscrite",
+      "source": "conditions_particulieres",
       "valeurs": [
         "oui",
         "non"
@@ -1330,6 +1344,7 @@
     },
     "option_protection_juridique": {
       "libelle": "Option protection juridique souscrite",
+      "source": "conditions_particulieres",
       "valeurs": [
         "oui",
         "non"

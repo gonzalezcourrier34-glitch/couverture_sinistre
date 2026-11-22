@@ -291,6 +291,7 @@
     },
     "couverture_rc_locative": {
       "libelle": "Responsabilité locative souscrite",
+      "source": "conditions_particulieres",
       "valeurs": [
         "oui",
         "non"

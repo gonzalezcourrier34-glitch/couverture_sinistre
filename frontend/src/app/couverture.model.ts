@@ -22,6 +22,17 @@ export interface Contrat {
     nb_clauses: number | null;
     alertes: string[];
     regles: boolean;
+    /** Ce que les conditions particulières du client peuvent préciser : la formule, les options. */
+    souscription?: Souscription[];
+}
+
+/** Un point des conditions particulières (« Formule », « Garantie vol souscrite ») et ses valeurs possibles. */
+export interface Souscription {
+    variable: string;
+    libelle: string;
+    question: string;
+    valeurs: string[];
+    libelles: Record<string, string>;
 }
 
 export interface Clause {

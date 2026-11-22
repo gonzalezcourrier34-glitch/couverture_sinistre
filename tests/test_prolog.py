@@ -1013,3 +1013,97 @@ def test_variable_sans_evenements_seulement_si_une_regle_vaut_pour_tout():
             generales |= set(re.findall(r"\bf\(\s*([a-z][a-z0-9_]*)\s*,", regle))
     sans = [v for v, d in prolog.vocabulaire().items() if v not in lecture.SOCLE and not d.get("pour")]
     assert [v for v in sans if v not in generales] == []
+
+
+# --- Les conditions particulières données avec la déclaration (7.141) --------------------------------------------
+
+def test_souscription_d_un_contrat():
+    """Ce que les conditions particulières précisent se lit dans le vocabulaire (« source ») et dans les règles
+    du contrat : ses options à lui, et ses formules à lui."""
+    voc = prolog.vocabulaire()
+    a, b, d = (prolog.souscription(c, voc) for c in prolog.contrats_regles())
+    assert set(a) == {"couverture_rc_locative", "option_materiel_multimedia"}
+    assert b["formule"]["valeurs"] == ["privilege", "active", "standard"]
+    assert d["formule"]["valeurs"] == ["eco", "confort", "excellence"] and "pack_jardin" in d and "pack_jardin" not in b
+    # Aucune formule déclarée pour un contrat qui n'existe pas, et rien sans règles.
+    assert all(set(x) <= set(prolog.contrats_regles()) for v in voc.values() for x in [v.get("par_contrat") or {}])
+    assert prolog.souscription("contrat-sans-regles", voc) == {}
+
+
+def test_souscription_retenue_ou_signalee():
+    b = "assureur-b-habitation-2017"
+    faits, ecarts = prolog.retenir_souscription(b, {"formule": "eco", "option_vol": "oui", "pack_jardin": "oui",
+                                                    "option_tempete": ""})
+    assert faits == {"option_vol": "oui"} and len(ecarts) == 2, "la formule d'un autre contrat et le pack de D"
+    assert prolog.retenir_souscription(b, None) == ({}, [])
+
+
+def test_la_declaration_peut_encore_dire_la_formule():
+    """« J'ai la formule Privilège » : la déclaration le dit parfois (golden b-v05), la lecture le cherche toujours.
+    La souscription donnée s'ajoute à la lecture, elle ne la remplace pas."""
+    voc = prolog.vocabulaire()
+    assert "formule" in lecture.variables_du_temps_2(voc, ["vol"])
+
+
+def test_souscription_donnee_tranche_sans_confirmation(contrat):
+    """Un ordinateur cassé chez A : sans l'option, « à préciser » ; avec l'option donnée par les conditions
+    particulières, « couvert », et ce fait n'est pas soumis à la confirmation sur la déclaration (il n'en vient pas)."""
+    def oracle(f):
+        d = Explorateur(contrat, f).decider()
+        for r in d["retenues"] + d.get("possibles", []) + d.get("accessoires", []):
+            g = next(x for x in contrat.regles("garantie", 4) if x.args[0] == r["id"])
+            r.update(garantie=g.args[1], article=g.args[2], motif="…", preuves=[])
+        return d
+
+    class Modele:
+        nom, accepte_schema = "souscription", True
+
+        def __init__(self):
+            self.juges = set()
+
+        def completer(self, systeme, message, schema=None):
+            if systeme == lecture.SYSTEME_LECTURE_SOCLE:
+                return json.dumps({"faits": {"evenement": ["accident"], "bien": ["appareil_informatique"],
+                                             "lieu": ["logement"]}})
+            if systeme == lecture.SYSTEME_LECTURE_DETAILS:
+                return json.dumps({"faits": {}})
+            props = set(schema["properties"]["verdicts"]["properties"])
+            self.juges |= props
+            return json.dumps({"verdicts": {v: "dit" for v in props}})
+
+    sinistre = "J'ai fait tomber mon ordinateur portable dans le salon, l'écran est cassé."
+    sans = chaine.PipelineRegles(CONTRAT, [], Modele(), decideur=oracle).analyser(sinistre)
+    assert sans.verdict.decision.value == "INCERTAIN"
+    m = Modele()
+    avec = chaine.PipelineRegles(CONTRAT, [], m, decideur=oracle).analyser(
+        sinistre, souscription={"option_materiel_multimedia": "oui", "pack_jardin": "oui"})
+    # Sans clauses en base, la validation rétrograde un « couvert » sans citation : on lit la décision du moteur.
+    assert (avec.verdict.decision_initiale or avec.verdict.decision).value == "COUVERT"
+    assert "option_materiel_multimedia" not in m.juges
+    assert "option_materiel_multimedia=oui" in avec.faits.circonstances
+    assert any("pack_jardin" in a for a in avec.verdict.avertissements), "l'option d'un autre contrat est signalée"
+    refus = chaine.PipelineRegles(CONTRAT, [], Modele(), decideur=oracle).analyser(
+        sinistre, souscription={"option_materiel_multimedia": "non"})
+    assert (refus.verdict.decision_initiale or refus.verdict.decision).value == "NON_COUVERT"
+
+
+def test_sans_evenement_le_moteur_n_est_pas_interroge():
+    """Un texte qui n'est pas une déclaration : « je n'ai pas reconnu de sinistre », la question « que s'est-il
+    passé ? », aucune garantie citée ; et le moteur n'est pas appelé (7.142)."""
+    class Modele:
+        nom, accepte_schema = "rien", True
+
+        def completer(self, systeme, message, schema=None):
+            return json.dumps({"faits": {}}) if "verdicts" not in str(schema) else json.dumps({"verdicts": {}})
+
+    def moteur(faits):
+        raise AssertionError("le moteur ne doit pas être interrogé sans événement")
+
+    etapes = []
+    r = chaine.PipelineRegles(CONTRAT, [], Modele(), decideur=moteur).analyser(
+        "Bonjour, pouvez-vous me rappeler demain matin ?", suivi=lambda e, d=None: etapes.append((e, d)),
+        souscription={"option_materiel_multimedia": "oui"})
+    assert r.verdict.decision.value == "INCERTAIN" and r.verdict.justification == chaine.SANS_EVENEMENT
+    assert r.verdict.informations_manquantes == [lecture.question("evenement")] and not r.verdict.citations
+    assert r.faits.circonstances == ["option_materiel_multimedia=oui"], "ce qui est donné reste dans les faits"
+    assert ("decision", "aucun sinistre reconnu : les règles ne sont pas appliquées") in etapes

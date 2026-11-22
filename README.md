@@ -86,22 +86,22 @@ Contrat « Assureur A » (48 pages, 147 clauses). Les réponses attendues ont é
 
 ### 4. Ce que cela donne
 
-Trois contrats de trois assureurs (anonymisés A, B, D), sur le même moteur. Mesures du 22 novembre 2026, trois passages par banc. Mistral Medium lit, Mistral Small vérifie :
+Trois contrats de trois assureurs (anonymisés A, B, D), sur le même moteur. Mistral Medium lit, Mistral Small vérifie. Mesures du 22 novembre 2026, deux séries dans la journée (13 h 30 et 16 h 20), trois passages par banc ; la fourchette donne les deux séries :
 
 | Banc | Réponses justes | Couverts à tort | Refus à tort |
 |---|---|---|---|
 | Règles seules, faits exacts (A, les 31 cas de test) | 100 % | 0 | 0 |
-| A, partie test du golden set (31 cas jamais utilisés pour régler) | 90 % | 0 | 0 |
+| A, partie test du golden set (31 cas jamais utilisés pour régler) | 90 % | 0 à 0,3 | 0 |
 | A, jeu fermé (20 cas écrits sans voir les règles) | 98 à 100 % | 0 à 0,3 | 0 |
-| B, jeu fermé (20 cas) | 82 % | 1 | 0 |
-| D, jeu fermé (25 cas) | 96 % | 0 | 1 |
+| B, jeu fermé (20 cas) | 82 à 85 % | 1 | 0 |
+| D, jeu fermé (25 cas) | 93 à 96 % | 0 | 1 |
 
 - **Toutes les erreurs viennent de la lecture**, pas des règles : avec des faits exacts, le moteur ne se trompe pas.
 - **Deux erreurs se répètent à chaque passage** : chez B, un vol dans une voiture est couvert alors qu'il fallait demander une précision ; chez D, une crue avec arrêté de catastrophe naturelle est refusée. Les autres sont des « à préciser » de trop : une question au lieu d'une réponse.
-- **La lecture est stable** : sur 96 déclarations, 2 changent de réponse d'un passage à l'autre.
-- Une analyse prend 4 à 5 secondes (95e centile : 7 secondes).
-- Les jeux sont petits : un écart de 3 ou 4 points entre deux passages n'est pas significatif.
-- Les deux bancs de A ont été relancés à 15 h, après un contrôle du vocabulaire (7.138) : 90 % et 100 %, aucun couvert à tort. Le jeu fermé de A est donné en fourchette sur les deux mesures.
+- **Un couvert à tort peut apparaître une fois sur trois** : un fer à repasser qui brûle une housse, lu « accident » six fois de suite puis « dégât électrique » deux fois sur trois, et couvert une fois. « 0,3 » veut dire cela : un passage sur trois. C'est l'erreur qui coûte, et la lecture ne la garantit pas à zéro.
+- **La lecture varie peu, mais elle varie** : sur 96 déclarations, 2 à 4 changent de réponse d'un passage à l'autre.
+- Une analyse prend 4 à 5 secondes (95e centile : 6 à 7 secondes ; un passage à 19 secondes chez B, un appel lent).
+- Les jeux sont petits : un écart de 3 ou 4 points entre deux séries n'est pas significatif.
 
 ### 5. Ce qui a été essayé, et ce que la mesure a dit
 
@@ -136,7 +136,8 @@ Ce qui manque pour des centaines : chaque contrat réemploie la moitié de ses v
 
 ### 7. Limites
 
-- Les **conditions particulières** du client (options, capitaux, formule) ne sont pas lues : une réponse qui en dépend est « à préciser ».
+- Les **conditions particulières** du client : la formule et les options se donnent avec la déclaration (à l'écran, ou par l'API), et la réponse en tient compte sans rien demander. Mais le document lui-même n'est pas lu, ni les capitaux ; non renseignée, une réponse qui en dépend reste « à préciser ».
+- La **loi applicable** n'est pas traitée : le contrat A se dit régi par la loi belge du 4 avril 2014, d'autres relèvent de la loi luxembourgeoise du 27 juillet 1997 ou du code des assurances français. Ces textes s'imposent aux conditions générales ; le système ne lit que le contrat.
 - La **lecture** reste la source de toutes les erreurs. Quand un fait qui porte la réponse n'est pas confirmé, le garde-fou en fait une question, pas une bonne réponse.
 - Le moteur n'est pas plus juste que son vocabulaire : il ne sait pas dire « une fuite, mais pas le gel ».
 - Seuls des **PDF** de conditions générales sont lus. Un seul document est produit : la fiche d'analyse d'un sinistre, en PDF.
@@ -208,7 +209,7 @@ l'en-tête `x-api-key` (`COUVERTURE_API_KEY` dans `.env` ; sans elle, les routes
 | `GET /api/v1/sante` | l'API, le moteur et le modèle répondent (publique) |
 | `GET /api/v1/contrats`, `/contrats/{id}`, `/contrats/{id}/clauses` | les contrats et leur texte |
 | `GET /api/v1/vocabulaire` | les faits que le moteur comprend |
-| `POST /api/v1/analyses` | une déclaration → couvert, non couvert ou incertain, avec les citations |
+| `POST /api/v1/analyses` | une déclaration, et si on les a la formule et les options du client → couvert, non couvert ou incertain, avec les citations |
 | `POST /api/v1/analyses/suivi` | la même analyse, racontée étape par étape pendant qu'elle se fait (flux de lignes JSON) |
 | `POST /api/v1/decisions` | des faits → la décision, sans modèle (résout un « incertain ») |
 | `POST /api/v1/fiches` | une décision → sa fiche en PDF, à verser au dossier |

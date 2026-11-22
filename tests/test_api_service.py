@@ -100,3 +100,17 @@ def test_analyse_un_fait_non_confirme_devient_la_question(base, oracle):
 
     _, r = service.analyser(Chaine(), "On m'a volé mon vélo dans la cave.")
     assert "fermeture" not in r["faits"] and r["a_preciser"][0]["variable"] == "fermeture"
+
+
+def test_souscription_publiee_et_gardee_a_la_decision(base, oracle):
+    """Le contrat dit ce que ses conditions particulières précisent ; donnée dans les faits, une option n'est pas
+    retirée comme « hors sujet » et n'est plus demandée (7.141)."""
+    public = service.contrat_public(base.contrat(CONTRAT))
+    assert {s["variable"] for s in public["souscription"]} == {"couverture_rc_locative", "option_materiel_multimedia"}
+    assert all(s["libelle"] and set(s["libelles"]) == set(s["valeurs"]) for s in public["souscription"])
+    faits = {"evenement": ["accident"], "bien": ["appareil_informatique"], "lieu": ["logement"]}
+    _, r = service.decider(base, CONTRAT, faits, oracle)
+    assert r["decision"] == "INCERTAIN" and "option_materiel_multimedia" in {p["variable"] for p in r["a_preciser"]}
+    _, r = service.decider(base, CONTRAT, faits | {"option_materiel_multimedia": "oui"}, oracle)
+    assert r["decision"] == "COUVERT" and r["faits"]["option_materiel_multimedia"] == "oui"
+    assert r["faits_affiches"][-1]["libelle"] == "Garantie « matériel multimédia » souscrite"

@@ -20,6 +20,11 @@ def numero(article: str) -> str:
     return str(article).split("~")[0]
 
 
+SANS_EVENEMENT = ("À préciser. Je n'ai pas reconnu de sinistre dans ce texte : il ne dit pas ce qui s'est passé "
+                  "(un vol, un incendie, un dégât des eaux, un dommage causé à quelqu'un…). Aucune garantie n'a été "
+                  "examinée.")
+
+
 class PipelineRegles:
     methode = "regles"
 
@@ -51,8 +56,10 @@ class PipelineRegles:
                 p.exemples = banque
         return p
 
-    def analyser(self, sinistre: str, suivi=None) -> Resultat:
-        """`suivi(etape, detail=None)` : le fil de l'analyse, étape par étape (7.134) ; None : rien."""
+    def analyser(self, sinistre: str, suivi=None, souscription: dict | None = None) -> Resultat:
+        """`suivi(etape, detail=None)` : le fil de l'analyse, étape par étape (7.134) ; None : rien.
+        `souscription` : ce que disent les conditions particulières du client ({variable: valeur} : la formule,
+        les options) ; ces faits s'ajoutent à ceux lus dans la déclaration, et l'emportent sur eux (7.141)."""
         dire = suivi or (lambda etape, detail=None: None)
         debut = time.perf_counter()
         try:
@@ -68,6 +75,23 @@ class PipelineRegles:
             return Resultat(sinistre=sinistre, contrat_id=self.contrat_id, methode=self.methode, faits=Faits(),
                             clauses_consultees=[], verdict=v)
         lu = time.perf_counter()
+        souscrits, ecarts_souscription = prolog.retenir_souscription(self.contrat_id, souscription)
+        # Le contrat du client fait foi : ce qu'il donne l'emporte sur ce que la déclaration en dit.
+        faits = {v: x for v, x in faits.items() if v not in souscrits} | souscrits
+        ecarts = ecarts + ecarts_souscription
+        if not faits.get("evenement"):
+            # Sans événement, le moteur n'a rien à décider : il rendait toutes les garanties « possibles » et une
+            # question sans rapport (« d'où venait l'eau ? » pour un texte qui n'est pas une déclaration, 7.142).
+            dire("decision")
+            dire("decision", "aucun sinistre reconnu : les règles ne sont pas appliquées")
+            dire("confirmation")
+            dire("confirmation", "rien à confirmer")
+            v = Verdict(decision=Decision.INCERTAIN, confiance=0.0, mode=f"regles:{self.llm.nom}+prolog",
+                        justification=SANS_EVENEMENT, informations_manquantes=[question("evenement")],
+                        avertissements=ecarts)
+            return Resultat(sinistre=sinistre, contrat_id=self.contrat_id, methode=self.methode,
+                            faits=faits_lisibles(faits), clauses_consultees=[], verdict=v,
+                            durees_ms={"lecture": int((lu - debut) * 1000), "decision": 0})
         dire("decision")
         d = self.decideur(faits)
         decide = time.perf_counter()
@@ -76,7 +100,7 @@ class PipelineRegles:
         doutes: list[str] = []
         dire("confirmation")
         if d["decision"] in ("COUVERT", "NON_COUVERT"):
-            d, doutes, avert = self.confirmer(sinistre, faits, d)
+            d, doutes, avert = self.confirmer(sinistre, faits, d, donnes=set(souscrits))
             ecarts = ecarts + avert
         dire("confirmation", ("non confirmé dans la déclaration : " + " ; ".join(v.replace("_", " ") for v in doutes)
                               + " ; la réponse devient « à préciser »") if doutes
@@ -104,22 +128,24 @@ class PipelineRegles:
             verdict.raisonnement = [f"Réponse suspendue : fait décisif non confirmé ({', '.join(doutes)}) ; "
                                     "ci-dessous, le raisonnement sans ce fait."] + verdict.raisonnement
         verdict.avertissements = ecarts + verdict.avertissements
-        verdict = valider(verdict, consultees)
+        verdict = valider(verdict, consultees, roles_des_regles=True)
         return Resultat(sinistre=sinistre, contrat_id=self.contrat_id, methode=self.methode,
                         faits=faits_lisibles(faits), clauses_consultees=consultees, verdict=verdict,
                         durees_ms={"lecture": int((lu - debut) * 1000), "decision": int((decide - lu) * 1000)})
 
-    def confirmer(self, sinistre: str, faits: dict, d: dict) -> tuple[dict, list[str], list[str]]:
+    def confirmer(self, sinistre: str, faits: dict, d: dict, donnes=None) -> tuple[dict, list[str], list[str]]:
         """Une réponse ferme doit reposer sur des faits confirmés (7.49). Le moteur dit quels faits portent la
         décision ; le modèle confirme, sur la déclaration, que chacun y est écrit. Un seul « non dit » : la
         réponse devient « incertain », avec la question sur ce fait. Rend (décision, faits douteux, avertissements)."""
-        decisifs = faits_decisifs(faits, self.decideur, d["decision"])
+        # Un fait donné par les conditions particulières ne se confirme pas dans la déclaration : il n'en vient
+        # pas (7.141). Le même fait lu dans la déclaration (« j'ai la formule Privilège ») se confirme comme un autre.
+        decisifs = [v for v in faits_decisifs(faits, self.decideur, d["decision"]) if v not in (donnes or ())]
         if not decisifs:
             return d, [], []
+        voc = prolog.vocabulaire()
         # Un fait déduit d'un autre (« implique », 7.94) n'est pas écrit tel quel : on confirme le fait qui le dit
         # (« entré sans effraction »), pas sa conséquence (« effraction = non »), que la confirmation jugeait « non
         # dite » une fois sur trois (f-d18, 7.95).
-        voc = prolog.vocabulaire()
         sources = sources_impliquees(faits, voc)
         a_juger = list(dict.fromkeys(sources.get(v, v) for v in decisifs))
         try:
@@ -190,7 +216,10 @@ class PipelineRegles:
             for lim in r.get("limites", []):
                 conditions.append(Condition(nature="limite", groupe="Limites", clause_id=lim["article"],
                                             extrait=lim["texte"], enonce=f"{lim['montant']}", etat=EtatCondition.REMPLIE))
-        citations = [Citation(clause_id=c.clause_id, extrait=c.extrait, role=c.nature, pages=c.pages)
+        # Le rôle d'une citation est celui de la règle (7.143) : « garantie » pour la seule phrase qui accorde la
+        # garantie, pas pour une définition ou une circonstance citée avec elle.
+        citations = [Citation(clause_id=c.clause_id, extrait=c.extrait, pages=c.pages,
+                              role=c.nature if c.nature == "exclusion" or c.groupe == "garantie" else c.groupe)
                      for c in conditions if c.nature != "limite"]
         consultees = [ClauseRetenue(clause=index[i], score=0.0, raison="règle")
                       for i in dict.fromkeys(c.clause_id for c in conditions) if i in index]

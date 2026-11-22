@@ -20,11 +20,16 @@ class AnalyseRequest(BaseModel):
         Le contrat (voir `GET /api/v1/contrats`).
     sinistre : str
         La déclaration, en français, telle que le client l'écrit (10 à 2 000 caractères).
+    souscription : dict[str, str]
+        Facultatif : ce que disent les conditions particulières du client (la formule, les options), parmi
+        celles du contrat (`souscription` de `GET /api/v1/contrats`). Ce qui n'est pas renseigné reste une
+        question ou une réserve.
     """
 
     contrat_id: str = Field(min_length=1, examples=["assureur-a-habitation-2025"])
     sinistre: str = Field(min_length=10, max_length=2000, examples=[
         "En faisant du vélo dans le parc, j'ai renversé un piéton. Il s'est cassé le poignet."])
+    souscription: dict[str, str] = Field(default_factory=dict, examples=[{"formule": "privilege"}])
 
 
 class DecisionRequest(BaseModel):

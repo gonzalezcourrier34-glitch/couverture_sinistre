@@ -4382,6 +4382,49 @@ Huit groupes, une dizaine de variables de moins si on les fusionnait : **environ
 
 **Limite.** La relecture des doublons est manuelle. Pour cent contrats, il faudrait la proposer à la rédaction (comparer la question d'une variable nouvelle à celles qui existent, par mistral-embed, avant de l'accepter).
 
+### 7.141 Les conditions particulières se donnent avec la déclaration
+
+**Le constat (bilan 7.140).** 19 variables portent sur ce que le client a souscrit : la formule, une option, un pack. Le système les demandait au client ou les gardait en réserve (« sous réserve des conditions particulières »), alors qu'un gestionnaire a le contrat du client sous les yeux.
+
+**La règle.** Un fait a une source. Elle s'écrit une fois, dans le vocabulaire : `source : conditions_particulieres`. Le reste en découle :
+
+- `prolog.souscription(contrat)` : ce que les conditions particulières précisent pour ce contrat, c'est-à-dire les variables de cette source que ses règles emploient (2 chez A, 14 chez B, 6 chez D), avec ses valeurs à lui (`par_contrat` : les formules de B ne sont pas celles de D) ;
+- l'analyse accepte une `souscription` facultative (`POST /analyses`, `/analyses/suivi`) ; ces faits s'ajoutent à ceux lus dans la déclaration et l'emportent sur eux, car le contrat fait foi ;
+- un fait donné ainsi n'est pas soumis à la confirmation sur la déclaration : il n'en vient pas ;
+- l'option d'un autre contrat ou une valeur inconnue est ignorée et signalée, jamais devinée ;
+- `GET /contrats` publie la liste ; l'écran la propose sous le choix du contrat, repliée, chaque point « non renseigné » par défaut ;
+- à l'affichage, ces faits viennent après ceux de la déclaration ; une question sur la formule ne propose que les formules du contrat.
+
+Sans souscription donnée, rien ne change : la chaîne mesurée est la même, aucun banc à relancer.
+
+**Ce qui n'a pas été fait : retirer ces variables de la lecture.** C'était l'étape suivante (« la déclaration ne les dit jamais »). Avant de la coder, le golden set a répondu : trois déclarations de B disent « j'ai la formule Privilège » (`b-v05`, `b-v06`, `b-v08`), et la formule figure dans leurs faits idéaux. Cesser de la lire aurait changé ces réponses en « à préciser ». La lecture reste donc inchangée, un test le garde (`test_la_declaration_peut_encore_dire_la_formule`), et le bilan dit « la déclaration ne les dit que parfois ». Les 16 variables de souscription propres à un contrat restent lues ; ce qui change, c'est qu'on n'a plus à les demander.
+
+**Limites.** L'entrée est une saisie ou un objet JSON, pas le document des conditions particulières du client. La question de `formule` garde sa parenthèse « (Privilège, Active, standard) », fausse pour D : la corriger change la consigne de lecture, donc se mesure.
+
+### 7.142 Sans événement lu, le moteur n'est pas interrogé
+
+**Le constat (22 nov., à l'écran).** Un texte qui n'est pas une déclaration (une consigne collée par erreur dans la zone de saisie) : le modèle ne lit aucun événement, et la réponse était « à préciser », avec toutes les garanties du contrat citées (« pourrait s'appliquer, selon des faits non précisés ») et « Une seule question tranche : d'où venait l'eau ? ». Rien de faux dans la décision, mais une réponse qui ne veut rien dire.
+
+**La cause.** Sans événement, le moteur ne peut écarter aucune garantie : il les rend toutes possibles, et l'exploration choisit une question parmi les leurs.
+
+**La règle.** Les règles ne s'appliquent qu'à un sinistre. Sans événement lu, `PipelineRegles.analyser` ne les interroge pas : la réponse est « à préciser », dit « je n'ai pas reconnu de sinistre dans ce texte », ne cite aucune garantie et pose une seule question, « que s'est-il passé ? ». L'API la rend avec ses réponses possibles : en choisir une relance la décision sur les faits. La décision reste « à préciser », comme avant : les bancs ne changent pas.
+
+### 7.143 Le rôle d'une citation est celui de la règle, pas le type de la clause
+
+**Le constat (22 nov., à l'écran).** Un ordinateur cassé chez A, garantie matériel multimédia souscrite : la justification dit « Couvert. », la pastille dit « À préciser, confiance 85 % », et l'article 6.1 est étiqueté « exclusion ».
+
+**La cause.** La validation exige, pour un « couvert », une citation vérifiable dont le rôle est « garantie ». Elle prenait ce rôle dans le type de la clause, fixé à l'ingestion par des indices de vocabulaire, pour la clause entière. La clause 6.1 de A commence par « Pour autant que vos conditions particulières en fassent mention… » et a été typée « exclusion » : tout « couvert » du pack multimédia était rétrogradé. Ce garde-fou date de la méthode où le modèle citait (« le rôle vient du contrat, pas du modèle ») ; dans la méthode « règles », c'est une règle rédigée, contrôlée et relue qui cite.
+
+**L'ampleur.** Garanties dont la clause citée n'est pas typée « garantie » en base : 1 sur 24 chez A, 3 sur 26 chez D, **22 sur 40 chez B** (la clause 3.1.4 des dégâts des eaux est typée « autre », la 3.1.1.2 du heurt et du vandalisme « condition »).
+
+**La règle.** Pour la méthode « règles », le rôle d'une citation est celui que la règle lui donne ; « garantie » est réservé à la phrase qui accorde la garantie (pas une définition ni une circonstance citée avec elle). Le garde-fou reste : un « couvert » exige cette phrase, retrouvée mot pour mot dans la clause. Quand un modèle cite (les autres méthodes), rien ne change. Et quand la validation rétrograde, la justification le dit, au lieu de garder « Couvert. ».
+
+**La mesure (22 nov., 16 h 20).** A, partie test : 90 %, mais **0,3 couvert à tort** (un passage sur trois). A, jeu fermé : 100 %. B : 85 % (82 % à 13 h 30), 1 couvert à tort (`f-b18`, le même). D : 93 % (96 %), 1 refus à tort (`f-d08`, le même).
+
+Comparées cas par cas à la série précédente, les réponses qui changent sont au nombre de quatre, et toutes par la lecture, avant toute validation : `val-09` (le fer à repasser, lu « accident » six fois sur six jusque-là, lu « électricité » deux fois sur trois, et couvert une fois par la garantie 2.6, dont la clause est bien typée « garantie » : l'ancien garde-fou ne l'aurait pas retenu), `f-d05` (un « cadre » lu « châssis », puis non confirmé), `f-b06` et `f-b13` (un passage de mieux chacun). Aucun passage, avant ou après, ne porte la trace d'une rétrogradation : **le changement de rôle n'a aucun effet mesuré sur ces jeux**, il corrige le cas vu à l'écran. Les consignes et le vocabulaire envoyés au modèle sont identiques entre les deux séries : l'écart est la variabilité du modèle.
+
+**Ce que cela dit.** « Zéro couvert à tort » sur la partie test de A tenait à six lectures identiques ; la septième série en montre un. Le chiffre honnête est une fourchette (0 à 0,3), et le README le donne ainsi.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
@@ -4396,8 +4439,8 @@ Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
 | 4 | Les libellés proposés par la rédaction | Chaque nouveau contrat demande aujourd'hui de les écrire à la main (7.137). |
 | 5 | Des exemples validés pour B et D | B est à 82 %, A entre 90 et 98 % : la lecture se corrige par des exemples, et il y en a surtout pour A. |
 | 6 | Un contrat ajouté à froid, hors habitation si possible | Trois contrats, tous en habitation, ne prouvent pas cent. |
-| 7 | Les conditions particulières lues dans le contrat du client | La formule et les options sont demandées au client. |
-| 8 | La loi luxembourgeoise sur le contrat d'assurance | Elle s'impose aux conditions générales ; le projet ne la traite pas. |
+| 7 | Les conditions particulières lues dans le contrat du client | **Fait pour la saisie (7.141)** : la formule et les options se donnent avec la déclaration. Reste : lire le document du client. |
+| 8 | La loi applicable au contrat | **Écrite comme limite** (README, section 7) : elle dépend du contrat (A se dit régi par la loi belge du 4 avril 2014), elle s'impose aux conditions générales, le système ne lit que le contrat. |
 
 **Le plan de lecture (7.35)**
 - La lecture vérifiée est la seule lecture (7.45, 7.110). Si un recours à Mistral Large revient un jour (cas douteux), il se mesurera sur la partie test.
@@ -4568,3 +4611,7 @@ Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
 139. Une exception tolérée (une variable « lue partout ») se justifie par une règle qu'un test peut vérifier ; sinon elle cache un oubli.
 140. Avant de corriger une structure, relire les erreurs mesurées une par une : la piste la plus élégante ne corrigeait aucune d'elles.
 141. Compter avant de généraliser : sur 99 variables « propres », 29 ne sont pas lues dans la déclaration, et les doublons n'en retirent qu'une dizaine.
+142. Une évidence sur les données se vérifie dans les données : « la déclaration ne dit jamais la formule » était faux pour trois cas du golden set.
+143. Une erreur de manipulation est un cas de test gratuit : le texte collé par erreur a montré ce que répond le système quand il n'y a pas de sinistre.
+144. Un garde-fou écrit pour une méthode se relit quand la méthode change : « le rôle vient du contrat » protégeait d'un modèle qui cite, et rétrogradait des règles qui citent juste.
+145. Un zéro mesuré sur trois passages n'est pas un zéro : donner la fourchette de plusieurs séries, surtout pour l'erreur qui coûte.

@@ -653,3 +653,25 @@ def test_un_autre_modele_pour_verifier(monkeypatch):
     assert llm.modele_de_verification() is None
     monkeypatch.setenv("COUVERTURE_MODELE_VERIFICATION", "mistral-small-latest")
     assert llm.modele_de_verification().modele == "mistral-small-latest"
+
+
+def test_role_de_la_regle_pour_une_garantie_dans_une_clause_typee_exclusion(clauses):
+    """7.143 : la clause 4.4 est typée « exclusion » à l'ingestion. Citée mot pour mot par une règle comme la phrase
+    d'une garantie, elle porte un « couvert » ; une définition seule ne le porte pas, et la justification ne dit
+    alors plus « Couvert. »."""
+    from couverture.models import ClauseRetenue, Verdict
+    from couverture.validation import RETROGRADE, valider
+
+    retenues = [ClauseRetenue(clause=c, score=0.0, raison="test") for c in clauses]
+    extrait = "les vols commis dans les parties communes de l'immeuble, y compris dans un local à vélos collectif"
+
+    def verdict(role):
+        return Verdict.model_validate({"decision": "COUVERT", "justification": "Couvert. …", "confiance": 0.85, "mode": "fixe",
+                                       "citations": [{"clause_id": "4.4", "extrait": extrait, "role": role}]})
+
+    garde = valider(verdict("garantie"), retenues, roles_des_regles=True)
+    assert garde.decision == Decision.COUVERT and garde.citations[0].role == "garantie"
+    sans = valider(verdict("définition"), retenues, roles_des_regles=True)
+    assert sans.decision == Decision.INCERTAIN and sans.justification.startswith(RETROGRADE) and sans.confiance <= 0.4
+    # Quand c'est un modèle qui cite, le rôle vient toujours du contrat : la même citation ne porte pas un « couvert ».
+    assert valider(verdict("garantie"), retenues).decision == Decision.INCERTAIN

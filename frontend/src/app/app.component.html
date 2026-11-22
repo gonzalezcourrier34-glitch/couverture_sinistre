@@ -53,6 +53,37 @@
                 }
             </div>
 
+            <!-- ### Conditions particulières : ce que le contrat du client dit, et que la déclaration ne dit pas -->
+
+            @if (contrat()?.souscription?.length) {
+                <details class="souscription">
+                    <summary>
+                        Conditions particulières du client
+                        <span class="muted">
+                            @if (nbSouscription()) {
+                                · {{ nbSouscription() }} renseignée{{ nbSouscription() > 1 ? 's' : '' }}
+                            } @else {
+                                · facultatif
+                            }
+                        </span>
+                    </summary>
+                    <p class="souscription-aide">La formule et les options souscrites. Ce qui n’est pas renseigné reste une question ou une réserve dans la réponse.</p>
+                    <div class="souscription-grille">
+                        @for (s of contrat()?.souscription ?? []; track s.variable) {
+                            <label class="souscription-ligne" [attr.title]="s.question">
+                                <span>{{ s.libelle }}</span>
+                                <select class="liste" (change)="souscrire(s.variable, $event)">
+                                    <option value="" [selected]="!souscription()[s.variable]">Non renseigné</option>
+                                    @for (v of s.valeurs; track v) {
+                                        <option [value]="v" [selected]="souscription()[s.variable] === v">{{ s.libelles[v] }}</option>
+                                    }
+                                </select>
+                            </label>
+                        }
+                    </div>
+                </details>
+            }
+
             <form class="saisie" (submit)="$event.preventDefault(); analyser()">
                 <label class="etiquette" for="sinistre">2. La déclaration du client</label>
                 <textarea id="sinistre" rows="4" [attr.maxlength]="longueurMax"

@@ -40,7 +40,15 @@ def contrat_public(c: Contrat) -> dict[str, Any]:
     """Ce que l'API montre d'un contrat (ni le chemin du fichier, ni son empreinte)."""
     return {"id": c.id, "assureur": c.assureur, "produit": c.produit, "version": c.version, "statut": c.statut,
             "nb_clauses": c.rapport.get("nb_clauses"), "alertes": c.rapport.get("alertes", []),
-            "regles": a_des_regles(c.id)}
+            "regles": a_des_regles(c.id), "souscription": souscription_publique(c.id)}
+
+
+def souscription_publique(contrat_id: str) -> list[dict[str, Any]]:
+    """Ce que les conditions particulières peuvent préciser pour ce contrat : la formule, les options (7.141)."""
+    voc = prolog.vocabulaire()
+    return [{"variable": v, "libelle": prolog.libelle(v, voc), "question": d.get("question", ""),
+             "valeurs": d["valeurs"], "libelles": {x: prolog.libelle(v, voc, x) for x in d["valeurs"]}}
+            for v, d in prolog.souscription(contrat_id, voc).items()]
 
 
 def clause_publique(c: Clause) -> dict[str, Any]:
@@ -64,7 +72,8 @@ def faits_depuis(faits: Faits) -> dict[str, Any]:
     return sortie
 
 
-def a_preciser(d: dict, voc: dict | None = None, faits: dict | None = None) -> list[dict[str, Any]]:
+def a_preciser(d: dict, voc: dict | None = None, faits: dict | None = None,
+               contrat_id: str | None = None) -> list[dict[str, Any]]:
     """Ce qu'il faut demander au client, variable par variable, avec les valeurs possibles.
 
     `question` : sans la réponse, la garantie ne tranche pas (la décision est « incertain ») ; `reserve` : la
@@ -74,15 +83,17 @@ def a_preciser(d: dict, voc: dict | None = None, faits: dict | None = None) -> l
     un bouton, et `/decisions` l'ignorerait ; elle reste dans `questions`, en phrase (7.125)."""
     voc = voc if voc is not None else prolog.vocabulaire()
     return [{"variable": v, "nature": n, "question": voc.get(v, {}).get("question", f"Préciser : {v}"),
-             "valeurs": (valeurs := valeurs_proposees(v, voc, faits or {})),
+             "valeurs": (valeurs := valeurs_proposees(v, voc, faits or {}, contrat_id)),
              "libelles": {x: prolog.libelle(v, voc, x) for x in valeurs}, "aide": voc.get(v, {}).get("aide", {})}
             for v, n in chaine.points_a_preciser(d, voc, faits) if v in voc]
 
 
-def valeurs_proposees(variable: str, voc: dict, faits: dict) -> list[str]:
+def valeurs_proposees(variable: str, voc: dict, faits: dict, contrat_id: str | None = None) -> list[str]:
     """Les réponses possibles à une question. Si le fait est déjà connu en gros (« une fuite »), seules ses
     précisions sont proposées (« le gel ») : reproposer la valeur déjà connue ramenait la même question (7.128)."""
-    valeurs = list(voc.get(variable, {}).get("valeurs", []))
+    d = voc.get(variable, {})
+    # Les valeurs du contrat, quand la variable les déclare : les formules de B ne sont pas celles de D (7.141).
+    valeurs = list((d.get("par_contrat") or {}).get(contrat_id) or d.get("valeurs", []))
     connu = faits.get(variable)
     connues = set(connu if isinstance(connu, list) else [connu]) if connu not in (None, "", []) else set()
     if not connues:
@@ -100,7 +111,7 @@ def reponse(r: Resultat, d: dict | None = None) -> dict[str, Any]:
         "decision": v.decision.value,
         "justification": v.justification,
         "confiance": v.confiance,
-        "a_preciser": a_preciser(d, faits=faits_depuis(r.faits)) if d else [],
+        "a_preciser": a_preciser(d, faits=faits_depuis(r.faits), contrat_id=r.contrat_id) if d else [],
         "questions": v.informations_manquantes,
         "citations": [c.model_dump(mode="json") for c in v.citations if c.valide],
         "limites": [{"clause_id": c.clause_id, "extrait": c.extrait, "montant": c.enonce}
@@ -117,7 +128,7 @@ def reponse(r: Resultat, d: dict | None = None) -> dict[str, Any]:
 NON_CONFIRME = " : fait décisif non confirmé par la déclaration"
 
 
-def analyser(pipeline, sinistre: str, suivi=None) -> tuple[Resultat, dict[str, Any]]:
+def analyser(pipeline, sinistre: str, suivi=None, souscription: dict | None = None) -> tuple[Resultat, dict[str, Any]]:
     """La déclaration lue par le modèle, la décision du moteur. Rend le résultat complet (pour le journal) et
     la réponse de l'API.
 
@@ -125,7 +136,8 @@ def analyser(pipeline, sinistre: str, suivi=None) -> tuple[Resultat, dict[str, A
     fait décisif que la confirmation n'a pas retrouvé dans la déclaration (7.49) est retiré des faits rendus et
     devient la première question : renvoyés tels quels à `/decisions`, les faits ne doivent pas redonner la
     réponse que la confirmation a suspendue."""
-    r = pipeline.analyser(sinistre, suivi=suivi) if suivi is not None else pipeline.analyser(sinistre)
+    options = ({"suivi": suivi} if suivi is not None else {}) | ({"souscription": souscription} if souscription else {})
+    r = pipeline.analyser(sinistre, **options)
     faits = faits_depuis(r.faits)
     doutes = [a.removesuffix(NON_CONFIRME) for a in r.verdict.avertissements if a.endswith(NON_CONFIRME)]
     for v in doutes:
@@ -134,6 +146,13 @@ def analyser(pipeline, sinistre: str, suivi=None) -> tuple[Resultat, dict[str, A
     if d is not None and doutes:
         d = d | {"retenues": [{"questions": doutes}] + d.get("retenues", [])}
     sortie = reponse(r, d)
+    if d is None:
+        # Aucun événement lu (7.142) : la seule question utile est « que s'est-il passé ? », avec ses réponses.
+        voc = prolog.vocabulaire()
+        sortie["a_preciser"] = [{"variable": "evenement", "nature": "question", "question": voc["evenement"]["question"],
+                                 "valeurs": list(voc["evenement"]["valeurs"]),
+                                 "libelles": {x: prolog.libelle("evenement", voc, x) for x in voc["evenement"]["valeurs"]},
+                                 "aide": voc["evenement"].get("aide", {})}]
     sortie["faits"] = faits
     sortie["faits_affiches"] = prolog.faits_affiches(faits)
     return r, sortie
@@ -150,13 +169,18 @@ def decider(base: Base, contrat_id: str, faits: dict[str, Any], decideur=None) -
     if not a_des_regles(contrat_id):
         raise LookupError(f"Pas de règles pour {contrat_id} : seule l'analyse documentaire est possible.")
     voc = prolog.vocabulaire()
-    retenus, ecarts = lecture.au_vocabulaire(faits, voc)
+    # Les conditions particulières (la formule, une option) ne sont pas jugées « hors sujet » d'après l'événement,
+    # comme le serait un fait lu : c'est aux règles de dire si elles servent (7.141).
+    souscrits, ecarts_souscription = prolog.retenir_souscription(
+        contrat_id, {v: x for v, x in faits.items() if v in prolog.souscription(contrat_id, voc) and isinstance(x, str)}, voc)
+    retenus, ecarts = lecture.au_vocabulaire({v: x for v, x in faits.items() if v not in souscrits}, voc)
+    retenus, ecarts = retenus | souscrits, ecarts + ecarts_souscription
     decideur = decideur or (lambda f: prolog.decider(contrat_id, f))
     d = decideur(retenus)
     p = chaine.PipelineRegles(contrat_id, clauses, SansModele(), decideur=decideur)
     verdict, consultees = p.verdict(d, retenus)
     verdict.avertissements = ecarts + verdict.avertissements
-    verdict = valider(verdict, consultees)
+    verdict = valider(verdict, consultees, roles_des_regles=True)
     r = Resultat(sinistre="", contrat_id=contrat_id, methode="regles", faits=chaine.faits_lisibles(retenus),
                  clauses_consultees=consultees, verdict=verdict)
     return r, reponse(r, d)

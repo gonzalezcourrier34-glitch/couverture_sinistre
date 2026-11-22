@@ -3,6 +3,7 @@
   "variables": {
     "option_veranda": {
       "libelle": "Garantie « véranda » souscrite",
+      "source": "conditions_particulieres",
       "valeurs": [
         "oui",
         "non"
@@ -18,6 +19,7 @@
     },
     "pack_piscine": {
       "libelle": "Pack Piscine souscrit",
+      "source": "conditions_particulieres",
       "valeurs": [
         "oui",
         "non"
@@ -33,6 +35,7 @@
     },
     "pack_jardin": {
       "libelle": "Pack Jardin souscrit",
+      "source": "conditions_particulieres",
       "valeurs": [
         "oui",
         "non"
@@ -63,6 +66,7 @@
     },
     "option_objets_valeur": {
       "libelle": "Garantie « objets de valeur » souscrite",
+      "source": "conditions_particulieres",
       "valeurs": [
         "oui",
         "non"

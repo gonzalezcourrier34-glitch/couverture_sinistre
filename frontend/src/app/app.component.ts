@@ -202,6 +202,13 @@ export class AppComponent implements OnInit {
         () => this.contrats().find((c) => c.id === this.contratId()) ?? null
     );
 
+    /** Ce que les conditions particulières du client disent (la formule, les options) ; vide : non renseigné. */
+    readonly souscription = signal<Record<string, string>>({});
+
+    readonly nbSouscription = computed(
+        () => Object.values(this.souscription()).filter((v) => !!v).length
+    );
+
     readonly derniere = computed(() => {
         const etapes = this.etapes();
         return etapes.length ? etapes[etapes.length - 1] : null;
@@ -265,7 +272,17 @@ export class AppComponent implements OnInit {
             return;
         }
         this.contratId.set(id);
+        this.souscription.set({});
         this.nouvelleDeclaration(false);
+    }
+
+    /** Renseigne un point des conditions particulières ; la valeur vide le remet à « non renseigné ». */
+    souscrire(
+        variable: string,
+        evenement: Event
+    ): void {
+        const valeur = (evenement.target as HTMLSelectElement).value;
+        this.souscription.update((s) => ({ ...s, [variable]: valeur }));
     }
 
     saisir(
@@ -284,7 +301,9 @@ export class AppComponent implements OnInit {
         viderTexte = true
     ): void {
         if (viderTexte) {
+            // Une nouvelle déclaration est celle d'un autre client : ses conditions particulières ne sont pas les mêmes.
             this.sinistre.set('');
+            this.souscription.set({});
         }
         this.etapes.set([]);
         this.reponses.set({});
@@ -304,7 +323,8 @@ export class AppComponent implements OnInit {
         this.lancer('Le modèle lit la déclaration, le moteur décide…');
         this.suivi.set({});
         this.suiviOuvert.set(true);
-        this.service.analyserAvecSuivi(contratId, sinistre)
+        const souscription = Object.fromEntries(Object.entries(this.souscription()).filter(([, v]) => !!v));
+        this.service.analyserAvecSuivi(contratId, sinistre, souscription)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: (message) => {
