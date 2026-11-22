@@ -86,7 +86,7 @@ Contrat « Assureur A » (48 pages, 147 clauses). Les réponses attendues ont é
 
 ### 4. Ce que cela donne
 
-Trois contrats de trois assureurs (anonymisés A, B, D), sur le même moteur. Mistral Medium lit, Mistral Small vérifie. Mesures du 22 novembre 2026, trois séries dans la journée (13 h 30, 16 h 20, 17 h 25), trois passages par banc ; la fourchette donne les trois séries :
+Trois contrats de trois assureurs (anonymisés A, B, D), sur le même moteur. Mistral Medium 3.5 lit (`mistral-medium-2604`), Mistral Small 4 vérifie (`mistral-small-2603`). Mesures du 22 novembre 2026, trois séries dans la journée (13 h 30, 16 h 20, 17 h 25), trois passages par banc ; la fourchette donne les trois séries :
 
 | Banc | Réponses justes | Couverts à tort | Refus à tort |
 |---|---|---|---|
@@ -98,7 +98,7 @@ Trois contrats de trois assureurs (anonymisés A, B, D), sur le même moteur. Mi
 
 - **Toutes les erreurs viennent de la lecture**, pas des règles : avec des faits exacts, le moteur ne se trompe pas.
 - **Deux erreurs se répètent à chaque passage** : chez B, un vol dans une voiture est couvert alors qu'il fallait demander une précision ; chez D, une crue avec arrêté de catastrophe naturelle est refusée. Les autres sont des « à préciser » de trop : une question au lieu d'une réponse.
-- **Un couvert à tort est apparu dans la journée, sans que rien ne change dans la lecture** : un fer à repasser qui brûle une housse, lu « accident » six fois de suite, puis « dégât électrique » deux fois sur trois, puis trois fois sur trois, et alors couvert. La consigne et le vocabulaire envoyés au modèle sont identiques entre ces séries. C'est l'erreur qui coûte, et la lecture ne la garantit pas à zéro ; en production, le modèle se désignerait par une version datée, pas par « latest ».
+- **Un couvert à tort est apparu dans la journée, sans que rien ne change dans la lecture** : un fer à repasser qui brûle une housse, lu « accident » six fois de suite, puis « dégât électrique » deux fois sur trois, puis trois fois sur trois, et alors couvert. La consigne et le vocabulaire envoyés au modèle sont identiques entre ces séries, et la version du modèle aussi (`mistral-medium-2604`, vérifié auprès de Mistral) : à température 0 et graine fixe, le même modèle ne lit pas toujours le même texte de la même façon. C'est l'erreur qui coûte, et la lecture ne la garantit pas à zéro.
 - **La lecture varie peu, mais elle varie** : sur 96 déclarations, 0 à 4 changent de réponse d'un passage à l'autre.
 - Une analyse prend 4 à 5 secondes (95e centile : 6 à 7 secondes ; un passage à 19 secondes chez B, un appel lent).
 - Les jeux sont petits : un écart de 3 ou 4 points entre deux séries n'est pas significatif.
@@ -173,10 +173,10 @@ uv run pytest -q
 
 ```
 MISTRAL_API_KEY=votre-clé
-COUVERTURE_MODELE=mistral-medium-latest           # lecture des déclarations
+COUVERTURE_MODELE=mistral-medium-2604             # lecture des déclarations (version datée : `couverture modele` dit ce que désigne « latest »)
 COUVERTURE_MODELE_CONTRAT=mistral-large-latest    # rédaction des règles : une fois par contrat
 # COUVERTURE_MODELE_SOCLE=mistral-large-latest    # essai (7.118) : un autre modèle pour le seul temps 1 de la lecture
-COUVERTURE_MODELE_VERIFICATION=mistral-small-latest   # vérification et confirmation des faits : un autre modèle que la lecture (7.136)
+COUVERTURE_MODELE_VERIFICATION=mistral-small-2603     # vérification et confirmation des faits : un autre modèle que la lecture (7.136)
 # COUVERTURE_GRAINE=0                             # graine des appels au modèle (0 par défaut ; non : aucune) (7.123)
 ```
 

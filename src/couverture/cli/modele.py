@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from ..base import Base
-from ..llm import ErreurLLM, configurer
+from ..llm import ErreurLLM, configurer, modele_de_verification, noms_du_modele
 
 
 def ajouter(sous) -> None:
@@ -33,6 +33,13 @@ def executer(a, base: Base, donnees: Path) -> int:
         print(f"Échec de la connexion : {e}")
         return 1
     print(f"Connexion réussie. Réponse : {reponse.strip()[:200]}")
+    # Ce que désignent aujourd'hui les noms configurés : « -latest » est un alias, qui change sans prévenir (7.145).
+    for role, m in (("analyses", llm), ("vérification", modele_de_verification(llm))):
+        noms = noms_du_modele(m) if m is not None and hasattr(m, "modele") else []
+        autres = [n for n in noms if n != m.modele] if noms else []
+        if autres:
+            print(f"Modèle des {role if role == 'analyses' else 'vérifications'} : « {m.modele} » désigne aujourd'hui "
+                  f"le même modèle que {', '.join(autres)}.")
     if hasattr(llm, "reflexion_refusee"):
         niveau = llm.extra.get("reasoning_effort")
         etat = ("refusé par ce modèle, il réfléchit à son niveau par défaut" if llm.reflexion_refusee

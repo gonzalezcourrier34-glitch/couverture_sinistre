@@ -4444,7 +4444,17 @@ Comparées cas par cas à la série précédente, les réponses qui changent son
 
 Comparée à la série de 16 h 20, sur les 288 lectures : 267 réponses justes contre 265 ; 2,29 détails lus par déclaration contre 2,34 ; les détails lus diffèrent pour 52 déclarations sur 96, quand ils différaient déjà pour 48 entre les deux séries précédentes, sans aucun changement. **L'effet des 28 exemples n'est pas mesurable sur ces jeux.** C'est attendu, et c'est le prix du contrôle : un exemple n'est montré que s'il ressemble à la déclaration (seuil 0,85), et ces exemples ont été écrits pour ne ressembler à aucun cas de mesure. Les bancs ne peuvent pas dire s'ils aident ; seules des déclarations nouvelles, proches d'eux, le diraient. Ils sont gardés : validés, sans effet négatif mesuré.
 
-**Le couvert à tort de A n'en vient pas.** `val-09` (le fer à repasser) est lu « électricité » aux trois passages, dès le temps 1, qui ne reçoit pas d'exemples et dont la consigne et le vocabulaire sont identiques, au caractère près, à ceux de 13 h 30. Lu « accident » six fois sur six avant 16 h, « électricité » deux fois sur trois à 16 h 20, trois fois sur trois à 17 h 25 : la lecture du même texte par `mistral-medium-latest` a changé dans la journée. Hypothèse non vérifiable d'ici : l'alias « latest » ne désigne pas un modèle figé. En production, le modèle se désigne par sa version datée, et un banc se rejoue quand elle change.
+**Le couvert à tort de A n'en vient pas.** `val-09` (le fer à repasser) est lu « électricité » aux trois passages, dès le temps 1, qui ne reçoit pas d'exemples et dont la consigne et le vocabulaire sont identiques, au caractère près, à ceux de 13 h 30. Lu « accident » six fois sur six avant 16 h, « électricité » deux fois sur trois à 16 h 20, trois fois sur trois à 17 h 25 : la lecture du même texte par `mistral-medium-latest` a changé dans la journée. L'hypothèse d'un alias « latest » qui aurait changé de modèle dans la journée est examinée, et écartée, en 7.145.
+
+### 7.145 Le modèle se désigne par sa version, et la variation ne vient pas d'un changement de version
+
+**La question.** Le même texte, lu autrement à quelques heures d'écart avec la même consigne (7.144) : `mistral-medium-latest` a-t-il changé de modèle dans la journée ?
+
+**La vérification.** `couverture modele` demande maintenant au fournisseur tous les noms du modèle configuré (`GET /models`, `llm.noms_du_modele`). Réponse du 22 nov., 17 h 54 : « mistral-medium-latest » désigne le même modèle que `mistral-medium-2604` (Mistral Medium 3.5) ; « mistral-small-latest », le même que `mistral-small-2603` (Mistral Small 4). La documentation de Mistral ne signale aucun changement de Medium ce jour-là, et classe Medium 3.5 comme déprécié depuis le 31 octobre 2026, retiré le 30 avril 2027.
+
+**La conclusion.** L'hypothèse est écartée : la version n'a pas changé. À température 0, avec une graine fixe, la même version ne lit pas toujours le même texte de la même façon, et l'écart peut durer (six lectures « accident », puis cinq « électricité » sur six). C'est une propriété du service, pas un réglage qu'on aurait manqué : 7.123 l'avait déjà mesuré sur la graine.
+
+**Ce qui change.** La configuration nomme les versions datées (`mistral-medium-2604`, `mistral-small-2603`) : ce sont les mêmes modèles que ceux mesurés, donc les mesures restent valables, et le jour où « latest » changera, le projet ne changera pas avec lui. Deux choses à savoir pour une mise en service : le modèle de lecture est déprécié (à remplacer avant avril 2027, bancs à rejouer), et un zéro mesuré un jour ne garantit pas le lendemain : les bancs se rejouent à intervalle régulier, pas seulement quand on change quelque chose.
 
 ## 8. Ce qui reste à faire
 
@@ -4638,4 +4648,5 @@ Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
 145. Un zéro mesuré sur trois passages n'est pas un zéro : donner la fourchette de plusieurs séries, surtout pour l'erreur qui coûte.
 146. Pour écrire des exemples sans copier les cas de mesure, ne pas les relire : laisser un contrôle automatique refuser ce qui leur ressemble.
 147. Un exemple écrit loin des cas de mesure ne peut pas améliorer la mesure : choisir d'avance entre protéger le banc et le voir bouger.
-148. Un modèle désigné par « latest » peut changer sans prévenir : la même consigne a lu le même texte autrement dans la même journée.
+148. Une hypothèse sur le fournisseur se vérifie auprès du fournisseur : « latest » n'avait pas changé de version ; c'est la même version qui lit le même texte autrement d'une heure à l'autre.
+149. Nommer la version datée du modèle : les mesures restent attachées à ce qu'on a mesuré, et les bancs se rejouent à date fixe, pas seulement après un changement.

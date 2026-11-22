@@ -675,3 +675,23 @@ def test_role_de_la_regle_pour_une_garantie_dans_une_clause_typee_exclusion(clau
     assert sans.decision == Decision.INCERTAIN and sans.justification.startswith(RETROGRADE) and sans.confiance <= 0.4
     # Quand c'est un modèle qui cite, le rôle vient toujours du contrat : la même citation ne porte pas un « couvert ».
     assert valider(verdict("garantie"), retenues).decision == Decision.INCERTAIN
+
+
+def test_noms_du_modele_resout_un_alias(env_vide, monkeypatch):
+    """« mistral-medium-latest » est un alias : `GET /models` dit quel modèle il désigne aujourd'hui (7.145)."""
+    env_vide.setenv("MISTRAL_API_KEY", "secret")
+    vues = []
+
+    def faux_urlopen(requete, timeout):
+        vues.append(requete.full_url)
+        return _Reponse(json.dumps({"data": [
+            {"id": "mistral-small-2603", "aliases": ["mistral-small-latest"]},
+            {"id": "mistral-medium-3-5", "aliases": ["mistral-medium-latest", "mistral-medium-2604"]}]}).encode())
+
+    monkeypatch.setattr(module_llm.urllib.request, "urlopen", faux_urlopen)
+    llm = module_llm.MistralLLM("mistral-medium-latest")
+    assert module_llm.noms_du_modele(llm) == ["mistral-medium-2604", "mistral-medium-3-5", "mistral-medium-latest"]
+    assert vues == ["https://api.mistral.ai/v1/models"]
+    assert module_llm.noms_du_modele(module_llm.MistralLLM("inconnu")) == []
+    monkeypatch.setattr(module_llm.urllib.request, "urlopen", lambda r, timeout: (_ for _ in ()).throw(OSError("réseau")))
+    assert module_llm.noms_du_modele(llm) == [], "sans réponse du fournisseur : pas d'erreur, pas de liste"

@@ -205,6 +205,24 @@ class OpenAICompatibleLLM:
         return texte_du_message(choix["message"].get("content"))
 
 
+def noms_du_modele(llm, timeout: int = 15) -> list[str]:
+    """Tous les noms du modèle configuré chez son fournisseur (`GET /models`) : son identifiant et ses alias.
+    Un nom en « -latest » est un alias : il désigne un modèle aujourd'hui, un autre demain (7.145). Rend la liste
+    vide si le fournisseur ne la donne pas : c'est une information, pas une condition."""
+    entetes = {"authorization": f"Bearer {llm.cle_api}"} if getattr(llm, "cle_api", None) else {}
+    try:
+        requete = urllib.request.Request(f"{llm.url}/models", headers=entetes)
+        with urllib.request.urlopen(requete, timeout=timeout) as reponse:
+            modeles = json.loads(reponse.read()).get("data", [])
+    except Exception:  # noqa: BLE001
+        return []
+    for m in modeles:
+        noms = [m.get("id"), *(m.get("aliases") or [])]
+        if llm.modele in noms:
+            return sorted({n for n in noms if n})
+    return []
+
+
 class MistralLLM(OpenAICompatibleLLM):
     """API de Mistral (La Plateforme, console.mistral.ai). Compatible OpenAI, avec mode JSON.
     Modèles conseillés : mistral-large-latest (résultats), mistral-small-latest (moins cher)."""
