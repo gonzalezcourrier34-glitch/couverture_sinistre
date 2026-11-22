@@ -14,6 +14,12 @@ from .models import Citation, Clause, ClauseRetenue, Condition, Decision, EtatCo
 from .validation import valider
 
 
+def numero(article: str) -> str:
+    """Le numéro d'article tel qu'il est imprimé dans le contrat : « 4~1 », premier morceau de l'article 4 dans la
+    base, se lit « 4 »."""
+    return str(article).split("~")[0]
+
+
 class PipelineRegles:
     methode = "regles"
 
@@ -132,7 +138,7 @@ class PipelineRegles:
     def verdict(self, d: dict, faits: dict) -> tuple[Verdict, list[ClauseRetenue]]:
         decision = Decision(d["decision"])
         retenues = d.get("retenues", [])
-        motifs = [f"« {r['garantie']} » ({r['article']}) : {r['motif']}" for r in retenues]
+        motifs = [f"« {r['garantie']} » ({numero(r['article'])}) : {r['motif']}" for r in retenues]
         non_traduits = d.get("non_traduits") or []
         if d.get("aucune"):
             motif = "Non couvert : aucune garantie ne s'applique."
@@ -143,7 +149,7 @@ class PipelineRegles:
         if accessoires and decision == Decision.COUVERT:
             # 7.68 : ce qui peut s'ajouter à la garantie qui couvre, sans changer la décision.
             motif += " Peuvent s'y ajouter : " + " ; ".join(
-                f"« {a['garantie']} » ({a['article']})" + (" sous réserve de précisions" if a.get("decision") == "INCERTAIN"
+                f"« {a['garantie']} » ({numero(a['article'])})" + (" sous réserve de précisions" if a.get("decision") == "INCERTAIN"
                                                           or a.get("reserves") else "") for a in accessoires[:4]) + "."
         if non_traduits:
             evts = ", ".join(non_traduits)
