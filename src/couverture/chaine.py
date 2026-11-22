@@ -167,7 +167,13 @@ class PipelineRegles:
         retenues = d.get("retenues", [])
         motifs = [f"« {r['garantie']} » ({numero(r['article'])}) : {r['motif']}" for r in retenues]
         non_traduits = d.get("non_traduits") or []
-        if d.get("aucune"):
+        # Aucune garantie ne s'applique, mais le contrat exclut ce cas en toutes lettres (7.157) : on cite la clause
+        # qui l'exclut, plutôt que le texte de garanties sans rapport.
+        exclues = (d.get("exclusions_etablies") or []) if d.get("aucune") else []
+        if exclues:
+            motif = ("Non couvert : aucune garantie ne s'applique, et le contrat l'exclut expressément ("
+                     + " ; ".join(dict.fromkeys(f"« {x['garantie']} », {numero(x['article'])}" for x in exclues[:3])) + ").")
+        elif d.get("aucune"):
             motif = "Non couvert : aucune garantie ne s'applique."
         else:
             motif = {"COUVERT": "Couvert. ", "NON_COUVERT": "Non couvert. ", "INCERTAIN": "À préciser. "}[decision.value] \
@@ -202,6 +208,8 @@ class PipelineRegles:
         index = {c.id: c for c in self.clauses}
         preuves = [p for r in (retenues if not d.get("aucune") else retenues[:3]) for p in r.get("preuves", [])
                    + r.get("partielles", [])]
+        if exclues:
+            preuves = [{"article": x["article"], "texte": x["texte"], "role": "exclusion"} for x in exclues[:5]]
         conditions, vus = [], set()
         for p in preuves:
             cle = (p["article"], p["texte"])

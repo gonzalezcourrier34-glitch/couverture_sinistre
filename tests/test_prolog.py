@@ -355,6 +355,7 @@ def test_prolog_et_oracle_concordent(contrat, cas, cas_validation):
         assert [r["id"] for r in p["retenues"]] == [r["id"] for r in o["retenues"]], i
         assert p.get("exploration") == o.get("exploration"), i
         assert p["preuve"] == o["preuve"], i
+        assert p.get("exclusions_etablies") == o.get("exclusions_etablies"), i
 
 
 @avec_swipl
@@ -1151,3 +1152,43 @@ def test_deux_biens_exclus_declares_ensemble_ne_sont_pas_couverts():
         d = Explorateur(c, {"evenement": ["bris"], "bien": biens, "formule": "confort"}).decider()
         assert d["decision"] != "COUVERT", biens
     assert Explorateur(c, {"evenement": ["bris"], "bien": ["vitre"], "formule": "confort"}).decider()["decision"] == "COUVERT"
+
+
+HORS_PERIMETRE = [("assureur-a-habitation-2025", {"evenement": ["bris"], "bien": ["objet_verre_non_vitre"], "lieu": ["logement"]}, "objets en verre"),
+                  ("assureur-a-habitation-2025", {"evenement": ["bris"], "bien": ["serre"], "lieu": ["jardin"]}, "serres"),
+                  ("assureur-c-habitation-2025", {"evenement": ["bris"], "bien": ["vitrail"], "formule": "confort"}, "vitraux"),
+                  ("assureur-c-habitation-2025", {"evenement": ["bris"], "bien": ["vitrail", "marquise"], "formule": "confort"}, "vitraux")]
+
+
+def test_aucune_garantie_mais_une_exclusion_ecrite_est_citee():
+    """7.157 : un vase brisé n'entre dans aucune garantie, et le contrat exclut « les objets en verre » : la décision
+    reste « non couvert », et c'est cette clause qu'on cite, pas le texte de garanties sans rapport."""
+    from moteur_reference import Contrat, Explorateur
+    for cid, faits, mot in HORS_PERIMETRE:
+        f = prolog.fichier_regles(cid)
+        if not f.exists() or "garantie(" not in f.read_text(encoding="utf-8"):
+            continue
+        regles = Contrat(f)
+        d = Explorateur(regles, faits).decider()
+        assert d["decision"] == "NON_COUVERT" and d.get("aucune") is True, (cid, faits)
+        assert any(mot in x["texte"] for x in d["exclusions_etablies"]), (cid, faits)
+        for r in d["retenues"]:      # la référence ne rend pas les libellés des garanties : comme le fait moteur.pl
+            g = next(x for x in regles.regles("garantie", 4) if x.args[0] == r["id"])
+            r.update(garantie=g.args[1], article=g.args[2], motif="hors de son périmètre", preuves=[])
+        v, _ = chaine.PipelineRegles(cid, [], FauxLLM({}), decideur=lambda _: d).verdict(d, faits)
+        assert v.decision == Decision.NON_COUVERT and "exclut expressément" in v.justification
+        assert v.citations and all(c.role == "exclusion" for c in v.citations) and any(mot in c.extrait for c in v.citations)
+    # Une garantie s'applique : rien n'est ajouté, la décision et ses citations sont celles d'avant.
+    a = Contrat(prolog.fichier_regles("assureur-a-habitation-2025"))
+    assert Explorateur(a, {"evenement": ["bris"], "bien": ["vitre"], "lieu": ["logement"]}).decider()["exclusions_etablies"] == []
+    assert Explorateur(a, {"evenement": ["vol"], "bien": ["velo"], "lieu": ["parties_communes"]}).decider()["exclusions_etablies"] == []
+
+
+@avec_swipl
+def test_exclusions_etablies_prolog_et_reference_concordent():
+    from moteur_reference import Contrat, Explorateur
+    for cid, faits, _ in HORS_PERIMETRE:
+        if not prolog.a_des_garanties(cid):
+            continue
+        p, o = prolog.decider(cid, faits), Explorateur(Contrat(prolog.fichier_regles(cid)), faits).decider()
+        assert p["decision"] == o["decision"] == "NON_COUVERT" and p["exclusions_etablies"] == o["exclusions_etablies"] != []

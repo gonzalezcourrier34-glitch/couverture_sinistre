@@ -380,7 +380,37 @@ decider(D) :-
     non_traduits(NT),
     plafonner(NT, D0, D1),
     accessoires(D1, Acc),
-    put_dict(_{garanties:Rs, accessoires:Acc}, D1, D).
+    exclusions_etablies(D1, Rs, Xe),
+    put_dict(_{garanties:Rs, accessoires:Acc, exclusions_etablies:Xe}, D1, D).
+
+%!  exclusions_etablies(+Decision, +Garanties, -Exclusions)
+%   Aucune garantie ne s'applique (DEMARCHE 7.157) : les exclusions que les faits établissent, parmi celles des
+%   garanties qui couvrent cet événement. Un vase brisé n'entre pas dans le périmètre du bris de vitrages, et la
+%   clause qui exclut « les objets en verre » n'était donc jamais citée. Ces exclusions ne changent pas la
+%   décision : elles disent quelle clause écarte ce bien ou ce lieu. Vide dans tous les autres cas.
+exclusions_etablies(D, Rs, Xs) :-
+    get_dict(aucune, D, true), !,
+    findall(_{id:G, garantie:Nom, article:A, texte:T},
+            ( member(R, Rs), get_dict(rattachement, R, "hors"), get_dict(id, R, G),
+              concerne_evenement(G),
+              regle(garantie(G, Nom, _, _)),
+              regle(exclusion(Cible, C, _, _, A, T)), vise(Cible, G),
+              eval(C, E), E == oui ),
+            Xs0),
+    sans_doublons(Xs0, [], Xs).
+exclusions_etablies(_, _, []).
+
+%  La garantie couvre l'événement déclaré : chaque condition de son périmètre qui parle de l'événement est établie.
+concerne_evenement(G) :-
+    findall(P, ( regle(perimetre(G, P)), variables(P, Vs), memberchk(evenement, Vs) ), Pe),
+    Pe \== [],
+    forall(member(P, Pe), ( eval(P, E), E == oui )).
+
+sans_doublons([], _, []).
+sans_doublons([X|Xs], Vus, Ys) :-
+    get_dict(article, X, A), get_dict(texte, X, T),
+    (   memberchk(A-T, Vus) -> Ys = Ys0 ; Ys = [X|Ys0] ),
+    sans_doublons(Xs, [A-T|Vus], Ys0).
 
 %!  accessoires(+Decision, -Accessoires)
 %   Une garantie accessoire (frais de sauvetage, logement provisoire, extension en séjour : DEMARCHE 7.68)

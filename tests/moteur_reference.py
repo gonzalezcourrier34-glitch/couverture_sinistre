@@ -388,6 +388,7 @@ class Moteur:
         nt = sorted(e for e in self.faits.get("evenement", set()) if e != "autre" and e not in traduits)
         if nt:  # 7.84 : même un « couvert » ; couvrir une partie n'est pas couvrir la demande
             d.update(decision="INCERTAIN", non_traduits=nt, aucune=False)
+        d["exclusions_etablies"] = self.exclusions_etablies(d)
         d["accessoires"] = []
         if d["decision"] == "COUVERT":           # 7.68 : une garantie accessoire ne joue qu'après un sinistre couvert
             for g in self.c.regles("garantie", 4):
@@ -396,6 +397,29 @@ class Moteur:
                     if r["rattachement"] == "rattachée" and r["decision"] != "NON_COUVERT":
                         d["accessoires"].append({**r, "id": g.args[0]})
         return d
+
+    def concerne_evenement(self, g) -> bool:
+        pe = [p.args[1] for p in self.c.regles("perimetre", 2) if p.args[0] == g and "evenement" in self.variables(p.args[1])]
+        return bool(pe) and all(self.eval(p) == OUI for p in pe)
+
+    def exclusions_etablies(self, d: dict) -> list:
+        """Comme moteur.pl (7.157) : aucune garantie ne s'applique ; les exclusions établies des garanties de l'événement."""
+        if d.get("aucune") is not True:
+            return []
+        noms = {g.args[0]: g.args[1] for g in self.c.regles("garantie", 4)}
+        xs, vus = [], set()
+        for r in d["garanties"]:
+            g = r["id"]
+            if r["rattachement"] != "hors" or not self.concerne_evenement(g):
+                continue
+            for x in self.c.regles("exclusion", 6):
+                cible, cond, _, _, a, t = x.args
+                if not (cible == "tous" or cible == g or (isinstance(cible, list) and g in cible)):
+                    continue
+                if self.eval(cond) == OUI and (a, t) not in vus:
+                    vus.add((a, t))
+                    xs.append({"id": g, "garantie": noms[g], "article": a, "texte": t})
+        return xs
 
     def accessoires(self) -> set:
         return {a.args[0] for a in self.c.regles("accessoire", 1)}

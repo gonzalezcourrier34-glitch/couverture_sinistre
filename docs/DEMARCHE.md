@@ -4642,9 +4642,23 @@ Après cela : aucun contrôle bloquant, toutes les citations retrouvées mot pou
 - Rien n'est changé chez A ni chez B. Les règles en place des quatre contrats ont été cherchées pour le même défaut (deux biens exclus d'une même garantie, déclarés ensemble) : aucun.
 - Le contrôle qui prenait pour une réduction d'indemnité l'obligation « la garantie intervient uniquement si » (B, 3.1.7.4) reconnaît maintenant cette formule comme un refus.
 
-**Ce qui reste, et qui ne se règle pas dans les règles.** Un vase brisé seul chez A, des lunettes chez B, un vitrail chez C : « non couvert », à raison, mais sans la clause qui l'exclut, parce qu'aucune garantie ne s'y rattache. Pour la citer, il faudrait que le moteur, quand aucune garantie ne concerne le sinistre, cherche les exclusions que les faits établissent. C'est un changement du moteur (Prolog et référence), pas des règles : non fait.
+**Ce qui restait, et qui ne se réglait pas dans les règles.** Un vase brisé seul chez A, un vitrail chez C : « non couvert », à raison, mais sans la clause qui l'exclut, parce qu'aucune garantie ne s'y rattache. C'est le moteur qu'il fallait changer : fait le soir même (7.157).
 
 **Une limite du moteur que ce défaut a rappelée.** Pour plusieurs biens déclarés ensemble, le moteur répond « couvert » dès qu'un bien entre dans une garantie, même si l'autre n'entre dans aucune (une vitre et une télévision chez C). La réponse ne dit pas lequel.
+
+### 7.157 Quand aucune garantie ne s'applique, citer la clause qui exclut
+
+**Le défaut, et pourquoi il ne se réglait pas dans les règles.** Un vase brisé chez A, un vitrail chez C : « non couvert », à raison, mais avec la phrase « aucune garantie ne s'applique » et, pour citations, le texte des trois premières garanties du contrat, sans rapport avec le sinistre. La clause qui exclut « les objets en verre » existe, mais elle est attachée à une garantie dont le vase ne franchit pas le périmètre : le moteur ne l'examinait jamais. Faire entrer le vase dans le périmètre créait des couverts à tort (7.156).
+
+**La règle, dans le moteur.** Quand aucune garantie ne s'applique, le moteur cherche les exclusions que les faits établissent, parmi celles des garanties qui couvrent l'événement déclaré (un bris pour le bris de vitrages), et les rend à part (`exclusions_etablies`). La décision ne change pas : elle était déjà « non couvert ». La chaîne cite alors ces clauses, avec le rôle « exclusion », et la phrase le dit : « aucune garantie ne s'applique, et le contrat l'exclut expressément ».
+
+**Écrite deux fois, comme le reste du moteur** : en Prolog (`regles/moteur.pl`) et dans le moteur de référence des tests ; le test de concordance compare ce champ sur tous les cas, et un test le vérifie sur quatre cas de A et de C.
+
+**Ce que ça donne (moteur de référence).** Vase brisé chez A : clause 2.9-a, « les dommages causés aux objets en verre autres que des vitres ». Serre brisée chez A : 2.9-a, « les parties vitrées des serres ». Vitrail chez C, seul ou avec une marquise : S10-c. Une vitre brisée, un vélo dans le local commun : rien de changé.
+
+**Vérifié sur le poste (22 nov., 21 h 17 à 21 h 27).** Les tests passent avec SWI-Prolog (221), dont la concordance des deux moteurs sur ce champ. À l'écran, sur A : « J'ai fait tomber un vase en cristal dans mon salon, il est cassé » donne « Non couvert », la clause 2.9-a sur les objets en verre, et des faits tous lus dans la déclaration. Les bancs, repassés parce que le moteur a changé, et pour la première fois sous la version datée `mistral-medium-2604` : A partie test 94 %, A jeu fermé 100 %, B 85 %, D 96 % ; les mêmes erreurs qu'à 20 h 30 (un couvert à tort chez B, un refus à tort chez D), aucune nouvelle.
+
+**Ce qui reste.** Quand aucune garantie ne s'applique et qu'aucune clause n'exclut le cas en toutes lettres (un vase brisé chez D), la réponse cite encore les premières garanties du contrat, faute de mieux. Et la « confiance » affichée (85 % pour un couvert ou un refus, 40 % pour un « à préciser ») est une valeur fixe par type de réponse, pas une probabilité mesurée.
 
 ## 8. Ce qui reste à faire
 
