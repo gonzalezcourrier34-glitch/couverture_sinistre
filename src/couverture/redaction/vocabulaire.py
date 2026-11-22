@@ -15,7 +15,8 @@ DESCRIPTIONS = {
     True: "Vocabulaire commun : le socle (événement, bien, lieu) et les variables que plusieurs contrats emploient. "
           "« plusieurs » : la variable prend une liste. « parents » : la hiérarchie des valeurs (une vitre est un "
           "élément du bâtiment). « pour » : les événements auxquels une variable s'applique. « aide » : le sens des "
-          "valeurs proches, donné au modèle qui lit. Rangé par `couverture regles --ranger`.",
+          "valeurs proches, donné au modèle qui lit. « libelle » : le nom montré d'une variable ; « libelles » : "
+          "celui d'une valeur, quand l'identifiant s'écrit mal. Rangé par `couverture regles --ranger`.",
     False: "Variables que seules les règles de ce contrat emploient (regles/{contrat}.pl). Même format que "
            "commun.json. Rangé par `couverture regles --ranger` : une variable qu'un autre contrat se met à employer "
            "passe dans commun.json.",
@@ -48,6 +49,32 @@ def ranger(voc: dict | None = None, dossier: Path | None = None) -> list[str]:
         (dossier / f"{nom}.json").write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8",
                                             newline="\n")
     return deplacees
+
+
+SOUSCRIPTION = ("conditions particulières", "souscrit")
+
+
+def bilan(dossier: Path | None = None) -> dict:
+    """Ce que le vocabulaire coûte à chaque contrat, calculé d'après les règles (7.140) : par contrat, les
+    variables qu'il emploie, celles qu'il partage avec un autre et celles qu'il est seul à employer ; et, dans
+    tout le vocabulaire, les faits de souscription (la question porte sur les conditions particulières ou sur
+    ce qui est souscrit : ce n'est pas la déclaration qui le dit), les variables jamais lues dans une
+    déclaration (« pour » : jamais, accessoire, extension) et celles qu'aucune règle n'emploie encore."""
+    voc = prolog.vocabulaire(dossier)
+    emplois = {c: prolog.variables_employees(c) & set(voc) for c in prolog.contrats_regles()}
+    nb = {v: sum(v in e for e in emplois.values()) for v in voc}
+    souscription = [v for v, d in voc.items() if any(m in d.get("question", "") for m in SOUSCRIPTION)]
+    non_lues = [v for v, d in voc.items() if d.get("pour") and set(d["pour"]) <= set(PSEUDO_EVENEMENTS)]
+    propres = [v for v in voc if nb[v] == 1 and v not in lecture.SOCLE]
+    return {"variables": len(voc),
+            "contrats": {c: {"employees": len(e), "partagees": sum(nb[v] > 1 or v in lecture.SOCLE for v in e),
+                             "propres": sum(nb[v] == 1 and v not in lecture.SOCLE for v in e)}
+                         for c, e in emplois.items()},
+            "propres": propres,
+            "souscription": souscription,
+            "non_lues": non_lues,
+            "sans_regle": [v for v in voc if nb[v] == 0 and v not in lecture.SOCLE],
+            "propres_lues_dans_la_declaration": [v for v in propres if v not in souscription and v not in non_lues]}
 
 
 def mal_rangees(dossier: Path | None = None) -> list[str]:

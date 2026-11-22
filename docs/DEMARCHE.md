@@ -4335,6 +4335,53 @@ Les libellés ne sont pas envoyés au modèle : les consignes ne changent pas, l
 
 **La mesure (22 nov., 15 h).** Partie test de A : 90 % justes, aucun couvert ni refus à tort, les trois mêmes « à préciser » de trop (`velo-06`, `val-09`, `g2-p01`), rappel des faits 89 % (89,9 % avant). Jeu fermé de A : 100 % (98 % avant), aucune erreur. Rien ne bouge, comme attendu d'un changement qui ne retire qu'un fait hors sujet. La porte « décisions changées par la lecture ≤ 2 » échouait déjà à 4 avant ce changement : elle vient de ces trois cas, pas de celui-ci.
 
+### 7.139 Piste écartée : demander la victime pour tout sinistre
+
+**L'idée.** Poser « qui a subi le dommage ? » dès le temps 1, et laisser le code en déduire la responsabilité civile, au lieu de laisser le modèle choisir l'événement « responsabilité ».
+
+**Ce que disent les mesures.** Relus un par un, les neuf cas en erreur des bancs du 22 nov. (partie test de A, jeux fermés de A, B et D) ne contiennent aucune erreur de responsabilité civile. Deux familles s'y voient : le bien n'est pas dit dans la déclaration (`g2-p01`, `val-09`, `f-b13`, `f-d08`), et un fait non dit est demandé là où l'annotateur a conclu « non » (`f-b06`, `f-b07`, `velo-06`). Restent `f-b18` (la vitre de la voiture lue comme un bris de vitrage) et `f-a02` (instable).
+
+**La décision.** Écartée : elle change la première lecture des trois contrats, elle croise des faits existants (le propriétaire des biens, le bien confié) avec un risque de couvrir à tort (la vitre du voisin lue comme bris et comme responsabilité), et aucune mesure ne montre de gain. Les deux familles d'erreurs ne sont pas corrigées d'après ces cas (leçon 119) : elles relèvent d'exemples validés nouveaux (point 5 du plan).
+
+### 7.140 Le vocabulaire en chiffres : ce qu'un contrat partage, ce qu'il est seul à employer
+
+**La question.** « Comment tenir des centaines de contrats ? » dépend de ce que coûte un contrat de plus en vocabulaire. `couverture regles --contrat … --bilan` le calcule d'après les règles (`redaction.bilan`).
+
+| Contrat | Variables employées | Partagées avec un autre | Propres |
+|---|---|---|---|
+| A | 76 | 44 (58 %) | 32 |
+| B | 92 | 44 (48 %) | 48 |
+| D | 48 | 29 (60 %) | 19 |
+
+Sur 149 variables, 99 ne servent qu'à un contrat. Elles ne pèsent pas toutes sur la lecture :
+
+- **16 sont des faits de souscription** (une option, un pack, une garantie mentionnée aux conditions particulières ; 19 avec les trois du commun). La déclaration ne les dit jamais : elles relèvent des conditions particulières (point 7 du plan), pas du vocabulaire de lecture.
+- **13 autres ne sont jamais lues dans une déclaration** (réserve d'une exclusion, garantie accessoire, extension).
+- **70 sont lues dans la déclaration.**
+
+**Les doublons, relus à la main parmi ces 70** (questions comparées une à une, entre contrats et avec le commun). Rien n'est fusionné : fusionner change la lecture, donc se mesure.
+
+| Groupe | Variables | Nature |
+|---|---|---|
+| Clés laissées dehors | `cles_a_proximite` (A), `cles_deposees_exterieur` (D) | même question |
+| Travaux au bâtiment | `travaux_construction` (B), `travaux_batiment` (commun) | même question, valeurs à aligner |
+| Fermeture du local | `fermeture` (A), `serrure_cylindre` (B), `serrure_surete` (commun) | une seule variable à plusieurs valeurs |
+| Canalisation | `canalisation_enterree` (D), `canalisation_encastree` (commun, employée par aucune règle) | une seule variable à plusieurs valeurs |
+| Vitesse du vent | `vent_80_kmh_irm` (commun), `vent_100_kmh` (D) | même grandeur, seuils différents |
+| Durée d'inoccupation | `batiment_vacant_90j` (A), `local_inoccupe_12_mois` (D) | même grandeur, seuils différents |
+| Depuis le déménagement | `emmenagement` (A), `duree_demenagement` (B) | même grandeur, seuils différents |
+| Dégâts aux alentours | `vent_dommages_voisins` (commun), `neige_dommages_voisins` (D) | même question, phénomène différent |
+
+Huit groupes, une dizaine de variables de moins si on les fusionnait : **environ une sur sept** des 70. Le reste est vraiment propre : « murs à plus de 50 % en matériaux légers », « construit plus de 18 mois après le classement de la zone ».
+
+**Ce que cela dit pour cent contrats.**
+
+- Un contrat réemploie la moitié de ses variables ou plus (48 à 60 %). Le troisième (D) n'en a ajouté que 19, dont 9 de souscription ou jamais lues.
+- Trois contrats ne donnent pas une courbe. Ce qui se mesure : la part réemployée par contrat ; ce qui ne se mesure pas encore : si elle monte avec le nombre de contrats.
+- Trois patrons reviennent et se prêtent à une règle : la souscription (hors de la lecture), les seuils (une grandeur, des valeurs graduées), la fermeture (une variable à valeurs). Les règles d'un contrat ne liraient alors que le seuil qui les concerne.
+
+**Limite.** La relecture des doublons est manuelle. Pour cent contrats, il faudrait la proposer à la rédaction (comparer la question d'une variable nouvelle à celles qui existent, par mistral-embed, avant de l'accepter).
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
@@ -4344,8 +4391,8 @@ Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
 | | Ce qui manque | Pourquoi ça compte |
 |---|---|---|
 | 1 | Les variables sans événements contrôlées d'après les règles | **Fait et mesuré (7.138).** |
-| 2 | La victime demandée pour tout sinistre | La responsabilité civile est devinée par le modèle au lieu d'être calculée ; plusieurs « à préciser » de trop en viennent. |
-| 3 | Les doublons du vocabulaire entre contrats | 99 variables sur 149 restent propres à un contrat ; à cent contrats, le vocabulaire grossirait à chaque ajout. |
+| 2 | La victime demandée pour tout sinistre | **Écartée (7.139)** : aucune erreur mesurée n'en relève, et le risque est réel. |
+| 3 | Les doublons du vocabulaire entre contrats | **Bilan fait (7.140)** : 70 variables propres lues dans la déclaration, huit groupes de doublons. Reste à fusionner et mesurer, et à faire proposer les doublons par la rédaction. |
 | 4 | Les libellés proposés par la rédaction | Chaque nouveau contrat demande aujourd'hui de les écrire à la main (7.137). |
 | 5 | Des exemples validés pour B et D | B est à 82 %, A entre 90 et 98 % : la lecture se corrige par des exemples, et il y en a surtout pour A. |
 | 6 | Un contrat ajouté à froid, hors habitation si possible | Trois contrats, tous en habitation, ne prouvent pas cent. |
@@ -4519,3 +4566,5 @@ Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
 137. Un bon lecteur n'est pas forcément un bon vérificateur : mesurer chaque rôle à part, et pouvoir les confier à deux modèles.
 138. Un identifiant sert au moteur, un libellé au lecteur : écrire le second à côté du premier, pas dans l'écran.
 139. Une exception tolérée (une variable « lue partout ») se justifie par une règle qu'un test peut vérifier ; sinon elle cache un oubli.
+140. Avant de corriger une structure, relire les erreurs mesurées une par une : la piste la plus élégante ne corrigeait aucune d'elles.
+141. Compter avant de généraliser : sur 99 variables « propres », 29 ne sont pas lues dans la déclaration, et les doublons n'en retirent qu'une dizaine.

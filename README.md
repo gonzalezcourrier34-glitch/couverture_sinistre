@@ -4,6 +4,14 @@ Dit si un sinistre est couvert par un contrat d'assurance habitation, **pourquoi
 
 > Une réponse assurée sans justification vaut moins qu'un « je ne sais pas » étayé.
 
+![La réponse à une déclaration : la décision, les faits retenus, la clause citée, les limites](docs/images/ecran-reponse.png)
+
+*Un piéton renversé à vélo, chez l'assureur A : la décision, les faits que le modèle a lus dans la déclaration, la phrase du contrat qui fonde la réponse (un clic ouvre l'article entier), les plafonds et la franchise. La même réponse se télécharge en fiche PDF, articles cités joints.*
+
+![L'analyse suivie étape par étape](docs/images/ecran-suivi.png)
+
+*Pendant les 4 à 5 secondes de l'analyse, l'écran dit ce qui se fait : lire, vérifier chaque fait, appliquer les règles, confirmer.*
+
 - [Note de conception](#note-de-conception) : le besoin, le choix, les résultats, ce qui a été essayé, les limites
 - [Démonstration en 5 minutes](#démonstration-en-5-minutes)
 - [Installation](#installation) et [utilisation](#utilisation)
@@ -60,7 +68,7 @@ Trois contrats de trois assureurs (anonymisés A, B, D), sur le même moteur. Me
 |---|---|---|---|
 | Règles seules, faits exacts (A, les 31 cas de test) | 100 % | 0 | 0 |
 | A, partie test du golden set (31 cas jamais utilisés pour régler) | 90 % | 0 | 0 |
-| A, jeu fermé (20 cas écrits sans voir les règles) | 98 % | 0,3 | 0 |
+| A, jeu fermé (20 cas écrits sans voir les règles) | 98 à 100 % | 0 à 0,3 | 0 |
 | B, jeu fermé (20 cas) | 82 % | 1 | 0 |
 | D, jeu fermé (25 cas) | 96 % | 0 | 1 |
 
@@ -69,6 +77,7 @@ Trois contrats de trois assureurs (anonymisés A, B, D), sur le même moteur. Me
 - **La lecture est stable** : sur 96 déclarations, 2 changent de réponse d'un passage à l'autre.
 - Une analyse prend 4 à 5 secondes (95e centile : 7 secondes).
 - Les jeux sont petits : un écart de 3 ou 4 points entre deux passages n'est pas significatif.
+- Les deux bancs de A ont été relancés à 15 h, après un contrôle du vocabulaire (7.138) : 90 % et 100 %, aucun couvert à tort. Le jeu fermé de A est donné en fourchette sur les deux mesures.
 
 ### 5. Ce qui a été essayé, et ce que la mesure a dit
 
@@ -99,7 +108,7 @@ Ce qui est fait :
 
 Ce que coûte un contrat de plus, honnêtement : la rédaction automatique est rapide (11 minutes pour un premier lot de six articles), mais la **relecture humaine reste lourde** sur les articles qui définissent les biens assurés : le modèle y invente des concepts, et ce lot a déclenché 80 contrôles bloquants. Les garanties demandent moins. Le temps complet par contrat n'a pas été mesuré.
 
-Ce qui manque pour des centaines : les deux tiers du vocabulaire restent propres à un contrat (sans doute moins : des doublons entre assureurs restent à chercher) ; trois contrats ne prouvent pas cent ; tout est en habitation.
+Ce qui manque pour des centaines : chaque contrat réemploie la moitié de ses variables ou plus (48 à 60 %), mais 70 variables lues dans la déclaration restent propres à un seul, dont une dizaine de doublons repérés et pas encore fusionnés (`couverture regles --contrat … --bilan`) ; trois contrats ne prouvent pas cent ; tout est en habitation.
 
 ### 7. Limites
 

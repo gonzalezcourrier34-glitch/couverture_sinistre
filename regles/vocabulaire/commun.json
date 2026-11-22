@@ -1,5 +1,5 @@
 {
-  "_description": "Vocabulaire commun : le socle (événement, bien, lieu) et les variables que plusieurs contrats emploient. « libelle » : le nom montré d'une variable ; « libelles » : celui d'une valeur, quand l'identifiant s'écrit mal. « plusieurs » : la variable prend une liste. « parents » : la hiérarchie des valeurs (une vitre est un élément du bâtiment). « pour » : les événements auxquels une variable s'applique. « aide » : le sens des valeurs proches, donné au modèle qui lit. Rangé par `couverture regles --ranger`.",
+  "_description": "Vocabulaire commun : le socle (événement, bien, lieu) et les variables que plusieurs contrats emploient. « plusieurs » : la variable prend une liste. « parents » : la hiérarchie des valeurs (une vitre est un élément du bâtiment). « pour » : les événements auxquels une variable s'applique. « aide » : le sens des valeurs proches, donné au modèle qui lit. « libelle » : le nom montré d'une variable ; « libelles » : celui d'une valeur, quand l'identifiant s'écrit mal. Rangé par `couverture regles --ranger`.",
   "variables": {
     "evenement": {
       "libelle": "Événement",

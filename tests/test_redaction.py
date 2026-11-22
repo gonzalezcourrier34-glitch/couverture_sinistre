@@ -713,3 +713,14 @@ def test_le_vocabulaire_est_range():
         propres = json.loads((prolog.VOCABULAIRE / f"{contrat}.json").read_text(encoding="utf-8"))["variables"]
         assert propres and set(propres) <= prolog.variables_employees(contrat)
         assert not any(set(propres) & prolog.variables_employees(c) for c in prolog.contrats_regles() if c != contrat)
+
+
+def test_bilan_du_vocabulaire():
+    """Le bilan se calcule d'après les règles : chaque variable employée est partagée ou propre, et les propres
+    se partagent entre souscription, jamais lues et lues dans la déclaration (7.140)."""
+    b = redaction.bilan()
+    for n in b["contrats"].values():
+        assert n["employees"] == n["partagees"] + n["propres"] and n["partagees"] > 0
+    assert sum(n["propres"] for n in b["contrats"].values()) == len(b["propres"])
+    assert set(b["propres_lues_dans_la_declaration"]) <= set(b["propres"])
+    assert "formule" in b["souscription"] and "evenement" not in b["sans_regle"]

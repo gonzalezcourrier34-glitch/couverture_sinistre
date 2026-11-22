@@ -20,6 +20,8 @@ def ajouter(sous) -> None:
                    help="Cas de mise au point (défaut), de validation (data/validation) ou des garanties rédigées par le modèle (data/redaction)")
     p.add_argument("--ranger", action="store_true",
                    help="Ranger le vocabulaire : commun.json, et un fichier par contrat pour ce que lui seul emploie")
+    p.add_argument("--bilan", action="store_true",
+                   help="Le vocabulaire en chiffres : ce que chaque contrat partage, ce qu'il est seul à employer")
     p.set_defaults(executer=executer)
 
 
@@ -37,6 +39,20 @@ def executer(a, base: Base, donnees: Path) -> int:
         print("Vocabulaire rangé (regles/vocabulaire/)." + ("" if deplacees else " Rien n'a bougé."))
         for x in deplacees:
             print(f"  {x}")
+        return 0
+    if a.bilan:
+        from .. import redaction
+        b = redaction.bilan()
+        print(f"Vocabulaire : {b['variables']} variables.")
+        for c, n in b["contrats"].items():
+            print(f"  {c} : {n['employees']} employées, {n['partagees']} partagées "
+                  f"({n['partagees'] / n['employees']:.0%}), {n['propres']} propres")
+        lues = b["propres_lues_dans_la_declaration"]
+        print(f"Propres à un seul contrat : {len(b['propres'])}, dont {len(lues)} lues dans la déclaration.")
+        print(f"Faits de souscription (conditions particulières) : {len(b['souscription'])} — {', '.join(b['souscription'])}")
+        print(f"Jamais lues dans une déclaration : {len(b['non_lues'])}")
+        if b["sans_regle"]:
+            print(f"Employées par aucune règle : {', '.join(b['sans_regle'])}")
         return 0
     exe = prolog.swipl()
     if exe is None:
