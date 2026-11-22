@@ -4162,6 +4162,150 @@ deux questions de l'énoncé, les mesures du jour, un tableau des essais avec le
 compris), ce que coûte un contrat de plus, les limites ; puis un déroulé de démonstration en 5 minutes. Les anciens
 résultats (97 cas, 15 cas pour B) en sont retirés : ils dataient d'avant les jeux fermés.
 
+### 7.130 La fiche d'analyse, en PDF
+
+Le poste demande aussi de **produire** des documents, « avec notre charte graphique » ; le projet n'en produisait
+aucun. Il en produit un, celui qu'un gestionnaire verserait au dossier : la fiche d'analyse d'un sinistre.
+
+- `fiche.py` met en page une réponse de l'API, sans rien recalculer : la déclaration, la décision et son motif, les
+  faits retenus, ce qu'il faut demander au client ou ce qui reste sous réserve, les clauses citées regroupées par
+  article (numéro, pages, phrase exacte), les limites, les contrôles de la lecture, et la mention que la fiche ne
+  remplace pas l'examen par un gestionnaire. Couleurs de l'écran ; ni logo, ni nom de marque.
+- `POST /api/v1/fiches` la renvoie en PDF ; à l'écran, « Télécharger la fiche (PDF) » sous chaque décision.
+- `reportlab`, déjà employé par les tests, devient une dépendance du projet (`uv lock`).
+
+Vérifié ici : la fiche se produit, tient en une page sur un cas complet, et son texte porte la décision, les
+articles et les questions (deux tests). Non vérifié ici : la route (FastAPI n'est pas installé dans cet
+environnement ; un test l'attend chez l'auteur) et le bouton (compilation Angular).
+
+### 7.131 Le piéton renversé lu « heurt » ; une question à 46 boutons
+
+Vu à l'écran, contrat A, toujours le vélo et le piéton : cette fois l'événement est lu « heurt » seul, et non
+« responsabilité ». La réponse part vers le pack multimédia (qui couvre le heurt du matériel informatique), et la
+question « quels biens sont endommagés ? » s'affiche avec ses 46 valeurs en boutons.
+
+- **La lecture.** L'aide de « heurt » disait « un véhicule, un arbre ou un objet a percuté le bâtiment ou les biens de
+  l'assuré » ; elle ne disait rien d'une personne. Elle dit maintenant qu'une personne heurtée, renversée ou blessée
+  par l'assuré relève de « responsabilite ». À dire : l'exemple de l'écran reprend presque mot pour mot `f-a18`, un
+  cas du jeu fermé de A ; ce cas n'est donc plus une mesure indépendante de cette aide (leçon 119), et les exemples
+  de l'écran ne devraient pas venir d'un jeu de mesure.
+- **L'écran.** Au-delà de 10 réponses possibles, une question s'affiche en liste déroulante.
+
+Non mesuré : l'effet de la nouvelle aide (un banc de A le dira), ni l'écran (compilation Angular).
+
+### 7.132 L'aide ne suffit pas : une règle dans la consigne du temps 1 (à mesurer)
+
+Après 7.131, même essai à l'écran : l'événement est encore lu « heurt ». La liste déroulante fonctionne ; l'aide du
+vocabulaire, elle, n'a rien changé. Le temps 1 ne reçoit pas d'exemples (7.116) : il ne reste que sa consigne. Une
+règle y est ajoutée (`lecture-socle` v3) : une personne blessée, ou le bien de quelqu'un d'autre abîmé, par l'assuré,
+un proche ou son animal, c'est « responsabilite », même s'il y a eu un choc ; « heurt » ne vaut que pour ce qui a
+percuté le bâtiment ou les biens de l'assuré.
+
+C'est aller contre 7.120 (sortir les cas particuliers de la consigne), et c'est dit : la responsabilité civile n'est
+pas un cas particulier de l'habitation mais une garantie de tout contrat, et aucun autre levier n'atteint le temps 1.
+Small a déjà ignoré des règles écrites (7.25) : cinq essais à l'écran, puis un banc, diront si celle-ci tient. Même
+réserve que 7.131 sur `f-a18`.
+
+### 7.133 Pas de rustine : les deux corrections sont retirées, et la règle est posée
+
+L'auteur, après 7.131 et 7.132 : « ce n'est pas généralisable ; je ne veux pas de rustine, je veux des règles claires,
+pas du cas par cas ». Il a raison : trois corrections en une heure pour la même phrase (une aide, une autre aide, une
+règle de consigne), dont aucune mesurée, et la deuxième n'avait rien changé. L'aide de « heurt » et la règle du temps 1
+sont **retirées** (`lecture-socle` revient à la v2).
+
+**La règle, désormais.** Une erreur de lecture ne se corrige plus en ajoutant une phrase pour ce cas :
+1. une **consigne** ne contient que des principes de lecture valables pour tout contrat ;
+2. le **vocabulaire** définit chaque valeur une fois, avec les règles du contrat ; on n'y ajoute pas une aide parce
+   qu'une phrase a été mal lue ;
+3. une lecture se corrige par des **exemples validés**, mesurés sur des cas qui n'ont pas servi à les choisir ;
+4. quand l'erreur vient de la **structure** du vocabulaire, c'est la structure qu'on corrige ;
+5. ce qui reste mal lu reste une **limite écrite**, que les garde-fous ramènent à « à préciser ».
+
+**Le cas du piéton relève du point 4.** « Événement » mélange deux choses : ce qui s'est passé (un vol, un incendie, un
+heurt) et la nature de la demande (« responsabilité », « assistance », « litige »). Un cycliste qui renverse un piéton,
+c'est bien un heurt, **et** c'est une affaire de responsabilité : le modèle doit choisir entre deux réponses vraies. La
+correction de structure : séparer les deux questions. « Qui a subi le dommage : l'assuré, ou quelqu'un d'autre ? »
+existe déjà (`victime`), mais n'est posée que si l'événement est déjà « responsabilité ». Posée au temps 1, pour tout
+sinistre, elle fait de la responsabilité une conséquence calculée par le code (un tiers a subi le dommage), plus un
+mot à deviner. À faire, et à mesurer sur les trois contrats.
+
+### 7.134 L'analyse racontée pendant qu'elle se fait
+
+Demande de l'auteur : une fenêtre qui dit ce que le modèle fait au fur et à mesure, comme dans SortirIA. Pendant les
+quelques secondes d'une analyse, l'écran ne montrait qu'un « analyse en cours ».
+
+- La lecture et la chaîne acceptent un `suivi` : appelé au début de chaque étape, puis à sa fin avec ce qu'elle a
+  donné, en une phrase (« evenement : vol ; bien : velo ; lieu : cave », « retiré, car non dit : fermeture »,
+  « le moteur répond : non couvert »). Cinq étapes : la première lecture, les détails, la vérification, la décision
+  du moteur, la confirmation des faits décisifs.
+- `POST /api/v1/analyses/suivi` rend la même réponse que `/analyses`, précédée d'une ligne JSON par événement
+  (`application/x-ndjson`). L'analyse tourne dans un fil ; une panne du modèle arrive dans le flux.
+- À l'écran, « Analyser » ouvre une fenêtre avec les cinq étapes : en attente, en cours, faite, et ce que chacune a
+  donné. Elle se referme seule une seconde après la fin, et la décision s'affiche.
+
+Ce n'est pas un décor : chaque ligne vient de l'étape réelle, au moment où elle se termine. Vérifié ici : l'ordre et
+le contenu des appels de suivi (un test) ; la fenêtre, sur une maquette. Non vérifié ici : la route en flux (FastAPI
+absent de cet environnement ; un test l'attend chez l'auteur) et l'écran (compilation Angular, passage du flux par
+le serveur de développement).
+
+**Mistral Medium.** Essai de l'auteur à l'écran (`COUVERTURE_MODELE=mistral-medium-latest`) : la lecture lui paraît
+meilleure et le temps de réponse acceptable. C'est une impression sur quelques essais ; les bancs restent à passer
+avant d'en faire le modèle de l'analyse.
+
+### 7.135 La fiche PDF joint les articles cités, en entier
+
+Demande de l'auteur. Après la page de synthèse, la fiche ajoute « Les articles cités, en entier » : pour chaque article
+cité, son chemin dans le contrat, ses pages et le texte complet de la clause, lu dans la base par la route, avec les
+passages cités surlignés. Le lecteur de la fiche n'a plus à ouvrir le contrat. Un extrait qui ne se retrouve pas tel
+quel n'est pas surligné ; un article absent de la base est simplement omis. Vérifié ici sur un PDF produit (un test).
+
+### 7.136 Mistral Medium lit mieux, mais vérifie trop sévèrement : celui qui lit n'est pas celui qui vérifie
+
+Bancs du 22 nov. (13 h 15 à 13 h 21), toute l'analyse par Mistral Medium (`COUVERTURE_MODELE=mistral-medium-latest`),
+192 tests passés :
+
+| Banc | Small (21 nov., 16 h 20) | Medium |
+|---|---|---|
+| A, jeu fermé | 87 %, 1 couvert à tort, 2 instables | **92 %**, **0**, 1 |
+| A, partie test | 85 %, 2 couverts à tort, 1 instable | **90 %**, **0**, 0 |
+| B, jeu fermé | 85 %, 0, 3 instables | 80 %, 1 couvert à tort, 0 |
+| D, jeu fermé | 100 %, 0, 0 | 92 %, 1 refus à tort, 0 |
+
+Ce que Medium apporte : **plus aucun couvert à tort chez A** (la clé sous le paillasson, le bain à bulles et le vase
+sont bien lus), une lecture **stable** (faits identiques aux trois passages pour 63 déclarations sur 96, contre 35 avec
+Small ; 1 cas instable sur 96 au lieu de 6), et un temps égal (3,5 à 3,9 s par cas, sans les appels bloqués de Small).
+
+Ce qu'il coûte, et pourquoi : sur 288 analyses, la **confirmation** des faits décisifs a refusé 17 fois un fait du
+temps 1 (11 fois le lieu, 5 fois le bien, 1 fois l'événement), toujours sur une réponse qui était juste, devenue « à
+préciser ». Avec Small, ce refus n'arrive jamais sur ces faits. Medium, comme vérificateur, ne reconnaît pas ce que la
+déclaration implique (« la chambre » : le logement). C'est la quasi-totalité de ce que B et D perdent.
+
+La conséquence n'est pas une consigne de plus, c'est une séparation des rôles : **celui qui lit n'est pas celui qui
+vérifie**. `COUVERTURE_MODELE_VERIFICATION` donne la vérification des faits lus et la confirmation des faits décisifs
+à un autre modèle que la lecture. À mesurer : Medium qui lit, Small qui vérifie.
+
+Restent, avec Medium, des erreurs de lecture propres : `f-b18` (un vol dans une voiture, couvert au lieu de « à
+préciser », 3 fois sur 3) et `f-d08` (une crue avec arrêté de catastrophe naturelle, refusée 3 fois sur 3).
+
+**Mesure (22 nov., 13 h 30 à 13 h 36) : gardé.** Medium lit, Small vérifie (`COUVERTURE_MODELE_VERIFICATION`), 193 tests
+passés :
+
+| Banc | Small seul | Medium seul | Medium lit, Small vérifie |
+|---|---|---|---|
+| A, jeu fermé | 87 %, 1 couvert à tort | 92 %, 0 | **98 %**, 0,3 |
+| A, partie test | 85 %, 2 | 90 %, 0 | **90 %**, 0 |
+| B, jeu fermé | 85 %, 0 | 80 %, 1 | 82 %, 1 |
+| D, jeu fermé | 100 %, 0 | 92 %, 1 refus à tort | **96 %**, 1 refus à tort |
+
+Les refus d'un fait du temps 1 par la confirmation tombent de 17 à 2 sur 288 analyses. Temps par cas : 4 à 4,8 s en
+médiane, 5,7 à 7 s au 95e centile, sous la porte des 10 s. Instables : 2 cas sur 96.
+
+Ce qui reste, à l'identique aux trois passages : `f-b18` (couvert à tort : un ordinateur volé dans une voiture, la
+vitre brisée ; il fallait demander une précision), `f-d08` (refus à tort : une crue avec arrêté, lue sans bien touché),
+et des « à préciser » de trop (`f-b06`, `f-b07`, `velo-06`, `val-09`, `g2-p01`). B est le seul contrat sous Small seul
+(82 % contre 85 %) : trois points sur 20 cas, dans la variation, mais `f-b18` est un couvert à tort que Small n'avait
+pas. C'est la configuration retenue pour la démonstration ; le README porte ces mesures.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 20 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.
@@ -4329,3 +4473,5 @@ Tenu à jour le 20 nov. 2026, après-midi ; ce qui est fait est dans les section
 133. Un banc note la décision, pas ce que l'écran demande : tester à part que chaque question posée peut servir.
 134. Une réserve n'est pas une question : ce que l'assureur vérifiera s'affiche, ce que le client doit dire se demande.
 135. Distinguer l'erreur instable de l'erreur répétée avant de choisir le remède : relire ne corrige que la première.
+136. Trois corrections pour une même phrase : arrêter, et chercher la règle ou la structure qui manque.
+137. Un bon lecteur n'est pas forcément un bon vérificateur : mesurer chaque rôle à part, et pouvoir les confier à deux modèles.

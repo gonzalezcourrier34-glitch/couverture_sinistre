@@ -292,6 +292,7 @@ dependencies = [
     { name = "fastapi" },
     { name = "pdfplumber" },
     { name = "pydantic" },
+    { name = "reportlab" },
     { name = "uvicorn" },
 ]
 
@@ -299,7 +300,6 @@ dependencies = [
 dev = [
     { name = "httpx" },
     { name = "pytest" },
-    { name = "reportlab" },
 ]
 word = [
     { name = "python-docx" },
@@ -313,7 +313,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8" },
     { name = "python-docx", marker = "extra == 'word'", specifier = ">=1" },
-    { name = "reportlab", marker = "extra == 'dev'", specifier = ">=4" },
+    { name = "reportlab", specifier = ">=4" },
     { name = "uvicorn", specifier = ">=0.29" },
 ]
 provides-extras = ["word", "dev"]

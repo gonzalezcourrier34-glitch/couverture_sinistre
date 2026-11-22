@@ -96,3 +96,21 @@ class Decision(BaseModel):
     raisonnement: list[str]
     mode: str
     durees_ms: dict[str, int]
+
+
+class FicheRequest(BaseModel):
+    """Une décision à mettre en page (PDF).
+
+    Attributes
+    ----------
+    contrat_id : str
+        Le contrat de la décision.
+    sinistre : str
+        La déclaration du client (et, s'il y en a, ses réponses aux questions).
+    reponse : Decision
+        La réponse de `POST /api/v1/analyses` ou de `POST /api/v1/decisions`, telle quelle.
+    """
+
+    contrat_id: str = Field(min_length=1, examples=["assureur-a-habitation-2025"])
+    sinistre: str = Field(min_length=1, max_length=4000)
+    reponse: Decision

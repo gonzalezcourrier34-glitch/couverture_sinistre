@@ -110,6 +110,15 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 
 ## 5. Dernières mesures
 
+**22 nov. 2026, 13 h 30 à 13 h 36** (Mistral Medium lit, Mistral Small vérifie ; configuration retenue) : jeu fermé
+de A **98 %** (0,3 couvert à tort), partie test de A **90 %** (0), B **82 %** (1), D **96 %** (0 ; 1 refus à tort).
+4 à 4,8 s par cas en médiane, 7 s au plus au 95e centile. Référence actuelle (DEMARCHE 7.136).
+
+**22 nov. 2026, 13 h 15 à 13 h 21** (toute l'analyse par Mistral Medium) : jeu fermé de A **92 %** (0 couvert à tort),
+partie test de A **90 %** (0), B **80 %** (1), D **92 %** (0 ; 1 refus à tort). Lecture stable (63 déclarations sur 96
+lues à l'identique trois fois). La confirmation refuse 17 fois sur 288 un lieu ou un bien que la déclaration implique
+(DEMARCHE 7.136) : à remesurer avec Small pour vérifier.
+
 **21 nov. 2026, 16 h 20 à 16 h 30** (graine fixe ; questions et réserves revues, 7.123 à 7.128) : jeu fermé de A
 **87 %** (1 couvert à tort), partie test de A **85 %** (2), B **85 %** (0), D **100 %** (0). Par réponse, un « non
 couvert » n'est jamais faux. Faits lus identiques aux trois passages : 35 déclarations sur 96 (30 sans graine).

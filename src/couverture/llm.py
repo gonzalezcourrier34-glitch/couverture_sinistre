@@ -282,7 +282,24 @@ def modele_du_socle(llm: LLM | None = None) -> LLM | None:
     Le temps 1 choisit des catégories (le sol est-il un « élément du bâtiment » ?), et Small ne se corrige pas
     lui-même sur ce choix (7.117) : on essaie un meilleur lecteur pour cet appel seulement (7.118). Rien si la
     variable est vide, s'il n'y a pas de clé, ou si c'est déjà le modèle de l'analyse."""
-    modele = os.environ.get("COUVERTURE_MODELE_SOCLE", "").strip()
+    return _modele_du_role("COUVERTURE_MODELE_SOCLE", llm)
+
+
+def modele_de_verification(llm: LLM | None = None) -> LLM | None:
+    """Un autre modèle pour vérifier les faits lus et confirmer ceux qui portent la décision, ou None :
+
+    COUVERTURE_MODELE_VERIFICATION=mistral-small-latest
+
+    Celui qui lit et celui qui vérifie n'ont pas à être le même (7.136). Mesuré : Mistral Medium lit mieux que
+    Small, mais comme vérificateur il refuse des lieux et des biens que la déclaration implique (« la chambre » :
+    le logement), et des réponses justes deviennent « à préciser »."""
+    return _modele_du_role("COUVERTURE_MODELE_VERIFICATION", llm)
+
+
+def _modele_du_role(variable: str, llm: LLM | None = None) -> LLM | None:
+    """Le modèle nommé par la variable d'environnement. Rien si elle est vide, s'il n'y a pas de clé, ou si c'est
+    déjà le modèle de l'analyse."""
+    modele = os.environ.get(variable, "").strip()
     cle = os.environ.get("MISTRAL_API_KEY", "").strip()
     if not modele or not cle or cle.startswith("colle") or modele == getattr(llm, "modele", None):
         return None

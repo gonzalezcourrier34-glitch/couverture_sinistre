@@ -450,8 +450,10 @@ def passer(donnees: Path, contrat_id: str, methode: str, couches: list[str], rep
             resultat["modele"] = getattr(getattr(pipeline, "llm", None), "nom", None) or resultat.get("modele")
             if resultat["methode"] == "regles":
                 socle = getattr(getattr(pipeline, "llm_socle", None), "modele", None)
+                verif = getattr(getattr(pipeline, "llm_verification", None), "modele", None)
                 resultat["lecture"] = ("verifiee" + (", exemples" if getattr(pipeline, "exemples", None) else "")
-                                       + (f", socle {socle}" if socle else ""))
+                                       + (f", socle {socle}" if socle else "")
+                                       + (f", verification {verif.removesuffix('-latest')}" if verif else ""))
             rapports.append((evaluer_fn or evaluer)(pipeline, cas, paralleles=paralleles))
             durees.append(time.perf_counter() - debut)
         resultat["couches"]["chaine"] = couche_chaine(cas, rapports, durees)

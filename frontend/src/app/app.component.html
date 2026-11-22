@@ -123,15 +123,26 @@
                             @for (p of questions(); track p.variable) {
                                 <div class="question">
                                     <div class="question-texte">{{ p.question }}</div>
-                                    <div class="valeurs" role="group" [attr.aria-label]="p.question">
-                                        @for (v of p.valeurs; track v) {
-                                            <button type="button" class="chip"
-                                                [class.chip-on]="reponses()[p.variable] === v"
-                                                [attr.aria-pressed]="reponses()[p.variable] === v"
-                                                [attr.title]="p.aide[v]"
-                                                (click)="repondre(p.variable, v)">{{ lisible(v) }}</button>
-                                        }
-                                    </div>
+                                    @if (p.valeurs.length > maxPuces) {
+                                        <!-- Trop de réponses possibles pour des boutons : une liste déroulante -->
+                                        <select class="liste" [attr.aria-label]="p.question"
+                                            (change)="choisir(p.variable, $event)">
+                                            <option value="" [selected]="!reponses()[p.variable]">Choisir une réponse…</option>
+                                            @for (v of p.valeurs; track v) {
+                                                <option [value]="v" [selected]="reponses()[p.variable] === v">{{ lisible(v) }}</option>
+                                            }
+                                        </select>
+                                    } @else {
+                                        <div class="valeurs" role="group" [attr.aria-label]="p.question">
+                                            @for (v of p.valeurs; track v) {
+                                                <button type="button" class="chip"
+                                                    [class.chip-on]="reponses()[p.variable] === v"
+                                                    [attr.aria-pressed]="reponses()[p.variable] === v"
+                                                    [attr.title]="p.aide[v]"
+                                                    (click)="repondre(p.variable, v)">{{ lisible(v) }}</button>
+                                            }
+                                        </div>
+                                    }
                                 </div>
                             }
                             <div class="actions">
@@ -192,6 +203,13 @@
                         </div>
                     }
 
+                    <div class="actions">
+                        <button type="button" class="bouton bouton-secondaire" [disabled]="ficheEnCours()"
+                            (click)="telechargerFiche(etape)">
+                            {{ ficheEnCours() ? 'Fiche en cours…' : 'Télécharger la fiche (PDF)' }}
+                        </button>
+                    </div>
+
                     <details class="details">
                         <summary>Raisonnement du moteur et contrôles</summary>
                         @if (etape.reponse.avertissements.length) {
@@ -239,6 +257,35 @@
             }
         </section>
     </section>
+
+    <!-- # L'analyse en cours, étape par étape -->
+
+    @if (suiviOuvert()) {
+        <div class="voile">
+            <div class="fenetre fenetre-suivi" role="dialog" aria-modal="true" aria-label="Analyse en cours" aria-live="polite">
+                <header class="fenetre-tete">
+                    <div>
+                        <div class="fenetre-titre">Analyse en cours</div>
+                        <div class="small">Le modèle lit, la logique décide, le code vérifie.</div>
+                    </div>
+                </header>
+                <ol class="suivi">
+                    @for (e of etapesSuivi; track e.cle) {
+                        @let s = suivi()[e.cle];
+                        <li class="suivi-etape" [class.suivi-encours]="s?.etat === 'encours'" [class.suivi-fait]="s?.etat === 'fait'">
+                            <span class="suivi-marque" aria-hidden="true"></span>
+                            <div>
+                                <div class="suivi-titre">{{ e.titre }}</div>
+                                @if (s?.detail) {
+                                    <div class="suivi-detail">{{ s?.detail }}</div>
+                                }
+                            </div>
+                        </li>
+                    }
+                </ol>
+            </div>
+        </div>
+    }
 
     <!-- # L'article entier, dans une fenêtre -->
 

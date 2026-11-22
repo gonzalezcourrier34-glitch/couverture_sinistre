@@ -63,6 +63,21 @@ const EXEMPLES: readonly { titre: string; texte: string }[] = [
     }
 ];
 
+/** Les étapes d'une analyse, dans l'ordre où l'API les annonce (`POST /analyses/suivi`). */
+const ETAPES_SUIVI: readonly { cle: string; titre: string }[] = [
+    { cle: 'socle', titre: 'Lire ce qui s’est passé, ce qui est touché, et où' },
+    { cle: 'details', titre: 'Lire les détails qui comptent pour cet événement' },
+    { cle: 'verification', titre: 'Vérifier que chaque fait est dans la déclaration' },
+    { cle: 'decision', titre: 'Appliquer les règles du contrat' },
+    { cle: 'confirmation', titre: 'Confirmer les faits qui portent la réponse' }
+];
+
+/** Le temps de lire la dernière ligne du suivi avant que la fenêtre se referme (ms). */
+const PAUSE_FIN_SUIVI = 1200;
+
+/** Au-delà, les réponses possibles à une question s'affichent en liste déroulante, plus en boutons. */
+const MAX_PUCES = 10;
+
 const LONGUEUR_MIN = 10;
 
 const LONGUEUR_MAX = 2000;
@@ -117,6 +132,10 @@ export class AppComponent implements OnInit {
 
     readonly longueurMax = LONGUEUR_MAX;
 
+    readonly maxPuces = MAX_PUCES;
+
+    readonly etapesSuivi = ETAPES_SUIVI;
+
     readonly libelles = LIBELLES;
 
     readonly tons = TONS;
@@ -159,6 +178,15 @@ export class AppComponent implements OnInit {
 
     /** Clauses du contrat choisi, chargées au premier article ouvert. */
     private readonly clausesParContrat = signal<Record<string, Record<string, Clause>>>({});
+
+    /** La fenêtre de suivi de l'analyse est affichée. */
+    readonly suiviOuvert = signal(false);
+
+    /** Où en est chaque étape de l'analyse en cours, et ce qu'elle a donné. */
+    readonly suivi = signal<Record<string, { etat: 'encours' | 'fait'; detail?: string }>>({});
+
+    /** Une fiche PDF est en cours de production. */
+    readonly ficheEnCours = signal(false);
 
     /** L'article affiché en entier dans la fenêtre, avec les extraits à y surligner. */
     readonly articleOuvert = signal<{ clauseId: string; extraits: string[] } | null>(null);
@@ -274,11 +302,35 @@ export class AppComponent implements OnInit {
             return;
         }
         this.lancer('Le modèle lit la déclaration, le moteur décide…');
-        this.service.analyser(contratId, sinistre)
+        this.suivi.set({});
+        this.suiviOuvert.set(true);
+        this.service.analyserAvecSuivi(contratId, sinistre)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
-                next: (reponse) => this.ajouter({ origine: 'analyse', texte: sinistre, reponse }, true),
-                error: (e) => this.echec(e)
+                next: (message) => {
+                    if (message.etape === 'fin' && message.reponse) {
+                        const reponse = message.reponse;
+                        setTimeout(() => {
+                            this.suiviOuvert.set(false);
+                            this.ajouter({ origine: 'analyse', texte: sinistre, reponse }, true);
+                        }, PAUSE_FIN_SUIVI);
+                    } else if (message.etape === 'erreur') {
+                        this.suiviOuvert.set(false);
+                        this.erreur.set(message.detail ?? 'L’analyse a échoué.');
+                        this.chargement.set(false);
+                    } else {
+                        this.suivi.update((s) => ({
+                            ...s,
+                            [message.etape]: message.detail === undefined
+                                ? { etat: 'encours' }
+                                : { etat: 'fait', detail: message.detail }
+                        }));
+                    }
+                },
+                error: (e) => {
+                    this.suiviOuvert.set(false);
+                    this.echec(e);
+                }
             });
     }
 
@@ -290,6 +342,15 @@ export class AppComponent implements OnInit {
         valeur: string
     ): void {
         this.reponses.update((r) => ({ ...r, [variable]: r[variable] === valeur ? '' : valeur }));
+    }
+
+    /** La réponse choisie dans une liste déroulante (vide : aucune). */
+    choisir(
+        variable: string,
+        evenement: Event
+    ): void {
+        const valeur = (evenement.target as HTMLSelectElement).value;
+        this.reponses.update((r) => ({ ...r, [variable]: valeur }));
     }
 
     decider(): void {
@@ -346,6 +407,40 @@ export class AppComponent implements OnInit {
     ): Clause | null {
         const contratId = this.contratId();
         return contratId ? this.clausesParContrat()[contratId]?.[clauseId] ?? null : null;
+    }
+
+
+    // # La fiche de la décision, en PDF
+
+    telechargerFiche(
+        etape: Etape
+    ): void {
+        const contratId = this.contratId();
+        const declaration = this.etapes()[0]?.texte ?? etape.texte;
+        if (!contratId || this.ficheEnCours()) {
+            return;
+        }
+        const sinistre = etape.origine === 'reponses'
+            ? `${declaration}\nRéponses du client : ${etape.texte}`
+            : declaration;
+        this.ficheEnCours.set(true);
+        this.service.fiche(contratId, sinistre.slice(0, 4000), etape.reponse)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: (pdf) => {
+                    const adresse = URL.createObjectURL(pdf);
+                    const lien = document.createElement('a');
+                    lien.href = adresse;
+                    lien.download = `fiche-sinistre-${contratId}.pdf`;
+                    lien.click();
+                    URL.revokeObjectURL(adresse);
+                    this.ficheEnCours.set(false);
+                },
+                error: (e) => {
+                    this.erreur.set(messageErreur(e));
+                    this.ficheEnCours.set(false);
+                }
+            });
     }
 
 

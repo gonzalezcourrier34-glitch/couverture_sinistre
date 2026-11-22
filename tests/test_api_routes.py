@@ -23,7 +23,10 @@ class FausseChaine:
     def __init__(self, base, oracle, erreur=False):
         self.base, self.decideur, self.erreur = base, oracle, erreur
 
-    def analyser(self, sinistre):
+    def analyser(self, sinistre, suivi=None):
+        if suivi:
+            suivi("socle")
+            suivi("socle", "evenement : responsabilite")
         if self.erreur:
             raise ErreurLLM("délai dépassé")
         r, _ = service.decider(self.base, CONTRAT, {"evenement": ["responsabilite"], "origine_rc": "personne",
@@ -122,10 +125,43 @@ def test_decision_puis_question(client):
     assert client.post("/api/v1/decisions", headers=CLE, json={"contrat_id": CONTRAT, "faits": {}}).status_code == 422
 
 
+def test_analyse_suivie(client, base, oracle):  # noqa: F811
+    """7.134 : le même résultat que `/analyses`, précédé d'une ligne JSON par étape ; une panne arrive dans le flux."""
+    import json
+
+    demande = {"contrat_id": CONTRAT, "sinistre": "En faisant du vélo, j'ai renversé un piéton qui s'est cassé le poignet."}
+    r = client.post("/api/v1/analyses/suivi", headers=CLE, json=demande)
+    assert r.status_code == 200 and r.headers["content-type"].startswith("application/x-ndjson")
+    lignes = [json.loads(l) for l in r.text.splitlines() if l.strip()]
+    assert lignes[0] == {"etape": "socle"} and lignes[1]["detail"] == "evenement : responsabilite"
+    assert lignes[-1]["etape"] == "fin" and lignes[-1]["reponse"]["decision"] == "COUVERT"
+    assert lignes[-1]["reponse"] == client.post("/api/v1/analyses", headers=CLE, json=demande).json() | {
+        "durees_ms": lignes[-1]["reponse"]["durees_ms"]}
+    assert client.post("/api/v1/analyses/suivi", headers=CLE, json=demande | {"contrat_id": "inconnu"}).status_code == 404
+    app.dependency_overrides[dependances.get_pipelines] = lambda: FaussesChaines(base, oracle, erreur=True)
+    panne = [json.loads(l) for l in client.post("/api/v1/analyses/suivi", headers=CLE, json=demande).text.splitlines()]
+    assert panne[-1]["etape"] == "erreur" and panne[-1]["code"] == 502 and client.journal.erreurs
+
+
+def test_fiche_pdf(client):
+    """7.130 : la réponse d'une analyse, renvoyée telle quelle, revient en PDF."""
+    declaration = "En faisant du vélo, j'ai renversé un piéton qui s'est cassé le poignet."
+    reponse = client.post("/api/v1/analyses", headers=CLE, json={"contrat_id": CONTRAT, "sinistre": declaration}).json()
+    r = client.post("/api/v1/fiches", headers=CLE, json={"contrat_id": CONTRAT, "sinistre": declaration, "reponse": reponse})
+    assert r.status_code == 200, r.text
+    assert r.headers["content-type"] == "application/pdf" and r.content.startswith(b"%PDF")
+    assert "fiche-sinistre-" in r.headers["content-disposition"]
+    assert client.post("/api/v1/fiches", headers=CLE, json={"contrat_id": "inconnu", "sinistre": declaration,
+                                                           "reponse": reponse}).status_code == 404
+    assert client.post("/api/v1/fiches", json={"contrat_id": CONTRAT, "sinistre": declaration,
+                                               "reponse": reponse}).status_code == 401
+
+
 def test_documentation(client):
     assert client.get("/", follow_redirects=False).headers["location"] == "/docs"
     chemins = client.get("/openapi.json").json()["paths"]
-    assert {"/api/v1/analyses", "/api/v1/decisions", "/api/v1/sante"} <= set(chemins)
+    assert {"/api/v1/analyses", "/api/v1/analyses/suivi", "/api/v1/decisions", "/api/v1/fiches",
+            "/api/v1/sante"} <= set(chemins)
 
 
 def test_une_route_par_fichier():

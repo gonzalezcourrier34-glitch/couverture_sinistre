@@ -24,6 +24,7 @@ class PipelineRegles:
         self.variables = variables_du_contrat(contrat_id)
         self.exemples = None                  # la banque d'exemples (7.108, par défaut depuis 7.112)
         self.llm_socle = None                 # un autre modèle pour le temps 1 (COUVERTURE_MODELE_SOCLE, 7.118)
+        self.llm_verification = None          # un autre modèle pour vérifier et confirmer (7.136)
 
     @classmethod
     def depuis_base(cls, base, contrat_id: str, llm: LLM) -> "PipelineRegles":
@@ -33,8 +34,9 @@ class PipelineRegles:
             raise LookupError("SWI-Prolog introuvable : `winget install SWI-Prolog.SWI-Prolog` (Windows).")
         p = cls(contrat_id, base.clauses(contrat_id), llm)
         from . import exemples
-        from .llm import modele_du_socle
+        from .llm import modele_de_verification, modele_du_socle
         p.llm_socle = modele_du_socle(llm)
+        p.llm_verification = modele_de_verification(llm)
         # Les exemples demandent la clé (un vecteur par déclaration) et une banque indexée (`couverture exemples
         # --indexer`) ; sans l'une ou l'autre, la lecture se fait sans exemples, comme avant 7.108.
         if exemples.actifs() and os.environ.get("MISTRAL_API_KEY", "").strip():
@@ -43,12 +45,15 @@ class PipelineRegles:
                 p.exemples = banque
         return p
 
-    def analyser(self, sinistre: str) -> Resultat:
+    def analyser(self, sinistre: str, suivi=None) -> Resultat:
+        """`suivi(etape, detail=None)` : le fil de l'analyse, étape par étape (7.134) ; None : rien."""
+        dire = suivi or (lambda etape, detail=None: None)
         debut = time.perf_counter()
         try:
             choix = self.exemples.pour(sinistre) if self.exemples is not None else None
             faits, ecarts = extraire_faits_regles(sinistre, self.llm, self.decideur, self.variables, choix,
-                                                  llm_socle=self.llm_socle)
+                                                  llm_socle=self.llm_socle, suivi=suivi,
+                                                  llm_verification=self.llm_verification)
         except ErreurLLM:
             raise
         except Exception as e:  # noqa: BLE001
@@ -57,12 +62,20 @@ class PipelineRegles:
             return Resultat(sinistre=sinistre, contrat_id=self.contrat_id, methode=self.methode, faits=Faits(),
                             clauses_consultees=[], verdict=v)
         lu = time.perf_counter()
+        dire("decision")
         d = self.decideur(faits)
         decide = time.perf_counter()
+        libelles = {"COUVERT": "couvert", "NON_COUVERT": "non couvert", "INCERTAIN": "à préciser"}
+        dire("decision", f"le moteur répond : {libelles.get(d['decision'], d['decision'])}")
         doutes: list[str] = []
+        dire("confirmation")
         if d["decision"] in ("COUVERT", "NON_COUVERT"):
             d, doutes, avert = self.confirmer(sinistre, faits, d)
             ecarts = ecarts + avert
+        dire("confirmation", ("non confirmé dans la déclaration : " + " ; ".join(v.replace("_", " ") for v in doutes)
+                              + " ; la réponse devient « à préciser »") if doutes
+             else "les faits qui portent la réponse sont confirmés" if d["decision"] != "INCERTAIN"
+             else "rien à confirmer : la réponse est déjà « à préciser »")
         verdict, consultees = self.verdict(d, faits)
         if doutes:
             # « Je ne sais pas » plutôt qu'une réponse fausse : un fait qui porte la décision n'est pas confirmé.
@@ -104,7 +117,8 @@ class PipelineRegles:
         sources = sources_impliquees(faits, voc)
         a_juger = list(dict.fromkeys(sources.get(v, v) for v in decisifs))
         try:
-            verdicts = juger_affirmations(sinistre, {v: faits[v] for v in a_juger}, self.llm, voc)
+            verdicts = juger_affirmations(sinistre, {v: faits[v] for v in a_juger},
+                                          self.llm_verification or self.llm, voc)
         except ErreurLLM:
             raise
         except Exception as e:  # noqa: BLE001

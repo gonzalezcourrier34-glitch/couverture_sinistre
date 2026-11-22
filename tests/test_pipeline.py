@@ -597,3 +597,59 @@ def test_la_graine_du_tirage(monkeypatch):
     assert llm.MistralLLM(modele="mistral-small-latest").extra["random_seed"] == 7
     monkeypatch.setenv("COUVERTURE_GRAINE", "non")
     assert "random_seed" not in llm.MistralLLM(modele="mistral-small-latest").extra
+
+
+def test_le_suivi_dit_chaque_etape_au_debut_puis_a_la_fin():
+    """7.134 : `suivi` est appelé au début de chaque étape de la lecture, puis à sa fin avec ce qu'elle a donné."""
+    import json
+
+    from couverture import lecture
+
+    class Modele:
+        nom, accepte_schema = "suivi", True
+
+        def completer(self, systeme, message, schema=None):
+            if systeme == lecture.SYSTEME_LECTURE_SOCLE:
+                return json.dumps({"faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}})
+            if systeme == lecture.SYSTEME_LECTURE_DETAILS:
+                return json.dumps({"faits": {"fermeture": "cadenas", "absence": "oui"}})
+            return json.dumps({"verdicts": {"fermeture": "dit", "absence": "non_dit"}})
+
+    fil = []
+    lecture.extraire_faits_regles("On m'a volé mon vélo dans ma cave fermée par un cadenas.", Modele(),
+                                  suivi=lambda etape, detail=None: fil.append((etape, detail)))
+    assert [e for e, _ in fil] == ["socle", "socle", "details", "details", "verification", "verification"]
+    assert [d is None for _, d in fil] == [True, False] * 3
+    assert fil[1][1] == "evenement : vol ; bien : velo ; lieu : cave"
+    assert "fermeture : cadenas" in fil[3][1] and "absence" in fil[5][1] and "non dit" in fil[5][1]
+
+
+def test_un_autre_modele_pour_verifier(monkeypatch):
+    """7.136 : COUVERTURE_MODELE_VERIFICATION donne la vérification des faits à un autre modèle que celui qui lit."""
+    import json
+
+    from couverture import lecture, llm
+
+    class Modele:
+        accepte_schema = True
+
+        def __init__(self, nom):
+            self.nom, self.systemes = nom, []
+
+        def completer(self, systeme, message, schema=None):
+            self.systemes.append(systeme)
+            if systeme == lecture.SYSTEME_LECTURE_SOCLE:
+                return json.dumps({"faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}})
+            if systeme == lecture.SYSTEME_LECTURE_DETAILS:
+                return json.dumps({"faits": {"fermeture": "cadenas"}})
+            return json.dumps({"verdicts": {"fermeture": "dit"}})
+
+    lecteur, verificateur = Modele("lecteur"), Modele("verificateur")
+    lecture.extraire_faits_regles("On m'a volé mon vélo dans ma cave fermée par un cadenas.", lecteur,
+                                  llm_verification=verificateur)
+    assert verificateur.systemes == [lecture.SYSTEME_VERIFICATION] and lecture.SYSTEME_VERIFICATION not in lecteur.systemes
+    monkeypatch.setenv("MISTRAL_API_KEY", "cle-de-test")
+    monkeypatch.delenv("COUVERTURE_MODELE_VERIFICATION", raising=False)
+    assert llm.modele_de_verification() is None
+    monkeypatch.setenv("COUVERTURE_MODELE_VERIFICATION", "mistral-small-latest")
+    assert llm.modele_de_verification().modele == "mistral-small-latest"

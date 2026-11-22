@@ -11,7 +11,9 @@ Routes (préfixe `/api/v1`, clé API dans `x-api-key` sauf `sante`) :
 - `GET  /contrats/{contrat_id}/clauses`   son texte, découpé en clauses ;
 - `GET  /vocabulaire`                     les faits que le moteur comprend ;
 - `POST /analyses`                        une déclaration → décision (le modèle lit, le moteur décide) ;
-- `POST /decisions`                       des faits → décision (le moteur seul, sans modèle).
+- `POST /analyses/suivi`                  la même analyse, racontée étape par étape pendant qu'elle se fait ;
+- `POST /decisions`                       des faits → décision (le moteur seul, sans modèle) ;
+- `POST /fiches`                          une décision → sa fiche en PDF.
 
 Lancement : `couverture api` (port 8001), ou `uvicorn couverture.api.main:app`.
 """
@@ -22,7 +24,8 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 
 from couverture.api import config
-from couverture.api.routes import analyse, clauses, contrat, contrats, decision, sante, vocabulaire
+from couverture.api.routes import (analyse, analyse_suivie, clauses, contrat, contrats, decision, fiche, sante,
+                                   vocabulaire)
 
 app = FastAPI(
     title="Couverture des sinistres",
@@ -33,7 +36,7 @@ app = FastAPI(
     ),
     version=config.VERSION,
 )
-for module in (sante, contrats, contrat, clauses, vocabulaire, analyse, decision):
+for module in (sante, contrats, contrat, clauses, vocabulaire, analyse, analyse_suivie, decision, fiche):
     app.include_router(module.router)
 
 

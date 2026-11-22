@@ -4,7 +4,8 @@ import {
 } from '@angular/core';
 
 import {
-    HttpClient
+    HttpClient,
+    HttpErrorResponse
 } from '@angular/common/http';
 
 import {
@@ -16,7 +17,8 @@ import {
     Contrat,
     Decision,
     Faits,
-    Sante
+    Sante,
+    Suivi
 } from './couverture.model';
 
 
@@ -67,6 +69,71 @@ export class CouvertureService {
         );
     }
 
+
+    /**
+     * La même analyse, racontée pendant qu'elle se fait : l'API envoie une ligne JSON par étape, puis la décision.
+     * `fetch` plutôt que `HttpClient` : il donne le flux au fur et à mesure. Se désabonner interrompt l'appel.
+     */
+    analyserAvecSuivi(
+        contratId: string,
+        sinistre: string
+    ): Observable<Suivi> {
+        return new Observable<Suivi>((abonne) => {
+            const arret = new AbortController();
+            const lire = async (): Promise<void> => {
+                const reponse = await fetch(`${API}/analyses/suivi`, {
+                    method: 'POST',
+                    headers: { 'content-type': 'application/json' },
+                    body: JSON.stringify({ contrat_id: contratId, sinistre }),
+                    signal: arret.signal
+                });
+                if (!reponse.ok || !reponse.body) {
+                    const corps: unknown = await reponse.json().catch(() => null);
+                    throw new HttpErrorResponse({ status: reponse.status, error: corps });
+                }
+                const lecteur = reponse.body.getReader();
+                const decodeur = new TextDecoder();
+                let reste = '';
+                for (;;) {
+                    const { done, value } = await lecteur.read();
+                    if (done) {
+                        break;
+                    }
+                    reste += decodeur.decode(value, { stream: true });
+                    const lignes = reste.split('\n');
+                    reste = lignes.pop() ?? '';
+                    for (const ligne of lignes) {
+                        if (ligne.trim()) {
+                            abonne.next(JSON.parse(ligne) as Suivi);
+                        }
+                    }
+                }
+                if (reste.trim()) {
+                    abonne.next(JSON.parse(reste) as Suivi);
+                }
+                abonne.complete();
+            };
+            lire().catch((erreur: unknown) => {
+                if (!arret.signal.aborted) {
+                    abonne.error(erreur instanceof HttpErrorResponse ? erreur : new HttpErrorResponse({ status: 0 }));
+                }
+            });
+            return () => arret.abort();
+        });
+    }
+
+    /** La fiche d'une décision, en PDF : la réponse est renvoyée telle quelle, rien n'est recalculé. */
+    fiche(
+        contratId: string,
+        sinistre: string,
+        reponse: Decision
+    ): Observable<Blob> {
+        return this.http.post(
+            `${API}/fiches`,
+            { contrat_id: contratId, sinistre, reponse },
+            { responseType: 'blob' }
+        );
+    }
 
     /** Des faits : le moteur seul décide (quelques millisecondes, sans modèle). */
     decider(

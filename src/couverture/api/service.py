@@ -115,7 +115,7 @@ def reponse(r: Resultat, d: dict | None = None) -> dict[str, Any]:
 NON_CONFIRME = " : fait décisif non confirmé par la déclaration"
 
 
-def analyser(pipeline, sinistre: str) -> tuple[Resultat, dict[str, Any]]:
+def analyser(pipeline, sinistre: str, suivi=None) -> tuple[Resultat, dict[str, Any]]:
     """La déclaration lue par le modèle, la décision du moteur. Rend le résultat complet (pour le journal) et
     la réponse de l'API.
 
@@ -123,7 +123,7 @@ def analyser(pipeline, sinistre: str) -> tuple[Resultat, dict[str, Any]]:
     fait décisif que la confirmation n'a pas retrouvé dans la déclaration (7.49) est retiré des faits rendus et
     devient la première question : renvoyés tels quels à `/decisions`, les faits ne doivent pas redonner la
     réponse que la confirmation a suspendue."""
-    r = pipeline.analyser(sinistre)
+    r = pipeline.analyser(sinistre, suivi=suivi) if suivi is not None else pipeline.analyser(sinistre)
     faits = faits_depuis(r.faits)
     doutes = [a.removesuffix(NON_CONFIRME) for a in r.verdict.avertissements if a.endswith(NON_CONFIRME)]
     for v in doutes:

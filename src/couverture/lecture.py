@@ -177,14 +177,24 @@ def variables_du_contrat(contrat_id: str) -> set[str] | None:
 
 
 def extraire_faits_regles(sinistre: str, llm: LLM, decideur=None, variables: set[str] | None = None,
-                          exemples=None, verifier: bool = True, llm_socle: LLM | None = None) -> tuple[dict, list[str]]:
+                          exemples=None, verifier: bool = True, llm_socle: LLM | None = None,
+                          suivi=None, llm_verification: LLM | None = None) -> tuple[dict, list[str]]:
     """Les faits lus par le modèle, et les écarts au vocabulaire (retirés). Deux temps (le socle, puis les
     questions de cet événement), puis la vérification fait par fait (`verifier=False` : sans, pour les tests).
     `decideur(faits) -> dict` (le moteur) arbitre la vérification (7.44).
     `variables` : celles du contrat (le socle est toujours lu) ; None : tout le vocabulaire.
     `exemples(evenement=None) -> [exemple]` : des déclarations proches et leurs faits, montrés au socle puis aux
     détails (ceux du même événement) (7.108). None : pas d'exemples.
-    `llm_socle` : un autre modèle pour le seul temps 1 (7.118) ; None : le même."""
+    `llm_socle` : un autre modèle pour le seul temps 1 (7.118) ; None : le même.
+    `llm_verification` : un autre modèle pour vérifier les faits lus (7.136) ; None : le même.
+    `suivi(etape, detail=None)` : appelé au début de chaque étape (sans détail), puis à sa fin avec ce qu'elle a
+    donné, en une phrase : pour montrer l'analyse pendant qu'elle se fait (7.134). None : rien."""
+    dire = suivi or (lambda etape, detail=None: None)
+
+    def en_clair(faits: dict) -> str:
+        return " ; ".join(f"{v.replace('_', ' ')} : {', '.join(str(e).replace('_', ' ') for e in (x if isinstance(x, list) else [x]))}"
+                          for v, x in faits.items() if x not in (None, "", []))
+
     from .exemples import bloc
 
     voc = prolog.vocabulaire()
@@ -196,13 +206,16 @@ def extraire_faits_regles(sinistre: str, llm: LLM, decideur=None, variables: set
     # Pas d'exemples au socle (7.116) : Small y recopiait les biens et les événements des exemples (le congélateur
     # d'un exemple ajoutait des denrées, la chaudière d'un autre l'assistance), et le socle n'est pas vérifié. Au
     # temps 2, chaque fait recopié passe par la vérification.
+    dire("socle")
     lus = _lire(llm_socle or llm, SYSTEME_LECTURE_SOCLE, {v: voc[v] for v in SOCLE}, declaration)
     # L'événement précisé avant de choisir les questions du temps 2 : un « accident » sur un miroir est un bris
     # (7.86), et c'est pour le bris qu'on demande si le miroir était posé (7.113). Précisé après, trop tard : le
     # temps 2 posait les questions de l'« accident », qui n'en a pas.
     lus = preciser(lus, voc)[0]
+    dire("socle", en_clair(lus) or "rien de reconnu dans la déclaration")
     evenements = [str(e) for e in (lus.get("evenement") or []) if str(e) in voc["evenement"]["valeurs"]]
     details = variables_du_temps_2(voc, evenements, lus)
+    dire("details")
     if details:
         etabli = "; ".join(f"{v} = {'/'.join(map(str, x)) if isinstance(x, list) else x}"
                            for v, x in lus.items() if x not in (None, "", []))
@@ -210,9 +223,15 @@ def extraire_faits_regles(sinistre: str, llm: LLM, decideur=None, variables: set
         lus |= {v: x for v, x in _lire(llm, SYSTEME_LECTURE_DETAILS, details,
                                        f"{ex_details}## Déjà établi\n{etabli or 'rien'}\n\n{declaration}").items()
                 if v not in SOCLE}
+    lus_details = {v: x for v, x in lus.items() if v not in SOCLE}
+    dire("details", en_clair(lus_details) or "aucun détail dit dans la déclaration")
     if not verifier:
         return au_vocabulaire(lus, voc)
-    lus_verifies, retraits = verifier_details(sinistre, lus, llm, voc)
+    dire("verification")
+    lus_verifies, retraits = verifier_details(sinistre, lus, llm_verification or llm, voc)
+    non_dits = [r.split(" : ")[0].replace("_", " ") for r in retraits if "non dit" in r]
+    dire("verification", ("retiré, car non dit dans la déclaration : " + " ; ".join(non_dits)) if non_dits
+         else "chaque fait est bien dans la déclaration")
     faits, ecarts = au_vocabulaire(lus_verifies, voc)
     if decideur is not None and any("non dit" in r for r in retraits):
         # Un doute ne doit jamais faire couvrir : si retirer les faits « non dits » fait passer la décision à

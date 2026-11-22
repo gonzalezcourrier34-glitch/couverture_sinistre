@@ -43,6 +43,7 @@ En service : `lecture-socle` v2, `lecture-details` v3, `verification-faits` v3, 
 | `redaction-regles` | v12 | 20 nov. 2026 | Un article d'exclusions générales, sans garantie, vise tout le contrat (7.88) |
 | `lecture-socle`, `lecture-details` | v1 | 18 nov. 2026 | La lecture v4 coupée en deux temps : l'événement, le bien et le lieu, puis les seules questions de cet événement (7.38) |
 | `lecture-socle`, `lecture-details` | v2 | 18 nov. 2026 | Chaque variable propose d'abord la valeur « inconnu » : le schéma poussait à remplir (7.40) |
+| `lecture-socle` | v3 | 21 nov. 2026 | Une règle de plus pour un cas (le piéton renversé à vélo lu « heurt ») ; **retirée le jour même**, retour à la v2 : une rustine, pas une règle (7.133) |
 | `lecture-details` | v3 | 21 nov. 2026 | Un cas particulier de moins : la phrase sur le vol sur la personne est retirée, l'aide du vocabulaire et 6 exemples de la banque le disent (7.120) |
 | `lecture-details` | v4 | 21 nov. 2026 | La phrase sur les flammes et l'embrasement retirée ; **retirée le jour même**, retour à la v3 : sans elle, une poêle en feu est lue « chaleur sans feu » chez D (7.120) |
 | `verification-faits` | v1 | 18 nov. 2026 | Chaque fait lu soumis au modèle comme une affirmation ; un fait « non dit » redevient inconnu (7.43) |

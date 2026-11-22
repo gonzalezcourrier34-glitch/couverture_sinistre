@@ -79,3 +79,11 @@ export interface Etape {
     texte: string;
     reponse: Decision;
 }
+
+/** Un message du suivi d'une analyse : une étape qui commence (sans détail), qui finit (avec), la fin, ou une erreur. */
+export interface Suivi {
+    etape: string;
+    detail?: string;
+    reponse?: Decision;
+    code?: number;
+}
