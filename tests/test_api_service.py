@@ -58,6 +58,7 @@ def test_decision_couverte_avec_citation(base, oracle):
     _, r = service.decider(base, CONTRAT, faits, oracle)
     assert r["decision"] == "COUVERT" and r["citations"] and r["mode"].startswith("regles:aucun")
     assert r["faits"]["origine_rc"] == "personne"
+    assert {"variable": "evenement", "libelle": "Événement", "valeur": "responsabilité civile"} == r["faits_affiches"][0]
 
 
 def test_incertain_puis_reponse_du_client(base, oracle):
@@ -66,6 +67,7 @@ def test_incertain_puis_reponse_du_client(base, oracle):
     assert r["decision"] == "INCERTAIN"
     fermeture = next(q for q in r["a_preciser"] if q["variable"] == "fermeture")
     assert fermeture["nature"] == "question" and "cadenas" in fermeture["valeurs"]
+    assert fermeture["libelles"]["cle"] == "clé" and set(fermeture["libelles"]) == set(fermeture["valeurs"])
     _, r2 = service.decider(base, CONTRAT, r["faits"] | {"fermeture": "cadenas"}, oracle)
     assert r2["decision"] == "NON_COUVERT"
 

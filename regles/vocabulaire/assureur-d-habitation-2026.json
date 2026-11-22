@@ -2,6 +2,7 @@
   "_description": "Variables que seules les règles de ce contrat emploient (regles/assureur-d-habitation-2026.pl). Même format que commun.json. Rangé par `couverture regles --ranger` : une variable qu'un autre contrat se met à employer passe dans commun.json.",
   "variables": {
     "option_veranda": {
+      "libelle": "Garantie « véranda » souscrite",
       "valeurs": [
         "oui",
         "non"
@@ -16,6 +17,7 @@
       ]
     },
     "pack_piscine": {
+      "libelle": "Pack Piscine souscrit",
       "valeurs": [
         "oui",
         "non"
@@ -30,6 +32,7 @@
       ]
     },
     "pack_jardin": {
+      "libelle": "Pack Jardin souscrit",
       "valeurs": [
         "oui",
         "non"
@@ -44,6 +47,7 @@
       ]
     },
     "local_inoccupe_12_mois": {
+      "libelle": "Locaux inoccupés depuis plus de 12 mois",
       "valeurs": [
         "oui",
         "non"
@@ -58,6 +62,7 @@
       ]
     },
     "option_objets_valeur": {
+      "libelle": "Garantie « objets de valeur » souscrite",
       "valeurs": [
         "oui",
         "non"
@@ -72,6 +77,7 @@
       ]
     },
     "participation_rixe": {
+      "libelle": "Participation à une rixe",
       "valeurs": [
         "oui",
         "non"
@@ -86,6 +92,7 @@
       ]
     },
     "legitime_defense": {
+      "libelle": "Légitime défense",
       "valeurs": [
         "oui",
         "non"
@@ -100,6 +107,7 @@
       ]
     },
     "cause_guerre": {
+      "libelle": "Guerre",
       "valeurs": [
         "oui",
         "non"
@@ -114,6 +122,7 @@
       ]
     },
     "vehicule_identifie": {
+      "libelle": "Véhicule identifié",
       "valeurs": [
         "oui",
         "non"
@@ -128,6 +137,7 @@
       ]
     },
     "cheminee_ouverte": {
+      "libelle": "Fumée d'une cheminée à feu ouvert",
       "valeurs": [
         "oui",
         "non"
@@ -142,6 +152,7 @@
       ]
     },
     "vent_100_kmh": {
+      "libelle": "Vent de plus de 100 km/h",
       "valeurs": [
         "oui",
         "non"
@@ -156,6 +167,7 @@
       ]
     },
     "neige_dommages_voisins": {
+      "libelle": "Autres dégâts de la neige dans le voisinage",
       "valeurs": [
         "oui",
         "non"
@@ -170,6 +182,7 @@
       ]
     },
     "certificat_meteo": {
+      "libelle": "Certificat de la station météo",
       "valeurs": [
         "oui",
         "non"
@@ -184,6 +197,7 @@
       ]
     },
     "canalisation_enterree": {
+      "libelle": "Canalisation enterrée",
       "valeurs": [
         "oui",
         "non"
@@ -198,6 +212,7 @@
       ]
     },
     "batiment_moins_10_ans": {
+      "libelle": "Construction de moins de dix ans",
       "valeurs": [
         "oui",
         "non"
@@ -212,6 +227,7 @@
       ]
     },
     "acces_voleur": {
+      "libelle": "Mode d'entrée du voleur",
       "valeurs": [
         "escalade",
         "menaces",
@@ -219,6 +235,11 @@
         "fausse_qualite",
         "sans_effraction"
       ],
+      "libelles": {
+        "cles_volees": "clés volées",
+        "fausse_qualite": "fausse qualité",
+        "sans_effraction": "sans effraction"
+      },
       "question": "Comment le voleur ou l'auteur est-il entré (hors effraction) ?",
       "aide": {
         "escalade": "par escalade : mur, balcon, fenêtre en hauteur",
@@ -238,6 +259,7 @@
       }
     },
     "cles_deposees_exterieur": {
+      "libelle": "Clés laissées dehors",
       "valeurs": [
         "oui",
         "non"
@@ -253,6 +275,7 @@
       ]
     },
     "arrete_catnat_30j": {
+      "libelle": "Arrêté de catastrophe naturelle et déclaration dans les 30 jours",
       "valeurs": [
         "oui",
         "non"
@@ -267,10 +290,14 @@
       ]
     },
     "dommage_tiers": {
+      "libelle": "Nature du dommage causé",
       "valeurs": [
         "corporel",
         "materiel"
       ],
+      "libelles": {
+        "materiel": "matériel"
+      },
       "question": "Le dommage causé est-il corporel (une blessure) ou matériel (un bien abîmé) ?",
       "aide": {
         "corporel": "une personne blessée",

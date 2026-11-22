@@ -401,9 +401,9 @@ def test_clauses_groupees_sans_swipl():
 
 def test_faits_hors_sujet_retires():
     lus = {"evenement": ["incendie"], "bien": ["mobilier"], "cause_eau": "fuite_installation",
-           "type_dommage": "bris", "flammes": "oui", "absence": "oui"}
+           "type_dommage": "bris", "flammes": "oui", "auteur": "tiers"}
     gardes, retires = prolog.filtrer_faits(lus)
-    assert gardes == {"evenement": ["incendie"], "bien": ["mobilier"], "flammes": "oui", "absence": "oui"}
+    assert gardes == {"evenement": ["incendie"], "bien": ["mobilier"], "flammes": "oui", "auteur": "tiers"}
     assert len(retires) == 2 and all("hors sujet" in r for r in retires)
     assert prolog.filtrer_faits({"bien": ["velo"], "cause_eau": "gel"})[1] == [], "sans événement lu, on ne juge pas"
     assert prolog.filtrer_faits({"evenement": ["vol", "bris"], "effraction": "oui", "vitre_placee": "oui"})[1] == []
@@ -981,3 +981,35 @@ def test_l_exploration_ne_reintroduit_pas_une_reserve_ecartee():
         {"variable": "travaux_vitres", "effet": "possible", "issues": []}]}
     lignes, _ = chaine.questions_explorees(exploration, ["travaux_vitres"], "")
     assert lignes == [lecture.question("travaux_vitres")]
+
+
+def test_libelles_du_vocabulaire():
+    """Chaque variable a un nom à montrer, et aucun libellé de valeur ne vise une valeur qui n'existe pas (7.137)."""
+    voc = prolog.vocabulaire()
+    assert [v for v, d in voc.items() if not d.get("libelle")] == []
+    assert [(v, x) for v, d in voc.items() for x in d.get("libelles", {}) if x not in d["valeurs"]] == []
+    assert prolog.libelle("evenement", voc) == "Événement"
+    assert prolog.libelle("lieu", voc, "voie_publique") == "voie publique"
+    assert prolog.libelle("inconnue", voc) == "inconnue" and prolog.libelle("lieu", voc, "ailleurs_encore") == "ailleurs encore"
+
+
+def test_faits_affiches_socle_en_tete():
+    lignes = prolog.faits_affiches({"victime": "tiers", "lieu": ["voie_publique"], "evenement": ["responsabilite"],
+                                    "origine_rc": "velo_trottinette"})
+    assert [(x["libelle"], x["valeur"]) for x in lignes] == [
+        ("Événement", "responsabilité civile"), ("Lieu", "voie publique"),
+        ("À l'origine du dommage", "vélo ou trottinette"), ("Victime", "tiers")]
+
+
+def test_variable_sans_evenements_seulement_si_une_regle_vaut_pour_tout():
+    """Une variable sans « pour » est lue pour chaque sinistre : ce n'est permis que si une règle qui vise toutes
+    les garanties (`tous`) l'emploie. « absence », employée pour le seul vol, était lue pour un accident de vélo
+    et s'affichait dans les faits (7.138)."""
+    import re
+    generales = set()
+    for contrat in prolog.contrats_regles():
+        texte = prolog.fichier_regles(contrat).read_text(encoding="utf-8")
+        for regle in re.findall(r"^[a-z_]+\(tous,.*?\)\.\s*$", texte, flags=re.M | re.S):
+            generales |= set(re.findall(r"\bf\(\s*([a-z][a-z0-9_]*)\s*,", regle))
+    sans = [v for v, d in prolog.vocabulaire().items() if v not in lecture.SOCLE and not d.get("pour")]
+    assert [v for v in sans if v not in generales] == []

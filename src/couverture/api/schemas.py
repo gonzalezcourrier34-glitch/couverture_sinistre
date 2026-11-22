@@ -51,7 +51,16 @@ class APreciser(BaseModel):
     nature: Literal["question", "reserve"]
     question: str
     valeurs: list[str]
+    libelles: dict[str, str] = Field(default_factory=dict)
     aide: dict[str, str] = Field(default_factory=dict)
+
+
+class FaitAffiche(BaseModel):
+    """Un fait tel qu'on le montre : « Lieu : voie publique »."""
+
+    variable: str
+    libelle: str
+    valeur: str
 
 
 class Citation(BaseModel):
@@ -81,6 +90,8 @@ class Decision(BaseModel):
         Les passages du contrat qui fondent la décision, vérifiés mot pour mot.
     faits : dict
         Les faits retenus, à renvoyer à `POST /api/v1/decisions` avec les réponses aux questions.
+    faits_affiches : list[FaitAffiche]
+        Les mêmes faits, avec les libellés du vocabulaire, pour l'affichage.
     """
 
     contrat_id: str | None
@@ -92,6 +103,7 @@ class Decision(BaseModel):
     citations: list[Citation]
     limites: list[Limite]
     faits: dict[str, Any]
+    faits_affiches: list[FaitAffiche] = Field(default_factory=list)
     avertissements: list[str]
     raisonnement: list[str]
     mode: str

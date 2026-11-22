@@ -362,7 +362,10 @@ export class AppComponent implements OnInit {
         const reponses = this.reponses();
         const resume = Object.entries(reponses)
             .filter(([, v]) => !!v)
-            .map(([variable, valeur]) => `${lisible(variable)} : ${lisible(valeur)}`)
+            .map(([variable, valeur]) => {
+                const point = derniere.reponse.a_preciser.find((p) => p.variable === variable);
+                return `${point?.question ?? lisible(variable)} ${point?.libelles?.[valeur] ?? lisible(valeur)}`;
+            })
             .join(' ; ');
         this.lancer('Le moteur décide…');
         this.service.decider(contratId, fusionner(derniere.reponse.faits, reponses))

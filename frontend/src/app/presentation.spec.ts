@@ -13,6 +13,11 @@ describe('présentation des décisions', () => {
         expect(lignes.map((l) => l.variable)).toEqual(['evenement', 'bien', 'lieu', 'victime']);
     });
 
+    it('montre les libellés du vocabulaire quand l’API les donne', () => {
+        const lignes = lignesDeFaits({ lieu: ['voie_publique'] }, [{ variable: 'lieu', libelle: 'Lieu', valeur: 'voie publique' }]);
+        expect(lignes).toEqual([{ variable: 'Lieu', valeur: 'voie publique' }]);
+    });
+
     it('ajoute les réponses du client aux faits, sans les vides', () => {
         const faits = fusionner({ evenement: ['vol'], fermeture: 'aucune' }, { fermeture: 'cadenas', effraction: '' });
         expect(faits).toEqual({ evenement: ['vol'], fermeture: 'cadenas' });

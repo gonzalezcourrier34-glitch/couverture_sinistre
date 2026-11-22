@@ -2,6 +2,7 @@
   "_description": "Variables que seules les règles de ce contrat emploient (regles/assureur-b-habitation-2017.pl). Même format que commun.json. Rangé par `couverture regles --ranger` : une variable qu'un autre contrat se met à employer passe dans commun.json.",
   "variables": {
     "serrure_cylindre": {
+      "libelle": "Annexes fermées par une serrure à cylindre",
       "valeurs": [
         "oui",
         "non"
@@ -13,6 +14,7 @@
       ]
     },
     "travaux_construction": {
+      "libelle": "Bâtiment en construction ou rénovation",
       "valeurs": [
         "oui",
         "non"
@@ -29,6 +31,7 @@
       ]
     },
     "lien_causal_travaux": {
+      "libelle": "Travaux ayant contribué au vol",
       "valeurs": [
         "oui",
         "non"
@@ -44,6 +47,7 @@
       ]
     },
     "occupation_irreguliere": {
+      "libelle": "Occupation irrégulière des locaux",
       "valeurs": [
         "oui",
         "non"
@@ -55,6 +59,7 @@
       ]
     },
     "abus_confiance": {
+      "libelle": "Abus de confiance",
       "valeurs": [
         "oui",
         "non"
@@ -66,6 +71,7 @@
       ]
     },
     "confiance_assure": {
+      "libelle": "Biens confiés au concierge",
       "valeurs": [
         "oui",
         "non"
@@ -77,6 +83,7 @@
       ]
     },
     "option_incendie": {
+      "libelle": "Garantie « incendie » souscrite",
       "valeurs": [
         "oui",
         "non"
@@ -101,6 +108,7 @@
       ]
     },
     "choc_deux_corps_durs": {
+      "libelle": "Choc entre deux objets durs",
       "valeurs": [
         "oui",
         "non"
@@ -115,6 +123,7 @@
       ]
     },
     "batiment_endommage_prealablement": {
+      "libelle": "Bâtiment déjà endommagé par les intempéries",
       "valeurs": [
         "oui",
         "non"
@@ -129,6 +138,7 @@
       ]
     },
     "objet_fixe_exterieurement": {
+      "libelle": "Objet fixé à l'extérieur",
       "valeurs": [
         "oui",
         "non"
@@ -143,6 +153,7 @@
       ]
     },
     "piscine": {
+      "libelle": "Piscine",
       "valeurs": [
         "oui",
         "non"
@@ -157,6 +168,7 @@
       ]
     },
     "materiaux_legers_murs": {
+      "libelle": "Murs en matériaux légers",
       "valeurs": [
         "oui",
         "non"
@@ -171,6 +183,7 @@
       ]
     },
     "materiaux_legers_toiture": {
+      "libelle": "Toiture en matériaux légers",
       "valeurs": [
         "oui",
         "non"
@@ -185,6 +198,7 @@
       ]
     },
     "abri_fixe_sol": {
+      "libelle": "Auvent, car-port ou pergola solidement fixé",
       "valeurs": [
         "oui",
         "non"
@@ -199,6 +213,7 @@
       ]
     },
     "deformation_sans_perte_etancheite": {
+      "libelle": "Déformation touchant l'étanchéité",
       "valeurs": [
         "oui",
         "non"
@@ -213,6 +228,7 @@
       ]
     },
     "choc_thermique": {
+      "libelle": "Variation brutale de température",
       "valeurs": [
         "oui",
         "non"
@@ -227,6 +243,7 @@
       ]
     },
     "dommage_esthetique": {
+      "libelle": "Dommage purement esthétique",
       "valeurs": [
         "oui",
         "non"
@@ -241,6 +258,7 @@
       ]
     },
     "option_tempete": {
+      "libelle": "Garantie « tempête » souscrite",
       "valeurs": [
         "oui",
         "non"
@@ -255,6 +273,7 @@
       ]
     },
     "support_donnees_ou_logiciel": {
+      "libelle": "Supports de données ou logiciels",
       "valeurs": [
         "oui",
         "non"
@@ -269,6 +288,7 @@
       ]
     },
     "bien_marchandise": {
+      "libelle": "Appareil destiné à la vente",
       "valeurs": [
         "oui",
         "non"
@@ -283,6 +303,7 @@
       ]
     },
     "appareil_plus_15_ans": {
+      "libelle": "Appareil de plus de 15 ans",
       "valeurs": [
         "oui",
         "non"
@@ -297,6 +318,7 @@
       ]
     },
     "fonctionnement_defectueux": {
+      "libelle": "Fonctionnement défectueux",
       "valeurs": [
         "oui",
         "non"
@@ -313,6 +335,7 @@
       ]
     },
     "option_degats_electriques": {
+      "libelle": "Garantie « dégâts électriques » souscrite",
       "valeurs": [
         "oui",
         "non"
@@ -327,6 +350,7 @@
       ]
     },
     "installation_hydraulique_exterieure": {
+      "libelle": "Fuite d'une installation extérieure au bâtiment",
       "valeurs": [
         "oui",
         "non"
@@ -341,6 +365,7 @@
       ]
     },
     "option_degats_eaux": {
+      "libelle": "Garantie « dégâts des eaux » souscrite",
       "valeurs": [
         "oui",
         "non"
@@ -355,6 +380,7 @@
       ]
     },
     "option_bris_vitrages": {
+      "libelle": "Garantie « bris de vitrages » souscrite",
       "valeurs": [
         "oui",
         "non"
@@ -369,6 +395,7 @@
       ]
     },
     "vitrage_en_deplacement": {
+      "libelle": "Vitrage en cours de déplacement",
       "valeurs": [
         "oui",
         "non"
@@ -383,6 +410,7 @@
       ]
     },
     "cause_projection_debris": {
+      "libelle": "Projection de débris de vitrage",
       "valeurs": [
         "oui",
         "non"
@@ -397,6 +425,7 @@
       ]
     },
     "vehicule_vole": {
+      "libelle": "Véhicule volé",
       "valeurs": [
         "oui",
         "non"
@@ -411,6 +440,7 @@
       ]
     },
     "mise_en_exploitation_satisfaction": {
+      "libelle": "Alarme en bon fonctionnement depuis l'installation",
       "valeurs": [
         "oui",
         "non"
@@ -425,6 +455,7 @@
       ]
     },
     "vice_defaut_connu": {
+      "libelle": "Défaut connu avant la souscription",
       "valeurs": [
         "oui",
         "non"
@@ -440,6 +471,7 @@
       ]
     },
     "option_vol": {
+      "libelle": "Garantie « vol » souscrite",
       "valeurs": [
         "oui",
         "non"
@@ -454,12 +486,17 @@
       ]
     },
     "catastrophe": {
+      "libelle": "Phénomène naturel",
       "valeurs": [
         "tremblement_terre",
         "inondation",
         "ruissellement",
         "glissement_terrain"
       ],
+      "libelles": {
+        "tremblement_terre": "tremblement de terre",
+        "glissement_terrain": "glissement de terrain"
+      },
       "question": "Quel phénomène naturel a causé les dégâts ?",
       "aide": {
         "tremblement_terre": "séisme, tremblement de terre et ses répliques",
@@ -472,6 +509,7 @@
       ]
     },
     "option_tremblement_terre": {
+      "libelle": "Garantie « tremblement de terre » souscrite",
       "valeurs": [
         "oui",
         "non"
@@ -486,6 +524,7 @@
       ]
     },
     "fixe_a_demeure": {
+      "libelle": "Objet fixé à demeure",
       "valeurs": [
         "oui",
         "non"
@@ -500,6 +539,7 @@
       ]
     },
     "construction_facilement_deplacable": {
+      "libelle": "Construction facile à déplacer",
       "valeurs": [
         "oui",
         "non"
@@ -514,6 +554,7 @@
       ]
     },
     "option_pluies_inondations": {
+      "libelle": "Garantie « pluies et inondations » souscrite",
       "valeurs": [
         "oui",
         "non"
@@ -528,6 +569,7 @@
       ]
     },
     "dommages_dans_72h": {
+      "libelle": "Dommages dans les 72 heures",
       "valeurs": [
         "oui",
         "non"
@@ -542,6 +584,7 @@
       ]
     },
     "ouvertures_non_fermees": {
+      "libelle": "Eau entrée par des ouvertures non fermées",
       "valeurs": [
         "oui",
         "non"
@@ -556,6 +599,7 @@
       ]
     },
     "autorisation_gestion_eau_non_respectee": {
+      "libelle": "Autorisation de la gestion de l'eau respectée",
       "valeurs": [
         "oui",
         "non"
@@ -570,10 +614,15 @@
       ]
     },
     "duree_demenagement": {
+      "libelle": "Durée du déménagement",
       "valeurs": [
         "moins_90_jours",
         "plus_90_jours"
       ],
+      "libelles": {
+        "moins_90_jours": "moins de 90 jours",
+        "plus_90_jours": "plus de 90 jours"
+      },
       "question": "Le déménagement a-t-il commencé depuis moins de 90 jours ?",
       "aide": {
         "moins_90_jours": "oui, depuis moins de 90 jours",
@@ -584,10 +633,14 @@
       ]
     },
     "cause_pollution": {
+      "libelle": "Origine de la pollution",
       "valeurs": [
         "huile_minerale",
         "autre"
       ],
+      "libelles": {
+        "huile_minerale": "huile minérale"
+      },
       "question": "La pollution provient-elle d'un écoulement d'huile minérale ?",
       "aide": {
         "huile_minerale": "l'écoulement vient d'huile minérale, de mazout, de carburant",
@@ -598,6 +651,7 @@
       ]
     },
     "reglementation_pollution_respectee": {
+      "libelle": "Réglementation de dépollution respectée",
       "valeurs": [
         "oui",
         "non"
@@ -612,6 +666,7 @@
       ]
     },
     "option_pertes_indirectes": {
+      "libelle": "Garantie « pertes indirectes » souscrite",
       "valeurs": [
         "oui",
         "non"
@@ -626,6 +681,7 @@
       ]
     },
     "heures_service": {
+      "libelle": "Pendant les heures de service de l'employé",
       "valeurs": [
         "oui",
         "non"
@@ -640,6 +696,7 @@
       }
     },
     "contact_incandescent": {
+      "libelle": "Contact avec une braise ou un foyer",
       "valeurs": [
         "oui",
         "non"
@@ -659,6 +716,7 @@
       }
     },
     "option_rc_immeuble": {
+      "libelle": "Option responsabilité civile immeuble souscrite",
       "valeurs": [
         "oui",
         "non"
@@ -673,6 +731,7 @@
       ]
     },
     "option_rc_vie_privee": {
+      "libelle": "Option responsabilité civile vie privée souscrite",
       "valeurs": [
         "oui",
         "non"

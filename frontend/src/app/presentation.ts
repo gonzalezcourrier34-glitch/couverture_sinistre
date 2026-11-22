@@ -4,6 +4,7 @@ import {
     APreciser,
     Citation,
     DecisionValeur,
+    FaitAffiche,
     Faits
 } from './couverture.model';
 
@@ -30,10 +31,17 @@ export function lisible(
 }
 
 
-/** Les faits en lignes « variable : valeur(s) », le socle (événement, bien, lieu) d'abord. */
+/**
+ * Les faits en lignes « variable : valeur(s) », le socle (événement, bien, lieu) d'abord.
+ * Les libellés viennent de l'API (`faits_affiches`, tirés du vocabulaire) ; sans eux, des identifiants.
+ */
 export function lignesDeFaits(
-    faits: Faits
+    faits: Faits,
+    affiches?: FaitAffiche[]
 ): { variable: string; valeur: string }[] {
+    if (affiches?.length) {
+        return affiches.map((f) => ({ variable: f.libelle, valeur: f.valeur }));
+    }
     const ordre = ['evenement', 'bien', 'lieu'];
     const variables = Object.keys(faits).sort(
         (a, b) => (ordre.indexOf(a) + 1 || 99) - (ordre.indexOf(b) + 1 || 99) || a.localeCompare(b)

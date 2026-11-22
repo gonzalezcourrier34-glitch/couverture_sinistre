@@ -2,12 +2,16 @@
   "_description": "Variables que seules les règles de ce contrat emploient (regles/assureur-a-habitation-2025.pl). Même format que commun.json. Rangé par `couverture regles --ranger` : une variable qu'un autre contrat se met à employer passe dans commun.json.",
   "variables": {
     "fermeture": {
+      "libelle": "Fermeture du local",
       "valeurs": [
         "serrure",
         "cle",
         "cadenas",
         "aucune"
       ],
+      "libelles": {
+        "cle": "clé"
+      },
       "question": "Comment le local était-il fermé ?",
       "pour": [
         "vol",
@@ -15,6 +19,7 @@
       ]
     },
     "simple_disparition": {
+      "libelle": "Simple disparition",
       "valeurs": [
         "oui",
         "non"
@@ -29,6 +34,7 @@
       }
     },
     "depot_moins_30j": {
+      "libelle": "Chez le réparateur depuis 30 jours au plus",
       "valeurs": [
         "oui",
         "non"
@@ -39,13 +45,19 @@
       ]
     },
     "absence": {
+      "libelle": "Assuré absent",
       "valeurs": [
         "oui",
         "non"
       ],
-      "question": "Étiez-vous absent au moment des faits ?"
+      "question": "Étiez-vous absent au moment des faits ?",
+      "pour": [
+        "vol",
+        "vandalisme"
+      ]
     },
     "portes_fermees": {
+      "libelle": "Portes extérieures fermées à clé",
       "valeurs": [
         "oui",
         "non"
@@ -57,6 +69,7 @@
       ]
     },
     "fenetres_fermees": {
+      "libelle": "Fenêtres fermées",
       "valeurs": [
         "oui",
         "non"
@@ -68,6 +81,7 @@
       ]
     },
     "cles_a_proximite": {
+      "libelle": "Clés laissées à proximité",
       "valeurs": [
         "oui",
         "non"
@@ -79,6 +93,7 @@
       ]
     },
     "prevention_gel": {
+      "libelle": "Précautions contre le gel",
       "valeurs": [
         "oui",
         "non"
@@ -90,17 +105,22 @@
       ]
     },
     "travaux_vitres": {
+      "libelle": "Travaux sur les vitres",
       "valeurs": [
         "nettoyage",
         "autres_que_nettoyage",
         "aucun"
       ],
+      "libelles": {
+        "autres_que_nettoyage": "autres que nettoyage"
+      },
       "question": "Des travaux (autres que nettoyage) sont-ils effectués sur les vitres ?",
       "pour": [
         "bris"
       ]
     },
     "merule_apres_prise_effet": {
+      "libelle": "Mérule apparue après la prise d'effet",
       "valeurs": [
         "oui",
         "non"
@@ -115,6 +135,7 @@
       ]
     },
     "residence_principale": {
+      "libelle": "Logement principal",
       "valeurs": [
         "oui",
         "non"
@@ -130,6 +151,7 @@
       ]
     },
     "reparation_loi_particuliere": {
+      "libelle": "Réparation organisée par une loi particulière",
       "valeurs": [
         "oui",
         "non"
@@ -144,6 +166,7 @@
       ]
     },
     "batiment_construit_plus_18_mois_apres_classement": {
+      "libelle": "Bâtiment construit plus de 18 mois après le classement de la zone",
       "valeurs": [
         "oui",
         "non"
@@ -158,6 +181,7 @@
       ]
     },
     "extension_sol_avant_classement": {
+      "libelle": "Extension d'un bien antérieur au classement",
       "valeurs": [
         "oui",
         "non"
@@ -172,6 +196,7 @@
       ]
     },
     "contenu_moins_10cm_sol": {
+      "libelle": "Contenu à moins de 10 cm du sol",
       "valeurs": [
         "oui",
         "non"
@@ -186,6 +211,7 @@
       ]
     },
     "periode_gel": {
+      "libelle": "Période de gel",
       "valeurs": [
         "oui",
         "non"
@@ -201,6 +227,7 @@
       ]
     },
     "controle_citerne_conforme": {
+      "libelle": "Citerne contrôlée",
       "valeurs": [
         "oui",
         "non"
@@ -215,6 +242,7 @@
       ]
     },
     "batiment_vacant_90j": {
+      "libelle": "Bâtiment inoccupé depuis plus de 90 jours",
       "valeurs": [
         "oui",
         "non"
@@ -230,6 +258,7 @@
       ]
     },
     "dispositifs_antivol_installes": {
+      "libelle": "Protections antivol installées et utilisées",
       "valeurs": [
         "oui",
         "non"
@@ -245,6 +274,7 @@
       ]
     },
     "materiel_jardin_range": {
+      "libelle": "Matériel de jardin rangé sous clé",
       "valeurs": [
         "oui",
         "non"
@@ -260,6 +290,7 @@
       ]
     },
     "couverture_rc_locative": {
+      "libelle": "Responsabilité locative souscrite",
       "valeurs": [
         "oui",
         "non"
@@ -274,6 +305,7 @@
       ]
     },
     "detenteur_vehicule": {
+      "libelle": "Assuré détenteur du véhicule",
       "valeurs": [
         "oui",
         "non"
@@ -293,6 +325,7 @@
       }
     },
     "occasion_fete_familiale": {
+      "libelle": "Fête de famille",
       "valeurs": [
         "oui",
         "non"
@@ -307,6 +340,7 @@
       ]
     },
     "pret_ou_location_habitation": {
+      "libelle": "Habitation prêtée ou louée à un proche",
       "valeurs": [
         "oui",
         "non"
@@ -321,6 +355,7 @@
       ]
     },
     "malveillance_auteur": {
+      "libelle": "Malveillance de l'auteur",
       "valeurs": [
         "oui",
         "non"
@@ -335,6 +370,7 @@
       ]
     },
     "assurance_responsabilite_tiers": {
+      "libelle": "Proche assuré en responsabilité civile",
       "valeurs": [
         "oui",
         "non"
@@ -349,6 +385,7 @@
       ]
     },
     "laisse_sans_surveillance": {
+      "libelle": "Objet laissé sans surveillance",
       "valeurs": [
         "oui",
         "non"
@@ -363,6 +400,7 @@
       ]
     },
     "habitacle_ferme": {
+      "libelle": "Habitacle fermé",
       "valeurs": [
         "oui",
         "non"
@@ -382,6 +420,7 @@
       }
     },
     "vehicule_voie_publique": {
+      "libelle": "Véhicule sur la voie publique",
       "valeurs": [
         "oui",
         "non"
@@ -401,11 +440,16 @@
       }
     },
     "periode_horaire": {
+      "libelle": "Période de stationnement",
       "valeurs": [
         "nuit_22h_7h",
         "jour_7h_22h",
         "autre"
       ],
+      "libelles": {
+        "nuit_22h_7h": "la nuit, de 22 h à 7 h",
+        "jour_7h_22h": "le jour, de 7 h à 22 h"
+      },
       "question": "À quelle période horaire le véhicule était-il stationné sur la voie publique ?",
       "aide": {
         "nuit_22h_7h": "entre 22 heures et 7 heures du matin",
@@ -422,11 +466,16 @@
       }
     },
     "emmenagement": {
+      "libelle": "Emménagement récent",
       "valeurs": [
         "non",
         "moins_30_jours",
         "plus_30_jours"
       ],
+      "libelles": {
+        "moins_30_jours": "depuis moins de 30 jours",
+        "plus_30_jours": "depuis plus de 30 jours"
+      },
       "question": "Avez-vous déménagé récemment dans le logement sinistré ? Depuis combien de temps ?",
       "aide": {
         "non": "pas de déménagement récent",
@@ -458,6 +507,7 @@
       ]
     },
     "demenagement_signale": {
+      "libelle": "Déménagement signalé dans les 30 jours",
       "valeurs": [
         "oui",
         "non"

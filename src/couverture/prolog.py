@@ -72,6 +72,29 @@ def vocabulaire(dossier: Path | None = None) -> dict:
     return voc
 
 
+def libelle(variable: str, voc: dict, valeur: str | None = None) -> str:
+    """Le nom à montrer d'une variable, ou d'une de ses valeurs : « libelle » et « libelles » du vocabulaire.
+    Sans libellé écrit, l'identifiant sans ses tirets bas (« voie_publique » → « voie publique »)."""
+    d = voc.get(variable, {})
+    if valeur is None:
+        return d.get("libelle") or variable.replace("_", " ")
+    return (d.get("libelles") or {}).get(valeur) or str(valeur).replace("_", " ")
+
+
+SOCLE_AFFICHE = ["evenement", "bien", "lieu"]
+
+
+def faits_affiches(faits: dict, voc: dict | None = None) -> list[dict[str, str]]:
+    """Les faits tels qu'on les montre : le libellé de la variable et de ses valeurs (`libelle`), le socle
+    (événement, bien, lieu) d'abord. L'écran et la fiche affichent cette liste ; `faits` reste la forme que
+    `/decisions` accepte."""
+    voc = voc if voc is not None else vocabulaire()
+    cles = sorted(faits, key=lambda v: (SOCLE_AFFICHE.index(v) if v in SOCLE_AFFICHE else len(SOCLE_AFFICHE), v))
+    return [{"variable": v, "libelle": libelle(v, voc),
+             "valeur": ", ".join(libelle(v, voc, x) for x in (faits[v] if isinstance(faits[v], list) else [faits[v]]))}
+            for v in cles]
+
+
 def contrats_regles() -> list[str]:
     return sorted(f.stem for f in DOSSIER.glob("*.pl") if f != MOTEUR)
 

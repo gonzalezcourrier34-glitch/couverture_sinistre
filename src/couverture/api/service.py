@@ -74,7 +74,8 @@ def a_preciser(d: dict, voc: dict | None = None, faits: dict | None = None) -> l
     un bouton, et `/decisions` l'ignorerait ; elle reste dans `questions`, en phrase (7.125)."""
     voc = voc if voc is not None else prolog.vocabulaire()
     return [{"variable": v, "nature": n, "question": voc.get(v, {}).get("question", f"Préciser : {v}"),
-             "valeurs": valeurs_proposees(v, voc, faits or {}), "aide": voc.get(v, {}).get("aide", {})}
+             "valeurs": (valeurs := valeurs_proposees(v, voc, faits or {})),
+             "libelles": {x: prolog.libelle(v, voc, x) for x in valeurs}, "aide": voc.get(v, {}).get("aide", {})}
             for v, n in chaine.points_a_preciser(d, voc, faits) if v in voc]
 
 
@@ -105,6 +106,7 @@ def reponse(r: Resultat, d: dict | None = None) -> dict[str, Any]:
         "limites": [{"clause_id": c.clause_id, "extrait": c.extrait, "montant": c.enonce}
                     for c in v.conditions if c.nature == "limite"],
         "faits": faits_depuis(r.faits),
+        "faits_affiches": prolog.faits_affiches(faits_depuis(r.faits)),
         "avertissements": v.avertissements,
         "raisonnement": v.raisonnement,
         "mode": v.mode,
@@ -133,6 +135,7 @@ def analyser(pipeline, sinistre: str, suivi=None) -> tuple[Resultat, dict[str, A
         d = d | {"retenues": [{"questions": doutes}] + d.get("retenues", [])}
     sortie = reponse(r, d)
     sortie["faits"] = faits
+    sortie["faits_affiches"] = prolog.faits_affiches(faits)
     return r, sortie
 
 

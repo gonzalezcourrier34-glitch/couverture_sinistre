@@ -23,6 +23,8 @@ from reportlab.lib.units import mm
 from reportlab.platypus import (HRFlowable, KeepTogether, PageBreak, Paragraph, SimpleDocTemplate, Spacer, Table,
                                 TableStyle)
 
+from . import prolog
+
 PRIMAIRE, NUIT = colors.HexColor("#2957c8"), colors.HexColor("#041d58")
 DOUX, PLUME, FOND = colors.HexColor("#454f5f"), colors.HexColor("#67768e"), colors.HexColor("#f8f9fc")
 BORD = colors.HexColor("#eaeef6")
@@ -55,10 +57,6 @@ def propre(texte: object) -> str:
     for a, b in REMPLACEMENTS.items():
         t = t.replace(a, b)
     return escape(t.encode("cp1252", "replace").decode("cp1252"))
-
-
-def lisible(identifiant: str) -> str:
-    return str(identifiant).replace("_", " ")
 
 
 def _puces(lignes: list[str], style: ParagraphStyle = TEXTE) -> list:
@@ -129,14 +127,11 @@ def fiche_pdf(sinistre: str, reponse: dict, contrat: dict | None = None, date: d
                                   ("BOTTOMPADDING", (0, 0), (-1, -1), 7)]))
     blocs += [pastille, Spacer(1, 6), Paragraph(propre(reponse.get("justification", "")), TEXTE)]
 
-    faits = reponse.get("faits") or {}
+    # Une réponse d'avant les libellés n'a que `faits` : les libellés se recalculent du vocabulaire.
+    faits = reponse.get("faits_affiches") or prolog.faits_affiches(reponse.get("faits") or {})
     if faits:
-        ordre = ["evenement", "bien", "lieu"]
-        cles = sorted(faits, key=lambda v: (ordre.index(v) if v in ordre else 99, v))
         ligne = " &nbsp;·&nbsp; ".join(
-            f"<font color='#67768e'>{propre(lisible(v))}</font> "
-            f"{propre(', '.join(lisible(x) for x in (faits[v] if isinstance(faits[v], list) else [faits[v]])))}"
-            for v in cles)
+            f"<font color='#67768e'>{propre(f['libelle'])} :</font> {propre(f['valeur'])}" for f in faits)
         blocs += [Paragraph("FAITS RETENUS", RUBRIQUE), Paragraph(ligne, TEXTE)]
 
     points = reponse.get("a_preciser") or []

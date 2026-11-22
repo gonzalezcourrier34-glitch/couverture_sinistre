@@ -5,11 +5,11 @@
 {"sinistre_id": "velo-05", "faits": {"evenement": "vol", "bien": ["velo"], "lieu": ["logement"], "effraction": "oui", "vol_sur_personne": "non"}}
 {"sinistre_id": "velo-06", "faits": {"evenement": "vol", "bien": ["velo"], "lieu": ["voie_publique"], "fermeture": "cadenas", "vol_sur_personne": "non", "violence": "non"}}
 {"sinistre_id": "velo-07", "faits": {"evenement": "vol", "bien": ["velo"], "lieu": ["garage"], "fermeture": "cle", "effraction": "oui", "vol_sur_personne": "non"}}
-{"sinistre_id": "bougie-01", "faits": {"evenement": "autre", "bien": ["mobilier_jardin"], "lieu": ["jardin"], "flammes": "non", "embrasement": "non", "absence": "oui"}}
+{"sinistre_id": "bougie-01", "faits": {"evenement": "autre", "bien": ["mobilier_jardin"], "lieu": ["jardin"], "flammes": "non", "embrasement": "non"}}
 {"sinistre_id": "bougie-02", "faits": {"evenement": "incendie", "bien": ["mobilier"], "lieu": ["logement"], "flammes": "oui", "embrasement": "oui"}}
 {"sinistre_id": "bougie-03", "faits": {"evenement": "autre", "bien": ["mobilier"], "lieu": ["logement"], "flammes": "non", "embrasement": "non"}}
-{"sinistre_id": "bougie-04", "faits": {"evenement": "incendie", "bien": ["mobilier_jardin"], "lieu": ["jardin"], "flammes": "oui", "embrasement": "oui", "absence": "oui"}}
-{"sinistre_id": "bougie-05", "faits": {"evenement": "incendie", "bien": ["element_batiment", "mobilier"], "lieu": ["terrasse", "logement"], "flammes": "oui", "embrasement": "oui", "absence": "oui"}}
+{"sinistre_id": "bougie-04", "faits": {"evenement": "incendie", "bien": ["mobilier_jardin"], "lieu": ["jardin"], "flammes": "oui", "embrasement": "oui"}}
+{"sinistre_id": "bougie-05", "faits": {"evenement": "incendie", "bien": ["element_batiment", "mobilier"], "lieu": ["terrasse", "logement"], "flammes": "oui", "embrasement": "oui"}}
 {"sinistre_id": "autre-01", "faits": {"evenement": "vol", "bien": ["electronique"], "lieu": ["voie_publique"], "vol_sur_personne": "oui", "violence": "oui"}}
 {"sinistre_id": "autre-02", "faits": {"evenement": "degat_eaux", "bien": ["element_batiment", "mobilier", "canalisation"], "lieu": ["logement"], "cause_eau": "fuite_installation"}}
 {"sinistre_id": "val-01", "faits": {"evenement": "vol", "bien": ["electronique"], "lieu": ["logement"], "absence": "oui", "portes_fermees": "oui", "effraction": "non", "vol_sur_personne": "non", "fenetres_fermees": "non"}}
@@ -21,7 +21,7 @@
 {"sinistre_id": "val-07", "faits": {"evenement": "vol", "bien": ["valeurs", "electronique"], "lieu": ["voie_publique"], "vol_sur_personne": "oui", "violence": "oui"}}
 {"sinistre_id": "val-08", "faits": {"evenement": "incendie", "bien": ["element_batiment", "electronique"], "lieu": ["logement"], "flammes": "oui", "embrasement": "oui"}}
 {"sinistre_id": "val-09", "faits": {"evenement": "autre", "bien": ["objet_divers"], "lieu": ["logement"], "flammes": "non", "embrasement": "non"}}
-{"sinistre_id": "val-10", "faits": {"evenement": "degat_eaux", "bien": ["canalisation", "element_batiment"], "lieu": ["logement"], "cause_eau": "gel", "absence": "oui", "prevention_gel": "non"}}
+{"sinistre_id": "val-10", "faits": {"evenement": "degat_eaux", "bien": ["canalisation", "element_batiment"], "lieu": ["logement"], "cause_eau": "gel", "prevention_gel": "non"}}
 {"sinistre_id": "val-11", "faits": {"evenement": "degat_eaux", "bien": ["element_batiment"], "lieu": ["logement"], "cause_eau": "infiltration_exterieure"}}
 {"sinistre_id": "val-12", "faits": {"evenement": "degat_eaux", "bien": ["element_batiment"], "lieu": ["logement"], "cause_eau": "fuite_installation"}}
 {"sinistre_id": "val-13", "faits": {"evenement": ["tempete", "degat_eaux"], "bien": ["element_batiment", "mobilier"], "lieu": ["logement"], "cause_eau": "infiltration_toiture"}}
@@ -39,7 +39,7 @@
 {"sinistre_id": "red-b06", "faits": {"evenement": ["bris"], "bien": ["vitre"], "lieu": ["logement"], "type_dommage": "rayure_ou_ecaillement"}}
 {"sinistre_id": "g-l01", "faits": {"evenement": ["vol"], "bien": ["velo"], "lieu": ["parties_communes"], "fermeture": "aucune"}}
 {"sinistre_id": "g-l02", "faits": {"evenement": ["vol"], "bien": ["electronique", "velo"], "lieu": ["logement"], "effraction": "oui", "absence": "oui"}}
-{"sinistre_id": "g-l03", "faits": {"evenement": ["autre"], "bien": ["mobilier_jardin"], "lieu": ["jardin"], "flammes": "non", "embrasement": "non", "absence": "oui"}}
+{"sinistre_id": "g-l03", "faits": {"evenement": ["autre"], "bien": ["mobilier_jardin"], "lieu": ["jardin"], "flammes": "non", "embrasement": "non"}}
 {"sinistre_id": "g-l04", "faits": {"evenement": ["incendie"], "bien": ["element_batiment", "mobilier"], "lieu": ["logement"], "flammes": "oui", "embrasement": "oui"}}
 {"sinistre_id": "g-l05", "faits": {"evenement": ["degat_eaux"], "bien": ["mobilier", "element_batiment"], "lieu": ["logement"], "cause_eau": "fuite_installation"}}
 {"sinistre_id": "g-l06", "faits": {"evenement": ["vol"], "bien": ["valeurs", "objet_divers"], "lieu": ["voie_publique"], "vol_sur_personne": "oui", "violence": "oui"}}
@@ -71,7 +71,7 @@
 {"sinistre_id": "g2-i03", "faits": {"evenement": ["degat_eaux"], "bien": ["element_batiment"], "lieu": ["logement"]}}
 {"sinistre_id": "g2-i04", "faits": {"bien": ["bijoux"], "lieu": ["logement"]}}
 {"sinistre_id": "g2-i05", "faits": {"evenement": ["incendie"], "lieu": ["logement"], "flammes": "oui"}}
-{"sinistre_id": "g2-i06", "faits": {"evenement": ["degat_eaux"], "bien": ["canalisation", "element_batiment"], "lieu": ["logement"], "cause_eau": "gel", "absence": "oui"}}
+{"sinistre_id": "g2-i06", "faits": {"evenement": ["degat_eaux"], "bien": ["canalisation", "element_batiment"], "lieu": ["logement"], "cause_eau": "gel"}}
 {"sinistre_id": "g2-i08", "faits": {"evenement": ["vol"], "bien": ["objet_divers"], "lieu": ["autre_batiment"]}}
 {"sinistre_id": "g2-i11", "faits": {"evenement": ["tempete"], "bien": ["element_batiment"], "lieu": ["terrasse"], "alea_tempete": "vent"}}
 {"sinistre_id": "g2-i12", "faits": {"evenement": ["vol"], "bien": ["appareil_audiovisuel"], "lieu": ["logement"], "absence": "oui"}}

@@ -82,7 +82,7 @@ Sommaire :
 | Terme | Définition |
 |---|---|
 | **Groupe** | La section dont dépend une clause. `2.10-a` (exclusions) appartient au groupe `2.10` (garantie vol). |
-| **Vocabulaire** | `regles/vocabulaire/` : `commun.json` (le socle et les variables que plusieurs contrats emploient) et un fichier par contrat (celles que lui seul emploie) ; pour chaque variable, ses valeurs, la question à poser quand elles manquent, une aide de lecture par valeur, et la hiérarchie des valeurs (un vélo est un bien du contenu). |
+| **Vocabulaire** | `regles/vocabulaire/` : `commun.json` (le socle et les variables que plusieurs contrats emploient) et un fichier par contrat (celles que lui seul emploie) ; pour chaque variable, son libellé (le nom montré à l'écran et sur la fiche), ses valeurs, la question à poser quand elles manquent, une aide de lecture par valeur, et la hiérarchie des valeurs (un vélo est un bien du contenu). |
 | **Faits** | Ce que la lecture tire de la déclaration, dans le vocabulaire : `evenement = vol`, `lieu = cave`. Ce qu'elle ne dit pas reste inconnu. |
 | **Règles d'un contrat** | `regles/<contrat>.pl` : pour chaque garantie, son périmètre, ses circonstances, ses obligations, ses exclusions et ses limites, chacune avec la phrase du contrat qu'elle traduit. |
 | **Périmètre** | Ce qui fait qu'une garantie concerne le sinistre (événement, bien, lieu). Hors du périmètre, la garantie ne dit rien. |

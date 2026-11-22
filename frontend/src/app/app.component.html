@@ -104,12 +104,12 @@
 
                     <!-- ### Faits retenus -->
 
-                    @if (lignesDeFaits(etape.reponse.faits).length) {
+                    @if (lignesDeFaits(etape.reponse.faits, etape.reponse.faits_affiches).length) {
                         <div class="bloc">
                             <div class="bloc-titre">Faits retenus</div>
                             <div class="faits">
-                                @for (f of lignesDeFaits(etape.reponse.faits); track f.variable) {
-                                    <span class="fait"><span class="fait-variable">{{ f.variable }}</span> {{ f.valeur }}</span>
+                                @for (f of lignesDeFaits(etape.reponse.faits, etape.reponse.faits_affiches); track f.variable) {
+                                    <span class="fait"><span class="fait-variable">{{ f.variable }}&nbsp;:</span> {{ f.valeur }}</span>
                                 }
                             </div>
                         </div>
@@ -129,7 +129,7 @@
                                             (change)="choisir(p.variable, $event)">
                                             <option value="" [selected]="!reponses()[p.variable]">Choisir une réponse…</option>
                                             @for (v of p.valeurs; track v) {
-                                                <option [value]="v" [selected]="reponses()[p.variable] === v">{{ lisible(v) }}</option>
+                                                <option [value]="v" [selected]="reponses()[p.variable] === v">{{ p.libelles?.[v] ?? lisible(v) }}</option>
                                             }
                                         </select>
                                     } @else {
@@ -139,7 +139,7 @@
                                                     [class.chip-on]="reponses()[p.variable] === v"
                                                     [attr.aria-pressed]="reponses()[p.variable] === v"
                                                     [attr.title]="p.aide[v]"
-                                                    (click)="repondre(p.variable, v)">{{ lisible(v) }}</button>
+                                                    (click)="repondre(p.variable, v)">{{ p.libelles?.[v] ?? lisible(v) }}</button>
                                             }
                                         </div>
                                     }

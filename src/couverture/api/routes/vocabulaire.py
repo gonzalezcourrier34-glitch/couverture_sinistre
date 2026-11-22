@@ -23,6 +23,6 @@ def vocabulaire(evenement: str | None = Query(default=None, description="Ne gard
     Avec `evenement`, seules les variables qui s'y appliquent (et celles qui s'appliquent à tout)."""
     from couverture.prolog import vocabulaire as voc
 
-    garder = ("question", "valeurs", "aide", "pour", "plusieurs")
+    garder = ("libelle", "question", "valeurs", "libelles", "aide", "pour", "plusieurs")
     return {v: {k: d[k] for k in garder if k in d} for v, d in voc().items()
             if d.get("pour") != ["jamais"] and (evenement is None or not d.get("pour") or evenement in d["pour"])}

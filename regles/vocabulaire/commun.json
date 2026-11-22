@@ -1,7 +1,8 @@
 {
-  "_description": "Vocabulaire commun : le socle (événement, bien, lieu) et les variables que plusieurs contrats emploient. « plusieurs » : la variable prend une liste. « parents » : la hiérarchie des valeurs (une vitre est un élément du bâtiment). « pour » : les événements auxquels une variable s'applique. « aide » : le sens des valeurs proches, donné au modèle qui lit. Rangé par `couverture regles --ranger`.",
+  "_description": "Vocabulaire commun : le socle (événement, bien, lieu) et les variables que plusieurs contrats emploient. « libelle » : le nom montré d'une variable ; « libelles » : celui d'une valeur, quand l'identifiant s'écrit mal. « plusieurs » : la variable prend une liste. « parents » : la hiérarchie des valeurs (une vitre est un élément du bâtiment). « pour » : les événements auxquels une variable s'applique. « aide » : le sens des valeurs proches, donné au modèle qui lit. Rangé par `couverture regles --ranger`.",
   "variables": {
     "evenement": {
+      "libelle": "Événement",
       "plusieurs": true,
       "valeurs": [
         "vol",
@@ -26,6 +27,17 @@
         "accident",
         "litige"
       ],
+      "libelles": {
+        "degat_eaux": "dégât des eaux",
+        "tempete": "tempête",
+        "electricite": "dégât électrique",
+        "catastrophe_naturelle": "catastrophe naturelle",
+        "fumee": "fumée",
+        "merule": "mérule",
+        "conflit_du_travail": "conflit du travail",
+        "responsabilite": "responsabilité civile",
+        "litige": "litige (protection juridique)"
+      },
       "question": "Que s'est-il passé (la cause, et le dommage s'il est d'une autre nature) ?",
       "aide": {
         "degat_eaux": "eau qui abîme des biens (fuite, débordement, infiltration) ; aussi des moisissures apparues après une fuite, quand la déclaration ne parle que d'elles",
@@ -98,6 +110,7 @@
       }
     },
     "bien": {
+      "libelle": "Bien touché",
       "plusieurs": true,
       "valeurs": [
         "velo",
@@ -147,6 +160,35 @@
         "eolienne",
         "piscine"
       ],
+      "libelles": {
+        "velo": "vélo",
+        "electronique": "électronique",
+        "valeurs": "valeurs (espèces, titres)",
+        "objet_divers": "objet divers",
+        "mobilier_jardin": "mobilier de jardin",
+        "vehicule_moteur": "véhicule à moteur",
+        "element_batiment": "élément du bâtiment",
+        "panneau_verre_plastique": "panneau en verre ou en plastique",
+        "table_cuisson_vitroceramique": "table de cuisson vitrocéramique",
+        "panneau_solaire": "panneau solaire",
+        "mur_rideau": "mur-rideau",
+        "verre_meuble": "verre de meuble",
+        "chassis": "châssis",
+        "appareil_audiovisuel": "appareil audiovisuel",
+        "couverture_piscine": "couverture de piscine",
+        "objet_verre_non_vitre": "objet en verre (hors vitre)",
+        "cles": "clés",
+        "materiaux_construction": "matériaux de construction",
+        "denrees_alimentaires": "denrées alimentaires",
+        "appareil_informatique": "appareil informatique",
+        "appareil_electromenager": "appareil électroménager",
+        "verre_optique": "verre optique",
+        "equipement_alarme_surveillance": "alarme ou surveillance",
+        "equipement_domotique": "équipement domotique",
+        "sepulture": "sépulture",
+        "veranda": "véranda",
+        "eolienne": "éolienne"
+      },
       "question": "Quels biens sont endommagés ou volés ?",
       "parents": {
         "vitre": [
@@ -262,6 +304,7 @@
       }
     },
     "lieu": {
+      "libelle": "Lieu",
       "plusieurs": true,
       "valeurs": [
         "logement",
@@ -282,6 +325,17 @@
         "maison_repos",
         "local_fete_privee"
       ],
+      "libelles": {
+        "abri_jardin": "abri de jardin",
+        "parties_communes": "parties communes",
+        "voie_publique": "voie publique",
+        "chez_reparateur": "chez un réparateur",
+        "autre_batiment": "autre bâtiment",
+        "vehicule": "véhicule",
+        "chambre_etudiant": "chambre d'étudiant",
+        "maison_repos": "maison de repos",
+        "local_fete_privee": "local de fête privée"
+      },
       "question": "Où se trouvaient les biens ?",
       "aide": {
         "logement": "l'intérieur de votre logement (pièces, entrée)",
@@ -312,6 +366,7 @@
       }
     },
     "serrure_surete": {
+      "libelle": "Serrure de sûreté",
       "valeurs": [
         "oui",
         "non"
@@ -327,6 +382,7 @@
       }
     },
     "effraction": {
+      "libelle": "Effraction",
       "valeurs": [
         "oui",
         "non"
@@ -340,6 +396,7 @@
       ]
     },
     "violence": {
+      "libelle": "Violences ou menaces",
       "valeurs": [
         "oui",
         "non"
@@ -354,6 +411,7 @@
       }
     },
     "vol_sur_personne": {
+      "libelle": "Vol sur la personne",
       "valeurs": [
         "oui",
         "non"
@@ -368,6 +426,7 @@
       }
     },
     "auteur": {
+      "libelle": "Auteur",
       "valeurs": [
         "tiers",
         "assure",
@@ -375,16 +434,25 @@
         "personnel_prive",
         "locataire"
       ],
+      "libelles": {
+        "assure": "l'assuré",
+        "personnel_prive": "personnel de maison"
+      },
       "question": "Qui est l'auteur ?",
       "aide": {
         "locataire": "la personne qui loue le logement, ou quelqu'un vivant chez elle"
       }
     },
     "proprietaire": {
+      "libelle": "Propriétaire des biens",
       "valeurs": [
         "assure",
         "hote"
       ],
+      "libelles": {
+        "assure": "l'assuré",
+        "hote": "un hôte"
+      },
       "question": "À qui appartiennent les biens ?",
       "pour": [
         "vol",
@@ -397,6 +465,7 @@
       }
     },
     "flammes": {
+      "libelle": "Flammes",
       "valeurs": [
         "oui",
         "non"
@@ -412,6 +481,7 @@
       ]
     },
     "embrasement": {
+      "libelle": "Feu propagé",
       "valeurs": [
         "oui",
         "non"
@@ -427,6 +497,7 @@
       ]
     },
     "chaleur_sans_feu": {
+      "libelle": "Chaleur sans feu",
       "valeurs": [
         "oui",
         "non"
@@ -442,6 +513,7 @@
       ]
     },
     "cause_eau": {
+      "libelle": "Origine de l'eau",
       "valeurs": [
         "fuite_installation",
         "infiltration_exterieure",
@@ -454,6 +526,15 @@
         "eau_souterraine",
         "piscine_exterieure"
       ],
+      "libelles": {
+        "fuite_installation": "fuite d'une installation",
+        "infiltration_exterieure": "infiltration par l'extérieur",
+        "debordement_recipient": "débordement d'un récipient",
+        "debordement_aquarium": "débordement d'un aquarium",
+        "infiltration_toiture": "infiltration par la toiture",
+        "eau_souterraine": "eau souterraine",
+        "piscine_exterieure": "piscine extérieure"
+      },
       "question": "D'où venait l'eau ?",
       "aide": {
         "fuite_installation": "fuite ou rupture d'un appareil relié à l'eau : tuyau, chauffe-eau, machine à laver, évier, baignoire qui déborde",
@@ -483,11 +564,16 @@
       }
     },
     "travaux_batiment": {
+      "libelle": "Travaux au bâtiment",
       "valeurs": [
         "entretien_reparation",
         "autres_que_entretien_reparation",
         "aucun"
       ],
+      "libelles": {
+        "entretien_reparation": "entretien ou réparation",
+        "autres_que_entretien_reparation": "autres qu'entretien ou réparation"
+      },
       "question": "Des travaux au bâtiment (autres que entretien/réparation) sont-ils en cours ?",
       "pour": [
         "bris",
@@ -495,6 +581,7 @@
       ]
     },
     "vitre_placee": {
+      "libelle": "Vitre placée",
       "valeurs": [
         "oui",
         "non"
@@ -508,6 +595,7 @@
       ]
     },
     "type_dommage": {
+      "libelle": "Type de dommage",
       "valeurs": [
         "bris",
         "felure",
@@ -515,6 +603,11 @@
         "opacification_ou_perte_etancheite",
         "moisissure"
       ],
+      "libelles": {
+        "felure": "fêlure",
+        "rayure_ou_ecaillement": "rayure ou écaillement",
+        "opacification_ou_perte_etancheite": "opacification ou perte d'étanchéité"
+      },
       "question": "Quel est le type de dommage ?",
       "pour": [
         "bris",
@@ -527,6 +620,7 @@
       }
     },
     "cause_dommage": {
+      "libelle": "Cause du dommage",
       "valeurs": [
         "gel",
         "autre",
@@ -542,6 +636,7 @@
       }
     },
     "intentionnel": {
+      "libelle": "Dommage volontaire",
       "question": "Le dommage a-t-il été causé volontairement par l'assuré (ou avec sa complicité) ?",
       "pour": [
         "vol",
@@ -566,6 +661,7 @@
       ]
     },
     "manque_entretien": {
+      "libelle": "Usure ou manque d'entretien",
       "question": "Le dommage vient-il de l'usure, d'un manque d'entretien ou d'une détérioration lente (fuite connue depuis longtemps, joint usé) ?",
       "pour": [
         "vol",
@@ -590,6 +686,7 @@
       ]
     },
     "corrosion_visible": {
+      "libelle": "Canalisation visiblement rouillée",
       "question": "La canalisation en cause était-elle apparente et visiblement rouillée en plusieurs points, sans traitement ?",
       "pour": [
         "degat_eaux"
@@ -600,6 +697,7 @@
       ]
     },
     "plainte_deposee": {
+      "libelle": "Plainte déposée",
       "valeurs": [
         "oui",
         "non"
@@ -614,6 +712,7 @@
       ]
     },
     "formule": {
+      "libelle": "Formule",
       "valeurs": [
         "privilege",
         "active",
@@ -622,6 +721,13 @@
         "confort",
         "excellence"
       ],
+      "libelles": {
+        "privilege": "Privilège",
+        "active": "Active",
+        "eco": "Éco",
+        "confort": "Confort",
+        "excellence": "Excellence"
+      },
       "question": "Quelle formule les conditions particulières mentionnent-elles (Privilège, Active, standard) ?",
       "pour": [
         "vol",
@@ -637,6 +743,7 @@
       }
     },
     "occupation_partielle": {
+      "libelle": "Occupation d'une partie du bâtiment",
       "valeurs": [
         "oui",
         "non"
@@ -654,6 +761,7 @@
       }
     },
     "sejour_temporaire": {
+      "libelle": "Séjour temporaire hors du domicile",
       "valeurs": [
         "oui",
         "non"
@@ -675,6 +783,7 @@
       }
     },
     "construction_delabree": {
+      "libelle": "Construction délabrée ou en démolition",
       "valeurs": [
         "oui",
         "non"
@@ -690,6 +799,7 @@
       ]
     },
     "construction_close": {
+      "libelle": "Construction close et couverte",
       "valeurs": [
         "oui",
         "non"
@@ -707,6 +817,7 @@
       ]
     },
     "annexe_ancree_beton": {
+      "libelle": "Annexe ancrée dans le béton",
       "valeurs": [
         "oui",
         "non"
@@ -722,11 +833,16 @@
       ]
     },
     "alea_tempete": {
+      "libelle": "Phénomène",
       "valeurs": [
         "vent",
         "grele",
         "neige_glace"
       ],
+      "libelles": {
+        "grele": "grêle",
+        "neige_glace": "neige ou glace"
+      },
       "question": "Quel phénomène a causé les dégâts : le vent, la grêle, ou le poids de la neige ou de la glace ?",
       "aide": {
         "vent": "tempête, rafales, arbre ou tuiles arrachés par le vent",
@@ -739,6 +855,7 @@
       ]
     },
     "vent_80_kmh_irm": {
+      "libelle": "Vent d'au moins 80 km/h",
       "valeurs": [
         "oui",
         "non"
@@ -753,6 +870,7 @@
       ]
     },
     "vent_dommages_voisins": {
+      "libelle": "Autres dégâts du vent aux alentours",
       "valeurs": [
         "oui",
         "non"
@@ -767,6 +885,7 @@
       ]
     },
     "cause_nucleaire": {
+      "libelle": "Arme ou engin nucléaire",
       "valeurs": [
         "oui",
         "non"
@@ -782,6 +901,7 @@
       ]
     },
     "graffiti_mur_exterieur": {
+      "libelle": "Graffitis sur les murs extérieurs",
       "valeurs": [
         "oui",
         "non"
@@ -799,6 +919,7 @@
       ]
     },
     "usage_professionnel": {
+      "libelle": "Usage professionnel du bien",
       "valeurs": [
         "oui",
         "non"
@@ -813,6 +934,7 @@
       ]
     },
     "garantie_fabricant": {
+      "libelle": "Garantie du fabricant",
       "valeurs": [
         "oui",
         "non"
@@ -829,12 +951,18 @@
       ]
     },
     "cause_perte_alimentaire": {
+      "libelle": "Cause de la perte des denrées",
       "valeurs": [
         "arret_6h",
         "derangement_installation",
         "coupure_soudaine_reseau",
         "autre"
       ],
+      "libelles": {
+        "arret_6h": "arrêt de 6 heures ou plus",
+        "derangement_installation": "panne de l'installation",
+        "coupure_soudaine_reseau": "coupure soudaine du réseau"
+      },
       "question": "Quelle est la cause de la perte des denrées alimentaires ?",
       "aide": {
         "arret_6h": "coupure de courant ou arrêt de l'installation d'au moins 6 heures",
@@ -847,6 +975,7 @@
       ]
     },
     "bien_a_l_origine_sinistre": {
+      "libelle": "Bien à l'origine du sinistre",
       "valeurs": [
         "oui",
         "non"
@@ -866,6 +995,7 @@
       ]
     },
     "demenagement": {
+      "libelle": "Pendant un déménagement",
       "valeurs": [
         "oui",
         "non"
@@ -885,10 +1015,14 @@
       }
     },
     "statut_logement": {
+      "libelle": "Propriétaire ou locataire",
       "valeurs": [
         "proprietaire",
         "locataire"
       ],
+      "libelles": {
+        "proprietaire": "propriétaire"
+      },
       "question": "Êtes-vous propriétaire ou locataire du bâtiment ?",
       "aide": {
         "proprietaire": "vous êtes propriétaire du logement ou de la maison",
@@ -901,6 +1035,7 @@
       ]
     },
     "canalisation_encastree": {
+      "libelle": "Canalisation encastrée ou souterraine",
       "valeurs": [
         "oui",
         "non"
@@ -915,6 +1050,7 @@
       ]
     },
     "vehicule_ferme_cle": {
+      "libelle": "Véhicule fermé à clé",
       "valeurs": [
         "oui",
         "non"
@@ -935,6 +1071,7 @@
       }
     },
     "materiel_laisse_en_vue": {
+      "libelle": "Matériel visible de l'extérieur",
       "valeurs": [
         "oui",
         "non"
@@ -955,6 +1092,7 @@
       }
     },
     "option_materiel_multimedia": {
+      "libelle": "Garantie « matériel multimédia » souscrite",
       "valeurs": [
         "oui",
         "non"
@@ -971,6 +1109,7 @@
       ]
     },
     "terrain_non_constructible": {
+      "libelle": "Terrain non constructible",
       "valeurs": [
         "oui",
         "non"
@@ -985,6 +1124,7 @@
       ]
     },
     "residence_principale_inhabitable": {
+      "libelle": "Résidence principale inhabitable",
       "valeurs": [
         "oui",
         "non"
@@ -1004,6 +1144,7 @@
       }
     },
     "pays": {
+      "libelle": "Pays",
       "valeurs": [
         "luxembourg",
         "allemagne",
@@ -1017,6 +1158,19 @@
         "andorre",
         "monaco"
       ],
+      "libelles": {
+        "luxembourg": "Luxembourg",
+        "allemagne": "Allemagne",
+        "belgique": "Belgique",
+        "france": "France",
+        "autre_ue": "autre pays de l'Union européenne",
+        "suisse": "Suisse",
+        "norvege": "Norvège",
+        "hors_europe": "hors d'Europe",
+        "royaume_uni": "Royaume-Uni",
+        "andorre": "Andorre",
+        "monaco": "Monaco"
+      },
       "question": "Dans quel pays se trouvait le lieu du sinistre ?",
       "aide": {
         "luxembourg": "au Grand-Duché de Luxembourg",
@@ -1045,6 +1199,7 @@
       }
     },
     "origine_rc": {
+      "libelle": "À l'origine du dommage",
       "valeurs": [
         "personne",
         "velo_trottinette",
@@ -1058,6 +1213,16 @@
         "contrat",
         "activite_professionnelle"
       ],
+      "libelles": {
+        "personne": "une personne",
+        "velo_trottinette": "vélo ou trottinette",
+        "animal_compagnie": "animal de compagnie",
+        "animal_autre": "autre animal",
+        "chien_dangereux": "chien dangereux",
+        "vehicule_moteur": "véhicule à moteur",
+        "chasse_sport": "chasse ou sport",
+        "activite_professionnelle": "activité professionnelle"
+      },
       "question": "Qu'est-ce qui a causé le dommage à l'autre personne ?",
       "aide": {
         "personne": "l'assuré, un enfant ou une personne de son foyer : maladresse, chute, jeu, sport en loisir (ski, foot)",
@@ -1082,6 +1247,7 @@
       }
     },
     "victime": {
+      "libelle": "Victime",
       "valeurs": [
         "tiers",
         "assure",
@@ -1089,6 +1255,10 @@
         "famille",
         "prepose"
       ],
+      "libelles": {
+        "assure": "l'assuré",
+        "prepose": "employé de l'assuré"
+      },
       "question": "Qui a subi le dommage ?",
       "aide": {
         "tiers": "une personne extérieure au foyer : voisin, passant, ami, propriétaire bailleur",
@@ -1102,6 +1272,7 @@
       ]
     },
     "domaine_litige": {
+      "libelle": "Objet du litige",
       "valeurs": [
         "travail",
         "logement",
@@ -1122,6 +1293,16 @@
         "divorce_succession",
         "autre"
       ],
+      "libelles": {
+        "sante": "santé",
+        "employeur_domestique": "employeur de personnel de maison",
+        "location_vacances": "location de vacances",
+        "recours_dommage": "recours pour un dommage",
+        "defense_penale": "défense pénale",
+        "vehicule_moteur": "véhicule à moteur",
+        "activite_professionnelle": "activité professionnelle",
+        "divorce_succession": "divorce ou succession"
+      },
       "question": "Sur quoi porte le litige ?",
       "aide": {
         "travail": "avec votre employeur, en tant que salarié",
@@ -1148,6 +1329,7 @@
       ]
     },
     "option_protection_juridique": {
+      "libelle": "Option protection juridique souscrite",
       "valeurs": [
         "oui",
         "non"
@@ -1162,6 +1344,7 @@
       ]
     },
     "bien_confie": {
+      "libelle": "Bien prêté, loué ou confié",
       "valeurs": [
         "oui",
         "non"

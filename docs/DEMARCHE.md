@@ -4306,9 +4306,51 @@ et des « à préciser » de trop (`f-b06`, `f-b07`, `velo-06`, `val-09`, `g2-p0
 (82 % contre 85 %) : trois points sur 20 cas, dans la variation, mais `f-b18` est un couvert à tort que Small n'avait
 pas. C'est la configuration retenue pour la démonstration ; le README porte ces mesures.
 
+### 7.137 Les faits s'affichent avec leurs libellés, écrits dans le vocabulaire
+
+**Le constat (22 nov., sur la fiche PDF).** La fiche et l'écran montraient les identifiants du moteur : « evenement responsabilite », « origine rc velo trottinette ». Et la justification citait « (4~1) » : le numéro d'un morceau d'article dans la base, pas celui du contrat.
+
+**La règle.** Ce qu'on montre d'un fait se définit là où le fait est défini, une fois :
+
+- chaque variable du vocabulaire porte un `libelle` (« À l'origine du dommage ») ;
+- une valeur porte un libellé (`libelles`) seulement quand l'identifiant sans tirets bas s'écrit mal (« velo_trottinette » → « vélo ou trottinette ») ; sinon l'identifiant suffit (« tiers », « cave ») ;
+- `prolog.libelle` et `prolog.faits_affiches` sont le seul endroit qui les lit ; l'API rend `faits_affiches` à côté de `faits`, et `libelles` dans chaque point de `a_preciser` ; l'écran et la fiche n'affichent que cela ;
+- un numéro d'article s'affiche comme dans le contrat (`chaine.numero` : « 4~1 » → « 4 »).
+
+Les libellés ne sont pas envoyés au modèle : les consignes ne changent pas, les mesures non plus.
+
+**Le contrôle.** `test_libelles_du_vocabulaire` : toute variable a un libellé, et aucun libellé ne vise une valeur qui n'existe pas. Une variable ajoutée par la rédaction sans libellé fait échouer ce test : il faut l'écrire en l'acceptant.
+
+**Limite.** Les 149 libellés ont été écrits à la main d'après la question de chaque variable ; la rédaction par Mistral Large ne les propose pas encore.
+
+### 7.138 Une variable sans événements n'est permise que si une règle vaut pour tout
+
+**Le constat (22 nov., à l'écran).** Un piéton renversé à vélo, chez A : les faits retenus affichent « Assuré absent : non ». Le fait est hors sujet, et pourtant ni lu à part ni retiré.
+
+**La cause.** Le vocabulaire dit, pour chaque variable, les événements où elle se lit (« pour ») ; la rédaction le calcule d'après les garanties qui l'emploient (7.56, 7.63). 144 variables sur 149 l'ont. « absence », écrite à la main avant ce mécanisme, ne l'avait pas : elle était donc lue pour tout sinistre, alors que les règles de A ne l'emploient que pour le vol et le vandalisme (2.10, 2.11), comme `portes_fermees` et `fenetres_fermees`.
+
+**La règle.** Une variable hors du socle sans « pour » est lue partout : ce n'est permis que si une règle qui vise toutes les garanties (`tous`) l'emploie, comme `auteur` (l'exclusion du fait intentionnel chez D). `test_variable_sans_evenements_seulement_si_une_regle_vaut_pour_tout` le contrôle sur les règles de tous les contrats. « absence » reçoit les événements de ses voisines : vol, vandalisme.
+
+**L'effet sur le golden set.** Six cas hors vol portaient « absence » dans leurs faits idéaux (les bougies, deux dégâts des eaux, un « autre ») : le filtre les retire désormais, et le test de conformité du golden au filtre l'exige. Retirés des faits idéaux, mécaniquement (aucune décision attendue ne change) ; golden set figé en **version 13**, avec la raison.
+
+**La mesure (22 nov., 15 h).** Partie test de A : 90 % justes, aucun couvert ni refus à tort, les trois mêmes « à préciser » de trop (`velo-06`, `val-09`, `g2-p01`), rappel des faits 89 % (89,9 % avant). Jeu fermé de A : 100 % (98 % avant), aucune erreur. Rien ne bouge, comme attendu d'un changement qui ne retire qu'un fait hors sujet. La porte « décisions changées par la lecture ≤ 2 » échouait déjà à 4 avant ce changement : elle vient de ces trois cas, pas de celui-ci.
+
 ## 8. Ce qui reste à faire
 
-Tenu à jour le 20 nov. 2026, après-midi ; ce qui est fait est dans les sections 7.
+Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
+
+**Le plan pour généraliser (22 nov.)**
+
+| | Ce qui manque | Pourquoi ça compte |
+|---|---|---|
+| 1 | Les variables sans événements contrôlées d'après les règles | **Fait et mesuré (7.138).** |
+| 2 | La victime demandée pour tout sinistre | La responsabilité civile est devinée par le modèle au lieu d'être calculée ; plusieurs « à préciser » de trop en viennent. |
+| 3 | Les doublons du vocabulaire entre contrats | 99 variables sur 149 restent propres à un contrat ; à cent contrats, le vocabulaire grossirait à chaque ajout. |
+| 4 | Les libellés proposés par la rédaction | Chaque nouveau contrat demande aujourd'hui de les écrire à la main (7.137). |
+| 5 | Des exemples validés pour B et D | B est à 82 %, A entre 90 et 98 % : la lecture se corrige par des exemples, et il y en a surtout pour A. |
+| 6 | Un contrat ajouté à froid, hors habitation si possible | Trois contrats, tous en habitation, ne prouvent pas cent. |
+| 7 | Les conditions particulières lues dans le contrat du client | La formule et les options sont demandées au client. |
+| 8 | La loi luxembourgeoise sur le contrat d'assurance | Elle s'impose aux conditions générales ; le projet ne la traite pas. |
 
 **Le plan de lecture (7.35)**
 - La lecture vérifiée est la seule lecture (7.45, 7.110). Si un recours à Mistral Large revient un jour (cas douteux), il se mesurera sur la partie test.
@@ -4475,3 +4517,5 @@ Tenu à jour le 20 nov. 2026, après-midi ; ce qui est fait est dans les section
 135. Distinguer l'erreur instable de l'erreur répétée avant de choisir le remède : relire ne corrige que la première.
 136. Trois corrections pour une même phrase : arrêter, et chercher la règle ou la structure qui manque.
 137. Un bon lecteur n'est pas forcément un bon vérificateur : mesurer chaque rôle à part, et pouvoir les confier à deux modèles.
+138. Un identifiant sert au moteur, un libellé au lecteur : écrire le second à côté du premier, pas dans l'écran.
+139. Une exception tolérée (une variable « lue partout ») se justifie par une règle qu'un test peut vérifier ; sinon elle cache un oubli.

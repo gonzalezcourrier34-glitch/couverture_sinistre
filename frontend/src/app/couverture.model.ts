@@ -40,7 +40,16 @@ export interface APreciser {
     nature: 'question' | 'reserve';
     question: string;
     valeurs: string[];
+    /** Le texte à montrer pour chaque valeur (« voie_publique » → « voie publique »). */
+    libelles?: Record<string, string>;
     aide: Record<string, string>;
+}
+
+/** Un fait tel qu'on le montre : « Lieu : voie publique ». */
+export interface FaitAffiche {
+    variable: string;
+    libelle: string;
+    valeur: string;
 }
 
 export interface Citation {
@@ -67,6 +76,7 @@ export interface Decision {
     citations: Citation[];
     limites: Limite[];
     faits: Faits;
+    faits_affiches?: FaitAffiche[];
     avertissements: string[];
     raisonnement: string[];
     mode: string;
