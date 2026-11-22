@@ -18,6 +18,9 @@ def ajouter(sous) -> None:
     p.add_argument("--evenement", help="Avec --proches : les seuls exemples de cet événement")
     p.add_argument("-k", type=int, default=4)
     p.add_argument("--seuil", type=float, default=None, help="Avec --proches : score minimal (défaut : exemples.SEUIL)")
+    p.add_argument("--valider", metavar="IDS", help="Valider des exemples ajoutés après relecture : « tout », ou des "
+                   "identifiants séparés par des virgules (data/lecture/exemples.jsonl)")
+    p.add_argument("--retirer", metavar="IDS", help="Retirer des exemples ajoutés (identifiants séparés par des virgules)")
     p.set_defaults(executer=executer)
 
 
@@ -25,6 +28,11 @@ def executer(a, base: Base, donnees: Path) -> int:
     """La banque d'exemples (7.107) : partage, vecteurs, et les plus proches d'une déclaration."""
     a_partager, a_indexer, texte, evenement, k, seuil = a.partager, a.indexer, a.proches, a.evenement, a.k, a.seuil
 
+    if a.valider or a.retirer:
+        ids = None if a.valider == "tout" else [x.strip() for x in (a.valider or "").split(",") if x.strip()]
+        n = exemples.valider_ajoutes(donnees, ids if a.valider else [], [x.strip() for x in (a.retirer or "").split(",") if x.strip()])
+        print(f"Exemples ajoutés : {n['valides']} validé(s), {n['retires']} retiré(s), {n['a_relire']} à relire. "
+              "Puis `couverture exemples --indexer`.")
     if a_partager:
         p = exemples.partager(donnees)
         print(f"Partage figé : {len(p['mise_au_point'])} cas de mise au point, {len(p['test'])} de test "
@@ -48,4 +56,10 @@ def executer(a, base: Base, donnees: Path) -> int:
         b = exemples.banque(donnees)
         print(f"Partage : {len(p['mise_au_point'])} cas de mise au point, {len(p['test'])} de test ; "
               f"banque : {len(b)} exemples ; indexés : {len(exemples.charger_index(base.chemin))}.")
+        ajoutes = exemples.exemples_ajoutes(donnees)
+        if ajoutes:
+            valides = sum(x.get("statut") == exemples.VALIDE for x in ajoutes)
+            print(f"Exemples ajoutés : {valides} validés, {len(ajoutes) - valides} à relire (data/lecture/exemples.jsonl).")
+        for probleme in exemples.controler_ajoutes(donnees):
+            print(f"  ! {probleme}")
     return 0

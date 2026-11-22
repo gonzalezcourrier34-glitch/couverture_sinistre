@@ -110,6 +110,8 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 
 ## 5. Dernières mesures
 
+**22 nov. 2026, 17 h 25 à 17 h 31** (28 exemples validés de plus dans la banque, 7.144) : partie test de A **90 %** (1 couvert à tort : `val-09`, aux trois passages), jeu fermé de A **100 %**, de B **85 %** (1 couvert à tort, `f-b18`), de D **96 %** (1 refus à tort, `f-d08`). Instables : 0 sur 96. Effet des exemples non mesurable (267 lectures justes sur 288, contre 265).
+
 **22 nov. 2026, 16 h 20 à 16 h 26** (même configuration ; après 7.138 et 7.143, consignes et vocabulaire de lecture inchangés) : partie test de A **90 %** (0,3 couvert à tort : `val-09`, un passage sur trois), jeu fermé de A **100 %**, de B **85 %** (1 couvert à tort, `f-b18`), de D **93 %** (1 refus à tort, `f-d08`). Instables : 4 sur 96. Les écarts avec la série de 13 h 30 viennent tous de la lecture (DEMARCHE 7.143).
 
 **22 nov. 2026, 13 h 30 à 13 h 36** (Mistral Medium lit, Mistral Small vérifie ; configuration retenue) : jeu fermé

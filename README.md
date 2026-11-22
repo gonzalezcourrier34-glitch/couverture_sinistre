@@ -86,20 +86,20 @@ Contrat « Assureur A » (48 pages, 147 clauses). Les réponses attendues ont é
 
 ### 4. Ce que cela donne
 
-Trois contrats de trois assureurs (anonymisés A, B, D), sur le même moteur. Mistral Medium lit, Mistral Small vérifie. Mesures du 22 novembre 2026, deux séries dans la journée (13 h 30 et 16 h 20), trois passages par banc ; la fourchette donne les deux séries :
+Trois contrats de trois assureurs (anonymisés A, B, D), sur le même moteur. Mistral Medium lit, Mistral Small vérifie. Mesures du 22 novembre 2026, trois séries dans la journée (13 h 30, 16 h 20, 17 h 25), trois passages par banc ; la fourchette donne les trois séries :
 
 | Banc | Réponses justes | Couverts à tort | Refus à tort |
 |---|---|---|---|
 | Règles seules, faits exacts (A, les 31 cas de test) | 100 % | 0 | 0 |
-| A, partie test du golden set (31 cas jamais utilisés pour régler) | 90 % | 0 à 0,3 | 0 |
+| A, partie test du golden set (31 cas jamais utilisés pour régler) | 90 % | 0 à 1 | 0 |
 | A, jeu fermé (20 cas écrits sans voir les règles) | 98 à 100 % | 0 à 0,3 | 0 |
 | B, jeu fermé (20 cas) | 82 à 85 % | 1 | 0 |
 | D, jeu fermé (25 cas) | 93 à 96 % | 0 | 1 |
 
 - **Toutes les erreurs viennent de la lecture**, pas des règles : avec des faits exacts, le moteur ne se trompe pas.
 - **Deux erreurs se répètent à chaque passage** : chez B, un vol dans une voiture est couvert alors qu'il fallait demander une précision ; chez D, une crue avec arrêté de catastrophe naturelle est refusée. Les autres sont des « à préciser » de trop : une question au lieu d'une réponse.
-- **Un couvert à tort peut apparaître une fois sur trois** : un fer à repasser qui brûle une housse, lu « accident » six fois de suite puis « dégât électrique » deux fois sur trois, et couvert une fois. « 0,3 » veut dire cela : un passage sur trois. C'est l'erreur qui coûte, et la lecture ne la garantit pas à zéro.
-- **La lecture varie peu, mais elle varie** : sur 96 déclarations, 2 à 4 changent de réponse d'un passage à l'autre.
+- **Un couvert à tort est apparu dans la journée, sans que rien ne change dans la lecture** : un fer à repasser qui brûle une housse, lu « accident » six fois de suite, puis « dégât électrique » deux fois sur trois, puis trois fois sur trois, et alors couvert. La consigne et le vocabulaire envoyés au modèle sont identiques entre ces séries. C'est l'erreur qui coûte, et la lecture ne la garantit pas à zéro ; en production, le modèle se désignerait par une version datée, pas par « latest ».
+- **La lecture varie peu, mais elle varie** : sur 96 déclarations, 0 à 4 changent de réponse d'un passage à l'autre.
 - Une analyse prend 4 à 5 secondes (95e centile : 6 à 7 secondes ; un passage à 19 secondes chez B, un appel lent).
 - Les jeux sont petits : un écart de 3 ou 4 points entre deux séries n'est pas significatif.
 

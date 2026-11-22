@@ -4425,6 +4425,27 @@ Comparées cas par cas à la série précédente, les réponses qui changent son
 
 **Ce que cela dit.** « Zéro couvert à tort » sur la partie test de A tenait à six lectures identiques ; la septième série en montre un. Le chiffre honnête est une fourchette (0 à 0,3), et le README le donne ainsi.
 
+### 7.144 Des exemples écrits pour B et D, validés par une personne
+
+**Le constat.** La banque d'exemples vient du golden set : 66 exemples de A, 8 de B, aucun de D, et aucun pour la responsabilité civile, le heurt, l'accident ou le vandalisme. Or la lecture se corrige par des exemples (7.133). À l'écran, « j'ai fait tomber mon ordinateur » a été lu « auteur : personnel de maison ».
+
+**Le procédé.**
+
+- Les exemples ajoutés sont dans `data/lecture/exemples.jsonl` : une déclaration, les faits qu'il fallait y lire, un statut. Ils sont **proposés** (ici par Claude, d'après le vocabulaire) puis **validés** par une personne, ligne par ligne ; seuls les validés entrent dans la banque (`couverture exemples --valider`, `--retirer`).
+- Ils ne portent que ce que la déclaration dit : pas de valeur par défaut.
+- **Aucun ne doit ressembler à un cas de mesure.** `exemples.controler_ajoutes` compare chaque exemple à la partie test du golden set et aux jeux fermés (part de mots communs, seuil 0,3) et refuse ce qui est trop proche : un exemple voisin d'un cas du banc lui soufflerait la réponse. Le contrôle est automatique, pour ne pas avoir à lire les cas de mesure en écrivant les exemples. Deux propositions ont été réécrites à l'aveugle et une retirée pour cette raison ; les sujets des neuf cas en erreur du 22 nov. ont été évités.
+- Le même contrôle refuse un fait hors vocabulaire ou hors sujet pour son événement. Un test le rejoue.
+
+**Ce qu'un exemple peut corriger, et ce qu'il ne peut pas.** Les exemples ne sont montrés qu'au temps 2 (7.116) : ils enseignent les détails (l'auteur, l'accès du voleur, le vent), pas l'événement ni le bien. La famille « le bien n'est pas dit » (7.139) n'en relève donc pas.
+
+**État.** 28 exemples proposés (13 pour D, 15 pour B), validés tous les 28 par l'auteur le 22 nov. ; la banque passe de 74 à 102 exemples.
+
+**La mesure (22 nov., 17 h 25).** A, partie test : 90 %, **1 couvert à tort** ; A, jeu fermé : 100 % ; B : 85 %, 1 couvert à tort ; D : 96 %, 1 refus à tort. Aucun cas instable sur les quatre bancs.
+
+Comparée à la série de 16 h 20, sur les 288 lectures : 267 réponses justes contre 265 ; 2,29 détails lus par déclaration contre 2,34 ; les détails lus diffèrent pour 52 déclarations sur 96, quand ils différaient déjà pour 48 entre les deux séries précédentes, sans aucun changement. **L'effet des 28 exemples n'est pas mesurable sur ces jeux.** C'est attendu, et c'est le prix du contrôle : un exemple n'est montré que s'il ressemble à la déclaration (seuil 0,85), et ces exemples ont été écrits pour ne ressembler à aucun cas de mesure. Les bancs ne peuvent pas dire s'ils aident ; seules des déclarations nouvelles, proches d'eux, le diraient. Ils sont gardés : validés, sans effet négatif mesuré.
+
+**Le couvert à tort de A n'en vient pas.** `val-09` (le fer à repasser) est lu « électricité » aux trois passages, dès le temps 1, qui ne reçoit pas d'exemples et dont la consigne et le vocabulaire sont identiques, au caractère près, à ceux de 13 h 30. Lu « accident » six fois sur six avant 16 h, « électricité » deux fois sur trois à 16 h 20, trois fois sur trois à 17 h 25 : la lecture du même texte par `mistral-medium-latest` a changé dans la journée. Hypothèse non vérifiable d'ici : l'alias « latest » ne désigne pas un modèle figé. En production, le modèle se désigne par sa version datée, et un banc se rejoue quand elle change.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
@@ -4437,7 +4458,7 @@ Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
 | 2 | La victime demandée pour tout sinistre | **Écartée (7.139)** : aucune erreur mesurée n'en relève, et le risque est réel. |
 | 3 | Les doublons du vocabulaire entre contrats | **Bilan fait (7.140)** : 70 variables propres lues dans la déclaration, huit groupes de doublons. Reste à fusionner et mesurer, et à faire proposer les doublons par la rédaction. |
 | 4 | Les libellés proposés par la rédaction | Chaque nouveau contrat demande aujourd'hui de les écrire à la main (7.137). |
-| 5 | Des exemples validés pour B et D | B est à 82 %, A entre 90 et 98 % : la lecture se corrige par des exemples, et il y en a surtout pour A. |
+| 5 | Des exemples validés pour B et D | **Fait (7.144)** : 28 exemples validés ; effet non mesurable sur les bancs, par construction. Reste : des déclarations nouvelles pour le mesurer. |
 | 6 | Un contrat ajouté à froid, hors habitation si possible | Trois contrats, tous en habitation, ne prouvent pas cent. |
 | 7 | Les conditions particulières lues dans le contrat du client | **Fait pour la saisie (7.141)** : la formule et les options se donnent avec la déclaration. Reste : lire le document du client. |
 | 8 | La loi applicable au contrat | **Écrite comme limite** (README, section 7) : elle dépend du contrat (A se dit régi par la loi belge du 4 avril 2014), elle s'impose aux conditions générales, le système ne lit que le contrat. |
@@ -4615,3 +4636,6 @@ Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
 143. Une erreur de manipulation est un cas de test gratuit : le texte collé par erreur a montré ce que répond le système quand il n'y a pas de sinistre.
 144. Un garde-fou écrit pour une méthode se relit quand la méthode change : « le rôle vient du contrat » protégeait d'un modèle qui cite, et rétrogradait des règles qui citent juste.
 145. Un zéro mesuré sur trois passages n'est pas un zéro : donner la fourchette de plusieurs séries, surtout pour l'erreur qui coûte.
+146. Pour écrire des exemples sans copier les cas de mesure, ne pas les relire : laisser un contrôle automatique refuser ce qui leur ressemble.
+147. Un exemple écrit loin des cas de mesure ne peut pas améliorer la mesure : choisir d'avance entre protéger le banc et le voir bouger.
+148. Un modèle désigné par « latest » peut changer sans prévenir : la même consigne a lu le même texte autrement dans la même journée.

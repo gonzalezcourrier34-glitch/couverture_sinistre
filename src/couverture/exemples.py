@@ -121,7 +121,8 @@ def evenements(faits: dict) -> list[str]:
 
 
 def banque(donnees: Path) -> list[dict]:
-    """Les exemples : les cas de mise au point, jamais un cas de test, ni une déclaration identique à un cas de test."""
+    """Les exemples : les cas de mise au point, jamais un cas de test, ni une déclaration identique à un cas de test ;
+    et les exemples ajoutés (`data/lecture/exemples.jsonl`) une fois validés (7.144)."""
     p = charger_partage(donnees)
     test = set(p["test"])
     tous = cas_golden(donnees)
@@ -129,7 +130,90 @@ def banque(donnees: Path) -> list[dict]:
     sortie = [c | {"evenements": evenements(c["faits"])} for c in tous
               if c["id"] in set(p["mise_au_point"]) and c["declaration"].strip() not in textes_test]
     assert not {c["id"] for c in sortie} & test
+    refuses = {x.split(" : ")[0] for x in controler_ajoutes(donnees)}
+    sortie += [{"id": x["id"], "contrat": x["contrat"], "declaration": x["declaration"], "faits": x["faits"],
+                "evenements": evenements(x["faits"])}
+               for x in exemples_ajoutes(donnees) if x.get("statut") == VALIDE and x["id"] not in refuses]
     return sortie
+
+
+# --- Les exemples ajoutés : écrits pour montrer une lecture, validés par une personne (7.144) ---------------------
+
+VALIDE = "valide"
+PROXIMITE_MAX = 0.3   # part de mots communs au-delà de laquelle un exemple ressemble trop à un cas de mesure
+MOTS_VIDES = set("le la les un une des de du et ou a au aux en dans par pour sur avec sans est il elle on je j mon ma mes "
+                 "me m ce cette ces son sa ses qui que qu d l n ne pas plus y ai ete etait ont se s nous notre nos".split())
+
+
+def chemin_ajoutes(donnees: Path) -> Path:
+    return Path(donnees) / "lecture" / "exemples.jsonl"
+
+
+def exemples_ajoutes(donnees: Path) -> list[dict]:
+    """Les exemples écrits à la main, validés ou non (`statut` : « propose » ou « valide »)."""
+    chemin = chemin_ajoutes(donnees)
+    return lire_jsonl(chemin) if chemin.exists() else []
+
+
+def mots(texte: str) -> set[str]:
+    """Les mots d'une déclaration, sans accents ni mots vides, réduits à leurs six premières lettres."""
+    import re
+    import unicodedata
+    plat = "".join(c for c in unicodedata.normalize("NFD", texte.lower()) if unicodedata.category(c) != "Mn")
+    return {m[:6] for m in re.findall(r"[a-z0-9]+", plat) if m not in MOTS_VIDES and len(m) > 2}
+
+
+def proximite(a: str, b: str) -> float:
+    """La part de mots communs entre deux déclarations (indice de Jaccard), de 0 à 1."""
+    ma, mb = mots(a), mots(b)
+    return len(ma & mb) / len(ma | mb) if ma | mb else 0.0
+
+
+def cas_de_mesure(donnees: Path) -> list[dict]:
+    """Les déclarations qui servent à mesurer : la partie test du golden set et les jeux fermés."""
+    test = set(charger_partage(donnees)["test"])
+    sinistres = lire_jsonl(Path(donnees) / "golden" / "sinistres.jsonl")
+    ferme = Path(donnees) / "ferme" / "sinistres.jsonl"
+    return ([{"id": s["id"], "declaration": s["sinistre"]} for s in sinistres if s["id"] in test]
+            + [{"id": s["id"], "declaration": s["sinistre"]} for s in (lire_jsonl(ferme) if ferme.exists() else [])])
+
+
+def valider_ajoutes(donnees: Path, ids: list[str] | None = None, retirer: list[str] | None = None) -> dict:
+    """La décision de la personne qui relit : `ids` deviennent « valide » (None : tous les proposés), `retirer`
+    sort des exemples du fichier. Rend le compte : validés, retirés, restant à relire."""
+    ajoutes = [x for x in exemples_ajoutes(donnees) if x["id"] not in set(retirer or [])]
+    n = 0
+    for x in ajoutes:
+        if x.get("statut") != VALIDE and (ids is None or x["id"] in ids):
+            x["statut"], n = VALIDE, n + 1
+    chemin_ajoutes(donnees).write_text("".join(json.dumps(x, ensure_ascii=False) + "\n" for x in ajoutes),
+                                       encoding="utf-8", newline="\n")
+    return {"valides": n, "retires": len(retirer or []), "a_relire": sum(x.get("statut") != VALIDE for x in ajoutes)}
+
+
+def controler_ajoutes(donnees: Path) -> list[str]:
+    """Ce qui empêche un exemple ajouté d'entrer dans la banque, en une ligne « id : raison » :
+    - un fait hors du vocabulaire, ou que le filtre retirerait comme hors sujet pour son événement ;
+    - une déclaration trop proche d'un cas de mesure (`PROXIMITE_MAX`) : un exemple qui ressemble à un cas du banc
+      lui soufflerait la réponse, et le banc mesurerait ce qu'on lui a appris ;
+    - un identifiant en double, ou déjà pris par un cas du golden set."""
+    ajoutes, problemes = exemples_ajoutes(donnees), []
+    mesure = cas_de_mesure(donnees)
+    pris = {s["id"] for s in lire_jsonl(Path(donnees) / "golden" / "sinistres.jsonl")}
+    vus: set[str] = set()
+    for x in ajoutes:
+        if x["id"] in vus or x["id"] in pris:
+            problemes.append(f"{x['id']} : identifiant déjà pris")
+        vus.add(x["id"])
+        problemes += [f"{x['id']} : {p}" for p in prolog.verifier_faits(x["faits"])]
+        problemes += [f"{x['id']} : {r}" for r in prolog.filtrer_faits(x["faits"])[1]]
+        if not x["faits"].get("evenement"):
+            problemes.append(f"{x['id']} : pas d'événement")
+        proche = max(mesure, key=lambda c: proximite(x["declaration"], c["declaration"]), default=None)
+        if proche and proximite(x["declaration"], proche["declaration"]) >= PROXIMITE_MAX:
+            problemes.append(f"{x['id']} : trop proche du cas de mesure {proche['id']} "
+                             f"({proximite(x['declaration'], proche['declaration']):.2f})")
+    return problemes
 
 
 def empreinte(exemple: dict, modele: str) -> str:

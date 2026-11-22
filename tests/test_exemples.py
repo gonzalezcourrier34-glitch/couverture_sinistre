@@ -155,3 +155,31 @@ def test_les_exemples_sont_la_lecture_par_defaut(monkeypatch, tmp_path):
     assert chaine.PipelineRegles.depuis_base(base, "assureur-a-habitation-2025", object()).exemples is None
     monkeypatch.setenv("MISTRAL_API_KEY", "k")
     assert chaine.PipelineRegles.depuis_base(base, "assureur-a-habitation-2025", object()).exemples is None  # banque vide
+
+
+# --- Les exemples ajoutés, validés par une personne (7.144) ------------------------------------------------------
+
+def test_exemples_ajoutes_conformes_et_loin_des_cas_de_mesure():
+    """Chaque exemple ajouté est dans le vocabulaire, sans fait hors sujet, et ne ressemble à aucun cas de mesure
+    (partie test du golden set, jeux fermés) : sinon le banc mesurerait ce qu'on lui a appris."""
+    assert exemples.controler_ajoutes(DONNEES) == []
+    assert exemples.proximite("Mon vélo a été volé dans la cave.", "On m'a volé mon vélo dans ma cave.") >= exemples.PROXIMITE_MAX
+    assert exemples.proximite("Mon vélo a été volé dans la cave.", "La grêle a abîmé le toit.") == 0
+
+
+def test_seuls_les_exemples_valides_entrent_dans_la_banque(tmp_path):
+    donnees = tmp_path / "data"
+    shutil.copytree(DONNEES / "golden", donnees / "golden")
+    shutil.copytree(DONNEES / "lecture", donnees / "lecture")
+    ex = {"id": "ex-x1", "contrat": "c", "declaration": "Mon perroquet s'est envolé par la lucarne du grenier et n'est jamais revenu.",
+          "faits": {"evenement": ["autre"], "bien": ["animal"], "lieu": ["grenier"]}, "statut": "propose"}
+    hors = ex | {"id": "ex-x2", "faits": {"evenement": ["autre"], "cause_eau": "gel"}}
+    exemples.chemin_ajoutes(donnees).write_text(json.dumps(ex) + "\n" + json.dumps(hors) + "\n", encoding="utf-8")
+    avant = len(exemples.banque(donnees))
+    assert exemples.valider_ajoutes(donnees, ["ex-x1", "ex-x2"]) == {"valides": 2, "retires": 0, "a_relire": 0}
+    ids = {x["id"] for x in exemples.banque(donnees)}
+    assert len(ids) == avant + 1 and "ex-x1" in ids, "validé et conforme : dans la banque"
+    assert "ex-x2" not in ids and any(p.startswith("ex-x2 : cause_eau") for p in exemples.controler_ajoutes(donnees)), \
+        "validé mais hors sujet : refusé, et signalé"
+    assert exemples.valider_ajoutes(donnees, [], ["ex-x2"])["retires"] == 1
+    assert [x["id"] for x in exemples.exemples_ajoutes(donnees)] == ["ex-x1"]
