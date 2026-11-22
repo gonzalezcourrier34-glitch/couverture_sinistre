@@ -6,16 +6,40 @@ Dit si un sinistre est couvert par un contrat d'assurance habitation, **pourquoi
 
 ![La réponse à une déclaration : la décision, les faits retenus, la clause citée, les limites](docs/images/ecran-reponse.png)
 
-*Un piéton renversé à vélo, chez l'assureur A : la décision, les faits que le modèle a lus dans la déclaration, la phrase du contrat qui fonde la réponse (un clic ouvre l'article entier), les plafonds et la franchise. La même réponse se télécharge en fiche PDF, articles cités joints.*
+*Un piéton renversé à vélo, chez l'assureur A : la décision, les faits que le modèle a lus dans la déclaration, la phrase du contrat qui fonde la réponse (un clic ouvre l'article entier), les plafonds et la franchise. La même réponse se télécharge en [fiche PDF](docs/exemple-fiche.pdf), articles cités joints en entier.*
 
 ![L'analyse suivie étape par étape](docs/images/ecran-suivi.png)
 
 *Pendant les 4 à 5 secondes de l'analyse, l'écran dit ce qui se fait : lire, vérifier chaque fait, appliquer les règles, confirmer.*
 
+- [Ce que j'ai déjà mis en production](#ce-que-jai-déjà-mis-en-production-et-ce-que-ça-a-donné) : SortirIA, et ce que j'en ai repris ici
 - [Note de conception](#note-de-conception) : le besoin, le choix, les résultats, ce qui a été essayé, les limites
 - [Démonstration en 5 minutes](#démonstration-en-5-minutes)
 - [Installation](#installation) et [utilisation](#utilisation)
 - Pour aller plus loin : [la démarche](docs/DEMARCHE.md) (chaque essai et sa mesure, échecs compris), [les explications](docs/EXPLICATIONS.md) (chaque fichier, un lexique), [les mesures](docs/METRIQUES.md), [les consignes versionnées](docs/consignes/README.md), [le suivi](monitoring/README.md)
+
+## Ce que j'ai déjà mis en production, et ce que ça a donné
+
+Ce dépôt est une démonstration : il n'a pas d'utilisateurs. Ce que je sais d'un service en ligne vient de **[SortirIA](https://www.sortiria-montpellier.fr)** ([code](https://github.com/gonzalezcourrier34-glitch/SortirIA), [portfolio](https://gonzalezcourrier34-glitch.github.io)), mon projet personnel, en ligne sur Azure depuis l'automne 2026 : un assistant de sorties pour Montpellier et le bassin de Thau. On écrit sa demande comme on la dirait (« un concert gratuit ce week-end à Sète ») ; la réponse respecte la date, le lieu, le public et le budget. J'y ai tout fait, du cadrage au suivi. C'est un service à faible trafic, pas une production d'entreprise.
+
+| Ce qui a été mesuré | Résultat |
+|---|---|
+| Contraintes respectées (date, lieu, public, budget) | 98,7 % |
+| Pertinence des trois premières sorties, sur mes questions | 97,8 % |
+| **Réponses exactes sur 93 questions de vrais testeurs** | **47 %** |
+| Accord du juge automatique avec l'humain, sur 135 cartes nouvelles | 91,9 % |
+| Temps de réponse au 95e centile | 6,4 s (4,1 s en production) |
+| Coût du modèle pour 1 000 questions | 0,12 $ |
+
+Ce que ça a donné, et ce que j'en ai repris ici :
+
+- **L'usage réel a corrigé mes jeux de test.** 97,8 % sur mes questions, 47 % sur celles des testeurs : ils cherchaient aussi des lieux permanents, que mes agendas ne recensent pas. D'où, ici, des jeux fermés écrits par d'autres que moi, sans voir les règles, et une partie test qui ne sert jamais à corriger.
+- **Des règles pour ce qui doit être respecté, le modèle pour rédiger.** Dans SortirIA, des règles comprennent la demande et des filtres SQL la font respecter ; Mistral n'écrit qu'à partir des fiches trouvées. C'est le même partage qu'ici : le modèle lit, la logique décide.
+- **Les seuils fixés avant de mesurer, et rejoués à chaque push.** L'évaluation tourne en intégration continue ; sous 95 % de contraintes respectées, le déploiement est bloqué. Ici, les bancs ont des portes de la même nature.
+- **Un service se surveille.** Contrôle de disponibilité toutes les 3 heures, dérive comparée chaque nuit (les demandes, les réponses, les sources), rapport mensuel, alertes et budget : environ 10 $ par mois.
+- **Les données se demandent.** Seulement des sources ouvertes ou autorisées : j'ai écrit aux offices de tourisme, et l'un d'eux a donné son accord écrit, avec ses conditions de citation.
+
+Ce qui me manque encore : tenir une charge réelle, et travailler en équipe sur un produit déjà en production.
 
 ## Note de conception
 
