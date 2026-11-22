@@ -146,12 +146,12 @@ def test_jeu_de_test_coherent():
 
 # --- Contrat réel (si le PDF est présent dans data/contrats) -------------------
 
-FOYER = DONNEES / "contrats" / "foyer_appart123_2025.pdf"
+CG_A = DONNEES / "contrats" / "assureur_a_habitation_2025.pdf"
 
 
-@pytest.mark.skipif(not FOYER.exists(), reason="PDF Foyer appart 123 absent de data/contrats")
-def test_contrat_foyer_lu_et_exclusion_parties_communes_trouvee():
-    clauses = segmenter_lignes(charger_lignes(FOYER))
+@pytest.mark.skipif(not CG_A.exists(), reason="PDF de l'Assureur A absent de data/contrats (non redistribué)")
+def test_contrat_a_lu_et_exclusion_parties_communes_trouvee():
+    clauses = segmenter_lignes(charger_lignes(CG_A))
     rapport = controler(clauses)
     assert rapport["statut"] == "OK", rapport["alertes"]
     par_id = {c.id: c for c in clauses}
@@ -457,7 +457,7 @@ def test_ingestion_ignore_la_documentation_et_retire_les_contrats_disparus(tmp_p
 
 
 def test_profil_reconnait_un_titre_numerote():
-    """« 3.1.6.1 Etendue de la garantie » (AXA) : le profil parle du titre sans son numéro."""
+    """« 3.1.6.1 Etendue de la garantie » (Assureur B) : le profil parle du titre sans son numéro."""
     from couverture.segmentation import type_du_profil
 
     assert type_du_profil("3.1.6.1 Etendue de la garantie", {"etendue de la garantie": "garantie"}).value == "garantie"
