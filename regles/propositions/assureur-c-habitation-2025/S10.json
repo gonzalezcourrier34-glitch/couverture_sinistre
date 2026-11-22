@@ -1,0 +1,448 @@
+{
+  "meta": {
+    "article": "S10",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-22",
+    "consigne": "redaction-regles v13",
+    "relecture": "Deux rédactions (18 h 39 et 19 h 02) relues et réunies à la main le 22 nov. 2026 (DEMARCHE 7.151)."
+  },
+  "proposition": {
+    "evenements": [
+      "bris"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "bris_glaces_batiment",
+        "nom": "Bris de glaces du bâtiment",
+        "article": "S10-a",
+        "texte": "Le bris des produits verriers (ou ceux en matière plastique remplissant les mêmes fonctions) constituant : - la clôture et la couverture de vos locaux y compris les fenêtres de toit, - les miroirs fixés ou accrochés au mur, - les portes et les cloisons intérieures verticales qui séparent une pièce d’une autre, - les parois de balcons, les vérandas.",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "bris"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "bien",
+                  "vitre"
+                ]
+              },
+              {
+                "f": [
+                  "bien",
+                  "miroir"
+                ]
+              },
+              {
+                "f": [
+                  "bien",
+                  "coupole"
+                ]
+              },
+              {
+                "f": [
+                  "bien",
+                  "panneau_verre_plastique"
+                ]
+              },
+              {
+                "f": [
+                  "bien",
+                  "veranda"
+                ]
+              },
+              {
+                "f": [
+                  "bien",
+                  "vitrail"
+                ]
+              },
+              {
+                "f": [
+                  "bien",
+                  "marquise"
+                ]
+              },
+              {
+                "f": [
+                  "bien",
+                  "serre"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "formule",
+                    "confort"
+                  ]
+                },
+                {
+                  "f": [
+                    "formule",
+                    "optimale"
+                  ]
+                },
+                {
+                  "f": [
+                    "formule",
+                    "investisseur"
+                  ]
+                }
+              ]
+            },
+            "article": "S10",
+            "texte": "Cette garantie vous est acquise si vous avez souscrit une formule Confort, Optimale ou Investisseur."
+          }
+        ],
+        "obligations": [],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "S10-b",
+            "texte": "Reportez-vous à la page 19.",
+            "montant": "voir « Montants maximums des garanties » (S14)"
+          }
+        ]
+      },
+      {
+        "id": "bris_glaces_meubles",
+        "nom": "Bris de glaces des meubles (formule Optimale)",
+        "article": "S10-a",
+        "texte": "Est également pris en charge le bris de glaces sur les meubles meublants ci-dessous : les vitres ou miroirs qui constituent des éléments des biens - mobiliers assurés, - les vitres d’inserts, les aquariums, - les parois de douche.",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "bris"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "bien",
+                  "verre_meuble"
+                ]
+              },
+              {
+                "f": [
+                  "bien",
+                  "insert"
+                ]
+              },
+              {
+                "f": [
+                  "bien",
+                  "aquarium"
+                ]
+              },
+              {
+                "f": [
+                  "bien",
+                  "paroi_douche"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "formule",
+                "optimale"
+              ]
+            },
+            "article": "S10-a",
+            "texte": "Si vous avez souscrit la formule Optimale"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      },
+      {
+        "id": "bris_cloture_provisoire",
+        "nom": "Frais de clôture provisoire",
+        "article": "S10-a",
+        "accessoire": true,
+        "texte": "nous vous remboursons également les frais de clôture provisoire, par des panneaux non vitrés",
+        "perimetre": [],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "protection_habitation_compromise",
+                "oui"
+              ]
+            },
+            "article": "S10-a",
+            "texte": "Dans la mesure où le bris de glaces met en cause la protection de votre habitation,"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "S10-a",
+            "texte": "(voir page 19, montants maximums des pertes pécuniaires et des frais complémentaires)",
+            "montant": "voir « Les frais complémentaires » (S16)"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "ou": [
+            {
+              "f": [
+                "travaux_vitres",
+                "autres_que_nettoyage"
+              ]
+            },
+            {
+              "f": [
+                "vitrage_en_deplacement",
+                "oui"
+              ]
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "S10-c",
+        "texte": "Les dommages causés aux objets assurés ou à leurs • encadrements, survenant lors de travaux de toute nature (y compris lors de leur pose, dépose, transport ou entrepôt) à l’exception des travaux de nettoyage."
+      },
+      {
+        "condition": {
+          "f": [
+            "defaut_encadrement",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "S10-c",
+        "texte": "Les dommages résultant de défauts sur les enchâssements, encadrements et soubassements."
+      },
+      {
+        "condition": {
+          "f": [
+            "type_dommage",
+            "rayure_ou_ecaillement"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "S10-c",
+        "texte": "Les rayures, ébréchures, écaillures."
+      },
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "vitrail"
+          ]
+        },
+        "portee": {
+          "bien": "vitrail"
+        },
+        "a_demander": false,
+        "article": "S10-c",
+        "texte": "Les vitraux, les marquises, les serres."
+      },
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "marquise"
+          ]
+        },
+        "portee": {
+          "bien": "marquise"
+        },
+        "a_demander": false,
+        "article": "S10-c",
+        "texte": "Les vitraux, les marquises, les serres."
+      },
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "serre"
+          ]
+        },
+        "portee": {
+          "bien": "serre"
+        },
+        "a_demander": false,
+        "article": "S10-c",
+        "texte": "Les vitraux, les marquises, les serres."
+      },
+      {
+        "condition": {
+          "et": [
+            {
+              "ou": [
+                {
+                  "f": [
+                    "bien",
+                    "verre_meuble"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "insert"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "aquarium"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "paroi_douche"
+                  ]
+                }
+              ]
+            },
+            {
+              "non": {
+                "f": [
+                  "formule",
+                  "optimale"
+                ]
+              }
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "S10-c",
+        "texte": "Les bris de vitres ou miroirs qui constituent des éléments des biens mobiliers assurés, les vitres d’inserts, les aquariums, les parois de douche, sauf si vous avez souscrit la formule Optimale."
+      }
+    ],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "formule",
+        "valeurs": [
+          "confort",
+          "optimale",
+          "investisseur"
+        ],
+        "libelle": "Formule souscrite",
+        "question": "Quelle formule vos conditions particulières mentionnent-elles ?",
+        "pourquoi": "la garantie bris de glaces dépend de la formule (S10)",
+        "plus_proche": "formule : chaque contrat a ses noms",
+        "aide": {
+          "confort": "formule Confort",
+          "optimale": "formule Optimale",
+          "investisseur": "formule Investisseur"
+        }
+      },
+      {
+        "variable": "bien",
+        "valeurs": [
+          "insert",
+          "aquarium",
+          "paroi_douche"
+        ],
+        "libelles": {
+          "insert": "vitre d'insert",
+          "paroi_douche": "paroi de douche"
+        },
+        "question": "Quel bien est concerné ?",
+        "pourquoi": "biens verriers que la formule Optimale ajoute (S10-a)",
+        "plus_proche": "bien = verre_meuble : le verre d'un meuble, pas un insert, un aquarium ni une paroi de douche",
+        "parent": "objet_divers",
+        "aide": {
+          "insert": "la vitre d'un insert ou d'un poêle",
+          "aquarium": "un aquarium",
+          "paroi_douche": "la paroi vitrée d'une douche"
+        }
+      },
+      {
+        "variable": "bien",
+        "valeurs": [
+          "vitrail",
+          "marquise"
+        ],
+        "question": "Quel bien est concerné ?",
+        "pourquoi": "biens que le bris de glaces exclut (S10-c)",
+        "plus_proche": "bien = vitre : un vitrage ordinaire",
+        "parent": "objet_divers",
+        "aide": {
+          "vitrail": "un vitrail",
+          "marquise": "une marquise, auvent vitré au-dessus d'une porte"
+        }
+      },
+      {
+        "variable": "defaut_encadrement",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Défaut de l'encadrement",
+        "question": "Le bris vient-il d'un défaut de l'encadrement, de l'enchâssement ou du soubassement de la vitre ?",
+        "pourquoi": "exclusion (S10-c)",
+        "plus_proche": "manque_entretien : l'usure en général, pas un défaut du cadre de la vitre",
+        "aide": {
+          "oui": "le cadre était défectueux, mal fixé, le soubassement abîmé",
+          "non": "l'encadrement était en bon état"
+        }
+      },
+      {
+        "variable": "protection_habitation_compromise",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Logement ouvert sur l'extérieur",
+        "question": "La vitre brisée laisse-t-elle le logement ouvert sur l'extérieur ?",
+        "pourquoi": "condition des frais de clôture provisoire (S10-a)",
+        "plus_proche": "aucune variable ne le dit",
+        "aide": {
+          "oui": "la vitre brisée donnait sur l'extérieur : on peut entrer",
+          "non": "vitre intérieure, miroir, ou ouverture hors d'atteinte"
+        }
+      }
+    ],
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "S10-c",
+        "texte": "Outre les exclusions relatives aux biens citées page 14 et les exclusions communes figurant page 30 :",
+        "pourquoi": "renvoi aux biens non assurés (S2-b) et aux exclusions communes (S35), qui se rédigent à part et visent toutes les garanties du contrat"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "à relire",
+      "controle": "réserve",
+      "message": "exclusion « Les dommages causés aux objets assurés ou à leurs • encadrem » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (S10-c) : renvoi aux biens non assurés (S2-b) et aux exclusions communes (S35), qui se rédigent à part et visent toutes les garanties du contrat"
+    }
+  ]
+}

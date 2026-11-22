@@ -103,6 +103,19 @@ def fusionner_variables(ancienne: str, nouvelle: str, donnees: Path | None = Non
         if mot.search(texte):
             f.write_bytes(mot.sub(nouvelle, texte).encode("utf-8"))     # octets : les fins de ligne ne bougent pas
             faits_changes.append(f"règles {f.stem} : {len(mot.findall(texte))} emploi(s) renommé(s)")
+    # Les propositions sont la source des règles (« corrigible à la main ») : une proposition qui garderait l'ancien
+    # nom ne pourrait plus être recontrôlée ni acceptée de nouveau (2.5 de D après la fusion du 22 nov., 7.153).
+    cle, n_props = re.compile(rf'"{re.escape(ancienne)}"'), 0
+    for f in sorted((Path(regles) / "propositions").rglob("*")):
+        if f.suffix not in (".json", ".pl") or not f.is_file():
+            continue
+        texte = f.read_bytes().decode("utf-8")
+        motif = cle if f.suffix == ".json" else mot
+        if motif.search(texte):
+            f.write_bytes(motif.sub(f'"{nouvelle}"' if f.suffix == ".json" else nouvelle, texte).encode("utf-8"))
+            n_props += 1
+    if n_props:
+        faits_changes.append(f"propositions : {n_props} fichier(s) mis à jour")
     pour = list(voc[nouvelle].get("pour") or [])
     if pour or voc[ancienne].get("pour"):
         ajoutes = [e for e in (voc[ancienne].get("pour") or []) if e not in pour and e not in PSEUDO_EVENEMENTS]
@@ -146,7 +159,7 @@ def mal_rangees(dossier: Path | None = None) -> list[str]:
             for v in variables if ou[v] != nom]
 
 
-def accepter_vocabulaire(prop: dict, dossier: Path | None = None) -> list[str]:
+def accepter_vocabulaire(prop: dict, dossier: Path | None = None, contrat_id: str | None = None) -> list[str]:
     """Ajoute au vocabulaire les faits déclarés par le modèle, puis le range. Décision humaine : c'est la commande
     qu'on lance après avoir lu les questions proposées."""
     dossier = dossier or prolog.VOCABULAIRE
@@ -163,6 +176,12 @@ def accepter_vocabulaire(prop: dict, dossier: Path | None = None) -> list[str]:
         if v in voc:
             nouvelles = [x for x in valeurs if x not in voc[v]["valeurs"]]
             voc[v]["valeurs"] += nouvelles
+            # Une variable dont chaque contrat a ses noms (la formule) : les noms déclarés deviennent ceux de ce
+            # contrat, y compris un nom qu'un autre porte déjà (« confort » chez C et chez D, 7.150).
+            if contrat_id and voc[v].get("par_contrat") is not None:
+                siens = voc[v]["par_contrat"].setdefault(contrat_id, [])
+                ajouts += [f"{v} = {x} : nom de ce contrat" for x in valeurs if x not in siens and x not in nouvelles]
+                siens += [x for x in valeurs if x not in siens]
             avant = list(voc[v].get("pour") or [])
             evs = evenements_par_variable(prop).get(v) or list(prop.get("evenements") or [])
             evs = [e for e in evs if e not in PSEUDO_EVENEMENTS]
@@ -181,7 +200,7 @@ def accepter_vocabulaire(prop: dict, dossier: Path | None = None) -> list[str]:
                 # Une valeur plus fine qu'une valeur existante doit y être rattachée : sans cela, un ordinateur lu
                 # `appareil_informatique` n'est plus de l'« electronique » pour les règles déjà écrites (7.64).
                 parent = (m.get("parent") or {}).get(x) if isinstance(m.get("parent"), dict) else m.get("parent")
-                if parent and parent in voc[v]["valeurs"] and parent != x:
+                if parent and parent in voc[v]["valeurs"] and parent != x and voc[v].get("par_contrat") is None:
                     voc[v].setdefault("parents", {})[x] = [parent]
             ajouts += [f"{v} = {x}" for x in nouvelles]
         else:

@@ -10,10 +10,11 @@ Un profil est un fichier JSON dans `<donnees>/profils/<nom>.json` :
   "nom": "assureur-a",
   "intertitres": {"les cas non couverts": "exclusion", "ce que signifient les mots": "definition"},
   "lignes_ignorees": ["^Assureur A S\\.A\\. .*$"],
-  "lexique": "auto",             // "auto", "deux_points" (Terme : définition) ou "terme_seul"
+  "lexique": "auto",             // "auto", "deux_points" (Terme : définition), "terme_seul" ou "puce" (■ puis le terme)
   "colonnes": 2,                 // facultatif : pages en deux colonnes, lues colonne par colonne (7.87)
   "pages_ignorees": [[11, 23]],  // facultatif : pages sautées (tableaux récapitulatifs)
-  "titres_numerotes": "articles" // facultatif : seuls « Article 3 », « Art. 3 », « ART 3 » ouvrent une clause
+  "titres_numerotes": "articles",// facultatif : seuls « Article 3 », « Art. 3 », « ART 3 » ouvrent une clause
+  "titres": ["Vol", "Bris de glaces"] // facultatif : un contrat sans numéros ; ses titres de section, pris au sommaire
 }
 Le catalogue des contrats désigne le profil : "profil": "assureur-a".
 
@@ -30,7 +31,7 @@ from pathlib import Path
 from .texte import normaliser
 
 TYPES_PERMIS = {"garantie", "exclusion", "condition", "limite", "definition"}
-FORMATS_LEXIQUE = {"auto", "deux_points", "terme_seul"}
+FORMATS_LEXIQUE = {"auto", "deux_points", "terme_seul", "puce"}
 
 
 class ProfilInvalide(ValueError):
@@ -80,6 +81,11 @@ def valider_profil(profil: dict) -> dict:
         sortie["pages_ignorees"] = pages
     if numeros == "articles":
         sortie["titres_numerotes"] = "articles"
+    titres = [str(t).strip() for t in profil.get("titres") or []]
+    if any(not 2 <= len(t) <= 120 for t in titres):
+        raise ProfilInvalide("titres : des titres de section de 2 à 120 caractères.")
+    if titres:
+        sortie["titres"] = titres
     return sortie
 
 

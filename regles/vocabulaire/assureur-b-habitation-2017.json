@@ -399,21 +399,6 @@
         "bris"
       ]
     },
-    "vitrage_en_deplacement": {
-      "libelle": "Vitrage en cours de déplacement",
-      "valeurs": [
-        "oui",
-        "non"
-      ],
-      "question": "Le vitrage était-il en cours de déplacement (transport, manutention) au moment du sinistre ?",
-      "aide": {
-        "oui": "la vitre était en train d'être déplacée, transportée, manipulée",
-        "non": "la vitre était fixe (placée ou non) mais pas en cours de déplacement"
-      },
-      "pour": [
-        "bris"
-      ]
-    },
     "cause_projection_debris": {
       "libelle": "Projection de débris de vitrage",
       "valeurs": [
@@ -472,22 +457,6 @@
       },
       "pour": [
         "bris",
-        "vol"
-      ]
-    },
-    "option_vol": {
-      "libelle": "Garantie « vol » souscrite",
-      "source": "conditions_particulieres",
-      "valeurs": [
-        "oui",
-        "non"
-      ],
-      "question": "Vos conditions particulières mentionnent-elles la garantie « vol » ?",
-      "aide": {
-        "oui": "la garantie figure aux conditions particulières",
-        "non": "elle n'y figure pas"
-      },
-      "pour": [
         "vol"
       ]
     },

@@ -10,7 +10,7 @@ from ..texte import normaliser
 
 
 PROPOSITIONS = prolog.DOSSIER / "propositions"
-VERSION = "v12"
+VERSION = "v13"
 IDENT = re.compile(r"^[a-z][a-z0-9_]*$")
 
 SYSTEME_REDACTION = """Tu traduis une garantie d'un contrat d'assurance habitation en règles pour un moteur logique. Tu ne juges aucun sinistre.
@@ -93,10 +93,31 @@ def concepts_existants(contrat_pl: str) -> dict[str, str]:
         r"^definition\((\w+),.*?'[^']*',\s*\"((?:[^\"\\]|\\.)*)\"\)\.", contrat_pl, re.M | re.S)}
 
 
-def message_redaction(article: str, textes: list[Clause], definitions: list[Clause], contrat_pl: str) -> str:
+def valeurs_du_contrat(d: dict, contrat_id: str | None) -> list[str] | None:
+    """Les valeurs qu'une variable prend dans ce contrat. None : la variable n'a pas de valeurs propres à un contrat
+    (ou le contrat n'est pas donné). Les formules portent le nom que chaque assureur leur donne (7.150)."""
+    if not contrat_id or not d.get("par_contrat"):
+        return None
+    return list(d["par_contrat"].get(contrat_id) or [])
+
+
+def ligne_vocabulaire(v: str, d: dict, contrat_id: str | None = None) -> str:
+    propres = valeurs_du_contrat(d, contrat_id)
+    if propres is None:
+        valeurs = ", ".join(d["valeurs"])
+    elif propres:
+        valeurs = ", ".join(propres) + " (les noms de CE contrat ; un autre nom que le texte emploie se déclare)"
+    else:
+        valeurs = ("(chaque contrat a ses noms ; aucun n'est encore connu pour celui-ci : emploie les noms du texte, "
+                   "tels quels, et déclare-les tous dans « vocabulaire_manquant »)")
+    return (f"- {v}{' (plusieurs)' if d.get('plusieurs') else ''} : {valeurs}"
+            f"{' — « ' + d['question'] + ' »' if d.get('question') else ''}")
+
+
+def message_redaction(article: str, textes: list[Clause], definitions: list[Clause], contrat_pl: str,
+                      contrat_id: str | None = None) -> str:
     voc = prolog.vocabulaire()
-    vocab = "\n".join(f"- {v}{' (plusieurs)' if d.get('plusieurs') else ''} : {', '.join(d['valeurs'])}"
-                      f"{' — « ' + d['question'] + ' »' if d.get('question') else ''}" for v, d in voc.items())
+    vocab = "\n".join(ligne_vocabulaire(v, d, contrat_id) for v, d in voc.items())
     concepts = "\n".join(f"- {n} : « {t} »" for n, t in concepts_existants(contrat_pl).items()) or "(aucun)"
     bloc = "\n\n".join(f"### Clause {c.id} ({' > '.join(c.chemin)})\n{c.texte}" for c in textes)
     defs = "\n\n".join(f"### Clause {c.id}\n{c.texte}" for c in definitions) or "(aucune)"

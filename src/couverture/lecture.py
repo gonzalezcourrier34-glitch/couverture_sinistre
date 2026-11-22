@@ -178,11 +178,13 @@ def variables_du_contrat(contrat_id: str) -> set[str] | None:
 
 def extraire_faits_regles(sinistre: str, llm: LLM, decideur=None, variables: set[str] | None = None,
                           exemples=None, verifier: bool = True, llm_socle: LLM | None = None,
-                          suivi=None, llm_verification: LLM | None = None) -> tuple[dict, list[str]]:
+                          suivi=None, llm_verification: LLM | None = None,
+                          voc: dict | None = None) -> tuple[dict, list[str]]:
     """Les faits lus par le modèle, et les écarts au vocabulaire (retirés). Deux temps (le socle, puis les
     questions de cet événement), puis la vérification fait par fait (`verifier=False` : sans, pour les tests).
     `decideur(faits) -> dict` (le moteur) arbitre la vérification (7.44).
     `variables` : celles du contrat (le socle est toujours lu) ; None : tout le vocabulaire.
+    `voc` : le vocabulaire tel que le contrat le voit (`prolog.vocabulaire_du_contrat`) ; None : le vocabulaire entier.
     `exemples(evenement=None) -> [exemple]` : des déclarations proches et leurs faits, montrés au socle puis aux
     détails (ceux du même événement) (7.108). None : pas d'exemples.
     `llm_socle` : un autre modèle pour le seul temps 1 (7.118) ; None : le même.
@@ -197,7 +199,7 @@ def extraire_faits_regles(sinistre: str, llm: LLM, decideur=None, variables: set
 
     from .exemples import bloc
 
-    voc = prolog.vocabulaire()
+    voc = voc if voc is not None else prolog.vocabulaire()
     if variables is not None:
         # Les règles d'Assureur B ne doivent pas changer ce qu'on lit pour Assureur A : la plainte ou la formule
         # « Privilège » n'ont rien à faire dans la lecture d'un vol chez Assureur A (7.57).

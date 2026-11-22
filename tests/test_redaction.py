@@ -759,6 +759,9 @@ def test_fusionner_deux_variables_qui_posent_la_meme_question(tmp_path, monkeypa
         json.dumps({"id": "x", "faits": {"evenement": ["tempete"], "vent_100_kmh": "oui"}}) + "\n", encoding="utf-8")
     voc = prolog.vocabulaire()
     b, d = "assureur-b-habitation-2017", "assureur-d-habitation-2026"
+    proposition = regles / "propositions" / d / "x.json"       # la source d'une règle suit le renommage (7.153)
+    proposition.parent.mkdir(parents=True)
+    proposition.write_text(json.dumps({"proposition": {"c": {"f": ["vent_100_kmh", "oui"]}}}), encoding="utf-8")
     assert "vent_100_kmh" in prolog.variables_employees(d) and "vent_80_kmh_irm" in prolog.variables_employees(b)
     question = voc["vent_80_kmh_irm"]["question"]
     octets_avant = (regles / f"{d}.pl").read_bytes()
@@ -768,6 +771,7 @@ def test_fusionner_deux_variables_qui_posent_la_meme_question(tmp_path, monkeypa
     assert rapport[0] == "vent_100_kmh → vent_80_kmh_irm" and any(d in ligne for ligne in rapport)
     apres = prolog.vocabulaire()
     assert "vent_100_kmh" not in apres and apres["vent_80_kmh_irm"]["question"] == question
+    assert json.loads(proposition.read_text(encoding="utf-8"))["proposition"]["c"] == {"f": ["vent_80_kmh_irm", "oui"]}
     assert "vent_80_kmh_irm" in prolog.variables_employees(d) and "vent_100_kmh" not in prolog.variables_employees(d)
     octets_apres = (regles / f"{d}.pl").read_bytes()
     assert octets_apres.count(b"\r\n") == octets_avant.count(b"\r\n"), "les fins de ligne des règles ne bougent pas"
@@ -778,3 +782,76 @@ def test_fusionner_deux_variables_qui_posent_la_meme_question(tmp_path, monkeypa
         redaction.fusionner_variables("alea_tempete", "vent_80_kmh_irm", donnees=donnees)
     with pytest.raises(ValueError):
         redaction.fusionner_variables("evenement", "vent_80_kmh_irm", donnees=donnees)
+
+
+def test_un_contrat_sans_regles_commence_par_un_fichier_vide(tmp_path, monkeypatch):
+    """7.149 : la première rédaction crée le fichier de règles (un en-tête, aucune règle) ; tant qu'il ne traduit
+    aucune garantie, le contrat n'est pas compté parmi ceux qu'on peut interroger."""
+    import shutil
+    regles = tmp_path / "regles"
+    shutil.copytree(prolog.DOSSIER, regles, ignore=shutil.ignore_patterns("propositions", "cas"))
+    monkeypatch.setattr(prolog, "DOSSIER", regles)
+    monkeypatch.setattr(prolog, "MOTEUR", regles / "moteur.pl")
+    avant = prolog.contrats_regles()
+    fichier = redaction.ouvrir_regles("assureur-z-auto-2030")
+    texte = fichier.read_text(encoding="utf-8")
+    assert texte.startswith(":- encoding(utf8).") and "discontiguous" in texte and "assureur-z-auto-2030" in texte
+    assert not prolog.a_des_garanties("assureur-z-auto-2030") and prolog.contrats_regles() == avant
+    fichier.write_text(texte + "garantie(vol, \"Vol\", 'S8', \"le vol\").\n", encoding="utf-8")
+    assert prolog.a_des_garanties("assureur-z-auto-2030") and "assureur-z-auto-2030" in prolog.contrats_regles()
+    assert redaction.ouvrir_regles("assureur-z-auto-2030").read_text(encoding="utf-8").endswith("le vol\").\n"), \
+        "un fichier qui existe n'est pas récrit"
+
+
+def test_une_formule_ne_vaut_que_dans_son_contrat(voc_etendu, monkeypatch):
+    """7.150 : pour le quatrième contrat, le modèle a écrit « excellence » (une formule de D) pour l'« Optimale »
+    du texte. Le vocabulaire donné ne montre que les noms du contrat, le contrôle refuse ceux d'un autre, et
+    l'acceptation range les noms déclarés sous le contrat."""
+    neuf = "assureur-z-habitation-2030"
+    message = redaction.message_redaction("2.2", [], [], "", neuf)
+    ligne = next(l for l in message.splitlines() if l.startswith("- formule"))
+    assert "excellence" not in ligne and "aucun n'est encore connu" in ligne
+    assert "privilege" in next(l for l in redaction.message_redaction("2.2", [], [], "", "assureur-b-habitation-2017").splitlines()
+                               if l.startswith("- formule"))
+    assert "excellence" in next(l for l in redaction.message_redaction("2.2", [], [], "").splitlines()
+                                if l.startswith("- formule")), "sans contrat, rien ne change"
+
+    prop = copy.deepcopy(BONNE)
+    prop["garanties"][0]["circonstances"].append(
+        {"condition": {"f": ["formule", "excellence"]}, "article": "2.2", "texte": prop["garanties"][0]["texte"]})
+    pl = prolog.fichier_regles(CONTRAT).read_text(encoding="utf-8")
+    ps = redaction.controler(copy.deepcopy(prop), CLAUSES, pl, "2.2", neuf)
+    assert any(p["gravite"] == redaction.BLOQUANT and "pas un nom de ce contrat" in p["message"] for p in ps)
+    assert not any("pas un nom de ce contrat" in p["message"]
+                   for p in redaction.controler(copy.deepcopy(prop), CLAUSES, pl, "2.2", "assureur-d-habitation-2026"))
+
+    prop["vocabulaire_manquant"] = [{"variable": "formule", "valeurs": ["confort", "optimale"], "parent": "confort",
+                                     "question": "?", "aide": {"optimale": "formule Optimale"}}]
+    ajouts = redaction.accepter_vocabulaire(prop, voc_etendu, contrat_id=neuf)
+    formule = prolog.vocabulaire(voc_etendu)["formule"]
+    assert formule["par_contrat"][neuf] == ["confort", "optimale"] and "optimale" in formule["valeurs"]
+    assert "formule = confort : nom de ce contrat" in ajouts and "optimale" not in (formule.get("parents") or {})
+
+
+def test_la_version_de_la_consigne_est_celle_du_registre():
+    from couverture import consignes
+    assert redaction.VERSION == consignes.CONSIGNES["couverture-redaction-regles"][2]
+
+
+def test_une_exclusion_hors_du_perimetre_est_signalee():
+    """7.152 : le vélo volé dans le local commun était refusé chez C sous le nom du « vol sur le lieu de vacances » :
+    le périmètre du vol dans l'habitation n'admettait pas les parties communes, que l'exclusion nomme pourtant."""
+    from couverture.redaction.controles import exclusions_hors_perimetre
+    f = lambda v, x: {"f": [v, x]}
+    prop = {"definitions": [{"concept": "dependances", "condition": {"ou": [f("lieu", "garage"), f("lieu", "annexe")]}}],
+            "garanties": [{"id": "vol", "perimetre": [f("evenement", "vol"), {"ou": [f("lieu", "logement"), {"concept": "dependances"}]}],
+                           "exclusions": []}],
+            "exclusions_communes": [{"condition": f("lieu", "parties_communes"), "texte": "les locaux à usage commun"},
+                                    {"condition": f("lieu", "annexe"), "texte": "les annexes"}]}
+    voc = prolog.vocabulaire()
+    notes = exclusions_hors_perimetre(prop, voc)
+    assert len(notes) == 1 and "parties_communes" in notes[0], "l'annexe est admise par le concept, pas le local commun"
+    prop["garanties"][0]["perimetre"][1]["ou"].append(f("lieu", "parties_communes"))
+    assert exclusions_hors_perimetre(prop, voc) == []
+    prop["garanties"][0]["perimetre"][1] = {"concept": "batiment"}          # un concept du contrat, qu'on ne sait pas ouvrir
+    assert exclusions_hors_perimetre(prop, voc) == [], "sans certitude, pas d'alerte"

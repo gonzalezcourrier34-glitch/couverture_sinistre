@@ -33,7 +33,7 @@ class SansModele:
 
 def a_des_regles(contrat_id: str) -> bool:
     """Vrai si le contrat a des règles Prolog (`regles/<contrat>.pl`) : seuls ceux-là peuvent décider."""
-    return prolog.fichier_regles(contrat_id).exists()
+    return prolog.a_des_garanties(contrat_id)
 
 
 def contrat_public(c: Contrat) -> dict[str, Any]:
@@ -93,7 +93,7 @@ def valeurs_proposees(variable: str, voc: dict, faits: dict, contrat_id: str | N
     précisions sont proposées (« le gel ») : reproposer la valeur déjà connue ramenait la même question (7.128)."""
     d = voc.get(variable, {})
     # Les valeurs du contrat, quand la variable les déclare : les formules de B ne sont pas celles de D (7.141).
-    valeurs = list((d.get("par_contrat") or {}).get(contrat_id) or d.get("valeurs", []))
+    valeurs = list(prolog.vocabulaire_du_contrat(contrat_id, {variable: d})[variable].get("valeurs", [])) if d else []
     connu = faits.get(variable)
     connues = set(connu if isinstance(connu, list) else [connu]) if connu not in (None, "", []) else set()
     if not connues:

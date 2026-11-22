@@ -58,14 +58,40 @@ def chemins(contrat_id: str, article: str, dossier: Path | None = None) -> tuple
     return base / f"{article}.json", base / f"{article}.pl"
 
 
+SQUELETTE = """:- encoding(utf8).
+/*  Règles du contrat {contrat_id}.
+
+    Le même moteur (regles/moteur.pl) et le même vocabulaire de faits (regles/vocabulaire/) que pour les autres
+    contrats. Aucune règle n'est écrite à la main : chaque garantie est rédigée par un modèle (`couverture rediger
+    --contrat {contrat_id} --article …`), contrôlée par le code, relue, puis ajoutée ici par
+    `couverture rediger --accepter`.
+
+    Tant qu'aucune garantie n'est ajoutée, aucun événement n'est traduit : le moteur ne conclut jamais à un
+    refus, il répond « à examiner par un gestionnaire ».
+*/
+
+:- discontiguous definition/4, precision/3, garantie/4, perimetre/2, circonstance/4,
+                 obligation/6, exclusion/6, limite/4, evenement_traduit/1, accessoire/1.
+"""
+
+
+def ouvrir_regles(contrat_id: str) -> Path:
+    """Le fichier de règles du contrat ; créé vide (un en-tête, aucune règle) à la première rédaction (7.149) :
+    un contrat de plus ne commence pas par un fichier écrit à la main."""
+    fichier = prolog.fichier_regles(contrat_id)
+    if not fichier.exists():
+        fichier.write_text(SQUELETTE.format(contrat_id=contrat_id), encoding="utf-8")
+    return fichier
+
+
 def rediger(contrat_id: str, article: str, clauses: list[Clause], llm, dossier: Path | None = None,
             cas: list[tuple[str, dict]] | None = None) -> dict:
     """Fait rédiger la proposition par le modèle, l'enregistre et la contrôle."""
-    contrat_pl = retirer_article(prolog.fichier_regles(contrat_id).read_text(encoding="utf-8"), article)
+    contrat_pl = retirer_article(ouvrir_regles(contrat_id).read_text(encoding="utf-8"), article)
     textes = clauses_article(clauses, article)
     if not textes:
         raise LookupError(f"Aucune clause {article} dans le contrat {contrat_id}.")
-    message = message_redaction(article, textes, definitions_utiles(clauses, textes), contrat_pl)
+    message = message_redaction(article, textes, definitions_utiles(clauses, textes), contrat_pl, contrat_id)
     llm_long = pour_compiler(llm, timeout=600)   # 300 s n'ont pas suffi pour 2.2 (7.22)
     prop = _appeler(llm_long, SYSTEME_REDACTION, message)
     meta = {"article": article, "modele": getattr(llm, "nom", "?"), "date": date.today().isoformat(),
@@ -99,7 +125,7 @@ def enregistrer(contrat_id: str, article: str, doc: dict, clauses: list[Clause],
     """Contrôle, écrit le JSON et les règles. `cas` (faits idéaux annotés) : avec SWI-Prolog, vérifie le
     chargement et la non-régression ; None : ces contrôles ne sont pas faits."""
     prop = doc["proposition"]
-    doc["controles"] = controler(prop, clauses, contrat_pl, article)
+    doc["controles"] = controler(prop, clauses, contrat_pl, article, contrat_id)
     _, pl = chemins(contrat_id, article, dossier)
     sauver(contrat_id, article, doc, dossier)
     if pl.exists():

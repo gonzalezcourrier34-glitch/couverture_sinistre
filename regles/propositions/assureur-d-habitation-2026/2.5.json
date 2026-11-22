@@ -130,7 +130,7 @@
           {
             "condition": {
               "f": [
-                "cles_deposees_exterieur",
+                "cles_a_proximite",
                 "oui"
               ]
             },
@@ -352,7 +352,7 @@
           {
             "condition": {
               "f": [
-                "cles_deposees_exterieur",
+                "cles_a_proximite",
                 "oui"
               ]
             },
@@ -389,7 +389,7 @@
         "plus_proche": "effraction, violence : oui/non chacun ; cinq faits oui/non dont un seul inconnu rend tout incertain"
       },
       {
-        "variable": "cles_deposees_exterieur",
+        "variable": "cles_a_proximite",
         "valeurs": [
           "oui",
           "non"

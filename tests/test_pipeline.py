@@ -695,3 +695,68 @@ def test_noms_du_modele_resout_un_alias(env_vide, monkeypatch):
     assert module_llm.noms_du_modele(module_llm.MistralLLM("inconnu")) == []
     monkeypatch.setattr(module_llm.urllib.request, "urlopen", lambda r, timeout: (_ for _ in ()).throw(OSError("réseau")))
     assert module_llm.noms_du_modele(llm) == [], "sans réponse du fournisseur : pas d'erreur, pas de liste"
+
+
+# --- Un contrat sans numéros d'article : les titres du sommaire dans le profil (7.148) --------------------------
+
+def _sans_numeros():
+    texte = """Quelques définitions
+■
+Accident
+Tout événement soudain, imprévu, extérieur à la victime.
+■
+Franchise
+Somme restant à votre charge en cas de sinistre.
+■
+Objets usuels
+Tous les objets qui ne sont pas des objets de valeur.
+Vol
+Cette garantie vous est acquise si vous avez souscrit une formule Confort.
+Ce qui est garanti
+■ La disparition des biens assurés à la suite d'un vol par effraction.
+MESURES DE PROTECTION
+Vous devez fermer les portes à clé.
+CE QUI EXCLU
+Outre les exclusions relatives aux biens citées page 14 et
+les exclusions communes figurant page 30 :
+• Les vols commis par les membres de votre famille.
+Bris de glaces
+Ce qui est garanti
+■ Le bris des vitres du bâtiment.
+Montants maximums des garanties
+Vol
+À concurrence des plafonds des Conditions Particulières.
+Bris de glaces
+Frais de remplacement."""
+    return [Ligne(1, l) for l in texte.splitlines()]
+
+
+def test_contrat_sans_numeros_decoupe_par_les_titres_du_profil():
+    from couverture.profils import valider_profil
+
+    profil = valider_profil({"nom": "sans-numeros", "lexique": "puce", "titres_numerotes": "articles",
+                             "intertitres": {"ce qui exclu": "exclusion", "mesures de protection": "condition"},
+                             "titres": ["Quelques définitions", "Vol", "Bris de glaces", "Montants maximums des garanties"]})
+    clauses = {c.id: c for c in segmenter_lignes(_sans_numeros(), profil)}
+    # Le lexique : un terme par puce, et « Franchise » y est un terme, pas l'intertitre des franchises.
+    assert {"S1/accident", "S1/franchise", "S1/objets-usuels"} <= set(clauses)
+    assert clauses["S1/franchise"].type == TypeClause.DEFINITION
+    # Chaque titre du sommaire ouvre une section ; les sous-titres en capitales lui restent rattachés.
+    assert clauses["S2-a"].chemin == ["Vol", "Ce qui est garanti"] and clauses["S2-a"].type == TypeClause.GARANTIE
+    assert clauses["S2-b"].chemin == ["Vol", "MESURES DE PROTECTION"] and clauses["S2-b"].type == TypeClause.CONDITION
+    exclusion = clauses["S2-c"]
+    assert exclusion.type == TypeClause.EXCLUSION and "membres de votre famille" in exclusion.texte, \
+        "« les exclusions communes figurant page 30 : » est la suite d'une phrase, pas un intertitre"
+    assert clauses["S3-a"].chemin[0] == "Bris de glaces"
+    # Le tableau des montants répète les titres des garanties : ils n'ouvrent pas de section une seconde fois.
+    assert "Frais de remplacement" in clauses["S4"].texte and "S5" not in clauses and "S6" not in clauses
+
+
+def test_profil_sans_titres_inchange():
+    """Sans « titres », le découpage est celui d'avant : une ligne en capitales ouvre un chapitre."""
+    lignes = [Ligne(1, t) for t in ["GARANTIE VOL", "Nous garantissons le vol.", "MESURES DE PROTECTION", "Fermez à clé."]]
+    assert [c.id for c in segmenter_lignes(lignes)] == ["S1", "S2"]
+    from couverture.profils import ProfilInvalide, valider_profil
+    assert "titres" not in valider_profil({"nom": "x"})
+    with pytest.raises(ProfilInvalide):
+        valider_profil({"nom": "x", "titres": ["A"]})

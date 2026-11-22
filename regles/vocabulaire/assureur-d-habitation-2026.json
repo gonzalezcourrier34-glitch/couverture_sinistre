@@ -230,38 +230,6 @@
         "jamais"
       ]
     },
-    "acces_voleur": {
-      "libelle": "Mode d'entrée du voleur",
-      "valeurs": [
-        "escalade",
-        "menaces",
-        "cles_volees",
-        "fausse_qualite",
-        "sans_effraction"
-      ],
-      "libelles": {
-        "cles_volees": "clés volées",
-        "fausse_qualite": "fausse qualité",
-        "sans_effraction": "sans effraction"
-      },
-      "question": "Comment le voleur ou l'auteur est-il entré (hors effraction) ?",
-      "aide": {
-        "escalade": "par escalade : mur, balcon, fenêtre en hauteur",
-        "menaces": "par menaces ou violences physiques sur l'assuré ou un proche",
-        "cles_volees": "avec les clés de l'assuré, volées auparavant",
-        "fausse_qualite": "en se faisant passer pour un employé, un agent, un livreur",
-        "sans_effraction": "porte ou fenêtre ouverte ou non verrouillée, aucune trace"
-      },
-      "pour": [
-        "vol",
-        "vandalisme"
-      ],
-      "implique": {
-        "sans_effraction": {
-          "effraction": "non"
-        }
-      }
-    },
     "arrete_catnat_30j": {
       "libelle": "Arrêté de catastrophe naturelle et déclaration dans les 30 jours",
       "valeurs": [

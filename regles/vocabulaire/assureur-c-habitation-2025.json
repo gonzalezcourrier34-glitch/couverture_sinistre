@@ -1,0 +1,129 @@
+{
+  "_description": "Variables que seules les règles de ce contrat emploient (regles/assureur-c-habitation-2025.pl). Même format que commun.json. Rangé par `couverture regles --ranger` : une variable qu'un autre contrat se met à employer passe dans commun.json.",
+  "variables": {
+    "defaut_encadrement": {
+      "libelle": "Défaut de l'encadrement",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le bris vient-il d'un défaut de l'encadrement, de l'enchâssement ou du soubassement de la vitre ?",
+      "aide": {
+        "oui": "le cadre était défectueux, mal fixé, le soubassement abîmé",
+        "non": "l'encadrement était en bon état"
+      },
+      "pour": [
+        "bris",
+        "accessoire"
+      ]
+    },
+    "protection_habitation_compromise": {
+      "libelle": "Logement ouvert sur l'extérieur",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La vitre brisée laisse-t-elle le logement ouvert sur l'extérieur ?",
+      "aide": {
+        "oui": "la vitre brisée donnait sur l'extérieur : on peut entrer",
+        "non": "vitre intérieure, miroir, ou ouverture hors d'atteinte"
+      },
+      "pour": [
+        "accessoire"
+      ]
+    },
+    "hauteur_ouverture": {
+      "libelle": "Hauteur de l'ouverture",
+      "valeurs": [
+        "plus_3m",
+        "moins_3m"
+      ],
+      "question": "La porte ou la fenêtre par laquelle le voleur est entré était-elle à plus de 3 mètres de hauteur ?",
+      "libelles": {
+        "plus_3m": "plus de 3 mètres",
+        "moins_3m": "moins de 3 mètres"
+      },
+      "aide": {
+        "plus_3m": "fenêtre d'un étage, à plus de 3 mètres du sol",
+        "moins_3m": "fenêtre du rez-de-chaussée ou facile à atteindre"
+      },
+      "pour": [
+        "vol"
+      ]
+    },
+    "changement_serrures_48h": {
+      "libelle": "Serrures changées sous 48 heures",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Après un vol ou une perte de clés, les serrures ont-elles été changées dans les 48 heures ?",
+      "aide": {
+        "oui": "les serrures ont été changées dans les deux jours",
+        "non": "des clés avaient été perdues ou volées et les serrures n'ont pas été changées"
+      },
+      "pour": [
+        "vol"
+      ]
+    },
+    "porte_pleine_verrou": {
+      "libelle": "Porte pleine avec serrure",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La dépendance était-elle fermée par une porte pleine munie d'un verrou ou d'une serrure à clé (un cadenas ne compte pas) ?",
+      "aide": {
+        "oui": "porte pleine fermée à clé par une serrure ou un verrou",
+        "non": "porte légère, à claire-voie, fermée par un cadenas ou un verrou sans clé, ou non fermée"
+      },
+      "pour": [
+        "vol"
+      ]
+    },
+    "valeur_unitaire": {
+      "libelle": "Valeur de l'objet",
+      "valeurs": [
+        "moins_200",
+        "de_200_a_5000",
+        "plus_5000"
+      ],
+      "question": "Quelle est la valeur de l'objet le plus cher (ou de la collection) ?",
+      "libelles": {
+        "moins_200": "moins de 200 €",
+        "de_200_a_5000": "de 200 à 5 000 €",
+        "plus_5000": "plus de 5 000 €"
+      },
+      "aide": {
+        "moins_200": "la déclaration dit une valeur inférieure à 200 euros",
+        "de_200_a_5000": "la déclaration dit une valeur entre 200 et 5 000 euros",
+        "plus_5000": "la déclaration dit une valeur supérieure à 5 000 euros"
+      },
+      "pour": [
+        "vol"
+      ]
+    },
+    "inhabitation": {
+      "libelle": "Logement inoccupé",
+      "valeurs": [
+        "non",
+        "plus_3_jours",
+        "plus_45_jours"
+      ],
+      "question": "Depuis combien de temps le logement était-il inoccupé au moment du vol ?",
+      "libelles": {
+        "non": "non, ou 3 jours au plus",
+        "plus_3_jours": "plus de 3 jours",
+        "plus_45_jours": "plus de 45 jours"
+      },
+      "aide": {
+        "non": "le logement était occupé, ou vide depuis trois jours au plus",
+        "plus_3_jours": "personne n'y logeait depuis plus de 3 jours et 45 jours au plus (vacances, déplacement)",
+        "plus_45_jours": "personne n'y logeait depuis plus de 45 jours d'affilée"
+      },
+      "pour": [
+        "vol"
+      ]
+    }
+  }
+}

@@ -212,6 +212,9 @@ def _decouper_long(base: Clause, lignes: list[Ligne]) -> list[Clause]:
     ]
 
 
+PUCES = {"■", "•", "▪", "●", "◼", "-", "–"}
+
+
 def _terme_seul(ligne: str, precedente: str | None) -> bool:
     """Lexique « terme sur sa ligne, définition dessous » : ligne courte, majuscule, sans ponctuation finale,
     après une définition terminée (point) ou une liste à puces."""
@@ -234,7 +237,18 @@ def _eclater_lexique(base: Clause, lignes: list[Ligne], format_: str = "auto") -
     else:
         avec_deux_points = format_ == "deux_points"
     precedente: str | None = None
+    apres_puce = False
     for l in lignes:
+        if format_ == "puce":
+            # Une puce seule sur sa ligne annonce le terme, sur la ligne suivante (7.148).
+            if l.texte.strip() in PUCES:
+                apres_puce = True
+            elif apres_puce:
+                termes.append((l.texte.strip(), []))
+                apres_puce = False
+            elif termes:
+                termes[-1][1].append(l)
+            continue
         if avec_deux_points and (m := TERME_RE.match(l.texte)):
             termes.append((m.group(1).strip(" «»\""), [Ligne(l.page, m.group(2))]))
         elif not avec_deux_points and _terme_seul(l.texte, precedente):
@@ -268,6 +282,13 @@ def segmenter_lignes(lignes: list[Ligne], profil: dict | None = None) -> list[Cl
     if pages := profil.get("pages_ignorees"):  # des tableaux récapitulatifs, numérotés comme des articles (7.87)
         lignes = [l for l in lignes if not any(a <= l.page <= b for a, b in pages)]
     articles_seuls = profil.get("titres_numerotes") == "articles"
+    # Un contrat sans numéros d'article (7.148) : ses titres de section, recopiés du sommaire dans le profil.
+    # Chacun ouvre une section, une fois (le tableau des montants répète les titres des garanties). Dans ce mode,
+    # une ligne en capitales est un sous-titre de la section en cours (« MESURES DE PRÉVENTION »), pas un chapitre,
+    # et un intertitre commence par une majuscule (« les exclusions communes figurant page 30 : » est la suite
+    # d'une phrase).
+    titres_profil = {normaliser(x).rstrip(" :").strip() for x in profil.get("titres", [])}
+    titres_ouverts: set[str] = set()
     clauses: list[Clause] = []
     deja: dict[str, int] = {}
     pile: list[_Section] = []
@@ -333,13 +354,26 @@ def segmenter_lignes(lignes: list[Ligne], profil: dict | None = None) -> list[Cl
             courante.lignes.append(ligne)
             continue
 
-        intertitre = _intertitre(t, intertitres_profil)
-        capitales = not intertitre and (_en_capitales(t) or CONTENEUR_RE.match(t))
+        cle = normaliser(t).rstrip(" :").strip()
+        du_profil = cle in titres_profil and cle not in titres_ouverts
+        if du_profil:
+            titres_ouverts.add(cle)
+        elif titres_profil and courante.genre == "haut" and re.search(r"definition|lexique|glossaire", normaliser(courante.titre)):
+            # Dans le lexique d'un contrat sans numéros, seul un titre du sommaire ferme la section : « Franchise »
+            # y est un terme, pas l'intertitre des franchises.
+            courante.lignes.append(ligne)
+            continue
+        intertitre = None if du_profil else _intertitre(t, intertitres_profil)
+        if intertitre and titres_profil and not t[:1].isupper():
+            intertitre = None
+        capitales = not intertitre and (du_profil or _en_capitales(t) or CONTENEUR_RE.match(t))
+        if titres_profil and capitales and not du_profil and not CONTENEUR_RE.match(t) and pile:
+            intertitre, capitales = t.rstrip(" :"), False      # sous-titre de la section en cours
         if intertitre or capitales:
             titre = (intertitre or t).strip()
             fermer(courante)
             a_un_numero = any(p.genre == "num" for p in pile)
-            if capitales and (CONTENEUR_RE.match(t) or not a_un_numero):
+            if capitales and (du_profil or CONTENEUR_RE.match(t) or not a_un_numero):
                 # Titre de premier niveau (chapitre, ou section d'un contrat sans numérotation).
                 pile.clear()
                 hauts += 1

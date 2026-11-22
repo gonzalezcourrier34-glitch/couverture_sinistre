@@ -11,7 +11,8 @@ from .. import lecture, prolog
 from ..models import Clause, TypeClause
 from ..texte import normaliser
 from ..validation import _compact, extrait_present, passage_exact
-from .consigne import IDENT, ErreurProposition, clauses_article, concepts_existants, definitions_utiles
+from .consigne import (IDENT, ErreurProposition, clauses_article, concepts_existants, definitions_utiles,
+                       valeurs_du_contrat)
 from .ecriture import en_prolog, exclusions, fusionner, portee, terme
 
 
@@ -220,6 +221,54 @@ def erreurs_schema(prop) -> list[str]:
     return erreurs
 
 
+def exclusions_hors_perimetre(prop: dict, voc: dict) -> list[str]:
+    """Les exclusions qui visent un lieu ou un bien que le périmètre de leurs garanties n'admet pas (7.152).
+    Une telle exclusion n'est jamais atteinte : le sinistre est écarté comme « hors garantie », sans la clause
+    qui le dit en toutes lettres (« les locaux à usage commun »). Le lieu ou le bien qu'un contrat exclut
+    expressément appartient au périmètre : c'est l'exclusion qui décide, et qu'on cite.
+    Sans réponse quand un périmètre emploie un concept que la proposition ne définit pas (on ne sait pas l'ouvrir)."""
+    definitions = {d.get("concept"): d.get("condition") for d in prop.get("definitions") or []}
+
+    def admis(c, variable, vus=()):
+        """Les valeurs de `variable` qu'une condition admet ; None : on ne sait pas."""
+        if not isinstance(c, dict) or len(c) != 1:
+            return set()
+        (cle, v), = c.items()
+        if cle == "f":
+            return {str(v[1])} if str(v[0]) == variable else set()
+        if cle == "concept":
+            return admis(definitions[v], variable, (*vus, v)) if v in definitions and v not in vus else None
+        if cle in ("et", "ou", "si"):
+            parts = [admis(x, variable, vus) for x in v]
+            return None if any(x is None for x in parts) else set().union(*parts)
+        return set()
+
+    notes = []
+    garanties = [g for g in prop.get("garanties") or [] if isinstance(g, dict) and not g.get("accessoire")]
+    visees = [(x, [g]) for g in garanties for x in g.get("exclusions") or []]
+    visees += [(x, garanties) for x in prop.get("exclusions_communes") or []]
+    for x, gs in visees:
+        c = x.get("condition")
+        if not (isinstance(c, dict) and list(c) == ["f"] and c["f"][0] in ("lieu", "bien")) or not gs:
+            continue
+        variable, valeur = str(c["f"][0]), str(c["f"][1])
+        parents = set((voc.get(variable, {}).get("parents") or {}).get(valeur) or [])
+        atteinte = False
+        for g in gs:
+            ensembles = [admis(p, variable) for p in g.get("perimetre") or []]
+            if any(e is None for e in ensembles):
+                atteinte = True
+                break
+            restreint = [e for e in ensembles if e]
+            if not restreint or all(valeur in e or parents & e for e in restreint):
+                atteinte = True
+                break
+        if not atteinte:
+            notes.append(f"exclusion « {str(x.get('texte'))[:60]} » : {variable} = {valeur} n'est dans le périmètre d'aucune "
+                         f"de ses garanties ; elle ne sera jamais citée : l'ajouter au périmètre (c'est l'exclusion qui décide)")
+    return notes
+
+
 def feuilles(c) -> list[tuple[str, str]]:
     if not isinstance(c, dict) or len(c) != 1:
         return []
@@ -330,7 +379,8 @@ def couvert_par(item: str, textes: list[str]) -> bool:
     return any((ct := _compact(t)) and (ct in ci or ci in ct) for t in textes)
 
 
-def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) -> list[dict]:
+def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str,
+              contrat_id: str | None = None) -> list[dict]:
     """Les problèmes d'une proposition. Répare en place les citations dont les mots sont dans l'ordre."""
     problemes: list[dict] = []
 
@@ -369,7 +419,14 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
             if (v, x) in vus:
                 continue
             vus.add((v, x))
-            if v in voc and x in voc[v]["valeurs"]:
+            # Une valeur propre à un contrat (une formule) ne vaut que dans le sien (7.150) : « excellence » est une
+            # formule de D ; l'écrire pour l'« Optimale » de C, c'est décider avec le contrat d'un autre.
+            propres = valeurs_du_contrat(voc[v], contrat_id) if v in voc else None
+            if propres is not None and x not in propres and (v, x) not in declares:
+                noter(BLOQUANT, "vocabulaire", f"{v} = {x} : ce n'est pas un nom de ce contrat"
+                      f"{' (' + ', '.join(propres) + ')' if propres else ''} ; employer le nom du texte et le déclarer")
+                continue
+            if v in voc and x in voc[v]["valeurs"] and (propres is None or x in propres):
                 continue
             if (v, x) in declares:
                 noter(BLOQUANT, "vocabulaire", f"{v} = {x} : fait nouveau déclaré par le modèle, à accepter "
@@ -516,6 +573,9 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str) 
                 and d.id not in employes:
             noter(BLOQUANT, "couverture", f"la définition {d.id} de l'événement couvert n'est pas traduite "
                   f"(elle restreint la garantie) : l'employer ou la déclarer non traduite")
+
+    for note in exclusions_hors_perimetre(prop, voc):
+        noter(A_RELIRE, "portée", note)
 
     # 5. Concepts et identifiants
     existants = set(concepts_existants(contrat_pl))

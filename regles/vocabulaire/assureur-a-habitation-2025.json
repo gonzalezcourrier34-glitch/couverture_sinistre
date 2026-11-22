@@ -92,21 +92,6 @@
         "mazout"
       ]
     },
-    "travaux_vitres": {
-      "libelle": "Travaux sur les vitres",
-      "valeurs": [
-        "nettoyage",
-        "autres_que_nettoyage",
-        "aucun"
-      ],
-      "libelles": {
-        "autres_que_nettoyage": "autres que nettoyage"
-      },
-      "question": "Des travaux (autres que nettoyage) sont-ils effectués sur les vitres ?",
-      "pour": [
-        "bris"
-      ]
-    },
     "merule_apres_prise_effet": {
       "libelle": "Mérule apparue après la prise d'effet",
       "valeurs": [
@@ -120,22 +105,6 @@
       },
       "pour": [
         "merule"
-      ]
-    },
-    "residence_principale": {
-      "libelle": "Logement principal",
-      "valeurs": [
-        "oui",
-        "non"
-      ],
-      "question": "Ce bâtiment est-il votre logement principal ?",
-      "aide": {
-        "oui": "vous y habitez à l'année",
-        "non": "seconde résidence, bien loué, dépendance"
-      },
-      "pour": [
-        "tempete",
-        "catastrophe_naturelle"
       ]
     },
     "reparation_loi_particuliere": {

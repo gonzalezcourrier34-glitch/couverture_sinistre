@@ -39,7 +39,8 @@ def executer(a, base: Base, donnees: Path) -> int:
 
     if vocabulaire:
         js, _ = redaction.chemins(contrat_id, vocabulaire)
-        ajouts = redaction.accepter_vocabulaire(json.loads(js.read_text(encoding="utf-8"))["proposition"])
+        ajouts = redaction.accepter_vocabulaire(json.loads(js.read_text(encoding="utf-8"))["proposition"],
+                                                 contrat_id=contrat_id)
         print("Vocabulaire commun complété :" if ajouts else "Rien à ajouter au vocabulaire.")
         for x in ajouts:
             print(f"  + {x}")

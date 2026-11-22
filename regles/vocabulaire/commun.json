@@ -158,7 +158,15 @@
         "sepulture",
         "veranda",
         "eolienne",
-        "piscine"
+        "piscine",
+        "objet_art",
+        "tapis_fourrure",
+        "collection",
+        "insert",
+        "aquarium",
+        "paroi_douche",
+        "vitrail",
+        "marquise"
       ],
       "libelles": {
         "velo": "vélo",
@@ -187,7 +195,11 @@
         "equipement_domotique": "équipement domotique",
         "sepulture": "sépulture",
         "veranda": "véranda",
-        "eolienne": "éolienne"
+        "eolienne": "éolienne",
+        "objet_art": "objet d'art",
+        "tapis_fourrure": "tapis ou fourrure",
+        "insert": "vitre d'insert",
+        "paroi_douche": "paroi de douche"
       },
       "question": "Quels biens sont endommagés ou volés ?",
       "parents": {
@@ -271,6 +283,30 @@
         ],
         "piscine": [
           "element_batiment"
+        ],
+        "objet_art": [
+          "objet_divers"
+        ],
+        "tapis_fourrure": [
+          "objet_divers"
+        ],
+        "collection": [
+          "objet_divers"
+        ],
+        "insert": [
+          "objet_divers"
+        ],
+        "aquarium": [
+          "objet_divers"
+        ],
+        "paroi_douche": [
+          "objet_divers"
+        ],
+        "vitrail": [
+          "objet_divers"
+        ],
+        "marquise": [
+          "objet_divers"
         ]
       },
       "aide": {
@@ -300,7 +336,15 @@
         "eolienne": "éolienne domestique",
         "piscine": "piscine, spa, jacuzzi, ou leur abri",
         "vitre": "vitrage du logement : fenêtre, porte vitrée, baie (la vitre d'une voiture : vehicule_moteur)",
-        "verre_meuble": "plateau ou porte en verre faisant partie d'un meuble (un objet posé dessus : objet_verre_non_vitre)"
+        "verre_meuble": "plateau ou porte en verre faisant partie d'un meuble (un objet posé dessus : objet_verre_non_vitre)",
+        "objet_art": "sculpture, tableau, dessin d'art, tapisserie, livre rare",
+        "tapis_fourrure": "tapis, manteau ou vêtement de fourrure",
+        "collection": "une collection d'au moins 50 objets (timbres, monnaies, vinyles)",
+        "insert": "la vitre d'un insert ou d'un poêle",
+        "aquarium": "un aquarium",
+        "paroi_douche": "la paroi vitrée d'une douche",
+        "vitrail": "un vitrail",
+        "marquise": "une marquise, auvent vitré au-dessus d'une porte"
       }
     },
     "lieu": {
@@ -323,7 +367,8 @@
         "vehicule",
         "chambre_etudiant",
         "maison_repos",
-        "local_fete_privee"
+        "local_fete_privee",
+        "veranda"
       ],
       "libelles": {
         "abri_jardin": "abri de jardin",
@@ -334,7 +379,8 @@
         "vehicule": "véhicule",
         "chambre_etudiant": "chambre d'étudiant",
         "maison_repos": "maison de repos",
-        "local_fete_privee": "local de fête privée"
+        "local_fete_privee": "local de fête privée",
+        "veranda": "véranda"
       },
       "question": "Où se trouvaient les biens ?",
       "aide": {
@@ -351,7 +397,8 @@
         "vehicule": "dans une voiture ou un autre véhicule, même garé dans la rue ou sur un parking : un objet volé dans la voiture, c'est « vehicule »",
         "chambre_etudiant": "chambre ou studio d'étudiant loué pour les études",
         "maison_repos": "chambre ou appartement en maison de repos",
-        "local_fete_privee": "local pris en location pour une fête privée"
+        "local_fete_privee": "local pris en location pour une fête privée",
+        "veranda": "dans la véranda attenante au logement"
       },
       "parents": {
         "chambre_etudiant": [
@@ -362,6 +409,9 @@
         ],
         "local_fete_privee": [
           "autre_batiment"
+        ],
+        "veranda": [
+          "logement"
         ]
       }
     },
@@ -720,7 +770,10 @@
         "standard",
         "eco",
         "confort",
-        "excellence"
+        "excellence",
+        "initiale",
+        "optimale",
+        "investisseur"
       ],
       "libelles": {
         "privilege": "Privilège",
@@ -729,7 +782,7 @@
         "confort": "Confort",
         "excellence": "Excellence"
       },
-      "question": "Quelle formule les conditions particulières mentionnent-elles (Privilège, Active, standard) ?",
+      "question": "Quelle formule les conditions particulières mentionnent-elles ?",
       "pour": [
         "vol",
         "vandalisme",
@@ -740,7 +793,10 @@
       "aide": {
         "eco": "formule Eco",
         "confort": "formule Confort",
-        "excellence": "formule Excellence"
+        "excellence": "formule Excellence",
+        "initiale": "formule Initiale",
+        "optimale": "formule Optimale",
+        "investisseur": "formule Investisseur"
       },
       "par_contrat": {
         "assureur-b-habitation-2017": [
@@ -752,6 +808,12 @@
           "eco",
           "confort",
           "excellence"
+        ],
+        "assureur-c-habitation-2025": [
+          "initiale",
+          "confort",
+          "optimale",
+          "investisseur"
         ]
       }
     },
@@ -1383,6 +1445,101 @@
       "pour": [
         "vol",
         "vandalisme"
+      ]
+    },
+    "residence_principale": {
+      "libelle": "Logement principal",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Ce bâtiment est-il votre logement principal ?",
+      "aide": {
+        "oui": "vous y habitez à l'année",
+        "non": "seconde résidence, bien loué, dépendance"
+      },
+      "pour": [
+        "tempete",
+        "catastrophe_naturelle",
+        "vol"
+      ]
+    },
+    "option_vol": {
+      "libelle": "Garantie « vol » souscrite",
+      "source": "conditions_particulieres",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Vos conditions particulières mentionnent-elles la garantie « vol » ?",
+      "aide": {
+        "oui": "la garantie figure aux conditions particulières",
+        "non": "elle n'y figure pas"
+      },
+      "pour": [
+        "vol"
+      ]
+    },
+    "acces_voleur": {
+      "libelle": "Mode d'entrée du voleur",
+      "valeurs": [
+        "escalade",
+        "menaces",
+        "cles_volees",
+        "fausse_qualite",
+        "sans_effraction"
+      ],
+      "libelles": {
+        "cles_volees": "clés volées",
+        "fausse_qualite": "fausse qualité",
+        "sans_effraction": "sans effraction"
+      },
+      "question": "Comment le voleur ou l'auteur est-il entré (hors effraction) ?",
+      "aide": {
+        "escalade": "par escalade : mur, balcon, fenêtre en hauteur",
+        "menaces": "par menaces ou violences physiques sur l'assuré ou un proche",
+        "cles_volees": "avec les clés de l'assuré, volées auparavant",
+        "fausse_qualite": "en se faisant passer pour un employé, un agent, un livreur",
+        "sans_effraction": "porte ou fenêtre ouverte ou non verrouillée, aucune trace"
+      },
+      "pour": [
+        "vol",
+        "vandalisme"
+      ],
+      "implique": {
+        "sans_effraction": {
+          "effraction": "non"
+        }
+      }
+    },
+    "travaux_vitres": {
+      "libelle": "Travaux sur les vitres",
+      "valeurs": [
+        "nettoyage",
+        "autres_que_nettoyage",
+        "aucun"
+      ],
+      "libelles": {
+        "autres_que_nettoyage": "autres que nettoyage"
+      },
+      "question": "Des travaux (autres que nettoyage) sont-ils effectués sur les vitres ?",
+      "pour": [
+        "bris"
+      ]
+    },
+    "vitrage_en_deplacement": {
+      "libelle": "Vitrage en cours de déplacement",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le vitrage était-il en cours de déplacement (transport, manutention) au moment du sinistre ?",
+      "aide": {
+        "oui": "la vitre était en train d'être déplacée, transportée, manipulée",
+        "non": "la vitre était fixe (placée ou non) mais pas en cours de déplacement"
+      },
+      "pour": [
+        "bris"
       ]
     }
   }

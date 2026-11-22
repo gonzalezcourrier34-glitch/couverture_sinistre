@@ -1,0 +1,632 @@
+{
+  "meta": {
+    "article": "S8",
+    "modele": "mistral:mistral-large-latest",
+    "date": "2026-11-22",
+    "consigne": "redaction-regles v12"
+  },
+  "proposition": {
+    "evenements": [
+      "vol"
+    ],
+    "definitions": [
+      {
+        "concept": "dependances",
+        "condition": {
+          "ou": [
+            {
+              "f": [
+                "lieu",
+                "garage"
+              ]
+            },
+            {
+              "f": [
+                "lieu",
+                "annexe"
+              ]
+            },
+            {
+              "f": [
+                "lieu",
+                "abri_jardin"
+              ]
+            }
+          ]
+        },
+        "article": "S1/dependances",
+        "texte": "Ensemble des locaux sous toiture, distincts ou non du bâtiment d'habitation, qui ne sont ni à usage d'habitation ni à usage professionnel, et qui ne sont pas des pièces annexes."
+      },
+      {
+        "concept": "objets_de_valeur",
+        "condition": {
+          "f": [
+            "bien",
+            "bijoux"
+          ]
+        },
+        "article": "S1/objets-de-valeur",
+        "texte": "Il s'agit : - des bijoux, montres et objets d'horlogerie, pierreries, perles, objets en métal précieux massif (or, argent, platine, vermeil) d'une valeur unitaire supérieure à 200 euros, - des sculptures, tableaux, dessins d'art, tapisseries, livres rares d'une valeur unitaire supérieure à 200 euros, - des tapis, fourrures d'une valeur unitaire supérieure à 200 euros, - des collections d'au moins 50 objets et dont la valeur globale par collection est supérieure à 5 000 euros, - de tout objet dont la valeur unitaire est supérieure à 5 000 euros."
+      },
+      {
+        "concept": "objets_usuels",
+        "condition": {
+          "non": {
+            "concept": "objets_de_valeur"
+          }
+        },
+        "article": "S1/objets-usuels",
+        "texte": "Tous les objets qui ne sont pas des objets de valeur."
+      },
+      {
+        "concept": "lieu_de_vacances",
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "sejour_temporaire",
+                "oui"
+              ]
+            },
+            {
+              "non": {
+                "f": [
+                  "residence_principale",
+                  "oui"
+                ]
+              }
+            }
+          ]
+        },
+        "article": "S1/lieu-de-vacances",
+        "texte": "Lieu de séjours temporaires, d'une durée inférieure à 3 mois consécutifs, dans un bâtiment n'appartenant pas à l'assuré, autre que l'habitation assurée désignée aux Conditions Particulières."
+      }
+    ],
+    "garanties": [
+      {
+        "id": "vol_batiment",
+        "nom": "Vol dans le bâtiment assuré",
+        "article": "S8-a",
+        "texte": "Le vol des biens assurés commis à l'intérieur des parties du bâtiment à usage d'habitation ou à l'intérieur des dépendances",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "vol"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "lieu",
+                  "logement"
+                ]
+              },
+              {
+                "concept": "dependances"
+              }
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "formule",
+                    "confort"
+                  ]
+                },
+                {
+                  "f": [
+                    "formule",
+                    "excellence"
+                  ]
+                },
+                {
+                  "et": [
+                    {
+                      "f": [
+                        "formule",
+                        "standard"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "option_vol",
+                        "oui"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "article": "S8",
+            "texte": "Cette garantie vous est acquise si vous avez souscrit une formule Initiale avec option Vol, une formule Confort ou une formule Optimale."
+          },
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "effraction",
+                    "oui"
+                  ]
+                },
+                {
+                  "et": [
+                    {
+                      "f": [
+                        "acces_voleur",
+                        "escalade"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "hauteur_ouverture_plus_3m",
+                        "oui"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "f": [
+                    "violence",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "acces_voleur",
+                    "fausse_qualite"
+                  ]
+                }
+              ]
+            },
+            "article": "S8-a",
+            "texte": "- par effraction extérieure des locaux renfermant les biens assurés, - ou par escalade directe des locaux renfermant les biens assurés par une porte ou une fenêtre située à plus de 3 mètres de hauteur, - ou avec violences ou menaces sur les personnes présentes, - ou avec fausse qualité ou fausse identité prise par un ou plusieurs individus pour s'introduire et voler dans les bâtiments renfermant les biens assurés."
+          }
+        ],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "cles_a_proximite",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "S8-e",
+            "texte": "Le vol consécutif au maintien des clés laissées sur la porte, sous le paillasson, dans un pot de fleurs, dans la boîte aux lettres ou dans une boîte à clés verrouillée"
+          },
+          {
+            "condition": {
+              "f": [
+                "changement_serrures_48h",
+                "non"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "S8-e",
+            "texte": "ou consécutif à l'absence de changement des serrures dans les 48 heures suivant la constatation d'un vol ou d'une perte de clés"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "concept": "dependances"
+                },
+                {
+                  "non": {
+                    "f": [
+                      "communication_interieure_privee",
+                      "oui"
+                    ]
+                  }
+                },
+                {
+                  "non": {
+                    "f": [
+                      "porte_pleine_verrou_serrure",
+                      "oui"
+                    ]
+                  }
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "S8-f",
+            "texte": "Le vol dans les dépendances ou dans les locaux sans communication intérieure et privée avec les locaux d'habitation qui ne seraient pas protégés par une porte pleine munie d'un verrou ou d'une serrure ; les verrous sans clé et les cadenas ne sont pas considérés comme des serrures."
+          },
+          {
+            "condition": {
+              "f": [
+                "auteur",
+                "famille"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "S8-f",
+            "texte": "Le vol dont serait auteur ou complice votre conjoint ou concubin ou partenaire d'un Pacte Civil de solidarité (PACS) ou vos ascendants, descendants, frères, sœurs ainsi que leurs conjoints, concubins ou partenaire d'un PACS."
+          },
+          {
+            "condition": {
+              "f": [
+                "auteur",
+                "locataire"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "S8-f",
+            "texte": "Le vol commis par vos locataires, sous-locataires, ainsi que leur conjoint ou concubin ou partenaire d'un Pacte Civil de solidarité (PACS), ascendants et descendants."
+          },
+          {
+            "condition": {
+              "f": [
+                "lieu",
+                "parties_communes"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "S8-f",
+            "texte": "Les vols des biens déposés dans les locaux à usage commun des occupants de l'immeuble."
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "concept": "objets_de_valeur"
+                },
+                {
+                  "ou": [
+                    {
+                      "concept": "dependances"
+                    },
+                    {
+                      "f": [
+                        "lieu",
+                        "veranda"
+                      ]
+                    },
+                    {
+                      "non": {
+                        "f": [
+                          "communication_interieure_privee",
+                          "oui"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "portee": {
+              "bien": "objets_de_valeur"
+            },
+            "a_demander": true,
+            "article": "S8-f",
+            "texte": "Le vol des objets de valeur dans les dépendances et les locaux sans communication intérieure et privée avec les locaux d'habitation ou dans les vérandas."
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "concept": "objets_de_valeur"
+                },
+                {
+                  "ou": [
+                    {
+                      "et": [
+                        {
+                          "f": [
+                            "residence_principale",
+                            "oui"
+                          ]
+                        },
+                        {
+                          "f": [
+                            "inhabitation_plus_45_jours",
+                            "oui"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "non": {
+                        "f": [
+                          "residence_principale",
+                          "oui"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "portee": {
+              "bien": "objets_de_valeur"
+            },
+            "a_demander": true,
+            "article": "S8-c",
+            "texte": "La garantie vol des objets de valeur, pour les formules Confort et Optimale, est suspendue : - en résidence principale, si l'inhabitation de vos locaux dépasse 45 jours consécutifs, dès le 46e jour et pendant toute la période d'inhabitation, - en résidence secondaire, dès le début de la période d'inhabitation."
+          }
+        ],
+        "limites": [
+          {
+            "article": "S8-b",
+            "texte": "En cas d'absence de plus de 24 heures, vous devez utiliser tous les moyens de fermeture et de protection existants. Le non-respect des mesures de protection entrainera une réduction de moitié de l'indemnisation à laquelle vous auriez pu avoir droit, si celui-ci a permis la réalisation du vol pour autant qu'il y ait un lien de cause à effet entre le sinistre et le nonrespect de ces mesures.",
+            "montant": "réduction de moitié"
+          }
+        ]
+      },
+      {
+        "id": "vol_lieu_vacances",
+        "nom": "Vol au lieu de vacances",
+        "article": "S8-a",
+        "texte": "Le vol sur le lieu de vacances des objets usuels de l'assuré commis à l'intérieur d'un bâtiment à usage d'habitation",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "vol"
+            ]
+          },
+          {
+            "concept": "lieu_de_vacances"
+          },
+          {
+            "concept": "objets_usuels"
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "formule",
+                    "confort"
+                  ]
+                },
+                {
+                  "f": [
+                    "formule",
+                    "excellence"
+                  ]
+                }
+              ]
+            },
+            "article": "S8-a",
+            "texte": "Pour les formules Confort et Optimale"
+          },
+          {
+            "condition": {
+              "f": [
+                "residence_principale",
+                "oui"
+              ]
+            },
+            "article": "S8-a",
+            "texte": "si l'habitation assurée est une résidence principale"
+          },
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "effraction",
+                    "oui"
+                  ]
+                },
+                {
+                  "et": [
+                    {
+                      "f": [
+                        "acces_voleur",
+                        "escalade"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "hauteur_ouverture_plus_3m",
+                        "oui"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "f": [
+                    "violence",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "article": "S8-a",
+            "texte": "- par effraction extérieure des locaux renfermant les biens assurés, - ou par escalade directe des locaux renfermant les biens assurés par une porte ou une fenêtre située à plus de 3 mètres de hauteur, - ou avec violences ou menaces sur les personnes présentes."
+          }
+        ],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "hauteur_ouverture_plus_3m",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Ouverture à plus de 3m",
+        "question": "La porte ou fenêtre utilisée pour l'escalade était-elle située à plus de 3 mètres de hauteur ?",
+        "pourquoi": "condition d'escalade directe",
+        "plus_proche": "acces_voleur : escalade ne précise pas la hauteur",
+        "aide": {
+          "oui": "la fenêtre était en hauteur, au premier étage ou plus",
+          "non": "la fenêtre était au rez-de-chaussée ou accessible facilement"
+        }
+      },
+      {
+        "variable": "changement_serrures_48h",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Changement serrures 48h",
+        "question": "Avez-vous changé les serrures dans les 48 heures suivant la constatation d'un vol ou d'une perte de clés ?",
+        "pourquoi": "exclusion si absence de changement",
+        "plus_proche": "aucune variable ne couvre ce délai",
+        "aide": {
+          "oui": "j'ai changé les serrures rapidement après avoir perdu mes clés",
+          "non": "je n'ai pas changé les serrures"
+        }
+      },
+      {
+        "variable": "communication_interieure_privee",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Communication intérieure privée",
+        "question": "Le local communique-t-il intérieurement et privément avec les locaux d'habitation ?",
+        "pourquoi": "exclusion des locaux sans communication intérieure",
+        "plus_proche": "lieu : ne distingue pas la communication intérieure",
+        "aide": {
+          "oui": "le garage donne directement dans la maison par une porte intérieure",
+          "non": "le garage est séparé, on y accède par l'extérieur"
+        }
+      },
+      {
+        "variable": "porte_pleine_verrou_serrure",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Porte pleine verrou/serrure",
+        "question": "La porte est-elle pleine et munie d'un verrou ou d'une serrure (pas un cadenas) ?",
+        "pourquoi": "exclusion si porte non sécurisée",
+        "plus_proche": "serrure_surete : ne précise pas le type de porte",
+        "aide": {
+          "oui": "la porte est pleine avec une serrure à cylindre",
+          "non": "la porte est légère ou fermée par un cadenas"
+        }
+      },
+      {
+        "variable": "inhabitation_plus_45_jours",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Inhabitation plus 45 jours",
+        "question": "L'inhabitation dépasse-t-elle 45 jours consécutifs ?",
+        "pourquoi": "suspension de la garantie objets de valeur",
+        "plus_proche": "batiment_vacant_90j : délai différent",
+        "aide": {
+          "oui": "la maison est vide depuis plus de 45 jours",
+          "non": "moins de 45 jours d'absence"
+        }
+      }
+    ],
+    "non_traduit": [
+      {
+        "article": "S8-d",
+        "texte": "Reportez-vous à la page 19.",
+        "pourquoi": "montants d'indemnisation non fournis"
+      },
+      {
+        "article": "S8-e",
+        "texte": "Outre les exclusions relatives aux biens citées page 14 et les exclusions communes figurant page 30",
+        "pourquoi": "contenu des pages 14 et 30 non fourni"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "hauteur_ouverture_plus_3m = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire S8`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "changement_serrures_48h = non : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire S8`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "communication_interieure_privee = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire S8`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "porte_pleine_verrou_serrure = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire S8`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "lieu = veranda : hors vocabulaire, et non déclaré"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "inhabitation_plus_45_jours = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire S8`) ou à remplacer"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "définition : citation rattachée à S1/dependances (et non S1)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "définition : citation rattachée à S1/objets-de-valeur (et non S1)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "définition : citation rattachée à S1/objets-usuels (et non S1)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "définition : citation rattachée à S1/lieu-de-vacances (et non S1)"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "exclusions",
+      "message": "garantie vol_lieu_vacances : aucune exclusion, alors que l'article en a ; les mettre dans « exclusions_communes »"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "limite",
+      "message": "limite « En cas d'absence de plus de 24 heures, vous devez utiliser t » (vol_batiment) : elle pose une condition ; circonstance ou garantie à part ?"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (S8-d) : « Reportez-vous à la page 19. » — montants d'indemnisation non fournis"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (S8-e) : « Outre les exclusions relatives aux biens citées page 14 et les exclusions communes figurant page 30 » — contenu des pages 14 et 30 non fourni"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "la définition S1/inhabitation de l'événement couvert n'est pas traduite (elle restreint la garantie) : l'employer ou la déclarer non traduite"
+    }
+  ]
+}

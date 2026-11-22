@@ -84,6 +84,24 @@ def libelle(variable: str, voc: dict, valeur: str | None = None) -> str:
 CONDITIONS_PARTICULIERES = "conditions_particulieres"
 
 
+def vocabulaire_du_contrat(contrat_id: str, voc: dict | None = None) -> dict:
+    """Le vocabulaire tel qu'un contrat le voit : une variable dont chaque contrat a ses noms (« par_contrat » : la
+    formule) n'y garde que les siens, avec leur aide et leurs libellés. La lecture d'une déclaration faite pour C
+    ne doit pas pouvoir répondre « excellence », une formule de D (7.154) ; la rédaction ne le peut plus (7.150).
+    Un contrat qui ne déclare pas ses noms garde toutes les valeurs : rien ne dit lesquelles sont les siennes."""
+    voc = voc if voc is not None else vocabulaire()
+    vu = {}
+    for v, d in voc.items():
+        siens = (d.get("par_contrat") or {}).get(contrat_id)
+        if siens:
+            d = d | {"valeurs": list(siens)}
+            for cle in ("aide", "libelles", "parents"):
+                if isinstance(d.get(cle), dict):
+                    d[cle] = {x: t for x, t in d[cle].items() if x in siens}
+        vu[v] = d
+    return vu
+
+
 def souscription(contrat_id: str, voc: dict | None = None) -> dict:
     """Ce que le contrat du client précise, et que la déclaration ne dit que parfois (7.141) : les variables
     de « source » conditions particulières (la formule, une option, un pack) que les règles de ce contrat
@@ -91,8 +109,8 @@ def souscription(contrat_id: str, voc: dict | None = None) -> dict:
     de B ne sont pas celles de D)."""
     voc = voc if voc is not None else vocabulaire()
     employees = variables_employees(contrat_id) if fichier_regles(contrat_id).exists() else set()
-    return {v: d | {"valeurs": list((d.get("par_contrat") or {}).get(contrat_id) or d["valeurs"])}
-            for v, d in voc.items() if v in employees and d.get("source") == CONDITIONS_PARTICULIERES}
+    return {v: d for v, d in vocabulaire_du_contrat(contrat_id, voc).items()
+            if v in employees and d.get("source") == CONDITIONS_PARTICULIERES}
 
 
 def retenir_souscription(contrat_id: str, donnee: dict | None, voc: dict | None = None) -> tuple[dict, list[str]]:
@@ -126,8 +144,16 @@ def faits_affiches(faits: dict, voc: dict | None = None) -> list[dict[str, str]]
             for v in cles]
 
 
+def a_des_garanties(contrat_id: str) -> bool:
+    """Vrai si les règles du contrat traduisent au moins une garantie. Un fichier tout juste créé par la rédaction
+    (un en-tête, aucune règle) n'est pas encore un contrat qu'on peut interroger (7.149)."""
+    fichier = fichier_regles(contrat_id)
+    return fichier.exists() and re.search(r"^garantie\(", fichier.read_text(encoding="utf-8"), flags=re.M) is not None
+
+
 def contrats_regles() -> list[str]:
-    return sorted(f.stem for f in DOSSIER.glob("*.pl") if f != MOTEUR)
+    """Les contrats dont les règles traduisent au moins une garantie."""
+    return sorted(f.stem for f in DOSSIER.glob("*.pl") if f != MOTEUR and a_des_garanties(f.stem))
 
 
 def variables_employees(contrat_id: str) -> set[str]:

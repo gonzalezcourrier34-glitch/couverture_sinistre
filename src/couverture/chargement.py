@@ -36,7 +36,7 @@ def lire_pages(chemin: str | Path, colonnes: int = 1) -> list[str]:
             with pdfplumber.open(str(chemin)) as pdf:
                 if colonnes == 2:
                     return [_deux_colonnes(p) for p in pdf.pages]
-                return [p.extract_text(x_tolerance=1.5) or "" for p in pdf.pages]
+                return [p.extract_text(**_ecart(p)) or "" for p in pdf.pages]
         except ImportError:
             from pypdf import PdfReader
 
@@ -53,19 +53,31 @@ def lire_pages(chemin: str | Path, colonnes: int = 1) -> list[str]:
     raise ValueError(f"Format non pris en charge : {suffixe} (attendu .md, .txt, .pdf ou .docx)")
 
 
+def _ecart(page) -> dict:
+    """La tolérance d'espacement pour lire les mots d'une page. Par défaut 1,5 point entre deux lettres. Certaines
+    pages ont des lettres espacées (une police dont les largeurs manquent au PDF) : presque tous les « mots » y
+    font une ou deux lettres (« L e s di s p o siti o n s »). Pour celles-là, l'écart toléré suit la taille des
+    caractères (7.148) ; les autres pages sont lues comme avant."""
+    mots = page.extract_words(x_tolerance=1.5, keep_blank_chars=False)
+    if len(mots) >= 40 and sum(len(m["text"]) <= 2 for m in mots) > 0.6 * len(mots):
+        return {"x_tolerance_ratio": 0.7}
+    return {"x_tolerance": 1.5}
+
+
 def _deux_colonnes(page) -> str:
     """Une page en deux colonnes, lue colonne par colonne. La gouttière est la verticale, entre 40 et 60 % de la
     largeur, que le moins de mots traversent ; si plus de 3 % des mots la traversent, ou si une colonne est presque
     vide, la page est lue comme une seule colonne. Les lignes qui traversent la gouttière (un titre sur toute la
     largeur) coupent la page en bandes : chaque bande est lue colonne gauche puis colonne droite."""
-    mots = page.extract_words(x_tolerance=1.5, keep_blank_chars=False)
+    ecart = _ecart(page)
+    mots = page.extract_words(keep_blank_chars=False, **ecart)
     if len(mots) < 40:
-        return page.extract_text(x_tolerance=1.5) or ""
+        return page.extract_text(**ecart) or ""
     x, n = min(((page.width * i / 100, sum(1 for m in mots if m["x0"] < page.width * i / 100 < m["x1"]))
                 for i in range(40, 61)), key=lambda t: t[1])
     gauche = sum(m["x1"] <= x for m in mots)
     if n > 0.03 * len(mots) or gauche < 0.2 * len(mots) or len(mots) - gauche - n < 0.2 * len(mots):
-        return page.extract_text(x_tolerance=1.5) or ""
+        return page.extract_text(**ecart) or ""
     lignes: list[list[dict]] = []
     for m in sorted(mots, key=lambda m: (round(m["top"]), m["x0"])):
         if lignes and abs(lignes[-1][0]["top"] - m["top"]) <= 2:

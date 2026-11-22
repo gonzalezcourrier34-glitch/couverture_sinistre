@@ -33,6 +33,7 @@ class PipelineRegles:
         self.contrat_id, self.clauses, self.llm = contrat_id, clauses, llm
         self.decideur = decideur or (lambda faits: prolog.decider(contrat_id, faits))
         self.variables = variables_du_contrat(contrat_id)
+        self.voc = prolog.vocabulaire_du_contrat(contrat_id)     # les formules de ce contrat, pas celles d'un autre (7.154)
         self.exemples = None                  # la banque d'exemples (7.108, par défaut depuis 7.112)
         self.llm_socle = None                 # un autre modèle pour le temps 1 (COUVERTURE_MODELE_SOCLE, 7.118)
         self.llm_verification = None          # un autre modèle pour vérifier et confirmer (7.136)
@@ -66,7 +67,7 @@ class PipelineRegles:
             choix = self.exemples.pour(sinistre) if self.exemples is not None else None
             faits, ecarts = extraire_faits_regles(sinistre, self.llm, self.decideur, self.variables, choix,
                                                   llm_socle=self.llm_socle, suivi=suivi,
-                                                  llm_verification=self.llm_verification)
+                                                  llm_verification=self.llm_verification, voc=self.voc)
         except ErreurLLM:
             raise
         except Exception as e:  # noqa: BLE001

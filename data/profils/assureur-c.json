@@ -1,0 +1,88 @@
+{
+  "nom": "assureur-c",
+  "intertitres": {
+    "ce qui exclu": "exclusion",
+    "ce qui est exclu": "exclusion",
+    "les biens qui ne sont pas assurés": "exclusion",
+    "montants d'indemnisation maximum": "limite",
+    "mesures de prévention": "condition",
+    "mesures de protection": "condition",
+    "en cas d'inhabitation": "condition",
+    "montants maximums de garantie par sinistre": "limite",
+    "montant maximum de la garantie par sinistre": "limite",
+    "montants maximums de la garantie": "limite",
+    "indemnisation des packs": "limite",
+    "ce qui exclu (suite)": "exclusion",
+    "attention": "condition",
+    "important": "condition"
+  },
+  "lignes_ignorees": [
+    "^Conditions Générales Assurance Habitation - Réf\\..*$",
+    "^Page \\d+.*$",
+    "^.*Page \\d+$"
+  ],
+  "lexique": "puce",
+  "colonnes": 2,
+  "pages_ignorees": [
+    [
+      1,
+      11
+    ],
+    [
+      41,
+      41
+    ],
+    [
+      49,
+      53
+    ]
+  ],
+  "titres_numerotes": "articles",
+  "titres": [
+    "Quelques définitions",
+    "Les biens assurés",
+    "Les événements garantis",
+    "Incendie et événements assimilés",
+    "Dommages électriques",
+    "Événements climatiques",
+    "Dégâts des eaux et gel",
+    "Vol",
+    "Détériorations suite à vol",
+    "Bris de glaces",
+    "Attentats ou actes de terrorisme",
+    "Catastrophes naturelles",
+    "Catastrophes technologiques",
+    "Montants maximums des garanties",
+    "Les pertes pécuniaires",
+    "Les frais complémentaires",
+    "Les dommages corporels des assurés",
+    "L'assurance de vos responsabilités",
+    "Responsabilité civile de locataire ou de propriétaire",
+    "Responsabilité civile de particulier",
+    "Responsabilité civile du fait de l'immeuble",
+    "Sauvegarde de vos droits",
+    "Pour les dommages causés à autrui",
+    "La Défense Pénale Recours Suite à Accident",
+    "Les Plus produit",
+    "Le bâtiment assuré est en cours de construction",
+    "En cas de déménagement",
+    "En cas de télétravail",
+    "Les Packs",
+    "Le Pack Piscine et Spa",
+    "Le Pack Loisirs",
+    "Le Pack Jardin",
+    "Le Pack Environnement",
+    "Responsabilité civile Plus",
+    "Location de chambres d'hôtes",
+    "Détention de chevaux, ânes ou poneys",
+    "Activité d'assistante maternelle",
+    "Les Exclusions communes",
+    "Que devez-vous faire en cas de sinistre ?",
+    "La vie de votre contrat",
+    "Comment faire intervenir l'assistance ?",
+    "L'assistance en cas de sinistre affectant le domicile",
+    "L'assistance à l'amélioration de l'habitat",
+    "Exclusions générales",
+    "Les dispositions générales"
+  ]
+}

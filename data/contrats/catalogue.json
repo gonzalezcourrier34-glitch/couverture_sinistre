@@ -22,7 +22,8 @@
     "id": "assureur-c-habitation-2025",
     "assureur": "Assureur C",
     "produit": "Assurance Habitation",
-    "version": "04/2025"
+    "version": "04/2025",
+    "profil": "assureur-c"
   },
   "assureur_a_habitation_2025.pdf": {
     "id": "assureur-a-habitation-2025",

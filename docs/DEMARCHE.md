@@ -4486,6 +4486,148 @@ Chacune changerait la lecture de deux contrats, pour un gain d'une variable. Or 
 
 **La mesure (22 nov., 18 h 11).** Jeu fermé de D : 96 %, aucun couvert à tort, 1 refus à tort (`f-d08`, le même), aucun cas instable : dans la fourchette du jour (93 à 96 %). Les règles de D se chargent dans SWI-Prolog, 117 citations retrouvées, aucun fait hors vocabulaire.
 
+### 7.148 Le quatrième contrat : un PDF sans numéros d'article (Assureur C)
+
+**D'où l'on part.** Assureur C avait été ingéré le 18 nov. (7.51) et laissé « à vérifier » : 157 clauses, aucune définition reconnue, presque tout rangé sous un article « 2 » qui n'existe pas. C'est le contrat ajouté à froid du plan (point 6), repris le 22 nov. à 18 h 20.
+
+**Ce que le document a de particulier.** Trois choses, toutes de mise en page :
+
+- **aucun numéro d'article** : 53 pages structurées par des titres (« Vol », « Bris de glaces »), avec sous chacun les mêmes sous-titres (« Ce qui est garanti », « Mesures de prévention », « Ce qui est exclu ») ;
+- **un lexique à puces** : une puce seule sur sa ligne, le terme sur la ligne suivante, la définition dessous ;
+- **sept pages aux lettres espacées** (« L e s di s p o siti o n s ») : la police n'a pas ses largeurs dans le PDF, l'extraction coupe un mot à chaque lettre.
+
+**Ce qui a été ajouté, au découpage et non au contrat.**
+
+- `titres` dans un profil : les titres de section, recopiés du sommaire. Chacun ouvre une section, une seule fois (le tableau des montants répète les titres des garanties). Dans ce mode, une ligne en capitales est un sous-titre de la section en cours, un intertitre commence par une majuscule (« les exclusions communes figurant page 30 : » est la suite d'une phrase), et seul un titre du sommaire ferme le lexique (« Franchise » y est un terme) ;
+- `lexique : "puce"` ;
+- dans la lecture du PDF, une page où plus de 60 % des « mots » font une ou deux lettres est relue avec un écart proportionnel à la taille des caractères.
+
+Le profil d'Assureur C tient en un fichier (`data/profils/assureur-c.json`) : 45 titres, 9 intertitres, 3 intervalles de pages ignorées (couvertures, sommaire, contacts, déclaration de confidentialité).
+
+**Le résultat.** 218 clauses, statut OK, aucune alerte : 51 définitions, 32 garanties, 32 exclusions, 47 conditions, 33 limites. Chaque garantie a sa section, avec ses clauses dans l'ordre (« Vol » : ce qui est garanti, mesures de protection, en cas d'inhabitation, montants, exclusions).
+
+**La non-régression.** Les trois autres contrats ont été redécoupés avec le code d'avant et celui d'après : mêmes clauses, au caractère près (147, 293 et 267 ; empreintes identiques). Sans `titres` dans le profil, rien ne change.
+
+**Ce que cela a coûté.** Environ une heure, sans appel à un modèle : lire la sortie du découpage, trouver les trois causes, écrire deux options de profil et une règle de lecture, recopier le sommaire. C'est le coût d'un PDF dont la mise en page sort de ce que les trois premiers avaient montré ; un cinquième contrat sans numéros ne demandera plus que son profil.
+
+**Ce qui reste.** Les règles d'Assureur C ne sont pas rédigées : c'est l'étape suivante (Mistral Large, consigne v13), et la première mesure des libellés proposés (7.146).
+
+### 7.149 Un contrat de plus ne commence pas par un fichier écrit à la main
+
+**Le constat (22 nov., 18 h 32).** Première rédaction pour Assureur C : la commande s'arrête sur « fichier introuvable ». Les règles de B et de D avaient commencé par un fichier vide créé à la main, avec son en-tête ; rien ne le créait.
+
+**La règle.** La première rédaction crée le fichier de règles du contrat (`redaction.ouvrir_regles` : un en-tête, aucune règle). Et un contrat n'est compté parmi ceux qu'on peut interroger que si ses règles traduisent au moins une garantie (`prolog.a_des_garanties`) : tant que le fichier est vide, il n'apparaît ni à l'écran, ni dans le rangement du vocabulaire, ni dans le bilan.
+
+### 7.150 La première rédaction du quatrième contrat : ce qu'elle a coûté, ce qu'elle a montré
+
+**La mesure (22 nov., 18 h 39 à 18 h 51).** Deux sections d'Assureur C, le vol (S8) et le bris de glaces (S10), rédigées par `mistral-large-latest` avec la consigne v13 : 11 min 23 s en tout, le bris de glaces en moins de quatre minutes, le vol en onze. 5 garanties, 13 exclusions, 8 circonstances, 1 limite. 22 contrôles bloquants : aucune règle n'est entrée dans le contrat sans relecture, ce qui est le but.
+
+**Ce qui marche sans rien changer.** Les citations sont toutes retrouvées dans le texte. Les neuf variables et valeurs nouvelles arrivent avec leur libellé, leur question et leur aide (7.146). Le vocabulaire existant est réutilisé là où il dit la même chose : les clés laissées à proximité, l'auteur du vol, les parties communes, les travaux sur les vitres, les rayures. Le modèle déclare ce qu'il ne traduit pas au lieu de l'inventer.
+
+**Ce qui est faux, et qu'aucun contrôle n'avait vu.** Le texte du vol dit « formule Initiale avec option Vol, formule Confort ou formule Optimale ». Le modèle a écrit `standard`, `confort`, `excellence` : les formules de B et de D, parce que le vocabulaire qu'on lui donnait les montrait toutes. Dans le bris de glaces, pour la même formule, il a déclaré `optimale`. Deux sections, deux noms, et le premier aurait décidé un sinistre de C avec le nom d'une formule de D.
+
+**La règle.** Une variable dont chaque contrat a ses noms (`par_contrat`, 7.141) ne montre à la rédaction que ceux du contrat traduit ; s'il n'en a pas encore, elle le dit et demande les noms du texte. Le contrôle refuse le nom d'un autre contrat. L'acceptation range les noms déclarés sous le contrat, y compris celui qu'un autre porte déjà (« confort » chez C et chez D). Aucune hiérarchie entre formules n'est retenue : le « parent » proposé par le modèle est ignoré pour ces variables.
+
+**Au passage.** Les propositions portaient « consigne v12 » : la version était écrite deux fois dans le code, et une seule avait été changée. Un test les compare.
+
+**Ce qui reste ouvert.** Ce contrat renvoie à ses pages (« reportez-vous à la page 19 », « les exclusions communes figurant page 30 »), pas à des articles. La rédaction ne suit pas ces renvois : elle les déclare non traduits, ce qui est honnête et bloquant. Les exclusions communes (S35) se rédigent à part et visent toutes les garanties ; les exclusions relatives aux biens (page 14) et les montants (page 19) restent à relier.
+
+### 7.151 La relecture du vol et du bris de glaces d'Assureur C
+
+**Deux rédactions du même texte ne se ressemblent pas (22 nov., 19 h 02).** Relancée après la règle des formules (7.150), la rédaction des deux mêmes sections a pris 2 min 28 s au lieu de 11 min 23 s, et elle a fait moins : le vol sur le lieu de vacances rangé en extension d'un concept qui n'existe pas, les dépendances réduites au garage, la suspension pour inhabitation déclarée non traduite, des citations coupées par « … », la formule et son option fondues en une valeur (`initiale_option_vol`). Les formules, elles, portent bien les noms du texte. Même modèle, même consigne, vingt minutes d'écart : relancer jusqu'à obtenir une bonne rédaction n'est pas une méthode. Les deux brouillons sont gardés (`regles/propositions/assureur-c-habitation-2025/brouillons/`).
+
+**Ce que les contrôles ont vu, et ce qu'ils n'ont pas vu.** 22 puis 26 points bloquants : le vocabulaire nouveau, les renvois non traduits, l'extension sans concept, une citation absente, une garantie sans exclusion. Ils n'ont pas vu les « objets de valeur » réduits aux bijoux dans les deux rédactions, ni les dépendances réduites au garage : une définition plus étroite que le texte est une règle bien formée.
+
+**La relecture (19 h 27).** Les deux brouillons réunis à la main dans le JSON de la proposition, comme le prévoit la méthode (« la source, corrigible à la main ») :
+- la formule et l'option sont deux faits (`formule = initiale` et `option_vol = oui`), comme chez B ;
+- les objets de valeur suivent la définition du contrat : bijoux, objets d'art, tapis et fourrures au-dessus de 200 €, collections, tout objet au-dessus de 5 000 € ; d'où une variable `valeur_unitaire` et trois biens nouveaux ;
+- les « locaux sans communication intérieure » se disent avec le lieu existant (`annexe` : « dépendance privée sans communication avec le logement ») ; la variable proposée pour cela n'est pas créée ;
+- l'inhabitation est une durée (trois jours, quarante-cinq jours) : une variable à trois valeurs, et la suspension de la garantie des objets de valeur est traduite ;
+- les exclusions du vol valent pour ses deux garanties ; « les vitraux, les marquises, les serres » n'excluent que ces biens ;
+- les renvois par page sont rangés : « reportez-vous à la page 19 » est une limite qui cite la section des montants ; « outre les exclusions […] page 14 et […] page 30 » est classé hors décision, avec la raison.
+Après cela : aucun contrôle bloquant, toutes les citations retrouvées mot pour mot.
+
+**Ce que la relecture ne règle pas.**
+- Les biens non assurés (S2-b) et les exclusions communes (S35) ne sont pas encore rédigés : tant qu'ils ne le sont pas, une décision « couvert » de C les ignore.
+- Un garage est une dépendance dans les règles, alors que le contrat en fait une pièce annexe quand il communique avec le logement : on demandera la porte pleine pour un garage attenant.
+- Une exclusion des objets de valeur écarte tout le sinistre, même si d'autres biens ont été volés avec eux.
+- Le relecteur ne connaît pas l'assurance : la relecture vérifie que la règle dit ce que dit le texte, pas qu'un gestionnaire la lirait ainsi.
+
+**Vérifié sur quelques faits, avec le moteur de référence.** Le vélo de l'énoncé, dans le local commun : non couvert, par l'exclusion des locaux à usage commun (S8-f). La bougie : à examiner, l'incendie n'étant pas traduit. Un cambriolage par effraction en formule Confort : couvert ; en formule Initiale sans option Vol : non couvert ; formule inconnue : à préciser. Une fenêtre brisée : couverte en Confort, pas en Initiale. Un aquarium : couvert en Optimale seulement.
+
+**Un effet sur les autres contrats, à mesurer.** L'acceptation ajoute huit valeurs à `bien` et une à `lieu`, que la lecture propose à tous les contrats. Chacune a un parent (`objet_divers`, `logement`), donc les règles existantes les reconnaissent ; mais les bancs de A, B et D sont à repasser. Et un test mesurait la longueur de la consigne de lecture sur tout le vocabulaire : elle grandissait avec chaque contrat ; il la mesure maintenant pour un contrat, comme en service.
+
+**Le coût, à ce stade.** Pour deux sections sur une trentaine : deux rédactions (14 minutes de modèle), trois corrections du code (7.148 à 7.150), une relecture qui a réécrit six définitions ou règles sur une vingtaine et créé sept variables. La relecture a été faite par l'assistant qui a écrit le code, en quelques minutes : ce n'est pas le temps d'un relecteur humain, qui reste à mesurer.
+
+### 7.152 Le premier essai à l'écran : la bonne réponse sous le mauvais nom
+
+**Le constat (22 nov., 19 h 40).** La question du vélo de l'énoncé, posée au contrat C à l'écran : « Non couvert », avec la clause S8-f sur les locaux à usage commun. La réponse et la citation sont justes. La phrase ne l'est pas : « Vol sur le lieu de vacances (S8-a) : une exclusion s'applique ». Personne n'était en vacances.
+
+**La cause.** Le périmètre du vol dans l'habitation, tel que je l'avais relu, n'admettait que le logement et les dépendances : le local commun en sortait, et la garantie était « hors sujet ». L'exclusion des locaux communs ne tenait plus qu'à l'autre garantie, celle des vacances, dont le périmètre restait inconnu. Chez A et chez D, le bâtiment comprend les parties communes, et c'est l'exclusion qui décide.
+
+**La règle.** Un lieu ou un bien que le contrat exclut en toutes lettres appartient au périmètre de la garantie : c'est l'exclusion qui décide, et c'est elle qu'on cite. Un contrôle le vérifie (`exclusions_hors_perimetre`) : une exclusion qui vise un lieu ou un bien qu'aucune de ses garanties n'admet est signalée à la relecture. Il a trouvé aussitôt le même défaut dans le bris de glaces : un vitrail brisé aurait été écarté sans la clause qui l'exclut.
+
+**Les corrections.** Les parties communes entrent dans le périmètre du vol dans l'habitation ; les vitraux, marquises et serres dans celui du bris de glaces. Le lieu de vacances suit sa définition jusqu'au bout (« dans un bâtiment n'appartenant pas à l'assuré ») : un séjour temporaire, dans un autre bâtiment.
+
+**Ce que ça dit de la relecture.** L'erreur était la mienne, pas celle du modèle, et les faits écrits à la main ne l'avaient pas montrée : la décision était juste. Il a fallu l'écran, c'est-à-dire lire la phrase qu'un gestionnaire lirait.
+
+### 7.153 Tout revérifier avant de continuer
+
+**La demande (22 nov., 19 h 45).** Après quatre corrections en une soirée sur le quatrième contrat, revérifier l'ensemble : le code, les règles, le vocabulaire, la logique. Fait sur une copie de l'état réel du dépôt (règles et vocabulaire de C acceptés compris).
+
+**Ce qui a été vérifié, et le résultat.**
+- Le code de `src/` est identique à la copie de travail, fichier par fichier ; les tests passent (203 ici, 215 sur le poste avec SWI-Prolog) ; l'analyse statique ne signale aucune erreur réelle.
+- Le vocabulaire, 155 variables : chacune a un libellé et une question ; aucune valeur en double ; les aides, libellés, parents, « si », « implique » et noms par contrat ne visent que des variables et des valeurs qui existent. Une variable n'est employée par aucune règle (`canalisation_encastree`, déjà connue).
+- Les règles des quatre contrats : chaque fait employé est dans le vocabulaire, chaque formule est un nom du contrat, chaque concept employé est défini, aucune garantie en double. 567 citations comparées au texte des clauses : 567 retrouvées.
+- Tous les contrôles d'aujourd'hui repassés sur toutes les propositions déjà acceptées.
+
+**Ce que la revue a trouvé.**
+1. *La fusion de variables oubliait les propositions.* Après la fusion de 7.147, la proposition 2.5 de D gardait l'ancien nom : les règles étaient justes, mais leur source ne pouvait plus être recontrôlée. La fusion renomme maintenant aussi les propositions ; celle de D est corrigée.
+2. *Le défaut de 7.152 existe aussi chez A et chez B.* Dix exclusions du bris de vitrages et du matériel multimédia visent un bien que le périmètre n'admet pas (un vase, une serre, des lunettes) : la décision est juste (« non couvert »), mais la clause qui le dit n'est pas citée. Non corrigé ce soir : cela change des règles mesurées, et demande de repasser les bancs.
+3. *Un contrôle se trompe sur une règle juste.* L'obligation du matériel dans un véhicule (B, 3.1.7.4) est signalée comme une simple réduction, alors que le texte dit « la garantie intervient uniquement si » : la clause réunit plusieurs alinéas, et le contrôle lit l'ensemble.
+4. *Des brouillons jamais acceptés restent dans les propositions de D* (objets de valeur, véranda, catastrophe technologique, mesures de protection contre le vol, manifestations) : ces articles ne sont pas dans les règles. Pour le vol de D, les mesures de protection exigées ne sont donc pas vérifiées.
+5. *L'en-tête des règles de A est périmé* : il dit que la tempête et le bris de vitrages ne sont pas traduits. Il dit aussi, et c'est toujours vrai, que le vol, l'incendie, les dégâts des eaux et les exclusions générales de A ont été écrits à la main, comme modèle.
+6. *L'anonymisation fuit à trois endroits* : un nom de fichier et un commentaire dans `tests/test_pipeline.py`, et le nom d'un service d'assistance dans le texte d'une clause recopiée dans deux fichiers de `data/ferme/`. Deux dossiers de propositions portent encore un ancien nom sur le poste.
+
+**Ce qui n'a pas pu être vérifié ici.** L'accord entre le moteur Prolog et le moteur de référence (les tests qui le font tournent sur le poste, pas ici) ; la lecture des déclarations par le modèle (les bancs) ; l'écran (pas de construction du frontend ici).
+
+### 7.154 Ce qui est général, ce qui ne l'est pas, et une dernière fuite entre contrats
+
+**La demande (22 nov., 19 h 58).** Dire ce qui est généralisable, et chercher les bogues restants.
+
+**Ce qui est général, vérifié dans le code.**
+- Aucun identifiant de contrat, aucun numéro d'article, aucune valeur métier (vol, logement, formule…) n'est écrit dans la logique de `src/` : seulement dans les exemples de la documentation de l'API, dans l'aide de la ligne de commande, et dans la liste des contrats du jeu fermé (`ferme.py`).
+- Le moteur, la validation des citations, l'API, l'écran et la fiche n'ont pas changé d'une ligne pour le quatrième contrat.
+- Ce qui est propre à un contrat tient dans quatre fichiers de données : son profil de découpage, ses règles, ses variables propres, sa ligne au catalogue.
+
+**Ce qui n'est pas général.**
+- Les deux consignes (rédaction et lecture) disent « assurance habitation », et leurs exemples en viennent.
+- Le socle de la lecture est « événement, bien, lieu » : il convient à un contrat de dommages aux biens ; pour une responsabilité civile seule, une assurance auto ou une prévoyance, il serait à revoir. Aucun contrat hors habitation n'a été essayé.
+- Le « pour » d'une variable (les sinistres pour lesquels on la lit) est commun à tous les contrats : accepter le vol de C fait lire la résidence principale pour un vol chez A. Sans effet sur une décision, mais la lecture d'un contrat dépend encore un peu des autres.
+- Le découpage : chaque mise en page nouvelle a demandé un profil, et une fois sur quatre du code.
+- La relecture des règles reste humaine (7.151).
+
+**Une fuite de plus entre contrats, corrigée.** La rédaction ne voyait plus que les formules du contrat (7.150), mais la lecture d'une déclaration les voyait encore toutes : interrogé sur C, le modèle pouvait répondre « excellence », une formule de D. La chaîne lit maintenant avec le vocabulaire tel que le contrat le voit (`prolog.vocabulaire_du_contrat`) ; une formule d'un autre contrat est écartée et signalée. Et la question posée pour la formule ne cite plus les noms d'un seul assureur.
+
+**La recherche de bogues.** 1 800 jeux de faits tirés au hasard dans le vocabulaire, plus des entrées mal formées (valeur inconnue, liste là où on attend un mot, valeur vide), soumis à la décision des quatre contrats et, pour une partie, à la fiche PDF : aucune erreur, aucun « couvert » sans clause citée, et chaque « à examiner » sans question vient d'un événement que le contrat ne traduit pas, ce que la réponse dit. Ce n'est pas une preuve d'absence de bogue : les routes HTTP, l'écran et le moteur Prolog ne tournent pas dans l'environnement où cette revue a été faite ; ils sont couverts par les tests du poste.
+
+### 7.155 Les bancs de A, B et D après l'arrivée du quatrième contrat
+
+**La question.** L'acceptation du vol et du bris de glaces de C a ajouté huit biens et un lieu au vocabulaire commun, que la lecture propose à tous les contrats (7.151) ; et la lecture ne voit plus que les formules du contrat interrogé (7.154). Les trois autres contrats en sont-ils changés ?
+
+**La mesure (22 nov., 20 h 22 à 20 h 30), trois répétitions par banc.**
+
+| Banc | Avant (séries du 22 nov.) | Après |
+|---|---|---|
+| A, partie test (31 cas) | 90 %, 0 à 1 couvert à tort | 94 %, 0 couvert à tort, 0 refus à tort |
+| A, jeu fermé (20 cas) | 98 à 100 % | 100 % |
+| B, jeu fermé (20 cas) | 82 à 85 %, 1 couvert à tort | 82 %, 1 couvert à tort (`f-b18`, le même) |
+| D, jeu fermé (25 cas) | 93 à 96 %, 1 refus à tort | 96 %, 1 refus à tort |
+
+**Ce qu'on peut en dire.** Aucun chiffre ne sort de sa fourchette : ajouter un contrat n'a pas dégradé les trois autres, à la précision de ces jeux (un cas pèse 3 à 5 points). Le 94 % de A n'est pas un progrès démontré : il est dans le bruit mesuré le même jour (trois séries à consigne identique variaient de 3 points). Les erreurs qui restent sont celles d'avant, laissées telles quelles parce qu'elles sont des cas de mesure.
+
+**Les portes.** Trois bancs sur quatre « échouent » : B sur l'exactitude et le couvert à tort, comme avant ; A sur le 95e centile du temps de réponse (15 s et 11 s pour un seuil à 10 s, médiane 3,6 à 4,3 s : un appel lent au modèle sur dix suffit) et sur les décisions changées par la lecture (3 pour un seuil à 2). Les seuils ne sont pas relevés pour faire passer.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
@@ -4499,7 +4641,7 @@ Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
 | 3 | Les doublons du vocabulaire entre contrats | **Fait pour le seul vrai doublon (7.147)**, avec l'outil pour les suivants. Les sept autres groupes sont des refontes, sous le bruit de mesure : décrites, pas faites. |
 | 4 | Les libellés proposés par la rédaction | **Fait (7.146)** : consigne v13. Reste à voir ce que le modèle propose, sur le prochain contrat. |
 | 5 | Des exemples validés pour B et D | **Fait (7.144)** : 28 exemples validés ; effet non mesurable sur les bancs, par construction. Reste : des déclarations nouvelles pour le mesurer. |
-| 6 | Un contrat ajouté à froid, hors habitation si possible | Trois contrats, tous en habitation, ne prouvent pas cent. |
+| 6 | Un contrat ajouté à froid | **Vol et bris de glaces d'Assureur C rédigés et relus (7.148 à 7.151)** ; la question du vélo y reçoit sa réponse. Reste : les biens non assurés et les exclusions communes (S2-b, S35), repasser les bancs de A, B, D, puis écrire le coût dans le README. Un contrat hors habitation : après. |
 | 7 | Les conditions particulières lues dans le contrat du client | **Fait pour la saisie (7.141)** : la formule et les options se donnent avec la déclaration. Reste : lire le document du client. |
 | 8 | La loi applicable au contrat | **Écrite comme limite** (README, section 7) : elle dépend du contrat (A se dit régi par la loi belge du 4 avril 2014), elle s'impose aux conditions générales, le système ne lit que le contrat. |
 
@@ -4681,3 +4823,7 @@ Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
 148. Une hypothèse sur le fournisseur se vérifie auprès du fournisseur : « latest » n'avait pas changé de version ; c'est la même version qui lit le même texte autrement d'une heure à l'autre.
 149. Nommer la version datée du modèle : les mesures restent attachées à ce qu'on a mesuré, et les bancs se rejouent à date fixe, pas seulement après un changement.
 150. Ne pas entreprendre un changement dont l'effet attendu est plus petit que le bruit de la mesure : on ne saurait pas dire s'il a marché.
+151. Avant d'aller chercher un contrat de plus, finir celui qui attend : il était déjà la mesure qu'on cherchait.
+152. Ce qu'on montre au modèle, il s'en sert : lui montrer les formules de tous les contrats, c'est lui proposer d'écrire celles d'un autre.
+153. Une définition plus étroite que le texte est une règle bien formée : aucun contrôle de forme ne la voit, seule la relecture.
+154. Une décision juste ne prouve pas une règle juste : lire aussi la phrase et la clause qui l'accompagnent.

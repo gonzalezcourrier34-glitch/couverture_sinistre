@@ -594,7 +594,10 @@ def test_lecture_en_deux_temps(monkeypatch):
             return json.dumps({"faits": {"fermeture": "cadenas", "lieu": ["logement"], "cause_eau": "gel"}})
 
     m = Modele()
-    faits, ecarts = lecture.extraire_faits_regles("On m'a volé mon vélo dans ma cave fermée par un cadenas.", m, verifier=False)
+    # Les variables d'un contrat, comme en service : sur tout le vocabulaire, la longueur mesurée plus bas
+    # grandirait avec chaque contrat ajouté (7.151), ce que la lecture d'un sinistre ne fait pas.
+    faits, ecarts = lecture.extraire_faits_regles("On m'a volé mon vélo dans ma cave fermée par un cadenas.", m, verifier=False,
+                                                  variables=lecture.variables_du_contrat("assureur-a-habitation-2025"))
     assert faits == {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"], "fermeture": "cadenas"}, \
         "le temps 2 ne réécrit pas le lieu, et une cause d'eau n'est pas demandée pour un vol"
     (s1, m1, sch1), (s2, m2, sch2) = m.appels
@@ -1021,7 +1024,8 @@ def test_souscription_d_un_contrat():
     """Ce que les conditions particulières précisent se lit dans le vocabulaire (« source ») et dans les règles
     du contrat : ses options à lui, et ses formules à lui."""
     voc = prolog.vocabulaire()
-    a, b, d = (prolog.souscription(c, voc) for c in prolog.contrats_regles())
+    a, b, d = (prolog.souscription(c, voc) for c in ("assureur-a-habitation-2025", "assureur-b-habitation-2017",
+                                                      "assureur-d-habitation-2026"))
     assert set(a) == {"couverture_rc_locative", "option_materiel_multimedia"}
     assert b["formule"]["valeurs"] == ["privilege", "active", "standard"]
     assert d["formule"]["valeurs"] == ["eco", "confort", "excellence"] and "pack_jardin" in d and "pack_jardin" not in b
@@ -1107,3 +1111,29 @@ def test_sans_evenement_le_moteur_n_est_pas_interroge():
     assert r.verdict.informations_manquantes == [lecture.question("evenement")] and not r.verdict.citations
     assert r.faits.circonstances == ["option_materiel_multimedia=oui"], "ce qui est donné reste dans les faits"
     assert ("decision", "aucun sinistre reconnu : les règles ne sont pas appliquées") in etapes
+
+
+def test_la_lecture_ne_propose_que_les_formules_du_contrat():
+    """7.154 : la lecture d'une déclaration faite pour B ne peut pas répondre une formule de D. Le vocabulaire vu
+    par un contrat ne garde, pour une variable « par_contrat », que ses noms, leur aide et leurs libellés."""
+    b, d = "assureur-b-habitation-2017", "assureur-d-habitation-2026"
+    voc = prolog.vocabulaire()
+    vu_b, vu_d = prolog.vocabulaire_du_contrat(b), prolog.vocabulaire_du_contrat(d)
+    assert vu_b["formule"]["valeurs"] == voc["formule"]["par_contrat"][b] and "excellence" not in vu_b["formule"]["valeurs"]
+    assert set(vu_d["formule"].get("aide") or {}) <= set(vu_d["formule"]["valeurs"])
+    assert vu_b["effraction"] == voc["effraction"] and voc["formule"]["valeurs"] != vu_b["formule"]["valeurs"], \
+        "le vocabulaire commun n'est pas modifié"
+    assert prolog.vocabulaire_du_contrat("assureur-a-habitation-2025")["formule"]["valeurs"] == voc["formule"]["valeurs"]
+
+    class Modele:
+        nom, appels = "faux", []
+
+        def completer(self, systeme, message, schema=None):
+            self.appels.append(schema)
+            return json.dumps({"faits": {"evenement": ["vol"]} if len(self.appels) == 1 else {"formule": "excellence"}})
+
+    m = Modele()
+    faits, ecarts = lecture.extraire_faits_regles("Vol chez moi, j'ai la formule Excellence.", m, verifier=False,
+                                                  variables=lecture.variables_du_contrat(b), voc=vu_b)
+    assert "excellence" not in lecture.schema_faits({"formule": vu_b["formule"]})["properties"]["faits"]["properties"]["formule"]["enum"]
+    assert "formule" not in faits and any("excellence" in e for e in ecarts), "une formule d'un autre contrat n'est pas retenue"
