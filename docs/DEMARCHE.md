@@ -4660,6 +4660,10 @@ Après cela : aucun contrôle bloquant, toutes les citations retrouvées mot pou
 
 **Ce qui reste.** Quand aucune garantie ne s'applique et qu'aucune clause n'exclut le cas en toutes lettres (un vase brisé chez D), la réponse cite encore les premières garanties du contrat, faute de mieux. Et la « confiance » affichée (85 % pour un couvert ou un refus, 40 % pour un « à préciser ») est une valeur fixe par type de réponse, pas une probabilité mesurée.
 
+### 7.158 Le README dit ce que le quatrième contrat a coûté
+
+La section « Tenir des centaines de contrats » est réécrite d'après ce qui a été mesuré le 22 novembre (7.148 à 7.157) : ce qui est général (le moteur, l'API, l'écran, quatre fichiers de données par contrat), ce que C a coûté étape par étape, l'erreur de relecture et ce qui l'a montrée, ce qui n'est pas général. Elle conclut qu'il faut des relecteurs du métier, un outil de relecture et un jeu de mesure par contrat. Les chiffres du vocabulaire sont recalculés avec C (56 questions communes, 70 variables lues propres à un seul contrat). Quatre limites sont ajoutées : plusieurs biens déclarés ensemble, le cas sans garantie ni exclusion écrite, le contrat C partiel, les mesures de protection de D. Le README dit aussi que quatre articles de A ont été écrits à la main, et que la confiance affichée est une valeur fixe.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.

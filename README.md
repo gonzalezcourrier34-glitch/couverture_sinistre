@@ -84,6 +84,8 @@ Le moteur reprend le raisonnement d'un gestionnaire : un périmètre contraire �
 
 Contrat « Assureur A » (48 pages, 147 clauses). Les réponses attendues ont été établies d'après le texte des conditions générales, avec l'aide de Claude ; elles sont à relire par un juriste.
 
+La question du vélo a aussi été posée à un quatrième contrat (C), ajouté à froid le 22 novembre ([ce qu'il a coûté](#6-tenir-des-centaines-de-contrats)) : **non couvert**, section « Vol », « Les vols des biens déposés dans les locaux à usage commun des occupants de l'immeuble ». La bougie y reste « à examiner » : son incendie n'est pas encore traduit.
+
 ### 4. Ce que cela donne
 
 Trois contrats de trois assureurs (anonymisés A, B, D), sur le même moteur. Mistral Medium 3.5 lit (`mistral-medium-2604`), Mistral Small 4 vérifie (`mistral-small-2603`). Mesures du 22 novembre 2026, trois séries dans la journée (13 h 30, 16 h 20, 17 h 25), trois passages par banc ; la fourchette donne les trois séries :
@@ -102,6 +104,8 @@ Trois contrats de trois assureurs (anonymisés A, B, D), sur le même moteur. Mi
 - **La lecture varie peu, mais elle varie** : sur 96 déclarations, 0 à 4 changent de réponse d'un passage à l'autre.
 - Une analyse prend 4 à 5 secondes (95e centile : 6 à 7 secondes ; un passage à 19 secondes chez B, un appel lent).
 - Les jeux sont petits : un écart de 3 ou 4 points entre deux séries n'est pas significatif.
+- **Le soir du même jour**, après l'ajout du contrat C et un changement du moteur, les quatre bancs ont été repassés : A 94 % et 100 %, B 85 %, D 96 %, avec les deux mêmes erreurs et aucune nouvelle. Ajouter un contrat n'a pas dégradé les autres, à la précision de ces jeux.
+- La **« confiance »** affichée à l'écran (85 % pour un couvert ou un refus, 40 % pour un « à préciser », moins quand une réserve subsiste) est une valeur fixe par type de réponse, pas une probabilité mesurée.
 
 ### 5. Ce qui a été essayé, et ce que la mesure a dit
 
@@ -124,15 +128,33 @@ Ce que cela apprend : un modèle sait dire si un fait est **écrit** ; il ne se 
 
 ### 6. Tenir des centaines de contrats
 
-Ce qui est fait :
-- **un seul moteur**, sans rien de propre à un assureur ;
-- **un vocabulaire à deux étages** : 50 questions communes (l'événement, le bien, le lieu, l'effraction, l'auteur…) et 19 à 48 questions propres à chaque contrat, rangées par le code ;
-- **les règles rédigées par Mistral Large**, puis contrôlées : vocabulaire, citations mot pour mot, cohérence des concepts ;
+**Ce qui est général.** Vérifié en ajoutant un quatrième contrat (C) le 22 novembre, sans l'avoir préparé :
+- **le moteur, la validation des citations, l'API, l'écran et la fiche** n'ont pas changé d'une ligne pour lui ; aucun identifiant de contrat, numéro d'article ou valeur métier n'est écrit dans la logique du code ;
+- ce qui est propre à un contrat tient dans **quatre fichiers de données** : son profil de découpage, ses règles, ses variables propres, sa ligne au catalogue ;
+- **un vocabulaire à deux étages** : 56 questions communes (l'événement, le bien, le lieu, l'effraction, l'auteur…) et les questions propres à chaque contrat, rangées par le code. Le vol et le bris de glaces de C ont demandé 22 faits : 15 existaient déjà ;
+- **les règles sont rédigées par Mistral Large**, puis contrôlées (vocabulaire, citations mot pour mot, cohérence des concepts) et relues. Quatre articles du contrat A font exception : le vol, l'incendie, les dégâts des eaux et les exclusions générales ont été écrits à la main, comme modèle, avant que la rédaction existe ;
 - **des jeux fermés** écrits à partir du seul texte du contrat, par deux annotateurs indépendants, pour mesurer sans biais.
 
-Ce que coûte un contrat de plus, honnêtement : la rédaction automatique est rapide (11 minutes pour un premier lot de six articles), mais la **relecture humaine reste lourde** sur les articles qui définissent les biens assurés : le modèle y invente des concepts, et ce lot a déclenché 80 contrôles bloquants. Les garanties demandent moins. Le temps complet par contrat n'a pas été mesuré.
+**Ce que le quatrième contrat a coûté**, pour deux garanties sur une trentaine (le vol et le bris de glaces) :
 
-Ce qui manque pour des centaines : chaque contrat réemploie la moitié de ses variables ou plus (48 à 60 %), mais 68 variables lues dans la déclaration restent propres à un seul (`couverture regles --contrat … --bilan`) ; un vrai doublon a été fusionné, sept autres rapprochements demanderaient de réécrire des règles pour un gain plus petit que le bruit des mesures ; trois contrats ne prouvent pas cent ; tout est en habitation.
+| Étape | Coût mesuré | Ce qu'il a fallu faire à la main |
+|---|---|---|
+| Découpage | environ une heure | Un profil, et du code : ce contrat n'a pas de numéros d'article |
+| Rédaction par le modèle | 11 min, puis 2 min 30 pour la même chose | Rien, mais les deux rédactions du même texte ne se ressemblent pas : la plus rapide avait fait moins |
+| Contrôles | 22 puis 26 points bloquants | Aucune règle n'est entrée sans relecture |
+| Relecture | une vingtaine de règles relues, six réécrites, sept variables créées | Les « objets de valeur » réduits aux bijoux dans les deux rédactions : une définition plus étroite que le texte est une règle bien formée, aucun contrôle ne la voit |
+| Défauts du code révélés | cinq, corrigés par une règle générale chacun | Dont les formules d'un autre contrat proposées au modèle, à la rédaction puis à la lecture |
+
+La relecture est le poste qui ne se réduit pas. Elle a été faite ici par l'assistant qui a écrit le code ; le temps d'un relecteur du métier n'a pas été mesuré, et c'est lui qu'il faudrait. Et cette relecture s'est trompée une fois : pour qu'une exclusion soit citée, deux biens exclus déclarés ensemble sont devenus « couverts », pendant une heure, sur un contrat qui n'a pas de jeu de mesure. C'est une comparaison des décisions avant et après, sur des faits tirés au hasard, qui l'a montré. Un contrat ajouté sans jeu de mesure n'est pas vérifié.
+
+**Ce qui n'est pas général.**
+- Les consignes de rédaction et de lecture sont écrites pour l'**assurance habitation**, et le socle de la lecture (événement, bien, lieu) convient aux dommages aux biens. Aucun contrat d'une autre branche n'a été essayé.
+- Le **découpage** : chaque mise en page a demandé un profil, et une fois sur quatre du code.
+- Le contrat C renvoie à ses pages (« reportez-vous à la page 19 »), pas à des articles : ces renvois sont rangés à la main.
+- 70 variables lues dans la déclaration restent propres à un seul contrat (`couverture regles --contrat … --bilan`) ; un vrai doublon a été fusionné, sept autres rapprochements demanderaient de réécrire des règles pour un gain plus petit que le bruit des mesures.
+- Quatre contrats, dont un partiel, ne prouvent pas cent.
+
+Pour des centaines de contrats, il faut donc une équipe de relecteurs du métier, un outil de relecture, et un jeu de mesure par contrat : pas un bouton.
 
 ### 7. Limites
 
@@ -140,6 +162,10 @@ Ce qui manque pour des centaines : chaque contrat réemploie la moitié de ses v
 - La **loi applicable** n'est pas traitée : le contrat A se dit régi par la loi belge du 4 avril 2014, d'autres relèvent de la loi luxembourgeoise du 27 juillet 1997 ou du code des assurances français. Ces textes s'imposent aux conditions générales ; le système ne lit que le contrat.
 - La **lecture** reste la source de toutes les erreurs. Quand un fait qui porte la réponse n'est pas confirmé, le garde-fou en fait une question, pas une bonne réponse.
 - Le moteur n'est pas plus juste que son vocabulaire : il ne sait pas dire « une fuite, mais pas le gel ».
+- **Plusieurs biens déclarés ensemble** : la réponse est « couvert » dès qu'un seul entre dans une garantie, sans dire lequel (une vitre et une télévision brisées : couvert, pour la vitre).
+- Quand aucune garantie ne s'applique, la réponse cite la clause qui exclut le cas si le contrat en a une (un vase brisé : « les objets en verre autres que des vitres ») ; s'il n'en a pas, elle dit qu'aucune garantie ne s'applique et cite, faute de mieux, les premières garanties du contrat.
+- Le **contrat C** n'est traduit que pour le vol et le bris de glaces ; ses biens non assurés et ses exclusions communes ne sont pas rédigés : un « couvert » de C les ignore.
+- Chez D, les **mesures de protection contre le vol** ne sont pas traduites : elles ne sont pas vérifiées.
 - Seuls des **PDF** de conditions générales sont lus. Un seul document est produit : la fiche d'analyse d'un sinistre, en PDF.
 - Les réponses attendues des jeux de référence ont été proposées par des modèles, puis arbitrées sur citations ; elles n'ont pas été validées par un juriste.
 
