@@ -1192,3 +1192,37 @@ def test_exclusions_etablies_prolog_et_reference_concordent():
             continue
         p, o = prolog.decider(cid, faits), Explorateur(Contrat(prolog.fichier_regles(cid)), faits).decider()
         assert p["decision"] == o["decision"] == "NON_COUVERT" and p["exclusions_etablies"] == o["exclusions_etablies"] != []
+
+
+def test_tous_les_biens_declares_exclus_il_ne_reste_rien_a_couvrir(tmp_path):
+    """7.159 : l'exclusion d'un bien ne retire que ce bien quand d'autres sont déclarés ; si chacun est exclu, la
+    garantie ne couvre plus rien. Avant, des espèces et un animal volés ensemble étaient « couverts »."""
+    from moteur_reference import Contrat, Explorateur
+    regles = tmp_path / "essai.pl"
+    regles.write_text('''evenement_traduit(vol).
+garantie(vol, "Vol", '1', "le vol des biens assurés").
+perimetre(vol, f(evenement, vol)).
+exclusion(vol, f(bien, valeurs), bien(valeurs), non, '2', "les fonds et valeurs").
+exclusion(vol, f(bien, animal), bien(animal), non, '2', "les animaux").
+''', encoding="utf-8")
+    c = Contrat(regles)
+    decide = lambda biens: Explorateur(c, {"evenement": ["vol"], "bien": biens}).decider()
+    assert decide(["valeurs"])["decision"] == "NON_COUVERT"
+    assert decide(["valeurs", "animal"])["decision"] == "NON_COUVERT", "deux biens exclus ne font pas un bien couvert"
+    mixte = decide(["valeurs", "electronique"])
+    assert mixte["decision"] == "COUVERT" and mixte["retenues"][0]["partielles"] == ["valeurs"], "le reste demeure couvert"
+    assert decide(["electronique"])["decision"] == "COUVERT"
+
+
+@avec_swipl
+def test_biens_tous_exclus_prolog_et_reference_concordent():
+    from moteur_reference import Contrat, Explorateur
+    cid = "assureur-c-habitation-2025"
+    if not prolog.a_des_garanties(cid) or "'S2-b'" not in prolog.fichier_regles(cid).read_text(encoding="utf-8"):
+        pytest.skip("les biens non assurés du contrat C ne sont pas traduits")
+    base = {"evenement": ["vol"], "lieu": ["logement"], "effraction": "oui", "formule": "confort"}
+    for biens, attendu in ((["valeurs"], "NON_COUVERT"), (["valeurs", "animal"], "NON_COUVERT"),
+                           (["valeurs", "electronique"], "COUVERT"), (["electronique"], "COUVERT")):
+        faits = base | {"bien": biens}
+        p, o = prolog.decider(cid, faits), Explorateur(Contrat(prolog.fichier_regles(cid)), faits).decider()
+        assert p["decision"] == o["decision"] == attendu, biens

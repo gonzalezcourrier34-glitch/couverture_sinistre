@@ -96,3 +96,45 @@ exclusion([bris_glaces_batiment, bris_glaces_meubles, bris_cloture_provisoire], 
     "Les vitraux, les marquises, les serres.").
 exclusion([bris_glaces_batiment, bris_glaces_meubles, bris_cloture_provisoire], et([ou([f(bien, verre_meuble), f(bien, insert), f(bien, aquarium), f(bien, paroi_douche)]), non(f(formule, optimale))]), tout, oui, 'S10-c',
     "Les bris de vitres ou miroirs qui constituent des éléments des biens mobiliers assurés, les vitres d’inserts, les aquariums, les parois de douche, sauf si vous avez souscrit la formule Optimale.").
+
+% --- Art. S35 : proposition rédigée par le modèle — mistral:mistral-large-4-0, 2026-11-22 ---
+exclusion(tous, f(intentionnel, oui), tout, non, 'S35',
+    "Intentionnellement causés ou provoqués par l’assuré ou avec sa complicité").
+exclusion(tous, f(dommage_legislation_construction, oui), tout, non, 'S35',
+    "Relevant de la législation sur la construction ou la rénovation des bâtiments").
+exclusion(tous, f(assurance_dommages_ouvrage, oui), tout, non, 'S35',
+    "Relevant de l’assurance Dommages ouvrage").
+exclusion(tous, f(cause_guerre, oui), tout, non, 'S35',
+    "Causés par une guerre étrangère, ou une guerre civile").
+exclusion(tous, et([ou([f(catastrophe, tremblement_terre), f(catastrophe, eruption_volcanique), f(catastrophe, action_mer), f(catastrophe, glissement_terrain)]), non(f(evenement, catastrophe_naturelle))]), tout, non, 'S35',
+    "Causés par les tremblements de terre, les éruptions volcaniques, l’action de la mer, les glissements de terrain ou autres événements à caractère catastrophique, sauf si ces événements sont déclarés « Catastrophes naturelles »").
+exclusion(tous, et([f(cause_nucleaire, oui), non(f(evenement, attentat))]), tout, non, 'S35',
+    "Causés par la désintégration du noyau atomique, la radioactivité, la transmutation d’atome, à l’exception des dommages causés aux biens par un attentat ou un acte de terrorisme").
+exclusion(tous, f(maladie_transmissible, oui), tout, non, 'S35',
+    "Causés ou aggravés ou en relation, de manière directe ou indirecte, avec une maladie transmissible ou la crainte d’une maladie transmissible. On entend par maladie transmissible, toute maladie qui peut être transmise d’un organisme à un autre organisme par le vecteur de toute substance ou agent.").
+exclusion(tous, f(defaut_reparation_connu, oui), tout, non, 'S35',
+    "Résultant d’un défaut de réparation vous incombant, connu de vous sauf cas de force majeure, étant entendu que les causes non supprimées d’un précédent sinistre sont considérées automatiquement comme un défaut de réparation").
+exclusion(tous, f(defaut_installation_electronique, oui), tout, non, 'S35',
+    "Les dommages résultant d’un défaut d’installation sur les matériels électroniques, HI-FI, vidéo et Informatique").
+exclusion(tous, f(support_donnees_ou_logiciel, oui), tout, non, 'S35',
+    "Les dommages de toute nature aux données sur tous supports informatiques (y compris en cours de transmission et de traitement), ainsi que les atteintes à l’authenticité, l’intégrité ou la confidentialité de ces informations et/ou données ainsi que leurs conséquences immatérielles et financières.").
+
+% --- Art. S2-b : proposition rédigée par le modèle — mistral:mistral-large-4-0, 2026-11-22 ---
+exclusion(tous, f(bien, vehicule_moteur), bien(vehicule_moteur), non, 'S2-b',
+    "Les véhicules terrestres à moteur soumis à l’obligation d’assurance de l’article L 211-1 du Code des assurances.").
+exclusion(tous, f(bien, caravane), bien(caravane), non, 'S2-b',
+    "Les caravanes, les bateaux à voile ou à moteur, les jets ski.").
+exclusion(tous, f(bien, bateau), bien(bateau), non, 'S2-b',
+    "Les caravanes, les bateaux à voile ou à moteur, les jets ski.").
+exclusion(tous, f(habitation_non_assuree, oui), tout, non, 'S2-b',
+    "Les mobil-homes, les manoirs, les châteaux, les monuments historiques ou inscrits à l’inventaire supplémentaire des monuments historiques.").
+exclusion(tous, f(bien, valeurs), bien(valeurs), non, 'S2-b',
+    "Les fonds et valeurs : il s’agit des billets de banque, pièces de monnaie, lingots d’or et d’argent, titres et valeurs mobilières, moyens de paiements.").
+exclusion(tous, f(bien, animal), bien(animal), non, 'S2-b',
+    "Les animaux.").
+exclusion(tous, f(bien, collection_timbres_monnaies), bien(collection_timbres_monnaies), non, 'S2-b',
+    "Les collections de timbres, de monnaie ou de médailles.").
+exclusion(tous, f(terrain_non_constructible, oui), tout, non, 'S2-b',
+    "Les bâtiments et leur contenu construits dans une zone qui a été, préalablement à leur construction, déclarée inconstructible en vertu des règles légales ou administratives visant à prévenir les conséquences des catastrophes naturelles (Plan de Prévention des Risques, Plan d’Exposition aux Risques ou autres règles administratives en vigueur lors de la construction).").
+exclusion(tous, f(batiment_inoccupe_10_ans_avant_souscription, oui), tout, non, 'S2-b',
+    "Les bâtiments inoccupés en permanence depuis plus de 10 ans avant la souscription.").

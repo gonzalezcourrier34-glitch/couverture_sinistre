@@ -1,0 +1,594 @@
+{
+  "meta": {
+    "article": "S2",
+    "modele": "mistral:mistral-large-4-0",
+    "date": "2026-11-22",
+    "consigne": "redaction-regles v13"
+  },
+  "proposition": {
+    "evenements": [],
+    "definitions": [
+      {
+        "concept": "batiment_assure",
+        "condition": {
+          "ou": [
+            {
+              "et": [
+                {
+                  "f": [
+                    "formule",
+                    "initiale"
+                  ]
+                },
+                {
+                  "f": [
+                    "statut_logement",
+                    "proprietaire"
+                  ]
+                }
+              ]
+            },
+            {
+              "et": [
+                {
+                  "f": [
+                    "formule",
+                    "initiale"
+                  ]
+                },
+                {
+                  "f": [
+                    "statut_logement",
+                    "coproprietaire"
+                  ]
+                }
+              ]
+            },
+            {
+              "et": [
+                {
+                  "f": [
+                    "formule",
+                    "confort"
+                  ]
+                },
+                {
+                  "f": [
+                    "statut_logement",
+                    "proprietaire"
+                  ]
+                }
+              ]
+            },
+            {
+              "et": [
+                {
+                  "f": [
+                    "formule",
+                    "confort"
+                  ]
+                },
+                {
+                  "f": [
+                    "statut_logement",
+                    "coproprietaire"
+                  ]
+                }
+              ]
+            },
+            {
+              "et": [
+                {
+                  "f": [
+                    "formule",
+                    "optimale"
+                  ]
+                },
+                {
+                  "f": [
+                    "statut_logement",
+                    "proprietaire"
+                  ]
+                }
+              ]
+            },
+            {
+              "et": [
+                {
+                  "f": [
+                    "formule",
+                    "optimale"
+                  ]
+                },
+                {
+                  "f": [
+                    "statut_logement",
+                    "coproprietaire"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "article": "S2-a",
+        "texte": "Si vous êtes propriétaire, le bâtiment désigné dans vos Conditions Particulières au paragraphe « L’habitation assurée ». Si vous êtes copropriétaire, vous êtes également couvert pour votre quote-part dans les parties communes."
+      },
+      {
+        "concept": "contenu_assure",
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "formule",
+                "initiale"
+              ]
+            },
+            {
+              "ou": [
+                {
+                  "f": [
+                    "statut_logement",
+                    "locataire"
+                  ]
+                },
+                {
+                  "f": [
+                    "statut_logement",
+                    "proprietaire"
+                  ]
+                },
+                {
+                  "f": [
+                    "statut_logement",
+                    "coproprietaire"
+                  ]
+                }
+              ]
+            },
+            {
+              "ou": [
+                {
+                  "concept": "objets_usuels"
+                },
+                {
+                  "concept": "amenagements_immobiliers"
+                }
+              ]
+            },
+            {
+              "f": [
+                "lieu",
+                "logement"
+              ]
+            },
+            {
+              "ou": [
+                {
+                  "f": [
+                    "proprietaire",
+                    "assure"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien_confie",
+                    "oui"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "article": "S2-a",
+        "texte": "Si vous êtes locataire, propriétaire ou copropriétaire : les objets usuels pour les montants précisés dans vos Conditions Particulières, les aménagements immobiliers réalisés à vos frais. Ces biens doivent se trouver à l’intérieur du bâtiment assuré. Ils doivent appartenir aux personnes assurées ou leur avoir été confiés."
+      },
+      {
+        "concept": "amenagements_immobiliers",
+        "condition": {
+          "f": [
+            "bien",
+            "element_batiment"
+          ]
+        },
+        "article": "S1/amenagements-immobiliers",
+        "texte": "Ils comprennent : - toutes les installations fixes de chauffage, de climatisation, d’alarme, les placards intégrés ainsi que les éléments fixes de cuisine et de salle de bains, - tous les revêtements de sols, de murs et de plafonds. Les appareils électroménagers, même encastrés, sont considérés comme des éléments mobiliers."
+      }
+    ],
+    "garanties": [],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "vehicule_moteur"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "S2-b",
+        "texte": "Les véhicules terrestres à moteur soumis à l’obligation d’assurance de l’article L 211-1 du Code des assurances."
+      },
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "caravane"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "S2-b",
+        "texte": "Les caravanes, les bateaux à voile ou à moteur, les jets ski."
+      },
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "bateau"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "S2-b",
+        "texte": "Les caravanes, les bateaux à voile ou à moteur, les jets ski."
+      },
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "jet_ski"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "S2-b",
+        "texte": "Les caravanes, les bateaux à voile ou à moteur, les jets ski."
+      },
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "mobil_home"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "S2-b",
+        "texte": "Les mobil-homes, les manoirs, les châteaux, les monuments historiques ou inscrits à l’inventaire supplémentaire des monuments historiques."
+      },
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "manoir"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "S2-b",
+        "texte": "Les mobil-homes, les manoirs, les châteaux, les monuments historiques ou inscrits à l’inventaire supplémentaire des monuments historiques."
+      },
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "chateau"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "S2-b",
+        "texte": "Les mobil-homes, les manoirs, les châteaux, les monuments historiques ou inscrits à l’inventaire supplémentaire des monuments historiques."
+      },
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "monument_historique"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "S2-b",
+        "texte": "Les mobil-homes, les manoirs, les châteaux, les monuments historiques ou inscrits à l’inventaire supplémentaire des monuments historiques."
+      },
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "valeurs"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "S2-b",
+        "texte": "Les fonds et valeurs : il s’agit des billets de banque, pièces de monnaie, lingots d’or et d’argent, titres et valeurs mobilières, moyens de paiements."
+      },
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "animal"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "S2-b",
+        "texte": "Les animaux."
+      },
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "collection"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "S2-b",
+        "texte": "Les collections de timbres, de monnaie ou de médailles."
+      },
+      {
+        "condition": {
+          "f": [
+            "terrain_non_constructible",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "S2-b",
+        "texte": "Les bâtiments et leur contenu construits dans une zone qui a été, préalablement à leur construction, déclarée inconstructible en vertu des règles légales ou administratives visant à prévenir les conséquences des catastrophes naturelles (Plan de Prévention des Risques, Plan d’Exposition aux Risques ou autres règles administratives en vigueur lors de la construction)."
+      },
+      {
+        "condition": {
+          "f": [
+            "batiment_inoccupe_10_ans_avant_souscription",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "S2-b",
+        "texte": "Les bâtiments inoccupés en permanence depuis plus de 10 ans avant la souscription."
+      }
+    ],
+    "extensions": [
+      {
+        "concept": "contenu_assure",
+        "condition": {
+          "et": [
+            {
+              "ou": [
+                {
+                  "f": [
+                    "domaine_litige",
+                    "defense_penale"
+                  ]
+                },
+                {
+                  "f": [
+                    "domaine_litige",
+                    "recours_dommage"
+                  ]
+                }
+              ]
+            },
+            {
+              "non": {
+                "f": [
+                  "pack_souscrit",
+                  "oui"
+                ]
+              }
+            }
+          ]
+        },
+        "article": "S2-a",
+        "texte": "toutefois, pour la garantie Défense Pénale et Recours Suite à Accident, les biens de l’assuré situés à l’extérieur des bâtiments assurés seront garantis, à l’exception de ceux qui auraient pu être pris en charge au titre d’un pack"
+      }
+    ],
+    "vocabulaire_manquant": [
+      {
+        "variable": "statut_logement",
+        "valeurs": [
+          "coproprietaire"
+        ],
+        "libelle": "Copropriétaire",
+        "libelles": {
+          "coproprietaire": "copropriétaire"
+        },
+        "question": "Êtes-vous copropriétaire du bâtiment ?",
+        "pourquoi": "La clause S2-a distingue le copropriétaire du propriétaire et du locataire pour la couverture du bâtiment et des parties communes",
+        "plus_proche": "statut_logement : ne contient que proprietaire et locataire",
+        "aide": {
+          "coproprietaire": "je suis copropriétaire, je possède une quote-part dans les parties communes de l'immeuble"
+        },
+        "parent": "proprietaire"
+      },
+      {
+        "variable": "bien",
+        "valeurs": [
+          "caravane",
+          "bateau",
+          "jet_ski",
+          "mobil_home",
+          "manoir",
+          "chateau",
+          "monument_historique"
+        ],
+        "libelle": "Type de bien exclu",
+        "libelles": {
+          "caravane": "caravane",
+          "bateau": "bateau",
+          "jet_ski": "jet ski",
+          "mobil_home": "mobil-home",
+          "manoir": "manoir",
+          "chateau": "château",
+          "monument_historique": "monument historique"
+        },
+        "question": "De quel type de bien s'agit-il exactement ?",
+        "pourquoi": "La clause S2-b exclut spécifiquement ces biens qui n'ont pas de valeur équivalente dans le vocabulaire existant",
+        "plus_proche": "bien : vehicule_moteur couvre les véhicules terrestres à moteur mais pas les caravanes, bateaux, jets ski ; remorque est une remorque, pas une caravane",
+        "aide": {
+          "caravane": "c'est une caravane",
+          "bateau": "c'est un bateau à voile ou à moteur",
+          "jet_ski": "c'est un jet ski",
+          "mobil_home": "c'est un mobil-home",
+          "manoir": "c'est un manoir",
+          "chateau": "c'est un château",
+          "monument_historique": "c'est un monument historique ou inscrit à l'inventaire"
+        },
+        "parent": "objet_divers"
+      },
+      {
+        "variable": "batiment_inoccupe_10_ans_avant_souscription",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Inoccupé 10 ans avant souscription",
+        "question": "Le bâtiment était-il inoccupé en permanence depuis plus de 10 ans avant la souscription du contrat ?",
+        "pourquoi": "La clause S2-b exclut les bâtiments inoccupés en permanence depuis plus de 10 ans avant la souscription",
+        "plus_proche": "local_inoccupe_12_mois : porte sur une période de 12 mois, pas 10 ans, et ne précise pas que c'est avant la souscription",
+        "aide": {
+          "oui": "le bâtiment était vide et inoccupé depuis plus de 10 ans avant la signature du contrat",
+          "non": "le bâtiment était occupé ou inoccupé depuis moins de 10 ans avant la souscription"
+        }
+      },
+      {
+        "variable": "pack_souscrit",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Bien couvert par un pack",
+        "question": "Ce bien aurait-il pu être pris en charge au titre d'un pack souscrit (piscine, jardin, etc.) ?",
+        "pourquoi": "La clause S2-a exclut de la garantie Défense Pénale et Recours les biens couverts par un pack",
+        "plus_proche": "pack_piscine, pack_jardin : options spécifiques, pas une variable générale indiquant si un pack couvre le bien",
+        "aide": {
+          "oui": "j'ai souscrit un pack qui couvre ce bien précis",
+          "non": "aucun pack souscrit ne couvre ce bien"
+        }
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "statut_logement = coproprietaire : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire S2`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "pack_souscrit = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire S2`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = caravane : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire S2`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = bateau : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire S2`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = jet_ski : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire S2`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = mobil_home : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire S2`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = manoir : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire S2`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = chateau : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire S2`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "bien = monument_historique : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire S2`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "batiment_inoccupe_10_ans_avant_souscription = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire S2`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "citation",
+      "message": "définition (S2-a) : « Si vous êtes locataire, propriétaire ou copropriétaire : les objets usuels pour  » ne figure pas dans la clause"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « Les véhicules terrestres à moteur soumis à l’obligation d’as » : ne vise que vehicule_moteur, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « Les caravanes, les bateaux à voile ou à moteur, les jets ski » : ne vise que caravane, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « Les caravanes, les bateaux à voile ou à moteur, les jets ski » : ne vise que bateau, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « Les caravanes, les bateaux à voile ou à moteur, les jets ski » : ne vise que jet_ski, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « Les mobil-homes, les manoirs, les châteaux, les monuments hi » : ne vise que mobil_home, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « Les mobil-homes, les manoirs, les châteaux, les monuments hi » : ne vise que manoir, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « Les mobil-homes, les manoirs, les châteaux, les monuments hi » : ne vise que chateau, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « Les mobil-homes, les manoirs, les châteaux, les monuments hi » : ne vise que monument_historique, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « Les fonds et valeurs : il s’agit des billets de banque, pièc » : ne vise que valeurs, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « Les animaux. » : ne vise que animal, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « Les collections de timbres, de monnaie ou de médailles. » : ne vise que collection, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "la définition S1/assure de l'événement couvert n'est pas traduite (elle restreint la garantie) : l'employer ou la déclarer non traduite"
+    }
+  ]
+}

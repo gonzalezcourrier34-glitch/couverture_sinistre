@@ -162,9 +162,9 @@ Pour des centaines de contrats, il faut donc une équipe de relecteurs du métie
 - La **loi applicable** n'est pas traitée : le contrat A se dit régi par la loi belge du 4 avril 2014, d'autres relèvent de la loi luxembourgeoise du 27 juillet 1997 ou du code des assurances français. Ces textes s'imposent aux conditions générales ; le système ne lit que le contrat.
 - La **lecture** reste la source de toutes les erreurs. Quand un fait qui porte la réponse n'est pas confirmé, le garde-fou en fait une question, pas une bonne réponse.
 - Le moteur n'est pas plus juste que son vocabulaire : il ne sait pas dire « une fuite, mais pas le gel ».
-- **Plusieurs biens déclarés ensemble** : la réponse est « couvert » dès qu'un seul entre dans une garantie, sans dire lequel (une vitre et une télévision brisées : couvert, pour la vitre).
+- **Plusieurs biens déclarés ensemble** : la réponse est « couvert » dès qu'un seul entre dans une garantie (une vitre et une télévision brisées : couvert, pour la vitre). Elle nomme les biens qu'une clause exclut, pas ceux qu'aucune garantie ne vise.
 - Quand aucune garantie ne s'applique, la réponse cite la clause qui exclut le cas si le contrat en a une (un vase brisé : « les objets en verre autres que des vitres ») ; s'il n'en a pas, elle dit qu'aucune garantie ne s'applique et cite, faute de mieux, les premières garanties du contrat.
-- Le **contrat C** n'est traduit que pour le vol et le bris de glaces ; ses biens non assurés et ses exclusions communes ne sont pas rédigés : un « couvert » de C les ignore.
+- Le **contrat C** n'est traduit que pour le vol et le bris de glaces, avec ses exclusions communes et ses biens non assurés. Ses biens assurés, qui dépendent de la formule et de la qualité d'occupant (propriétaire, locataire), ne sont pas traduits, et il n'a pas de jeu de mesure.
 - Chez D, les **mesures de protection contre le vol** ne sont pas traduites : elles ne sont pas vérifiées.
 - Seuls des **PDF** de conditions générales sont lus. Un seul document est produit : la fiche d'analyse d'un sinistre, en PDF.
 - Les réponses attendues des jeux de référence ont été proposées par des modèles, puis arbitrées sur citations ; elles n'ont pas été validées par un juriste.

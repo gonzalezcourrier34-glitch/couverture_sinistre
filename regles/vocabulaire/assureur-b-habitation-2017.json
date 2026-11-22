@@ -274,21 +274,6 @@
         "tempete"
       ]
     },
-    "support_donnees_ou_logiciel": {
-      "libelle": "Supports de données ou logiciels",
-      "valeurs": [
-        "oui",
-        "non"
-      ],
-      "question": "S'agit-il de dégâts à des supports de données (disques durs, clés USB, etc.) ou à des logiciels ?",
-      "aide": {
-        "oui": "disque dur endommagé, clé USB, logiciel corrompu",
-        "non": "autre bien"
-      },
-      "pour": [
-        "electricite"
-      ]
-    },
     "bien_marchandise": {
       "libelle": "Appareil destiné à la vente",
       "valeurs": [
@@ -458,29 +443,6 @@
       "pour": [
         "bris",
         "vol"
-      ]
-    },
-    "catastrophe": {
-      "libelle": "Phénomène naturel",
-      "valeurs": [
-        "tremblement_terre",
-        "inondation",
-        "ruissellement",
-        "glissement_terrain"
-      ],
-      "libelles": {
-        "tremblement_terre": "tremblement de terre",
-        "glissement_terrain": "glissement de terrain"
-      },
-      "question": "Quel phénomène naturel a causé les dégâts ?",
-      "aide": {
-        "tremblement_terre": "séisme, tremblement de terre et ses répliques",
-        "inondation": "crue, débordement d'un cours d'eau, refoulement d'égouts",
-        "ruissellement": "eau de pluies torrentielles qui ruisselle faute d'absorption du sol",
-        "glissement_terrain": "glissement ou affaissement de terrain"
-      },
-      "pour": [
-        "catastrophe_naturelle"
       ]
     },
     "option_tremblement_terre": {

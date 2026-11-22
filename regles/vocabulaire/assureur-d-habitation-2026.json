@@ -110,21 +110,6 @@
         "jamais"
       ]
     },
-    "cause_guerre": {
-      "libelle": "Guerre",
-      "valeurs": [
-        "oui",
-        "non"
-      ],
-      "question": "Les dommages résultent-ils d'une guerre ?",
-      "aide": {
-        "oui": "guerre civile ou étrangère",
-        "non": "non"
-      },
-      "pour": [
-        "jamais"
-      ]
-    },
     "vehicule_identifie": {
       "libelle": "Véhicule identifié",
       "valeurs": [

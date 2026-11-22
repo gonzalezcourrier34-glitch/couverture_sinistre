@@ -1,0 +1,215 @@
+{
+  "meta": {
+    "article": "S2-b",
+    "modele": "mistral:mistral-large-4-0",
+    "date": "2026-11-22",
+    "consigne": "redaction-regles v13",
+    "relecture": "Rédaction du 22 nov. 2026 (21 h 44) relue et corrigée à la main le même jour (DEMARCHE 7.159). Tirée de la rédaction de S2 : seuls les biens non assurés (S2-b) sont repris ; les biens assurés selon la formule et la qualité d'occupant (S2-a) ne sont pas traduits."
+  },
+  "proposition": {
+    "evenements": [],
+    "definitions": [],
+    "garanties": [],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "vehicule_moteur"
+          ]
+        },
+        "portee": {
+          "bien": "vehicule_moteur"
+        },
+        "a_demander": false,
+        "article": "S2-b",
+        "texte": "Les véhicules terrestres à moteur soumis à l’obligation d’assurance de l’article L 211-1 du Code des assurances."
+      },
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "caravane"
+          ]
+        },
+        "portee": {
+          "bien": "caravane"
+        },
+        "a_demander": false,
+        "article": "S2-b",
+        "texte": "Les caravanes, les bateaux à voile ou à moteur, les jets ski."
+      },
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "bateau"
+          ]
+        },
+        "portee": {
+          "bien": "bateau"
+        },
+        "a_demander": false,
+        "article": "S2-b",
+        "texte": "Les caravanes, les bateaux à voile ou à moteur, les jets ski."
+      },
+      {
+        "condition": {
+          "f": [
+            "habitation_non_assuree",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "S2-b",
+        "texte": "Les mobil-homes, les manoirs, les châteaux, les monuments historiques ou inscrits à l’inventaire supplémentaire des monuments historiques."
+      },
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "valeurs"
+          ]
+        },
+        "portee": {
+          "bien": "valeurs"
+        },
+        "a_demander": false,
+        "article": "S2-b",
+        "texte": "Les fonds et valeurs : il s’agit des billets de banque, pièces de monnaie, lingots d’or et d’argent, titres et valeurs mobilières, moyens de paiements."
+      },
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "animal"
+          ]
+        },
+        "portee": {
+          "bien": "animal"
+        },
+        "a_demander": false,
+        "article": "S2-b",
+        "texte": "Les animaux."
+      },
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "collection_timbres_monnaies"
+          ]
+        },
+        "portee": {
+          "bien": "collection_timbres_monnaies"
+        },
+        "a_demander": false,
+        "article": "S2-b",
+        "texte": "Les collections de timbres, de monnaie ou de médailles."
+      },
+      {
+        "condition": {
+          "f": [
+            "terrain_non_constructible",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "S2-b",
+        "texte": "Les bâtiments et leur contenu construits dans une zone qui a été, préalablement à leur construction, déclarée inconstructible en vertu des règles légales ou administratives visant à prévenir les conséquences des catastrophes naturelles (Plan de Prévention des Risques, Plan d’Exposition aux Risques ou autres règles administratives en vigueur lors de la construction)."
+      },
+      {
+        "condition": {
+          "f": [
+            "batiment_inoccupe_10_ans_avant_souscription",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "S2-b",
+        "texte": "Les bâtiments inoccupés en permanence depuis plus de 10 ans avant la souscription."
+      }
+    ],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "bien",
+        "valeurs": [
+          "caravane",
+          "bateau"
+        ],
+        "question": "Quel bien est concerné ?",
+        "pourquoi": "biens que le contrat n'assure pas (S2-b)",
+        "plus_proche": "bien = vehicule_moteur : un véhicule à moteur soumis à l'assurance obligatoire, ni une caravane ni un bateau",
+        "parent": "objet_divers",
+        "aide": {
+          "caravane": "une caravane",
+          "bateau": "un bateau à voile ou à moteur, un jet-ski"
+        }
+      },
+      {
+        "variable": "bien",
+        "valeurs": [
+          "collection_timbres_monnaies"
+        ],
+        "libelles": {
+          "collection_timbres_monnaies": "collection de timbres, de monnaies ou de médailles"
+        },
+        "question": "Quel bien est concerné ?",
+        "pourquoi": "collections que le contrat n'assure pas (S2-b)",
+        "plus_proche": "bien = collection : toute collection, que le contrat assure comme objet de valeur",
+        "parent": "collection",
+        "aide": {
+          "collection_timbres_monnaies": "une collection de timbres, de pièces de monnaie ou de médailles"
+        }
+      },
+      {
+        "variable": "habitation_non_assuree",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Habitation d'un type non assuré",
+        "question": "L'habitation est-elle un mobil-home, un manoir, un château ou un monument historique ?",
+        "pourquoi": "habitations que le contrat n'assure pas (S2-b)",
+        "plus_proche": "aucune variable ne dit le type d'habitation",
+        "aide": {
+          "oui": "un mobil-home, un manoir, un château, un bâtiment classé ou inscrit aux monuments historiques",
+          "non": "une maison ou un appartement ordinaire"
+        }
+      },
+      {
+        "variable": "batiment_inoccupe_10_ans_avant_souscription",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Inoccupé 10 ans avant souscription",
+        "question": "Le bâtiment était-il inoccupé en permanence depuis plus de 10 ans avant la souscription du contrat ?",
+        "pourquoi": "La clause S2-b exclut les bâtiments inoccupés en permanence depuis plus de 10 ans avant la souscription",
+        "plus_proche": "local_inoccupe_12_mois : porte sur une période de 12 mois, pas 10 ans, et ne précise pas que c'est avant la souscription",
+        "aide": {
+          "oui": "le bâtiment était vide et inoccupé depuis plus de 10 ans avant la signature du contrat",
+          "non": "le bâtiment était occupé ou inoccupé depuis moins de 10 ans avant la souscription"
+        }
+      }
+    ],
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "S1/assure",
+        "texte": "Celui qui est défini comme tel pour chaque garantie.",
+        "pourquoi": "définit la personne assurée ; le titre de la section parle des biens assurés, pas d'elle"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (S1/assure) : définit la personne assurée ; le titre de la section parle des biens assurés, pas d'elle"
+    }
+  ]
+}

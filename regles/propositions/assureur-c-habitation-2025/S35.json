@@ -1,0 +1,318 @@
+{
+  "meta": {
+    "article": "S35",
+    "modele": "mistral:mistral-large-4-0",
+    "date": "2026-11-22",
+    "consigne": "redaction-regles v13",
+    "relecture": "Rédaction du 22 nov. 2026 (21 h 44) relue et corrigée à la main le même jour (DEMARCHE 7.159)."
+  },
+  "proposition": {
+    "evenements": [],
+    "definitions": [],
+    "garanties": [],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "f": [
+            "intentionnel",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "S35",
+        "texte": "Intentionnellement causés ou provoqués par l’assuré ou avec sa complicité"
+      },
+      {
+        "condition": {
+          "f": [
+            "dommage_legislation_construction",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "S35",
+        "texte": "Relevant de la législation sur la construction ou la rénovation des bâtiments"
+      },
+      {
+        "condition": {
+          "f": [
+            "assurance_dommages_ouvrage",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "S35",
+        "texte": "Relevant de l’assurance Dommages ouvrage"
+      },
+      {
+        "condition": {
+          "f": [
+            "cause_guerre",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "S35",
+        "texte": "Causés par une guerre étrangère, ou une guerre civile"
+      },
+      {
+        "condition": {
+          "et": [
+            {
+              "ou": [
+                {
+                  "f": [
+                    "catastrophe",
+                    "tremblement_terre"
+                  ]
+                },
+                {
+                  "f": [
+                    "catastrophe",
+                    "eruption_volcanique"
+                  ]
+                },
+                {
+                  "f": [
+                    "catastrophe",
+                    "action_mer"
+                  ]
+                },
+                {
+                  "f": [
+                    "catastrophe",
+                    "glissement_terrain"
+                  ]
+                }
+              ]
+            },
+            {
+              "non": {
+                "f": [
+                  "evenement",
+                  "catastrophe_naturelle"
+                ]
+              }
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "S35",
+        "texte": "Causés par les tremblements de terre, les éruptions volcaniques, l’action de la mer, les glissements de terrain ou autres événements à caractère catastrophique, sauf si ces événements sont déclarés « Catastrophes naturelles »"
+      },
+      {
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "cause_nucleaire",
+                "oui"
+              ]
+            },
+            {
+              "non": {
+                "f": [
+                  "evenement",
+                  "attentat"
+                ]
+              }
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "S35",
+        "texte": "Causés par la désintégration du noyau atomique, la radioactivité, la transmutation d’atome, à l’exception des dommages causés aux biens par un attentat ou un acte de terrorisme"
+      },
+      {
+        "condition": {
+          "f": [
+            "maladie_transmissible",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "S35",
+        "texte": "Causés ou aggravés ou en relation, de manière directe ou indirecte, avec une maladie transmissible ou la crainte d’une maladie transmissible. On entend par maladie transmissible, toute maladie qui peut être transmise d’un organisme à un autre organisme par le vecteur de toute substance ou agent."
+      },
+      {
+        "condition": {
+          "f": [
+            "defaut_reparation_connu",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "S35",
+        "texte": "Résultant d’un défaut de réparation vous incombant, connu de vous sauf cas de force majeure, étant entendu que les causes non supprimées d’un précédent sinistre sont considérées automatiquement comme un défaut de réparation"
+      },
+      {
+        "condition": {
+          "f": [
+            "defaut_installation_electronique",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "S35",
+        "texte": "Les dommages résultant d’un défaut d’installation sur les matériels électroniques, HI-FI, vidéo et Informatique"
+      },
+      {
+        "condition": {
+          "f": [
+            "support_donnees_ou_logiciel",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "S35",
+        "texte": "Les dommages de toute nature aux données sur tous supports informatiques (y compris en cours de transmission et de traitement), ainsi que les atteintes à l’authenticité, l’intégrité ou la confidentialité de ces informations et/ou données ainsi que leurs conséquences immatérielles et financières."
+      }
+    ],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "dommage_legislation_construction",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Dommage législation construction",
+        "question": "Le dommage relève-t-il de la législation sur la construction ou la rénovation des bâtiments ?",
+        "pourquoi": "Exclusion S35 des dommages relevant de la législation construction/rénovation",
+        "plus_proche": "travaux_construction : indique si le bâtiment est en travaux, pas si le dommage relève de la législation",
+        "aide": {
+          "oui": "le dommage est couvert par la législation sur la construction ou la rénovation",
+          "non": "le dommage ne relève pas de cette législation"
+        }
+      },
+      {
+        "variable": "assurance_dommages_ouvrage",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Assurance dommages ouvrage",
+        "question": "Le dommage relève-t-il de l'assurance Dommages ouvrage ?",
+        "pourquoi": "Exclusion S35 des dommages relevant de l'assurance Dommages ouvrage",
+        "plus_proche": "aucune variable ne couvre l'assurance dommages ouvrage",
+        "aide": {
+          "oui": "le dommage est couvert par l'assurance dommages ouvrage",
+          "non": "le dommage n'est pas couvert par cette assurance"
+        }
+      },
+      {
+        "variable": "maladie_transmissible",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Maladie transmissible",
+        "question": "Le dommage est-il causé, aggravé ou en relation avec une maladie transmissible ou la crainte d'une maladie transmissible ?",
+        "pourquoi": "Exclusion S35 des dommages liés à une maladie transmissible",
+        "plus_proche": "aucune variable ne couvre les maladies transmissibles",
+        "aide": {
+          "oui": "le dommage est lié à une maladie transmissible (ex: pandémie, épidémie)",
+          "non": "le dommage n'est pas lié à une maladie transmissible"
+        }
+      },
+      {
+        "variable": "defaut_reparation_connu",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Défaut réparation connu",
+        "question": "Le dommage résulte-t-il d'un défaut de réparation vous incombant et connu de vous (sauf cas de force majeure) ?",
+        "pourquoi": "Exclusion S35 des dommages résultant d'un défaut de réparation connu",
+        "plus_proche": "manque_entretien : couvre l'usure et manque d'entretien, pas spécifiquement un défaut de réparation connu",
+        "aide": {
+          "oui": "le dommage vient d'un défaut de réparation que vous connaissiez (ex: cause non supprimée d'un précédent sinistre)",
+          "non": "le dommage ne vient pas d'un défaut de réparation connu"
+        }
+      },
+      {
+        "variable": "defaut_installation_electronique",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Défaut installation électronique",
+        "question": "Le dommage résulte-t-il d'un défaut d'installation sur les matériels électroniques, HI-FI, vidéo et Informatique ?",
+        "pourquoi": "Exclusion S35 des dommages résultant d'un défaut d'installation électronique",
+        "plus_proche": "fonctionnement_defectueux : concerne le fonctionnement défectueux, pas le défaut d'installation",
+        "aide": {
+          "oui": "le dommage vient d'un défaut d'installation de l'appareil électronique",
+          "non": "le dommage ne vient pas d'un défaut d'installation"
+        }
+      },
+      {
+        "variable": "catastrophe",
+        "valeurs": [
+          "eruption_volcanique",
+          "action_mer"
+        ],
+        "libelles": {
+          "eruption_volcanique": "éruption volcanique",
+          "action_mer": "action de la mer"
+        },
+        "question": "Quel phénomène naturel a causé les dégâts ?",
+        "pourquoi": "exclusion commune (S35)",
+        "plus_proche": "catastrophe : tremblement de terre, inondation, ruissellement, glissement de terrain",
+        "aide": {
+          "eruption_volcanique": "une éruption volcanique",
+          "action_mer": "la mer : submersion, vagues, érosion du littoral"
+        }
+      }
+    ],
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "S35",
+        "texte": "Les honoraires de l’expert ayant procédé aux opérations d’expertise pour votre compte et les frais d’établissement de devis",
+        "pourquoi": "un poste de frais que le contrat ne rembourse pas : il ne dit pas si le sinistre est couvert"
+      },
+      {
+        "article": "S35",
+        "texte": "Les frais de dépollution et de désamiantage sauf lorsqu’ils relèvent de la garantie Catastrophes Technologiques et à l’exception des frais de décontamination pris en charge au titre de la garantie attentat et acte de terrorisme. Les dispositions en cas",
+        "pourquoi": "un poste de frais que le contrat ne rembourse pas : il ne dit pas si le sinistre est couvert"
+      },
+      {
+        "article": "S35",
+        "texte": "Les pertes pécuniaires résultant de l’application d’une franchise, d’une règle proportionnelle de cotisation, d’une insuffisance de garantie, d’une non garantie",
+        "pourquoi": "une perte d'argent qui résulte du contrat lui-même (franchise, garantie insuffisante) : elle ne dit pas si le sinistre est couvert"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "à relire",
+      "controle": "réserve",
+      "message": "exclusion « Résultant d’un défaut de réparation vous incombant, connu de » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (S35) : un poste de frais que le contrat ne rembourse pas : il ne dit pas si le sinistre est couvert"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (S35) : un poste de frais que le contrat ne rembourse pas : il ne dit pas si le sinistre est couvert"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (S35) : une perte d'argent qui résulte du contrat lui-même (franchise, garantie insuffisante) : elle ne dit pas si le sinistre est couvert"
+    }
+  ]
+}

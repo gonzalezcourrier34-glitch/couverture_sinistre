@@ -4664,6 +4664,21 @@ Après cela : aucun contrôle bloquant, toutes les citations retrouvées mot pou
 
 La section « Tenir des centaines de contrats » est réécrite d'après ce qui a été mesuré le 22 novembre (7.148 à 7.157) : ce qui est général (le moteur, l'API, l'écran, quatre fichiers de données par contrat), ce que C a coûté étape par étape, l'erreur de relecture et ce qui l'a montrée, ce qui n'est pas général. Elle conclut qu'il faut des relecteurs du métier, un outil de relecture et un jeu de mesure par contrat. Les chiffres du vocabulaire sont recalculés avec C (56 questions communes, 70 variables lues propres à un seul contrat). Quatre limites sont ajoutées : plusieurs biens déclarés ensemble, le cas sans garantie ni exclusion écrite, le contrat C partiel, les mesures de protection de D. Le README dit aussi que quatre articles de A ont été écrits à la main, et que la confiance affichée est une valeur fixe.
 
+### 7.159 Les exclusions communes et les biens non assurés de C ; et un défaut du moteur trouvé en les relisant
+
+**La rédaction (22 nov., 21 h 44).** Deux sections en 3 min 56 s : les biens assurés et non assurés (S2), les exclusions communes (S35). 24 contrôles bloquants, presque tous du vocabulaire nouveau.
+
+**La relecture.**
+- *Les exclusions communes* : le modèle les avait toutes marquées « à demander ». Chaque vol aurait reçu une douzaine de questions (une guerre ? une maladie transmissible ?). Elles ne sont jamais demandées, comme chez A et D : c'est à l'assureur de prouver l'exclusion. Dix exclusions gardées, cinq variables nouvelles qui ne sont jamais lues dans une déclaration. Trois alinéas sont des postes de frais que le contrat ne rembourse pas (honoraires d'expert, dépollution, pertes dues à une franchise) : classés hors décision, ils ne disent pas si le sinistre est couvert. Une valeur d'événement et deux variables proposées pour eux ne sont pas créées.
+- *Les biens non assurés* (S2-b) : neuf exclusions, chacune pour son bien (un véhicule, des espèces, un animal), au lieu d'écarter tout le sinistre comme le proposait le modèle : un téléviseur volé avec des espèces reste couvert. Les collections de timbres et de monnaies deviennent un bien à part, rattaché à « collection » : le contrat assure les autres collections comme objets de valeur. Sept biens proposés (manoir, château…) sont ramenés à deux biens et une variable.
+- *Les biens assurés* (S2-a), qui dépendent de la formule et de la qualité d'occupant, ne sont pas repris : aucune garantie traduite ne les emploie, et la rédaction y inventait trois concepts.
+
+**Le défaut du moteur.** En vérifiant ces exclusions par bien : des espèces et un animal volés ensemble étaient « couverts ». Chaque exclusion voyait « un autre bien déclaré » et ne retirait que le sien ; aucune ne voyait que l'autre était exclu aussi. C'est la cause profonde du couvert à tort de 7.156, et elle est dans le moteur depuis le début. La règle : si chaque bien déclaré est exclu, il ne reste rien à couvrir, et les exclusions partielles valent une exclusion totale (`consolider_partielles`, en Prolog et dans la référence).
+
+**Vérifié avant de déposer.** 450 jeux de faits par contrat, avec plusieurs biens : aucune décision de A, B, C ou D ne change avec la correction du moteur (le cas est rare, et il était faux). Puis, sur C, 700 jeux de faits avant et après les deux sections : 81 décisions changent, toutes vers « non couvert », aucune vers « couvert ». Des espèces volées : non couvert ; des espèces et un téléviseur : couvert, sauf les espèces ; un vol simulé par l'assuré : non couvert ; une voiture volée dans le garage : non couvert.
+
+**Vérifié sur le poste (22 h 05 à 22 h 17).** Les deux sections sont acceptées sans contrôle bloquant ; 223 tests passent avec SWI-Prolog, dont la concordance des deux moteurs sur les biens tous exclus. Les quatre bancs, repassés après ce second changement du moteur et l'ajout de trois biens au vocabulaire commun, rendent exactement les chiffres de 21 h 27 : A partie test 94 %, A jeu fermé 100 %, B 85 % (un couvert à tort, le même), D 96 % (un refus à tort, le même).
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
@@ -4863,4 +4878,5 @@ Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
 152. Ce qu'on montre au modèle, il s'en sert : lui montrer les formules de tous les contrats, c'est lui proposer d'écrire celles d'un autre.
 153. Une définition plus étroite que le texte est une règle bien formée : aucun contrôle de forme ne la voit, seule la relecture.
 154. Une décision juste ne prouve pas une règle juste : lire aussi la phrase et la clause qui l'accompagnent.
+156. Un défaut corrigé par ses effets revient : chercher pourquoi le moteur a laissé passer, pas seulement quelle règle l'a déclenché.
 155. Avant d'étendre une règle à d'autres contrats, comparer les décisions avant et après sur des faits tirés au hasard : c'est ce qui a montré qu'elle était fausse.

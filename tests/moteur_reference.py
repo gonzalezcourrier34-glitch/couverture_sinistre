@@ -284,6 +284,11 @@ class Moteur:
                 xs.append(("partielle", a, t, b) if autres else ("totale", a, t, []))
             elif e == INCONNU and dem == "oui":
                 xs.append(("engagee" if self.entamee(cond) else "inconnue", a, t, self.inconnues(cond)))
+        # Comme consolider_partielles/2 (7.159) : si chaque bien déclaré est exclu, il ne reste rien à couvrir.
+        exclus, biens = [x[3] for x in xs if x[0] == "partielle"], self.faits.get("bien", set())
+        if exclus and all(any(b0 == b or b in self.ancetres("bien", b0) or b0 in self.ancetres("bien", b) for b in exclus)
+                          for b0 in biens):
+            xs = [("totale", a, t, []) if k == "partielle" else (k, a, t, q) for k, a, t, q in xs]
         os_ = []
         for o in self.c.regles("obligation", 6):
             if o.args[0] != g:

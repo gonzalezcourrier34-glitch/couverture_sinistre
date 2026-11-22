@@ -212,7 +212,24 @@ exclusions(G, Xs) :-
               vise(Cible, G),
               eval(C, E),
               classer_exclusion(E, Portee, Dem, C, A, T, X) ),
-            Xs).
+            Xs0),
+    consolider_partielles(Xs0, Xs).
+
+%  L'exclusion d'un bien ne retire que ce bien quand d'autres sont déclarés avec lui. Mais si chaque bien déclaré
+%  est ainsi exclu, il ne reste rien à couvrir : les exclusions partielles valent une exclusion totale (DEMARCHE
+%  7.159). Sans cela, un vitrail et une marquise, exclus l'un et l'autre, étaient couverts ensemble.
+consolider_partielles(Xs0, Xs) :-
+    memberchk(x(partielle, _, _, _), Xs0),
+    forall(fait(bien, B0), ( member(x(partielle, _, _, B), Xs0), meme_bien(B0, B) )), !,
+    maplist(en_totale, Xs0, Xs).
+consolider_partielles(Xs, Xs).
+
+meme_bien(B, B) :- !.
+meme_bien(B0, B) :- ancetre(bien, B0, B), !.
+meme_bien(B0, B) :- ancetre(bien, B, B0).
+
+en_totale(x(partielle, A, T, _), x(totale, A, T, [])) :- !.
+en_totale(X, X).
 
 vise(tous, _) :- !.
 vise(G, G) :- !.

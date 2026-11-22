@@ -1,6 +1,111 @@
 {
   "_description": "Variables que seules les règles de ce contrat emploient (regles/assureur-c-habitation-2025.pl). Même format que commun.json. Rangé par `couverture regles --ranger` : une variable qu'un autre contrat se met à employer passe dans commun.json.",
   "variables": {
+    "habitation_non_assuree": {
+      "libelle": "Habitation d'un type non assuré",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'habitation est-elle un mobil-home, un manoir, un château ou un monument historique ?",
+      "aide": {
+        "oui": "un mobil-home, un manoir, un château, un bâtiment classé ou inscrit aux monuments historiques",
+        "non": "une maison ou un appartement ordinaire"
+      },
+      "pour": [
+        "jamais"
+      ]
+    },
+    "batiment_inoccupe_10_ans_avant_souscription": {
+      "libelle": "Inoccupé 10 ans avant souscription",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le bâtiment était-il inoccupé en permanence depuis plus de 10 ans avant la souscription du contrat ?",
+      "aide": {
+        "oui": "le bâtiment était vide et inoccupé depuis plus de 10 ans avant la signature du contrat",
+        "non": "le bâtiment était occupé ou inoccupé depuis moins de 10 ans avant la souscription"
+      },
+      "pour": [
+        "jamais"
+      ]
+    },
+    "dommage_legislation_construction": {
+      "libelle": "Dommage législation construction",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage relève-t-il de la législation sur la construction ou la rénovation des bâtiments ?",
+      "aide": {
+        "oui": "le dommage est couvert par la législation sur la construction ou la rénovation",
+        "non": "le dommage ne relève pas de cette législation"
+      },
+      "pour": [
+        "jamais"
+      ]
+    },
+    "assurance_dommages_ouvrage": {
+      "libelle": "Assurance dommages ouvrage",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage relève-t-il de l'assurance Dommages ouvrage ?",
+      "aide": {
+        "oui": "le dommage est couvert par l'assurance dommages ouvrage",
+        "non": "le dommage n'est pas couvert par cette assurance"
+      },
+      "pour": [
+        "jamais"
+      ]
+    },
+    "maladie_transmissible": {
+      "libelle": "Maladie transmissible",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage est-il causé, aggravé ou en relation avec une maladie transmissible ou la crainte d'une maladie transmissible ?",
+      "aide": {
+        "oui": "le dommage est lié à une maladie transmissible (ex: pandémie, épidémie)",
+        "non": "le dommage n'est pas lié à une maladie transmissible"
+      },
+      "pour": [
+        "jamais"
+      ]
+    },
+    "defaut_reparation_connu": {
+      "libelle": "Défaut réparation connu",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage résulte-t-il d'un défaut de réparation vous incombant et connu de vous (sauf cas de force majeure) ?",
+      "aide": {
+        "oui": "le dommage vient d'un défaut de réparation que vous connaissiez (ex: cause non supprimée d'un précédent sinistre)",
+        "non": "le dommage ne vient pas d'un défaut de réparation connu"
+      },
+      "pour": [
+        "jamais"
+      ]
+    },
+    "defaut_installation_electronique": {
+      "libelle": "Défaut installation électronique",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage résulte-t-il d'un défaut d'installation sur les matériels électroniques, HI-FI, vidéo et Informatique ?",
+      "aide": {
+        "oui": "le dommage vient d'un défaut d'installation de l'appareil électronique",
+        "non": "le dommage ne vient pas d'un défaut d'installation"
+      },
+      "pour": [
+        "jamais"
+      ]
+    },
     "defaut_encadrement": {
       "libelle": "Défaut de l'encadrement",
       "valeurs": [

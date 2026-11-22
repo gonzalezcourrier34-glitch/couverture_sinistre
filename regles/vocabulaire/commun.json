@@ -166,7 +166,10 @@
         "aquarium",
         "paroi_douche",
         "vitrail",
-        "marquise"
+        "marquise",
+        "caravane",
+        "bateau",
+        "collection_timbres_monnaies"
       ],
       "libelles": {
         "velo": "vélo",
@@ -199,7 +202,8 @@
         "objet_art": "objet d'art",
         "tapis_fourrure": "tapis ou fourrure",
         "insert": "vitre d'insert",
-        "paroi_douche": "paroi de douche"
+        "paroi_douche": "paroi de douche",
+        "collection_timbres_monnaies": "collection de timbres, de monnaies ou de médailles"
       },
       "question": "Quels biens sont endommagés ou volés ?",
       "parents": {
@@ -307,6 +311,15 @@
         ],
         "marquise": [
           "objet_divers"
+        ],
+        "caravane": [
+          "objet_divers"
+        ],
+        "bateau": [
+          "objet_divers"
+        ],
+        "collection_timbres_monnaies": [
+          "collection"
         ]
       },
       "aide": {
@@ -344,7 +357,10 @@
         "aquarium": "un aquarium",
         "paroi_douche": "la paroi vitrée d'une douche",
         "vitrail": "un vitrail",
-        "marquise": "une marquise, auvent vitré au-dessus d'une porte"
+        "marquise": "une marquise, auvent vitré au-dessus d'une porte",
+        "caravane": "une caravane",
+        "bateau": "un bateau à voile ou à moteur, un jet-ski",
+        "collection_timbres_monnaies": "une collection de timbres, de pièces de monnaie ou de médailles"
       }
     },
     "lieu": {
@@ -1540,6 +1556,65 @@
       },
       "pour": [
         "bris"
+      ]
+    },
+    "support_donnees_ou_logiciel": {
+      "libelle": "Supports de données ou logiciels",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "S'agit-il de dégâts à des supports de données (disques durs, clés USB, etc.) ou à des logiciels ?",
+      "aide": {
+        "oui": "disque dur endommagé, clé USB, logiciel corrompu",
+        "non": "autre bien"
+      },
+      "pour": [
+        "electricite"
+      ]
+    },
+    "catastrophe": {
+      "libelle": "Phénomène naturel",
+      "valeurs": [
+        "tremblement_terre",
+        "inondation",
+        "ruissellement",
+        "glissement_terrain",
+        "eruption_volcanique",
+        "action_mer"
+      ],
+      "libelles": {
+        "tremblement_terre": "tremblement de terre",
+        "glissement_terrain": "glissement de terrain",
+        "eruption_volcanique": "éruption volcanique",
+        "action_mer": "action de la mer"
+      },
+      "question": "Quel phénomène naturel a causé les dégâts ?",
+      "aide": {
+        "tremblement_terre": "séisme, tremblement de terre et ses répliques",
+        "inondation": "crue, débordement d'un cours d'eau, refoulement d'égouts",
+        "ruissellement": "eau de pluies torrentielles qui ruisselle faute d'absorption du sol",
+        "glissement_terrain": "glissement ou affaissement de terrain",
+        "eruption_volcanique": "une éruption volcanique",
+        "action_mer": "la mer : submersion, vagues, érosion du littoral"
+      },
+      "pour": [
+        "catastrophe_naturelle"
+      ]
+    },
+    "cause_guerre": {
+      "libelle": "Guerre",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les dommages résultent-ils d'une guerre ?",
+      "aide": {
+        "oui": "guerre civile ou étrangère",
+        "non": "non"
+      },
+      "pour": [
+        "jamais"
       ]
     }
   }
