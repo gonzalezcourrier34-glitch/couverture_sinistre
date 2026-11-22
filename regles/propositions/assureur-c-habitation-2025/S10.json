@@ -4,7 +4,7 @@
     "modele": "mistral:mistral-large-latest",
     "date": "2026-11-22",
     "consigne": "redaction-regles v13",
-    "relecture": "Deux rédactions (18 h 39 et 19 h 02) relues et réunies à la main le 22 nov. 2026 (DEMARCHE 7.151)."
+    "relecture": "Deux rédactions (18 h 39 et 19 h 02) relues et réunies à la main le 22 nov. 2026 (DEMARCHE 7.151). Vitraux, marquises et serres retirés du périmètre le même jour (7.156)."
   },
   "proposition": {
     "evenements": [
@@ -54,24 +54,6 @@
                 "f": [
                   "bien",
                   "veranda"
-                ]
-              },
-              {
-                "f": [
-                  "bien",
-                  "vitrail"
-                ]
-              },
-              {
-                "f": [
-                  "bien",
-                  "marquise"
-                ]
-              },
-              {
-                "f": [
-                  "bien",
-                  "serre"
                 ]
               }
             ]

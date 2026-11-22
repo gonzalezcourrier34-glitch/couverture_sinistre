@@ -4565,7 +4565,7 @@ Après cela : aucun contrôle bloquant, toutes les citations retrouvées mot pou
 
 **La cause.** Le périmètre du vol dans l'habitation, tel que je l'avais relu, n'admettait que le logement et les dépendances : le local commun en sortait, et la garantie était « hors sujet ». L'exclusion des locaux communs ne tenait plus qu'à l'autre garantie, celle des vacances, dont le périmètre restait inconnu. Chez A et chez D, le bâtiment comprend les parties communes, et c'est l'exclusion qui décide.
 
-**La règle.** Un lieu ou un bien que le contrat exclut en toutes lettres appartient au périmètre de la garantie : c'est l'exclusion qui décide, et c'est elle qu'on cite. Un contrôle le vérifie (`exclusions_hors_perimetre`) : une exclusion qui vise un lieu ou un bien qu'aucune de ses garanties n'admet est signalée à la relecture. Il a trouvé aussitôt le même défaut dans le bris de glaces : un vitrail brisé aurait été écarté sans la clause qui l'exclut.
+**La règle (restreinte depuis, voir 7.156 : elle ne vaut que pour une exclusion de tout le sinistre).** Un lieu ou un bien que le contrat exclut en toutes lettres appartient au périmètre de la garantie : c'est l'exclusion qui décide, et c'est elle qu'on cite. Un contrôle le vérifie (`exclusions_hors_perimetre`) : une exclusion qui vise un lieu ou un bien qu'aucune de ses garanties n'admet est signalée à la relecture. Il a trouvé aussitôt le même défaut dans le bris de glaces : un vitrail brisé aurait été écarté sans la clause qui l'exclut.
 
 **Les corrections.** Les parties communes entrent dans le périmètre du vol dans l'habitation ; les vitraux, marquises et serres dans celui du bris de glaces. Le lieu de vacances suit sa définition jusqu'au bout (« dans un bâtiment n'appartenant pas à l'assuré ») : un séjour temporaire, dans un autre bâtiment.
 
@@ -4627,6 +4627,24 @@ Après cela : aucun contrôle bloquant, toutes les citations retrouvées mot pou
 **Ce qu'on peut en dire.** Aucun chiffre ne sort de sa fourchette : ajouter un contrat n'a pas dégradé les trois autres, à la précision de ces jeux (un cas pèse 3 à 5 points). Le 94 % de A n'est pas un progrès démontré : il est dans le bruit mesuré le même jour (trois séries à consigne identique variaient de 3 points). Les erreurs qui restent sont celles d'avant, laissées telles quelles parce qu'elles sont des cas de mesure.
 
 **Les portes.** Trois bancs sur quatre « échouent » : B sur l'exactitude et le couvert à tort, comme avant ; A sur le 95e centile du temps de réponse (15 s et 11 s pour un seuil à 10 s, médiane 3,6 à 4,3 s : un appel lent au modèle sur dix suffit) et sur les décisions changées par la lecture (3 pour un seuil à 2). Les seuils ne sont pas relevés pour faire passer.
+
+### 7.156 La règle de 7.152 était trop large : un couvert à tort introduit, puis retiré
+
+**Le constat (22 nov., 20 h 50).** Avant d'appliquer à A et à B la règle de 7.152 (« un bien exclu en toutes lettres entre dans le périmètre »), comparaison des décisions avant et après sur 600 jeux de faits par contrat : chez A, 40 « non couvert » ou « à préciser » devenaient « couvert » ; chez B, 29. Un vase et un meuble, une serre et une couverture de piscine : couverts.
+
+**La cause.** Le périmètre d'une garantie est établi dès qu'un des biens déclarés y entre. Une exclusion qui ne vise qu'un bien (« les vitraux ») n'en retire qu'un. Faire entrer dans le périmètre un bien qui n'y est que pour être exclu, c'est ouvrir la garantie à tout ce qui est déclaré avec lui. La règle de 7.152 est juste pour une exclusion qui écarte tout le sinistre (les locaux à usage commun) ; elle est fausse pour une exclusion d'un seul bien.
+
+**Le défaut était déjà dans le contrat C**, accepté une heure plus tôt : un vitrail et une marquise brisés ensemble, ou un vitrail et une télévision, étaient « couverts ». Les bancs ne pouvaient pas le voir, C n'a pas de jeu de mesure. La comparaison avant-après l'a vu avant que A et B ne soient touchés.
+
+**Les corrections.**
+- Les vitraux, marquises et serres sortent du périmètre du bris de glaces de C ; leurs exclusions restent, chacune pour son bien. Un test garde le cas : deux biens exclus déclarés ensemble ne sont pas couverts.
+- Le contrôle de 7.152 ne signale plus que les exclusions de tout le sinistre.
+- Rien n'est changé chez A ni chez B. Les règles en place des quatre contrats ont été cherchées pour le même défaut (deux biens exclus d'une même garantie, déclarés ensemble) : aucun.
+- Le contrôle qui prenait pour une réduction d'indemnité l'obligation « la garantie intervient uniquement si » (B, 3.1.7.4) reconnaît maintenant cette formule comme un refus.
+
+**Ce qui reste, et qui ne se règle pas dans les règles.** Un vase brisé seul chez A, des lunettes chez B, un vitrail chez C : « non couvert », à raison, mais sans la clause qui l'exclut, parce qu'aucune garantie ne s'y rattache. Pour la citer, il faudrait que le moteur, quand aucune garantie ne concerne le sinistre, cherche les exclusions que les faits établissent. C'est un changement du moteur (Prolog et référence), pas des règles : non fait.
+
+**Une limite du moteur que ce défaut a rappelée.** Pour plusieurs biens déclarés ensemble, le moteur répond « couvert » dès qu'un bien entre dans une garantie, même si l'autre n'entre dans aucune (une vitre et une télévision chez C). La réponse ne dit pas lequel.
 
 ## 8. Ce qui reste à faire
 
@@ -4827,3 +4845,4 @@ Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
 152. Ce qu'on montre au modèle, il s'en sert : lui montrer les formules de tous les contrats, c'est lui proposer d'écrire celles d'un autre.
 153. Une définition plus étroite que le texte est une règle bien formée : aucun contrôle de forme ne la voit, seule la relecture.
 154. Une décision juste ne prouve pas une règle juste : lire aussi la phrase et la clause qui l'accompagnent.
+155. Avant d'étendre une règle à d'autres contrats, comparer les décisions avant et après sur des faits tirés au hasard : c'est ce qui a montré qu'elle était fausse.

@@ -1137,3 +1137,17 @@ def test_la_lecture_ne_propose_que_les_formules_du_contrat():
                                                   variables=lecture.variables_du_contrat(b), voc=vu_b)
     assert "excellence" not in lecture.schema_faits({"formule": vu_b["formule"]})["properties"]["faits"]["properties"]["formule"]["enum"]
     assert "formule" not in faits and any("excellence" in e for e in ecarts), "une formule d'un autre contrat n'est pas retenue"
+
+
+def test_deux_biens_exclus_declares_ensemble_ne_sont_pas_couverts():
+    """7.156 : les vitraux et les marquises de C avaient été mis dans le périmètre du bris de glaces pour que leur
+    exclusion soit citée ; déclarés ensemble, chacun n'étant exclu que pour lui-même, ils donnaient « couvert »."""
+    from moteur_reference import Contrat, Explorateur
+    f = prolog.fichier_regles("assureur-c-habitation-2025")
+    if not f.exists() or "bris_glaces_batiment" not in f.read_text(encoding="utf-8"):
+        pytest.skip("le bris de glaces du contrat C n'est pas traduit")
+    c = Contrat(f)
+    for biens in (["vitrail"], ["vitrail", "marquise"], ["marquise", "serre"]):
+        d = Explorateur(c, {"evenement": ["bris"], "bien": biens, "formule": "confort"}).decider()
+        assert d["decision"] != "COUVERT", biens
+    assert Explorateur(c, {"evenement": ["bris"], "bien": ["vitre"], "formule": "confort"}).decider()["decision"] == "COUVERT"

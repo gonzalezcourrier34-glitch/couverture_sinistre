@@ -66,7 +66,7 @@ evenement_traduit(bris).
 garantie(bris_glaces_batiment, "Bris de glaces du bâtiment", 'S10-a',
     "Le bris des produits verriers (ou ceux en matière plastique remplissant les mêmes fonctions) constituant : - la clôture et la couverture de vos locaux y compris les fenêtres de toit, - les miroirs fixés ou accrochés au mur, - les portes et les cloisons intérieures verticales qui séparent une pièce d’une autre, - les parois de balcons, les vérandas.").
 perimetre(bris_glaces_batiment, f(evenement, bris)).
-perimetre(bris_glaces_batiment, ou([f(bien, vitre), f(bien, miroir), f(bien, coupole), f(bien, panneau_verre_plastique), f(bien, veranda), f(bien, vitrail), f(bien, marquise), f(bien, serre)])).
+perimetre(bris_glaces_batiment, ou([f(bien, vitre), f(bien, miroir), f(bien, coupole), f(bien, panneau_verre_plastique), f(bien, veranda)])).
 circonstance(bris_glaces_batiment, ou([f(formule, confort), f(formule, optimale), f(formule, investisseur)]), 'S10',
     "Cette garantie vous est acquise si vous avez souscrit une formule Confort, Optimale ou Investisseur.").
 limite(bris_glaces_batiment, 'S10-b', "Reportez-vous à la page 19.", "voir « Montants maximums des garanties » (S14)").

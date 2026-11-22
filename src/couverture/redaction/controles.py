@@ -225,7 +225,8 @@ def exclusions_hors_perimetre(prop: dict, voc: dict) -> list[str]:
     """Les exclusions qui visent un lieu ou un bien que le périmètre de leurs garanties n'admet pas (7.152).
     Une telle exclusion n'est jamais atteinte : le sinistre est écarté comme « hors garantie », sans la clause
     qui le dit en toutes lettres (« les locaux à usage commun »). Le lieu ou le bien qu'un contrat exclut
-    expressément appartient au périmètre : c'est l'exclusion qui décide, et qu'on cite.
+    expressément appartient au périmètre : c'est l'exclusion qui décide, et qu'on cite. La règle ne vaut que pour
+    une exclusion de tout le sinistre (portée « tout »).
     Sans réponse quand un périmètre emploie un concept que la proposition ne définit pas (on ne sait pas l'ouvrir)."""
     definitions = {d.get("concept"): d.get("condition") for d in prop.get("definitions") or []}
 
@@ -250,6 +251,11 @@ def exclusions_hors_perimetre(prop: dict, voc: dict) -> list[str]:
     for x, gs in visees:
         c = x.get("condition")
         if not (isinstance(c, dict) and list(c) == ["f"] and c["f"][0] in ("lieu", "bien")) or not gs:
+            continue
+        # Seulement une exclusion qui écarte tout le sinistre. Celle qui n'écarte qu'un bien (« les vitraux »)
+        # doit rester hors du périmètre : le périmètre est établi dès qu'UN bien y entre, et l'exclusion n'en
+        # retire qu'un ; deux biens exclus déclarés ensemble donnaient « couvert » (7.156).
+        if x.get("portee") not in (None, "tout"):
             continue
         variable, valeur = str(c["f"][0]), str(c["f"][1])
         parents = set((voc.get(variable, {}).get("parents") or {}).get(valeur) or [])
@@ -457,6 +463,8 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str,
     # 2 bis. Une réduction n'est pas un refus (7.81) : le gel sans vidange chez l'assureur B réduit l'indemnité de
     # moitié, et la règle refusait ; le jeu fermé l'a montré (f-b02).
     # Seule compte la sanction qui suit le devoir (3.1.1.2 de B, une longue clause, parle ailleurs d'une réduction).
+    # « La garantie intervient uniquement si… » est un refus (3.1.7.4 de B, signalé à tort : l'alinéa suivant
+    # demande de « réduire l'étendue des dommages », 7.156).
     for g in prop.get("garanties", []):
         for o in g.get("obligations") or []:
             c = index.get(o.get("article"))
@@ -466,7 +474,7 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str,
             if c is None or not fenetre:
                 continue
             if re.search(r"\br[ée]dui|proportionnel", fenetre) \
-                    and not re.search(r"refuser|pas de garantie|n.?est pas garanti", fenetre):
+                    and not re.search(r"refuser|pas de garantie|n.?est pas garanti|uniquement si|seulement si|qu.a (la )?condition", fenetre):
                 noter(BLOQUANT, "couverture", f"garantie {g.get('id')} : l'obligation « {str(o.get('texte'))[:60]} » : "
                       f"sa clause ({o.get('article')}) réduit l'indemnité sans refuser ; une limite, pas une obligation")
             elif re.search(r"\br[ée]dui|proportionnel", fenetre):

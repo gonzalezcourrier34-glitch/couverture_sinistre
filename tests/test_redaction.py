@@ -853,5 +853,10 @@ def test_une_exclusion_hors_du_perimetre_est_signalee():
     assert len(notes) == 1 and "parties_communes" in notes[0], "l'annexe est admise par le concept, pas le local commun"
     prop["garanties"][0]["perimetre"][1]["ou"].append(f("lieu", "parties_communes"))
     assert exclusions_hors_perimetre(prop, voc) == []
+    # Une exclusion qui n'écarte qu'un bien reste hors du périmètre (7.156) : l'y faire entrer donnait « couvert »
+    # à deux biens exclus déclarés ensemble. Elle n'est donc pas signalée.
+    prop["exclusions_communes"].append({"condition": f("bien", "vitrail"), "portee": {"bien": "vitrail"}, "texte": "les vitraux"})
+    prop["garanties"][0]["perimetre"].append({"ou": [f("bien", "vitre")]})
+    assert exclusions_hors_perimetre(prop, voc) == []
     prop["garanties"][0]["perimetre"][1] = {"concept": "batiment"}          # un concept du contrat, qu'on ne sait pas ouvrir
     assert exclusions_hors_perimetre(prop, voc) == [], "sans certitude, pas d'alerte"
