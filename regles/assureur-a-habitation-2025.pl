@@ -1,12 +1,16 @@
 :- encoding(utf8).
-/*  Règles du contrat Assureur A « Habitation A » (2025) : vol (art. 2.10), incendie (art. 2.1),
-    dégâts des eaux (art. 2.7), et les définitions de l'art. 12 qu'elles emploient.
-    Les autres garanties (tempête, bris de vitrages…) ne sont pas encore traduites : voir evenement_traduit.
+/*  Règles du contrat Assureur A « Habitation A » (2025).
 
-    Écrites à la main, pour servir de modèle avant de les faire écrire par un modèle de langage.
+    Quatre blocs ont été écrits à la main, pour servir de modèle avant que la rédaction par un modèle de langage
+    existe : le vol (art. 2.10 et ses exclusions, 2.10-a), l'incendie (art. 2.1), les dégâts des eaux (art. 2.7) et
+    les exclusions générales (art. 1.4), avec les définitions de l'art. 12 qu'ils emploient.
+    Tous les autres articles ont été rédigés par Mistral Large (`couverture rediger`), contrôlés par le code, relus,
+    puis ajoutés ici : chacun porte l'en-tête « proposition rédigée par le modèle ». Ce que le contrat traduit
+    aujourd'hui se lit dans les faits evenement_traduit.
+
     Chaque règle garde, mot pour mot, la phrase du contrat qu'elle traduit : `couverture regles`
     vérifie que chaque citation figure dans la clause citée, et que chaque variable appartient
-    au vocabulaire commun (regles/vocabulaire.json). Le moteur est dans regles/moteur.pl.
+    au vocabulaire (regles/vocabulaire/). Le moteur est dans regles/moteur.pl.
 
     Deux formes du contrat que les fiches ne savaient pas représenter (voir docs/DEMARCHE.md) :
       - une condition cachée dans le tableau des limites : la cave n'est couverte que « si ces
