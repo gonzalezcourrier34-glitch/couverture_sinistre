@@ -148,10 +148,14 @@ $rayon: 12px;
 
 // ## Contrats
 
+// Tous les contrats sur une seule ligne, à parts égales, quel que soit leur nombre. Sous 110 px par carte
+// (beaucoup de contrats, ou un écran étroit), la ligne défile au lieu de passer à la ligne.
 .contrats {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(110px, 1fr);
     gap: 8px;
+    overflow-x: auto;
 }
 
 .contrats > .muted {
