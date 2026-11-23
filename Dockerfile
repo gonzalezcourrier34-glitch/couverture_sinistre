@@ -6,7 +6,9 @@ COPY pyproject.toml README.md ./
 COPY src ./src
 COPY config ./config
 COPY regles ./regles
-RUN pip install --no-cache-dir .
+# Installation « éditable » : le code cherche regles/ et config/ à côté de src/, donc dans /app. Sans elle,
+# le paquet est copié dans les bibliothèques de Python et ne les retrouve pas (DEMARCHE 7.161, 7.163).
+RUN pip install --no-cache-dir -e .
 COPY data ./data
 # Sans docker compose : les contrats sont lus à la construction de l'image.
 RUN couverture ingerer

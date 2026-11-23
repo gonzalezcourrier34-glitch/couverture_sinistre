@@ -169,10 +169,11 @@ Pour des centaines de contrats, il faut donc une équipe de relecteurs du métie
 - Chez D, les **mesures de protection contre le vol** ne sont pas traduites : elles ne sont pas vérifiées.
 - Seuls des **PDF** de conditions générales sont lus. Un seul document est produit : la fiche d'analyse d'un sinistre, en PDF.
 - Les réponses attendues des jeux de référence ont été proposées par des modèles, puis arbitrées sur citations ; elles n'ont pas été validées par un juriste.
+- **En ligne**, la démonstration n'a pas d'utilisateurs réels. Son journal part dans les journaux de l'hébergeur, sans tableau de bord ni alerte ; le compteur d'analyses repart de zéro à chaque réveil du service ; le temps du premier chargement n'est pas mesuré.
 
 ## Démonstration en 5 minutes
 
-À répéter avant : `uv run couverture api` dans un terminal, `npm start` dans `frontend`, puis http://localhost:4220. La lecture varie d'un appel à l'autre : rejouer chaque étape une fois avant de la montrer.
+À répéter avant : `uv run couverture api` dans un terminal, `npm start` dans `frontend`, puis http://localhost:4220 ; ou la démonstration en ligne, avec son code d'accès (le premier chargement réveille le service : l'ouvrir avant de commencer). La lecture varie d'un appel à l'autre : rejouer chaque étape une fois avant de la montrer.
 
 | Temps | Ce qu'on montre | Ce qu'on dit |
 |---|---|---|
@@ -182,7 +183,7 @@ Pour des centaines de contrats, il faut donc une équipe de relecteurs du métie
 | 2:15 | Une déclaration incomplète (un vol sans dire comment le local était fermé) | « À préciser » : la question à poser, les réponses possibles ; la réponse du client donne la décision tout de suite, sans nouvel appel au modèle |
 | 3:00 | « Télécharger la fiche (PDF) » | Une page à verser au dossier : la décision, les articles cités, ce qu'il reste à demander |
 | 3:15 | La même déclaration sur Assureur B ou D | Autre contrat, autres règles, même moteur |
-| 3:45 | `uv run couverture regles --contrat assureur-a-habitation-2025` | Les règles se vérifient sans modèle : vocabulaire, 171 citations retrouvées mot pour mot |
+| 3:45 | `uv run couverture regles --contrat assureur-a-habitation-2025` | Les règles se vérifient sans modèle : vocabulaire, 173 citations retrouvées mot pour mot |
 | 4:15 | Le tableau des essais (section 5) | Ce qui a marché, ce qui a été retiré, et pourquoi |
 | 4:45 | Les limites (section 7) | Ce que le système ne sait pas faire |
 
@@ -208,6 +209,8 @@ COUVERTURE_MODELE_VERIFICATION=mistral-small-2603     # vérification et confirm
 ```
 
 **SWI-Prolog** (gratuit) : `winget install SWI-Prolog.SWI-Prolog` sous Windows, `apt install swi-prolog-nox` sous Linux.
+
+**Les noms des assureurs** sont masqués à l'ingestion d'après `data/contrats/noms.prive.json`, qui n'est pas versionné (modèle : `noms.exemple.json`). Sans ce fichier, seuls les courriels, les sites et les téléphones sont masqués.
 
 ## Utilisation
 
@@ -235,11 +238,14 @@ l'en-tête `x-api-key` (`COUVERTURE_API_KEY` dans `.env` ; sans elle, les routes
 |---|---|
 | `GET /api/v1/sante` | l'API, le moteur et le modèle répondent (publique) |
 | `GET /api/v1/contrats`, `/contrats/{id}`, `/contrats/{id}/clauses` | les contrats et leur texte |
+| `GET /api/v1/contrats/{id}/clauses/{clause}` | une seule clause : celle qu'une réponse cite |
 | `GET /api/v1/vocabulaire` | les faits que le moteur comprend |
 | `POST /api/v1/analyses` | une déclaration, et si on les a la formule et les options du client → couvert, non couvert ou incertain, avec les citations |
 | `POST /api/v1/analyses/suivi` | la même analyse, racontée étape par étape pendant qu'elle se fait (flux de lignes JSON) |
 | `POST /api/v1/decisions` | des faits → la décision, sans modèle (résout un « incertain ») |
 | `POST /api/v1/fiches` | une décision → sa fiche en PDF, à verser au dossier |
+
+**En ligne** (`COUVERTURE_CODE_ACCES` défini), trois choses changent. Le navigateur demande un code d'accès, qui tient lieu de clé. Le contrat entier ne se télécharge plus : la liste des clauses est fermée, et une clause ne se lit que si les règles la citent. Les analyses sont comptées (`COUVERTURE_LIMITE_JOUR`), puis refusées.
 
 ### L'interface
 
@@ -251,27 +257,28 @@ npm start                                                   # http://localhost:4
 
 Angular 21, sur le modèle de l'interface de SortirIA, aux couleurs du système de design public de foyer.lu. Le contrat,
 la déclaration, la décision avec ses clauses citées (l'article entier dans une fenêtre, au clic sur son numéro) ; pour
-« à préciser », les questions à poser au client, et ses réponses donnent la décision tout de suite. La clé de l'API reste côté serveur (`frontend/proxy.conf.mjs`).
+« à préciser », les questions à poser au client, et ses réponses donnent la décision tout de suite. En local, la clé de l'API reste côté serveur (`frontend/proxy.conf.mjs`) ; en ligne, l'API sert elle-même l'écran et demande le code d'accès.
 
 Une réponse « incertain » dit, dans `a_preciser`, quoi demander au client ; ses réponses, ajoutées aux `faits` de la
 réponse, se soumettent à `/decisions` : décision immédiate, gratuite, déterministe.
 
 `analyser` donne la décision, le motif, les preuves, les questions à poser et l'**arbre de preuve** du moteur. Autres commandes : `contrats`, `clauses`, `versions`, `modele` (`--help`).
 
-Avec docker : `docker compose up -d --build` lance l'API (8021) et Grafana (3011). L'image de la démonstration en ligne (l'écran et l'API dans un seul conteneur, un code d'accès, une limite d'analyses par jour) se construit avec `deploiement/Dockerfile` ; son en-tête dit comment.
+Avec docker : `docker compose up -d --build` lance l'API (8021) et Grafana (3011). L'image de la démonstration en ligne (l'écran et l'API dans un seul conteneur, un code d'accès, une limite d'analyses par jour) se construit avec `deploiement/Dockerfile` ; son en-tête dit comment. En ligne, chaque analyse écrit aussi sa ligne de journal sur la sortie standard, sans le texte du sinistre : `az containerapp logs show` la relit.
 
 ## Arborescence
 
 ```
 src/couverture/      le code : lecture.py (le modèle lit), prolog.py (le moteur décide), chaine.py (la réponse), fiche.py (le PDF),
                      redaction/ (Mistral Large rédige les règles), banc.py, exemples.py, cli/ et api/ (une
-                     commande, une route par fichier), découpage des contrats, base
+                     commande, une route par fichier), découpage des contrats, anonymisation.py (les noms masqués), base
 regles/              moteur Prolog, règles par contrat, vocabulaire (commun.json + un fichier par contrat), faits idéaux des cas
 data/contrats/       conditions générales, catalogue.json, SOURCES.md (liens des CG réelles)
 data/golden/         le golden set : sinistres, réponses attendues, version figée
 config/              manifeste des versions des consignes
 docs/                explications, démarche, métriques, archive des consignes
 monitoring/          Grafana et guide du suivi
+deploiement/         l'image de la démonstration en ligne : l'écran et l'API dans un seul conteneur
 tests/               tests (pytest), sans clé ni réseau ; un second moteur en Python pour le test différentiel
 ```
 

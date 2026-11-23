@@ -2,7 +2,9 @@
 
 > **Une seule méthode depuis le 18 nov. 2026.** Les premières méthodes (grille remplie par le modèle et relue, recherche hybride, fiches compilées, juge de qualité, agent de réparation, dérive et bilan) ont été retirées : les règles Prolog les ont remplacées. Pourquoi, et ce qu'elles ont appris : [DEMARCHE.md](DEMARCHE.md), 7.36. Leurs consignes restent archivées dans `docs/consignes/`, et leur code dans l'historique git (tag `avant-simplification`). Ce document décrit le projet tel qu'il est.
 >
-> **Noms anonymisés (19 nov. 2026).** Les assureurs s'appellent ici Assureur A, B, C et D (DEMARCHE 7.70).
+> **Noms anonymisés (19 nov. 2026).** Les assureurs s'appellent ici Assureur A, B, C et D (DEMARCHE 7.70). Depuis le 23 nov., leurs noms sont aussi masqués dans le texte des clauses, à l'ingestion (7.160).
+>
+> **En ligne (23 nov. 2026).** La démonstration tourne sur Azure, derrière un code d'accès (7.161, 7.162). Les passages touchés ce jour-là sont à jour ; le reste du document n'a pas été relu ligne à ligne depuis le 20 nov. : en cas d'écart, le README (sections 4 à 7) fait foi.
 
 Ce document explique **ce que fait chaque partie du projet, et pourquoi elle est faite ainsi**. Il sert à préparer l'entretien : pour chaque choix, il donne la raison et ce qui a été écarté.
 
@@ -135,8 +137,8 @@ Sommaire :
 ### A. Une fois par contrat
 
 ```
-PDF ─► chargement.py ─► segmentation.py ─► controles.py ─► base.py (SQLite)
-       pages, nettoyage   clauses typées     OK / A_VERIFIER   contrats, clauses, renvois
+PDF ─► chargement.py ─► segmentation.py ─► anonymisation.py ─► controles.py ─► base.py (SQLite)
+       pages, nettoyage   clauses typées     noms masqués        OK / A_VERIFIER   contrats, clauses, renvois
                           (+ profil d'assureur)
 
 garanties ─► règles Prolog (regles/<contrat>.pl) : à la main, ou `couverture rediger` (Mistral Large)
@@ -154,7 +156,7 @@ Exemple : « Mon vélo a été volé dans ma cave, fermée par un cadenas. »
 3. **Hypothèses** : si la réponse avait été incertaine (fermeture inconnue), le moteur aurait essayé chaque réponse et dit « serrure de sûreté ? oui → couvert ; non → non couvert ».
 4. **Arbre de preuve** : chaque condition évaluée, sa phrase du contrat, son état, jusqu'au fait déclaré `fermeture = cadenas`.
 5. **Vérification** : chaque citation est recherchée dans la clause du contrat.
-6. **Journal** : l'analyse est notée (décision, faits, questions), sans le texte du sinistre.
+6. **Journal** : l'analyse est notée (décision, faits, questions), sans le texte du sinistre. En ligne, la même ligne part aussi sur la sortie standard.
 
 ---
 
@@ -267,7 +269,15 @@ Méthodes : `enregistrer` (remplace entièrement un contrat), `contrats`, `contr
 **Rôle** :
 - `ingerer_fichier` : calcule l'empreinte du fichier ; s'il n'a pas changé depuis la dernière fois, ne fait rien (idempotence) ; sinon lit, découpe, contrôle et enregistre.
 - `ingerer_dossier` : fait de même pour tous les fichiers de `data/contrats`, avec les métadonnées de `catalogue.json` (identifiant, assureur, produit, version, et le **profil d'assureur** s'il y en a un). Sans entrée au catalogue, l'identifiant est tiré du nom du fichier.
-- **L'empreinte** couvre le fichier **et** son profil : modifier le profil relance le découpage.
+- **L'empreinte** couvre le fichier, son profil **et** la liste des noms à masquer : modifier l'un des trois relance le découpage.
+
+### `src/couverture/anonymisation.py` — masquer les noms dans le texte
+
+**Rôle** : après le découpage, remplacer dans chaque clause et dans le texte brut le nom de l'assureur (« Assureur A »), de son assisteur, ses adresses, ses numéros. Les courriels, les sites et les téléphones sont masqués pour tout contrat ; le reste vient d'une liste propre à chaque contrat, `data/contrats/noms.prive.json`, qui n'est pas versionnée (la versionner publierait les noms). `ingerer` affiche le nombre de remplacements.
+
+**Pourquoi après le découpage** : masquer avant aurait pu changer les titres et les numéros que le découpage reconnaît. Les citations des règles restent exactes : elles ne portaient pas sur ces passages (vérifié, 567 sur 567).
+
+**Ce que ça ne fait pas** : le texte reste celui de l'assureur, reconnaissable par qui le connaît. C'est pourquoi les conditions générales ne sont pas redistribuées, et pourquoi, en ligne, on ne lit que les clauses citées.
 
 **Pourquoi** : ajouter un contrat se résume à déposer un fichier et relancer `couverture ingerer`. La version du contrat compte : un client garde les CG en vigueur au moment de sa souscription.
 
@@ -336,13 +346,15 @@ COUVERTURE_MODELE=mistral-large-latest
 
 **Pourquoi** : le banc mesure le système sur des cas écrits à l'avance ; le journal mesure ce qui se passe vraiment (comme `search_log.py` dans SortirIA).
 
+**En ligne** : la base vit dans le conteneur et repart de l'image à chaque réveil. L'image définit `COUVERTURE_JOURNAL_SORTIE` : chaque ligne est alors aussi écrite sur la sortie standard, en JSON, que l'hébergeur collecte (`az containerapp logs show`). Grafana, lui, reste un outil du poste.
+
 ### `src/couverture/consignes.py` — le versionnage des consignes
 
 **Rôle** : `CONSIGNES` liste les quatre consignes en service (lecture en deux temps : socle puis détails, vérification des faits, rédaction des règles), le texte qui porte chacune dans le code, et sa version.
 - **archive** : `ecrire_manifeste` écrit aussi le texte intégral de chaque nouvelle version dans `docs/consignes/<consigne>/<version>.txt`, sans jamais réécrire une version archivée. `verifier` échoue si le texte d'une version en service ne correspond plus à son archive. L'histoire des consignes (rédaction des règles v1 à v9, et celles des méthodes retirées) reste ainsi lisible, avec le pourquoi de chaque changement dans `docs/DEMARCHE.md` ;
 - `etat_actuel` calcule la version et l'empreinte de chaque texte ; `ecrire_manifeste` les écrit dans `config/versions_consignes.json` ;
 - `verifier` compare le code au manifeste et signale un texte modifié **sans nouvelle version**, ou un manifeste pas à jour. Un test l'appelle : la CI échoue ;
-- `versions_courtes` (« lecture-socle:v2,redaction-regles:v12… ») est notée dans le journal à chaque analyse.
+- `versions_courtes` (« lecture-socle:v2,redaction-regles:v13… ») est notée dans le journal à chaque analyse.
 
 **Pourquoi** : une consigne modifiée change les réponses. Pour comparer deux versions, ou comprendre une réponse passée, il faut savoir quelle consigne l'a produite. C'est la même règle que SortirIA (`scripts/versionnage.py`).
 
@@ -360,6 +372,8 @@ Les requêtes utilisent les macros de période du plugin (`$__unixEpochFrom()`, 
 
 - **docker compose** lance l'API (port 8021) et Grafana (3011). L'API lit les contrats au démarrage ; la base `data/base.sqlite` est partagée avec Grafana, en lecture seule. Les ports évitent ceux de SortirIA.
 - **La CI** installe SWI-Prolog et le projet (avec uv), vérifie les versions des consignes, puis lance les tests : le moteur Prolog y est comparé à l'oracle Python.
+
+- **L'image en ligne** (`deploiement/Dockerfile`) est une autre image : elle construit l'écran, embarque la base du poste nettoyée (`nettoyer_base.py` retire le journal local et le texte brut), et ne contient ni les PDF, ni la liste des noms. Un seul conteneur sert l'écran et l'API.
 
 Le détail est dans `monitoring/README.md`.
 
@@ -401,7 +415,9 @@ Une commande par module (`cli/regles.py`, `cli/banc.py`…), comme une route par
 
 ### L'API (`src/couverture/api/`) et l'interface (`frontend/`)
 
-L'API FastAPI (une route par fichier, la logique dans `service.py`, la clé dans l'en-tête `x-api-key`) et l'interface Angular aux couleurs du système de design de foyer.lu : voir `README.md`. L'ancienne page (`web.py`, HTML sans framework) a été retirée le 20 nov. 2026.
+L'API FastAPI (une route par fichier, la logique dans `service.py`, la clé dans l'en-tête `x-api-key`) et l'interface Angular aux couleurs du système de design de foyer.lu : voir `README.md`.
+
+**En ligne** (`api/acces.py`, actif quand `COUVERTURE_CODE_ACCES` est défini) : le navigateur demande un code d'accès, qui tient lieu de clé (en local, c'est le proxy de développement qui ajoute la clé ; en ligne il n'y a pas de proxy) ; les analyses sont comptées par jour ; la liste des clauses est fermée et `routes/clause.py` ne sert une clause que si les règles la citent ; l'API sert l'écran construit (`COUVERTURE_FRONT`). Pourquoi : une page ouverte dépenserait le crédit du modèle pour n'importe qui, et donnerait à télécharger le texte de quatre assureurs. L'ancienne page (`web.py`, HTML sans framework) a été retirée le 20 nov. 2026.
 
 ### `src/couverture/__init__.py`
 
@@ -413,7 +429,9 @@ Expose `Resultat`, `Verdict`, `Decision` pour un usage en Python, et la version 
 |---|---|
 | `pyproject.toml`, `uv.lock` | Le paquet Python : dépendances (pydantic, pdfplumber, fastapi, uvicorn), la commande `couverture`, la configuration de pytest ; les versions exactes, installées avec `uv sync`. |
 | `perso/` | Les fichiers de l'auteur, non versionnés. |
-| `Dockerfile` | Construit une image qui installe le paquet, ingère les contrats et lance l'API. La clé du modèle est passée au lancement, jamais écrite dans l'image. |
+| `Dockerfile` | Construit l'image de `docker compose` : installe le paquet, ingère les contrats et lance l'API. La clé du modèle est passée au lancement, jamais écrite dans l'image. |
+| `deploiement/` | L'image de la démonstration en ligne, le nettoyage de la base qu'elle embarque, le modèle du fichier de secrets. |
+| `.dockerignore` | Ce que la construction d'une image ne lit pas : `.env`, `perso/`, la liste des noms, les secrets de l'image en ligne. |
 | `.gitignore` | Exclut la base générée, les caches, le fichier `.env` (les clés) et **les PDF des assureurs** (on ne redistribue pas leurs documents). |
 | `README.md` | La présentation du projet. |
 
@@ -440,11 +458,13 @@ Expose `Resultat`, `Verdict`, `Decision` pour un usage en Python, et la version 
 
 ## 6. Les tests
 
-`uv run pytest` lance environ 170 tests, sans appel réel à un modèle (les réponses sont préparées ou la connexion simulée) :
-- **`test_pipeline.py` (37)** — lecture et découpage d'un PDF (sommaire, en-têtes, mots coupés, intertitres, lexique éclaté, renvois), contrôles d'ingestion, base, contrôle des citations (une citation inventée fait passer COUVERT à INCERTAIN), configuration du modèle (`.env`, nouvelles tentatives, clé refusée, réponses coupées), profils, journal sans le texte du sinistre, versions des consignes, tableaux Grafana exécutés sur une vraie base ; le contrat réel A si son PDF est présent.
-- **`test_prolog.py` (44)** — le moteur : trois valeurs et questions, exclusions partielles, extensions de définition, garanties accessoires, événement non traduit jamais refusé, obligations, questions décisives et paires, arbre de preuve, faits sans injection possible ; la lecture (vocabulaire, deux temps, vérification, un doute ne fait jamais couvrir, confirmation) ; le moteur permanent ; et, si SWI-Prolog est installé, **Prolog et l'oracle Python concordent** sur tous les cas.
-- **`test_redaction.py` (32)** — la rédaction : Prolog généré et évalué par l'oracle, chaque contrôle (vocabulaire déclaré, fait inventé, citation réparée ou refusée, exclusion oubliée, réserves, conditions des conditions particulières mises en réserve, accessoires, extensions…), la reprise unique sur un écart au schéma, l'acceptation, la hiérarchie des valeurs.
-- **`test_banc.py` (16)** — le golden set (complet, cohérent, figé), les règles seules justes pour chaque contrat, les trois couches, les portes, la latence, la fiche de validation.
+`uv run pytest` lance 228 tests (23 nov. 2026 ; le nombre entre parenthèses compte les fonctions de test, dont certaines jouent plusieurs cas), sans appel réel à un modèle (les réponses sont préparées ou la connexion simulée) :
+- **`test_pipeline.py` (47)** — lecture et découpage d'un PDF (sommaire, en-têtes, mots coupés, intertitres, lexique éclaté, renvois), contrôles d'ingestion, base, contrôle des citations (une citation inventée fait passer COUVERT à INCERTAIN), configuration du modèle (`.env`, nouvelles tentatives, clé refusée, réponses coupées), profils, journal sans le texte du sinistre, versions des consignes, tableaux Grafana exécutés sur une vraie base ; le contrat réel A si son PDF est présent.
+- **`test_prolog.py` (68)** — le moteur : trois valeurs et questions, exclusions partielles, extensions de définition, garanties accessoires, événement non traduit jamais refusé, obligations, questions décisives et paires, arbre de preuve, faits sans injection possible ; la lecture (vocabulaire, deux temps, vérification, un doute ne fait jamais couvrir, confirmation) ; le moteur permanent ; et, si SWI-Prolog est installé, **Prolog et l'oracle Python concordent** sur tous les cas.
+- **`test_redaction.py` (52)** — la rédaction : Prolog généré et évalué par l'oracle, chaque contrôle (vocabulaire déclaré, fait inventé, citation réparée ou refusée, exclusion oubliée, réserves, conditions des conditions particulières mises en réserve, accessoires, extensions…), la reprise unique sur un écart au schéma, l'acceptation, la hiérarchie des valeurs.
+- **`test_banc.py` (18)** — le golden set (complet, cohérent, figé), les règles seules justes pour chaque contrat, les trois couches, les portes, la latence, la fiche de validation.
+- **`test_api_routes.py` (14)** et **`test_api_service.py` (7)** — les routes par HTTP, dépendances remplacées ; une route par fichier ; et le mode en ligne : le code d'accès remplace la clé, le contrat ne se télécharge pas, les analyses sont comptées.
+- **`test_exemples.py` (12)**, **`test_fiche.py`**, **`test_tableaux.py`**, **`test_questions.py`**, **`test_ferme.py`** — la banque d'exemples, la fiche PDF, les tableaux Grafana exécutés, les questions posées, le jeu fermé.
 
 ---
 
@@ -527,17 +547,19 @@ Pour écrire le code plus vite, comme le recruteur l'encourage, et dans le syst�
 
 ## 10. Limites et suites
 
-**Limites actuelles**
-- Les conditions particulières ne sont pas lues : les options deviennent des réserves (« couvert, sous réserve que… »).
-- La lecture des déclarations reste la principale source d'erreurs (4 à 5 couverts à tort par exécution sur 97 cas pour l'assureur A).
-- Le golden set a été écrit par Claude et reste à valider par l'auteur (`data/golden/A_VALIDER.md`) ; les cas de l'assureur B ont été écrits par celui qui a relu ses règles.
-- La responsabilité civile, l'assistance et la protection juridique ne sont pas encore traduites : ces sinistres vont à un gestionnaire.
+**Limites actuelles** (23 nov. 2026 ; la liste complète et tenue à jour est dans le README, section 7)
+- Les règles n'ont pas été relues par un juriste ou un gestionnaire de sinistres, et les jeux de cas viennent de ceux qui ont écrit ou relu les règles.
+- La lecture des déclarations reste la principale source d'erreurs, et elle varie d'un appel à l'autre ; les chiffres du jour sont dans le README, section 4.
+- Chaque nouveau contrat demande une rédaction, non reproductible d'un essai à l'autre, puis une relecture humaine (README, section 6).
+- Les conditions particulières ne sont pas lues dans le document du client : la formule et les options se saisissent avec la déclaration.
+- Le contrat C est partiel et n'a pas de jeu de mesure.
 - Le découpage repose sur des règles et des profils ; un format très inhabituel dépassera ce qu'un profil peut décrire.
 - Les tableaux de plafonds sont lus comme du texte : les montants sont cités, pas calculés.
+- En ligne : pas d'utilisateurs réels, un compteur d'analyses qui repart de zéro à chaque réveil, et un journal lisible dans les journaux de l'hébergeur, sans tableau de bord.
 
 **Suites, dans l'ordre**
-1. Un jeu de cas écrit par l'auteur sans voir les règles, pour chaque contrat.
-2. Les garanties restantes des deux contrats (responsabilité civile, assistance, pack multimédia).
+1. Faire relire les règles d'un contrat par quelqu'un du métier, et mesurer sur ses propres cas.
+2. Un jeu de cas écrit sans voir les règles, pour chaque contrat ; un jeu de mesure pour C.
 3. La lecture : les erreurs restantes, une par une, comme pour les règles.
-4. Lire les conditions particulières pour lever les réserves.
-5. Déployer l'interface avec le `Dockerfile` pour avoir une URL à envoyer.
+4. Lire les conditions particulières dans le document du client.
+5. En ligne : relever les journaux dans un tableau de bord, et le coût par analyse.

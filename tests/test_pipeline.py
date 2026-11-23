@@ -320,6 +320,23 @@ def test_le_journal_ne_garde_pas_le_texte_du_sinistre(tmp_path):
     assert "Un sinistre" not in json.dumps(ligne) and ligne["longueur"] == len("Un sinistre décrit en une phrase.")
 
 
+def test_en_ligne_le_journal_sort_aussi_sur_la_sortie_standard(tmp_path, monkeypatch, capsys):
+    """En ligne la base du conteneur est perdue à chaque réveil : la même ligne, sans le texte, part aussi sur la
+    sortie standard, que l'hébergeur collecte. Hors ligne, rien n'est écrit."""
+    j = Journal(str(tmp_path / "b.sqlite"))
+    j.noter(resultat(), date=MAINTENANT)
+    assert capsys.readouterr().out == ""
+    monkeypatch.setenv("COUVERTURE_JOURNAL_SORTIE", "1")
+    j.noter(resultat(decision="INCERTAIN", questions=["La porte était-elle fermée à clé ?"]), duree_ms=4200, date=MAINTENANT)
+    j.noter_erreur("foyer", "conditions", "délai dépassé", date=MAINTENANT)
+    analyse, erreur = (json.loads(x) for x in capsys.readouterr().out.splitlines())
+    assert analyse["journal"] == "analyse" and analyse["decision"] == "INCERTAIN" and analyse["duree_ms"] == 4200
+    assert analyse["evenement"] == "vol" and "fermée à clé" in analyse["questions"] and analyse["consignes"]
+    assert "Un sinistre" not in json.dumps(analyse) and analyse["longueur"] == len("Un sinistre décrit en une phrase.")
+    assert erreur["erreur"] == "délai dépassé" and erreur["contrat_id"] == "foyer"
+    assert len(j.lignes(MAINTENANT - timedelta(days=1), MAINTENANT + timedelta(days=1))) == 3, "la base reçoit toujours tout"
+
+
 # --- Versionnage des consignes (garde-fou de la CI) -----------------------------------------------
 
 from couverture import consignes  # noqa: E402

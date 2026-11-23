@@ -8,11 +8,16 @@ Sert à trois choses, comme le journal des recherches de SortirIA (`app/search_l
 
 Le texte du sinistre n'est pas conservé : seulement sa longueur et les faits repérés
 (événement, bien, lieu). Une déclaration de sinistre peut contenir des données personnelles.
+
+En ligne (23/11/2026, DEMARCHE 7.163), la base vit dans le conteneur et repart de l'image à chaque réveil : le
+journal y serait perdu. Quand `COUVERTURE_JOURNAL_SORTIE` est défini (l'image en ligne le fait), chaque ligne
+est aussi écrite sur la sortie standard, en JSON, que l'hébergeur collecte. La même ligne, donc sans le texte.
 """
 
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
 from datetime import datetime, timezone
 
@@ -31,6 +36,15 @@ CREATE TABLE IF NOT EXISTS analyses (
 );
 CREATE INDEX IF NOT EXISTS idx_analyses_date ON analyses(date);
 """
+COLONNES = ("date", "contrat_id", "methode", "juge", "decision", "decision_initiale", "decision_avant_relecture",
+            "confiance", "longueur", "evenement", "bien", "lieu", "citations_rejetees", "conditions_ecartees",
+            "contestations", "questions", "duree_ms", "erreur", "consignes")
+
+
+def sortie(ligne: dict) -> None:
+    """Écrit la ligne du journal sur la sortie standard, si `COUVERTURE_JOURNAL_SORTIE` est défini."""
+    if os.getenv("COUVERTURE_JOURNAL_SORTIE"):
+        print(json.dumps({"journal": "analyse", **ligne}, ensure_ascii=False), flush=True)
 
 
 class Journal:
@@ -60,13 +74,13 @@ class Journal:
         )
         with sqlite3.connect(self.chemin) as cx:
             cx.execute(f"INSERT INTO analyses VALUES ({','.join('?' * 19)})", ligne)
+        sortie(dict(zip(COLONNES, ligne, strict=True)))
 
     def noter_erreur(self, contrat_id: str, methode: str, erreur: str, date: datetime | None = None) -> None:
+        ligne = ((date or datetime.now(timezone.utc)).isoformat(timespec="seconds"), contrat_id, methode, erreur[:300])
         with sqlite3.connect(self.chemin) as cx:
-            cx.execute(
-                "INSERT INTO analyses (date, contrat_id, methode, erreur) VALUES (?,?,?,?)",
-                ((date or datetime.now(timezone.utc)).isoformat(timespec="seconds"), contrat_id, methode, erreur[:300]),
-            )
+            cx.execute("INSERT INTO analyses (date, contrat_id, methode, erreur) VALUES (?,?,?,?)", ligne)
+        sortie(dict(zip(("date", "contrat_id", "methode", "erreur"), ligne, strict=True)))
 
     def lignes(self, depuis: datetime, jusqua: datetime) -> list[dict]:
         with sqlite3.connect(self.chemin) as cx:

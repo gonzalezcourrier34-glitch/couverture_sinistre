@@ -4718,6 +4718,14 @@ La section « Tenir des centaines de contrats » est réécrite d'après ce qui 
 
 **Retouche de l'écran.** Les contrats sur une seule ligne, à parts égales ; sous 110 px par carte la ligne défile.
 
+### 7.163 Après la mise en ligne : le journal, l'ancienne image, la documentation
+
+**Le journal était perdu en ligne.** Il s'écrit dans la base, et la base du conteneur repart de l'image à chaque réveil : aucune trace de ce que font les visiteurs, alors que le suivi est ce que je raconte de SortirIA. La règle : quand `COUVERTURE_JOURNAL_SORTIE` est défini (l'image en ligne le fait), chaque ligne du journal est aussi écrite sur la sortie standard, en JSON, que l'hébergeur collecte. C'est la même ligne : toujours sans le texte du sinistre. Un test le vérifie, et vérifie qu'hors ligne rien n'est écrit. Ce n'est pas un tableau de bord : les lignes se relisent avec `az containerapp logs show`, sans requête ni alerte.
+
+**L'ancienne image.** Le `Dockerfile` de `docker compose` installait le paquet par `pip install .` : même défaut que celui trouvé en 7.161. Corrigé de la même façon (installation éditable). À vérifier sur le poste par `docker compose up -d --build` : non exécuté ici.
+
+**La documentation relue.** Le README, `EXPLICATIONS.md` et le guide du suivi décrivaient le projet d'avant la mise en ligne : routes, clé et code d'accès, arborescence, nombre de tests, « déployer pour avoir une URL » parmi les suites. Corrigés. `EXPLICATIONS.md` n'a été relu en entier nulle part ailleurs que sur ces passages : son en-tête le dit, et renvoie au README en cas d'écart.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
@@ -4921,3 +4929,4 @@ Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
 155. Avant d'étendre une règle à d'autres contrats, comparer les décisions avant et après sur des faits tirés au hasard : c'est ce qui a montré qu'elle était fausse.
 157. Mettre en ligne change qui peut appeler quoi : relire chaque route en se demandant ce qu'elle donne à un inconnu, avant de choisir l'hébergeur.
 158. Un message d'erreur exact sur l'effet peut tromper sur la cause : « clé non configurée » voulait dire « fichier d'environnement vide ».
+159. Ce qu'on écrit dans un fichier du conteneur disparaît avec lui : en ligne, ce qui doit rester sort par la sortie standard ou par un service.

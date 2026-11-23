@@ -41,8 +41,10 @@ RUN pip install --no-cache-dir -e .
 COPY data/lecture ./data/lecture
 COPY --from=donnees /prep/base.sqlite ./data/base.sqlite
 COPY --from=ecran /ecran/dist/couverture-front/browser ./ecran
+# Le journal des analyses sort aussi sur la sortie standard : la base du conteneur ne survit pas à un réveil.
 ENV COUVERTURE_FRONT=/app/ecran \
-    COUVERTURE_BASE=/app/data/base.sqlite
+    COUVERTURE_BASE=/app/data/base.sqlite \
+    COUVERTURE_JOURNAL_SORTIE=1
 EXPOSE 8001
 # Les secrets viennent de l'environnement, jamais de l'image : MISTRAL_API_KEY, COUVERTURE_CODE_ACCES,
 # et les noms de modèles (COUVERTURE_MODELE, COUVERTURE_MODELE_VERIFICATION).

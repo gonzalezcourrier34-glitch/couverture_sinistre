@@ -10,10 +10,23 @@ docker compose up -d --build
 
 | Service | Adresse | Rôle |
 |---|---|---|
-| API | http://localhost:8021/docs | L'API (clé `COUVERTURE_API_KEY`) ; lit `data/contrats` au démarrage |
+| API | http://localhost:8021/docs | L'API (clé `COUVERTURE_API_KEY`) ; lit `data/contrats` au démarrage, et y masque les noms si `noms.prive.json` s'y trouve |
 | Grafana | http://localhost:3011 | Tableaux de bord (identifiant `admin`, mot de passe `GRAFANA_ADMIN_PASSWORD` du `.env`) |
 
 Les ports évitent ceux de SortirIA (3001, 8010) : les deux projets peuvent tourner en même temps.
+
+## En ligne (23 nov. 2026)
+
+La démonstration tourne sur Azure Container Apps, dans une autre image (`deploiement/Dockerfile`), sans Grafana. Ce qui change pour le suivi :
+
+| | En local | En ligne |
+|---|---|---|
+| Journal | table `analyses` de `data/base.sqlite` | la même table, **perdue à chaque réveil du service** (la base repart de l'image) ; et la même ligne sur la sortie standard, que l'hébergeur garde |
+| Où le lire | Grafana | `az containerapp logs show -n couverture-demo -g sortiria-rg --tail 100` (lignes `{"journal": "analyse", …}`) |
+| Texte du sinistre | jamais noté | jamais noté |
+| Frein à la dépense | aucun | `COUVERTURE_LIMITE_JOUR` analyses par jour, compte remis à zéro à chaque réveil ; le vrai plafond est chez le fournisseur du modèle |
+
+Ce qui manque en ligne : un tableau de bord sur ces lignes (aucune requête n'est écrite dans les journaux de l'hébergeur), et une alerte.
 
 ## Les couches
 
