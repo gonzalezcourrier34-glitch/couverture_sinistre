@@ -4703,6 +4703,21 @@ La section « Tenir des centaines de contrats » est réécrite d'après ce qui 
 
 **Ce qui n'est pas vérifié ici.** Les routes HTTP et l'écran ne s'exécutent pas dans l'environnement de l'assistant : les tests ajoutés (code d'accès, clause seule, limite) et la construction de l'image se lancent sur le poste.
 
+### 7.162 La démonstration est en ligne
+
+**Fait le 23 nov.** L'image de 7.161, construite sur le poste, envoyée dans un registre privé (GHCR), tourne sur Azure Container Apps, dans l'environnement qui héberge déjà SortirIA. Zéro instance au repos, une au plus : rien ne tourne sans visiteur, et le compteur d'analyses reste unique. L'adresse et le code d'accès se donnent avec le message d'accompagnement ; ils ne sont pas dans le dépôt.
+
+**Ce que l'essai sur le poste a montré avant l'envoi.**
+- Un test du projet (« une route par fichier ») a refusé ma route d'une clause, ajoutée dans le fichier de la liste : elle a son fichier (`routes/clause.py`). La règle existait, je ne l'avais pas relue.
+- Le premier lancement affichait « la clé API du serveur n'est pas configurée » : le fichier d'environnement était vide. Sans code d'accès, l'image retombe en mode local et réclame une clé qu'elle n'a pas. Rien n'est exposé dans ce cas, mais le message ne dit pas la cause.
+- L'image doit rester privée alors que le code est public : le dépôt montre le code, l'image contient en plus le texte des clauses.
+
+**Vérifié en ligne.** L'en-tête (modèle daté), les quatre contrats, une analyse complète avec ses citations. Sur le poste, avant l'envoi : le code d'accès, l'article cité, la fiche. 227 tests passent.
+
+**Ce qui n'est pas mesuré.** Le temps du premier chargement quand le service dort ; ce que l'application coûte à côté de SortirIA ; la tenue de la limite d'analyses, dont le compte repart de zéro à chaque réveil. Le jeton qui laisse Azure lire l'image expire : passé sa date, le service ne redémarre plus.
+
+**Retouche de l'écran.** Les contrats sur une seule ligne, à parts égales ; sous 110 px par carte la ligne défile.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
@@ -4905,3 +4920,4 @@ Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
 156. Un défaut corrigé par ses effets revient : chercher pourquoi le moteur a laissé passer, pas seulement quelle règle l'a déclenché.
 155. Avant d'étendre une règle à d'autres contrats, comparer les décisions avant et après sur des faits tirés au hasard : c'est ce qui a montré qu'elle était fausse.
 157. Mettre en ligne change qui peut appeler quoi : relire chaque route en se demandant ce qu'elle donne à un inconnu, avant de choisir l'hébergeur.
+158. Un message d'erreur exact sur l'effet peut tromper sur la cause : « clé non configurée » voulait dire « fichier d'environnement vide ».
