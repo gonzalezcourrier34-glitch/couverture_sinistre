@@ -405,13 +405,14 @@ export class AppComponent implements OnInit {
     ): void {
         const contratId = this.contratId();
         this.articleOuvert.set({ clauseId, extraits });
-        if (contratId && !this.clausesParContrat()[contratId]) {
-            this.service.clauses(contratId)
+        // Seule la clause ouverte est demandée : en ligne, le contrat entier ne se télécharge pas.
+        if (contratId && !this.clausesParContrat()[contratId]?.[clauseId]) {
+            this.service.clause(contratId, clauseId)
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe({
-                    next: (clauses) => this.clausesParContrat.update((c) => ({
+                    next: (clause) => this.clausesParContrat.update((c) => ({
                         ...c,
-                        [contratId]: Object.fromEntries(clauses.map((x) => [x.id, x]))
+                        [contratId]: { ...(c[contratId] ?? {}), [clause.id]: clause }
                     })),
                     error: (e) => {
                         this.articleOuvert.set(null);

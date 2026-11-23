@@ -15,3 +15,7 @@ garde/.venv/
 data/debug/
 # Les vrais noms et liens des CG (anonymisation, DEMARCHE 7.70)
 data/contrats/SOURCES.prive.md
+# La liste des vrais noms à masquer dans le texte des contrats (DEMARCHE 7.160)
+data/contrats/*.prive.*
+# Les secrets de l'image en ligne (DEMARCHE 7.161) ; le modèle enligne.env.exemple, lui, est versionné
+deploiement/*.env

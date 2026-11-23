@@ -144,6 +144,15 @@ def faits_affiches(faits: dict, voc: dict | None = None) -> list[dict[str, str]]
             for v in cles]
 
 
+def clauses_citees(contrat_id: str) -> set[str]:
+    """Les clauses que les règles du contrat citent : celles qu'une réponse peut montrer. En ligne, ce sont les
+    seules dont le texte entier se consulte (7.161) : pas le contrat, les passages qui appuient une décision."""
+    fichier = fichier_regles(contrat_id)
+    if not fichier.exists():
+        return set()
+    return set(re.findall(r"'([^'\n]+)',\s*\n?\s*\"", fichier.read_text(encoding="utf-8")))
+
+
 def a_des_garanties(contrat_id: str) -> bool:
     """Vrai si les règles du contrat traduisent au moins une garantie. Un fichier tout juste créé par la rédaction
     (un en-tête, aucune règle) n'est pas encore un contrat qu'on peut interroger (7.149)."""

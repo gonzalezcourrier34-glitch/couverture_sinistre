@@ -13,6 +13,7 @@ import time
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from couverture.api import service
+from couverture.api.acces import limiter_analyses
 from couverture.api.dependances import Pipelines, get_journal, get_pipelines
 from couverture.api.schemas import AnalyseRequest, Decision
 from couverture.api.securite import require_api_key
@@ -22,7 +23,7 @@ from couverture.llm import ErreurLLM
 router = APIRouter(prefix="/api/v1", tags=["décisions"], dependencies=[Depends(require_api_key)])
 
 
-@router.post("/analyses", response_model=Decision)
+@router.post("/analyses", response_model=Decision, dependencies=[Depends(limiter_analyses)])
 def analyser(demande: AnalyseRequest, pipelines: Pipelines = Depends(get_pipelines),  # noqa: B008
              journal: Journal = Depends(get_journal)) -> dict:  # noqa: B008
     """Analyse une déclaration sur un contrat.

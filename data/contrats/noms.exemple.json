@@ -1,0 +1,9 @@
+{
+  "_lisezmoi": "Modèle de la liste privée des noms à masquer (DEMARCHE 7.160). Copier ce fichier en noms.prive.json, que git ignore, et y mettre les vrais noms : ils ne doivent jamais entrer dans le dépôt. Une entrée par contrat (son identifiant au catalogue) ; les motifs sont appliqués dans l'ordre, le plus long d'abord. « regex » : le motif est une expression régulière. Les courriels, les sites et les numéros de téléphone sont masqués d'office pour un contrat qui figure ici. Puis : couverture ingerer.",
+  "assureur-x-habitation-2025": [
+    {"motif": "Nom Complet de l'Assureur S.A.", "par": "Assureur X"},
+    {"motif": "Nom de l'Assisteur", "par": "l’assisteur"},
+    {"motif": "12, rue de l'Exemple - \\d{5} Ville", "par": "[adresse]", "regex": true},
+    {"motif": "R\\.C\\.S\\. \\w+ B ?\\d+", "par": "R.C.S. [numéro]", "regex": true}
+  ]
+}

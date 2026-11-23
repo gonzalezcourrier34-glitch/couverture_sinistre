@@ -1,4 +1,5 @@
 """GET /api/v1/contrats/{contrat_id}/clauses : le texte du contrat, découpé en clauses.
+Pour une seule clause : `routes/clause.py`.
 
 **Provenance** : nouveau (20/11/2026) ; reprend `GET /api/contrats/{id}/clauses` de l'ancienne interface. Sert
 à afficher, à côté d'une décision, le texte complet des clauses citées.
@@ -10,6 +11,7 @@ from typing import Any, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
+from couverture.api import config
 from couverture.api.dependances import get_base
 from couverture.api.securite import require_api_key
 from couverture.api.service import clause_publique
@@ -32,6 +34,11 @@ def clauses(
     HTTPException
         404 si le contrat est inconnu.
     """
+    if config.CODE_ACCES:
+        # En ligne, le contrat entier ne se télécharge pas : seulement, une à une, les clauses qu'une réponse cite.
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+                            detail="En ligne, le texte du contrat ne se consulte que clause par clause, pour les "
+                                   "clauses citées dans une réponse.")
     try:
         base.contrat(contrat_id)
     except KeyError as e:

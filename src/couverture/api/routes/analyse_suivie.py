@@ -23,6 +23,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import StreamingResponse
 
 from couverture.api import service
+from couverture.api.acces import limiter_analyses
 from couverture.api.dependances import Pipelines, get_journal, get_pipelines
 from couverture.api.schemas import AnalyseRequest
 from couverture.api.securite import require_api_key
@@ -32,7 +33,7 @@ from couverture.llm import ErreurLLM
 router = APIRouter(prefix="/api/v1", tags=["décisions"], dependencies=[Depends(require_api_key)])
 
 
-@router.post("/analyses/suivi", response_class=StreamingResponse,
+@router.post("/analyses/suivi", response_class=StreamingResponse, dependencies=[Depends(limiter_analyses)],
              responses={200: {"content": {"application/x-ndjson": {}}, "description": "Une ligne JSON par étape."}})
 def analyser_avec_suivi(demande: AnalyseRequest, pipelines: Pipelines = Depends(get_pipelines),  # noqa: B008
                         journal: Journal = Depends(get_journal)) -> StreamingResponse:  # noqa: B008

@@ -49,11 +49,14 @@ export class CouvertureService {
     }
 
 
-    clauses(
-        contratId: string
-    ): Observable<Clause[]> {
-        return this.http.get<Clause[]>(
-            `${API}/contrats/${encodeURIComponent(contratId)}/clauses`
+    /** Une clause citée, pour en lire l'article entier. L'identifiant peut contenir « / » (« 12/batiment »). */
+    clause(
+        contratId: string,
+        clauseId: string
+    ): Observable<Clause> {
+        const chemin = clauseId.split('/').map(encodeURIComponent).join('/');
+        return this.http.get<Clause>(
+            `${API}/contrats/${encodeURIComponent(contratId)}/clauses/${chemin}`
         );
     }
 

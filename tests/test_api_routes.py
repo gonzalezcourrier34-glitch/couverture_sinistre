@@ -174,3 +174,65 @@ def test_une_route_par_fichier():
     for m in pkgutil.iter_modules(routes.__path__):
         module = importlib.import_module(f"couverture.api.routes.{m.name}")
         assert len(module.router.routes) == 1, m.name
+
+
+# --- Mise en ligne : code d'accès, limite d'appels, texte du contrat (7.161) --------------------------------
+
+def basic(code: str) -> dict:
+    import base64
+    return {"Authorization": "Basic " + base64.b64encode(f"visiteur:{code}".encode()).decode()}
+
+
+def test_en_ligne_le_code_d_acces_remplace_la_cle(client, monkeypatch):
+    """Sans proxy pour ajouter la clé, l'écran en ligne s'ouvre avec un code d'accès, demandé par le navigateur."""
+    monkeypatch.setattr(config, "CODE_ACCES", "sésame-42")
+    assert client.get("/health").status_code == 200, "l'hébergeur doit pouvoir vérifier que le service vit"
+    refus = client.get("/api/v1/contrats")
+    assert refus.status_code == 401 and refus.headers["www-authenticate"].startswith("Basic")
+    assert client.get("/api/v1/sante").status_code == 401, "en ligne, rien n'est ouvert sans le code"
+    assert client.get("/api/v1/contrats", headers=basic("faux")).status_code == 401
+    assert client.get("/api/v1/contrats", headers=CLE).status_code == 401, "la clé seule ne suffit pas en ligne"
+    assert client.get("/api/v1/contrats", headers=basic("sésame-42")).status_code == 200, "le code dispense de la clé"
+    monkeypatch.setattr(config, "CODE_ACCES", "")
+    assert client.get("/api/v1/contrats").status_code == 401 and client.get("/api/v1/contrats", headers=CLE).status_code == 200
+
+
+def test_en_ligne_le_contrat_ne_se_telecharge_pas(client, monkeypatch):
+    """Hors ligne, une clause se lit seule ou avec les autres. En ligne : pas la liste, et une à une seulement
+    les clauses que les règles citent, celles qu'une réponse peut montrer."""
+    from couverture import prolog
+    citees = sorted(prolog.clauses_citees(CONTRAT))
+    toutes = client.get(f"/api/v1/contrats/{CONTRAT}/clauses", headers=CLE).json()
+    presentes = {c["id"] for c in toutes}
+    citee = next(c for c in citees if c in presentes)
+    autre = next((c for c in sorted(presentes) if c not in citees), None)
+    une = client.get(f"/api/v1/contrats/{CONTRAT}/clauses/{citee}", headers=CLE)
+    assert une.status_code == 200 and une.json()["id"] == citee
+    if autre:
+        assert client.get(f"/api/v1/contrats/{CONTRAT}/clauses/{autre}", headers=CLE).status_code == 200
+    assert client.get(f"/api/v1/contrats/{CONTRAT}/clauses/inconnue", headers=CLE).status_code == 404
+    avec_barre = next((c for c in citees if "/" in c and c in presentes), None)       # « 12/batiment » : l'identifiant contient une barre
+    if avec_barre:
+        assert client.get(f"/api/v1/contrats/{CONTRAT}/clauses/{avec_barre}", headers=CLE).json()["id"] == avec_barre
+
+    monkeypatch.setattr(config, "CODE_ACCES", "sésame-42")
+    code = basic("sésame-42")
+    assert client.get(f"/api/v1/contrats/{CONTRAT}/clauses", headers=code).status_code == 403
+    assert client.get(f"/api/v1/contrats/{CONTRAT}/clauses/{citee}", headers=code).status_code == 200
+    if autre:
+        assert client.get(f"/api/v1/contrats/{CONTRAT}/clauses/{autre}", headers=code).status_code == 403
+
+
+def test_en_ligne_les_analyses_sont_comptees(client, monkeypatch):
+    from couverture.api import acces
+    monkeypatch.setattr(config, "CODE_ACCES", "sésame-42")
+    monkeypatch.setattr(config, "LIMITE_JOUR", 2)
+    monkeypatch.setitem(acces._compte, "jour", "")
+    corps = {"contrat_id": CONTRAT, "sinistre": "En faisant du vélo, j'ai renversé un piéton qui s'est cassé le poignet."}
+    code = basic("sésame-42")
+    assert [client.post("/api/v1/analyses", json=corps, headers=code).status_code for _ in range(3)] == [200, 200, 429]
+    assert client.post("/api/v1/decisions", json={"contrat_id": CONTRAT, "faits": {"evenement": ["vol"]}},
+                       headers=code).status_code == 200, "le moteur seul n'appelle pas le modèle : il n'est pas compté"
+    monkeypatch.setattr(config, "CODE_ACCES", "")
+    monkeypatch.setitem(acces._compte, "jour", "")
+    assert client.post("/api/v1/analyses", json=corps, headers=CLE).status_code == 200, "hors ligne, pas de limite"

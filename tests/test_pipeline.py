@@ -760,3 +760,37 @@ def test_profil_sans_titres_inchange():
     assert "titres" not in valider_profil({"nom": "x"})
     with pytest.raises(ProfilInvalide):
         valider_profil({"nom": "x", "titres": ["A"]})
+
+
+def test_les_noms_sont_masques_a_l_ingestion(tmp_path, monkeypatch):
+    """7.160 : le texte des conditions générales nomme l'assureur, son assisteur, son adresse ; l'écran et la fiche
+    le citent. Une liste privée, hors du dépôt, dit quoi remplacer ; sans elle, rien ne change."""
+    from couverture import anonymisation
+    monkeypatch.delenv("COUVERTURE_NOMS", raising=False)
+    dossier = tmp_path / "contrats"
+    dossier.mkdir()
+    (dossier / "a.md").write_text(
+        "Article 1 - Objet\nLe contrat est souscrit auprès de Durand\nAssurances S.A., 3 rue des Lilas - 75000 Paris, "
+        "TVA FR 12 345 678.\nArticle 2 - Vol\nNous couvrons le vol. Durand Assistance répond au 01 23 45 67 89 "
+        "et sur www.durand-assurances.example/aide, ou à aide@durand.example.\n", encoding="utf-8")
+    (dossier / "catalogue.json").write_text(json.dumps({"a.md": {"id": "contrat-a"}}), encoding="utf-8")
+
+    base = Base(tmp_path / "base.sqlite")
+    ingerer_dossier(dossier, base)
+    brut = " ".join(c.texte for c in base.clauses("contrat-a"))
+    assert "Durand" in brut and "01 23 45 67 89" in brut, "sans liste privée, le texte n'est pas touché"
+
+    (dossier / anonymisation.FICHIER).write_text(json.dumps({"contrat-a": [
+        {"motif": "Durand Assurances S.A.", "par": "Assureur A"},
+        {"motif": "Durand Assistance", "par": "Assureur A Assistance"},
+        {"motif": r"3 rue des Lilas - \d{5} Paris", "par": "[adresse]", "regex": True},
+        {"motif": r"TVA FR [\d ]+\d", "par": "TVA [numéro]", "regex": True}]}), encoding="utf-8")
+    contrats = ingerer_dossier(dossier, base)          # la liste a changé : le contrat est relu sans --forcer
+    assert {c.id for c in contrats} == {"contrat-a"}, "la liste privée n'est pas prise pour un contrat"
+    clauses = base.clauses("contrat-a")
+    texte = " ".join(c.texte for c in clauses)
+    assert "Durand" not in texte and "durand" not in texte, texte
+    assert "Assureur A, [adresse], TVA [numéro]" in texte, "un nom coupé par une fin de ligne est le même nom"
+    assert "Assureur A Assistance répond au [téléphone] et sur [site], ou à [courriel]." in texte
+    assert "Nous couvrons le vol." in texte and len(clauses) == 2, "le découpage et le reste du texte ne changent pas"
+    assert contrats[0].rapport["noms_masques"] == 7

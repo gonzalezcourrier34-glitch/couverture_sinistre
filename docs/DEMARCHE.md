@@ -4679,6 +4679,30 @@ La section « Tenir des centaines de contrats » est réécrite d'après ce qui 
 
 **Vérifié sur le poste (22 h 05 à 22 h 17).** Les deux sections sont acceptées sans contrôle bloquant ; 223 tests passent avec SWI-Prolog, dont la concordance des deux moteurs sur les biens tous exclus. Les quatre bancs, repassés après ce second changement du moteur et l'ajout de trois biens au vocabulaire commun, rendent exactement les chiffres de 21 h 27 : A partie test 94 %, A jeu fermé 100 %, B 85 % (un couvert à tort, le même), D 96 % (un refus à tort, le même).
 
+### 7.160 Masquer les noms dans le texte des contrats
+
+**Le constat (23 nov.).** Le dépôt est anonyme depuis 7.70 : les assureurs s'y appellent A, B, C, D. Mais la base, elle, contient le texte des conditions générales tel qu'il est : l'assureur, son assisteur, son siège, ses numéros d'immatriculation, ses courriels. C'est ce texte que l'écran et la fiche citent. Une capture, une vidéo ou une mise en ligne montrerait ces noms.
+
+**La règle.** À l'ingestion, après le découpage (pour ne pas le changer), les clauses et le texte brut passent par une liste de remplacements propre à chaque contrat : le nom devient « Assureur A », l'assisteur « Assureur A Assistance », une adresse « [adresse] », un numéro « [numéro] ». Les courriels, les sites et les téléphones sont masqués d'office. La liste contient les vrais noms : elle est hors du dépôt (`data/contrats/noms.prive.json`, que git ignore) ; un modèle sans nom réel est versionné (`noms.exemple.json`). Sans liste, rien ne change. La liste entre dans l'empreinte du contrat : la modifier relance son ingestion.
+
+**Vérifié avant de déposer, sur une copie de la base.** 84, 206, 92 et 136 remplacements pour A, B, C, D. Une recherche des noms, adresses et numéros connus ne trouve plus que des restes sans nom (un médiateur public, le mot « Appartement »). Les 567 citations des règles se retrouvent toutes mot pour mot dans le texte masqué : aucune règle ne cite un nom.
+
+**Ce que ça ne fait pas.** Le texte reste celui de l'assureur : une phrase suffit à le retrouver, et les noms de formules sont des signatures. Masquer le nom de l'auteur ne donne pas le droit de republier son texte. L'anonymisation protège une capture ou une vidéo ; elle ne rend pas le contrat publiable.
+
+### 7.161 Une image pour mettre la démonstration en ligne
+
+**Le besoin (23 nov.).** Le projet sera jugé sans moi : il faut une adresse où l'essayer. Trois choses manquaient, et aucune n'est une question d'hébergeur.
+
+**1. La clé.** En local, l'écran passe par le proxy de développement, qui ajoute la clé de l'API : elle n'entre jamais dans le navigateur. En ligne il n'y a plus de proxy, et une page ouverte dépenserait le crédit Mistral pour n'importe qui. La règle (`api/acces.py`) : quand `COUVERTURE_CODE_ACCES` est défini, toute requête demande ce code par l'authentification « Basic » du navigateur (sa propre fenêtre, une fois ; l'écran n'a pas changé), le code dispense de la clé, et `/health` seul reste ouvert pour l'hébergeur. Les analyses, qui appellent le modèle, sont comptées : `COUVERTURE_LIMITE_JOUR` par jour, puis 429. Le compte est en mémoire, il repart de zéro au redémarrage : c'est un frein, pas une garantie, et le vrai plafond se règle chez le fournisseur du modèle.
+
+**2. Le texte des contrats.** L'écran, pour afficher un article cité, téléchargeait toutes les clauses du contrat. En ligne, cela revenait à publier les conditions générales de quatre assureurs derrière un code. La règle : une route pour une seule clause ; en ligne, la liste complète est fermée (403) et une clause n'est servie que si les règles du contrat la citent (`prolog.clauses_citees` : 175 clauses sur 925). La fiche PDF suit la même règle pour les articles qu'elle joint. Hors ligne, rien ne change.
+
+**3. Un seul conteneur.** L'API sert l'écran construit (`COUVERTURE_FRONT`) : une adresse, un service à payer ou à ne pas payer. `deploiement/Dockerfile` construit l'écran, puis prépare la base du poste (`nettoyer_base.py` retire le journal des analyses locales et le texte brut des contrats), et n'emporte ni les PDF, ni la liste des noms, ni les propositions de rédaction. L'image contient encore le texte des clauses : elle va dans un registre privé.
+
+**Trouvé en l'écrivant.** L'image d'origine installe le paquet par `pip install .` : le code est alors copié dans les bibliothèques de Python, et il cherche `regles/` et `config/` à côté de lui, où ils ne sont pas. La nouvelle image installe en mode éditable. L'ancienne n'a pas été corrigée ni réessayée : à vérifier avant de s'en resservir.
+
+**Ce qui n'est pas vérifié ici.** Les routes HTTP et l'écran ne s'exécutent pas dans l'environnement de l'assistant : les tests ajoutés (code d'accès, clause seule, limite) et la construction de l'image se lancent sur le poste.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
@@ -4880,3 +4904,4 @@ Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
 154. Une décision juste ne prouve pas une règle juste : lire aussi la phrase et la clause qui l'accompagnent.
 156. Un défaut corrigé par ses effets revient : chercher pourquoi le moteur a laissé passer, pas seulement quelle règle l'a déclenché.
 155. Avant d'étendre une règle à d'autres contrats, comparer les décisions avant et après sur des faits tirés au hasard : c'est ce qui a montré qu'elle était fausse.
+157. Mettre en ligne change qui peut appeler quoi : relire chaque route en se demandant ce qu'elle donne à un inconnu, avant de choisir l'hébergeur.

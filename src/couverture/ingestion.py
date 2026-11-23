@@ -11,6 +11,7 @@ import json
 import re
 from pathlib import Path
 
+from . import anonymisation
 from .base import Base, Contrat
 from .chargement import charger_lignes
 from .controles import controler
@@ -33,14 +34,18 @@ def charger_catalogue(dossier: Path) -> dict:
 
 
 def ingerer_fichier(fichier: str | Path, base: Base, meta: dict | None = None, forcer: bool = False,
-                    profil: dict | None = None) -> Contrat:
+                    profil: dict | None = None, noms: dict | None = None) -> Contrat:
     """Lit, découpe, contrôle et enregistre un contrat.
     `profil` : règles propres à l'assureur (voir `profils.py`), qui font partie de l'empreinte :
-    changer le profil relance le découpage."""
+    changer le profil relance le découpage.
+    `noms` : la liste privée des noms à masquer (voir `anonymisation.py`) ; elle aussi entre dans l'empreinte.
+    Le masquage vient après le découpage, pour ne pas le changer : il porte sur les clauses et sur le texte brut."""
     fichier = Path(fichier)
     meta = meta or {}
     contrat_id = meta.get("id") or identifiant(fichier)
-    contenu = fichier.read_bytes() + json.dumps(profil or {}, sort_keys=True).encode()
+    regles_noms = anonymisation.motifs(noms or {}, contrat_id)
+    contenu = (fichier.read_bytes() + json.dumps(profil or {}, sort_keys=True).encode()
+               + anonymisation.empreinte(noms or {}, contrat_id).encode())
     empreinte = hashlib.sha256(contenu).hexdigest()[:16]
 
     if not forcer and base.empreinte(contrat_id) == empreinte:
@@ -48,7 +53,10 @@ def ingerer_fichier(fichier: str | Path, base: Base, meta: dict | None = None, f
 
     lignes = charger_lignes(fichier, (profil or {}).get("colonnes", 1))
     clauses = segmenter_lignes(lignes, profil)
+    masques = anonymisation.masquer_clauses(clauses, regles_noms)
     rapport = controler(clauses)
+    if regles_noms:
+        rapport["noms_masques"] = masques
     contrat = Contrat(
         id=contrat_id,
         assureur=meta.get("assureur", ""),
@@ -59,7 +67,7 @@ def ingerer_fichier(fichier: str | Path, base: Base, meta: dict | None = None, f
         statut=rapport["statut"],
         rapport=rapport,
     )
-    base.enregistrer(contrat, clauses, "\n".join(l.texte for l in lignes))
+    base.enregistrer(contrat, clauses, anonymisation.masquer("\n".join(l.texte for l in lignes), regles_noms)[0])
     return contrat
 
 
@@ -77,11 +85,12 @@ def ingerer_dossier(dossier: str | Path, base: Base, forcer: bool = False, barre
 
     dossier = Path(dossier)
     catalogue = charger_catalogue(dossier)
+    noms = anonymisation.charger_noms(dossier)
     contrats = []
     for f in fichiers_contrats(dossier):
         meta = catalogue.get(f.name) or {}
         profil = charger_profil(dossier.parent / "profils", meta.get("profil")) if meta.get("profil") else None
-        contrats.append(ingerer_fichier(f, base, meta, forcer=forcer, profil=profil))
+        contrats.append(ingerer_fichier(f, base, meta, forcer=forcer, profil=profil, noms=noms))
         if barre is not None:
             barre.avancer(f.name)
     gardes = {c.id for c in contrats}

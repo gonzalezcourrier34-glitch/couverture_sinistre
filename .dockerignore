@@ -1,0 +1,16 @@
+# Ce que la construction d'une image n'a pas à lire (ni à envoyer au démon Docker).
+.git
+.venv
+.env
+.pytest_cache
+.ruff_cache
+**/__pycache__
+perso
+frontend/node_modules
+frontend/dist
+frontend/.angular
+data/debug
+data/mlflow
+data/bancs
+data/contrats/*.prive.*
+deploiement/*.env

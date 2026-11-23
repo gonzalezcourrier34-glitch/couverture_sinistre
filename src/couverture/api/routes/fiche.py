@@ -10,6 +10,8 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 
+from couverture import prolog
+from couverture.api import config
 from couverture.api.dependances import get_base
 from couverture.api.schemas import FicheRequest
 from couverture.api.securite import require_api_key
@@ -36,6 +38,10 @@ def fiche(demande: FicheRequest, base: Base = Depends(get_base)) -> Response:  #
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e).strip("'\"")) from e
     reponse = demande.reponse.model_dump(mode="json")
     cites = {c["clause_id"] for c in reponse["citations"]}
+    if config.CODE_ACCES:
+        # En ligne, la réponse vient du navigateur : elle ne fait joindre que des clauses que les règles citent,
+        # pas n'importe quel article du contrat (7.161).
+        cites &= prolog.clauses_citees(demande.contrat_id)
     clauses = {c.id: {"texte": c.texte, "chemin": c.chemin, "pages": c.pages}
                for c in base.clauses(demande.contrat_id) if c.id in cites}
     pdf = fiche_pdf(demande.sinistre.strip(), reponse, contrat, clauses=clauses)

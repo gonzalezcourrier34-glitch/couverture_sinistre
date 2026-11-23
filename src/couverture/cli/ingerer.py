@@ -22,6 +22,8 @@ def executer(a, base: Base, donnees: Path) -> int:
     barre.terminer()
     for c in contrats:
         print(f"{c.statut:<11} {c.id:<28} {c.rapport.get('nb_clauses', 0):>4} clauses  {c.rapport.get('par_type', {})}")
+        if "noms_masques" in c.rapport:
+            print(f"{'':<11} {c.rapport['noms_masques']} nom(s), adresse(s) ou numéro(s) masqué(s)")
         for alerte in c.rapport.get("alertes", []):
             print(f"{'':<11} ! {alerte}")
     if any(c.statut != "OK" for c in base.contrats()):
