@@ -1,0 +1,419 @@
+{
+  "meta": {
+    "article": "3.3.1",
+    "modele": "mistral:mistral-large-4-0",
+    "date": "2026-11-24",
+    "consigne": "redaction-regles v13"
+  },
+  "proposition": {
+    "evenements": [
+      "bris"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "dommages_biens_confort",
+        "nom": "Dommages aux biens (Option Confort)",
+        "article": "3.3.1.1",
+        "texte": "La Compagnie couvre tout bris ou destruction accidentel résultant d'une chute, d'un choc ou de la pénétration d'un corps étranger et qui rend nécessaire la réparation ou le remplacement des",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "bris"
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [
+          {
+            "condition": {
+              "f": [
+                "plainte_deposee",
+                "oui"
+              ]
+            },
+            "article": "3.3.1.7",
+            "texte": "déposer une plainte auprès du Parquet",
+            "lien_causal": false
+          }
+        ],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "proprietaire",
+                "hote"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.3.1.3",
+            "texte": "les objets et matériels dont l'Assuré n'est pas propriétaire"
+          },
+          {
+            "condition": {
+              "f": [
+                "usage_professionnel",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.3.1.3",
+            "texte": "les objets et matériels utilisés à des fins professionnelles"
+          },
+          {
+            "condition": {
+              "f": [
+                "bien",
+                "vehicule_moteur"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.3.1.3",
+            "texte": "les dommages aux véhicules automoteurs"
+          },
+          {
+            "condition": {
+              "f": [
+                "vice_defaut_connu",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.3.1.3",
+            "texte": "les dommages dus à des vices ou défauts qui existaient à la date d'effet de la présente assurance et qui étaient connus de l'Assuré ou de ses mandataires"
+          },
+          {
+            "condition": {
+              "f": [
+                "manque_entretien",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.3.1.3.7",
+            "texte": "les dommages qui sont la conséquence directe de l'usure, de la détérioration lente, de la vétusté ou d'un défaut d'entretien"
+          },
+          {
+            "condition": {
+              "f": [
+                "fonctionnement_defectueux",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.3.1.3",
+            "texte": "d'un fonctionnement défectueux"
+          },
+          {
+            "condition": {
+              "f": [
+                "garantie_fabricant",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.3.1.3",
+            "texte": "les dommages dont le fabricant ou le fournisseur est légalement ou contractuellement responsable"
+          },
+          {
+            "condition": {
+              "f": [
+                "dommage_esthetique",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.3.1.3",
+            "texte": "les dommages d'ordre purement esthétique"
+          },
+          {
+            "condition": {
+              "f": [
+                "auteur",
+                "assure"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.3.1.3.17",
+            "texte": "les vols commis par ou avec la complicité de l'Assuré"
+          }
+        ],
+        "limites": [
+          {
+            "article": "3.3.1.4.1",
+            "texte": "Le calcul de l'indemnité tient compte d'une vétusté de 10% par année d'ancienneté révolue, sans que cette vétusté ne puisse dépasser 80%",
+            "montant": "vétusté 10%/an max 80%"
+          },
+          {
+            "article": "3.3.1.4",
+            "texte": "Pour le matériel d'assistance médicale de type pompe à oxygène ou à insuline, et prothèse auditive, le calcul de l'indemnité tient compte d'une vétusté de 20% par année d'ancienneté révolue",
+            "montant": "vétusté 20%/an"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [
+      {
+        "concept": "lieu_assure",
+        "condition": {
+          "f": [
+            "pays",
+            "monde"
+          ]
+        },
+        "article": "3.3.1.2",
+        "texte": "La garantie ainsi définie s'exerce dans le monde entier"
+      }
+    ],
+    "vocabulaire_manquant": [
+      {
+        "variable": "pays",
+        "valeurs": [
+          "monde"
+        ],
+        "libelle": "Lieu monde entier",
+        "question": "Le sinistre s'est-il produit hors de l'Europe ou dans un pays spécifique ?",
+        "pourquoi": "extension territoriale mondiale de la garantie",
+        "plus_proche": "pays : valeurs par pays",
+        "aide": {
+          "monde": "partout dans le monde, quel que soit le pays"
+        }
+      }
+    ],
+    "non_traduit": [
+      {
+        "article": "3.3.1.3.3",
+        "texte": "les dommages aux voiles des matériels utilisés dans le cadre de sports nautiques, aériens ou de glisse",
+        "pourquoi": "pas de variable pour voiles de sport"
+      },
+      {
+        "article": "3.3.1.3.5",
+        "texte": "les dommages aux vêtements et accessoires (casque, lunettes, gants, bottes, combinaison, …)",
+        "pourquoi": "pas de variable pour vêtements/accessoires"
+      },
+      {
+        "article": "3.3.1.3.7",
+        "texte": "de la pluie, de la grêle et de toute autre manifestation atmosphérique",
+        "pourquoi": "pas de valeur atmosphérique dans cause_dommage"
+      },
+      {
+        "article": "3.3.1.3.8",
+        "texte": "les frais exposés pour réparer des défauts de fonctionnement, sauf si ces défauts sont la conséquence d'une perte ou d'un dommage indemnisable causé aux matériels assurés",
+        "pourquoi": "condition complexe"
+      },
+      {
+        "article": "3.3.1.3.9",
+        "texte": "les frais d'entretien des matériels assurés, y compris le coût des pièces remplacées pendant les travaux d'entretien",
+        "pourquoi": "frais d'entretien non couverts"
+      },
+      {
+        "article": "3.3.1.3.11",
+        "texte": "les pertes indirectes de quelque nature que ce soit",
+        "pourquoi": "pas de variable perte_indirecte"
+      },
+      {
+        "article": "3.3.1.3.12",
+        "texte": "les vices de sonorité, la casse des cordes ainsi que les dommages aux peaux et aux anches des instruments de musique",
+        "pourquoi": "détails spécifiques instruments"
+      },
+      {
+        "article": "3.3.1.3.13",
+        "texte": "les dommages aux instruments de musique survenus en cours de transport et résultant d'une absence d'emballage ou d'un emballage inapproprié",
+        "pourquoi": "condition transport spécifique"
+      },
+      {
+        "article": "3.3.1.3.15",
+        "texte": "les dommages d'origine électrique",
+        "pourquoi": "pas de variable cause électrique distincte"
+      },
+      {
+        "article": "3.3.1.3.16",
+        "texte": "les dommages d'un montant inférieur à 100 €",
+        "pourquoi": "pas de variable montant du dommage"
+      },
+      {
+        "article": "3.3.1.5",
+        "texte": "Mesures obligatoires de sécurité lorsque les objets se trouvent hors de la surveillance directe et immédiate de l'Assuré",
+        "pourquoi": "conditions de sécurité complexes (horaires, effraction, etc.)"
+      },
+      {
+        "article": "3.3.1.6",
+        "texte": "Pour les risques autres que ceux d'incendie et d'explosion, les effets du contrat sont suspendus de plein droit pendant la durée de l'évacuation des locaux",
+        "pourquoi": "suspension de garantie, pas exclusion"
+      },
+      {
+        "article": "3.3.1.8",
+        "texte": "Aucune réparation ne peut être entreprise sans l'accord formel de la Compagnie",
+        "pourquoi": "obligation préalable complexe"
+      },
+      {
+        "article": "3.3.1.9",
+        "texte": "En cas de récupération, en totalité ou en partie, d'objets volés, l'Assuré doit en aviser immédiatement la Compagnie",
+        "pourquoi": "procédure post-sinistre"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "pays = monde : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.3.1`) ou à remplacer"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 3.3.1.3 (et non 3.3.1.3.1)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 3.3.1.3 (et non 3.3.1.3.2)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 3.3.1.3 (et non 3.3.1.3.4)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 3.3.1.3 (et non 3.3.1.3.6)"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "citation",
+      "message": "exclusion : article 3.3.1.3.7 inconnu"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 3.3.1.3 (et non 3.3.1.3.7)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 3.3.1.3 (et non 3.3.1.3.10)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 3.3.1.3 (et non 3.3.1.3.14)"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "citation",
+      "message": "exclusion : article 3.3.1.3.17 inconnu"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "citation",
+      "message": "limite : article 3.3.1.4.1 inconnu"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "limite : citation rattachée à 3.3.1.4 (et non 3.3.1.4.2)"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "portée",
+      "message": "exclusion « les dommages aux véhicules automoteurs » : ne vise que vehicule_moteur, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (3.3.1.3) : « les vols commis par ou avec la complicité de ou du : n Preneur d’assurance, son conjoint, leurs asce »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (3.3.1.3) : « et 3.3.1.3.14, la Compagnie est tenue de payer une indemnité lorsqu’elles ont été endommagées à la s »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (3.3.1.3.3) : « les dommages aux voiles des matériels utilisés dans le cadre de sports nautiques, aériens ou de glis » — pas de variable pour voiles de sport"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (3.3.1.3.5) : « les dommages aux vêtements et accessoires (casque, lunettes, gants, bottes, combinaison, …) » — pas de variable pour vêtements/accessoires"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (3.3.1.3.7) : « de la pluie, de la grêle et de toute autre manifestation atmosphérique » — pas de valeur atmosphérique dans cause_dommage"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (3.3.1.3.8) : « les frais exposés pour réparer des défauts de fonctionnement, sauf si ces défauts sont la conséquenc » — condition complexe"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (3.3.1.3.9) : « les frais d'entretien des matériels assurés, y compris le coût des pièces remplacées pendant les tra » — frais d'entretien non couverts"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (3.3.1.3.11) : « les pertes indirectes de quelque nature que ce soit » — pas de variable perte_indirecte"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (3.3.1.3.12) : « les vices de sonorité, la casse des cordes ainsi que les dommages aux peaux et aux anches des instru » — détails spécifiques instruments"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (3.3.1.3.13) : « les dommages aux instruments de musique survenus en cours de transport et résultant d'une absence d' » — condition transport spécifique"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (3.3.1.3.15) : « les dommages d'origine électrique » — pas de variable cause électrique distincte"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (3.3.1.3.16) : « les dommages d'un montant inférieur à 100 € » — pas de variable montant du dommage"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (3.3.1.5) : « Mesures obligatoires de sécurité lorsque les objets se trouvent hors de la surveillance directe et i » — conditions de sécurité complexes (horaires, effraction, etc.)"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (3.3.1.6) : « Pour les risques autres que ceux d'incendie et d'explosion, les effets du contrat sont suspendus de  » — suspension de garantie, pas exclusion"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (3.3.1.8) : « Aucune réparation ne peut être entreprise sans l'accord formel de la Compagnie » — obligation préalable complexe"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "déclaré non traduit (3.3.1.9) : « En cas de récupération, en totalité ou en partie, d'objets volés, l'Assuré doit en aviser immédiatem » — procédure post-sinistre"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "concept",
+      "message": "extension d'un concept inconnu : lieu_assure (concepts de ce contrat : batiment_designe, incendie, tempete, vol_simple)"
+    }
+  ]
+}

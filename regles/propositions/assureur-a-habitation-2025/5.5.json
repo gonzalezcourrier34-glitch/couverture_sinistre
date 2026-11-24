@@ -1,0 +1,250 @@
+{
+  "meta": {
+    "article": "5.5",
+    "modele": "mistral:mistral-large-4-0",
+    "date": "2026-11-24",
+    "consigne": "redaction-regles v13"
+  },
+  "proposition": {
+    "evenements": [
+      "responsabilite"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "rc_vie_privee_activites_sportives_loisirs",
+        "nom": "RC Vie Privée - Activités sportives et de loisirs",
+        "article": "5.5",
+        "texte": "Nous vous assurons pour les dommages causés par : • la pratique d'activités sportives ou d'agrément • l'utilisation à des fins exclusivement sportives ou récréatives d'aéromodèles (y compris les drones dont la masse maximale au décollage est inferieure à 150 kg), pour autant qu'ils ne volent pas dans un rayon de 3 km autour des aéroports ou des aérodromes civils et militaires et qu'ils ne volent pas au-dessus des complexes industriels, des prisons, des terminaux LNG, des centrales nucléaires, ou d'un rassemblement public de personnes en plein air • les enfants assurés à l'occasion de services même rémunérés",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "responsabilite"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "origine_rc",
+                  "activite_sportive_loisir"
+                ]
+              },
+              {
+                "f": [
+                  "origine_rc",
+                  "aeromodele"
+                ]
+              },
+              {
+                "f": [
+                  "origine_rc",
+                  "enfant_service_remunere"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "si": [
+                {
+                  "f": [
+                    "origine_rc",
+                    "aeromodele"
+                  ]
+                },
+                {
+                  "et": [
+                    {
+                      "f": [
+                        "aeromodele_rayon_3km_aeroport",
+                        "non"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "aeromodele_au_dessus_zone_interdite",
+                        "non"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "article": "5.5",
+            "texte": "pour autant qu'ils ne volent pas dans un rayon de 3 km autour des aéroports ou des aérodromes civils et militaires et qu'ils ne volent pas au-dessus des complexes industriels, des prisons, des terminaux LNG, des centrales nucléaires, ou d'un rassemblement public de personnes en plein air"
+          },
+          {
+            "condition": {
+              "si": [
+                {
+                  "et": [
+                    {
+                      "f": [
+                        "origine_rc",
+                        "aeromodele"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "est_drone",
+                        "oui"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "f": [
+                    "masse_aeromodele",
+                    "moins_150kg"
+                  ]
+                }
+              ]
+            },
+            "article": "5.5",
+            "texte": "y compris les drones dont la masse maximale au décollage est inferieure à 150 kg"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "origine_rc",
+                "chasse_sport"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "5.5-a",
+            "texte": "Nous n'indemnisons pas les dommages causés par la pratique de la chasse."
+          }
+        ],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "origine_rc",
+        "valeurs": [
+          "activite_sportive_loisir",
+          "aeromodele",
+          "enfant_service_remunere"
+        ],
+        "libelle": "Origine RC",
+        "question": "Qu'est-ce qui a causé le dommage à l'autre personne ?",
+        "pourquoi": "Nouvelles origines couvertes par l'article 5.5 : activités sportives ou de loisir, aéromodèles, enfants assurés en service rémunéré",
+        "plus_proche": "origine_rc : les valeurs existantes ne distinguent pas ces activités spécifiques de la vie privée",
+        "aide": {
+          "activite_sportive_loisir": "le dommage vient de la pratique d'une activité sportive ou d'agrément (vélo, ski, jeu, bricolage, etc.)",
+          "aeromodele": "le dommage vient de l'utilisation d'un aéromodèle ou d'un drone",
+          "enfant_service_remunere": "le dommage a été causé par un enfant assuré à l'occasion d'un service même rémunéré"
+        },
+        "parent": "personne"
+      },
+      {
+        "variable": "est_drone",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Aéromodèle est un drone",
+        "question": "L'aéromodèle est-il un drone ?",
+        "pourquoi": "L'article 5.5 applique une limite de masse spécifique aux drones",
+        "plus_proche": "aucune variable existante ne distingue le drone des autres aéromodèles",
+        "aide": {
+          "oui": "il s'agit d'un drone",
+          "non": "il s'agit d'un autre type d'aéromodèle (avion télécommandé, hélicoptère, etc.)"
+        }
+      },
+      {
+        "variable": "masse_aeromodele",
+        "valeurs": [
+          "moins_150kg",
+          "plus_150kg"
+        ],
+        "libelle": "Masse au décollage",
+        "question": "Quelle est la masse maximale au décollage de l'aéromodèle ?",
+        "pourquoi": "Condition de l'article 5.5 : les drones ne sont couverts que si leur masse est inférieure à 150 kg",
+        "plus_proche": "aucune variable existante ne mesure la masse d'un aéromodèle",
+        "aide": {
+          "moins_150kg": "la masse maximale au décollage est inférieure à 150 kg",
+          "plus_150kg": "la masse maximale au décollage est de 150 kg ou plus"
+        }
+      },
+      {
+        "variable": "aeromodele_rayon_3km_aeroport",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Aéromodèle près aéroport",
+        "question": "L'aéromodèle volait-il dans un rayon de 3 km autour d'un aéroport ou aérodrome civil ou militaire ?",
+        "pourquoi": "Condition de l'article 5.5 : exclusion si vol dans ce rayon",
+        "plus_proche": "aucune variable existante ne couvre cette restriction géographique spécifique",
+        "aide": {
+          "oui": "l'aéromodèle volait à moins de 3 km d'un aéroport ou aérodrome",
+          "non": "l'aéromodèle volait à plus de 3 km de tout aéroport ou aérodrome"
+        }
+      },
+      {
+        "variable": "aeromodele_au_dessus_zone_interdite",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Aéromodèle sur zone interdite",
+        "question": "L'aéromodèle volait-il au-dessus d'un complexe industriel, d'une prison, d'un terminal LNG, d'une centrale nucléaire ou d'un rassemblement public de personnes en plein air ?",
+        "pourquoi": "Condition de l'article 5.5 : exclusion si vol au-dessus de ces zones",
+        "plus_proche": "aucune variable existante ne couvre ces zones interdites spécifiques",
+        "aide": {
+          "oui": "l'aéromodèle volait au-dessus de l'une de ces zones interdites",
+          "non": "l'aéromodèle ne volait pas au-dessus de ces zones"
+        }
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "origine_rc = activite_sportive_loisir : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "origine_rc = aeromodele : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "origine_rc = enfant_service_remunere : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "aeromodele_rayon_3km_aeroport = non : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "aeromodele_au_dessus_zone_interdite = non : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "est_drone = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.5`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "masse_aeromodele = moins_150kg : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.5`) ou à remplacer"
+    }
+  ]
+}

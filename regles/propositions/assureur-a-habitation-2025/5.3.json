@@ -1,0 +1,673 @@
+{
+  "meta": {
+    "article": "5.3",
+    "modele": "mistral:mistral-large-4-0",
+    "date": "2026-11-24",
+    "consigne": "redaction-regles v13"
+  },
+  "proposition": {
+    "evenements": [
+      "responsabilite"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "rc_vie_privee_animaux",
+        "nom": "RC Vie Privée - Animaux et attelages",
+        "article": "5.3",
+        "texte": "Nous vous assurons pour les dommages causés : • par les animaux dont vous avez la garde en dehors de toute activité professionnelle (les chiens de garde utilisés pour la garde de bâtiments à usage professionnel sont couverts) • aux animaux appartenant à des tiers et dont vous avez la garde en dehors de toute activité professionnelle • par les chevaux de selle, poneys et attelages dont vous êtes propriétaire, détenteur ou gardien. La garantie est acquise pour 5 chevaux de selle dont vous êtes propriétaire, ou plus si leur nombre est mentionné en conditions particulières. De plus, nous couvrons les dommages causés : • lorsque vous participez, à titre non professionnel, avec les chevaux ou attelages assurés, à des épreuves équestres (courses, jumpings, concours de dressage) ainsi que lors de leur préparation • lors du transport à titre gracieux dans les attelages assurés, étant entendu que le nombre de personnes transportées ne peut dépasser la capacité de transport de l’attelage concerné • par les objets transportés ou par leur chute",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "responsabilite"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "et": [
+                  {
+                    "f": [
+                      "garde_animal",
+                      "oui"
+                    ]
+                  },
+                  {
+                    "non": {
+                      "f": [
+                        "activite_garde_professionnelle",
+                        "oui"
+                      ]
+                    }
+                  },
+                  {
+                    "non": {
+                      "f": [
+                        "type_animal",
+                        "chien_garde_pro"
+                      ]
+                    }
+                  },
+                  {
+                    "ou": [
+                      {
+                        "f": [
+                          "origine_rc",
+                          "animal_compagnie"
+                        ]
+                      },
+                      {
+                        "f": [
+                          "origine_rc",
+                          "animal_autre"
+                        ]
+                      },
+                      {
+                        "f": [
+                          "type_animal",
+                          "autre_animal"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "f": [
+                  "type_animal",
+                  "chien_garde_pro"
+                ]
+              },
+              {
+                "et": [
+                  {
+                    "f": [
+                      "type_animal",
+                      "cheval_selle"
+                    ]
+                  },
+                  {
+                    "f": [
+                      "proprietaire_detenteur_gardien",
+                      "oui"
+                    ]
+                  }
+                ]
+              },
+              {
+                "et": [
+                  {
+                    "f": [
+                      "type_animal",
+                      "poney"
+                    ]
+                  },
+                  {
+                    "f": [
+                      "proprietaire_detenteur_gardien",
+                      "oui"
+                    ]
+                  }
+                ]
+              },
+              {
+                "et": [
+                  {
+                    "f": [
+                      "type_animal",
+                      "attelage"
+                    ]
+                  },
+                  {
+                    "f": [
+                      "proprietaire_detenteur_gardien",
+                      "oui"
+                    ]
+                  }
+                ]
+              },
+              {
+                "et": [
+                  {
+                    "f": [
+                      "bien",
+                      "animal"
+                    ]
+                  },
+                  {
+                    "f": [
+                      "proprietaire",
+                      "hote"
+                    ]
+                  },
+                  {
+                    "f": [
+                      "garde_animal",
+                      "oui"
+                    ]
+                  },
+                  {
+                    "non": {
+                      "f": [
+                        "activite_garde_professionnelle",
+                        "oui"
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "et": [
+                  {
+                    "f": [
+                      "auteur",
+                      "personnel_prive"
+                    ]
+                  },
+                  {
+                    "ou": [
+                      {
+                        "f": [
+                          "utilisation_besoins_personnels",
+                          "oui"
+                        ]
+                      },
+                      {
+                        "f": [
+                          "garde_animal_prepose",
+                          "oui"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "epreuve_equestre",
+                "oui"
+              ]
+            },
+            "article": "5.3",
+            "texte": "lorsque vous participez, à titre non professionnel, avec les chevaux ou attelages assurés, à des épreuves équestres (courses, jumpings, concours de dressage) ainsi que lors de leur préparation"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "transport_gracieux",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "capacite_attelage_respectee",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "article": "5.3",
+            "texte": "lors du transport à titre gracieux dans les attelages assurés, étant entendu que le nombre de personnes transportées ne peut dépasser la capacité de transport de l’attelage concerné"
+          },
+          {
+            "condition": {
+              "f": [
+                "objet_transporte_cause_dommage",
+                "oui"
+              ]
+            },
+            "article": "5.3",
+            "texte": "par les objets transportés ou par leur chute"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "type_animal",
+                    "gibier"
+                  ]
+                },
+                {
+                  "f": [
+                    "type_animal",
+                    "animal_sauvage"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "5.3-a",
+            "texte": "causés par le gibier ou les animaux sauvages, domptés ou non, à l’exception des cervidés"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "auteur",
+                    "personnel_prive"
+                  ]
+                },
+                {
+                  "f": [
+                    "age_prepose",
+                    "moins_14_ans"
+                  ]
+                },
+                {
+                  "f": [
+                    "lieu",
+                    "voie_publique"
+                  ]
+                },
+                {
+                  "f": [
+                    "accompagnement_adulte",
+                    "non"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "5.3-a",
+            "texte": "causés par un préposé de l’assuré, âgé de moins de 14 ans, quand il conduit des animaux ou des attelages sur la voie publique, sans être accompagné par un adulte"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "lieu",
+                    "voie_publique"
+                  ]
+                },
+                {
+                  "f": [
+                    "dispositifs_securite_vehicule",
+                    "non"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "5.3-a",
+            "texte": "résultant du fait que les véhicules, circulant sur la voie publique, ne sont pas munis des dispositifs de sécurité prévus par la règlementation sur la circulation routière"
+          },
+          {
+            "condition": {
+              "f": [
+                "dommage_objet_transporte",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "5.3-a",
+            "texte": "aux objets et marchandises transportés"
+          }
+        ],
+        "limites": [
+          {
+            "article": "5.3",
+            "texte": "La garantie est acquise pour 5 chevaux de selle dont vous êtes propriétaire, ou plus si leur nombre est mentionné en conditions particulières",
+            "montant": "5 chevaux de selle (ou plus selon conditions particulières)"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "garde_animal",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Garde de l'animal",
+        "question": "Avez-vous la garde de cet animal ?",
+        "pourquoi": "La garantie couvre les animaux dont l'assuré a la garde",
+        "plus_proche": "bien_confie : concerne le bien endommagé confié, pas l'animal cause du dommage",
+        "aide": {
+          "oui": "l'animal était sous ma garde, je m'en occupais, il était chez moi",
+          "non": "je n'avais pas la garde de cet animal"
+        }
+      },
+      {
+        "variable": "activite_garde_professionnelle",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Garde professionnelle",
+        "question": "La garde de cet animal relève-t-elle d'une activité professionnelle ?",
+        "pourquoi": "Exclusion de la garde professionnelle (sauf chiens de garde pro)",
+        "plus_proche": "usage_professionnel : concerne l'usage du bien endommagé, pas l'activité de garde de l'animal",
+        "aide": {
+          "oui": "je gardais cet animal dans le cadre de mon travail, mon activité professionnelle",
+          "non": "je gardais cet animal à titre privé, personnel"
+        }
+      },
+      {
+        "variable": "type_animal",
+        "valeurs": [
+          "chien_garde_pro",
+          "cheval_selle",
+          "poney",
+          "attelage",
+          "gibier",
+          "animal_sauvage",
+          "cervide",
+          "autre_animal"
+        ],
+        "libelle": "Type d'animal",
+        "question": "De quel animal ou attelage s'agit-il ?",
+        "pourquoi": "Distinguer les catégories couvertes (chevaux, attelages, chiens de garde pro) et exclues (gibier, animaux sauvages)",
+        "plus_proche": "origine_rc : animal_compagnie/animal_autre ne distinguent pas chevaux, attelages, gibier, cervidés",
+        "aide": {
+          "chien_garde_pro": "c'était un chien de garde utilisé pour la garde d'un bâtiment à usage professionnel",
+          "cheval_selle": "c'était un cheval de selle",
+          "poney": "c'était un poney",
+          "attelage": "c'était un attelage (véhicule hippomobile)",
+          "gibier": "c'était du gibier (cerf, sanglier, lièvre chassé)",
+          "animal_sauvage": "c'était un animal sauvage non chassé (renard, blaireau, etc.)",
+          "cervide": "c'était un cervidé (cerf, chevreuil, daim)",
+          "autre_animal": "c'était un autre animal domestique (chien, chat, etc.)"
+        }
+      },
+      {
+        "variable": "proprietaire_detenteur_gardien",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Propriété de l'animal",
+        "question": "Êtes-vous propriétaire, détenteur ou gardien de ce cheval, poney ou attelage ?",
+        "pourquoi": "La garantie pour chevaux/poney/attelages exige d'être propriétaire, détenteur ou gardien",
+        "plus_proche": "proprietaire : concerne les biens endommagés, pas l'animal cause du dommage",
+        "aide": {
+          "oui": "j'étais propriétaire, détenteur ou gardien de ce cheval/poney/attelage",
+          "non": "je n'étais ni propriétaire ni détenteur ni gardien"
+        }
+      },
+      {
+        "variable": "epreuve_equestre",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Épreuve équestre",
+        "question": "Participez-vous à une épreuve équestre (course, jumping, dressage) ou à l'entraînement avec les chevaux/attelages assurés ?",
+        "pourquoi": "Extension de garantie pour les épreuves équestres non professionnelles",
+        "plus_proche": "aucune variable existante ne décrit les activités équestres",
+        "aide": {
+          "oui": "je participais à une course, un jumping, un concours de dressage ou à la préparation",
+          "non": "ce n'était pas une épreuve équestre ni un entraînement"
+        }
+      },
+      {
+        "variable": "transport_gracieux",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Transport gracieux",
+        "question": "S'agit-il d'un transport à titre gracieux (gratuit) dans l'attelage assuré ?",
+        "pourquoi": "Extension pour le transport gratuit dans les attelages",
+        "plus_proche": "aucune variable existante ne décrit le transport gracieux",
+        "aide": {
+          "oui": "je transportais gratuitement des personnes dans mon attelage",
+          "non": "ce n'était pas un transport gratuit"
+        }
+      },
+      {
+        "variable": "capacite_attelage_respectee",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Capacité attelage",
+        "question": "Le nombre de personnes transportées ne dépasse-t-il pas la capacité de transport de l'attelage ?",
+        "pourquoi": "Condition pour le transport gracieux dans l'attelage",
+        "plus_proche": "aucune variable existante ne concerne la capacité de transport de l'attelage",
+        "aide": {
+          "oui": "le nombre de passagers était dans la limite prévue pour l'attelage",
+          "non": "il y avait trop de passagers par rapport à la capacité de l'attelage"
+        }
+      },
+      {
+        "variable": "objet_transporte_cause_dommage",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Objet transporté cause",
+        "question": "Les dommages ont-ils été causés par les objets transportés ou par leur chute ?",
+        "pourquoi": "Couverture des dommages causés par les objets transportés (à des tiers)",
+        "plus_proche": "aucune variable existante ne distingue la cause du dommage par objet transporté",
+        "aide": {
+          "oui": "un objet transporté est tombé et a causé des dégâts à un tiers, ou a heurté quelqu'un",
+          "non": "les objets transportés n'ont pas causé le dommage"
+        }
+      },
+      {
+        "variable": "dommage_objet_transporte",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Dommage à l'objet transporté",
+        "question": "S'agit-il de dommages aux objets ou marchandises transportés eux-mêmes ?",
+        "pourquoi": "Exclusion des dommages subis par les objets transportés (contrairement aux dommages causés par eux)",
+        "plus_proche": "bien : liste les types de biens mais pas spécifiquement 'objet transporté' comme exclusion",
+        "aide": {
+          "oui": "c'est la marchandise ou l'objet transporté qui est endommagé",
+          "non": "ce n'est pas l'objet transporté qui est endommagé"
+        }
+      },
+      {
+        "variable": "age_prepose",
+        "valeurs": [
+          "moins_14_ans",
+          "14_ans_et_plus"
+        ],
+        "libelle": "Âge du préposé",
+        "question": "Quel est l'âge du préposé auteur du dommage ?",
+        "pourquoi": "Exclusion pour les préposés de moins de 14 ans conduisant sur la voie publique sans adulte",
+        "plus_proche": "auteur : identifie le préposé mais pas son âge",
+        "aide": {
+          "moins_14_ans": "le préposé avait moins de 14 ans",
+          "14_ans_et_plus": "le préposé avait 14 ans ou plus"
+        }
+      },
+      {
+        "variable": "accompagnement_adulte",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Accompagnement adulte",
+        "question": "Le préposé était-il accompagné par un adulte sur la voie publique ?",
+        "pourquoi": "Condition de l'exclusion pour les préposés mineurs sur la voie publique",
+        "plus_proche": "aucune variable existante ne concerne l'accompagnement d'un préposé",
+        "aide": {
+          "oui": "un adulte accompagnait le préposé",
+          "non": "le préposé était seul, sans adulte"
+        }
+      },
+      {
+        "variable": "dispositifs_securite_vehicule",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Dispositifs sécurité véhicule",
+        "question": "Le véhicule circulant sur la voie publique était-il muni des dispositifs de sécurité prévus par la réglementation sur la circulation routière ?",
+        "pourquoi": "Exclusion si le véhicule n'a pas les équipements de sécurité obligatoires",
+        "plus_proche": "vehicule_ferme_cle : concerne la fermeture à clé, pas les équipements de sécurité réglementaires",
+        "aide": {
+          "oui": "le véhicule avait tous les équipements de sécurité obligatoires (éclairage, freins, rétroviseurs, etc.)",
+          "non": "il manquait des équipements de sécurité obligatoires sur le véhicule"
+        }
+      },
+      {
+        "variable": "utilisation_besoins_personnels",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Usage personnel préposé",
+        "question": "Le préposé utilisait-il les animaux ou véhicules pour vos besoins personnels ?",
+        "pourquoi": "Extension de garantie à la responsabilité personnelle des préposés pour usage personnel des animaux/véhicules",
+        "plus_proche": "usage_professionnel : concerne le bien endommagé, pas l'usage par le préposé",
+        "aide": {
+          "oui": "le préposé utilisait l'animal ou le véhicule pour mon compte, pour mes besoins personnels",
+          "non": "ce n'était pas pour mes besoins personnels"
+        }
+      },
+      {
+        "variable": "garde_animal_prepose",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Garde par le préposé",
+        "question": "Le préposé assumait-il la garde des animaux ou véhicules ?",
+        "pourquoi": "Extension de garantie à la responsabilité personnelle des préposés assumant la garde",
+        "plus_proche": "garde_animal : concerne l'assuré, pas le préposé",
+        "aide": {
+          "oui": "le préposé avait la garde de l'animal ou du véhicule au moment des faits",
+          "non": "le préposé n'avait pas la garde"
+        }
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "garde_animal = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "activite_garde_professionnelle = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "type_animal = chien_garde_pro : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "type_animal = autre_animal : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "type_animal = cheval_selle : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "proprietaire_detenteur_gardien = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "type_animal = poney : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "type_animal = attelage : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "utilisation_besoins_personnels = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "garde_animal_prepose = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "epreuve_equestre = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "transport_gracieux = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "capacite_attelage_respectee = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "objet_transporte_cause_dommage = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "type_animal = gibier : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "type_animal = animal_sauvage : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "age_prepose = moins_14_ans : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "accompagnement_adulte = non : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "dispositifs_securite_vehicule = non : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "dommage_objet_transporte = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.3`) ou à remplacer"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "réserve",
+      "message": "exclusion « causés par le gibier ou les animaux sauvages, domptés ou non » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "limite",
+      "message": "limite « La garantie est acquise pour 5 chevaux de selle dont vous êt » (rc_vie_privee_animaux) : elle pose une condition ; circonstance ou garantie à part ?"
+    }
+  ]
+}

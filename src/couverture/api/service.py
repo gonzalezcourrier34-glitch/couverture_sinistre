@@ -14,6 +14,8 @@ Deux façons d'obtenir une décision :
 
 from __future__ import annotations
 
+import json
+
 from typing import Any
 
 from couverture import chaine, lecture, prolog
@@ -40,7 +42,17 @@ def contrat_public(c: Contrat) -> dict[str, Any]:
     """Ce que l'API montre d'un contrat (ni le chemin du fichier, ni son empreinte)."""
     return {"id": c.id, "assureur": c.assureur, "produit": c.produit, "version": c.version, "statut": c.statut,
             "nb_clauses": c.rapport.get("nb_clauses"), "alertes": c.rapport.get("alertes", []),
-            "regles": a_des_regles(c.id), "souscription": souscription_publique(c.id)}
+            "regles": a_des_regles(c.id), "souscription": souscription_publique(c.id)} | traduction(c.id)
+
+
+def traduction(contrat_id: str) -> dict[str, Any]:
+    """Ces conditions générales sont-elles traduites en règles en entier ? (7.169) Lu dans `regles/traduction.json`,
+    tenu à la main : `complet` (faux tant que rien n'est déclaré) et `traduction`, ce qui est traduit et ce qui reste."""
+    try:
+        d = json.loads((prolog.DOSSIER / "traduction.json").read_text(encoding="utf-8")).get(contrat_id) or {}
+    except (OSError, ValueError):
+        d = {}
+    return {"complet": bool(d.get("complet")), "traduction": str(d.get("detail") or "")}
 
 
 def souscription_publique(contrat_id: str) -> list[dict[str, Any]]:

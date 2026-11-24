@@ -22,6 +22,9 @@ export interface Contrat {
     nb_clauses: number | null;
     alertes: string[];
     regles: boolean;
+    /** Les conditions générales sont-elles traduites en règles en entier ? Et le détail, en une phrase. */
+    complet?: boolean;
+    traduction?: string;
     /** Ce que les conditions particulières du client peuvent préciser : la formule, les options. */
     souscription?: Souscription[];
 }

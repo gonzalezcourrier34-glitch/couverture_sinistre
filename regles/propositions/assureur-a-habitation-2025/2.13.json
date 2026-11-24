@@ -1,0 +1,213 @@
+{
+  "meta": {
+    "article": "2.13",
+    "modele": "mistral:mistral-large-4-0 (proposition écartée)",
+    "date": "2026-11-24",
+    "consigne": "redaction-regles v13",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-24",
+      "modifications": [
+        "réécrite à la main : la proposition du modèle faisait quatorze garanties sans événement, qui couvraient une soixantaine de cas de test (non-régression)",
+        "les prestations « mises en place après un sinistre couvert » : une garantie accessoire, qui ne décide rien et s'ajoute à un sinistre couvert",
+        "le dépannage serrurier, seul dû sans sinistre couvert : une garantie sur l'événement assistance, quand la demande porte sur une ouverture",
+        "objet_assistance et intervention_mandatee : les variables de l'assistance d'urgence de B, reprises telles quelles",
+        "événements : « assistance » seul ; la garantie accessoire ne déclare traduit aucun événement, sinon un événement sans règle ne serait plus signalé (7.84)",
+        "l'intervention non demandée à l'assistance : une exclusion à demander. Le contrat en fait la condition de la prestation, et seul l'assuré sait qui a appelé le dépanneur ; sans la question, un dépannage payé de sa poche était « couvert »"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "assistance"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "assistance_apres_sinistre",
+        "nom": "Assistance après un sinistre couvert",
+        "article": "2.13~1",
+        "accessoire": true,
+        "texte": "vous trouverez ci-dessous, de manière exhaustive, les prestations comprises dans votre contrat d’assurance et qui sont mises en place après un sinistre couvert",
+        "perimetre": [],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": [
+          {
+            "article": "2.13~3",
+            "texte": "de l’organisation et de la prise en charge d’un véhicule de remplacement (voiture de tourisme de la catégorie B au maximum) durant 7 jours au maximum à partir de la date du sinistre couvert",
+            "montant": "7 jours max"
+          },
+          {
+            "article": "2.13~4",
+            "texte": "Assureur A Assistance organise cette surveillance et en assume les frais pendant 72 heures au maximum",
+            "montant": "72 heures max"
+          },
+          {
+            "article": "2.13~4",
+            "texte": "de la mise à disposition pendant 16 heures maximum d’un agent de nettoyage pour le nettoyage des locaux endommagés à concurrence de 40 EUR/heure",
+            "montant": "16 heures, 40 EUR/heure"
+          },
+          {
+            "article": "2.13~4",
+            "texte": "Assureur A Assistance indemnise à concurrence de 120 EUR par jour (toutes taxes et frais compris) au cours de 7 jours au maximum",
+            "montant": "120 EUR/jour, 7 jours max"
+          }
+        ]
+      },
+      {
+        "id": "depannage_serrurier",
+        "nom": "Dépannage serrurier",
+        "article": "2.13~6",
+        "accessoire": false,
+        "texte": "Si l’assuré ne peut plus pénétrer dans le bâtiment assuré à la suite de la perte des clés, de l’oubli des clés à l’intérieur, ou du vol des clés ou parce que la serrure du bâtiment ou de l’appartement (lorsque l’assuré n’occupe qu’une partie du bâtiment) a été endommagée, Assureur A Assistance organisera et paiera les frais d’ouverture de la porte et, le cas échéant, le remplacement de la serrure par un serrurier",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "assistance"
+            ]
+          },
+          {
+            "f": [
+              "objet_assistance",
+              "ouverture"
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "intervention_mandatee",
+                    "non"
+                  ]
+                },
+                {
+                  "non": {
+                    "f": [
+                      "contact_assistance_impossible",
+                      "oui"
+                    ]
+                  }
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "2.13-a",
+            "texte": "Les prestations qui ne peuvent être demandées au moment du sinistre et qui ne sont pas exécutées en accord avec Assureur A Assistance ne sont pas garanties. Néanmoins, lorsque l’assuré n’a matériellement pas été en mesure de prendre contact avec la centrale de Assureur A Assistance, la couverture continuera à s’appliquer"
+          }
+        ],
+        "limites": [
+          {
+            "article": "2.13~6",
+            "texte": "Assureur A Assistance prend ces frais en charge à concurrence de 300 EUR au maximum par sinistre et par année assurée",
+            "montant": "300"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "objet_assistance",
+        "libelle": "Objet de la demande de dépannage",
+        "valeurs": [
+          "fuite_eau",
+          "chauffage_central",
+          "ouverture",
+          "panne_electrique",
+          "autre_installation"
+        ],
+        "question": "Sur quoi porte la demande de dépannage ?",
+        "aide": {
+          "fuite_eau": "une fuite ou une évacuation d'eau, y compris une chaudière ou un tuyau qui fuit",
+          "chauffage_central": "le chauffage central, la chaudière ou les radiateurs en panne",
+          "ouverture": "une porte, une fenêtre ou une serrure : clé perdue, porte claquée, serrure bloquée",
+          "autre_installation": "une autre installation fixe du logement : ventilation, climatisation, adoucisseur d'eau",
+          "panne_electrique": "une panne du circuit électrique, ou d'un appareil électronique, informatique ou de télécommunication"
+        },
+        "libelles": {
+          "fuite_eau": "fuite ou évacuation d'eau",
+          "chauffage_central": "chauffage central",
+          "ouverture": "porte, fenêtre ou serrure",
+          "panne_electrique": "panne électrique ou électronique",
+          "autre_installation": "autre installation fixe"
+        },
+        "pourquoi": "2.13 : le dépannage serrurier est la seule prestation due sans sinistre couvert ; il faut savoir sur quoi porte la demande",
+        "plus_proche": "la même variable que pour l'assistance d'urgence de B : même fait, même définition"
+      },
+      {
+        "variable": "intervention_mandatee",
+        "libelle": "Intervention demandée à l'assistance",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "L'intervention a-t-elle été demandée à l'assistance au moment des faits, et faite par le réparateur qu'elle a envoyé ?",
+        "aide": {
+          "oui": "l'assuré a appelé l'assistance, qui a envoyé son réparateur",
+          "non": "l'assuré a fait venir lui-même un dépanneur, ou n'a prévenu qu'après coup"
+        },
+        "pourquoi": "2.13-a : les prestations non demandées à l'assistance ne sont pas garanties",
+        "plus_proche": "la même variable que pour l'assistance d'urgence de B : même fait, même définition"
+      },
+      {
+        "variable": "contact_assistance_impossible",
+        "libelle": "Assistance impossible à joindre",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Étiez-vous matériellement dans l'impossibilité de joindre l'assistance au moment des faits ?",
+        "aide": {
+          "oui": "aucun moyen d'appeler : pas de téléphone, hospitalisé, à l'étranger sans réseau",
+          "non": "l'assistance pouvait être jointe"
+        },
+        "pourquoi": "2.13-a : la réserve de l'exclusion",
+        "plus_proche": "aucune"
+      }
+    ],
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "2.13~1",
+        "texte": "Nous mettons un service d’informations à votre disposition 24 heures sur 24 qui fournit les renseignements suivants",
+        "pourquoi": "un service de renseignements par téléphone : pas un sinistre, sans effet sur la question de couverture"
+      },
+      {
+        "article": "2.13~6",
+        "texte": "L’assuré doit prouver au serrurier qu’il est l’occupant du bâtiment",
+        "pourquoi": "une formalité sur place, après la demande : sans effet sur la question de couverture à la déclaration"
+      },
+      {
+        "article": "2.13~7",
+        "texte": "réduire la prestation contractuelle ou réclamer les débours, à concurrence des préjudices de Assureur A Assistance",
+        "pourquoi": "les suites d'un manquement après le sinistre (réduction, remboursement) : procédure, pas un refus décidable à la déclaration"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.13~1) : un service de renseignements par téléphone : pas un sinistre, sans effet sur la question de couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.13~6) : une formalité sur place, après la demande : sans effet sur la question de couverture à la déclaration"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.13~7) : les suites d'un manquement après le sinistre (réduction, remboursement) : procédure, pas un refus décidable à la déclaration"
+    }
+  ]
+}

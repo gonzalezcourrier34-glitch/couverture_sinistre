@@ -1,0 +1,413 @@
+{
+  "meta": {
+    "article": "3.1.12",
+    "modele": "aucun : la réponse du modèle a été coupée (16000 tokens)",
+    "date": "2026-11-24",
+    "consigne": "redaction-regles v13",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-24",
+      "modifications": [
+        "écrite à la main à partir du texte de l'article, la rédaction automatique ayant échoué",
+        "délai de carence : une exclusion sur l'ancienneté de la garantie et l'objet de la demande, appliquée seulement si la déclaration le dit",
+        "périmètre limité à l'habitation (bâtiment désigné) : une demande d'assistance en voyage n'y entre pas",
+        "exclusions de 3.1.12.5 traduites une à une ; conditions d'exécution sur place classées hors décision",
+        "l'intervention non demandée à l'assistance : une exclusion à demander. Le contrat en fait la condition de la prestation, et seul l'assuré sait qui a appelé le dépanneur ; sans la question, un dépannage payé de sa poche était « couvert »"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [
+      "assistance"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "assistance_urgence",
+        "nom": "Assistance d’urgence",
+        "article": "3.1.12.2",
+        "texte": "Assureur B Assistance intervient dans les frais en cas de situation d’urgence afin de prévenir ou de limiter les dommages, ou pour effectuer une réparation urgente et provisoire à l’habitation de l’Assuré ou à une installation fixe",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "assistance"
+            ]
+          },
+          {
+            "concept": "batiment_designe"
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "urgence_habitation",
+                "oui"
+              ]
+            },
+            "article": "3.1.12.1",
+            "texte": "Urgent ou urgence : Des conditions où un dommage soudain et imprévisible : n rend l’habitation du bénéficiaire dangereuse ou peu sûre, n entraîne un risque de dommage supplémentaire à l’habitation du bénéficiaire et/ou aux biens immeubles qu’elle contient, et/ou n rend l’habitation de l’Assuré inhabitable"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "anciennete_garantie",
+                    "moins_30_jours"
+                  ]
+                },
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "objet_assistance",
+                        "fuite_eau"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "objet_assistance",
+                        "chauffage_central"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "objet_assistance",
+                        "ouverture"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.1.12.6",
+            "texte": "Un délai d’attente de trente jours calendaires s’applique à compter de la prise d’effet de la garantie pour les sinistres liés : n aux fuites et évacuation d’eaux ; n au chauffage central ; n aux ouvertures de la maison (porte, fenêtre, serrure)"
+          },
+          {
+            "condition": {
+              "f": [
+                "intervention_mandatee",
+                "non"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.12.3",
+            "texte": "Une intervention qui n’a pas été demandée au moment des faits ou qui a été organisée sans l’accord d’Assureur B Assistance, ne relève pas de la garantie"
+          },
+          {
+            "condition": {
+              "f": [
+                "manque_entretien",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.1.12.5",
+            "texte": "les frais consécutifs à des signes de vétusté normale, d’usure ou d’altération"
+          },
+          {
+            "condition": {
+              "f": [
+                "vice_defaut_connu",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.1.12.5",
+            "texte": "les frais pour un problème connu avant la conclusion du contrat"
+          },
+          {
+            "condition": {
+              "f": [
+                "evenement",
+                "catastrophe_naturelle"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.1.12.5",
+            "texte": "d’un glissement de terrain, d’une inondation ou de toute autre catastrophe naturelle"
+          },
+          {
+            "condition": {
+              "f": [
+                "cause_guerre",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.1.12.5",
+            "texte": "les événements résultant d’une guerre, d’une mobilisation générale, d’une mobilisation de personnes ou de matériel par les pouvoirs publics, de terrorisme ou de sabotage, ou de conflits sociaux"
+          },
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "manque_entretien",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "intentionnel",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.1.12.5",
+            "texte": "les conséquences nuisibles normalement prévisibles imputables à un fait ou à une négligence (par exemple le manque d’entretien prévu pour l’habitation ou l’installation fixe concernée) dans le chef de l’occupant de l’habitation de l’Assuré ou à sa faute intentionnelle"
+          },
+          {
+            "condition": {
+              "f": [
+                "manque_entretien",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.1.12.5",
+            "texte": "frais en cas de manque d’entretien évident de l’installation fixe ou de l’habitation de l’Assuré"
+          },
+          {
+            "condition": {
+              "f": [
+                "coupure_reseau",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.1.12.5",
+            "texte": "l’interruption ou la coupure de l’alimentation en gaz, en électricité ou en eau imputable au réseau de distribution"
+          },
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "cause_pollution",
+                    "huile_minerale"
+                  ]
+                },
+                {
+                  "f": [
+                    "cause_pollution",
+                    "autre"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.1.12.5",
+            "texte": "les dommages causés directement ou indirectement par une pollution"
+          },
+          {
+            "condition": {
+              "f": [
+                "objet_assistance",
+                "panne_electrique"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.1.12.5",
+            "texte": "les dommages causés directement ou indirectement par ou consistant en un dysfonctionnement ou une panne du circuit électrique, d’une connexion intégrée, d’un circuit intégré, d’un microprocesseur, de matériel informatique, d’un logiciel, d’un ordinateur, d’un appareil de télécommunication ou d’un système similaire"
+          }
+        ],
+        "limites": [
+          {
+            "article": "3.1.12.2",
+            "texte": "L’intervention d’Assureur B Assistance se limite à deux interventions/an et à concurrence de 400 € maximum par intervention à l’habitation de l’Assuré",
+            "montant": "400"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "f": [
+            "option_assistance_urgence",
+            "non"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "3.1.12",
+        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie ” Assistance d’urgence ” est accordée."
+      }
+    ],
+    "vocabulaire_manquant": [
+      {
+        "variable": "option_assistance_urgence",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Vos conditions particulières mentionnent-elles la garantie « assistance d’urgence » ?",
+        "aide": {
+          "oui": "la garantie figure aux conditions particulières",
+          "non": "elle n'y figure pas"
+        },
+        "pourquoi": "garantie optionnelle : réserve tant que les conditions particulières ne sont pas lues",
+        "plus_proche": "aucune ; fait des conditions particulières",
+        "libelle": "Garantie « assistance d’urgence » souscrite",
+        "source": "conditions_particulieres"
+      },
+      {
+        "variable": "urgence_habitation",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La situation rend-elle le logement dangereux ou inhabitable, ou risque-t-elle d'aggraver les dégâts (une porte qu'on ne peut plus ouvrir compte aussi) ?",
+        "aide": {
+          "oui": "fuite en cours, plus de chauffage, logement ouvert ou inaccessible, danger : il faut intervenir tout de suite",
+          "non": "une gêne ou une réparation qui peut attendre"
+        },
+        "pourquoi": "3.1.12.1 : la garantie ne joue qu'en situation urgente, que le contrat définit",
+        "plus_proche": "aucune",
+        "libelle": "Situation d'urgence dans le logement"
+      },
+      {
+        "variable": "objet_assistance",
+        "valeurs": [
+          "fuite_eau",
+          "chauffage_central",
+          "ouverture",
+          "panne_electrique",
+          "autre_installation"
+        ],
+        "question": "Sur quoi porte la demande de dépannage ?",
+        "aide": {
+          "fuite_eau": "une fuite ou une évacuation d'eau, y compris une chaudière ou un tuyau qui fuit",
+          "chauffage_central": "le chauffage central, la chaudière ou les radiateurs en panne",
+          "ouverture": "une porte, une fenêtre ou une serrure : clé perdue, porte claquée, serrure bloquée",
+          "autre_installation": "une autre installation fixe du logement : ventilation, climatisation, adoucisseur d'eau",
+          "panne_electrique": "une panne du circuit électrique, ou d'un appareil électronique, informatique ou de télécommunication"
+        },
+        "pourquoi": "3.1.12.6 : le délai d'attente ne vise que trois sortes de demandes",
+        "plus_proche": "cause_eau, bien : disent ce qui est endommagé, pas ce pour quoi on appelle un dépanneur",
+        "libelle": "Objet de la demande de dépannage",
+        "libelles": {
+          "fuite_eau": "fuite ou évacuation d'eau",
+          "chauffage_central": "chauffage central",
+          "ouverture": "porte, fenêtre ou serrure",
+          "panne_electrique": "panne électrique ou électronique",
+          "autre_installation": "autre installation fixe"
+        }
+      },
+      {
+        "variable": "anciennete_garantie",
+        "valeurs": [
+          "moins_30_jours",
+          "plus_30_jours"
+        ],
+        "question": "La garantie a-t-elle pris effet depuis plus de trente jours ?",
+        "aide": {
+          "moins_30_jours": "contrat ou garantie signé il y a moins de trente jours (« la semaine dernière », « il y a quinze jours »)",
+          "plus_30_jours": "contrat plus ancien"
+        },
+        "pourquoi": "3.1.12.6 : délai de carence de trente jours calendaires",
+        "plus_proche": "aucune pour ce contrat",
+        "libelle": "Ancienneté de la garantie",
+        "libelles": {
+          "moins_30_jours": "moins de trente jours",
+          "plus_30_jours": "plus de trente jours"
+        }
+      },
+      {
+        "variable": "intervention_mandatee",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "L'intervention a-t-elle été demandée à l'assistance au moment des faits, et faite par le réparateur qu'elle a envoyé ?",
+        "aide": {
+          "oui": "l'assuré a appelé l'assistance, qui a envoyé son réparateur",
+          "non": "l'assuré a fait venir lui-même un dépanneur, ou n'a prévenu qu'après coup"
+        },
+        "pourquoi": "3.1.12.3 et 3.1.12.5 : seules les interventions mandatées relèvent de la garantie",
+        "plus_proche": "aucune",
+        "libelle": "Intervention demandée à l'assistance"
+      },
+      {
+        "variable": "coupure_reseau",
+        "libelle": "Coupure du réseau de distribution",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La coupure de gaz, d'électricité ou d'eau vient-elle du réseau de distribution ?",
+        "aide": {
+          "oui": "coupure générale du quartier, travaux ou panne du distributeur",
+          "non": "le problème vient de l'installation du logement"
+        },
+        "pourquoi": "3.1.12.5 : les coupures imputables au réseau sont exclues",
+        "plus_proche": "aucune"
+      }
+    ],
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "3.1.12.2",
+        "texte": "à condition que : n cela soit possible techniquement, n que les conditions climatiques le permettent, n et que l’Assuré permette d’accéder au bâtiment désigné",
+        "pourquoi": "condition d'exécution de la prestation, appréciée sur place par le réparateur après la demande : sans effet sur la question de couverture à la déclaration"
+      },
+      {
+        "article": "3.1.12.2",
+        "texte": "Les montants supérieurs à 400 € facturés par le réparateur doivent être payés personnellement par le Preneur d’assurance au réparateur",
+        "pourquoi": "des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
+      },
+      {
+        "article": "3.1.12.5",
+        "texte": "les frais de déplacement du réparateur si l’habitation de l’Assuré n’est pas accessible à l’heure convenue",
+        "pourquoi": "des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
+      },
+      {
+        "article": "3.1.12.5",
+        "texte": "les frais de nature décorative",
+        "pourquoi": "des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.1.12.2) : condition d'exécution de la prestation, appréciée sur place par le réparateur après la demande : sans effet sur la question de couverture à la déclaration"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.1.12.2) : des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.1.12.5) : des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.1.12.5) : des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
+    }
+  ]
+}

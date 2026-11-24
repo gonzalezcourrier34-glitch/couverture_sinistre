@@ -1,0 +1,519 @@
+{
+  "meta": {
+    "article": "4.1.4",
+    "modele": "mistral:mistral-large-4-0",
+    "date": "2026-11-24",
+    "consigne": "redaction-regles v13"
+  },
+  "proposition": {
+    "evenements": [
+      "litige"
+    ],
+    "definitions": [
+      {
+        "concept": "e_protection",
+        "condition": {
+          "f": [
+            "option_e_protection",
+            "oui"
+          ]
+        },
+        "article": "4.1.4",
+        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ E-protection ” est accordée."
+      }
+    ],
+    "garanties": [
+      {
+        "id": "e_protection",
+        "nom": "E-protection",
+        "article": "4.1.4.3~1",
+        "texte": "Le Prestataire s’engage aux conditions telles que prévues ci-dessous, à fournir des services et à prendre en charge si nécessaire des frais afin de permettre à l’Assuré de faire valoir ses droits en tant que demandeur ou défendeur, soit dans une procédure judiciaire, administrative ou autre, soit en dehors de toute procédure.",
+        "accessoire": true,
+        "perimetre": [
+          {
+            "concept": "e_protection"
+          },
+          {
+            "f": [
+              "type_sinistre_e_protection",
+              "usurpation_identite"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "type_sinistre_e_protection",
+                  "utilisation_frauduleuse_moyens_paiement"
+                ]
+              },
+              {
+                "f": [
+                  "type_sinistre_e_protection",
+                  "atteinte_e_reputation"
+                ]
+              },
+              {
+                "f": [
+                  "type_sinistre_e_protection",
+                  "achat_bien_mobilier_e_commercant"
+                ]
+              },
+              {
+                "f": [
+                  "type_sinistre_e_protection",
+                  "achat_service_e_commercant"
+                ]
+              },
+              {
+                "f": [
+                  "type_sinistre_e_protection",
+                  "objet_connecte"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "fait_generateur_connu_souscription",
+                "non"
+              ]
+            },
+            "article": "4.1.4.4",
+            "texte": "le fait générateur du sinistre ne doit pas être connu de l’Assuré à la date de prise d’effet de la présente garantie"
+          },
+          {
+            "condition": {
+              "f": [
+                "declaration_sinistre",
+                "oui"
+              ]
+            },
+            "article": "4.1.4.4",
+            "texte": "l’Assuré doit déclarer son sinistre à la Compagnie"
+          },
+          {
+            "condition": {
+              "f": [
+                "delai_attente_1_mois",
+                "oui"
+              ]
+            },
+            "article": "4.1.4.4",
+            "texte": "Pour tous les sinistres, le délai d’attente est d’1 mois à partir de la prise d’effet du contrat"
+          },
+          {
+            "condition": {
+              "f": [
+                "domicile_luxembourg",
+                "oui"
+              ]
+            },
+            "article": "4.1.4.1",
+            "texte": "sont considérés comme assurés, pour autant qu’ils soient domiciliés au Grand-Duché de Luxembourg et y résident habituellement"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "domaine_litige",
+                "propriete_intellectuelle"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "4.1.4.3~1",
+            "texte": "de litiges liés à la propriété intellectuelle ou autres droits similaires (marques, copyright, droit d’auteur, etc…)"
+          },
+          {
+            "condition": {
+              "f": [
+                "activite_professionnelle",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "4.1.4.3~1",
+            "texte": "d’une activité rémunérée ou professionnelle"
+          },
+          {
+            "condition": {
+              "f": [
+                "complicite_assure",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "4.1.4.3~1",
+            "texte": "de la complicité de l’Assuré à savoir coopérer directement ou prêter pour l’exécution une aide telle que, sans son assistance l’événement dont découle le sinistre n’aurait pu avoir lieu"
+          },
+          {
+            "condition": {
+              "f": [
+                "faute_lourde",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "4.1.4.3.8",
+            "texte": "d’une faute lourde"
+          },
+          {
+            "condition": {
+              "f": [
+                "crime",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "4.1.4.3~2",
+            "texte": "pour les crimes ou les crimes correctionnalisés ainsi que leurs conséquences"
+          },
+          {
+            "condition": {
+              "f": [
+                "auteur_sinistre",
+                "assure"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "4.1.4.3~2",
+            "texte": "Le Prestataire ne prend pas en charge les sinistres résultant d’une usurpation d’identité ou d’une utilisation frauduleuse des moyens de paiement ou d’une atteinte à l’e-réputation par une personne assurée au titre des présentes garanties"
+          }
+        ],
+        "limites": [
+          {
+            "article": "4.1.4.4.9",
+            "texte": "Indemnisation du préjudice subi en cas d’usurpation d’identité",
+            "montant": "5000 EUR par sinistre et par année d’assurance"
+          },
+          {
+            "article": "4.1.4.4.9",
+            "texte": "Défense des intérêts de l’Assuré (défense amiable et judiciaire) par sinistre et par année d’assurance",
+            "montant": "5750 EUR (1er instance), 5750 EUR (appel), 5750 EUR (cassation)"
+          },
+          {
+            "article": "4.1.4.4.9",
+            "texte": "Mise en relation en cas d’atteinte à l’e-réputation des frais de nettoyage ou de noyage des informations par sinistre et par année d’assurance",
+            "montant": "5000 EUR"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "option_e_protection",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Option E-protection",
+        "question": "Vos conditions particulières mentionnent-elles la garantie « E-protection » ?",
+        "pourquoi": "condition d'application",
+        "plus_proche": "option_protection_juridique",
+        "aide": {
+          "oui": "E-protection souscrite",
+          "non": "pas d'E-protection"
+        }
+      },
+      {
+        "variable": "type_sinistre_e_protection",
+        "valeurs": [
+          "usurpation_identite",
+          "utilisation_frauduleuse_moyens_paiement",
+          "atteinte_e_reputation",
+          "achat_bien_mobilier_e_commercant",
+          "achat_service_e_commercant",
+          "objet_connecte"
+        ],
+        "libelle": "Type sinistre E-protection",
+        "question": "Quel est le type de sinistre ?",
+        "pourquoi": "distinguer les couvertures",
+        "plus_proche": "domaine_litige",
+        "aide": {
+          "usurpation_identite": "usurpation d'identité",
+          "utilisation_frauduleuse_moyens_paiement": "fraude carte bancaire",
+          "atteinte_e_reputation": "atteinte e-réputation",
+          "achat_bien_mobilier_e_commercant": "achat bien en ligne",
+          "achat_service_e_commercant": "achat service en ligne",
+          "objet_connecte": "objet connecté"
+        }
+      },
+      {
+        "variable": "fait_generateur_connu_souscription",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Litige connu avant souscription",
+        "question": "Le litige était-il connu avant la souscription ?",
+        "pourquoi": "condition de garantie",
+        "plus_proche": "vice_defaut_connu",
+        "aide": {
+          "oui": "connu avant",
+          "non": "inconnu avant"
+        }
+      },
+      {
+        "variable": "delai_attente_1_mois",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Délai attente 1 mois écoulé",
+        "question": "Le délai d'attente d'un mois est-il écoulé ?",
+        "pourquoi": "condition de garantie",
+        "plus_proche": "aucune",
+        "aide": {
+          "oui": "plus d'un mois",
+          "non": "moins d'un mois"
+        }
+      },
+      {
+        "variable": "domicile_luxembourg",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Domicile au Luxembourg",
+        "question": "Êtes-vous domicilié au Luxembourg et y résidez-vous habituellement ?",
+        "pourquoi": "définition de l'assuré",
+        "plus_proche": "pays",
+        "aide": {
+          "oui": "domicilié au Luxembourg",
+          "non": "domicilié ailleurs"
+        }
+      },
+      {
+        "variable": "declaration_sinistre",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Sinistre déclaré",
+        "question": "Avez-vous déclaré le sinistre à la compagnie ?",
+        "pourquoi": "condition de garantie",
+        "plus_proche": "plainte_deposee",
+        "aide": {
+          "oui": "déclaré",
+          "non": "non déclaré"
+        }
+      },
+      {
+        "variable": "faute_lourde",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Faute lourde",
+        "question": "Y a-t-il eu faute lourde ?",
+        "pourquoi": "exclusion",
+        "plus_proche": "intentionnel",
+        "aide": {
+          "oui": "faute lourde",
+          "non": "pas de faute lourde"
+        }
+      },
+      {
+        "variable": "crime",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Crime commis",
+        "question": "S'agit-il d'un crime ?",
+        "pourquoi": "exclusion",
+        "plus_proche": "aucune",
+        "aide": {
+          "oui": "crime",
+          "non": "pas un crime"
+        }
+      },
+      {
+        "variable": "auteur_sinistre",
+        "valeurs": [
+          "assure",
+          "tiers"
+        ],
+        "libelle": "Auteur du sinistre",
+        "question": "Qui est l'auteur du sinistre ?",
+        "pourquoi": "exclusion si assuré",
+        "plus_proche": "auteur",
+        "aide": {
+          "assure": "une personne assurée",
+          "tiers": "un tiers"
+        }
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "option_e_protection = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "type_sinistre_e_protection = usurpation_identite : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "type_sinistre_e_protection = utilisation_frauduleuse_moyens_paiement : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "type_sinistre_e_protection = atteinte_e_reputation : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "type_sinistre_e_protection = achat_bien_mobilier_e_commercant : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "type_sinistre_e_protection = achat_service_e_commercant : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "type_sinistre_e_protection = objet_connecte : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "fait_generateur_connu_souscription = non : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "declaration_sinistre = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "delai_attente_1_mois = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "domicile_luxembourg = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "domaine_litige = propriete_intellectuelle : hors vocabulaire, et non déclaré"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "activite_professionnelle = oui : hors vocabulaire, et non déclaré"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "complicite_assure = oui : hors vocabulaire, et non déclaré"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "faute_lourde = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "crime = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.4`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "auteur_sinistre = assure : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.4`) ou à remplacer"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "garantie : citation rattachée à 4.1.4.3~1 (et non 4.1.4.3)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "circonstance : citation rattachée à 4.1.4.4 (et non 4.1.4.4.1)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "circonstance : citation rattachée à 4.1.4.4 (et non 4.1.4.4.1)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "circonstance : citation rattachée à 4.1.4.4 (et non 4.1.4.4.8)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "circonstance : citation rattachée à 4.1.4.1 (et non 4.1.4.1.2)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 4.1.4.3~1 (et non 4.1.4.3.8)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 4.1.4.3~1 (et non 4.1.4.3.8)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 4.1.4.3~1 (et non 4.1.4.3.8)"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "citation",
+      "message": "exclusion : article 4.1.4.3.8 inconnu"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 4.1.4.3~2 (et non 4.1.4.3.8)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 4.1.4.3~2 (et non 4.1.4.3.9)"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "citation",
+      "message": "limite : article 4.1.4.4.9 inconnu"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "citation",
+      "message": "limite : article 4.1.4.4.9 inconnu"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "citation",
+      "message": "limite : article 4.1.4.4.9 inconnu"
+    }
+  ]
+}

@@ -156,6 +156,7 @@ $rayon: 12px;
     grid-auto-columns: minmax(110px, 1fr);
     gap: 8px;
     overflow-x: auto;
+    padding: 3px; // la place de l'anneau de la carte choisie
 }
 
 .contrats > .muted {
@@ -180,9 +181,47 @@ $rayon: 12px;
     }
 }
 
+// Le contour dit si ces conditions générales sont traduites en règles en entier (vert) ou en partie (orange) ;
+// la carte choisie se reconnaît à son fond et à son anneau bleu (7.169).
 .contrat-on {
     background: var(--primaire-pale);
-    border-color: var(--primaire);
+    box-shadow: 0 0 0 2px var(--primaire);
+}
+
+.contrat.contrat-complet {
+    border-color: var(--succes);
+}
+
+.contrat.contrat-partiel {
+    border-color: #e8890c;
+}
+
+.legende-conditions {
+    margin: 6px 0 0;
+    font-size: 12px;
+    color: var(--plume-fonce);
+}
+
+.pastille {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin: 0 4px 0 10px;
+    border: 2px solid;
+    border-radius: 3px;
+    vertical-align: -1px;
+
+    &:first-child {
+        margin-left: 0;
+    }
+}
+
+.pastille-complet {
+    border-color: var(--succes);
+}
+
+.pastille-partiel {
+    border-color: #e8890c;
 }
 
 .contrat-assureur {

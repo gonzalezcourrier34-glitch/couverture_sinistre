@@ -37,11 +37,14 @@
 
         <section class="panneau declaration" aria-label="Déclaration du sinistre">
 
-            <div class="etiquette">1. Le contrat</div>
-            <div class="contrats" role="radiogroup" aria-label="Contrat">
+            <div class="etiquette">1. Les conditions générales</div>
+            <div class="contrats" role="radiogroup" aria-label="Conditions générales">
                 @for (c of decidables(); track c.id) {
                     <button type="button" class="contrat" role="radio"
                         [class.contrat-on]="c.id === contratId()"
+                        [class.contrat-complet]="c.complet"
+                        [class.contrat-partiel]="!c.complet"
+                        [attr.title]="c.traduction || null"
                         [attr.aria-checked]="c.id === contratId()"
                         (click)="choisirContrat(c.id)">
                         <span class="contrat-assureur">{{ c.assureur }}</span>
@@ -53,6 +56,10 @@
                     <p class="muted">Aucun contrat décidable : vérifiez que l’API tourne et que la base est remplie.</p>
                 }
             </div>
+            <p class="legende-conditions">
+                <span class="pastille pastille-complet"></span> conditions traduites en entier
+                <span class="pastille pastille-partiel"></span> traduites en partie
+            </p>
 
             <!-- ### Conditions particulières : ce que le contrat du client dit, et que la déclaration ne dit pas -->
 

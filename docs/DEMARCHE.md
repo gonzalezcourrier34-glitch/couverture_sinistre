@@ -4874,6 +4874,36 @@ La baisse ne vient donc pas du découpage : le modèle de confirmation ne répon
 
 **Ce qui n'est pas fait.** Aucun jeu ne mesure le découpage lui-même : les cas existants ont une à trois phrases. L'écran affiche les lignes mais ne propose pas de répondre aux questions d'un sinistre en particulier. La réponse coûte une lecture de plus par sinistre.
 
+### 7.169 Dire à l'écran ce qui est traduit
+
+Le 24 nov., 13 h. Une question simple, posée tard : pourquoi des garanties manquent-elles ? Parce que la traduction s'est faite garantie par garantie, les plus courantes d'abord, et que rien ne le disait à qui regarde l'écran.
+
+- **Un inventaire.** Les articles de garantie de chaque jeu de conditions, comparés aux règles. Le premier comptage, automatique, s'appuyait sur l'étiquette « garantie » des clauses : il a manqué l'assistance de B, étiquetée autrement, et il a déclaré A complet à tort. L'état est donc **déclaré à la main**, dans `regles/traduction.json`, et non calculé.
+- **À l'écran.** « 1. Les conditions générales » (et non « le contrat ») ; un contour vert pour des conditions traduites en entier, orange pour des conditions traduites en partie ; la légende en petit sous les cartes ; au survol, ce qui est traduit et ce qui reste. La carte choisie garde son fond et prend un anneau bleu.
+- **Aujourd'hui, quatre contours orange.** C'est l'état réel.
+
+Ce que « en entier » veut dire : chaque garantie a ses règles, et chaque exclusion qu'une déclaration peut énoncer est une règle. La définition plus souple (tout passage est traduit ou classé « sans effet ») aurait donné un vert à A alors qu'un accident de chasse, que le contrat exclut, y est couvert : l'exclusion est classée « rare » depuis le 20 nov.
+
+### 7.170 Neuf articles d'un coup, et deux assistances à la main
+
+Le même après-midi. Objectif fixé : A et B en vert ; C et D restent en partie, et c'est assumé. La livraison est repoussée d'un jour, au 26 au matin, avec un gel du code le 25 à 18 h.
+
+**Neuf articles de B donnés au modèle d'un coup.** Un quart d'heure de rédaction. Résultat : l'assistance d'urgence échoue (réponse coupée à 16 000 jetons), et les huit autres sortent avec 6 à 43 contrôles bloquants chacune. Des citations d'articles qui n'existent pas, des exclusions du contrat absentes des règles, un événement « maladie » inventé, une centaine de faits nouveaux. Une proposition range parmi les garanties un service qui met seulement en relation avec un artisan, sans jamais payer la facture. Aucune n'est acceptée. Les contrôles ont fait ce pour quoi ils existent.
+
+**L'assistance d'urgence de B (3.1.12), écrite à la main** à partir du texte : la garantie en situation d'urgence dans l'habitation, le délai de carence de trente jours (fuites, chauffage, ouvertures), onze exclusions, l'option, le plafond. Six faits nouveaux, propres à B. Les citations passent mot pour mot.
+
+**L'assistance de A (2.13).** La proposition du modèle : quatorze garanties sans événement. Le contrôle de non-régression annonce une soixantaine de cas de test qui passeraient à « couvert ». Réécrite : les prestations « mises en place après un sinistre couvert » forment une garantie accessoire, qui ne décide rien ; le dépannage serrurier, seul dû sans sinistre, est une garantie sur l'événement « assistance ».
+
+**Trois erreurs à moi, dans l'ordre où elles sont apparues.**
+
+- J'ai cru que le fait `depot_moins_30j`, que le modèle lisait chez B, était un délai d'attente. C'est « chez le réparateur depuis trente jours au plus », une règle de vol de A. Lire un nom n'est pas lire une définition.
+- Ma première version de l'assistance de A déclarait « traduits » dix-sept événements pour la garantie accessoire. Deux tests ont échoué, à raison : une tempête sans règle n'aurait plus été signalée « à examiner par un gestionnaire » (7.84).
+- J'ai écrit l'intervention non demandée à l'assistance comme une exclusion que l'assureur prouve et que le système ne demande pas. Le jeu fermé de A a rendu un couvert à tort, trois fois sur trois : une porte claquée, un serrurier, une facture, et rien sur qui a appelé. C'est la condition même de la prestation, et seul l'assuré le sait : c'est une question. Corrigé chez A et chez B.
+
+**Ce que cette correction coûte.** Elle vient du texte du contrat, mais c'est un cas du jeu fermé (`f-a20`) qui l'a montrée. Pour l'assistance de A, ce cas n'est plus un cas jamais vu. Le README le dit à côté du chiffre.
+
+**Bancs après les deux assistances.** A 94 % (partie test) et 100 % (jeu fermé) ; B 83 % ; D 96 % ; 233 tests. Aucun gain sur B : le cas de la chaudière dépend de la lecture, qui ne retient pas toujours l'événement « assistance » quand une panne est racontée avec lui. Essai écrit pour l'occasion : un chauffage en panne et un appel à l'assistance sont lus « dégât électrique ». C'est le prochain point, et il touche le vocabulaire commun.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le ferais.
@@ -5073,3 +5103,6 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 161. Ce qu'un document annonce de l'écran se vérifie à l'écran, pas dans les notes d'un cas de test.
 162. Une correction qui améliore le cas qu'on regarde se juge sur ceux qu'on ne regarde pas ; et un écart se rejoue dans les deux états avant d'être attribué au hasard.
 163. Rejouer dans les deux états sert aussi à innocenter : la baisse de B est apparue juste après un changement, et ne venait pas de lui. Un modèle appelé par une API n'est pas un point fixe ; une fourchette publiée doit dire sur combien de passages elle repose.
+164. Ce qu'un écran ne dit pas, on finit par le croire complet : l'état de la traduction se montre, et se déclare à la main quand le comptage automatique se trompe.
+165. Une exclusion que seul l'assuré peut renseigner est une question, pas une chose que l'assureur prouvera. Se le demander pour chaque exclusion écrite : qui sait ?
+166. Un jeu fermé qui révèle une erreur de règle a fait son travail une fois ; après la correction, ce cas est vu, et il faut l'écrire à côté du chiffre.

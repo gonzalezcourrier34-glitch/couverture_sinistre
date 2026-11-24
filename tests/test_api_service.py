@@ -102,6 +102,20 @@ def test_analyse_un_fait_non_confirme_devient_la_question(base, oracle):
     assert "fermeture" not in r["faits"] and r["a_preciser"][0]["variable"] == "fermeture"
 
 
+def test_traduction_des_conditions_declaree():
+    """7.169. Chaque jeu de conditions dit s'il est traduit en entier ; sans déclaration, il ne l'est pas."""
+    import json
+
+    from couverture import prolog
+
+    declare = json.loads((prolog.DOSSIER / "traduction.json").read_text(encoding="utf-8"))
+    for contrat_id, d in declare.items():
+        if contrat_id.startswith("_"):
+            continue
+        assert service.traduction(contrat_id) == {"complet": d["complet"], "traduction": d["detail"]} and d["detail"]
+    assert service.traduction("contrat-inconnu") == {"complet": False, "traduction": ""}
+
+
 def test_souscription_publiee_et_gardee_a_la_decision(base, oracle):
     """Le contrat dit ce que ses conditions particulières précisent ; donnée dans les faits, une option n'est pas
     retirée comme « hors sujet » et n'est plus demandée (7.141)."""

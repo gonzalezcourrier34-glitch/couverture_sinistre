@@ -1,0 +1,530 @@
+{
+  "meta": {
+    "article": "4.2.3",
+    "modele": "mistral:mistral-large-4-0",
+    "date": "2026-11-24",
+    "consigne": "redaction-regles v13"
+  },
+  "proposition": {
+    "evenements": [
+      "assistance",
+      "maladie"
+    ],
+    "definitions": [
+      {
+        "concept": "accident_corporel",
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "evenement",
+                "accident"
+              ]
+            },
+            {
+              "f": [
+                "dommage_tiers",
+                "corporel"
+              ]
+            },
+            {
+              "non": {
+                "f": [
+                  "intentionnel",
+                  "oui"
+                ]
+              }
+            }
+          ]
+        },
+        "article": "4.2.3.1",
+        "texte": "Accident corporel Evénement soudain indépendant de la volonté de l'Assuré qui entraîne une lésion corporelle constatée par une autorité médicale compétente et dont l'une des causes est extérieure à l'organisme de la victime."
+      },
+      {
+        "concept": "incident_medical",
+        "condition": {
+          "ou": [
+            {
+              "concept": "accident_corporel"
+            },
+            {
+              "f": [
+                "evenement",
+                "maladie"
+              ]
+            }
+          ]
+        },
+        "article": "4.2.3.1",
+        "texte": "Incident médical La maladie ou l'accident corporel survenant à un Assuré."
+      }
+    ],
+    "garanties": [
+      {
+        "id": "assistance_voyage",
+        "nom": "Assistance voyage",
+        "article": "4.2.3",
+        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie \"assistance voyage\" est souscrite.",
+        "accessoire": true,
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "assistance"
+            ]
+          },
+          {
+            "f": [
+              "sejour_temporaire",
+              "oui"
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "duree_sejour",
+                "moins_90_jours"
+              ]
+            },
+            "article": "4.2.3.3",
+            "texte": "La garantie de la présente convention est limitée aux déplacements de 90 jours calendaires consécutifs au maximum."
+          }
+        ],
+        "obligations": [
+          {
+            "condition": {
+              "f": [
+                "declaration_assistance",
+                "oui"
+              ]
+            },
+            "article": "4.2.3.3",
+            "texte": "Ces événements doivent obligatoirement faire l'objet d'une demande d'intervention auprès d'Assureur B Assistance au moment des faits, sauf disposition contraire expresse propre à certaines garanties.",
+            "exception": null,
+            "lien_causal": false
+          }
+        ],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "cause_guerre",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "4.2.3.8",
+            "texte": "les événements résultant de faits de guerre, une mobilisation générale, une réquisition des hommes et du matériel par les autorités, le terrorisme ou le sabotage, ou de conflits sociaux tels que grève, lock-out, émeute ou mouvement populaire, à moins que l'Assuré démontre qu'il n'a pas participé à cet événement"
+          },
+          {
+            "condition": {
+              "f": [
+                "intentionnel",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "4.2.3.8",
+            "texte": "les événements provoqués par un acte intentionnel, par suicide ou tentative de suicide de l'Assuré"
+          },
+          {
+            "condition": {
+              "f": [
+                "activite_dangereuse",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "4.2.3.8",
+            "texte": "les activités à caractère dangereux telles que celles d'acrobate, de dompteur ou scaphandrier ou l'une des activités professionnelles ci-après : des montées sur toit, sur échelles ou échafaudages ; descentes en puits, mines ou carrières en galeries ; fabrication, usage ou manipulation d'artifices ou d'explosifs"
+          },
+          {
+            "condition": {
+              "f": [
+                "etat_ivresse",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "4.2.3.8",
+            "texte": "le besoin d'assistance qui est survenu alors que l'Assuré se trouve en état d'ivresse, d'intoxication alcoolique punissable ou dans un état analogue résultant de produits autres que des boissons alcoolisées ou accomplit un acte téméraire, un pari ou un défi"
+          },
+          {
+            "condition": {
+              "non": {
+                "f": [
+                  "option_assistance_voyage",
+                  "oui"
+                ]
+              }
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "4.2.3",
+            "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie \"assistance voyage\" est souscrite."
+          }
+        ],
+        "limites": [
+          {
+            "article": "4.2.3.3",
+            "texte": "La garantie de la présente convention est limitée aux déplacements de 90 jours calendaires consécutifs au maximum.",
+            "montant": "90 jours"
+          }
+        ]
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "option_assistance_voyage",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Option assistance voyage",
+        "question": "Vos conditions particulières mentionnent-elles la garantie « assistance voyage » ?",
+        "pourquoi": "condition d'application de la garantie",
+        "plus_proche": "option_protection_juridique",
+        "aide": {
+          "oui": "j'ai souscrit l'assistance voyage",
+          "non": "je n'ai pas l'assistance voyage"
+        }
+      },
+      {
+        "variable": "duree_sejour",
+        "valeurs": [
+          "moins_90_jours",
+          "plus_90_jours"
+        ],
+        "libelle": "Durée du séjour",
+        "question": "Le séjour dure-t-il moins de 90 jours consécutifs ?",
+        "pourquoi": "limite temporelle de 90 jours",
+        "plus_proche": "duree_demenagement",
+        "aide": {
+          "moins_90_jours": "moins de 90 jours",
+          "plus_90_jours": "plus de 90 jours"
+        }
+      },
+      {
+        "variable": "declaration_assistance",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Contact assistance",
+        "question": "Avez-vous contacté la centrale d'assistance au moment des faits ?",
+        "pourquoi": "obligation de déclaration immédiate",
+        "plus_proche": "plainte_deposee",
+        "aide": {
+          "oui": "j'ai appelé l'assistance immédiatement",
+          "non": "je n'ai pas appelé"
+        }
+      },
+      {
+        "variable": "activite_dangereuse",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Activité dangereuse",
+        "question": "L'événement résulte-t-il d'une activité dangereuse (acrobate, dompteur, scaphandrier, travaux en hauteur, explosifs) ?",
+        "pourquoi": "exclusion des activités dangereuses",
+        "plus_proche": "aucune",
+        "aide": {
+          "oui": "activité dangereuse pratiquée",
+          "non": "activité normale"
+        }
+      },
+      {
+        "variable": "etat_ivresse",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "État d'ivresse",
+        "question": "L'assuré était-il en état d'ivresse ou d'intoxication au moment des faits ?",
+        "pourquoi": "exclusion en cas d'ivresse",
+        "plus_proche": "intentionnel",
+        "aide": {
+          "oui": "j'étais en état d'ivresse",
+          "non": "j'étais sobre"
+        }
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "garantie assistance_voyage : {\"f\": [\"option_assistance_voyage\", \"oui\"]} (conditions particulières) mise en réserve, et non en question"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "evenement = maladie : hors vocabulaire, et non déclaré"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "duree_sejour = moins_90_jours : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "declaration_assistance = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "activite_dangereuse = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "etat_ivresse = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "option_assistance_voyage = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.3`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "evenement = maladie : hors vocabulaire, et non déclaré"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "définition : citation rattachée à 4.2.3.1 (et non 4.2.3.1.1)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "définition : citation rattachée à 4.2.3.1 (et non 4.2.3.1.6)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "circonstance : citation rattachée à 4.2.3.3 (et non 4.2.3.3.5)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "obligation : citation rattachée à 4.2.3.3 (et non 4.2.3.3.2)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 4.2.3.8 (et non 4.2.3.8.1)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 4.2.3.8 (et non 4.2.3.8.1)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 4.2.3.8 (et non 4.2.3.8.1)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "exclusion : citation rattachée à 4.2.3.8 (et non 4.2.3.8.1)"
+    },
+    {
+      "gravite": "info",
+      "controle": "citation",
+      "message": "limite : citation rattachée à 4.2.3.3 (et non 4.2.3.3.5)"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Assistance médicale En cas d’incident médical survenant à un Assuré, l’équipe médicale d’Assureur B  »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Frais de recherche et de sauvetage à l’étranger Assureur B Assistance rembourse les frais de recherc »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Remboursement du forfait «Remonte-pentes» Si l’état de l’Assuré blessé entraîne une hospitalisation  »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Accident de ski à l’étranger En cas d’accident corporel sur une piste de ski, Assureur B Assistance  »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Remboursement des frais médicaux Suite à un incident médical à l’étranger Assureur B Assistance pren »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Frais médicaux exclus Ne sont pas remboursés : n les interventions et traitements d’ordre esthétique »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Conditions de prise en charge des frais médicaux »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.4) : « L a prise en charge et/ou le remboursement viennent en complément des remboursements et/ou prises en »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.4) : « La prise en charge et/ou le remboursement de frais de traitement sont effectués sous le régime publi »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Lorsque l’Assuré ne dispose pas d’une couverture valable auprès de la sécurité sociale et/ou de tout »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Modalités de paiement des frais médicaux Le paiement complémentaire de ces frais est effectué par As »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Envoi d’un médecin sur place Suite à un incident médical et si l’équipe médicale d’Assureur B Assist »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Hospitalisation de plus de 5 jours de l’Assuré voyageant seul à l’étranger Lorsque l’Assuré, voyagea »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Frais de prolongation du séjour de l’Assuré à l’étranger Assureur B Assistance prend en charge les f »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Rapatriement ou transport suite à un incident médical Si l’Assuré est hospitalisé à la suite d’un in »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Rapatriement funéraire au cours d’un voyage à l’étranger En cas de décès d’un Assuré à l’étranger et »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Frais de rapatriement des autres Assurés en cas d’évacuation sanitaire ou décès d’un Assuré à l’étra »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Prise en charge des enfants de moins de 16 ans à l’étranger Si l’(es) Assuré(s) accompagnant des enf »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.4) : « (Retour anticipé d’un Assuré) »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Retour anticipé d’un Assuré Si l’Assuré doit interrompre son voyage à l’étranger pour cause : n du d »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.8) : « Exclusions relatives à l’assistance aux personnes La garantie n’est pas acquise pour : n les frais d »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.9~1) : « Subrogation et pluralités d’assurances »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.9~1) : « Tiers responsables Assureur B Assistance qui a presté l’assistance ou payé l’indemnité est subrogée, »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.9~1) : « Pluralités d’assurances Assureur B Assistance n’intervient qu’après épuisement des garanties octroyé »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.9~1) : « Les engagements de l’Assuré »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.9~1) : « Déclaration de sinistre L’Assuré doit, dès que possible et en tout cas dans les délais imposés, sign »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.9~2) : « fournir les justificatifs des dépenses engagées »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.9~2) : « apporter les preuves des faits qui donnent droit aux prestations garanties »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.9~2) : « restituer d’office les titres de transport qui n’ont pas été utilisés parce qu’Assureur B Assistance »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.9~2) : « lorsqu’Assureur B Assistance a fait l’avance des frais médicaux, l’Assuré doit effectuer d’office to »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.9~2) : « Sanctions n Si l’Assuré ne remplit pas une des obligations prévues ci-dessus et qu’il en résulte un  »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.9~2) : « Obligation de moyen Assureur B Assistance met tout en oeuvre pour assister l’Assuré. Assureur B Assi »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.9~2) : « Intervention non-contractuelle Dans l’intérêt de l’Assuré, il se peut qu’Assureur B Assistance doive »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.9~3) : « 7102.60 .dE »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.9~3) : « 7102.60.W »"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "exclusion du contrat absente des règles (4.2.3.9~3) : « AC [produit] Assureur B – [adresse] Tél. : [téléphone]-1 – Fax : [téléphone] – R.C.S. [numéro] »"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+ "_description": "Pour chaque jeu de conditions générales : sont-elles traduites en règles en entier ? Déclaré à la main, article par article, et non calculé (7.169). « complet » : chaque passage de chaque article de garantie est traduit en règle ou classé sans effet sur la décision. L'écran entoure la carte en vert (complet) ou en orange (en partie).",
+ "assureur-a-habitation-2025": {
+  "complet": false,
+  "detail": "Toutes les garanties ont leurs règles, assistance comprise. Restent des exclusions de la responsabilité civile encore classées « rares » et non lues : chasse, gibier, ivresse, terrorisme, pollution graduelle, économie de partage."
+ },
+ "assureur-b-habitation-2017": {
+  "complet": false,
+  "detail": "Seize articles traduits : toutes les garanties des biens (3.1.1 à 3.1.10, 3.2.1 à 3.2.3), l'assistance d'urgence, la responsabilité civile vie privée et la protection juridique. Restent huit articles : protection juridique de l'immeuble, dommages aux biens en option, assistance pour petits travaux, chasse, protection numérique, annulation de voyage, bagages, assistance voyage."
+ },
+ "assureur-c-habitation-2025": {
+  "complet": false,
+  "detail": "Deux garanties traduites : le vol et le bris de glaces. Les autres ne le sont pas encore."
+ },
+ "assureur-d-habitation-2026": {
+  "complet": false,
+  "detail": "Garanties des biens, catastrophes naturelles, responsabilité civile et défense traduites. Restent les options (piscine, jardin, numérique, canalisations enterrées), les frais annexes, les assistances et la protection des personnes."
+ }
+}

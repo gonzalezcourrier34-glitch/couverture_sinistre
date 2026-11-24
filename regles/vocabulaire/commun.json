@@ -719,7 +719,8 @@
         "attentat",
         "fumee",
         "vandalisme",
-        "merule"
+        "merule",
+        "assistance"
       ],
       "valeurs": [
         "oui",
@@ -744,7 +745,8 @@
         "attentat",
         "fumee",
         "vandalisme",
-        "merule"
+        "merule",
+        "assistance"
       ],
       "valeurs": [
         "oui",
@@ -1615,6 +1617,49 @@
       },
       "pour": [
         "jamais"
+      ]
+    },
+    "objet_assistance": {
+      "libelle": "Objet de la demande de dépannage",
+      "valeurs": [
+        "fuite_eau",
+        "chauffage_central",
+        "ouverture",
+        "panne_electrique",
+        "autre_installation"
+      ],
+      "question": "Sur quoi porte la demande de dépannage ?",
+      "libelles": {
+        "fuite_eau": "fuite ou évacuation d'eau",
+        "chauffage_central": "chauffage central",
+        "ouverture": "porte, fenêtre ou serrure",
+        "panne_electrique": "panne électrique ou électronique",
+        "autre_installation": "autre installation fixe"
+      },
+      "aide": {
+        "fuite_eau": "une fuite ou une évacuation d'eau, y compris une chaudière ou un tuyau qui fuit",
+        "chauffage_central": "le chauffage central, la chaudière ou les radiateurs en panne",
+        "ouverture": "une porte, une fenêtre ou une serrure : clé perdue, porte claquée, serrure bloquée",
+        "autre_installation": "une autre installation fixe du logement : ventilation, climatisation, adoucisseur d'eau",
+        "panne_electrique": "une panne du circuit électrique, ou d'un appareil électronique, informatique ou de télécommunication"
+      },
+      "pour": [
+        "assistance"
+      ]
+    },
+    "intervention_mandatee": {
+      "libelle": "Intervention demandée à l'assistance",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'intervention a-t-elle été demandée à l'assistance au moment des faits, et faite par le réparateur qu'elle a envoyé ?",
+      "aide": {
+        "oui": "l'assuré a appelé l'assistance, qui a envoyé son réparateur",
+        "non": "l'assuré a fait venir lui-même un dépanneur, ou n'a prévenu qu'après coup"
+      },
+      "pour": [
+        "assistance"
       ]
     }
   }

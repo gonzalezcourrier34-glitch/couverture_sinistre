@@ -1,0 +1,221 @@
+{
+  "meta": {
+    "article": "5.8",
+    "modele": "mistral:mistral-large-4-0",
+    "date": "2026-11-24",
+    "consigne": "redaction-regles v13"
+  },
+  "proposition": {
+    "evenements": [
+      "responsabilite"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "rc_vie_privee_assistance_benevole",
+        "nom": "Assistance bénévole de tiers",
+        "article": "5.8",
+        "texte": "Nous vous assurons pour les dommages subis par un tiers qui aurait participé, dans le cadre de votre vie privée et en cas de danger imminent, à votre sauvetage à titre gratuit et non professionnel et/ou à celui de vos biens assurés.",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "responsabilite"
+            ]
+          },
+          {
+            "f": [
+              "victime",
+              "tiers"
+            ]
+          },
+          {
+            "f": [
+              "dommage_tiers",
+              "corporel"
+            ]
+          },
+          {
+            "f": [
+              "danger_imminent",
+              "oui"
+            ]
+          },
+          {
+            "f": [
+              "assistance_benevole",
+              "oui"
+            ]
+          },
+          {
+            "f": [
+              "contexte_vie_privee",
+              "oui"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "objet_sauvetage",
+                  "assure"
+                ]
+              },
+              {
+                "f": [
+                  "objet_sauvetage",
+                  "biens_assures"
+                ]
+              },
+              {
+                "f": [
+                  "objet_sauvetage",
+                  "les_deux"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "compensation_autre_organisme",
+                "non"
+              ]
+            },
+            "article": "5.8",
+            "texte": "Nous intervenons dans la mesure où la personne lésée ne peut obtenir de compensation à charge d'un autre organisme public ou privé."
+          }
+        ],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "danger_imminent",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Danger imminent",
+        "question": "Y avait-il un danger imminent au moment où le tiers est intervenu ?",
+        "pourquoi": "La garantie ne couvre que les interventions en cas de danger imminent",
+        "plus_proche": "urgence_habitation décrit une urgence pour l'habitation, pas un danger imminent pour une personne",
+        "aide": {
+          "oui": "il y avait un danger immédiat, une urgence vitale",
+          "non": "pas de danger imminent, intervention préventive ou sans urgence"
+        }
+      },
+      {
+        "variable": "assistance_benevole",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Intervention bénévole",
+        "question": "Le tiers est-il intervenu à titre gratuit et non professionnel ?",
+        "pourquoi": "La garantie exclut les interventions professionnelles ou rémunérées",
+        "plus_proche": "auteur décrit qui cause le dommage, pas le caractère bénévole de l'aide",
+        "aide": {
+          "oui": "le voisin est venu spontanément, sans être appelé professionnellement, gratuitement",
+          "non": "c'était un professionnel appelé, ou rémunéré"
+        }
+      },
+      {
+        "variable": "contexte_vie_privee",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Cadre vie privée",
+        "question": "L'intervention s'est-elle déroulée dans le cadre de votre vie privée ?",
+        "pourquoi": "La garantie est limitée au cadre de la vie privée",
+        "plus_proche": "domaine_litige concerne les litiges, pas le cadre d'une intervention",
+        "aide": {
+          "oui": "c'était dans ma vie personnelle, chez moi, avec des amis",
+          "non": "c'était dans un cadre professionnel"
+        }
+      },
+      {
+        "variable": "objet_sauvetage",
+        "valeurs": [
+          "assure",
+          "biens_assures",
+          "les_deux"
+        ],
+        "libelle": "Objet du sauvetage",
+        "question": "Qui ou quoi le tiers cherchait-il à sauver ?",
+        "pourquoi": "La garantie couvre le sauvetage de l'assuré et/ou de ses biens assurés",
+        "plus_proche": "bien décrit ce qui est endommagé, pas ce qui était sauvé",
+        "aide": {
+          "assure": "il me sauvait moi-même",
+          "biens_assures": "il sauvait mes biens, ma maison",
+          "les_deux": "il nous sauvait moi et mes biens"
+        }
+      },
+      {
+        "variable": "compensation_autre_organisme",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Compensation autre organisme",
+        "question": "La personne lésée peut-elle obtenir une compensation d'un autre organisme public ou privé ?",
+        "pourquoi": "Nous n'intervenons que si aucune autre compensation n'est possible",
+        "plus_proche": "garantie_fabricant ne concerne que le fabricant, pas tout organisme public ou privé",
+        "aide": {
+          "oui": "la sécurité sociale, une autre assurance, un fonds public va l'indemniser",
+          "non": "aucun autre organisme ne peut l'indemniser"
+        }
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "danger_imminent = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.8`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "assistance_benevole = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.8`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "contexte_vie_privee = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.8`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "objet_sauvetage = assure : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.8`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "objet_sauvetage = biens_assures : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.8`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "objet_sauvetage = les_deux : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.8`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "compensation_autre_organisme = non : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.8`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "couverture",
+      "message": "la définition 12/tiers de l'événement couvert n'est pas traduite (elle restreint la garantie) : l'employer ou la déclarer non traduite"
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "meta": {
+    "article": "5.6",
+    "modele": "mistral:mistral-large-4-0",
+    "date": "2026-11-24",
+    "consigne": "redaction-regles v13"
+  },
+  "proposition": {
+    "evenements": [
+      "responsabilite"
+    ],
+    "definitions": [],
+    "garanties": [
+      {
+        "id": "rc_garde_enfants_remuneree",
+        "nom": "Garde rémunérée d'enfants",
+        "article": "5.6",
+        "texte": "Nous assurons votre responsabilité contractuelle et extracontractuelle, lorsque vous assurez la garde, contre rémunération, de maximum 5 enfants de tiers. Nous vous assurons tant pour les dommages causés par les enfants gardés que pour ceux qui sont causés aux enfants gardés.",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "responsabilite"
+            ]
+          },
+          {
+            "f": [
+              "garde_enfants_remuneree",
+              "oui"
+            ]
+          },
+          {
+            "f": [
+              "nombre_enfants_gardes",
+              "max_5"
+            ]
+          },
+          {
+            "f": [
+              "enfants_de_tiers",
+              "oui"
+            ]
+          }
+        ],
+        "circonstances": [],
+        "obligations": [],
+        "exclusions": [],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [],
+    "extensions": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "garde_enfants_remuneree",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Garde rémunérée d'enfants",
+        "question": "Assurez-vous la garde d'enfants contre rémunération ?",
+        "pourquoi": "La garantie ne s'applique que lors d'une garde contre rémunération",
+        "plus_proche": "origine_rc : aucune valeur ne désigne la garde d'enfants rémunérée en vie privée",
+        "aide": {
+          "oui": "je garde des enfants et je suis payé pour cette garde",
+          "non": "je garde des enfants gratuitement ou ce n'est pas une garde d'enfants"
+        }
+      },
+      {
+        "variable": "nombre_enfants_gardes",
+        "valeurs": [
+          "max_5",
+          "plus_5"
+        ],
+        "libelle": "Nombre d'enfants gardés",
+        "question": "Combien d'enfants gardez-vous simultanément ?",
+        "pourquoi": "La garantie est limitée à maximum 5 enfants de tiers",
+        "plus_proche": "aucune variable ne compte le nombre d'enfants gardés",
+        "aide": {
+          "max_5": "je garde 5 enfants ou moins en même temps",
+          "plus_5": "je garde plus de 5 enfants en même temps"
+        }
+      },
+      {
+        "variable": "enfants_de_tiers",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "libelle": "Enfants de tiers",
+        "question": "Les enfants gardés sont-ils les enfants de tiers (et non vos propres enfants) ?",
+        "pourquoi": "La garantie concerne les enfants de tiers, pas les enfants de l'assuré",
+        "plus_proche": "victime ou auteur : ne précisent pas la parenté des enfants concernés",
+        "aide": {
+          "oui": "ce sont les enfants d'autres personnes, des tiers, pas mes propres enfants",
+          "non": "ce sont mes propres enfants ou ceux de ma famille assurée"
+        }
+      }
+    ],
+    "non_traduit": []
+  },
+  "controles": [
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "garde_enfants_remuneree = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.6`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "nombre_enfants_gardes = max_5 : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.6`) ou à remplacer"
+    },
+    {
+      "gravite": "bloquant",
+      "controle": "vocabulaire",
+      "message": "enfants_de_tiers = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 5.6`) ou à remplacer"
+    }
+  ]
+}

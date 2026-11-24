@@ -1,6 +1,21 @@
 {
   "_description": "Variables que seules les règles de ce contrat emploient (regles/assureur-a-habitation-2025.pl). Même format que commun.json. Rangé par `couverture regles --ranger` : une variable qu'un autre contrat se met à employer passe dans commun.json.",
   "variables": {
+    "contact_assistance_impossible": {
+      "libelle": "Assistance impossible à joindre",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Étiez-vous matériellement dans l'impossibilité de joindre l'assistance au moment des faits ?",
+      "aide": {
+        "oui": "aucun moyen d'appeler : pas de téléphone, hospitalisé, à l'étranger sans réseau",
+        "non": "l'assistance pouvait être jointe"
+      },
+      "pour": [
+        "assistance"
+      ]
+    },
     "fermeture": {
       "libelle": "Fermeture du local",
       "valeurs": [

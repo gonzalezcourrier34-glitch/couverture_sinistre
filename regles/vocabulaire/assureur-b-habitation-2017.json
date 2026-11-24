@@ -1,6 +1,71 @@
 {
   "_description": "Variables que seules les règles de ce contrat emploient (regles/assureur-b-habitation-2017.pl). Même format que commun.json. Rangé par `couverture regles --ranger` : une variable qu'un autre contrat se met à employer passe dans commun.json.",
   "variables": {
+    "option_assistance_urgence": {
+      "libelle": "Garantie « assistance d’urgence » souscrite",
+      "source": "conditions_particulieres",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Vos conditions particulières mentionnent-elles la garantie « assistance d’urgence » ?",
+      "aide": {
+        "oui": "la garantie figure aux conditions particulières",
+        "non": "elle n'y figure pas"
+      },
+      "pour": [
+        "assistance"
+      ]
+    },
+    "urgence_habitation": {
+      "libelle": "Situation d'urgence dans le logement",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La situation rend-elle le logement dangereux ou inhabitable, ou risque-t-elle d'aggraver les dégâts (une porte qu'on ne peut plus ouvrir compte aussi) ?",
+      "aide": {
+        "oui": "fuite en cours, plus de chauffage, logement ouvert ou inaccessible, danger : il faut intervenir tout de suite",
+        "non": "une gêne ou une réparation qui peut attendre"
+      },
+      "pour": [
+        "assistance"
+      ]
+    },
+    "anciennete_garantie": {
+      "libelle": "Ancienneté de la garantie",
+      "valeurs": [
+        "moins_30_jours",
+        "plus_30_jours"
+      ],
+      "question": "La garantie a-t-elle pris effet depuis plus de trente jours ?",
+      "libelles": {
+        "moins_30_jours": "moins de trente jours",
+        "plus_30_jours": "plus de trente jours"
+      },
+      "aide": {
+        "moins_30_jours": "contrat ou garantie signé il y a moins de trente jours (« la semaine dernière », « il y a quinze jours »)",
+        "plus_30_jours": "contrat plus ancien"
+      },
+      "pour": [
+        "assistance"
+      ]
+    },
+    "coupure_reseau": {
+      "libelle": "Coupure du réseau de distribution",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La coupure de gaz, d'électricité ou d'eau vient-elle du réseau de distribution ?",
+      "aide": {
+        "oui": "coupure générale du quartier, travaux ou panne du distributeur",
+        "non": "le problème vient de l'installation du logement"
+      },
+      "pour": [
+        "assistance"
+      ]
+    },
     "serrure_cylindre": {
       "libelle": "Annexes fermées par une serrure à cylindre",
       "valeurs": [
@@ -442,7 +507,8 @@
       },
       "pour": [
         "bris",
-        "vol"
+        "vol",
+        "assistance"
       ]
     },
     "option_tremblement_terre": {
@@ -586,7 +652,8 @@
         "autre": "autre polluant"
       },
       "pour": [
-        "accessoire"
+        "accessoire",
+        "assistance"
       ]
     },
     "reglementation_pollution_respectee": {
