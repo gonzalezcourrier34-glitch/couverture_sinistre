@@ -1,82 +1,107 @@
 {
   "meta": {
     "article": "4.2.3",
-    "modele": "mistral:mistral-large-4-0",
+    "modele": "mistral:mistral-large-4-0 (proposition écartée)",
     "date": "2026-11-24",
-    "consigne": "redaction-regles v13"
+    "consigne": "redaction-regles v13",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-24",
+      "modifications": [
+        "réécrite à la main : la proposition du modèle inventait un événement « maladie » ; l'événement « voyage » et le fait « objet de la demande de voyage » sont ceux de l'annulation (4.2.1)",
+        "une seule garantie : les quinze prestations de l'assistance répondent toutes à la même question de couverture, l'option souscrite et l'assistance appelée ; le détail des montants n'est pas la question",
+        "l'appel à l'assistance au moment des faits est une circonstance, donc une question (leçon 165), sauf pour les trois cas que le contrat en dispense : soins sans hospitalisation, sauvetage ou ski, frais de vétérinaire. Écrit d'abord en exclusion à demander : le moteur de référence ne posait pas la question et couvrait",
+        "les exclusions sont lues par deux faits à plusieurs valeurs",
+        "limite : la plupart des prestations ne valent qu'à l'étranger ; le lieu n'est pas vérifié, le vocabulaire des pays étant écrit pour la responsabilité civile"
+      ]
+    }
   },
   "proposition": {
     "evenements": [
-      "assistance",
-      "maladie"
+      "voyage"
     ],
-    "definitions": [
-      {
-        "concept": "accident_corporel",
-        "condition": {
-          "et": [
-            {
-              "f": [
-                "evenement",
-                "accident"
-              ]
-            },
-            {
-              "f": [
-                "dommage_tiers",
-                "corporel"
-              ]
-            },
-            {
-              "non": {
-                "f": [
-                  "intentionnel",
-                  "oui"
-                ]
-              }
-            }
-          ]
-        },
-        "article": "4.2.3.1",
-        "texte": "Accident corporel Evénement soudain indépendant de la volonté de l'Assuré qui entraîne une lésion corporelle constatée par une autorité médicale compétente et dont l'une des causes est extérieure à l'organisme de la victime."
-      },
-      {
-        "concept": "incident_medical",
-        "condition": {
-          "ou": [
-            {
-              "concept": "accident_corporel"
-            },
-            {
-              "f": [
-                "evenement",
-                "maladie"
-              ]
-            }
-          ]
-        },
-        "article": "4.2.3.1",
-        "texte": "Incident médical La maladie ou l'accident corporel survenant à un Assuré."
-      }
-    ],
+    "definitions": [],
     "garanties": [
       {
         "id": "assistance_voyage",
-        "nom": "Assistance voyage",
-        "article": "4.2.3",
-        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie \"assistance voyage\" est souscrite.",
-        "accessoire": true,
+        "nom": "Assistance voyage (option)",
+        "article": "4.2.3.2",
+        "texte": "Assureur B Assistance garantit, à concurrence des montants indiqués, taxes comprises, un service d’assistance lorsque les Assurés sont victimes des événements aléatoires définis dans le présent contrat",
         "perimetre": [
           {
             "f": [
               "evenement",
-              "assistance"
+              "voyage"
             ]
           },
           {
-            "f": [
-              "sejour_temporaire",
-              "oui"
+            "ou": [
+              {
+                "f": [
+                  "objet_voyage",
+                  "incident_medical"
+                ]
+              },
+              {
+                "f": [
+                  "objet_voyage",
+                  "soins_sans_hospitalisation"
+                ]
+              },
+              {
+                "f": [
+                  "objet_voyage",
+                  "sauvetage_ou_ski"
+                ]
+              },
+              {
+                "f": [
+                  "objet_voyage",
+                  "deces"
+                ]
+              },
+              {
+                "f": [
+                  "objet_voyage",
+                  "retour_anticipe"
+                ]
+              },
+              {
+                "f": [
+                  "objet_voyage",
+                  "perte_bagage"
+                ]
+              },
+              {
+                "f": [
+                  "objet_voyage",
+                  "retard_bagage"
+                ]
+              },
+              {
+                "f": [
+                  "objet_voyage",
+                  "perte_papiers"
+                ]
+              },
+              {
+                "f": [
+                  "objet_voyage",
+                  "poursuites_etranger"
+                ]
+              },
+              {
+                "f": [
+                  "objet_voyage",
+                  "enfant_hospitalise"
+                ]
+              },
+              {
+                "f": [
+                  "objet_voyage",
+                  "animal"
+                ]
+              }
             ]
           }
         ],
@@ -84,447 +109,968 @@
           {
             "condition": {
               "f": [
-                "duree_sejour",
-                "moins_90_jours"
-              ]
-            },
-            "article": "4.2.3.3",
-            "texte": "La garantie de la présente convention est limitée aux déplacements de 90 jours calendaires consécutifs au maximum."
-          }
-        ],
-        "obligations": [
-          {
-            "condition": {
-              "f": [
-                "declaration_assistance",
+                "option_assistance_voyage",
                 "oui"
               ]
             },
+            "article": "4.2.3",
+            "texte": "la garantie “assistance voyage” est souscrite"
+          },
+          {
+            "condition": {
+              "ou": [
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "objet_voyage",
+                        "soins_sans_hospitalisation"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "objet_voyage",
+                        "sauvetage_ou_ski"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "objet_voyage",
+                        "animal"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "f": [
+                    "assistance_voyage_appelee",
+                    "oui"
+                  ]
+                }
+              ]
+            },
             "article": "4.2.3.3",
-            "texte": "Ces événements doivent obligatoirement faire l'objet d'une demande d'intervention auprès d'Assureur B Assistance au moment des faits, sauf disposition contraire expresse propre à certaines garanties.",
-            "exception": null,
-            "lien_causal": false
+            "texte": "Ces événements doivent obligatoirement faire l’objet d’une demande d’intervention auprès d’Assureur B Assistance au moment des faits, sauf disposition contraire expresse propre à certaines garanties"
           }
         ],
+        "obligations": [],
         "exclusions": [
           {
             "condition": {
               "f": [
-                "cause_guerre",
+                "voyage_plus_90_jours",
                 "oui"
               ]
             },
             "portee": "tout",
-            "a_demander": true,
-            "article": "4.2.3.8",
-            "texte": "les événements résultant de faits de guerre, une mobilisation générale, une réquisition des hommes et du matériel par les autorités, le terrorisme ou le sabotage, ou de conflits sociaux tels que grève, lock-out, émeute ou mouvement populaire, à moins que l'Assuré démontre qu'il n'a pas participé à cet événement"
+            "a_demander": false,
+            "article": "4.2.3.3",
+            "texte": "La garantie de la présente convention est limitée aux déplacements de 90 jours calendaires consécutifs au maximum"
           },
           {
             "condition": {
               "f": [
-                "intentionnel",
+                "destination_deconseillee",
                 "oui"
               ]
             },
             "portee": "tout",
-            "a_demander": true,
-            "article": "4.2.3.8",
-            "texte": "les événements provoqués par un acte intentionnel, par suicide ou tentative de suicide de l'Assuré"
+            "a_demander": false,
+            "article": "4.2.3.3",
+            "texte": "La garantie n’est pas acquise lorsque, nonobstant la déclaration officielle du Ministère desAffaires Etrangères qui déconseille à ses ressortissants de se rendre dans un pays en état de troubles, d’émeutes, de guerres ou de guerres civiles, l’Assuré décide néanmoins d’entreprendre son voyage"
           },
           {
             "condition": {
-              "f": [
-                "activite_dangereuse",
-                "oui"
+              "ou": [
+                {
+                  "f": [
+                    "cause_assistance_exclue",
+                    "activite_dangereuse"
+                  ]
+                },
+                {
+                  "f": [
+                    "cause_assistance_exclue",
+                    "acte_intentionnel"
+                  ]
+                },
+                {
+                  "f": [
+                    "cause_assistance_exclue",
+                    "ivresse_ou_defi"
+                  ]
+                },
+                {
+                  "f": [
+                    "cause_assistance_exclue",
+                    "guerre_greve_emeute"
+                  ]
+                },
+                {
+                  "f": [
+                    "cause_assistance_exclue",
+                    "nucleaire"
+                  ]
+                },
+                {
+                  "f": [
+                    "cause_assistance_exclue",
+                    "competition_ou_sport_dangereux"
+                  ]
+                }
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "4.2.3.8",
-            "texte": "les activités à caractère dangereux telles que celles d'acrobate, de dompteur ou scaphandrier ou l'une des activités professionnelles ci-après : des montées sur toit, sur échelles ou échafaudages ; descentes en puits, mines ou carrières en galeries ; fabrication, usage ou manipulation d'artifices ou d'explosifs"
+            "texte": "les activités à caractère dangereux telles que celles d’acrobate, de dompteur ou scaphandrier"
           },
           {
             "condition": {
-              "f": [
-                "etat_ivresse",
-                "oui"
+              "et": [
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "objet_voyage",
+                        "incident_medical"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "objet_voyage",
+                        "soins_sans_hospitalisation"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "etat_sante_exclu",
+                        "affection_benigne"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "etat_sante_exclu",
+                        "maladie_mentale_deja_traitee"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "etat_sante_exclu",
+                        "grossesse_avancee_ou_ivg"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "etat_sante_exclu",
+                        "maladie_chronique_ou_en_traitement"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "etat_sante_exclu",
+                        "soins_au_pays"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "etat_sante_exclu",
+                        "prothese_cure_prevention"
+                      ]
+                    }
+                  ]
+                }
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "4.2.3.8",
-            "texte": "le besoin d'assistance qui est survenu alors que l'Assuré se trouve en état d'ivresse, d'intoxication alcoolique punissable ou dans un état analogue résultant de produits autres que des boissons alcoolisées ou accomplit un acte téméraire, un pari ou un défi"
+            "texte": "les affections ou lésions bénignes qui n’empêchent pas l’Assuré de poursuivre son voyage ; n les maladies mentales et les états psychiatriques ayant déjà fait l’objet d’un traitement ; n les états de grossesse après la 26ème semaine et les interruptions volontaires de grossesse"
           },
           {
             "condition": {
-              "non": {
-                "f": [
-                  "option_assistance_voyage",
-                  "oui"
-                ]
-              }
+              "et": [
+                {
+                  "f": [
+                    "objet_voyage",
+                    "sauvetage_ou_ski"
+                  ]
+                },
+                {
+                  "f": [
+                    "ski_hors_piste",
+                    "oui"
+                  ]
+                }
+              ]
             },
             "portee": "tout",
-            "a_demander": true,
-            "article": "4.2.3",
-            "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie \"assistance voyage\" est souscrite."
+            "a_demander": false,
+            "article": "4.2.3.4",
+            "texte": "Cette garantie est exclue lorsque le sinistre survient suite à la pratique du ski effectué hors pistes balisées sans guide agréé par les autorités du pays"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "objet_voyage",
+                    "retour_anticipe"
+                  ]
+                },
+                {
+                  "f": [
+                    "evenement_previsible_au_depart",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.2.3.4",
+            "texte": "uniquement si la maladie ou le décès présente un caractère imprévisible au moment du départ de l’Assuré à l’étranger"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "objet_voyage",
+                    "poursuites_etranger"
+                  ]
+                },
+                {
+                  "f": [
+                    "suite_accident_circulation",
+                    "non"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.2.3.6",
+            "texte": "Si, à la suite d’un accident de la circulation à l’étranger, l’Assuré tombe sous le coup de poursuites judiciaires"
           }
         ],
         "limites": [
           {
-            "article": "4.2.3.3",
-            "texte": "La garantie de la présente convention est limitée aux déplacements de 90 jours calendaires consécutifs au maximum.",
-            "montant": "90 jours"
+            "article": "4.2.3.4",
+            "texte": "à concurrence d’un maximum de 150.000 f par Assuré",
+            "montant": "150000"
           }
         ]
       }
     ],
     "exclusions_communes": [],
-    "extensions": [],
     "vocabulaire_manquant": [
       {
-        "variable": "option_assistance_voyage",
+        "variable": "evenement",
         "valeurs": [
-          "oui",
-          "non"
+          "voyage"
         ],
-        "libelle": "Option assistance voyage",
-        "question": "Vos conditions particulières mentionnent-elles la garantie « assistance voyage » ?",
-        "pourquoi": "condition d'application de la garantie",
-        "plus_proche": "option_protection_juridique",
+        "libelle": "Événement",
+        "question": "Que s'est-il passé ?",
+        "pourquoi": "4.2.1, 4.2.2 et 4.2.3 : les garanties de voyage ne partent pas d'un dommage à un bien",
+        "plus_proche": "assistance : un dépannage au logement ; autre : rien de précis",
         "aide": {
-          "oui": "j'ai souscrit l'assistance voyage",
-          "non": "je n'ai pas l'assistance voyage"
+          "voyage": "un voyage ou une location de vacances annulé ou interrompu ; une maladie, un accident corporel ou un décès pendant un voyage ; un bagage ou des papiers perdus en voyage ; un besoin d'aide à l'étranger. Un bagage volé ou cassé en voyage reste « vol » ou « bris »"
+        },
+        "libelles": {
+          "voyage": "voyage : annulation, incident ou besoin d'aide"
         }
       },
       {
-        "variable": "duree_sejour",
+        "variable": "objet_voyage",
+        "libelle": "Objet de la demande de voyage",
         "valeurs": [
-          "moins_90_jours",
-          "plus_90_jours"
+          "annulation",
+          "interruption",
+          "incident_medical",
+          "soins_sans_hospitalisation",
+          "sauvetage_ou_ski",
+          "deces",
+          "retour_anticipe",
+          "perte_bagage",
+          "retard_bagage",
+          "perte_papiers",
+          "poursuites_etranger",
+          "enfant_hospitalise",
+          "animal",
+          "autre"
         ],
-        "libelle": "Durée du séjour",
-        "question": "Le séjour dure-t-il moins de 90 jours consécutifs ?",
-        "pourquoi": "limite temporelle de 90 jours",
-        "plus_proche": "duree_demenagement",
+        "question": "Que s'est-il passé pour ce voyage ?",
         "aide": {
-          "moins_90_jours": "moins de 90 jours",
-          "plus_90_jours": "plus de 90 jours"
-        }
-      },
-      {
-        "variable": "declaration_assistance",
-        "valeurs": [
-          "oui",
-          "non"
+          "annulation": "le voyage ou la location est annulé avant le départ",
+          "interruption": "le voyage est interrompu, ou le retour ne peut pas se faire à la date prévue",
+          "incident_medical": "maladie ou accident corporel en voyage, avec hospitalisation, rapatriement ou appel à l'assistance",
+          "soins_sans_hospitalisation": "des soins ou une consultation à l'étranger, sans hospitalisation",
+          "sauvetage_ou_ski": "des frais de recherche, de sauvetage, ou de descente en traîneau après un accident de ski",
+          "deces": "le décès d'un assuré pendant le voyage",
+          "retour_anticipe": "un retour avancé parce qu'un proche resté au pays est décédé ou hospitalisé",
+          "perte_bagage": "un bagage perdu ou égaré, sans vol : par la compagnie aérienne, dans un transport",
+          "retard_bagage": "un bagage livré en retard",
+          "perte_papiers": "papiers, billets ou carte bancaire perdus ou volés à l'étranger",
+          "poursuites_etranger": "des poursuites judiciaires à l'étranger après un accident de la circulation",
+          "enfant_hospitalise": "un enfant de moins de 16 ans hospitalisé au pays pendant que ses parents sont à l'étranger",
+          "animal": "le chien ou le chat qui accompagne l'assuré tombe malade ou se blesse à l'étranger",
+          "autre": "autre chose"
+        },
+        "pour": [
+          "voyage"
         ],
-        "libelle": "Contact assistance",
-        "question": "Avez-vous contacté la centrale d'assistance au moment des faits ?",
-        "pourquoi": "obligation de déclaration immédiate",
-        "plus_proche": "plainte_deposee",
-        "aide": {
-          "oui": "j'ai appelé l'assistance immédiatement",
-          "non": "je n'ai pas appelé"
-        }
-      },
-      {
-        "variable": "activite_dangereuse",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "libelle": "Activité dangereuse",
-        "question": "L'événement résulte-t-il d'une activité dangereuse (acrobate, dompteur, scaphandrier, travaux en hauteur, explosifs) ?",
-        "pourquoi": "exclusion des activités dangereuses",
+        "pourquoi": "ce que demande l'assuré : chaque garantie de voyage en couvre une partie",
         "plus_proche": "aucune",
-        "aide": {
-          "oui": "activité dangereuse pratiquée",
-          "non": "activité normale"
+        "libelles": {
+          "annulation": "annulation avant le départ",
+          "interruption": "interruption ou retour empêché",
+          "incident_medical": "maladie ou accident en voyage",
+          "soins_sans_hospitalisation": "soins à l'étranger sans hospitalisation",
+          "sauvetage_ou_ski": "sauvetage ou accident de ski",
+          "deces": "décès en voyage",
+          "retour_anticipe": "retour anticipé",
+          "perte_bagage": "bagage perdu",
+          "retard_bagage": "bagage en retard",
+          "perte_papiers": "papiers ou billets perdus",
+          "poursuites_etranger": "poursuites à l'étranger",
+          "enfant_hospitalise": "enfant hospitalisé au pays",
+          "animal": "animal malade ou blessé",
+          "autre": "autre"
         }
       },
       {
-        "variable": "etat_ivresse",
+        "variable": "option_assistance_voyage",
+        "libelle": "Garantie « assistance voyage » souscrite",
         "valeurs": [
           "oui",
           "non"
         ],
-        "libelle": "État d'ivresse",
-        "question": "L'assuré était-il en état d'ivresse ou d'intoxication au moment des faits ?",
-        "pourquoi": "exclusion en cas d'ivresse",
-        "plus_proche": "intentionnel",
+        "question": "Avez-vous souscrit l'option « assistance voyage » ?",
         "aide": {
-          "oui": "j'étais en état d'ivresse",
-          "non": "j'étais sobre"
-        }
+          "oui": "la garantie figure à votre contrat",
+          "non": "elle n'y figure pas"
+        },
+        "pour": [
+          "voyage"
+        ],
+        "pourquoi": "une option : le contrat la range sous un titre « Option », elle se demande (7.173)",
+        "plus_proche": "aucune ; fait des conditions particulières",
+        "source": "conditions_particulieres"
+      },
+      {
+        "variable": "assistance_voyage_appelee",
+        "libelle": "Assistance appelée au moment des faits",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Avez-vous appelé l'assistance au moment des faits, et suivi ce qu'elle a organisé ?",
+        "aide": {
+          "oui": "assistance appelée sur le moment, prestations organisées par elle",
+          "non": "tout organisé et payé par vous-même, assistance prévenue après coup ou pas du tout"
+        },
+        "pour": [
+          "voyage"
+        ],
+        "pourquoi": "4.2.3.3.2 et 4.2.3.3.4 : la prestation en dépend et seul l'assuré le sait (leçon 165)",
+        "plus_proche": "intervention_mandatee, écrite pour un réparateur au logement"
+      },
+      {
+        "variable": "voyage_plus_90_jours",
+        "libelle": "Déplacement de plus de 90 jours",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le déplacement durait-il depuis plus de 90 jours ?",
+        "aide": {
+          "oui": "parti depuis plus de trois mois",
+          "non": "moins de trois mois"
+        },
+        "pour": [
+          "voyage"
+        ],
+        "pourquoi": "4.2.3.3.5",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "destination_deconseillee",
+        "libelle": "Destination déconseillée",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le pays était-il déconseillé par le ministère des Affaires étrangères ?",
+        "aide": {
+          "oui": "pays en guerre ou en troubles, officiellement déconseillé",
+          "non": "destination ordinaire"
+        },
+        "pour": [
+          "voyage"
+        ],
+        "pourquoi": "4.2.3.3.6",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "cause_assistance_exclue",
+        "libelle": "Cause exclue de l'assistance",
+        "valeurs": [
+          "activite_dangereuse",
+          "acte_intentionnel",
+          "ivresse_ou_defi",
+          "guerre_greve_emeute",
+          "nucleaire",
+          "competition_ou_sport_dangereux",
+          "non"
+        ],
+        "question": "Le besoin d'assistance vient-il de l'une de ces causes ?",
+        "aide": {
+          "activite_dangereuse": "activité professionnelle dangereuse : acrobate, travail sur toit ou échafaudage, explosifs",
+          "acte_intentionnel": "un acte volontaire de l'assuré",
+          "ivresse_ou_defi": "ivresse, drogue, acte téméraire, pari ou défi",
+          "guerre_greve_emeute": "guerre, terrorisme, grève, émeute",
+          "nucleaire": "accident nucléaire",
+          "competition_ou_sport_dangereux": "compétition, sport à moteur en compétition, sport professionnel ou réputé dangereux",
+          "non": "rien de cela"
+        },
+        "pour": [
+          "voyage"
+        ],
+        "pourquoi": "4.2.3.8.1 : les exclusions communes, lues par un seul fait",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "etat_sante_exclu",
+        "libelle": "État de santé exclu de l'assistance",
+        "valeurs": [
+          "affection_benigne",
+          "maladie_mentale_deja_traitee",
+          "grossesse_avancee_ou_ivg",
+          "maladie_chronique_ou_en_traitement",
+          "soins_au_pays",
+          "prothese_cure_prevention",
+          "non"
+        ],
+        "question": "L'incident médical relève-t-il de l'un de ces cas ?",
+        "aide": {
+          "affection_benigne": "un mal bénin qui n'empêche pas de continuer le voyage",
+          "maladie_mentale_deja_traitee": "une maladie mentale déjà traitée auparavant",
+          "grossesse_avancee_ou_ivg": "grossesse après la 26e semaine, ou interruption volontaire de grossesse",
+          "maladie_chronique_ou_en_traitement": "maladie chronique, affection en cours de traitement ou convalescence avant le départ",
+          "soins_au_pays": "des soins reçus au Luxembourg après le retour",
+          "prothese_cure_prevention": "lunettes, prothèse, cure, médecine préventive",
+          "non": "rien de cela"
+        },
+        "pour": [
+          "voyage"
+        ],
+        "pourquoi": "4.2.3.8.2 : les exclusions de l'assistance aux personnes",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "ski_hors_piste",
+        "libelle": "Ski hors piste sans guide",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "L'accident de ski est-il survenu hors des pistes balisées, sans guide agréé ?",
+        "aide": {
+          "oui": "hors piste, sans guide",
+          "non": "sur une piste balisée, ou avec un guide"
+        },
+        "pour": [
+          "voyage"
+        ],
+        "pourquoi": "4.2.3.4.4",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "evenement_previsible_au_depart",
+        "libelle": "Maladie ou décès prévisible au départ",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La maladie ou le décès du proche était-il prévisible quand vous êtes parti ?",
+        "aide": {
+          "oui": "le proche était déjà gravement malade au départ",
+          "non": "rien ne le laissait prévoir"
+        },
+        "pour": [
+          "voyage"
+        ],
+        "pourquoi": "4.2.3.4.13",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "suite_accident_circulation",
+        "libelle": "Poursuites après un accident de la circulation",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Les poursuites font-elles suite à un accident de la circulation ?",
+        "aide": {
+          "oui": "après un accident de la route",
+          "non": "pour une autre raison"
+        },
+        "pour": [
+          "voyage"
+        ],
+        "pourquoi": "4.2.3.6",
+        "plus_proche": "aucune"
       }
     ],
-    "non_traduit": []
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "4.2.3",
+        "texte": "Pour bénéficier des garanties de l’assistance voyage, l’Assuré pourra joindre la centrale d’assistance",
+        "pourquoi": "procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.3.1",
+        "texte": "4.2.3.1.1 Accident corporel Evénement soudain indépendant de la volonté de l’Assuré",
+        "pourquoi": "des définitions, portées par les valeurs du fait « objet de la demande de voyage »"
+      },
+      {
+        "article": "4.2.3.2",
+        "texte": "Le service d’assistance est acquis dans le monde entier, dès le départ du domicile de l’Assuré",
+        "pourquoi": "aucune limite de territoire : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.3.3",
+        "texte": "Le choix du moyen de transport le plus approprié appartient à Assureur B Assistance",
+        "pourquoi": "procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.3.4",
+        "texte": "4.2.3.4.5.1 Frais médicaux exclus Ne sont pas remboursés : n les interventions et traitements d’ordre esthétique",
+        "pourquoi": "le détail des frais médicaux remboursés : l'étendue de la prise en charge, pas l'existence de la garantie ; les soins au pays, les prothèses et les cures sont des règles (4.2.3.8.2)"
+      },
+      {
+        "article": "4.2.3.4",
+        "texte": "4.2.3.4.5.2 Conditions de prise en charge des frais médicaux",
+        "pourquoi": "procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.3.4",
+        "texte": "La décision du transport et des moyens à mettre en oeuvre et du choix du lieu d’hospitalisation éventuel à l’étranger, est prise par le médecin d’Assureur B Assistance",
+        "pourquoi": "une décision médicale de l'assisteur, après le sinistre"
+      },
+      {
+        "article": "4.2.3.4",
+        "texte": "Cette garantie s’applique pour autant que les autres Assurés ne puissent pas utiliser le même moyen de transport qu’au voyage aller",
+        "pourquoi": "une condition d'une prestation accessoire (le retour des accompagnants), qui ne change pas la réponse sur l'incident lui-même"
+      },
+      {
+        "article": "4.2.3.5",
+        "texte": "4.2.3.5.1 Informations diverses Assureur B Assistance donne à l’Assuré, par téléphone, des informations relatives à un départ vers l’étranger",
+        "pourquoi": "des services d'information, de traduction et de transmission de messages, pas des garanties qui décident d'un sinistre"
+      },
+      {
+        "article": "4.2.3.5",
+        "texte": "L’intervention d’Assureur B Assistance dans l’acheminement des bagages est subordonnée à la production du P.I.R. (Property Irregularity Report)",
+        "pourquoi": "procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.3.5",
+        "texte": "4.2.3.5.7 Avance de fonds",
+        "pourquoi": "une avance remboursable, pas une prise en charge"
+      },
+      {
+        "article": "4.2.3.8",
+        "texte": "les frais de restauration ; n les frais de taxi, sauf ceux prévus explicitement dans le contrat",
+        "pourquoi": "des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.3.8",
+        "texte": "les prestations garanties qu’elle ne peut fournir par suite de force majeure ou de fait du prince",
+        "pourquoi": "l'impossibilité de l'assisteur, pas un fait que l'assuré déclare"
+      },
+      {
+        "article": "4.2.3.4",
+        "texte": "Assistance médicale En cas d’incident médical survenant à un Assuré,",
+        "pourquoi": "une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
+      },
+      {
+        "article": "4.2.3.4",
+        "texte": "Frais de recherche et de sauvetage à l’étranger Assureur B Assistance",
+        "pourquoi": "une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
+      },
+      {
+        "article": "4.2.3.4",
+        "texte": "Remboursement du forfait «Remonte-pentes» Si l’état de l’Assuré",
+        "pourquoi": "une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
+      },
+      {
+        "article": "4.2.3.4",
+        "texte": "Remboursement des frais médicaux Suite à un incident médical à",
+        "pourquoi": "une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
+      },
+      {
+        "article": "4.2.3.4",
+        "texte": "Frais médicaux exclus Ne sont pas remboursés : n les interventions et",
+        "pourquoi": "une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
+      },
+      {
+        "article": "4.2.3.4",
+        "texte": "L a prise en charge et/ou le remboursement viennent en complément des",
+        "pourquoi": "une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
+      },
+      {
+        "article": "4.2.3.4",
+        "texte": "La prise en charge et/ou le remboursement de frais de traitement sont",
+        "pourquoi": "une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
+      },
+      {
+        "article": "4.2.3.4",
+        "texte": "Lorsque l’Assuré ne dispose pas d’une couverture valable auprès de la",
+        "pourquoi": "une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
+      },
+      {
+        "article": "4.2.3.4",
+        "texte": "Modalités de paiement des frais médicaux Le paiement complémentaire",
+        "pourquoi": "une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
+      },
+      {
+        "article": "4.2.3.4",
+        "texte": "Envoi d’un médecin sur place Suite à un incident médical et si",
+        "pourquoi": "une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
+      },
+      {
+        "article": "4.2.3.4",
+        "texte": "Hospitalisation de plus de 5 jours de l’Assuré voyageant seul à",
+        "pourquoi": "une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
+      },
+      {
+        "article": "4.2.3.4",
+        "texte": "Frais de prolongation du séjour de l’Assuré à l’étranger Assureur B",
+        "pourquoi": "une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
+      },
+      {
+        "article": "4.2.3.4",
+        "texte": "Rapatriement funéraire au cours d’un voyage à l’étranger En cas de",
+        "pourquoi": "une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
+      },
+      {
+        "article": "4.2.3.4",
+        "texte": "Prise en charge des enfants de moins de 16 ans à l’étranger Si l’(es)",
+        "pourquoi": "une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
+      },
+      {
+        "article": "4.2.3.4",
+        "texte": "(Retour anticipé d’un Assuré)",
+        "pourquoi": "une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
+      },
+      {
+        "article": "4.2.3.9~1",
+        "texte": "Subrogation et pluralités d’assurances",
+        "pourquoi": "dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.3.9~1",
+        "texte": "Tiers responsables Assureur B Assistance qui a presté l’assistance ou",
+        "pourquoi": "dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.3.9~1",
+        "texte": "Pluralités d’assurances Assureur B Assistance n’intervient qu’après",
+        "pourquoi": "dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.3.9~1",
+        "texte": "Les engagements de l’Assuré",
+        "pourquoi": "dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.3.9~1",
+        "texte": "Déclaration de sinistre L’Assuré doit, dès que possible et en tout",
+        "pourquoi": "dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.3.9~2",
+        "texte": "fournir les justificatifs des dépenses engagées",
+        "pourquoi": "dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.3.9~2",
+        "texte": "apporter les preuves des faits qui donnent droit aux prestations",
+        "pourquoi": "dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.3.9~2",
+        "texte": "restituer d’office les titres de transport qui n’ont pas été utilisés",
+        "pourquoi": "dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.3.9~2",
+        "texte": "lorsqu’Assureur B Assistance a fait l’avance des frais médicaux,",
+        "pourquoi": "dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.3.9~2",
+        "texte": "Sanctions n Si l’Assuré ne remplit pas une des obligations prévues",
+        "pourquoi": "dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.3.9~2",
+        "texte": "Obligation de moyen Assureur B Assistance met tout en oeuvre pour",
+        "pourquoi": "dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.3.9~2",
+        "texte": "Intervention non-contractuelle Dans l’intérêt de l’Assuré, il se peut",
+        "pourquoi": "dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.3.9~3",
+        "texte": "7102.60 .dE",
+        "pourquoi": "dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.3.9~3",
+        "texte": "7102.60.W",
+        "pourquoi": "dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.3.9~3",
+        "texte": "AC [produit] Assureur B – [adresse] Tél. : [téléphone]-1 – Fax :",
+        "pourquoi": "dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.3.3",
+        "texte": "N e donnent pas, à posteriori, droit à un remboursement ou à une indemnité toutes les prestations non sollicitées au moment des faits ainsi que celles refusées par l’Assuré ou organisées sans l’accord d’Assureur B Assistance",
+        "pourquoi": "la même règle que 4.2.3.3.2, traduite une fois en circonstance : sans appel à l'assistance au moment des faits, pas de prise en charge"
+      }
+    ]
   },
   "controles": [
     {
       "gravite": "info",
       "controle": "couverture",
-      "message": "garantie assistance_voyage : {\"f\": [\"option_assistance_voyage\", \"oui\"]} (conditions particulières) mise en réserve, et non en question"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "evenement = maladie : hors vocabulaire, et non déclaré"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "duree_sejour = moins_90_jours : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.3`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "declaration_assistance = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.3`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "activite_dangereuse = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.3`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "etat_ivresse = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.3`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "option_assistance_voyage = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.3`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "evenement = maladie : hors vocabulaire, et non déclaré"
+      "message": "hors décision (4.2.3) : procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
     },
     {
       "gravite": "info",
-      "controle": "citation",
-      "message": "définition : citation rattachée à 4.2.3.1 (et non 4.2.3.1.1)"
+      "controle": "couverture",
+      "message": "hors décision (4.2.3.1) : des définitions, portées par les valeurs du fait « objet de la demande de voyage »"
     },
     {
       "gravite": "info",
-      "controle": "citation",
-      "message": "définition : citation rattachée à 4.2.3.1 (et non 4.2.3.1.6)"
+      "controle": "couverture",
+      "message": "hors décision (4.2.3.2) : aucune limite de territoire : sans effet sur la question de couverture"
     },
     {
       "gravite": "info",
-      "controle": "citation",
-      "message": "circonstance : citation rattachée à 4.2.3.3 (et non 4.2.3.3.5)"
+      "controle": "couverture",
+      "message": "hors décision (4.2.3.3) : procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
     },
     {
       "gravite": "info",
-      "controle": "citation",
-      "message": "obligation : citation rattachée à 4.2.3.3 (et non 4.2.3.3.2)"
+      "controle": "couverture",
+      "message": "hors décision (4.2.3.4) : le détail des frais médicaux remboursés : l'étendue de la prise en charge, pas l'existence de la garantie ; les soins au pays, les prothèses et les cures sont des règles (4.2.3.8.2)"
     },
     {
       "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.3.8 (et non 4.2.3.8.1)"
+      "controle": "couverture",
+      "message": "hors décision (4.2.3.4) : procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
     },
     {
       "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.3.8 (et non 4.2.3.8.1)"
+      "controle": "couverture",
+      "message": "hors décision (4.2.3.4) : une décision médicale de l'assisteur, après le sinistre"
     },
     {
       "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.3.8 (et non 4.2.3.8.1)"
+      "controle": "couverture",
+      "message": "hors décision (4.2.3.4) : une condition d'une prestation accessoire (le retour des accompagnants), qui ne change pas la réponse sur l'incident lui-même"
     },
     {
       "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.3.8 (et non 4.2.3.8.1)"
+      "controle": "couverture",
+      "message": "hors décision (4.2.3.5) : des services d'information, de traduction et de transmission de messages, pas des garanties qui décident d'un sinistre"
     },
     {
       "gravite": "info",
-      "controle": "citation",
-      "message": "limite : citation rattachée à 4.2.3.3 (et non 4.2.3.3.5)"
+      "controle": "couverture",
+      "message": "hors décision (4.2.3.5) : procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Assistance médicale En cas d’incident médical survenant à un Assuré, l’équipe médicale d’Assureur B  »"
+      "message": "hors décision (4.2.3.5) : une avance remboursable, pas une prise en charge"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Frais de recherche et de sauvetage à l’étranger Assureur B Assistance rembourse les frais de recherc »"
+      "message": "hors décision (4.2.3.8) : des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Remboursement du forfait «Remonte-pentes» Si l’état de l’Assuré blessé entraîne une hospitalisation  »"
+      "message": "hors décision (4.2.3.8) : l'impossibilité de l'assisteur, pas un fait que l'assuré déclare"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Accident de ski à l’étranger En cas d’accident corporel sur une piste de ski, Assureur B Assistance  »"
+      "message": "hors décision (4.2.3.4) : une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Remboursement des frais médicaux Suite à un incident médical à l’étranger Assureur B Assistance pren »"
+      "message": "hors décision (4.2.3.4) : une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Frais médicaux exclus Ne sont pas remboursés : n les interventions et traitements d’ordre esthétique »"
+      "message": "hors décision (4.2.3.4) : une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Conditions de prise en charge des frais médicaux »"
+      "message": "hors décision (4.2.3.4) : une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.4) : « L a prise en charge et/ou le remboursement viennent en complément des remboursements et/ou prises en »"
+      "message": "hors décision (4.2.3.4) : une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.4) : « La prise en charge et/ou le remboursement de frais de traitement sont effectués sous le régime publi »"
+      "message": "hors décision (4.2.3.4) : une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Lorsque l’Assuré ne dispose pas d’une couverture valable auprès de la sécurité sociale et/ou de tout »"
+      "message": "hors décision (4.2.3.4) : une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Modalités de paiement des frais médicaux Le paiement complémentaire de ces frais est effectué par As »"
+      "message": "hors décision (4.2.3.4) : une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Envoi d’un médecin sur place Suite à un incident médical et si l’équipe médicale d’Assureur B Assist »"
+      "message": "hors décision (4.2.3.4) : une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Hospitalisation de plus de 5 jours de l’Assuré voyageant seul à l’étranger Lorsque l’Assuré, voyagea »"
+      "message": "hors décision (4.2.3.4) : une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Frais de prolongation du séjour de l’Assuré à l’étranger Assureur B Assistance prend en charge les f »"
+      "message": "hors décision (4.2.3.4) : une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Rapatriement ou transport suite à un incident médical Si l’Assuré est hospitalisé à la suite d’un in »"
+      "message": "hors décision (4.2.3.4) : une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Rapatriement funéraire au cours d’un voyage à l’étranger En cas de décès d’un Assuré à l’étranger et »"
+      "message": "hors décision (4.2.3.4) : une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Frais de rapatriement des autres Assurés en cas d’évacuation sanitaire ou décès d’un Assuré à l’étra »"
+      "message": "hors décision (4.2.3.4) : une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Prise en charge des enfants de moins de 16 ans à l’étranger Si l’(es) Assuré(s) accompagnant des enf »"
+      "message": "hors décision (4.2.3.4) : une prestation de l'assistance (ce qui est organisé et payé), pas un refus : la question de couverture est celle de la garantie, l'option et l'appel à l'assistance"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.4) : « (Retour anticipé d’un Assuré) »"
+      "message": "hors décision (4.2.3.9~1) : dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.4) : « Retour anticipé d’un Assuré Si l’Assuré doit interrompre son voyage à l’étranger pour cause : n du d »"
+      "message": "hors décision (4.2.3.9~1) : dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.8) : « Exclusions relatives à l’assistance aux personnes La garantie n’est pas acquise pour : n les frais d »"
+      "message": "hors décision (4.2.3.9~1) : dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.9~1) : « Subrogation et pluralités d’assurances »"
+      "message": "hors décision (4.2.3.9~1) : dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.9~1) : « Tiers responsables Assureur B Assistance qui a presté l’assistance ou payé l’indemnité est subrogée, »"
+      "message": "hors décision (4.2.3.9~1) : dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.9~1) : « Pluralités d’assurances Assureur B Assistance n’intervient qu’après épuisement des garanties octroyé »"
+      "message": "hors décision (4.2.3.9~2) : dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.9~1) : « Les engagements de l’Assuré »"
+      "message": "hors décision (4.2.3.9~2) : dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.9~1) : « Déclaration de sinistre L’Assuré doit, dès que possible et en tout cas dans les délais imposés, sign »"
+      "message": "hors décision (4.2.3.9~2) : dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.9~2) : « fournir les justificatifs des dépenses engagées »"
+      "message": "hors décision (4.2.3.9~2) : dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.9~2) : « apporter les preuves des faits qui donnent droit aux prestations garanties »"
+      "message": "hors décision (4.2.3.9~2) : dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.9~2) : « restituer d’office les titres de transport qui n’ont pas été utilisés parce qu’Assureur B Assistance »"
+      "message": "hors décision (4.2.3.9~2) : dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.9~2) : « lorsqu’Assureur B Assistance a fait l’avance des frais médicaux, l’Assuré doit effectuer d’office to »"
+      "message": "hors décision (4.2.3.9~2) : dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.9~2) : « Sanctions n Si l’Assuré ne remplit pas une des obligations prévues ci-dessus et qu’il en résulte un  »"
+      "message": "hors décision (4.2.3.9~3) : dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.9~2) : « Obligation de moyen Assureur B Assistance met tout en oeuvre pour assister l’Assuré. Assureur B Assi »"
+      "message": "hors décision (4.2.3.9~3) : dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.9~2) : « Intervention non-contractuelle Dans l’intérêt de l’Assuré, il se peut qu’Assureur B Assistance doive »"
+      "message": "hors décision (4.2.3.9~3) : dispositions juridiques après le sinistre (subrogation, justificatifs, sanctions) ou pied de page : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.9~3) : « 7102.60 .dE »"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.9~3) : « 7102.60.W »"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.3.9~3) : « AC [produit] Assureur B – [adresse] Tél. : [téléphone]-1 – Fax : [téléphone] – R.C.S. [numéro] »"
+      "message": "hors décision (4.2.3.3) : la même règle que 4.2.3.3.2, traduite une fois en circonstance : sans appel à l'assistance au moment des faits, pas de prise en charge"
     }
   ]
 }

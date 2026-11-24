@@ -12,12 +12,12 @@
         "quatre garanties : le vol, le vol par agression des valeurs, la casse accidentelle, et l'incendie, l'explosion ou le dégât des eaux",
         "« en voyage » : un fait propre à ce contrat, dans le périmètre, avec un lieu où l'on voyage (voie publique, véhicule, autre bâtiment). Chez soi, chez un réparateur ou dans un casier, la garantie ne se rattache pas : un vélo volé dans le hall n'appelle pas la question du voyage",
         "l'option est une question, comme pour 3.3.1 et 4.1.2 (7.173)",
-        "la perte d'un bagage n'est pas traduite ici : le vocabulaire n'a pas d'événement « perte ». Elle entre avec les événements de voyage, dans un lot mesuré à part",
         "le vol dans un véhicule : mêmes conditions et mêmes faits que 3.3.1.5 (de jour, véhicule volé ou forcé, portes fermées, pas de toit souple)",
         "la casse d'un objet fragile : demandée (l'accident de la circulation) quand le bien est un instrument, un miroir ou un objet en verre ; les exclusions qui retirent un cas ne se demandent pas (leçon 165)",
         "le bagage qui n'appartient pas à l'assuré : exclu pour le vol et la casse, pas pour l'incendie ou le dégât des eaux. L'y étendre ferait lire « propriétaire des biens » sur ces événements pour les quatre contrats : un changement du vocabulaire commun, à mesurer à part",
         "un véhicule ou une remorque ne sont pas des bagages : dans le périmètre, pas en exclusion. En exclusion, le moteur refusait un sinistre dont on ne savait pas encore s'il était survenu en voyage, y compris quand une autre garantie restait possible (comparaison sur 3 000 jeux de faits)",
-        "les exclusions de ces garanties ne jouent que si le voyage est établi. Sans cela, le moteur refusait par une exclusion des bagages (les valeurs, l'objet laissé sans surveillance) un sinistre dont on ne savait pas s'il était survenu en voyage, alors qu'une autre garantie restait possible : vu sur 2 500 jeux de faits tirés au hasard. Les deux exclusions qui se demandent (objet fragile, bagage à l'extérieur du véhicule) n'en ont pas besoin"
+        "les exclusions de ces garanties ne jouent que si le voyage est établi. Sans cela, le moteur refusait par une exclusion des bagages (les valeurs, l'objet laissé sans surveillance) un sinistre dont on ne savait pas s'il était survenu en voyage, alors qu'une autre garantie restait possible : vu sur 2 500 jeux de faits tirés au hasard. Les deux exclusions qui se demandent (objet fragile, bagage à l'extérieur du véhicule) n'en ont pas besoin",
+        "la perte d'un bagage est une cinquième garantie, sur l'événement « voyage » ajouté pour l'annulation et l'assistance ; les exclusions communes (oubli, saisie) y sont reprises, pas celle du bagage prêté (même raison que pour l'incendie)"
       ]
     }
   },
@@ -28,7 +28,8 @@
       "accident",
       "incendie",
       "explosion",
-      "degat_eaux"
+      "degat_eaux",
+      "voyage"
     ],
     "definitions": [],
     "garanties": [
@@ -897,6 +898,86 @@
             "montant": "5000"
           }
         ]
+      },
+      {
+        "id": "bagages_perte",
+        "nom": "Bagages en voyage : perte (option)",
+        "article": "4.2.2.1",
+        "texte": "La Compagnie garantit à l’Assuré la couverture de ses bagages emportés dans le cadre d’un voyage contre : n le vol,pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes ; n la perte, n les dégâts dus à toute circonstance fortuite survenue pendant le voyage",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "voyage"
+            ]
+          },
+          {
+            "f": [
+              "objet_voyage",
+              "perte_bagage"
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "option_bagages",
+                "oui"
+              ]
+            },
+            "article": "4.2.2",
+            "texte": "la garantie “ bagages” est souscrite"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "bagage_oublie",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.2.2.4",
+            "texte": "les bagages oubliés"
+          },
+          {
+            "condition": {
+              "f": [
+                "saisie_autorites",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.2.2.4",
+            "texte": "les pertes et dégâts causés à l’occasion d’une saisie par les autorités publiques (police, douane, …)"
+          },
+          {
+            "condition": {
+              "f": [
+                "bien",
+                "valeurs"
+              ]
+            },
+            "portee": {
+              "bien": "valeurs"
+            },
+            "a_demander": false,
+            "article": "4.2.2.1",
+            "texte": "Les valeurs ne sont pas assimilées à des bagages"
+          }
+        ],
+        "limites": [
+          {
+            "article": "4.2.2.1",
+            "texte": "à concurrence de 5.000 € par sinistre",
+            "montant": "5000"
+          }
+        ]
       }
     ],
     "exclusions_communes": [
@@ -1158,6 +1239,80 @@
         ],
         "pourquoi": "4.2.2.4.8 ; un fait à part de « dommage purement esthétique » (tempête), pour qu'il ne soit lu qu'en voyage",
         "plus_proche": "dommage_esthetique, lu pour la tempête"
+      },
+      {
+        "variable": "evenement",
+        "valeurs": [
+          "voyage"
+        ],
+        "libelle": "Événement",
+        "question": "Que s'est-il passé ?",
+        "pourquoi": "4.2.1, 4.2.2 et 4.2.3 : les garanties de voyage ne partent pas d'un dommage à un bien",
+        "plus_proche": "assistance : un dépannage au logement ; autre : rien de précis",
+        "aide": {
+          "voyage": "un voyage ou une location de vacances annulé ou interrompu ; une maladie, un accident corporel ou un décès pendant un voyage ; un bagage ou des papiers perdus en voyage ; un besoin d'aide à l'étranger. Un bagage volé ou cassé en voyage reste « vol » ou « bris »"
+        },
+        "libelles": {
+          "voyage": "voyage : annulation, incident ou besoin d'aide"
+        }
+      },
+      {
+        "variable": "objet_voyage",
+        "libelle": "Objet de la demande de voyage",
+        "valeurs": [
+          "annulation",
+          "interruption",
+          "incident_medical",
+          "soins_sans_hospitalisation",
+          "sauvetage_ou_ski",
+          "deces",
+          "retour_anticipe",
+          "perte_bagage",
+          "retard_bagage",
+          "perte_papiers",
+          "poursuites_etranger",
+          "enfant_hospitalise",
+          "animal",
+          "autre"
+        ],
+        "question": "Que s'est-il passé pour ce voyage ?",
+        "aide": {
+          "annulation": "le voyage ou la location est annulé avant le départ",
+          "interruption": "le voyage est interrompu, ou le retour ne peut pas se faire à la date prévue",
+          "incident_medical": "maladie ou accident corporel en voyage, avec hospitalisation, rapatriement ou appel à l'assistance",
+          "soins_sans_hospitalisation": "des soins ou une consultation à l'étranger, sans hospitalisation",
+          "sauvetage_ou_ski": "des frais de recherche, de sauvetage, ou de descente en traîneau après un accident de ski",
+          "deces": "le décès d'un assuré pendant le voyage",
+          "retour_anticipe": "un retour avancé parce qu'un proche resté au pays est décédé ou hospitalisé",
+          "perte_bagage": "un bagage perdu ou égaré, sans vol : par la compagnie aérienne, dans un transport",
+          "retard_bagage": "un bagage livré en retard",
+          "perte_papiers": "papiers, billets ou carte bancaire perdus ou volés à l'étranger",
+          "poursuites_etranger": "des poursuites judiciaires à l'étranger après un accident de la circulation",
+          "enfant_hospitalise": "un enfant de moins de 16 ans hospitalisé au pays pendant que ses parents sont à l'étranger",
+          "animal": "le chien ou le chat qui accompagne l'assuré tombe malade ou se blesse à l'étranger",
+          "autre": "autre chose"
+        },
+        "pour": [
+          "voyage"
+        ],
+        "pourquoi": "ce que demande l'assuré : chaque garantie de voyage en couvre une partie",
+        "plus_proche": "aucune",
+        "libelles": {
+          "annulation": "annulation avant le départ",
+          "interruption": "interruption ou retour empêché",
+          "incident_medical": "maladie ou accident en voyage",
+          "soins_sans_hospitalisation": "soins à l'étranger sans hospitalisation",
+          "sauvetage_ou_ski": "sauvetage ou accident de ski",
+          "deces": "décès en voyage",
+          "retour_anticipe": "retour anticipé",
+          "perte_bagage": "bagage perdu",
+          "retard_bagage": "bagage en retard",
+          "perte_papiers": "papiers ou billets perdus",
+          "poursuites_etranger": "poursuites à l'étranger",
+          "enfant_hospitalise": "enfant hospitalisé au pays",
+          "animal": "animal malade ou blessé",
+          "autre": "autre"
+        }
       }
     ],
     "non_traduit": [],

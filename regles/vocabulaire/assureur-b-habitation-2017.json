@@ -1,6 +1,361 @@
 {
   "_description": "Variables que seules les règles de ce contrat emploient (regles/assureur-b-habitation-2017.pl). Même format que commun.json. Rangé par `couverture regles --ranger` : une variable qu'un autre contrat se met à employer passe dans commun.json.",
   "variables": {
+    "option_assistance_voyage": {
+      "libelle": "Garantie « assistance voyage » souscrite",
+      "source": "conditions_particulieres",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Avez-vous souscrit l'option « assistance voyage » ?",
+      "aide": {
+        "oui": "la garantie figure à votre contrat",
+        "non": "elle n'y figure pas"
+      },
+      "pour": [
+        "voyage"
+      ]
+    },
+    "assistance_voyage_appelee": {
+      "libelle": "Assistance appelée au moment des faits",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Avez-vous appelé l'assistance au moment des faits, et suivi ce qu'elle a organisé ?",
+      "aide": {
+        "oui": "assistance appelée sur le moment, prestations organisées par elle",
+        "non": "tout organisé et payé par vous-même, assistance prévenue après coup ou pas du tout"
+      },
+      "pour": [
+        "voyage"
+      ]
+    },
+    "voyage_plus_90_jours": {
+      "libelle": "Déplacement de plus de 90 jours",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le déplacement durait-il depuis plus de 90 jours ?",
+      "aide": {
+        "oui": "parti depuis plus de trois mois",
+        "non": "moins de trois mois"
+      },
+      "pour": [
+        "voyage"
+      ]
+    },
+    "destination_deconseillee": {
+      "libelle": "Destination déconseillée",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le pays était-il déconseillé par le ministère des Affaires étrangères ?",
+      "aide": {
+        "oui": "pays en guerre ou en troubles, officiellement déconseillé",
+        "non": "destination ordinaire"
+      },
+      "pour": [
+        "voyage"
+      ]
+    },
+    "cause_assistance_exclue": {
+      "libelle": "Cause exclue de l'assistance",
+      "valeurs": [
+        "activite_dangereuse",
+        "acte_intentionnel",
+        "ivresse_ou_defi",
+        "guerre_greve_emeute",
+        "nucleaire",
+        "competition_ou_sport_dangereux",
+        "non"
+      ],
+      "question": "Le besoin d'assistance vient-il de l'une de ces causes ?",
+      "aide": {
+        "activite_dangereuse": "activité professionnelle dangereuse : acrobate, travail sur toit ou échafaudage, explosifs",
+        "acte_intentionnel": "un acte volontaire de l'assuré",
+        "ivresse_ou_defi": "ivresse, drogue, acte téméraire, pari ou défi",
+        "guerre_greve_emeute": "guerre, terrorisme, grève, émeute",
+        "nucleaire": "accident nucléaire",
+        "competition_ou_sport_dangereux": "compétition, sport à moteur en compétition, sport professionnel ou réputé dangereux",
+        "non": "rien de cela"
+      },
+      "pour": [
+        "voyage"
+      ]
+    },
+    "etat_sante_exclu": {
+      "libelle": "État de santé exclu de l'assistance",
+      "valeurs": [
+        "affection_benigne",
+        "maladie_mentale_deja_traitee",
+        "grossesse_avancee_ou_ivg",
+        "maladie_chronique_ou_en_traitement",
+        "soins_au_pays",
+        "prothese_cure_prevention",
+        "non"
+      ],
+      "question": "L'incident médical relève-t-il de l'un de ces cas ?",
+      "aide": {
+        "affection_benigne": "un mal bénin qui n'empêche pas de continuer le voyage",
+        "maladie_mentale_deja_traitee": "une maladie mentale déjà traitée auparavant",
+        "grossesse_avancee_ou_ivg": "grossesse après la 26e semaine, ou interruption volontaire de grossesse",
+        "maladie_chronique_ou_en_traitement": "maladie chronique, affection en cours de traitement ou convalescence avant le départ",
+        "soins_au_pays": "des soins reçus au Luxembourg après le retour",
+        "prothese_cure_prevention": "lunettes, prothèse, cure, médecine préventive",
+        "non": "rien de cela"
+      },
+      "pour": [
+        "voyage"
+      ]
+    },
+    "ski_hors_piste": {
+      "libelle": "Ski hors piste sans guide",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'accident de ski est-il survenu hors des pistes balisées, sans guide agréé ?",
+      "aide": {
+        "oui": "hors piste, sans guide",
+        "non": "sur une piste balisée, ou avec un guide"
+      },
+      "pour": [
+        "voyage"
+      ]
+    },
+    "evenement_previsible_au_depart": {
+      "libelle": "Maladie ou décès prévisible au départ",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La maladie ou le décès du proche était-il prévisible quand vous êtes parti ?",
+      "aide": {
+        "oui": "le proche était déjà gravement malade au départ",
+        "non": "rien ne le laissait prévoir"
+      },
+      "pour": [
+        "voyage"
+      ]
+    },
+    "suite_accident_circulation": {
+      "libelle": "Poursuites après un accident de la circulation",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les poursuites font-elles suite à un accident de la circulation ?",
+      "aide": {
+        "oui": "après un accident de la route",
+        "non": "pour une autre raison"
+      },
+      "pour": [
+        "voyage"
+      ]
+    },
+    "objet_voyage": {
+      "libelle": "Objet de la demande de voyage",
+      "valeurs": [
+        "annulation",
+        "interruption",
+        "incident_medical",
+        "soins_sans_hospitalisation",
+        "sauvetage_ou_ski",
+        "deces",
+        "retour_anticipe",
+        "perte_bagage",
+        "retard_bagage",
+        "perte_papiers",
+        "poursuites_etranger",
+        "enfant_hospitalise",
+        "animal",
+        "autre"
+      ],
+      "question": "Que s'est-il passé pour ce voyage ?",
+      "libelles": {
+        "annulation": "annulation avant le départ",
+        "interruption": "interruption ou retour empêché",
+        "incident_medical": "maladie ou accident en voyage",
+        "soins_sans_hospitalisation": "soins à l'étranger sans hospitalisation",
+        "sauvetage_ou_ski": "sauvetage ou accident de ski",
+        "deces": "décès en voyage",
+        "retour_anticipe": "retour anticipé",
+        "perte_bagage": "bagage perdu",
+        "retard_bagage": "bagage en retard",
+        "perte_papiers": "papiers ou billets perdus",
+        "poursuites_etranger": "poursuites à l'étranger",
+        "enfant_hospitalise": "enfant hospitalisé au pays",
+        "animal": "animal malade ou blessé",
+        "autre": "autre"
+      },
+      "aide": {
+        "annulation": "le voyage ou la location est annulé avant le départ",
+        "interruption": "le voyage est interrompu, ou le retour ne peut pas se faire à la date prévue",
+        "incident_medical": "maladie ou accident corporel en voyage, avec hospitalisation, rapatriement ou appel à l'assistance",
+        "soins_sans_hospitalisation": "des soins ou une consultation à l'étranger, sans hospitalisation",
+        "sauvetage_ou_ski": "des frais de recherche, de sauvetage, ou de descente en traîneau après un accident de ski",
+        "deces": "le décès d'un assuré pendant le voyage",
+        "retour_anticipe": "un retour avancé parce qu'un proche resté au pays est décédé ou hospitalisé",
+        "perte_bagage": "un bagage perdu ou égaré, sans vol : par la compagnie aérienne, dans un transport",
+        "retard_bagage": "un bagage livré en retard",
+        "perte_papiers": "papiers, billets ou carte bancaire perdus ou volés à l'étranger",
+        "poursuites_etranger": "des poursuites judiciaires à l'étranger après un accident de la circulation",
+        "enfant_hospitalise": "un enfant de moins de 16 ans hospitalisé au pays pendant que ses parents sont à l'étranger",
+        "animal": "le chien ou le chat qui accompagne l'assuré tombe malade ou se blesse à l'étranger",
+        "autre": "autre chose"
+      },
+      "pour": [
+        "voyage"
+      ]
+    },
+    "option_annulation": {
+      "libelle": "Garantie « annulation » souscrite",
+      "source": "conditions_particulieres",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Avez-vous souscrit l'option « annulation de voyage » ?",
+      "aide": {
+        "oui": "la garantie figure à votre contrat",
+        "non": "elle n'y figure pas"
+      },
+      "pour": [
+        "voyage"
+      ]
+    },
+    "motif_annulation": {
+      "libelle": "Motif de l'annulation",
+      "valeurs": [
+        "sante_ou_deces_proche",
+        "transport_greve_sauvage",
+        "accident_trajet_depart",
+        "licenciement_economique",
+        "greffe_ou_adoption",
+        "vaccination_impossible",
+        "vol_papiers_48h",
+        "divorce_ou_separation",
+        "hote_empeche",
+        "degats_domicile",
+        "grossesse",
+        "autre"
+      ],
+      "question": "Pour quelle raison le voyage est-il annulé ou interrompu ?",
+      "aide": {
+        "sante_ou_deces_proche": "maladie grave, accident grave ou décès : de vous, de votre conjoint, d'un parent, d'un enfant, d'un beau-parent, d'un compagnon de voyage, de votre remplaçant au travail ou de la personne qui garde vos enfants",
+        "transport_greve_sauvage": "le transport public vers l'aéroport ou la gare est en retard ou annulé par une grève sauvage",
+        "accident_trajet_depart": "accident de la circulation ou cas de force majeure sur le trajet vers l'aéroport ou la gare",
+        "licenciement_economique": "licenciement économique, de vous ou d'un membre du foyer inscrit au voyage",
+        "greffe_ou_adoption": "convocation pour une greffe d'organe ou pour l'adoption d'un enfant",
+        "vaccination_impossible": "une vaccination obligatoire que vous ne pouvez pas recevoir pour raison médicale",
+        "vol_papiers_48h": "vol des papiers d'identité ou du visa dans les 48 heures avant le départ",
+        "divorce_ou_separation": "divorce ou séparation engagés après la réservation",
+        "hote_empeche": "la personne qui devait vous loger à l'étranger est malade, accidentée ou décédée",
+        "degats_domicile": "des dégâts graves à votre logement ou à vos locaux professionnels exigent votre présence",
+        "grossesse": "complications de grossesse, ou grossesse découverte après la réservation pour un voyage prévu dans les trois derniers mois",
+        "autre": "une autre raison : changement d'avis, travail, météo, problème d'argent"
+      },
+      "pour": [
+        "voyage"
+      ]
+    },
+    "voyage_professionnel": {
+      "libelle": "Voyage professionnel",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "S'agissait-il d'un voyage professionnel ?",
+      "aide": {
+        "oui": "déplacement pour le travail",
+        "non": "voyage privé"
+      },
+      "pour": [
+        "voyage"
+      ]
+    },
+    "reservation_avant_souscription": {
+      "libelle": "Voyage réservé avant la garantie",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le voyage était-il réservé avant la souscription de la garantie, avec un départ moins d'un mois après ?",
+      "aide": {
+        "oui": "réservé avant la souscription, départ dans le mois qui suit",
+        "non": "réservé après, ou départ plus tard"
+      },
+      "pour": [
+        "voyage"
+      ]
+    },
+    "motif_anterieur_inscription": {
+      "libelle": "Maladie ou accident antérieur à l'inscription",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La maladie ou l'accident existait-il déjà quand vous vous êtes inscrit au voyage ?",
+      "aide": {
+        "oui": "déjà connu avant l'inscription",
+        "non": "survenu après"
+      },
+      "pour": [
+        "voyage"
+      ]
+    },
+    "cause_annulation_exclue": {
+      "libelle": "Cause exclue de l'annulation",
+      "valeurs": [
+        "alcool_drogue",
+        "trouble_psychique_sans_hospitalisation",
+        "acte_intentionnel",
+        "pari_crime_rixe",
+        "sport_professionnel",
+        "sport_a_risque",
+        "epidemie_pollution_catastrophe",
+        "greve_guerre_terrorisme",
+        "radioactivite_ou_interdiction",
+        "ivg",
+        "non"
+      ],
+      "question": "L'annulation vient-elle de l'une de ces causes ?",
+      "aide": {
+        "alcool_drogue": "abus d'alcool, de médicaments ou de drogue",
+        "trouble_psychique_sans_hospitalisation": "maladie mentale ou nerveuse sans hospitalisation de plus de sept jours",
+        "acte_intentionnel": "un acte volontaire",
+        "pari_crime_rixe": "un pari, un crime, ou une bagarre à laquelle vous avez pris part (pas une agression dont vous vous êtes défendu)",
+        "sport_professionnel": "un sport pratiqué comme professionnel ou contre rémunération",
+        "sport_a_risque": "sport mécanique, sport aérien, alpinisme, sport de combat, spéléologie, glisse en compétition",
+        "epidemie_pollution_catastrophe": "épidémie, pollution, catastrophe naturelle",
+        "greve_guerre_terrorisme": "grève, guerre, émeute, attentat",
+        "radioactivite_ou_interdiction": "radioactivité, ou une interdiction officielle que vous n'avez pas respectée",
+        "ivg": "interruption volontaire de grossesse",
+        "non": "rien de cela"
+      },
+      "pour": [
+        "voyage"
+      ]
+    },
+    "immobilisation_moins_1h": {
+      "libelle": "Immobilisation moins d'une heure avant l'embarquement",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'incident sur le trajet est-il survenu moins d'une heure avant l'embarquement, ou s'agit-il d'un simple embouteillage ?",
+      "aide": {
+        "oui": "embouteillage, ou incident moins d'une heure avant l'embarquement",
+        "non": "accident ou force majeure, plus d'une heure avant"
+      },
+      "pour": [
+        "voyage"
+      ]
+    },
     "litige_internet": {
       "libelle": "Litige lié à Internet",
       "valeurs": [
@@ -274,15 +629,9 @@
         "bris",
         "incendie",
         "explosion",
-        "degat_eaux"
-      ],
-      "seulement_si": {
-        "lieu": [
-          "voie_publique",
-          "vehicule",
-          "autre_batiment"
-        ]
-      }
+        "degat_eaux",
+        "voyage"
+      ]
     },
     "en_voyage": {
       "libelle": "Sinistre survenu en voyage",
@@ -300,7 +649,8 @@
         "bris",
         "incendie",
         "explosion",
-        "degat_eaux"
+        "degat_eaux",
+        "voyage"
       ],
       "seulement_si": {
         "lieu": [
@@ -326,15 +676,9 @@
         "bris",
         "incendie",
         "explosion",
-        "degat_eaux"
-      ],
-      "seulement_si": {
-        "lieu": [
-          "voie_publique",
-          "vehicule",
-          "autre_batiment"
-        ]
-      }
+        "degat_eaux",
+        "voyage"
+      ]
     },
     "saisie_autorites": {
       "libelle": "Saisie par les autorités",
@@ -352,15 +696,9 @@
         "bris",
         "incendie",
         "explosion",
-        "degat_eaux"
-      ],
-      "seulement_si": {
-        "lieu": [
-          "voie_publique",
-          "vehicule",
-          "autre_batiment"
-        ]
-      }
+        "degat_eaux",
+        "voyage"
+      ]
     },
     "deterioration_lente_ou_parasites": {
       "libelle": "Usure, humidité ou parasites",
@@ -428,7 +766,8 @@
         "bris",
         "incendie",
         "explosion",
-        "degat_eaux"
+        "degat_eaux",
+        "voyage"
       ],
       "seulement_si": {
         "lieu": [
@@ -454,7 +793,8 @@
         "vol",
         "incendie",
         "explosion",
-        "degat_eaux"
+        "degat_eaux",
+        "voyage"
       ],
       "seulement_si": {
         "lieu": [

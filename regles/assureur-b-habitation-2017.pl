@@ -761,6 +761,116 @@ exclusion(rc_chasse, f(pays, hors_europe), tout, non, '4.1.2.5',
     "L’assurance est valable en Europe à l’exception des pays suivants : Albanie, Turquie et tous les pays de l’ex-URSS et de l’ex-Yougoslavie non intégrés à l’Union Européenne").
 limite(rc_chasse, '4.1.2.2', "12.000.000 f par sinistre au titre des dommages corporels", "12000000").
 limite(rc_chasse, '4.1.2.2', "250.000 f par sinistre au titre des dommages matériels et des dommages immatériels", "250000").
+% --- Art. 4.1.4 : proposition rédigée par le modèle — mistral:mistral-large-4-0 (proposition écartée), 2026-11-24 ---
+evenement_traduit(litige).
+garantie(e_protection, "E-protection : litiges liés à Internet (option)", '4.1.4.3~1',
+    "La présente protection juridique a pour vocation de protéger l’Assuré contre les risques liés à Internet dans le cadre de sa vie privée aux conditions telles que prévues ci-dessous").
+perimetre(e_protection, f(evenement, litige)).
+perimetre(e_protection, ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)])).
+perimetre(e_protection, non(ou([f(domaine_litige, travail), f(domaine_litige, logement), f(domaine_litige, travaux), f(domaine_litige, sante), f(domaine_litige, voisinage), f(domaine_litige, employeur_domestique), f(domaine_litige, location_vacances), f(domaine_litige, bateau), f(domaine_litige, association), f(domaine_litige, famille), f(domaine_litige, vehicule_moteur), f(domaine_litige, activite_professionnelle), f(domaine_litige, divorce_succession)]))).
+circonstance(e_protection, f(option_e_protection, oui), '4.1.4',
+    "la garantie “ E-protection ” est accordée").
+circonstance(e_protection, si(ou([f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(vendeur_lu_be_fr_nl, oui)), '4.1.4.3~1',
+    "être acquis auprès d’un professionnel domicilié au Luxembourg, en Belgique, en France, ou aux Pays-Bas").
+circonstance(e_protection, si(f(litige_internet, achat_bien_internet), f(achat_bien_conditions, oui)), '4.1.4.3~1',
+    "être neuf, n être d’une valeur comprise entre 150 E et 5000 E TTC").
+exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(anciennete_garantie, moins_30_jours)]), tout, non, '4.1.4.4',
+    "Pour tous les sinistres, le délai d’attente est d’1 mois à partir de la prise d’effet du contrat").
+exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(litige_connu_avant_souscription, oui)]), tout, non, '4.1.4.4',
+    "le fait générateur du sinistre ne doit pas être connu de l’Assuré à la date de prise d’effet de la présente garantie").
+exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(domaine_litige, activite_professionnelle)]), tout, non, '4.1.4.3~1',
+    "d’une activité rémunérée ou professionnelle").
+exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), ou([f(litige_nature_exclue, propriete_intellectuelle), f(litige_nature_exclue, douane_fiscalite), f(litige_nature_exclue, gestion_societe), f(litige_nature_exclue, delai_paiement), f(litige_nature_exclue, politique_syndical), f(litige_nature_exclue, droits_tiers_ou_cedes), f(litige_nature_exclue, action_collective), f(litige_nature_exclue, caution_mandat)])]), tout, non, '4.1.4.3~1',
+    "de litiges liés à la propriété intellectuelle ou autres droits similaires (marques, copyright, droit d’auteur, etc…) ; n de litiges liés à des questions douanières ou fiscales ; n de la participation à l’administration ou à la gestion d’une association ou d’une société civile ou commerciale").
+exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(enjeu_moins_150, oui)]), tout, non, '4.1.4.4',
+    "les sinistres dont l’enjeu en principal ne dépasse pas 150 R").
+exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation)]), ou([f(auteur, assure), f(auteur, famille)])]), tout, non, '4.1.4.3~2',
+    "Le Prestataire ne prend pas en charge les sinistres résultant d’une usurpation d’identité ou d’une utilisation frauduleuse des moyens de paiement ou d’une atteinte à l’e-réputation par une personne assurée au titre des présentes garanties").
+exclusion(e_protection, et([f(litige_internet, fraude_paiement), f(code_secret_divulgue, oui)]), tout, non, '4.1.4.3~2',
+    "donner la possibilité à un tiers (y compris le (la) conjoint(e), un membre de la famille et des amis) de prendre connaissance du code secret et/ou d’utiliser la carte de crédit ou de débit ; indiquer son code secret sur un support de quelle que forme qu’il soit").
+exclusion(e_protection, et([f(litige_internet, fraude_paiement), f(banque_prevenue, non)]), tout, non, '4.1.4.3~2',
+    "ne pas notifier immédiatement à sa banque, dès que l’Assuré a connaissance de la perte, du vol ou de l’usage abusif de sa carte de crédit ou de débit, ou de toute utilisation non autorisée de sa carte de crédit ou de débit").
+exclusion(e_protection, et([f(litige_internet, e_reputation), f(diffusion_volontaire, oui)]), tout, non, '4.1.4.3~2',
+    "une e-réputation que l’Assuré s’est lui-même constituée au travers des réseaux sociaux, commentaires sur les sites Internet ou encore utilisation de son courrier électronique ; n une diffusion volontaire d’informations de données personnelles de la part de l’Assuré").
+exclusion(e_protection, et([f(litige_internet, e_reputation), f(auteur_presse, oui)]), tout, non, '4.1.4.3~2',
+    "une atteinte à l’e-réputation par une société de presse ou un journaliste").
+exclusion(e_protection, et([f(litige_internet, achat_bien_internet), ou([f(bien, animal), f(bien, plantation), f(bien, bijoux), f(bien, objet_art), f(bien, tapis_fourrure), f(bien, valeurs), f(bien, collection), f(bien, collection_timbres_monnaies), f(bien, denrees_alimentaires), f(bien, vehicule_moteur)])]), tout, non, '4.1.4.3~2',
+    "d’animaux et de végétaux ; n de bijoux, d’orfèvrerie, de pierres précieuses, de peintures, de sculptures, de tapis, d’espèces").
+exclusion(e_protection, et([f(litige_internet, achat_bien_internet), f(achat_bien_exclu, oui)]), tout, non, '4.1.4.3~2',
+    "de biens et denrées périssables ; n de médicaments au sens du droit luxembourgeois ; n d’armes de toutes catégories au sens du droit luxembourgeois ; n de véhicules terrestres à moteur ; n de données numériques à visualiser ou à télécharger en ligne").
+exclusion(e_protection, et([ou([f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(achat_enchere, oui)]), tout, non, '4.1.4.3~2',
+    "s ur un site de vente aux enchères").
+exclusion(e_protection, et([ou([f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(prix_conteste, oui)]), tout, non, '4.1.4.3~2',
+    "dont le prix d’achat est contesté").
+exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement)]), f(litige_hors_europe, oui)]), tout, non, '4.1.4.5',
+    "dans un pays membre de l’Union européenne, en ce compris la Suisse, Monaco, Andorre, Saint-Marin, le Vatican, le Liechtenstein et la Norvège pour la garantie en cas d’usurpation d’identité et la garantie en cas d’utilisation frauduleuse des moyens de paiement").
+limite(e_protection, '4.1.4.3~1', "l’indemnisation du préjudice s’effectue dans la limite globale de 5000 E toutes taxes comprises (TTC) par année d’assurance", "5000").
+
+% --- Art. 4.2.1 : proposition rédigée par le modèle — mistral:mistral-large-4-0 (proposition écartée), 2026-11-24 ---
+evenement_traduit(voyage).
+garantie(annulation_voyage, "Annulation ou interruption de voyage (option)", '4.2.1.1',
+    "La Compagnie garantit le remboursement : n des frais d’annulation contractuellement dus lorsque le voyage est annulé avant le départ ou lorsque la location est annulée avant l’entrée en jouissance des locaux").
+perimetre(annulation_voyage, f(evenement, voyage)).
+perimetre(annulation_voyage, ou([f(objet_voyage, annulation), f(objet_voyage, interruption)])).
+circonstance(annulation_voyage, f(option_annulation, oui), '4.2.1',
+    "la garantie “ annulation” est souscrite").
+circonstance(annulation_voyage, ou([f(motif_annulation, sante_ou_deces_proche), f(motif_annulation, transport_greve_sauvage), f(motif_annulation, accident_trajet_depart), f(motif_annulation, licenciement_economique), f(motif_annulation, greffe_ou_adoption), f(motif_annulation, vaccination_impossible), f(motif_annulation, vol_papiers_48h), f(motif_annulation, divorce_ou_separation), f(motif_annulation, hote_empeche), f(motif_annulation, degats_domicile), f(motif_annulation, grossesse)]), '4.2.1.2',
+    "La garantie est d’application : 4.2.1.2.1 dans le cas d’une maladie grave, d’un accident corporel grave ou du décès").
+exclusion(annulation_voyage, f(voyage_professionnel, oui), tout, non, '4.2.1.4',
+    "les voyages à caractère professionnel").
+exclusion(annulation_voyage, f(reservation_avant_souscription, oui), tout, non, '4.2.1.4',
+    "les voyages réservés par l’Assuré avant la date de souscription de la garantie et dont la date de départ est prévue moins d’un mois après sa date de prise d’effet").
+exclusion(annulation_voyage, f(motif_anterieur_inscription, oui), tout, non, '4.2.1.2',
+    "La Compagnie garantit l’Assuré seulement contre les conséquences des maladies et accidents survenus après la date de l’inscription au voyage").
+exclusion(annulation_voyage, et([f(motif_annulation, accident_trajet_depart), f(immobilisation_moins_1h, oui)]), tout, non, '4.2.1.2',
+    "les embarras de circulation ainsi que tout événement à l’origine de l’immobilisation survenus moins d’une heure avant l’heure d’embarquement prévue ne sont pas pris en compte par cette garantie").
+exclusion(annulation_voyage, f(cause_annulation_exclue, alcool_drogue), tout, non, '4.2.1.4',
+    "l’usage abusif de l’alcool (ivresse, alcoolisme), de médicaments, de drogues ou de stupéfiants").
+exclusion(annulation_voyage, f(cause_annulation_exclue, trouble_psychique_sans_hospitalisation), tout, non, '4.2.1.4',
+    "les maladies psychotiques, mentales ou nerveuses qui n’entraînent pas d’hospitalisation de plus de 7 jours").
+exclusion(annulation_voyage, f(cause_annulation_exclue, acte_intentionnel), tout, non, '4.2.1.4',
+    "les actes intentionnels").
+exclusion(annulation_voyage, f(cause_annulation_exclue, pari_crime_rixe), tout, non, '4.2.1.4',
+    "les accidents et troubles résultant de participation à des paris, crimes, rixes (sauf cas de légitime défense)").
+exclusion(annulation_voyage, f(cause_annulation_exclue, sport_professionnel), tout, non, '4.2.1.4',
+    "les accidents et troubles résultant de participation, à titre professionnel ou sous contrat avec rémunération, à tout sport ou compétition ainsi qu’aux entrainements préparatoires").
+exclusion(annulation_voyage, f(cause_annulation_exclue, sport_a_risque), tout, non, '4.2.1.4',
+    "les accidents résultant de la pratique en tant qu’amateur et n’importe quel niveau, des sports suivants : sports mécaniques (auto, moto, tout véhicule motorisé), sports aériens, alpinisme").
+exclusion(annulation_voyage, f(cause_annulation_exclue, epidemie_pollution_catastrophe), tout, non, '4.2.1.4',
+    "les épidémies, la pollution du milieu naturel et les catastrophes naturelles").
+exclusion(annulation_voyage, f(cause_annulation_exclue, greve_guerre_terrorisme), tout, non, '4.2.1.4',
+    "les grèves, les guerres et les guerres civiles, les émeutes, les mouvements populaires, les actes de terrorisme").
+exclusion(annulation_voyage, f(cause_annulation_exclue, radioactivite_ou_interdiction), tout, non, '4.2.1.4',
+    "tout effet de rayonnement radioactif ainsi que l’inobservation consciente d’interdictions officielles").
+exclusion(annulation_voyage, f(cause_annulation_exclue, ivg), tout, non, '4.2.1.4',
+    "les annulations et modifications consécutives à une interruption volontaire de grossesse").
+limite(annulation_voyage, '4.2.1.1', "La prise en charge totale de ces frais se fait à concurrence de 15.000 E maximum par sinistre et par année d’assurance", "15000").
+
+% --- Art. 4.2.3 : proposition rédigée par le modèle — mistral:mistral-large-4-0 (proposition écartée), 2026-11-24 ---
+evenement_traduit(voyage).
+garantie(assistance_voyage, "Assistance voyage (option)", '4.2.3.2',
+    "Assureur B Assistance garantit, à concurrence des montants indiqués, taxes comprises, un service d’assistance lorsque les Assurés sont victimes des événements aléatoires définis dans le présent contrat").
+perimetre(assistance_voyage, f(evenement, voyage)).
+perimetre(assistance_voyage, ou([f(objet_voyage, incident_medical), f(objet_voyage, soins_sans_hospitalisation), f(objet_voyage, sauvetage_ou_ski), f(objet_voyage, deces), f(objet_voyage, retour_anticipe), f(objet_voyage, perte_bagage), f(objet_voyage, retard_bagage), f(objet_voyage, perte_papiers), f(objet_voyage, poursuites_etranger), f(objet_voyage, enfant_hospitalise), f(objet_voyage, animal)])).
+circonstance(assistance_voyage, f(option_assistance_voyage, oui), '4.2.3',
+    "la garantie “assistance voyage” est souscrite").
+circonstance(assistance_voyage, ou([ou([f(objet_voyage, soins_sans_hospitalisation), f(objet_voyage, sauvetage_ou_ski), f(objet_voyage, animal)]), f(assistance_voyage_appelee, oui)]), '4.2.3.3',
+    "Ces événements doivent obligatoirement faire l’objet d’une demande d’intervention auprès d’Assureur B Assistance au moment des faits, sauf disposition contraire expresse propre à certaines garanties").
+exclusion(assistance_voyage, f(voyage_plus_90_jours, oui), tout, non, '4.2.3.3',
+    "La garantie de la présente convention est limitée aux déplacements de 90 jours calendaires consécutifs au maximum").
+exclusion(assistance_voyage, f(destination_deconseillee, oui), tout, non, '4.2.3.3',
+    "La garantie n’est pas acquise lorsque, nonobstant la déclaration officielle du Ministère desAffaires Etrangères qui déconseille à ses ressortissants de se rendre dans un pays en état de troubles, d’émeutes, de guerres ou de guerres civiles, l’Assuré décide néanmoins d’entreprendre son voyage").
+exclusion(assistance_voyage, ou([f(cause_assistance_exclue, activite_dangereuse), f(cause_assistance_exclue, acte_intentionnel), f(cause_assistance_exclue, ivresse_ou_defi), f(cause_assistance_exclue, guerre_greve_emeute), f(cause_assistance_exclue, nucleaire), f(cause_assistance_exclue, competition_ou_sport_dangereux)]), tout, non, '4.2.3.8',
+    "les activités à caractère dangereux telles que celles d’acrobate, de dompteur ou scaphandrier").
+exclusion(assistance_voyage, et([ou([f(objet_voyage, incident_medical), f(objet_voyage, soins_sans_hospitalisation)]), ou([f(etat_sante_exclu, affection_benigne), f(etat_sante_exclu, maladie_mentale_deja_traitee), f(etat_sante_exclu, grossesse_avancee_ou_ivg), f(etat_sante_exclu, maladie_chronique_ou_en_traitement), f(etat_sante_exclu, soins_au_pays), f(etat_sante_exclu, prothese_cure_prevention)])]), tout, non, '4.2.3.8',
+    "les affections ou lésions bénignes qui n’empêchent pas l’Assuré de poursuivre son voyage ; n les maladies mentales et les états psychiatriques ayant déjà fait l’objet d’un traitement ; n les états de grossesse après la 26ème semaine et les interruptions volontaires de grossesse").
+exclusion(assistance_voyage, et([f(objet_voyage, sauvetage_ou_ski), f(ski_hors_piste, oui)]), tout, non, '4.2.3.4',
+    "Cette garantie est exclue lorsque le sinistre survient suite à la pratique du ski effectué hors pistes balisées sans guide agréé par les autorités du pays").
+exclusion(assistance_voyage, et([f(objet_voyage, retour_anticipe), f(evenement_previsible_au_depart, oui)]), tout, non, '4.2.3.4',
+    "uniquement si la maladie ou le décès présente un caractère imprévisible au moment du départ de l’Assuré à l’étranger").
+exclusion(assistance_voyage, et([f(objet_voyage, poursuites_etranger), f(suite_accident_circulation, non)]), tout, non, '4.2.3.6',
+    "Si, à la suite d’un accident de la circulation à l’étranger, l’Assuré tombe sous le coup de poursuites judiciaires").
+limite(assistance_voyage, '4.2.3.4', "à concurrence d’un maximum de 150.000 f par Assuré", "150000").
 
 % --- Art. 4.2.2 : proposition rédigée par le modèle — mistral:mistral-large-4-0 (proposition écartée), 2026-11-24 ---
 evenement_traduit(vol).
@@ -769,6 +879,7 @@ evenement_traduit(accident).
 evenement_traduit(incendie).
 evenement_traduit(explosion).
 evenement_traduit(degat_eaux).
+evenement_traduit(voyage).
 garantie(bagages_vol, "Bagages en voyage : vol (option)", '4.2.2.1',
     "La Compagnie garantit à l’Assuré la couverture de ses bagages emportés dans le cadre d’un voyage contre : n le vol,pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes ; n la perte, n les dégâts dus à toute circonstance fortuite survenue pendant le voyage").
 perimetre(bagages_vol, f(evenement, vol)).
@@ -844,54 +955,22 @@ exclusion(bagages_sinistre, et([f(en_voyage, oui), f(cause_intemperie, oui)]), t
 exclusion(bagages_sinistre, et([f(bien, valeurs), f(en_voyage, oui)]), bien(valeurs), non, '4.2.2.1',
     "Les valeurs ne sont pas assimilées à des bagages").
 limite(bagages_sinistre, '4.2.2.1', "à concurrence de 5.000 € par sinistre", "5000").
-exclusion([bagages_vol, bagages_valeurs_agression, bagages_bris, bagages_sinistre], et([f(en_voyage, oui), f(bagage_oublie, oui)]), tout, non, '4.2.2.4',
+garantie(bagages_perte, "Bagages en voyage : perte (option)", '4.2.2.1',
+    "La Compagnie garantit à l’Assuré la couverture de ses bagages emportés dans le cadre d’un voyage contre : n le vol,pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes ; n la perte, n les dégâts dus à toute circonstance fortuite survenue pendant le voyage").
+perimetre(bagages_perte, f(evenement, voyage)).
+perimetre(bagages_perte, f(objet_voyage, perte_bagage)).
+circonstance(bagages_perte, f(option_bagages, oui), '4.2.2',
+    "la garantie “ bagages” est souscrite").
+exclusion(bagages_perte, f(bagage_oublie, oui), tout, non, '4.2.2.4',
     "les bagages oubliés").
-exclusion([bagages_vol, bagages_valeurs_agression, bagages_bris, bagages_sinistre], et([f(en_voyage, oui), f(saisie_autorites, oui)]), tout, non, '4.2.2.4',
+exclusion(bagages_perte, f(saisie_autorites, oui), tout, non, '4.2.2.4',
     "les pertes et dégâts causés à l’occasion d’une saisie par les autorités publiques (police, douane, …)").
-exclusion([bagages_vol, bagages_valeurs_agression, bagages_bris, bagages_sinistre], et([f(bagage_exterieur_vehicule, oui), non(f(accident_circulation, oui))]), tout, oui, '4.2.2.1',
+exclusion(bagages_perte, f(bien, valeurs), bien(valeurs), non, '4.2.2.1',
+    "Les valeurs ne sont pas assimilées à des bagages").
+limite(bagages_perte, '4.2.2.1', "à concurrence de 5.000 € par sinistre", "5000").
+exclusion([bagages_vol, bagages_valeurs_agression, bagages_bris, bagages_sinistre, bagages_perte], et([f(en_voyage, oui), f(bagage_oublie, oui)]), tout, non, '4.2.2.4',
+    "les bagages oubliés").
+exclusion([bagages_vol, bagages_valeurs_agression, bagages_bris, bagages_sinistre, bagages_perte], et([f(en_voyage, oui), f(saisie_autorites, oui)]), tout, non, '4.2.2.4',
+    "les pertes et dégâts causés à l’occasion d’une saisie par les autorités publiques (police, douane, …)").
+exclusion([bagages_vol, bagages_valeurs_agression, bagages_bris, bagages_sinistre, bagages_perte], et([f(bagage_exterieur_vehicule, oui), non(f(accident_circulation, oui))]), tout, oui, '4.2.2.1',
     "Les bagages transportés à l’extérieur d’un véhicule sont uniquement couverts contre les conséquences d’un accident de la circulation impliquant le moyen de transport").
-
-% --- Art. 4.1.4 : proposition rédigée par le modèle — mistral:mistral-large-4-0 (proposition écartée), 2026-11-24 ---
-evenement_traduit(litige).
-garantie(e_protection, "E-protection : litiges liés à Internet (option)", '4.1.4.3~1',
-    "La présente protection juridique a pour vocation de protéger l’Assuré contre les risques liés à Internet dans le cadre de sa vie privée aux conditions telles que prévues ci-dessous").
-perimetre(e_protection, f(evenement, litige)).
-perimetre(e_protection, ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)])).
-perimetre(e_protection, non(ou([f(domaine_litige, travail), f(domaine_litige, logement), f(domaine_litige, travaux), f(domaine_litige, sante), f(domaine_litige, voisinage), f(domaine_litige, employeur_domestique), f(domaine_litige, location_vacances), f(domaine_litige, bateau), f(domaine_litige, association), f(domaine_litige, famille), f(domaine_litige, vehicule_moteur), f(domaine_litige, activite_professionnelle), f(domaine_litige, divorce_succession)]))).
-circonstance(e_protection, f(option_e_protection, oui), '4.1.4',
-    "la garantie “ E-protection ” est accordée").
-circonstance(e_protection, si(ou([f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(vendeur_lu_be_fr_nl, oui)), '4.1.4.3~1',
-    "être acquis auprès d’un professionnel domicilié au Luxembourg, en Belgique, en France, ou aux Pays-Bas").
-circonstance(e_protection, si(f(litige_internet, achat_bien_internet), f(achat_bien_conditions, oui)), '4.1.4.3~1',
-    "être neuf, n être d’une valeur comprise entre 150 E et 5000 E TTC").
-exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(anciennete_garantie, moins_30_jours)]), tout, non, '4.1.4.4',
-    "Pour tous les sinistres, le délai d’attente est d’1 mois à partir de la prise d’effet du contrat").
-exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(litige_connu_avant_souscription, oui)]), tout, non, '4.1.4.4',
-    "le fait générateur du sinistre ne doit pas être connu de l’Assuré à la date de prise d’effet de la présente garantie").
-exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(domaine_litige, activite_professionnelle)]), tout, non, '4.1.4.3~1',
-    "d’une activité rémunérée ou professionnelle").
-exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), ou([f(litige_nature_exclue, propriete_intellectuelle), f(litige_nature_exclue, douane_fiscalite), f(litige_nature_exclue, gestion_societe), f(litige_nature_exclue, delai_paiement), f(litige_nature_exclue, politique_syndical), f(litige_nature_exclue, droits_tiers_ou_cedes), f(litige_nature_exclue, action_collective), f(litige_nature_exclue, caution_mandat)])]), tout, non, '4.1.4.3~1',
-    "de litiges liés à la propriété intellectuelle ou autres droits similaires (marques, copyright, droit d’auteur, etc…) ; n de litiges liés à des questions douanières ou fiscales ; n de la participation à l’administration ou à la gestion d’une association ou d’une société civile ou commerciale").
-exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(enjeu_moins_150, oui)]), tout, non, '4.1.4.4',
-    "les sinistres dont l’enjeu en principal ne dépasse pas 150 R").
-exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation)]), ou([f(auteur, assure), f(auteur, famille)])]), tout, non, '4.1.4.3~2',
-    "Le Prestataire ne prend pas en charge les sinistres résultant d’une usurpation d’identité ou d’une utilisation frauduleuse des moyens de paiement ou d’une atteinte à l’e-réputation par une personne assurée au titre des présentes garanties").
-exclusion(e_protection, et([f(litige_internet, fraude_paiement), f(code_secret_divulgue, oui)]), tout, non, '4.1.4.3~2',
-    "donner la possibilité à un tiers (y compris le (la) conjoint(e), un membre de la famille et des amis) de prendre connaissance du code secret et/ou d’utiliser la carte de crédit ou de débit ; indiquer son code secret sur un support de quelle que forme qu’il soit").
-exclusion(e_protection, et([f(litige_internet, fraude_paiement), f(banque_prevenue, non)]), tout, non, '4.1.4.3~2',
-    "ne pas notifier immédiatement à sa banque, dès que l’Assuré a connaissance de la perte, du vol ou de l’usage abusif de sa carte de crédit ou de débit, ou de toute utilisation non autorisée de sa carte de crédit ou de débit").
-exclusion(e_protection, et([f(litige_internet, e_reputation), f(diffusion_volontaire, oui)]), tout, non, '4.1.4.3~2',
-    "une e-réputation que l’Assuré s’est lui-même constituée au travers des réseaux sociaux, commentaires sur les sites Internet ou encore utilisation de son courrier électronique ; n une diffusion volontaire d’informations de données personnelles de la part de l’Assuré").
-exclusion(e_protection, et([f(litige_internet, e_reputation), f(auteur_presse, oui)]), tout, non, '4.1.4.3~2',
-    "une atteinte à l’e-réputation par une société de presse ou un journaliste").
-exclusion(e_protection, et([f(litige_internet, achat_bien_internet), ou([f(bien, animal), f(bien, plantation), f(bien, bijoux), f(bien, objet_art), f(bien, tapis_fourrure), f(bien, valeurs), f(bien, collection), f(bien, collection_timbres_monnaies), f(bien, denrees_alimentaires), f(bien, vehicule_moteur)])]), tout, non, '4.1.4.3~2',
-    "d’animaux et de végétaux ; n de bijoux, d’orfèvrerie, de pierres précieuses, de peintures, de sculptures, de tapis, d’espèces").
-exclusion(e_protection, et([f(litige_internet, achat_bien_internet), f(achat_bien_exclu, oui)]), tout, non, '4.1.4.3~2',
-    "de biens et denrées périssables ; n de médicaments au sens du droit luxembourgeois ; n d’armes de toutes catégories au sens du droit luxembourgeois ; n de véhicules terrestres à moteur ; n de données numériques à visualiser ou à télécharger en ligne").
-exclusion(e_protection, et([ou([f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(achat_enchere, oui)]), tout, non, '4.1.4.3~2',
-    "s ur un site de vente aux enchères").
-exclusion(e_protection, et([ou([f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(prix_conteste, oui)]), tout, non, '4.1.4.3~2',
-    "dont le prix d’achat est contesté").
-exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement)]), f(litige_hors_europe, oui)]), tout, non, '4.1.4.5',
-    "dans un pays membre de l’Union européenne, en ce compris la Suisse, Monaco, Andorre, Saint-Marin, le Vatican, le Liechtenstein et la Norvège pour la garantie en cas d’usurpation d’identité et la garantie en cas d’utilisation frauduleuse des moyens de paiement").
-limite(e_protection, '4.1.4.3~1', "l’indemnisation du préjudice s’effectue dans la limite globale de 5000 E toutes taxes comprises (TTC) par année d’assurance", "5000").

@@ -4992,6 +4992,26 @@ Le 24 nov., 17 h à 21 h.
 
 **Vu à l'essai, non corrigé.** « Quelqu'un a ouvert un compte en ligne à mon nom et a commandé pour 900 euros » est lu « vol de valeurs », pas « litige ». La garantie n'est pas atteinte. La correction est dans la lecture de l'événement, donc dans le vocabulaire commun : avec les événements de voyage, quatre bancs.
 
+### 7.175 Le voyage : le seul lot de la soirée dans le vocabulaire commun, et B en vert
+
+Le 24 nov., 21 h à 21 h 45.
+
+**Un événement, pas trois.** Les propositions du modèle demandaient un événement par article (« annulation de voyage », « maladie »). Retenu : un seul événement commun, « voyage », et un fait propre à B, « objet de la demande de voyage », à quatorze valeurs. Les trois articles s'y rattachent : l'annulation (4.2.1), l'assistance voyage (4.2.3) et la perte d'un bagage, cinquième garantie de 4.2.2. Un bagage volé ou cassé reste « vol » ou « bris ».
+
+**L'annulation.** Onze motifs couverts, un motif « autre » qui refuse, treize exclusions, chacune avec sa phrase : le contrôle des exclusions les compte une à une, et ma première écriture en citait trois pour dix.
+
+**L'assistance voyage.** Une seule garantie pour quinze prestations : toutes répondent à la même question de couverture. L'appel à l'assistance au moment des faits est une circonstance, donc une question, sauf pour les trois cas que le contrat en dispense. Je l'avais d'abord écrit en exclusion à demander : le moteur de référence ne posait pas la question et couvrait. Les quinze prestations et les dispositions juridiques, que le découpage du contrat avait typées « exclusion », sont classées hors décision avec leur raison.
+
+**« Litige » nomme la fraude en ligne.** L'essai de 21 h (« un compte ouvert à mon nom ») avait été lu « vol de valeurs ». L'aide de l'événement « litige » cite maintenant l'usurpation d'identité, la fraude à la carte et l'atteinte à la réputation.
+
+**Deux effets sur les autres contrats, vus avant le dépôt.** Un test a échoué : une réserve « qui vaut pour tous les sinistres » est reconnue à ce que son fait est lu pour tous les événements ; avec un événement de plus, le déménagement de A ne valait plus « pour tous » et serait réapparu sur chaque réponse couverte de A. Les deux faits de A sont étendus au nouvel événement. Et la réserve de légitime défense, écrite comme un fait, portait le nom d'un fait de D : l'acceptation le déplaçait dans le vocabulaire commun. Elle est passée dans l'aide de la valeur ; le fichier de D n'a pas bougé.
+
+**Mesure, quatre bancs.** A 94 % et 100 %, D 96 % (le refus à tort connu), B 87 %, un seul couvert à tort (`f-b18`), 233 tests. Je n'avais pas de banc « avant » du soir pour A et D : les références sont celles de l'après-midi, et aucun chiffre n'a baissé. Trois essais : le voyage annulé chez B, « à préciser » avec la question de l'option ; la fraude en ligne, lue « litige » et rattachée à la protection numérique, mais avec une question de trop sur le domaine du litige, que la lecture donne et que la confirmation ne retrouve pas ; le voyage annulé chez A, « à examiner par un gestionnaire ».
+
+**Cette dernière réponse est fausse dans sa phrase.** Elle dit « relève d'une garantie qui n'est pas encore traduite ». A est en vert : il n'a pas de garantie de voyage, et la réponse juste est « non couvert ». La phrase date du temps où aucun contrat n'était complet. Non corrigé ce soir : c'est du code de la chaîne, pas une règle.
+
+**B en vert, et ce que cela veut dire.** Tous les articles de B ont leurs règles, et aucune proposition n'a de passage non traduit. Recompté : trois passages restent « laissés au gestionnaire » ou « non distingués », tous dans la protection numérique (l'antivirus, la grève du transporteur, le domicile des membres du ménage) ; ce sont des faits qu'une déclaration ne peut pas établir. Les limites : l'assistance voyage ne vérifie pas l'étranger ; la gravité d'une maladie n'est pas jugée ; et le banc de B ne contient aucun cas de voyage ni de litige sur Internet. Le vert de B dit que le texte est traduit, pas que ces garanties sont mesurées.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le ferais.
@@ -5009,7 +5029,7 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 
 **3. Les contrats.**
 - Assureur C : les biens assurés, qui dépendent de la formule et de la qualité d'occupant, et un jeu de mesure (7.159).
-- Assureur B : l'annulation de voyage (4.2.1), l'assistance voyage (4.2.3) et la perte d'un bagage, qui demandent des événements nouveaux ; la lecture d'une fraude en ligne racontée comme un vol (7.174). Assureur D : les options, les assistances, les mesures de protection contre le vol.
+- Assureur B : traduit en entier (7.175) ; à mesurer : des cas de voyage et de litige sur Internet dans son jeu fermé. La phrase « garantie pas encore traduite » pour un contrat complet (7.175). Assureur D : les options, les assistances, les mesures de protection contre le vol.
 - Un contrat hors habitation : le socle de la lecture (événement, bien, lieu) et les deux consignes sont à revoir pour lui (7.154). Aucun n'a été essayé.
 - Les conditions particulières lues dans le document du client : aujourd'hui elles se saisissent (7.141).
 - La loi applicable : écrite comme limite, non traitée.
@@ -5204,3 +5224,5 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 174. Une exclusion d'une garantie définie par un fait (« en voyage », « lié à Internet ») ne doit jouer que si ce fait est établi : sinon elle refuse un sinistre qui relève peut-être d'une autre garantie.
 175. Après une acceptation, lire le diff du vocabulaire commun : une règle propre à un contrat peut y étendre la lecture d'un fait pour les quatre.
 176. Un risque vu avant le dépôt s'annonce avec son essai et son critère de retrait ; l'essai l'a confirmé en une commande.
+177. Ajouter une valeur au socle commun (un événement) change ce que « pour tous » veut dire : chercher qui raisonne sur l'ensemble des valeurs avant de l'étendre.
+178. « Traduit en entier » et « mesuré » sont deux affirmations : le vert dit la première, le banc la seconde, et il faut écrire laquelle manque.

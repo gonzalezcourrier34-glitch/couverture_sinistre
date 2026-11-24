@@ -1,202 +1,143 @@
 {
   "meta": {
     "article": "4.2.1",
-    "modele": "mistral:mistral-large-4-0",
+    "modele": "mistral:mistral-large-4-0 (proposition écartée)",
     "date": "2026-11-24",
-    "consigne": "redaction-regles v13"
+    "consigne": "redaction-regles v13",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-24",
+      "modifications": [
+        "réécrite à la main : la proposition du modèle demandait un événement « annulation de voyage » par article ; un seul événement « voyage » sert aux trois articles, avec un fait propre à B qui dit ce qui est demandé",
+        "les quatorze événements couverts sont regroupés en onze motifs ; un motif « autre » (changement d'avis, travail, météo) refuse",
+        "les exclusions sont lues par un seul fait à plusieurs valeurs",
+        "l'option est une question (7.173)",
+        "la réserve de légitime défense est dans l'aide de la valeur (« une bagarre à laquelle vous avez pris part ») : un fait à part existait chez D et l'acceptation le déplaçait dans le vocabulaire commun"
+      ]
+    }
   },
   "proposition": {
     "evenements": [
-      "annulation_voyage"
+      "voyage"
     ],
-    "definitions": [
-      {
-        "concept": "maladie_grave",
-        "condition": {
-          "f": [
-            "maladie_grave",
-            "oui"
-          ]
-        },
-        "article": "4.2.1.2",
-        "texte": "Par maladie grave, on entend : une altération de la santé constatée par une autorité médicale notoirement compétente interdisant de quitter la chambre (sortie non autorisée) et impliquant la cessation de toute activité professionnelle ou autre."
-      },
-      {
-        "concept": "accident_grave",
-        "condition": {
-          "f": [
-            "accident_grave",
-            "oui"
-          ]
-        },
-        "article": "4.2.1.2",
-        "texte": "Par accident grave, on entend : une atteinte corporelle non intentionnelle de la part de la victime provenant de l'action soudaine d'une cause extérieure et lui interdisant tous déplacements par ses propres moyens."
-      }
-    ],
+    "definitions": [],
     "garanties": [
       {
         "id": "annulation_voyage",
-        "nom": "Annulation de voyage",
-        "article": "4.2.1",
-        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ annulation” est souscrite.",
+        "nom": "Annulation ou interruption de voyage (option)",
+        "article": "4.2.1.1",
+        "texte": "La Compagnie garantit le remboursement : n des frais d’annulation contractuellement dus lorsque le voyage est annulé avant le départ ou lorsque la location est annulée avant l’entrée en jouissance des locaux",
         "perimetre": [
           {
             "f": [
               "evenement",
-              "annulation_voyage"
+              "voyage"
             ]
           },
           {
-            "f": [
-              "option_annulation",
-              "oui"
+            "ou": [
+              {
+                "f": [
+                  "objet_voyage",
+                  "annulation"
+                ]
+              },
+              {
+                "f": [
+                  "objet_voyage",
+                  "interruption"
+                ]
+              }
             ]
           }
         ],
         "circonstances": [
           {
             "condition": {
-              "et": [
+              "f": [
+                "option_annulation",
+                "oui"
+              ]
+            },
+            "article": "4.2.1",
+            "texte": "la garantie “ annulation” est souscrite"
+          },
+          {
+            "condition": {
+              "ou": [
                 {
-                  "ou": [
-                    {
-                      "f": [
-                        "motif_annulation",
-                        "maladie_grave_assure_famille"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "motif_annulation",
-                        "deces_assure_famille"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "motif_annulation",
-                        "retard_transport_public"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "motif_annulation",
-                        "greve_sauvage_transport"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "motif_annulation",
-                        "accident_circulation_trajet"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "motif_annulation",
-                        "force_majeure_trajet"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "motif_annulation",
-                        "licenciement_economique"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "motif_annulation",
-                        "convocation_greffe"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "motif_annulation",
-                        "convocation_adoption"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "motif_annulation",
-                        "vaccination_impossible"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "motif_annulation",
-                        "vol_papiers_48h"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "motif_annulation",
-                        "divorce"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "motif_annulation",
-                        "separation"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "motif_annulation",
-                        "hote_indisponible"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "motif_annulation",
-                        "degats_materiels_residence"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "motif_annulation",
-                        "complications_grossesse"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "motif_annulation",
-                        "grossesse_3_mois"
-                      ]
-                    }
+                  "f": [
+                    "motif_annulation",
+                    "sante_ou_deces_proche"
                   ]
                 },
                 {
                   "f": [
-                    "maladie_accident_apres_inscription",
-                    "oui"
+                    "motif_annulation",
+                    "transport_greve_sauvage"
+                  ]
+                },
+                {
+                  "f": [
+                    "motif_annulation",
+                    "accident_trajet_depart"
+                  ]
+                },
+                {
+                  "f": [
+                    "motif_annulation",
+                    "licenciement_economique"
+                  ]
+                },
+                {
+                  "f": [
+                    "motif_annulation",
+                    "greffe_ou_adoption"
+                  ]
+                },
+                {
+                  "f": [
+                    "motif_annulation",
+                    "vaccination_impossible"
+                  ]
+                },
+                {
+                  "f": [
+                    "motif_annulation",
+                    "vol_papiers_48h"
+                  ]
+                },
+                {
+                  "f": [
+                    "motif_annulation",
+                    "divorce_ou_separation"
+                  ]
+                },
+                {
+                  "f": [
+                    "motif_annulation",
+                    "hote_empeche"
+                  ]
+                },
+                {
+                  "f": [
+                    "motif_annulation",
+                    "degats_domicile"
+                  ]
+                },
+                {
+                  "f": [
+                    "motif_annulation",
+                    "grossesse"
                   ]
                 }
               ]
             },
             "article": "4.2.1.2",
-            "texte": "La garantie est d’application : 4.2.1.2.1 dans le cas d’une maladie grave, d’un accident corporel grave ou du décès... 4.2.1.2.14 en cas de grossesse de l’Assurée pour autant que le voyage était prévu pendant les 3 derniers mois de la grossesse et que cette dernière n’était pas connue au moment de la réservation du voyage ou de la location. La Compagnie garantit l’Assuré seulement contre les conséquences des maladies et accidents survenus après la date de l’inscription au voyage."
+            "texte": "La garantie est d’application : 4.2.1.2.1 dans le cas d’une maladie grave, d’un accident corporel grave ou du décès"
           }
         ],
-        "obligations": [
-          {
-            "condition": {
-              "f": [
-                "declaration_ecrite_5j",
-                "oui"
-              ]
-            },
-            "article": "4.2.1.5",
-            "texte": "La déclaration d’annulation doit être signifiée par écrit à la Compagnie dans les 5 jours suivant la communication de l’annulation, et sera accompagnée des pièces justificatives."
-          },
-          {
-            "condition": {
-              "f": [
-                "transmission_infos_30j",
-                "oui"
-              ]
-            },
-            "article": "4.2.1.5",
-            "texte": "L’Assuré doit transmettre sans délai à la Compagnie, et dans tous les cas dans les 30 jours, toutes les informations utiles."
-          }
-        ],
+        "obligations": [],
         "exclusions": [
           {
             "condition": {
@@ -206,51 +147,85 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "4.2.1.4",
             "texte": "les voyages à caractère professionnel"
           },
           {
             "condition": {
               "f": [
-                "voyage_reserve_avant_souscription",
+                "reservation_avant_souscription",
                 "oui"
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "4.2.1.4",
             "texte": "les voyages réservés par l’Assuré avant la date de souscription de la garantie et dont la date de départ est prévue moins d’un mois après sa date de prise d’effet"
           },
           {
             "condition": {
               "f": [
-                "abus_substances",
+                "motif_anterieur_inscription",
                 "oui"
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
+            "article": "4.2.1.2",
+            "texte": "La Compagnie garantit l’Assuré seulement contre les conséquences des maladies et accidents survenus après la date de l’inscription au voyage"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "motif_annulation",
+                    "accident_trajet_depart"
+                  ]
+                },
+                {
+                  "f": [
+                    "immobilisation_moins_1h",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.2.1.2",
+            "texte": "les embarras de circulation ainsi que tout événement à l’origine de l’immobilisation survenus moins d’une heure avant l’heure d’embarquement prévue ne sont pas pris en compte par cette garantie"
+          },
+          {
+            "condition": {
+              "f": [
+                "cause_annulation_exclue",
+                "alcool_drogue"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
             "article": "4.2.1.4",
             "texte": "l’usage abusif de l’alcool (ivresse, alcoolisme), de médicaments, de drogues ou de stupéfiants"
           },
           {
             "condition": {
               "f": [
-                "maladie_mentale_sans_hospitalisation",
-                "oui"
+                "cause_annulation_exclue",
+                "trouble_psychique_sans_hospitalisation"
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "4.2.1.4",
             "texte": "les maladies psychotiques, mentales ou nerveuses qui n’entraînent pas d’hospitalisation de plus de 7 jours"
           },
           {
             "condition": {
               "f": [
-                "intentionnel",
-                "oui"
+                "cause_annulation_exclue",
+                "acte_intentionnel"
               ]
             },
             "portee": "tout",
@@ -261,8 +236,8 @@
           {
             "condition": {
               "f": [
-                "participation_rixe",
-                "oui"
+                "cause_annulation_exclue",
+                "pari_crime_rixe"
               ]
             },
             "portee": "tout",
@@ -273,56 +248,56 @@
           {
             "condition": {
               "f": [
-                "sport_professionnel",
-                "oui"
+                "cause_annulation_exclue",
+                "sport_professionnel"
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "4.2.1.4",
             "texte": "les accidents et troubles résultant de participation, à titre professionnel ou sous contrat avec rémunération, à tout sport ou compétition ainsi qu’aux entrainements préparatoires"
           },
           {
             "condition": {
               "f": [
-                "sport_dangereux",
-                "oui"
+                "cause_annulation_exclue",
+                "sport_a_risque"
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "4.2.1.4",
-            "texte": "les accidents résultant de la pratique en tant qu’amateur et n’importe quel niveau, des sports suivants : sports mécaniques (auto, moto, tout véhicule motorisé), sports aériens, alpinisme, sports de glisse donnant lieu à un classement international, national ou régional, skeleton, sports de combat, spéléologie"
+            "texte": "les accidents résultant de la pratique en tant qu’amateur et n’importe quel niveau, des sports suivants : sports mécaniques (auto, moto, tout véhicule motorisé), sports aériens, alpinisme"
           },
           {
             "condition": {
               "f": [
-                "cause_epidemie_pollution_catnat",
-                "oui"
+                "cause_annulation_exclue",
+                "epidemie_pollution_catastrophe"
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "4.2.1.4",
             "texte": "les épidémies, la pollution du milieu naturel et les catastrophes naturelles"
           },
           {
             "condition": {
               "f": [
-                "cause_greve_guerre_terrorisme",
-                "oui"
+                "cause_annulation_exclue",
+                "greve_guerre_terrorisme"
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "4.2.1.4",
             "texte": "les grèves, les guerres et les guerres civiles, les émeutes, les mouvements populaires, les actes de terrorisme"
           },
           {
             "condition": {
               "f": [
-                "cause_nucleaire",
-                "oui"
+                "cause_annulation_exclue",
+                "radioactivite_ou_interdiction"
               ]
             },
             "portee": "tout",
@@ -333,12 +308,12 @@
           {
             "condition": {
               "f": [
-                "interruption_volontaire_grossesse",
-                "oui"
+                "cause_annulation_exclue",
+                "ivg"
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "4.2.1.4",
             "texte": "les annulations et modifications consécutives à une interruption volontaire de grossesse"
           }
@@ -346,538 +321,313 @@
         "limites": [
           {
             "article": "4.2.1.1",
-            "texte": "La prise en charge totale de ces frais se fait à concurrence de 15.000 E maximum par sinistre et par année d’assurance.",
-            "montant": "15000 EUR"
+            "texte": "La prise en charge totale de ces frais se fait à concurrence de 15.000 E maximum par sinistre et par année d’assurance",
+            "montant": "15000"
           }
         ]
       }
     ],
     "exclusions_communes": [],
-    "extensions": [],
     "vocabulaire_manquant": [
       {
         "variable": "evenement",
         "valeurs": [
-          "annulation_voyage"
+          "voyage"
         ],
-        "libelle": "Annulation de voyage",
-        "question": "S'agit-il d'une annulation de voyage ?",
-        "pourquoi": "événement couvert",
-        "plus_proche": "aucun",
+        "libelle": "Événement",
+        "question": "Que s'est-il passé ?",
+        "pourquoi": "4.2.1, 4.2.2 et 4.2.3 : les garanties de voyage ne partent pas d'un dommage à un bien",
+        "plus_proche": "assistance : un dépannage au logement ; autre : rien de précis",
         "aide": {
-          "annulation_voyage": "l'assuré a annulé son voyage"
+          "voyage": "un voyage ou une location de vacances annulé ou interrompu ; une maladie, un accident corporel ou un décès pendant un voyage ; un bagage ou des papiers perdus en voyage ; un besoin d'aide à l'étranger. Un bagage volé ou cassé en voyage reste « vol » ou « bris »"
+        },
+        "libelles": {
+          "voyage": "voyage : annulation, incident ou besoin d'aide"
+        }
+      },
+      {
+        "variable": "objet_voyage",
+        "libelle": "Objet de la demande de voyage",
+        "valeurs": [
+          "annulation",
+          "interruption",
+          "incident_medical",
+          "soins_sans_hospitalisation",
+          "sauvetage_ou_ski",
+          "deces",
+          "retour_anticipe",
+          "perte_bagage",
+          "retard_bagage",
+          "perte_papiers",
+          "poursuites_etranger",
+          "enfant_hospitalise",
+          "animal",
+          "autre"
+        ],
+        "question": "Que s'est-il passé pour ce voyage ?",
+        "aide": {
+          "annulation": "le voyage ou la location est annulé avant le départ",
+          "interruption": "le voyage est interrompu, ou le retour ne peut pas se faire à la date prévue",
+          "incident_medical": "maladie ou accident corporel en voyage, avec hospitalisation, rapatriement ou appel à l'assistance",
+          "soins_sans_hospitalisation": "des soins ou une consultation à l'étranger, sans hospitalisation",
+          "sauvetage_ou_ski": "des frais de recherche, de sauvetage, ou de descente en traîneau après un accident de ski",
+          "deces": "le décès d'un assuré pendant le voyage",
+          "retour_anticipe": "un retour avancé parce qu'un proche resté au pays est décédé ou hospitalisé",
+          "perte_bagage": "un bagage perdu ou égaré, sans vol : par la compagnie aérienne, dans un transport",
+          "retard_bagage": "un bagage livré en retard",
+          "perte_papiers": "papiers, billets ou carte bancaire perdus ou volés à l'étranger",
+          "poursuites_etranger": "des poursuites judiciaires à l'étranger après un accident de la circulation",
+          "enfant_hospitalise": "un enfant de moins de 16 ans hospitalisé au pays pendant que ses parents sont à l'étranger",
+          "animal": "le chien ou le chat qui accompagne l'assuré tombe malade ou se blesse à l'étranger",
+          "autre": "autre chose"
+        },
+        "pour": [
+          "voyage"
+        ],
+        "pourquoi": "ce que demande l'assuré : chaque garantie de voyage en couvre une partie",
+        "plus_proche": "aucune",
+        "libelles": {
+          "annulation": "annulation avant le départ",
+          "interruption": "interruption ou retour empêché",
+          "incident_medical": "maladie ou accident en voyage",
+          "soins_sans_hospitalisation": "soins à l'étranger sans hospitalisation",
+          "sauvetage_ou_ski": "sauvetage ou accident de ski",
+          "deces": "décès en voyage",
+          "retour_anticipe": "retour anticipé",
+          "perte_bagage": "bagage perdu",
+          "retard_bagage": "bagage en retard",
+          "perte_papiers": "papiers ou billets perdus",
+          "poursuites_etranger": "poursuites à l'étranger",
+          "enfant_hospitalise": "enfant hospitalisé au pays",
+          "animal": "animal malade ou blessé",
+          "autre": "autre"
         }
       },
       {
         "variable": "option_annulation",
+        "libelle": "Garantie « annulation » souscrite",
         "valeurs": [
           "oui",
           "non"
         ],
-        "libelle": "Option annulation",
-        "question": "La garantie « annulation » est-elle souscrite ?",
-        "pourquoi": "condition d'application",
-        "plus_proche": "aucune",
+        "question": "Avez-vous souscrit l'option « annulation de voyage » ?",
         "aide": {
-          "oui": "option annulation souscrite",
-          "non": "non"
-        }
+          "oui": "la garantie figure à votre contrat",
+          "non": "elle n'y figure pas"
+        },
+        "pour": [
+          "voyage"
+        ],
+        "pourquoi": "une option : le contrat la range sous un titre « Option », elle se demande (7.173)",
+        "plus_proche": "aucune ; fait des conditions particulières",
+        "source": "conditions_particulieres"
       },
       {
         "variable": "motif_annulation",
+        "libelle": "Motif de l'annulation",
         "valeurs": [
-          "maladie_grave_assure_famille",
-          "deces_assure_famille",
-          "retard_transport_public",
-          "greve_sauvage_transport",
-          "accident_circulation_trajet",
-          "force_majeure_trajet",
+          "sante_ou_deces_proche",
+          "transport_greve_sauvage",
+          "accident_trajet_depart",
           "licenciement_economique",
-          "convocation_greffe",
-          "convocation_adoption",
+          "greffe_ou_adoption",
           "vaccination_impossible",
           "vol_papiers_48h",
-          "divorce",
-          "separation",
-          "hote_indisponible",
-          "degats_materiels_residence",
-          "complications_grossesse",
-          "grossesse_3_mois"
+          "divorce_ou_separation",
+          "hote_empeche",
+          "degats_domicile",
+          "grossesse",
+          "autre"
         ],
-        "libelle": "Motif d'annulation",
-        "question": "Quel est le motif de l'annulation ?",
-        "pourquoi": "circonstances couvertes",
-        "plus_proche": "aucune",
-        "aide": {}
-      },
-      {
-        "variable": "maladie_grave",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "libelle": "Maladie grave",
-        "question": "Maladie grave au sens du contrat ?",
-        "pourquoi": "définition",
-        "plus_proche": "aucune",
+        "question": "Pour quelle raison le voyage est-il annulé ou interrompu ?",
         "aide": {
-          "oui": "interdit de quitter la chambre",
-          "non": "autre"
-        }
-      },
-      {
-        "variable": "accident_grave",
-        "valeurs": [
-          "oui",
-          "non"
+          "sante_ou_deces_proche": "maladie grave, accident grave ou décès : de vous, de votre conjoint, d'un parent, d'un enfant, d'un beau-parent, d'un compagnon de voyage, de votre remplaçant au travail ou de la personne qui garde vos enfants",
+          "transport_greve_sauvage": "le transport public vers l'aéroport ou la gare est en retard ou annulé par une grève sauvage",
+          "accident_trajet_depart": "accident de la circulation ou cas de force majeure sur le trajet vers l'aéroport ou la gare",
+          "licenciement_economique": "licenciement économique, de vous ou d'un membre du foyer inscrit au voyage",
+          "greffe_ou_adoption": "convocation pour une greffe d'organe ou pour l'adoption d'un enfant",
+          "vaccination_impossible": "une vaccination obligatoire que vous ne pouvez pas recevoir pour raison médicale",
+          "vol_papiers_48h": "vol des papiers d'identité ou du visa dans les 48 heures avant le départ",
+          "divorce_ou_separation": "divorce ou séparation engagés après la réservation",
+          "hote_empeche": "la personne qui devait vous loger à l'étranger est malade, accidentée ou décédée",
+          "degats_domicile": "des dégâts graves à votre logement ou à vos locaux professionnels exigent votre présence",
+          "grossesse": "complications de grossesse, ou grossesse découverte après la réservation pour un voyage prévu dans les trois derniers mois",
+          "autre": "une autre raison : changement d'avis, travail, météo, problème d'argent"
+        },
+        "pour": [
+          "voyage"
         ],
-        "libelle": "Accident grave",
-        "question": "Accident grave au sens du contrat ?",
-        "pourquoi": "définition",
-        "plus_proche": "accident",
-        "aide": {
-          "oui": "interdit tout déplacement",
-          "non": "autre"
-        }
-      },
-      {
-        "variable": "maladie_accident_apres_inscription",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "libelle": "Survenu après inscription",
-        "question": "La maladie ou l'accident est-il survenu après l'inscription au voyage ?",
-        "pourquoi": "condition de couverture",
-        "plus_proche": "aucune",
-        "aide": {
-          "oui": "survenu après inscription",
-          "non": "avant"
-        }
+        "pourquoi": "4.2.1.2 : les quatorze événements couverts, regroupés ; toute autre raison n'est pas couverte",
+        "plus_proche": "aucune"
       },
       {
         "variable": "voyage_professionnel",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
         "libelle": "Voyage professionnel",
-        "question": "Voyage à caractère professionnel ?",
-        "pourquoi": "exclusion 4.2.1.4.1",
-        "plus_proche": "usage_professionnel",
-        "aide": {
-          "oui": "voyage d'affaires",
-          "non": "privé"
-        }
-      },
-      {
-        "variable": "voyage_reserve_avant_souscription",
         "valeurs": [
           "oui",
           "non"
         ],
-        "libelle": "Réservé avant souscription",
-        "question": "Réservé avant souscription avec départ < 1 mois ?",
-        "pourquoi": "exclusion 4.2.1.4.2",
-        "plus_proche": "aucune",
+        "question": "S'agissait-il d'un voyage professionnel ?",
         "aide": {
-          "oui": "réservé avant et départ < 1 mois",
-          "non": "autre"
-        }
+          "oui": "déplacement pour le travail",
+          "non": "voyage privé"
+        },
+        "pour": [
+          "voyage"
+        ],
+        "pourquoi": "4.2.1.4.1",
+        "plus_proche": "aucune"
       },
       {
-        "variable": "abus_substances",
+        "variable": "reservation_avant_souscription",
+        "libelle": "Voyage réservé avant la garantie",
         "valeurs": [
           "oui",
           "non"
         ],
-        "libelle": "Abus de substances",
-        "question": "Usage abusif d'alcool, drogues, médicaments ?",
-        "pourquoi": "exclusion 4.2.1.4.3",
-        "plus_proche": "aucune",
+        "question": "Le voyage était-il réservé avant la souscription de la garantie, avec un départ moins d'un mois après ?",
         "aide": {
-          "oui": "ivresse, drogues",
-          "non": "non"
-        }
+          "oui": "réservé avant la souscription, départ dans le mois qui suit",
+          "non": "réservé après, ou départ plus tard"
+        },
+        "pour": [
+          "voyage"
+        ],
+        "pourquoi": "4.2.1.4.2",
+        "plus_proche": "aucune"
       },
       {
-        "variable": "maladie_mentale_sans_hospitalisation",
+        "variable": "motif_anterieur_inscription",
+        "libelle": "Maladie ou accident antérieur à l'inscription",
         "valeurs": [
           "oui",
           "non"
         ],
-        "libelle": "Maladie mentale sans hosp.",
-        "question": "Maladie mentale sans hospitalisation > 7 jours ?",
-        "pourquoi": "exclusion 4.2.1.4.4",
-        "plus_proche": "aucune",
+        "question": "La maladie ou l'accident existait-il déjà quand vous vous êtes inscrit au voyage ?",
         "aide": {
-          "oui": "sans hospitalisation > 7j",
-          "non": "autre"
-        }
+          "oui": "déjà connu avant l'inscription",
+          "non": "survenu après"
+        },
+        "pour": [
+          "voyage"
+        ],
+        "pourquoi": "4.2.1.2.1",
+        "plus_proche": "aucune"
       },
       {
-        "variable": "sport_professionnel",
+        "variable": "cause_annulation_exclue",
+        "libelle": "Cause exclue de l'annulation",
+        "valeurs": [
+          "alcool_drogue",
+          "trouble_psychique_sans_hospitalisation",
+          "acte_intentionnel",
+          "pari_crime_rixe",
+          "sport_professionnel",
+          "sport_a_risque",
+          "epidemie_pollution_catastrophe",
+          "greve_guerre_terrorisme",
+          "radioactivite_ou_interdiction",
+          "ivg",
+          "non"
+        ],
+        "question": "L'annulation vient-elle de l'une de ces causes ?",
+        "aide": {
+          "alcool_drogue": "abus d'alcool, de médicaments ou de drogue",
+          "trouble_psychique_sans_hospitalisation": "maladie mentale ou nerveuse sans hospitalisation de plus de sept jours",
+          "acte_intentionnel": "un acte volontaire",
+          "pari_crime_rixe": "un pari, un crime, ou une bagarre à laquelle vous avez pris part (pas une agression dont vous vous êtes défendu)",
+          "sport_professionnel": "un sport pratiqué comme professionnel ou contre rémunération",
+          "sport_a_risque": "sport mécanique, sport aérien, alpinisme, sport de combat, spéléologie, glisse en compétition",
+          "epidemie_pollution_catastrophe": "épidémie, pollution, catastrophe naturelle",
+          "greve_guerre_terrorisme": "grève, guerre, émeute, attentat",
+          "radioactivite_ou_interdiction": "radioactivité, ou une interdiction officielle que vous n'avez pas respectée",
+          "ivg": "interruption volontaire de grossesse",
+          "non": "rien de cela"
+        },
+        "pour": [
+          "voyage"
+        ],
+        "pourquoi": "4.2.1.4 : les exclusions, lues par un seul fait",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "immobilisation_moins_1h",
+        "libelle": "Immobilisation moins d'une heure avant l'embarquement",
         "valeurs": [
           "oui",
           "non"
         ],
-        "libelle": "Sport professionnel",
-        "question": "Sport à titre professionnel ?",
-        "pourquoi": "exclusion 4.2.1.4.7",
-        "plus_proche": "usage_professionnel",
+        "question": "L'incident sur le trajet est-il survenu moins d'une heure avant l'embarquement, ou s'agit-il d'un simple embouteillage ?",
         "aide": {
-          "oui": "sport rémunéré",
-          "non": "amateur"
-        }
-      },
-      {
-        "variable": "sport_dangereux",
-        "valeurs": [
-          "oui",
-          "non"
+          "oui": "embouteillage, ou incident moins d'une heure avant l'embarquement",
+          "non": "accident ou force majeure, plus d'une heure avant"
+        },
+        "pour": [
+          "voyage"
         ],
-        "libelle": "Sport dangereux",
-        "question": "Sport dangereux amateur listé ?",
-        "pourquoi": "exclusion 4.2.1.4.8",
-        "plus_proche": "aucune",
-        "aide": {
-          "oui": "sports mécaniques, aériens, etc.",
-          "non": "autre"
-        }
-      },
-      {
-        "variable": "cause_epidemie_pollution_catnat",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "libelle": "Épidémie/pollution/catnat",
-        "question": "Cause : épidémie, pollution ou catastrophe naturelle ?",
-        "pourquoi": "exclusion 4.2.1.4.9",
-        "plus_proche": "catastrophe_naturelle",
-        "aide": {
-          "oui": "épidémie, pollution, catnat",
-          "non": "autre"
-        }
-      },
-      {
-        "variable": "cause_greve_guerre_terrorisme",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "libelle": "Grève/guerre/terrorisme",
-        "question": "Cause : grève, guerre, émeute ou terrorisme ?",
-        "pourquoi": "exclusion 4.2.1.4.10",
-        "plus_proche": "conflit_du_travail, cause_guerre",
-        "aide": {
-          "oui": "grève, guerre, attentat",
-          "non": "autre"
-        }
-      },
-      {
-        "variable": "interruption_volontaire_grossesse",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "libelle": "IVG",
-        "question": "Interruption volontaire de grossesse ?",
-        "pourquoi": "exclusion 4.2.1.4.12",
-        "plus_proche": "aucune",
-        "aide": {
-          "oui": "IVG",
-          "non": "autre"
-        }
-      },
-      {
-        "variable": "declaration_ecrite_5j",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "libelle": "Déclaration écrite 5 jours",
-        "question": "Déclaration écrite dans les 5 jours ?",
-        "pourquoi": "obligation 4.2.1.5",
-        "plus_proche": "aucune",
-        "aide": {
-          "oui": "déclaration écrite dans les 5 jours",
-          "non": "non"
-        }
-      },
-      {
-        "variable": "transmission_infos_30j",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "libelle": "Infos transmises 30 jours",
-        "question": "Informations transmises dans les 30 jours ?",
-        "pourquoi": "obligation 4.2.1.5",
-        "plus_proche": "aucune",
-        "aide": {
-          "oui": "infos dans les 30 jours",
-          "non": "non"
-        }
+        "pourquoi": "4.2.1.2.3",
+        "plus_proche": "aucune"
       }
     ],
-    "non_traduit": []
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "4.2.1.1",
+        "texte": "Les remboursements sont limités au prix du voyage ou de la location mentionnés sur les documents confirmant le voyage",
+        "pourquoi": "procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.1.2",
+        "texte": "Par maladie grave, on entend : une altération de la santé constatée par une autorité médicale notoirement compétente interdisant de quitter la chambre",
+        "pourquoi": "la gravité de la maladie : une appréciation médicale, que le certificat établit et non la déclaration"
+      },
+      {
+        "article": "4.2.1.2",
+        "texte": "Les rechutes de maladies préexistantes sont également couvertes à condition que ces rechutes n’aient pas fait l’objet d’une constatation médicale dans le mois précédant la souscription de la présente garantie",
+        "pourquoi": "une extension, sous une condition que seul un dossier médical établit"
+      },
+      {
+        "article": "4.2.1.3",
+        "texte": "La garantie ainsi définie s’exerce quelle que soit la destination du voyage",
+        "pourquoi": "aucune limite de territoire : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.1.5",
+        "texte": "La déclaration d’annulation doit être signifiée par écrit à la Compagnie dans les 5 jours suivant la communication de l’annulation",
+        "pourquoi": "procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
+      }
+    ]
   },
   "controles": [
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "maladie_grave = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "accident_grave = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "evenement = annulation_voyage : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "option_annulation = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "motif_annulation = maladie_grave_assure_famille : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "motif_annulation = deces_assure_famille : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "motif_annulation = retard_transport_public : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "motif_annulation = greve_sauvage_transport : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "motif_annulation = accident_circulation_trajet : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "motif_annulation = force_majeure_trajet : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "motif_annulation = licenciement_economique : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "motif_annulation = convocation_greffe : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "motif_annulation = convocation_adoption : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "motif_annulation = vaccination_impossible : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "motif_annulation = vol_papiers_48h : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "motif_annulation = divorce : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "motif_annulation = separation : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "motif_annulation = hote_indisponible : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "motif_annulation = degats_materiels_residence : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "motif_annulation = complications_grossesse : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "motif_annulation = grossesse_3_mois : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "maladie_accident_apres_inscription = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "declaration_ecrite_5j = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "transmission_infos_30j = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "voyage_professionnel = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "voyage_reserve_avant_souscription = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "abus_substances = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "maladie_mentale_sans_hospitalisation = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "sport_professionnel = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "sport_dangereux = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "cause_epidemie_pollution_catnat = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "cause_greve_guerre_terrorisme = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "interruption_volontaire_grossesse = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.1`) ou à remplacer"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "vocabulaire",
-      "message": "evenement = annulation_voyage : valeur nouvelle sans « parent » ; les règles déjà écrites ne la reconnaîtront pas (un ordinateur qui n'est plus de l'électronique, 7.64)"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "vocabulaire",
-      "message": "motif_annulation : variable nouvelle sans « aide » par valeur ; elle sera mal lue (7.59)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "définition : citation rattachée à 4.2.1.2 (et non 4.2.1.2.1)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "définition : citation rattachée à 4.2.1.2 (et non 4.2.1.2.1)"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "citation",
-      "message": "circonstance (4.2.1.2) : « La garantie est d’application : 4.2.1.2.1 dans le cas d’une maladie grave, d’un  » ne figure pas dans la clause"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.1.4 (et non 4.2.1.4.1)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.1.4 (et non 4.2.1.4.2)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.1.4 (et non 4.2.1.4.3)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.1.4 (et non 4.2.1.4.4)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.1.4 (et non 4.2.1.4.5)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.1.4 (et non 4.2.1.4.6)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.1.4 (et non 4.2.1.4.7)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.1.4 (et non 4.2.1.4.8)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.1.4 (et non 4.2.1.4.9)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.1.4 (et non 4.2.1.4.10)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.1.4 (et non 4.2.1.4.11)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.1.4 (et non 4.2.1.4.12)"
-    },
     {
       "gravite": "à relire",
       "controle": "réserve",
       "message": "exclusion « les accidents et troubles résultant de participation à des p » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (4.2.1.1) : procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (4.2.1.2) : la gravité de la maladie : une appréciation médicale, que le certificat établit et non la déclaration"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (4.2.1.2) : une extension, sous une condition que seul un dossier médical établit"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (4.2.1.3) : aucune limite de territoire : sans effet sur la question de couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (4.2.1.5) : procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
     }
   ]
 }

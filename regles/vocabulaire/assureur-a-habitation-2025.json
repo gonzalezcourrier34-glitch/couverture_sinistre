@@ -566,7 +566,8 @@
         "responsabilite",
         "assistance",
         "accident",
-        "litige"
+        "litige",
+        "voyage"
       ]
     },
     "demenagement_signale": {
@@ -601,7 +602,8 @@
         "responsabilite",
         "assistance",
         "accident",
-        "litige"
+        "litige",
+        "voyage"
       ]
     }
   }

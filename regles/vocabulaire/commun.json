@@ -25,7 +25,8 @@
         "responsabilite",
         "assistance",
         "accident",
-        "litige"
+        "litige",
+        "voyage"
       ],
       "libelles": {
         "degat_eaux": "dégât des eaux",
@@ -36,7 +37,8 @@
         "merule": "mérule",
         "conflit_du_travail": "conflit du travail",
         "responsabilite": "responsabilité civile",
-        "litige": "litige (protection juridique)"
+        "litige": "litige (protection juridique)",
+        "voyage": "voyage : annulation, incident ou besoin d'aide"
       },
       "question": "Que s'est-il passé (la cause, et le dommage s'il est d'une autre nature) ?",
       "aide": {
@@ -56,7 +58,8 @@
         "responsabilite": "un dommage causé par l'assuré, un proche, son animal ou sa maison à quelqu'un d'autre, qui en demande réparation : un passant ou un skieur blessé, un objet emprunté cassé, la vitre ou la voiture d'un voisin abîmée, des dégâts chez un voisin",
         "assistance": "un besoin d'aide ou de dépannage sans dommage à indemniser : serrurier après des clés oubliées, intervention d'urgence demandée",
         "accident": "casse ou dommage accidentel d'un objet (pas d'une vitre, d'un miroir ni d'un verre : c'est « bris ») par l'assuré ou un proche : chute, choc, objet renversé ou tombé ; pas un vol, un incendie, l'eau, la tempête ni l'électricité ; l'objet de quelqu'un d'autre cassé par l'assuré, c'est « responsabilite »",
-        "litige": "un différend avec quelqu'un (employeur, vendeur, artisan, voisin, administration) pour lequel l'assuré veut être conseillé, aidé ou défendu ; pas un dommage à indemniser"
+        "litige": "un différend avec quelqu'un (employeur, vendeur, artisan, voisin, administration, site Internet) pour lequel l'assuré veut être conseillé, aidé ou défendu ; aussi une usurpation d'identité, une fraude à la carte bancaire ou une atteinte à la réputation sur Internet ; pas un dommage à indemniser",
+        "voyage": "un voyage ou une location de vacances annulé ou interrompu ; une maladie, un accident corporel ou un décès pendant un voyage ; un bagage ou des papiers perdus en voyage ; un besoin d'aide à l'étranger. Un bagage volé ou cassé en voyage reste « vol » ou « bris »"
       },
       "parents": {
         "accident": [

@@ -5,6 +5,7 @@ evenement_traduit(accident).
 evenement_traduit(incendie).
 evenement_traduit(explosion).
 evenement_traduit(degat_eaux).
+evenement_traduit(voyage).
 garantie(bagages_vol, "Bagages en voyage : vol (option)", '4.2.2.1',
     "La Compagnie garantit à l’Assuré la couverture de ses bagages emportés dans le cadre d’un voyage contre : n le vol,pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes ; n la perte, n les dégâts dus à toute circonstance fortuite survenue pendant le voyage").
 perimetre(bagages_vol, f(evenement, vol)).
@@ -80,9 +81,22 @@ exclusion(bagages_sinistre, et([f(en_voyage, oui), f(cause_intemperie, oui)]), t
 exclusion(bagages_sinistre, et([f(bien, valeurs), f(en_voyage, oui)]), bien(valeurs), non, '4.2.2.1',
     "Les valeurs ne sont pas assimilées à des bagages").
 limite(bagages_sinistre, '4.2.2.1', "à concurrence de 5.000 € par sinistre", "5000").
-exclusion([bagages_vol, bagages_valeurs_agression, bagages_bris, bagages_sinistre], et([f(en_voyage, oui), f(bagage_oublie, oui)]), tout, non, '4.2.2.4',
+garantie(bagages_perte, "Bagages en voyage : perte (option)", '4.2.2.1',
+    "La Compagnie garantit à l’Assuré la couverture de ses bagages emportés dans le cadre d’un voyage contre : n le vol,pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes ; n la perte, n les dégâts dus à toute circonstance fortuite survenue pendant le voyage").
+perimetre(bagages_perte, f(evenement, voyage)).
+perimetre(bagages_perte, f(objet_voyage, perte_bagage)).
+circonstance(bagages_perte, f(option_bagages, oui), '4.2.2',
+    "la garantie “ bagages” est souscrite").
+exclusion(bagages_perte, f(bagage_oublie, oui), tout, non, '4.2.2.4',
     "les bagages oubliés").
-exclusion([bagages_vol, bagages_valeurs_agression, bagages_bris, bagages_sinistre], et([f(en_voyage, oui), f(saisie_autorites, oui)]), tout, non, '4.2.2.4',
+exclusion(bagages_perte, f(saisie_autorites, oui), tout, non, '4.2.2.4',
     "les pertes et dégâts causés à l’occasion d’une saisie par les autorités publiques (police, douane, …)").
-exclusion([bagages_vol, bagages_valeurs_agression, bagages_bris, bagages_sinistre], et([f(bagage_exterieur_vehicule, oui), non(f(accident_circulation, oui))]), tout, oui, '4.2.2.1',
+exclusion(bagages_perte, f(bien, valeurs), bien(valeurs), non, '4.2.2.1',
+    "Les valeurs ne sont pas assimilées à des bagages").
+limite(bagages_perte, '4.2.2.1', "à concurrence de 5.000 € par sinistre", "5000").
+exclusion([bagages_vol, bagages_valeurs_agression, bagages_bris, bagages_sinistre, bagages_perte], et([f(en_voyage, oui), f(bagage_oublie, oui)]), tout, non, '4.2.2.4',
+    "les bagages oubliés").
+exclusion([bagages_vol, bagages_valeurs_agression, bagages_bris, bagages_sinistre, bagages_perte], et([f(en_voyage, oui), f(saisie_autorites, oui)]), tout, non, '4.2.2.4',
+    "les pertes et dégâts causés à l’occasion d’une saisie par les autorités publiques (police, douane, …)").
+exclusion([bagages_vol, bagages_valeurs_agression, bagages_bris, bagages_sinistre, bagages_perte], et([f(bagage_exterieur_vehicule, oui), non(f(accident_circulation, oui))]), tout, oui, '4.2.2.1',
     "Les bagages transportés à l’extérieur d’un véhicule sont uniquement couverts contre les conséquences d’un accident de la circulation impliquant le moyen de transport").

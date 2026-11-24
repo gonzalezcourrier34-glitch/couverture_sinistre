@@ -5,8 +5,8 @@
   "detail": "Toutes les garanties ont leurs règles, assistance comprise, et toutes les exclusions qu'une déclaration peut énoncer sont lues. Ce qui reste hors décision : des extensions de garantie, de la procédure et des frais. Un point faible connu : la garde d'enfants rémunérée, que le contrat couvre, peut être lue comme une activité professionnelle."
  },
  "assureur-b-habitation-2017": {
-  "complet": false,
-  "detail": "Vingt-deux articles traduits sur vingt-quatre, avec leurs exclusions : toutes les garanties des biens, les assistances de l'habitation, les protections juridiques, la protection numérique, les options dommages aux biens et bagages, la responsabilité civile vie privée et la chasse. Restent l'annulation de voyage, l'assistance voyage et la perte d'un bagage."
+  "complet": true,
+  "detail": "Tous les articles ont leurs règles, voyage et protection numérique compris, et les exclusions qu'une déclaration peut énoncer sont lues. Limites connues : l'assistance voyage ne vérifie pas que le sinistre a lieu à l'étranger ; les garanties de voyage et de protection numérique ne sont vérifiées que par des essais, pas par le banc."
  },
  "assureur-c-habitation-2025": {
   "complet": false,
