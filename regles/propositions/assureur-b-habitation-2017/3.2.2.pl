@@ -5,6 +5,8 @@ garantie(pluies_inondations, "Pluies & inondations", '3.2.2',
 perimetre(pluies_inondations, f(evenement, catastrophe_naturelle)).
 perimetre(pluies_inondations, ou([f(catastrophe, inondation), f(catastrophe, ruissellement), f(catastrophe, glissement_terrain)])).
 perimetre(pluies_inondations, concept(batiment_designe)).
+circonstance(pluies_inondations, f(option_pluies_inondations, oui), '3.2.2',
+    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “Pluies & inondations” est accordée.").
 exclusion(pluies_inondations, et([et([ou([f(lieu, jardin), f(lieu, terrasse)]), non(f(bien, element_batiment))]), non(f(bien, mobilier_jardin))]), tout, oui, '3.2.2.4',
     "au contenu se trouvant à l’extérieur des locaux, à l’exception du mobilier de jardin").
 exclusion(pluies_inondations, et([f(travaux_construction, oui), f(lien_causal_travaux, oui)]), tout, oui, '3.2.2.4',
@@ -30,5 +32,3 @@ exclusion(pluies_inondations, f(dommages_dans_72h, non), tout, non, '3.2.2.1',
 limite(pluies_inondations, '3.2.2.2', "Lorsque les conditions particulières mentionnent que les biens désignés ne sont pas situés en zone inondable, l’Assuré bénéficie en cas de sinistre d’une intervention de la Compagnie à concurrence de 250.000€ maximum par sinistre.", "250000").
 limite(pluies_inondations, '3.2.2.3', "Lorsque les conditions particulières mentionnent que les biens désignés sont situés en zone inondable, l’Assuré bénéficie en cas de sinistre d’une intervention de la Compagnie à concurrence de 20.000€ maximum par sinistre. En cas de sinistre, la garantie sera accordée dans la limite du plafond indiqué ci-avant soit 20.000€ et après déduction de la franchise de 1.500€ prévue dans le cadre de la présente garantie.", "20000").
 limite(pluies_inondations, '3.2.2.4', "Dans ce cas, la prise en charge des dommages se fait sans application de la règle proportionnelle à concurrence de 5.000€ par sinistre", "5000").
-exclusion([pluies_inondations], f(option_pluies_inondations, non), tout, oui, '3.2.2',
-    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “Pluies & inondations” est accordée.").

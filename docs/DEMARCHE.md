@@ -5096,6 +5096,26 @@ Le 24 nov., 22 h 40 à 23 h 10.
 
 **Mesure.** Un test : un événement inventé est accepté, les faits généraux le reçoivent, un fait partiel ne le reçoit pas. Aucune réponse actuelle ne peut changer : la règle ne joue qu'à l'ajout d'un événement, et les bancs ne sont pas rejoués pour elle.
 
+### 7.181 Les options qui ouvrent une garantie : une seule écriture, et une neuvième option trouvée
+
+Le 24 nov., 23 h 05 à minuit.
+
+**La question.** Après 7.178, huit options plus anciennes restaient déclarées en tête des fichiers de règles (`option(...)`), en plus d'une exclusion « option non souscrite » dans leur article. J'avais écrit qu'elles « décidaient pareil » et que les convertir demanderait de réécrire des règles mesurées. Je ne les avais pas lues une par une.
+
+**Lues, elles sont de deux sortes.** Quatre ouvrent une garantie entière : le matériel multimédia chez A, le tremblement de terre, les pluies et inondations et les pertes indirectes chez B. Les quatre de D lèvent une exclusion pour un bien : la véranda, les objets de valeur, le jardin, la piscine. Le pack jardin n'ouvre pas une garantie, il fait qu'un meuble de jardin n'est plus exclu de la tempête. Une circonstance sur la garantie ne dit pas cela : chez D, la déclaration en tête n'est pas un doublon, et elle reste.
+
+**Mesuré avant de rien déposer**, avec le moteur de référence : les quatre premières converties en circonstances marquées « option », comparées aux règles d'avant sur les 141 cas à faits exacts, sur 3 000 jeux de faits tirés au hasard par contrat, et sur 3 000 autres ciblés sur ces options (souscrite, non souscrite, non dite). Aucune décision ne change. Ce qui change est l'ordre des questions : écrite en circonstance, l'option se demande avant les autres points de sa garantie, au lieu de se demander après.
+
+**Ce que la comparaison a trouvé sans le chercher.** Le « matériel multimédia » de B (3.1.7) est une option, écrite comme les autres en exclusion « option non souscrite », mais déclarée nulle part : une neuvième, que ma liste de huit ne contenait pas. Sans la déclaration, le moteur la traitait en garantie de base : un ordinateur cassé était « couvert », l'option devenant une réserve. C'est le défaut de 7.173, sur un article que je croyais réglé. Convertie, la garantie répond « à préciser » et demande si l'option est souscrite ; 15 jeux de faits au hasard sur 3 000 passent de « couvert » à « à préciser », 73 sur 3 000 en ciblé, aucun dans un autre sens.
+
+**Ce qui est fait.** Cinq propositions (A 6.1 ; B 3.1.7, 3.2.1, 3.2.2, 3.2.3) : l'exclusion « option non souscrite » devient une circonstance marquée « option ». Les quatre déclarations en tête des règles de A et de B sont retirées. Le contrôle de couverture compte la phrase d'une circonstance « option » comme traduite : il la réclamait une seconde fois, puisqu'elle n'était plus dans une exclusion. Les règles obtenues par l'acceptation sont, fait pour fait, celles qui ont été mesurées.
+
+**Un test a dû changer, et il faut le dire.** Le vol dans la voiture garée (7.106, `f-b18`, un cas vu) attendait la question « le véhicule était-il fermé à clé ? ». Elle vient maintenant après « l'option est-elle souscrite ? » : le test vérifie les deux temps. C'est une question de plus avant la bonne, sur un cas du jeu fermé ; le banc de B dira ce que cela coûte.
+
+**Ce que je n'ai pas fait.** « Sous réserve que la garantie vol ait été accordée » (3.1.7.1) reste une réserve : le vol est une garantie de base de B que le contrat laisse retirer, pas une option rangée sous un titre « Option ». Le moteur Prolog n'a pas tourné sur ma machine.
+
+**Ce que j'avais mal estimé, une troisième fois.** J'avais écrit « elles décident pareil » sans les lire : c'était vrai des huit, et la neuvième, que je ne voyais pas, couvrait à tort. Une liste qu'on n'a pas relue cache ce qui n'y est pas.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le ferais.
@@ -5320,3 +5340,4 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 186. Le coût d'un changement du moteur se mesure d'abord sur les cas à faits exacts, sans modèle : c'est rapide, et cela dit quelles réponses bougent avant tout banc.
 187. Un test qui s'arrête à l'étape modifiée ne voit pas ce que l'étape suivante en fait : la décision se vérifie là où l'utilisateur la lit.
 188. Ce qu'un test a rattrapé une fois et qu'on a réparé à la main reviendra au prochain ajout : la réparation va dans le code qui fait l'ajout.
+189. Avant d'écrire « ces cas décident pareil », les convertir et comparer : la comparaison a trouvé celui qui manquait à la liste, et il décidait autrement.

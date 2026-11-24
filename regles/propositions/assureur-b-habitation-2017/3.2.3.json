@@ -9,7 +9,8 @@
       "date": "2026-11-19",
       "modifications": [
         "les garanties dont l'indemnité n'est pas majorée : hors décision (un calcul de montant)",
-        "« «voyage» » : citation introuvable, couverte par la ligne des options"
+        "« «voyage» » : citation introuvable, couverte par la ligne des options",
+        "24 nov., 23 h 30 : l'option s'écrit comme les autres, une circonstance marquée « option » (7.181) ; elle était une exclusion « option non souscrite »"
       ]
     }
   },
@@ -24,24 +25,21 @@
         "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ pertes indirectes ” est accordée. La Compagnie garantit la majoration de 10% des indemnités contractuellement dues, en vue de dédommager l’Assuré à la suite d’un sinistre couvert.",
         "accessoire": true,
         "perimetre": [],
-        "circonstances": [],
-        "obligations": [],
-        "exclusions": [
+        "circonstances": [
           {
             "condition": {
-              "non": {
-                "f": [
-                  "option_pertes_indirectes",
-                  "oui"
-                ]
-              }
+              "f": [
+                "option_pertes_indirectes",
+                "oui"
+              ]
             },
-            "portee": "tout",
-            "a_demander": true,
             "article": "3.2.3",
-            "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ pertes indirectes ” est accordée."
+            "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ pertes indirectes ” est accordée.",
+            "option": true
           }
         ],
+        "obligations": [],
+        "exclusions": [],
         "limites": [
           {
             "article": "3.2.3",

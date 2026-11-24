@@ -1033,7 +1033,13 @@ def test_obligation_engagee_sans_lien_causal_se_demande():
     contrat_b = Contrat(prolog.fichier_regles("assureur-b-habitation-2017"))
     faits = {"evenement": ["vol"], "bien": ["appareil_informatique"], "lieu": ["vehicule"], "effraction": "oui",
              "plainte_deposee": "oui"}
+    # 7.181 : le matériel multimédia est une option. Tant qu'on ne sait pas si elle est souscrite, c'est elle qu'on
+    # demande d'abord (inutile de demander si la voiture était fermée pour une garantie qui n'est pas au contrat).
     d = Moteur(contrat_b, faits).decider()
+    assert d["decision"] == "INCERTAIN"
+    vol = next(r for r in d["garanties"] if r["id"] == "materiel_multimedia_vol")
+    assert vol["questions"] == ["option_materiel_multimedia"]
+    d = Moteur(contrat_b, faits | {"option_materiel_multimedia": "oui"}).decider()
     assert d["decision"] == "INCERTAIN"
     vol = next(r for r in d["garanties"] if r["id"] == "materiel_multimedia_vol")
     assert "vehicule_ferme_cle" in vol["questions"]
@@ -1072,6 +1078,33 @@ def test_une_option_seule_a_couvrir_donne_a_preciser():
     assert pluies["questions"] == ["option_pluies_inondations"]
     if prolog.swipl() is not None:
         assert prolog.decider("assureur-b-habitation-2017", faits)["decision"] == "INCERTAIN"
+
+
+def test_le_multimedia_de_b_est_une_option_qui_se_demande():
+    """7.181. Le « matériel multimédia » de B (3.1.7) est une option, mais elle n'était déclarée nulle part : écrite
+    en exclusion « option non souscrite », elle couvrait un ordinateur cassé sans demander si elle était souscrite.
+    Écrite comme les autres, elle se demande ; souscrite elle couvre, non souscrite elle refuse."""
+    cid = "assureur-b-habitation-2017"
+    contrat_b = Contrat(prolog.fichier_regles(cid))
+    faits = {"evenement": ["bris"], "bien": ["appareil_informatique"], "lieu": ["logement"]}
+    attendus = [(faits, "INCERTAIN"), (faits | {"option_materiel_multimedia": "oui"}, "COUVERT"),
+                (faits | {"option_materiel_multimedia": "non"}, "NON_COUVERT")]
+    for f, attendu in attendus:
+        d = Moteur(contrat_b, f).decider()
+        assert d["decision"] == attendu, f
+        if prolog.swipl() is not None:
+            assert prolog.decider(cid, f)["decision"] == attendu, f
+    bris = next(r for r in Moteur(contrat_b, faits).decider()["garanties"] if r["id"] == "materiel_multimedia_bris")
+    assert bris["questions"] == ["option_materiel_multimedia"]
+
+
+def test_une_option_qui_ouvre_une_garantie_ne_se_declare_plus_en_tete():
+    """7.181. Chez A et B, plus aucune option n'est déclarée en tête du fichier de règles : chacune est une
+    circonstance de son article. Chez D, les quatre déclarations restent : ces options-là lèvent une exclusion pour
+    un bien (la véranda, la piscine), elles n'ouvrent pas une garantie."""
+    for cid in ("assureur-a-habitation-2025", "assureur-b-habitation-2017"):
+        assert Contrat(prolog.fichier_regles(cid)).regles("option", 1) == [], cid
+    assert len(Contrat(prolog.fichier_regles("assureur-d-habitation-2026")).regles("option", 1)) == 4
 
 
 def test_l_evenement_est_precise_avant_les_questions_du_temps_2():

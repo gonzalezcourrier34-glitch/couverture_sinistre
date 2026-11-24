@@ -12,7 +12,8 @@
         "formule = serenite_plus → réserve option_tremblement_terre (3.2.1 : « applicables si les conditions particulières mentionnent la garantie »)",
         "circonstance qui répétait le périmètre : retirée",
         "jardins et plantations, véhicules : portée limitée au bien ; terrains de golf et de tennis : hors vocabulaire d'un particulier, retirée de la règle (citée hors décision)",
-        "« à l'extérieur » = jardin ou terrasse, objets ; contenu de constructions délabrées : fondu dans l'exclusion de la construction"
+        "« à l'extérieur » = jardin ou terrasse, objets ; contenu de constructions délabrées : fondu dans l'exclusion de la construction",
+        "24 nov., 23 h 30 : l'option s'écrit comme les autres, une circonstance marquée « option » (7.181) ; elle était une exclusion « option non souscrite »"
       ]
     }
   },
@@ -44,7 +45,19 @@
             "concept": "batiment_designe"
           }
         ],
-        "circonstances": [],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "option_tremblement_terre",
+                "oui"
+              ]
+            },
+            "article": "3.2.1",
+            "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ tremblement de terre ” est accordée.",
+            "option": true
+          }
+        ],
         "obligations": [],
         "exclusions": [
           {
@@ -207,20 +220,7 @@
         ]
       }
     ],
-    "exclusions_communes": [
-      {
-        "condition": {
-          "f": [
-            "option_tremblement_terre",
-            "non"
-          ]
-        },
-        "portee": "tout",
-        "a_demander": true,
-        "article": "3.2.1",
-        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ tremblement de terre ” est accordée."
-      }
-    ],
+    "exclusions_communes": [],
     "vocabulaire_manquant": [
       {
         "variable": "catastrophe",

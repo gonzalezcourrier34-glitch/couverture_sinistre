@@ -14,12 +14,9 @@
 :- discontiguous definition/4, precision/3, garantie/4, perimetre/2, circonstance/4,
                  obligation/6, exclusion/6, limite/4, evenement_traduit/1, accessoire/1.
 
-%  Les garanties optionnelles (DEMARCHE 7.109) : elles ne jouent que si les conditions particulières les mentionnent,
-%  ce que la déclaration ne dit pas. Seule à couvrir, une option ne donne pas « couvert sous réserve » mais « à
-%  préciser », avec le point à vérifier dans les conditions particulières. Les garanties de base sont présumées souscrites.
-option(option_tremblement_terre).
-option(option_pluies_inondations).
-option(option_pertes_indirectes).
+%  Les garanties optionnelles (DEMARCHE 7.109, 7.178, 7.181) : elles ne jouent que si les conditions particulières les
+%  mentionnent, ce que la déclaration ne dit pas. Chacune s'écrit dans son article : une circonstance « option = oui »,
+%  marquée « option » dans la proposition, qui se demande. Les garanties de base sont présumées souscrites.
 % --- Art. 3.1.2 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
 evenement_traduit(tempete).
 definition(tempete, et([f(alea_tempete, vent), f(vent_80_kmh_irm, oui)]), '3.1.2.1',
@@ -88,28 +85,6 @@ exclusion(degats_electriques, ou([f(manque_entretien, oui), f(fonctionnement_def
 limite(degats_electriques, '3.1.3.1', "Les dommages matériels occasionnés aux panneaux solaires et/ou installations photovoltaïques sont couverts à concurrence de 50.000 € par sinistre.", "50000").
 exclusion([degats_electriques], f(option_degats_electriques, non), tout, oui, '3.1.3',
     "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ dégâts électriques” est souscrite.").
-% --- Art. 3.2.1 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
-evenement_traduit(catastrophe_naturelle).
-garantie(tremblement_terre, "Tremblement de terre", '3.2.1.1',
-    "La Compagnie garantit, sous réserve des exclusions générales et des exclusions spécifiques, les dommages matériels causés aux biens désignés par un tremblement de terre.").
-perimetre(tremblement_terre, f(evenement, catastrophe_naturelle)).
-perimetre(tremblement_terre, f(catastrophe, tremblement_terre)).
-perimetre(tremblement_terre, concept(batiment_designe)).
-exclusion(tremblement_terre, et([f(travaux_construction, oui), f(lien_causal_travaux, oui)]), tout, oui, '3.2.1.2',
-    "survenus alors que le bâtiment est en cours de construction, transformation ou rénovation dans la mesure où il existe un lien causal entre les dommages et les travaux en cours").
-exclusion(tremblement_terre, et([et([ou([f(lieu, jardin), f(lieu, terrasse)]), non(f(bien, element_batiment))]), non(f(fixe_a_demeure, oui))]), tout, oui, '3.2.1.2',
-    "survenus aux objets se trouvant à l’extérieur du bâtiment sauf s’ils sont fixés à demeure").
-exclusion(tremblement_terre, ou([f(construction_facilement_deplacable, oui), f(construction_delabree, oui)]), tout, oui, '3.2.1.2',
-    "aux constructions faciles à déplacer ou à démonter, délabrées ou en cours de démolition de même qu’à leur éventuel contenu").
-exclusion(tremblement_terre, et([f(annexe_ancree_beton, non), ou([f(lieu, annexe), f(lieu, abri_jardin)])]), tout, oui, '3.2.1.2',
-    "aux dépendances et abris de jardins qui ne reposent pas sur des fondations").
-exclusion(tremblement_terre, f(bien, plantation), bien(plantation), non, '3.2.1.2',
-    "aux jardins et plantations").
-exclusion(tremblement_terre, f(bien, vehicule_moteur), bien(vehicule_moteur), non, '3.2.1.2',
-    "aux véhicules terrestres à moteur, aériens, maritimes ou fluviaux").
-limite(tremblement_terre, '3.2.1.3', "Lors du règlement de l’indemnité, l’Assuré conserve à sa charge un montant de 10% du dommage avec un minimum de 1.500 €.", "10% du dommage avec un minimum de 1.500 €").
-exclusion([tremblement_terre], f(option_tremblement_terre, non), tout, oui, '3.2.1',
-    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ tremblement de terre ” est accordée.").
 % --- Art. 3.1.8 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
 extension(batiment_designe, et([f(residence_principale_inhabitable, oui), f(lieu, autre_batiment), f(pays, luxembourg)]), '3.1.8.2',
     "Si le logement couvert par le présent contrat est devenu temporairement inhabitable en raison d'un sinistre couvert, les garanties sont automatiquement transférées sur le bâtiment pris en location au Grand-Duché de Luxembourg pour une période de 18 mois maximum").
@@ -206,14 +181,6 @@ accessoire(frais_remise_etat_jardins).
 accessoire(frais_expertise).
 accessoire(recours_locataires_occupants).
 accessoire(recours_tiers).
-
-% --- Art. 3.2.3 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
-garantie(pertes_indirectes, "Pertes indirectes", '3.2.3',
-    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ pertes indirectes ” est accordée. La Compagnie garantit la majoration de 10% des indemnités contractuellement dues, en vue de dédommager l’Assuré à la suite d’un sinistre couvert.").
-exclusion(pertes_indirectes, non(f(option_pertes_indirectes, oui)), tout, oui, '3.2.3',
-    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ pertes indirectes ” est accordée.").
-limite(pertes_indirectes, '3.2.3', "La Compagnie garantit la majoration de 10% des indemnités contractuellement dues, en vue de dédommager l’Assuré à la suite d’un sinistre couvert.", "majoration de 10% des indemnités contractuellement dues").
-accessoire(pertes_indirectes).
 % --- Art. 3.1.6 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-18 ---
 evenement_traduit(vol).
 evenement_traduit(vandalisme).
@@ -354,41 +321,6 @@ limite(degats_eaux_3_1_4, '3.1.4.1', "La perte d’eau subie à l’occasion d�
 limite(degats_eaux_3_1_4, '3.1.4.3', "Si l’Assuré ne respecte pas ces prescriptions, sauf cas de force majeure, et si un sinistre survient ou est aggravé de ce fait, l’indemnité due sera réduite de moitié.", "indemnité réduite de moitié si les conduites n'ont pas été vidangées ou protégées").
 exclusion([degats_eaux_3_1_4], f(option_degats_eaux, non), tout, oui, '3.1.4',
     "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ dégâts des eaux ” est souscrite.").
-
-% --- Art. 3.2.2 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
-evenement_traduit(catastrophe_naturelle).
-garantie(pluies_inondations, "Pluies & inondations", '3.2.2',
-    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “Pluies & inondations” est accordée.").
-perimetre(pluies_inondations, f(evenement, catastrophe_naturelle)).
-perimetre(pluies_inondations, ou([f(catastrophe, inondation), f(catastrophe, ruissellement), f(catastrophe, glissement_terrain)])).
-perimetre(pluies_inondations, concept(batiment_designe)).
-exclusion(pluies_inondations, et([et([ou([f(lieu, jardin), f(lieu, terrasse)]), non(f(bien, element_batiment))]), non(f(bien, mobilier_jardin))]), tout, oui, '3.2.2.4',
-    "au contenu se trouvant à l’extérieur des locaux, à l’exception du mobilier de jardin").
-exclusion(pluies_inondations, et([f(travaux_construction, oui), f(lien_causal_travaux, oui)]), tout, oui, '3.2.2.4',
-    "lorsque le bâtiment est en cours de construction, transformation ou rénovation et qu’il existe un lien causal entre les dommages et les travaux en cours").
-exclusion(pluies_inondations, f(ouvertures_non_fermees, oui), tout, oui, '3.2.2.4',
-    "par des entrées d’eaux pluviales, de neige ou de glace par des ouvertures non fermées, tels que portes, fenêtres, soupiraux, lucarnes").
-exclusion(pluies_inondations, f(cause_eau, eau_souterraine), tout, oui, '3.2.2.4',
-    "par les infiltrations d’eaux souterraines").
-exclusion(pluies_inondations, f(cause_eau, condensation), tout, non, '3.2.2.4',
-    "par l’hygrométrie ambiante, même consécutivement à un sinistre couvert").
-exclusion(pluies_inondations, f(type_dommage, moisissure), tout, non, '3.2.2.4',
-    "par des champignons ou des moisissures, même consécutivement à un sinistre couvert").
-exclusion(pluies_inondations, f(manque_entretien, oui), tout, non, '3.2.2.4',
-    "par un défaut de réparation ou d’entretien, ou dus à une étanchéité absente, mal conçue ou mal réalisée").
-exclusion(pluies_inondations, f(cause_eau, condensation), tout, non, '3.2.2.4',
-    "par l’humidité, la porosité, la condensation, les phénomènes de capillarité").
-exclusion(pluies_inondations, f(terrain_non_constructible, oui), tout, non, '3.2.2.4',
-    "aux bâtiments situés sur un terrain non constructible").
-exclusion(pluies_inondations, f(autorisation_gestion_eau_non_respectee, oui), tout, non, '3.2.2.4',
-    "aux bâtiments soumis à l’autorisation de l’Administration de la gestion de l’eau et qui ne respectent pas les conditions afférentes à cette autorisation").
-exclusion(pluies_inondations, f(dommages_dans_72h, non), tout, non, '3.2.2.1',
-    "Les dommages qui résultent des événements climatiques cités ci-dessus seront pris en charge par la Compagnie à conditions qu’ils se soient réalisés dans les 72 heures suivant l’événement.").
-limite(pluies_inondations, '3.2.2.2', "Lorsque les conditions particulières mentionnent que les biens désignés ne sont pas situés en zone inondable, l’Assuré bénéficie en cas de sinistre d’une intervention de la Compagnie à concurrence de 250.000€ maximum par sinistre.", "250000").
-limite(pluies_inondations, '3.2.2.3', "Lorsque les conditions particulières mentionnent que les biens désignés sont situés en zone inondable, l’Assuré bénéficie en cas de sinistre d’une intervention de la Compagnie à concurrence de 20.000€ maximum par sinistre. En cas de sinistre, la garantie sera accordée dans la limite du plafond indiqué ci-avant soit 20.000€ et après déduction de la franchise de 1.500€ prévue dans le cadre de la présente garantie.", "20000").
-limite(pluies_inondations, '3.2.2.4', "Dans ce cas, la prise en charge des dommages se fait sans application de la règle proportionnelle à concurrence de 5.000€ par sinistre", "5000").
-exclusion([pluies_inondations], f(option_pluies_inondations, non), tout, oui, '3.2.2',
-    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “Pluies & inondations” est accordée.").
 % --- Art. 3.1.5 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
 evenement_traduit(bris).
 garantie(bris_vitrages, "Bris de vitrages", '3.1.5.1',
@@ -779,54 +711,6 @@ exclusion(assistance_voyage, et([f(objet_voyage, retour_anticipe), f(evenement_p
 exclusion(assistance_voyage, et([f(objet_voyage, poursuites_etranger), f(suite_accident_circulation, non)]), tout, non, '4.2.3.6',
     "Si, à la suite d’un accident de la circulation à l’étranger, l’Assuré tombe sous le coup de poursuites judiciaires").
 limite(assistance_voyage, '4.2.3.4', "à concurrence d’un maximum de 150.000 f par Assuré", "150000").
-
-% --- Art. 3.1.7 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
-evenement_traduit(bris).
-evenement_traduit(vol).
-evenement_traduit(accident).
-garantie(materiel_multimedia_bris, "Bris du matériel multimédia", '3.1.7.1',
-    "La Compagnie couvre tout bris ou destruction accidentel résultant d’une chute, d’un choc ou de la pénétration d’un corps étranger et qui rend nécessaire la réparation ou le remplacement du matériel multimédia. Sont également couverts au titre de cette garantie les équipements suivants : n équipement d’alarme et de surveillance, en activité ou au repos, pendant les opérations de démontage, de déplacement sur les lieux assurés ou de remontage nécessitées pour leur entretien ou leur révision, pour autant que la mise en exploitation desdits matériels ait donné entière satisfaction ; n équipement domotique").
-perimetre(materiel_multimedia_bris, f(evenement, bris)).
-perimetre(materiel_multimedia_bris, ou([f(bien, electronique), f(bien, equipement_alarme_surveillance), f(bien, equipement_domotique)])).
-obligation(materiel_multimedia_bris, si(ou([f(lieu, vehicule), et([f(bien, vehicule_moteur), f(lieu, voie_publique)])]), et([f(vehicule_ferme_cle, oui), non(f(materiel_laisse_en_vue, oui))])), faux, non, '3.1.7.4',
-    "Lorsque les biens assurés se trouvent à l’intérieur d’un véhicule inoccupé, la garantie intervient uniquement si les deux conditions suivantes sont remplies simultanément : n le véhicule a été fermé à clé ; n le matériel assuré n’a pas été laissé en vue à l’intérieur de l’habitacle du véhicule").
-exclusion(materiel_multimedia_bris, et([f(bien, equipement_alarme_surveillance), f(mise_en_exploitation_satisfaction, non)]), bien(equipement_alarme_surveillance), non, '3.1.7.1',
-    "pour autant que la mise en exploitation desdits matériels ait donné entière satisfaction").
-limite(materiel_multimedia_bris, '3.1.7.1', "1 0.000 € par sinistre lorsque les conditions particulières mentionnent que la formule «Privilège» est souscrite", "10000").
-limite(materiel_multimedia_bris, '3.1.7.1', "5.000 € par sinistre lorsque les conditions particulières mentionnent que la formule «Active» est souscrite", "5000").
-garantie(materiel_multimedia_vol, "Vol du matériel multimédia", '3.1.7.1',
-    "Sous réserve que la garantie vol ait été accordée, la Compagnie couvre également : n le vol du matériel multimédia lorsque le vol a eu lieu à l’extérieur du bâtiment désigné ; n le vol de ces équipements se trouvant à l’intérieur d’un véhicule terrestre automoteur à condition que ledit véhicule soit également volé ou qu’il y ait effraction caractérisée du véhicule ; n le vol de ces équipements qu’un Assuré déplace à l’occasion d’un séjour temporaire dans un bâtiment situé n’importe où dans le monde, pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes").
-perimetre(materiel_multimedia_vol, f(evenement, vol)).
-perimetre(materiel_multimedia_vol, ou([f(bien, electronique), f(bien, equipement_alarme_surveillance), f(bien, equipement_domotique)])).
-circonstance(materiel_multimedia_vol, ou([non(concept(batiment_designe)), et([f(lieu, vehicule), ou([f(vehicule_vole, oui), f(effraction, oui)])]), et([f(sejour_temporaire, oui), f(plainte_deposee, oui)])]), '3.1.7.1',
-    "le vol du matériel multimédia lorsque le vol a eu lieu à l’extérieur du bâtiment désigné ; n le vol de ces équipements se trouvant à l’intérieur d’un véhicule terrestre automoteur à condition que ledit véhicule soit également volé ou qu’il y ait effraction caractérisée du véhicule ; n le vol de ces équipements qu’un Assuré déplace à l’occasion d’un séjour temporaire dans un bâtiment situé n’importe où dans le monde, pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes").
-obligation(materiel_multimedia_vol, si(ou([f(lieu, vehicule), et([f(bien, vehicule_moteur), f(lieu, voie_publique)])]), et([f(vehicule_ferme_cle, oui), non(f(materiel_laisse_en_vue, oui))])), faux, non, '3.1.7.4',
-    "Lorsque les biens assurés se trouvent à l’intérieur d’un véhicule inoccupé, la garantie intervient uniquement si les deux conditions suivantes sont remplies simultanément : n le véhicule a été fermé à clé ; n le matériel assuré n’a pas été laissé en vue à l’intérieur de l’habitacle du véhicule").
-exclusion(materiel_multimedia_vol, f(option_vol, non), tout, oui, '3.1.7.1',
-    "Sous réserve que la garantie vol ait été accordée").
-exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(proprietaire, hote), tout, oui, '3.1.7.2',
-    "le matériel dont l'Assuré n'est pas propriétaire").
-exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(cause_dommage, virus), tout, non, '3.1.7.2',
-    "les pertes liées à l'action d'un virus et tous préjudices consécutifs").
-exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(vice_defaut_connu, oui), tout, non, '3.1.7.2',
-    "les pertes ou dommages dus à des vices ou défauts qui existaient à la date d'effet de la présente assurance et qui étaient connus de l'Assuré ou de ses mandataires").
-exclusion([materiel_multimedia_bris, materiel_multimedia_vol], ou([f(manque_entretien, oui), f(fonctionnement_defectueux, oui)]), tout, non, '3.1.7.2',
-    "les pertes ou dommages qui sont la conséquence directe : n des effets continuels de l’exploitation (usure) ; n d’un fonctionnement défectueux").
-exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(garantie_fabricant, oui), tout, non, '3.1.7.2',
-    "les pertes ou dommages dont le fabricant ou le fournisseur est légalement ou contractuellement responsable").
-exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(bien, consommable), bien(consommable), non, '3.1.7.2',
-    "les pertes ou dommages causés aux lampes,tubes, bandes transporteuses, fusibles, joints, courroies, chaînes").
-exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(type_dommage, rayure_ou_ecaillement), tout, non, '3.1.7.2',
-    "les défauts d'ordre esthétique, tels que les bosses, égratignures, rayures ou écaillements").
-exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(evenement, electricite), tout, oui, '3.1.7.2',
-    "les dommages d'origine électrique").
-exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(bien, denrees_alimentaires), bien(denrees_alimentaires), non, '3.1.7.2',
-    "les dommages causés au contenu des appareils").
-exclusion([materiel_multimedia_bris, materiel_multimedia_vol], ou([f(auteur, assure), f(auteur, famille), et([f(auteur, personnel_prive), ou([f(heures_service, oui), non(ou([f(effraction, oui), f(violence, oui)]))])])]), tout, oui, '3.1.7.2',
-    "les vols commis par ou avec la complicité de ou du : n Preneur d’assurance, son conjoint, leurs ascendants ou descendants ainsi que les conjoints de ces personnes ; n l’Assuré ; n toute personne au service de l’Assuré pendant les heures de service et, si ces vols ont été commis en dehors de celles-ci, autrement que par effraction ou avec violence. En ce qui concerne les pièces mentionnées aux points").
-exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(option_materiel_multimedia, non), tout, oui, '3.1.7',
-    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “matériel multimédia” est accordée.").
-
 % --- Art. 4.2.2 : proposition rédigée par le modèle — mistral:mistral-large-4-0 (proposition écartée), 2026-11-24 ---
 evenement_traduit(vol).
 evenement_traduit(bris).
@@ -974,3 +858,118 @@ exclusion(e_protection, et([ou([f(litige_internet, achat_bien_internet), f(litig
 exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement)]), f(litige_hors_europe, oui)]), tout, non, '4.1.4.5',
     "dans un pays membre de l’Union européenne, en ce compris la Suisse, Monaco, Andorre, Saint-Marin, le Vatican, le Liechtenstein et la Norvège pour la garantie en cas d’usurpation d’identité et la garantie en cas d’utilisation frauduleuse des moyens de paiement").
 limite(e_protection, '4.1.4.3~1', "l’indemnisation du préjudice s’effectue dans la limite globale de 5000 E toutes taxes comprises (TTC) par année d’assurance", "5000").
+
+% --- Art. 3.2.1 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
+evenement_traduit(catastrophe_naturelle).
+garantie(tremblement_terre, "Tremblement de terre", '3.2.1.1',
+    "La Compagnie garantit, sous réserve des exclusions générales et des exclusions spécifiques, les dommages matériels causés aux biens désignés par un tremblement de terre.").
+perimetre(tremblement_terre, f(evenement, catastrophe_naturelle)).
+perimetre(tremblement_terre, f(catastrophe, tremblement_terre)).
+perimetre(tremblement_terre, concept(batiment_designe)).
+circonstance(tremblement_terre, f(option_tremblement_terre, oui), '3.2.1',
+    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ tremblement de terre ” est accordée.").
+exclusion(tremblement_terre, et([f(travaux_construction, oui), f(lien_causal_travaux, oui)]), tout, oui, '3.2.1.2',
+    "survenus alors que le bâtiment est en cours de construction, transformation ou rénovation dans la mesure où il existe un lien causal entre les dommages et les travaux en cours").
+exclusion(tremblement_terre, et([et([ou([f(lieu, jardin), f(lieu, terrasse)]), non(f(bien, element_batiment))]), non(f(fixe_a_demeure, oui))]), tout, oui, '3.2.1.2',
+    "survenus aux objets se trouvant à l’extérieur du bâtiment sauf s’ils sont fixés à demeure").
+exclusion(tremblement_terre, ou([f(construction_facilement_deplacable, oui), f(construction_delabree, oui)]), tout, oui, '3.2.1.2',
+    "aux constructions faciles à déplacer ou à démonter, délabrées ou en cours de démolition de même qu’à leur éventuel contenu").
+exclusion(tremblement_terre, et([f(annexe_ancree_beton, non), ou([f(lieu, annexe), f(lieu, abri_jardin)])]), tout, oui, '3.2.1.2',
+    "aux dépendances et abris de jardins qui ne reposent pas sur des fondations").
+exclusion(tremblement_terre, f(bien, plantation), bien(plantation), non, '3.2.1.2',
+    "aux jardins et plantations").
+exclusion(tremblement_terre, f(bien, vehicule_moteur), bien(vehicule_moteur), non, '3.2.1.2',
+    "aux véhicules terrestres à moteur, aériens, maritimes ou fluviaux").
+limite(tremblement_terre, '3.2.1.3', "Lors du règlement de l’indemnité, l’Assuré conserve à sa charge un montant de 10% du dommage avec un minimum de 1.500 €.", "10% du dommage avec un minimum de 1.500 €").
+
+% --- Art. 3.2.2 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
+evenement_traduit(catastrophe_naturelle).
+garantie(pluies_inondations, "Pluies & inondations", '3.2.2',
+    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “Pluies & inondations” est accordée.").
+perimetre(pluies_inondations, f(evenement, catastrophe_naturelle)).
+perimetre(pluies_inondations, ou([f(catastrophe, inondation), f(catastrophe, ruissellement), f(catastrophe, glissement_terrain)])).
+perimetre(pluies_inondations, concept(batiment_designe)).
+circonstance(pluies_inondations, f(option_pluies_inondations, oui), '3.2.2',
+    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “Pluies & inondations” est accordée.").
+exclusion(pluies_inondations, et([et([ou([f(lieu, jardin), f(lieu, terrasse)]), non(f(bien, element_batiment))]), non(f(bien, mobilier_jardin))]), tout, oui, '3.2.2.4',
+    "au contenu se trouvant à l’extérieur des locaux, à l’exception du mobilier de jardin").
+exclusion(pluies_inondations, et([f(travaux_construction, oui), f(lien_causal_travaux, oui)]), tout, oui, '3.2.2.4',
+    "lorsque le bâtiment est en cours de construction, transformation ou rénovation et qu’il existe un lien causal entre les dommages et les travaux en cours").
+exclusion(pluies_inondations, f(ouvertures_non_fermees, oui), tout, oui, '3.2.2.4',
+    "par des entrées d’eaux pluviales, de neige ou de glace par des ouvertures non fermées, tels que portes, fenêtres, soupiraux, lucarnes").
+exclusion(pluies_inondations, f(cause_eau, eau_souterraine), tout, oui, '3.2.2.4',
+    "par les infiltrations d’eaux souterraines").
+exclusion(pluies_inondations, f(cause_eau, condensation), tout, non, '3.2.2.4',
+    "par l’hygrométrie ambiante, même consécutivement à un sinistre couvert").
+exclusion(pluies_inondations, f(type_dommage, moisissure), tout, non, '3.2.2.4',
+    "par des champignons ou des moisissures, même consécutivement à un sinistre couvert").
+exclusion(pluies_inondations, f(manque_entretien, oui), tout, non, '3.2.2.4',
+    "par un défaut de réparation ou d’entretien, ou dus à une étanchéité absente, mal conçue ou mal réalisée").
+exclusion(pluies_inondations, f(cause_eau, condensation), tout, non, '3.2.2.4',
+    "par l’humidité, la porosité, la condensation, les phénomènes de capillarité").
+exclusion(pluies_inondations, f(terrain_non_constructible, oui), tout, non, '3.2.2.4',
+    "aux bâtiments situés sur un terrain non constructible").
+exclusion(pluies_inondations, f(autorisation_gestion_eau_non_respectee, oui), tout, non, '3.2.2.4',
+    "aux bâtiments soumis à l’autorisation de l’Administration de la gestion de l’eau et qui ne respectent pas les conditions afférentes à cette autorisation").
+exclusion(pluies_inondations, f(dommages_dans_72h, non), tout, non, '3.2.2.1',
+    "Les dommages qui résultent des événements climatiques cités ci-dessus seront pris en charge par la Compagnie à conditions qu’ils se soient réalisés dans les 72 heures suivant l’événement.").
+limite(pluies_inondations, '3.2.2.2', "Lorsque les conditions particulières mentionnent que les biens désignés ne sont pas situés en zone inondable, l’Assuré bénéficie en cas de sinistre d’une intervention de la Compagnie à concurrence de 250.000€ maximum par sinistre.", "250000").
+limite(pluies_inondations, '3.2.2.3', "Lorsque les conditions particulières mentionnent que les biens désignés sont situés en zone inondable, l’Assuré bénéficie en cas de sinistre d’une intervention de la Compagnie à concurrence de 20.000€ maximum par sinistre. En cas de sinistre, la garantie sera accordée dans la limite du plafond indiqué ci-avant soit 20.000€ et après déduction de la franchise de 1.500€ prévue dans le cadre de la présente garantie.", "20000").
+limite(pluies_inondations, '3.2.2.4', "Dans ce cas, la prise en charge des dommages se fait sans application de la règle proportionnelle à concurrence de 5.000€ par sinistre", "5000").
+
+% --- Art. 3.1.7 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
+evenement_traduit(bris).
+evenement_traduit(vol).
+evenement_traduit(accident).
+garantie(materiel_multimedia_bris, "Bris du matériel multimédia", '3.1.7.1',
+    "La Compagnie couvre tout bris ou destruction accidentel résultant d’une chute, d’un choc ou de la pénétration d’un corps étranger et qui rend nécessaire la réparation ou le remplacement du matériel multimédia. Sont également couverts au titre de cette garantie les équipements suivants : n équipement d’alarme et de surveillance, en activité ou au repos, pendant les opérations de démontage, de déplacement sur les lieux assurés ou de remontage nécessitées pour leur entretien ou leur révision, pour autant que la mise en exploitation desdits matériels ait donné entière satisfaction ; n équipement domotique").
+perimetre(materiel_multimedia_bris, f(evenement, bris)).
+perimetre(materiel_multimedia_bris, ou([f(bien, electronique), f(bien, equipement_alarme_surveillance), f(bien, equipement_domotique)])).
+circonstance(materiel_multimedia_bris, f(option_materiel_multimedia, oui), '3.1.7',
+    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “matériel multimédia” est accordée.").
+obligation(materiel_multimedia_bris, si(ou([f(lieu, vehicule), et([f(bien, vehicule_moteur), f(lieu, voie_publique)])]), et([f(vehicule_ferme_cle, oui), non(f(materiel_laisse_en_vue, oui))])), faux, non, '3.1.7.4',
+    "Lorsque les biens assurés se trouvent à l’intérieur d’un véhicule inoccupé, la garantie intervient uniquement si les deux conditions suivantes sont remplies simultanément : n le véhicule a été fermé à clé ; n le matériel assuré n’a pas été laissé en vue à l’intérieur de l’habitacle du véhicule").
+exclusion(materiel_multimedia_bris, et([f(bien, equipement_alarme_surveillance), f(mise_en_exploitation_satisfaction, non)]), bien(equipement_alarme_surveillance), non, '3.1.7.1',
+    "pour autant que la mise en exploitation desdits matériels ait donné entière satisfaction").
+limite(materiel_multimedia_bris, '3.1.7.1', "1 0.000 € par sinistre lorsque les conditions particulières mentionnent que la formule «Privilège» est souscrite", "10000").
+limite(materiel_multimedia_bris, '3.1.7.1', "5.000 € par sinistre lorsque les conditions particulières mentionnent que la formule «Active» est souscrite", "5000").
+garantie(materiel_multimedia_vol, "Vol du matériel multimédia", '3.1.7.1',
+    "Sous réserve que la garantie vol ait été accordée, la Compagnie couvre également : n le vol du matériel multimédia lorsque le vol a eu lieu à l’extérieur du bâtiment désigné ; n le vol de ces équipements se trouvant à l’intérieur d’un véhicule terrestre automoteur à condition que ledit véhicule soit également volé ou qu’il y ait effraction caractérisée du véhicule ; n le vol de ces équipements qu’un Assuré déplace à l’occasion d’un séjour temporaire dans un bâtiment situé n’importe où dans le monde, pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes").
+perimetre(materiel_multimedia_vol, f(evenement, vol)).
+perimetre(materiel_multimedia_vol, ou([f(bien, electronique), f(bien, equipement_alarme_surveillance), f(bien, equipement_domotique)])).
+circonstance(materiel_multimedia_vol, ou([non(concept(batiment_designe)), et([f(lieu, vehicule), ou([f(vehicule_vole, oui), f(effraction, oui)])]), et([f(sejour_temporaire, oui), f(plainte_deposee, oui)])]), '3.1.7.1',
+    "le vol du matériel multimédia lorsque le vol a eu lieu à l’extérieur du bâtiment désigné ; n le vol de ces équipements se trouvant à l’intérieur d’un véhicule terrestre automoteur à condition que ledit véhicule soit également volé ou qu’il y ait effraction caractérisée du véhicule ; n le vol de ces équipements qu’un Assuré déplace à l’occasion d’un séjour temporaire dans un bâtiment situé n’importe où dans le monde, pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes").
+circonstance(materiel_multimedia_vol, f(option_materiel_multimedia, oui), '3.1.7',
+    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “matériel multimédia” est accordée.").
+obligation(materiel_multimedia_vol, si(ou([f(lieu, vehicule), et([f(bien, vehicule_moteur), f(lieu, voie_publique)])]), et([f(vehicule_ferme_cle, oui), non(f(materiel_laisse_en_vue, oui))])), faux, non, '3.1.7.4',
+    "Lorsque les biens assurés se trouvent à l’intérieur d’un véhicule inoccupé, la garantie intervient uniquement si les deux conditions suivantes sont remplies simultanément : n le véhicule a été fermé à clé ; n le matériel assuré n’a pas été laissé en vue à l’intérieur de l’habitacle du véhicule").
+exclusion(materiel_multimedia_vol, f(option_vol, non), tout, oui, '3.1.7.1',
+    "Sous réserve que la garantie vol ait été accordée").
+exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(proprietaire, hote), tout, oui, '3.1.7.2',
+    "le matériel dont l'Assuré n'est pas propriétaire").
+exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(cause_dommage, virus), tout, non, '3.1.7.2',
+    "les pertes liées à l'action d'un virus et tous préjudices consécutifs").
+exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(vice_defaut_connu, oui), tout, non, '3.1.7.2',
+    "les pertes ou dommages dus à des vices ou défauts qui existaient à la date d'effet de la présente assurance et qui étaient connus de l'Assuré ou de ses mandataires").
+exclusion([materiel_multimedia_bris, materiel_multimedia_vol], ou([f(manque_entretien, oui), f(fonctionnement_defectueux, oui)]), tout, non, '3.1.7.2',
+    "les pertes ou dommages qui sont la conséquence directe : n des effets continuels de l’exploitation (usure) ; n d’un fonctionnement défectueux").
+exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(garantie_fabricant, oui), tout, non, '3.1.7.2',
+    "les pertes ou dommages dont le fabricant ou le fournisseur est légalement ou contractuellement responsable").
+exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(bien, consommable), bien(consommable), non, '3.1.7.2',
+    "les pertes ou dommages causés aux lampes,tubes, bandes transporteuses, fusibles, joints, courroies, chaînes").
+exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(type_dommage, rayure_ou_ecaillement), tout, non, '3.1.7.2',
+    "les défauts d'ordre esthétique, tels que les bosses, égratignures, rayures ou écaillements").
+exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(evenement, electricite), tout, oui, '3.1.7.2',
+    "les dommages d'origine électrique").
+exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(bien, denrees_alimentaires), bien(denrees_alimentaires), non, '3.1.7.2',
+    "les dommages causés au contenu des appareils").
+exclusion([materiel_multimedia_bris, materiel_multimedia_vol], ou([f(auteur, assure), f(auteur, famille), et([f(auteur, personnel_prive), ou([f(heures_service, oui), non(ou([f(effraction, oui), f(violence, oui)]))])])]), tout, oui, '3.1.7.2',
+    "les vols commis par ou avec la complicité de ou du : n Preneur d’assurance, son conjoint, leurs ascendants ou descendants ainsi que les conjoints de ces personnes ; n l’Assuré ; n toute personne au service de l’Assuré pendant les heures de service et, si ces vols ont été commis en dehors de celles-ci, autrement que par effraction ou avec violence. En ce qui concerne les pièces mentionnées aux points").
+
+% --- Art. 3.2.3 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
+garantie(pertes_indirectes, "Pertes indirectes", '3.2.3',
+    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ pertes indirectes ” est accordée. La Compagnie garantit la majoration de 10% des indemnités contractuellement dues, en vue de dédommager l’Assuré à la suite d’un sinistre couvert.").
+circonstance(pertes_indirectes, f(option_pertes_indirectes, oui), '3.2.3',
+    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ pertes indirectes ” est accordée.").
+limite(pertes_indirectes, '3.2.3', "La Compagnie garantit la majoration de 10% des indemnités contractuellement dues, en vue de dédommager l’Assuré à la suite d’un sinistre couvert.", "majoration de 10% des indemnités contractuellement dues").
+accessoire(pertes_indirectes).

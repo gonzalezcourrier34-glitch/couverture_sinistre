@@ -906,6 +906,20 @@ def test_une_option_marquee_se_demande_une_garantie_de_base_reste_en_reserve():
     assert {"non": condition} in [x["condition"] for x in base["garanties"][0]["exclusions"]]
 
 
+def test_la_clause_d_une_option_compte_comme_traduite():
+    """7.181. La phrase « si les conditions particulières mentionnent la garantie » était portée par une exclusion
+    « option non souscrite ». Portée par la circonstance marquée « option », elle reste traduite : le contrôle de
+    couverture ne la réclame pas une seconde fois."""
+    prop = copy.deepcopy(BONNE)
+    retiree = prop["garanties"][0]["exclusions"].pop(0)
+    assert any("absente" in p["message"] for p in bloquants(controles(prop), "couverture"))
+    prop["garanties"][0]["circonstances"].append(
+        {"condition": {"f": ["option_essai", "oui"]}, "article": "2.2-a", "texte": retiree["texte"], "option": True})
+    assert not [p for p in bloquants(controles(prop), "couverture") if "absente" in p["message"]]
+    prop["garanties"][0]["circonstances"][-1].pop("option")
+    assert any("absente" in p["message"] for p in bloquants(controles(prop), "couverture")), "sans la marque, non"
+
+
 def test_une_option_mal_declaree_est_bloquante():
     from couverture.redaction.controles import options_mal_declarees
     prop = copy.deepcopy(BONNE)

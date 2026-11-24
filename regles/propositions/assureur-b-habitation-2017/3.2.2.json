@@ -12,7 +12,8 @@
         "« applicables si… » : réserve (option_pluies_inondations)",
         "dommages dans les 72 heures : exclusion à établir par l'assureur, pas une question à chaque inondation",
         "hygrométrie, champignons, humidité, condensation : cause_eau = condensation ; défaut d'étanchéité → manque_entretien ; « à l'extérieur des locaux » : règle 3 quater",
-        "moisissures : la condition était `cause_eau = condensation` (une autre exclusion) ; désormais `type_dommage = moisissure` (7.83)"
+        "moisissures : la condition était `cause_eau = condensation` (une autre exclusion) ; désormais `type_dommage = moisissure` (7.83)",
+        "24 nov., 23 h 30 : l'option s'écrit comme les autres, une circonstance marquée « option » (7.181) ; elle était une exclusion « option non souscrite »"
       ]
     }
   },
@@ -60,7 +61,19 @@
             "concept": "batiment_designe"
           }
         ],
-        "circonstances": [],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "option_pluies_inondations",
+                "oui"
+              ]
+            },
+            "article": "3.2.2",
+            "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “Pluies & inondations” est accordée.",
+            "option": true
+          }
+        ],
         "obligations": [],
         "exclusions": [
           {
@@ -259,20 +272,7 @@
         ]
       }
     ],
-    "exclusions_communes": [
-      {
-        "condition": {
-          "f": [
-            "option_pluies_inondations",
-            "non"
-          ]
-        },
-        "portee": "tout",
-        "a_demander": true,
-        "article": "3.2.2",
-        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “Pluies & inondations” est accordée."
-      }
-    ],
+    "exclusions_communes": [],
     "vocabulaire_manquant": [
       {
         "variable": "catastrophe",

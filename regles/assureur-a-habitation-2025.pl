@@ -21,10 +21,9 @@
 :- discontiguous definition/4, precision/3, garantie/4, perimetre/2, circonstance/4,
                  obligation/6, exclusion/6, limite/4, evenement_traduit/1, accessoire/1.
 
-%  Les garanties optionnelles (DEMARCHE 7.109) : elles ne jouent que si les conditions particulières les mentionnent,
-%  ce que la déclaration ne dit pas. Seule à couvrir, une option ne donne pas « couvert sous réserve » mais « à
-%  préciser », avec le point à vérifier dans les conditions particulières. Les garanties de base sont présumées souscrites.
-option(option_materiel_multimedia).
+%  Les garanties optionnelles (DEMARCHE 7.109, 7.178, 7.181) : elles ne jouent que si les conditions particulières les
+%  mentionnent, ce que la déclaration ne dit pas. Chacune s'écrit dans son article : une circonstance « option = oui »,
+%  marquée « option » dans la proposition, qui se demande. Les garanties de base sont présumées souscrites.
 
 %  Les événements dont les garanties sont traduites ici. Un autre événement déclaré (tempête, bris de
 %  vitrage…) relève d'une garantie qui n'est pas encore en règles : le moteur ne conclut alors pas
@@ -408,30 +407,6 @@ limite(garanties_complementaires, '4~2', "• l’avance de fonds jusqu'à 7.700
 limite(garanties_complementaires, '4~2', "• frais médicaux et pharmaceutiques à concurrence de 2.000 EUR.", "2000 EUR").
 limite(garanties_complementaires, '4~2', "• frais d’expertise c'est-à-dire les frais et honoraires de votre expert et le cas échéant ceux d’un tiersexpert, calculés en pourcentage des indemnités dues hors TVA, conformément au barème repris ciaprès, à l'exclusion de celles relatives aux assurances de responsabilité et des pertes indirectes.", "barème % max 25000 EUR").
 accessoire(garanties_complementaires).
-
-% --- Art. 6.1 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
-evenement_traduit(heurt).
-evenement_traduit(bris).
-evenement_traduit(vol).
-definition(materiel_informatique, f(bien, appareil_informatique), '12/materiel-informatique',
-    "Les ordinateurs de bureau et périphériques, laptops, notebook et tout appareil dont la taille de l’écran est supérieure à 7’’.").
-garantie(pack_multimedia, "Pack multimédia", '6.1',
-    "Pour autant que vos conditions particulières en fassent mention, vos garanties sont étendues au matériel informatique. Dans ce cadre, nous prenons en charge les dommages causés par : • la chute, le heurt et l’introduction d’un corps étrangers • le vol survenu à l’extérieur du bâtiment assuré, pour autant qu’une plainte soit déposée auprès des autorités judiciaires ou de polices compétentes. Il faut noter que ces couvertures sont acquises dans le monde entier.").
-perimetre(pack_multimedia, concept(materiel_informatique)).
-perimetre(pack_multimedia, ou([f(evenement, heurt), f(evenement, bris), f(evenement, vol)])).
-circonstance(pack_multimedia, si(f(evenement, vol), et([non(concept(batiment)), f(plainte_deposee, oui)])), '6.1',
-    "le vol survenu à l’extérieur du bâtiment assuré, pour autant qu’une plainte soit déposée auprès des autorités judiciaires ou de polices compétentes").
-exclusion(pack_multimedia, et([f(evenement, vol), f(laisse_sans_surveillance, oui)]), tout, oui, '6.1',
-    "le vol d’objets ayant été laissé sans surveillance dans un lieu public").
-exclusion(pack_multimedia, et([f(evenement, vol), f(lieu, vehicule), f(vehicule_voie_publique, oui), f(periode_horaire, nuit_22h_7h)]), tout, oui, '6.1',
-    "le vol d’objets laissés dans un véhicule en stationnement sur la voie publique entre 22 heures et 7 heures").
-exclusion(pack_multimedia, et([f(evenement, vol), f(lieu, vehicule), f(vehicule_voie_publique, oui), f(periode_horaire, jour_7h_22h), ou([f(materiel_laisse_en_vue, oui), f(vehicule_ferme_cle, non), f(habitacle_ferme, non)])]), tout, oui, '6.1',
-    "le vol d’objets laissés dans un véhicule en stationnement sur la voie publique entre 7 heures et 22 heures et que les objets étaient visibles de l’extérieur ou que le véhicule n’était pas fermé à clé ou encore que l’habitacle n’était pas entièrement fermé").
-exclusion(pack_multimedia, et([f(evenement, vol), f(simple_disparition, oui)]), tout, oui, '6.1',
-    "la simple perte, disparition ou l’oubli d’un objet dans un lieu public").
-exclusion(pack_multimedia, non(f(option_materiel_multimedia, oui)), tout, oui, '6.1',
-    "Pour autant que vos conditions particulières en fassent mention, vos garanties sont étendues au matériel informatique. Dans ce cadre, nous prenons en charge les dommages causés par : • la chute, le heurt et l’introduction d’un corps étrangers • le vol survenu à l’extérieur du bâtiment assuré, pour autant qu’une plainte soit déposée auprès des autorités judiciaires ou de polices compétentes. Il faut noter que ces couvertures sont acquises dans le monde entier.").
-limite(pack_multimedia, '6.1-a', "Limite par sinistre (à l’indice ABEX 775) 5.750 EUR", "5750 EUR à l'indice ABEX 775").
 % --- Art. 2.6 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-18 ---
 evenement_traduit(electricite).
 garantie(action_electricite, "Action de l'électricité", '2.6',
@@ -552,3 +527,27 @@ exclusion(rc_vie_privee, f(plus_de_5_chevaux, oui), tout, non, '5.3',
 limite(rc_vie_privee, '5.1', "les dommages résultant de lésions corporelles à concurrence de 24.763.874,96 EUR", "24763874.96").
 limite(rc_vie_privee, '5.1', "les dommages matériels à concurrence de 7.131.995,99 EUR", "7131995.99").
 limite(rc_vie_privee, '5.1', "Une franchise de 258,70 EUR est d’application pour les dommages matériels", "franchise 258.70").
+
+% --- Art. 6.1 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
+evenement_traduit(heurt).
+evenement_traduit(bris).
+evenement_traduit(vol).
+definition(materiel_informatique, f(bien, appareil_informatique), '12/materiel-informatique',
+    "Les ordinateurs de bureau et périphériques, laptops, notebook et tout appareil dont la taille de l’écran est supérieure à 7’’.").
+garantie(pack_multimedia, "Pack multimédia", '6.1',
+    "Pour autant que vos conditions particulières en fassent mention, vos garanties sont étendues au matériel informatique. Dans ce cadre, nous prenons en charge les dommages causés par : • la chute, le heurt et l’introduction d’un corps étrangers • le vol survenu à l’extérieur du bâtiment assuré, pour autant qu’une plainte soit déposée auprès des autorités judiciaires ou de polices compétentes. Il faut noter que ces couvertures sont acquises dans le monde entier.").
+perimetre(pack_multimedia, concept(materiel_informatique)).
+perimetre(pack_multimedia, ou([f(evenement, heurt), f(evenement, bris), f(evenement, vol)])).
+circonstance(pack_multimedia, si(f(evenement, vol), et([non(concept(batiment)), f(plainte_deposee, oui)])), '6.1',
+    "le vol survenu à l’extérieur du bâtiment assuré, pour autant qu’une plainte soit déposée auprès des autorités judiciaires ou de polices compétentes").
+circonstance(pack_multimedia, f(option_materiel_multimedia, oui), '6.1',
+    "Pour autant que vos conditions particulières en fassent mention, vos garanties sont étendues au matériel informatique. Dans ce cadre, nous prenons en charge les dommages causés par : • la chute, le heurt et l’introduction d’un corps étrangers • le vol survenu à l’extérieur du bâtiment assuré, pour autant qu’une plainte soit déposée auprès des autorités judiciaires ou de polices compétentes. Il faut noter que ces couvertures sont acquises dans le monde entier.").
+exclusion(pack_multimedia, et([f(evenement, vol), f(laisse_sans_surveillance, oui)]), tout, oui, '6.1',
+    "le vol d’objets ayant été laissé sans surveillance dans un lieu public").
+exclusion(pack_multimedia, et([f(evenement, vol), f(lieu, vehicule), f(vehicule_voie_publique, oui), f(periode_horaire, nuit_22h_7h)]), tout, oui, '6.1',
+    "le vol d’objets laissés dans un véhicule en stationnement sur la voie publique entre 22 heures et 7 heures").
+exclusion(pack_multimedia, et([f(evenement, vol), f(lieu, vehicule), f(vehicule_voie_publique, oui), f(periode_horaire, jour_7h_22h), ou([f(materiel_laisse_en_vue, oui), f(vehicule_ferme_cle, non), f(habitacle_ferme, non)])]), tout, oui, '6.1',
+    "le vol d’objets laissés dans un véhicule en stationnement sur la voie publique entre 7 heures et 22 heures et que les objets étaient visibles de l’extérieur ou que le véhicule n’était pas fermé à clé ou encore que l’habitacle n’était pas entièrement fermé").
+exclusion(pack_multimedia, et([f(evenement, vol), f(simple_disparition, oui)]), tout, oui, '6.1',
+    "la simple perte, disparition ou l’oubli d’un objet dans un lieu public").
+limite(pack_multimedia, '6.1-a', "Limite par sinistre (à l’indice ABEX 775) 5.750 EUR", "5750 EUR à l'indice ABEX 775").

@@ -13,7 +13,8 @@
         "périmètre : bris ajouté (un ordinateur tombé se lit souvent « bris »)",
         "obligations du véhicule retirées : écrites comme une situation, elles faisaient refuser tout heurt à la maison ; les exclusions disent déjà la même chose",
         "« laissé sans surveillance dans un lieu public » et « simple perte dans un lieu public » : pas limités à la voie publique (une gare, un café) ; la simple perte réservée au vol (une chute n'en est pas une)",
-        "periode_horaire : valeurs nuit_22h_7h et jour_7h_22h (un identifiant commence par une lettre)"
+        "periode_horaire : valeurs nuit_22h_7h et jour_7h_22h (un identifiant commence par une lettre)",
+        "24 nov., 23 h 30 : l'option s'écrit comme les autres, une circonstance marquée « option » (7.181) ; elle était une exclusion « option non souscrite »"
       ]
     }
   },
@@ -98,6 +99,17 @@
             },
             "article": "6.1",
             "texte": "le vol survenu à l’extérieur du bâtiment assuré, pour autant qu’une plainte soit déposée auprès des autorités judiciaires ou de polices compétentes"
+          },
+          {
+            "condition": {
+              "f": [
+                "option_materiel_multimedia",
+                "oui"
+              ]
+            },
+            "article": "6.1",
+            "texte": "Pour autant que vos conditions particulières en fassent mention, vos garanties sont étendues au matériel informatique. Dans ce cadre, nous prenons en charge les dommages causés par : • la chute, le heurt et l’introduction d’un corps étrangers • le vol survenu à l’extérieur du bâtiment assuré, pour autant qu’une plainte soit déposée auprès des autorités judiciaires ou de polices compétentes. Il faut noter que ces couvertures sont acquises dans le monde entier.",
+            "option": true
           }
         ],
         "obligations": [],
@@ -235,20 +247,6 @@
             "a_demander": true,
             "article": "6.1",
             "texte": "la simple perte, disparition ou l’oubli d’un objet dans un lieu public"
-          },
-          {
-            "condition": {
-              "non": {
-                "f": [
-                  "option_materiel_multimedia",
-                  "oui"
-                ]
-              }
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "6.1",
-            "texte": "Pour autant que vos conditions particulières en fassent mention, vos garanties sont étendues au matériel informatique. Dans ce cadre, nous prenons en charge les dommages causés par : • la chute, le heurt et l’introduction d’un corps étrangers • le vol survenu à l’extérieur du bâtiment assuré, pour autant qu’une plainte soit déposée auprès des autorités judiciaires ou de polices compétentes. Il faut noter que ces couvertures sont acquises dans le monde entier."
           }
         ],
         "limites": [
@@ -324,11 +322,5 @@
     ],
     "non_traduit": []
   },
-  "controles": [
-    {
-      "gravite": "à relire",
-      "controle": "non-régression",
-      "message": "g2-i07 : NON_COUVERT → INCERTAIN avec les nouvelles règles"
-    }
-  ]
+  "controles": []
 }

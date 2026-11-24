@@ -573,6 +573,10 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str,
     textes = [x.get("texte", "") for x in exclusions(prop)]
     textes += [n.get("texte", "") for n in non_traduits(prop)]
     textes += [n.get("texte", "") for n in prop.get("hors_decision") or []]
+    # 7.181 : la clause « si les conditions particulières mentionnent la garantie » est portée par la circonstance
+    # marquée « option », plus par une exclusion « option non souscrite » : elle compte comme traduite.
+    textes += [c.get("texte", "") for g in prop.get("garanties") or [] if isinstance(g, dict)
+               for c in g.get("circonstances") or [] if isinstance(c, dict) and c.get("option") is True]
     for c in clauses_article(clauses, article):
         if c.type != TypeClause.EXCLUSION:
             continue
