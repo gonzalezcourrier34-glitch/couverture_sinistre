@@ -5098,7 +5098,7 @@ Le 24 nov., 22 h 40 à 23 h 10.
 
 ### 7.181 Les options qui ouvrent une garantie : une seule écriture, et une neuvième option trouvée
 
-Le 24 nov., 23 h 05 à minuit.
+Le 24 nov., 23 h 05 à 23 h 40.
 
 **La question.** Après 7.178, huit options plus anciennes restaient déclarées en tête des fichiers de règles (`option(...)`), en plus d'une exclusion « option non souscrite » dans leur article. J'avais écrit qu'elles « décidaient pareil » et que les convertir demanderait de réécrire des règles mesurées. Je ne les avais pas lues une par une.
 
@@ -5115,6 +5115,24 @@ Le 24 nov., 23 h 05 à minuit.
 **Ce que je n'ai pas fait.** « Sous réserve que la garantie vol ait été accordée » (3.1.7.1) reste une réserve : le vol est une garantie de base de B que le contrat laisse retirer, pas une option rangée sous un titre « Option ». Le moteur Prolog n'a pas tourné sur ma machine.
 
 **Ce que j'avais mal estimé, une troisième fois.** J'avais écrit « elles décident pareil » sans les lire : c'était vrai des huit, et la neuvième, que je ne voyais pas, couvrait à tort. Une liste qu'on n'a pas relue cache ce qui n'y est pas.
+
+**Mesuré à 23 h 40, avec SWI-Prolog et le modèle.** Les cinq articles sans contrôle bloquant ; 261 tests passés, un ignoré. A : 94 % (partie test) et 100 % (jeu fermé). B : 93 % (90 % une heure plus tôt), un cas instable. Aucun couvert ni refus à tort. Deux portes échouent, aucune sur une décision : celle de A sur les décisions changées par la lecture (3 pour un seuil de 2, comme avant), celle de B sur le temps de réponse (11,3 s au 95e centile pour un seuil de 10, un appel lent ; médiane 4,3 s).
+
+### 7.182 Une exclusion du vol qui refusait le bris
+
+Le 24 nov., 23 h 40 à minuit.
+
+**Comment c'est apparu.** Pour vérifier 7.181, une phrase que j'avais écrite moi-même, hors de tout jeu de cas : « Mon ordinateur portable est tombé de la table du salon, l'écran est cassé. » J'annonçais « à préciser ». La réponse a été « non couvert », avec pour preuve « les vols commis par ou avec la complicité de l'Assuré ».
+
+**Trois causes, une seule corrigée.** La lecture a ajouté « causé par l'assuré », que la phrase ne dit pas. Une question hors sujet est restée (« des débris de vitrages ? »). Et une règle était fausse depuis le 19 novembre : l'exclusion des vols commis par l'assuré ou sa famille (3.1.7.2) était commune aux deux garanties du matériel multimédia, le vol et le bris. Dès que l'auteur était lu « assuré », le bris était refusé pour complicité de vol. Seule cette règle est corrigée ici : l'exclusion appartient à la garantie vol.
+
+**Une première écriture, retirée avant dépôt.** J'avais d'abord gardé l'exclusion commune en lui ajoutant « et l'événement est un vol ». Un test l'a refusée : établie à moitié par l'événement, l'exclusion faisait demander « qui est l'auteur ? » à chaque vol, avant « le véhicule était-il fermé ? ». C'est le piège déjà noté dans la relecture de cet article pour la garantie vol. Rangée dans la garantie vol, la condition reste celle d'avant, et rien ne change pour un vol.
+
+**Mesuré avant de déposer, avec le moteur de référence.** L'ordinateur tombé : « à préciser » (l'option est-elle souscrite ?), « couvert » si elle l'est, « non couvert » si elle ne l'est pas. Les 15 cas à faits exacts de B et 700 jeux de faits au hasard : aucune décision ne change. 700 jeux ciblés (bris, accident, vol ou heurt, auteur connu) : 74 décisions changent, toutes sur un bris ou un accident, vers « couvert » ou « à préciser » ; aucune sur un vol. Cela ajoute des « couvert » : un bris accidentel causé par l'assuré ou un proche, option souscrite. C'est ce que dit l'article (« tout bris ou destruction accidentel résultant d'une chute, d'un choc ») ; le banc de B dira si l'un d'eux est à tort.
+
+**Mesuré à 23 h 53, avec SWI-Prolog et le modèle.** L'article sans contrôle bloquant ; 261 tests passés, un ignoré. L'ordinateur tombé de la table : « à préciser », une seule question, « vos conditions particulières mentionnent-elles la garantie matériel multimédia ? », et plus aucune citation sur le vol. La lecture donne toujours « causé par l'assuré » : elle ne refuse plus rien. Jeu fermé de B : 92 % (93 % dix minutes plus tôt, le même cas instable faisant l'écart), aucun couvert ni refus à tort, portes passées. Aucun des « couvert » ajoutés n'est sorti à tort sur ce banc, qui ne contient qu'un cas de matériel multimédia.
+
+**Ce qui n'est pas corrigé.** La lecture qui nomme un auteur que la déclaration ne nomme pas, et la question sur les vitrages. La seconde ne change pas la décision ; la première se mesurerait sur toute la lecture, pas la veille du gel.
 
 ## 8. Ce qui reste à faire
 
@@ -5341,3 +5359,4 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 187. Un test qui s'arrête à l'étape modifiée ne voit pas ce que l'étape suivante en fait : la décision se vérifie là où l'utilisateur la lit.
 188. Ce qu'un test a rattrapé une fois et qu'on a réparé à la main reviendra au prochain ajout : la réparation va dans le code qui fait l'ajout.
 189. Avant d'écrire « ces cas décident pareil », les convertir et comparer : la comparaison a trouvé celui qui manquait à la liste, et il décidait autrement.
+190. Essayer une phrase qu'aucun jeu de cas ne contient, et lire la preuve citée, pas seulement la décision : un refus juste en apparence citait une exclusion du vol pour un objet tombé.

@@ -1096,6 +1096,18 @@ def test_le_multimedia_de_b_est_une_option_qui_se_demande():
             assert prolog.decider(cid, f)["decision"] == attendu, f
     bris = next(r for r in Moteur(contrat_b, faits).decider()["garanties"] if r["id"] == "materiel_multimedia_bris")
     assert bris["questions"] == ["option_materiel_multimedia"]
+    # 7.182 : « les vols commis par l'Assuré ou sa famille » ne vaut que pour un vol. Commune aux deux garanties,
+    # l'exclusion refusait aussi le bris : un ordinateur tombé de la table, lu « causé par l'assuré », était refusé
+    # pour complicité de vol. Un vol commis par un proche reste refusé.
+    par_l_assure = faits | {"evenement": ["accident"], "auteur": "assure"}
+    assert Moteur(contrat_b, par_l_assure).decider()["decision"] == "INCERTAIN"
+    assert Moteur(contrat_b, par_l_assure | {"option_materiel_multimedia": "oui"}).decider()["decision"] == "COUVERT"
+    vol = {"evenement": ["vol"], "bien": ["appareil_informatique"], "lieu": ["voie_publique"], "auteur": "famille",
+           "option_materiel_multimedia": "oui", "plainte_deposee": "oui"}
+    assert Moteur(contrat_b, vol).decider()["decision"] == "NON_COUVERT"
+    if prolog.swipl() is not None:
+        assert prolog.decider(cid, par_l_assure)["decision"] == "INCERTAIN"
+        assert prolog.decider(cid, vol)["decision"] == "NON_COUVERT"
 
 
 def test_une_option_qui_ouvre_une_garantie_ne_se_declare_plus_en_tete():

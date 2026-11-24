@@ -20,7 +20,8 @@
         "personnel au service de l'Assuré : exclu pendant les heures de service, et en dehors sauf effraction ou violence (variable heures_service) ; 7.75",
         "24 nov. : « accident » déclaré traduit chez B. Le périmètre reste l'événement « bris », que le vocabulaire donne pour parent à « accident » : un objet tombé y entre déjà. Écrit « bris ou accident », le périmètre devenait incertain pour un heurt",
         "24 nov. au soir : « à l'intérieur d'un véhicule » vaut aussi quand un véhicule figure parmi les biens touchés et que le lieu lu est la voie publique. Vu sur un cas du jeu fermé (f-b18, la voiture fracturée devant la gare) : la lecture nomme la voiture comme bien et situe le tout « dans la rue », l'obligation du véhicule fermé ne se déclenchait pas et le matériel était couvert sans question. La règle ne conclut rien de plus : elle fait poser la question du contrat. Ce cas n'est plus un cas jamais vu",
-        "24 nov., 23 h 30 : l'option s'écrit comme les autres, une circonstance marquée « option » (7.181) ; elle était une exclusion « option non souscrite »"
+        "24 nov., 23 h 30 : l'option s'écrit comme les autres, une circonstance marquée « option » (7.181) ; elle était une exclusion « option non souscrite »",
+        "24 nov., 23 h 45 : « les vols commis par l'Assuré ou sa famille » est une exclusion de la seule garantie vol. Commune aux deux garanties, elle refusait aussi le bris : un ordinateur tombé de la table, lu « causé par l'assuré », était refusé pour complicité de vol (7.182). Écrite « vol et auteur », elle aurait été entamée par l'événement et demandé l'auteur à chaque vol"
       ],
       "question_metier": "Le matériel multimédia en séjour temporaire est couvert par les garanties incendie, tempête, eaux… « sous réserve qu'elles aient été accordées » : non traduit ici (hors décision), à vérifier avec un souscripteur."
     }
@@ -347,6 +348,66 @@
             "a_demander": true,
             "article": "3.1.7.1",
             "texte": "Sous réserve que la garantie vol ait été accordée"
+          },
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "auteur",
+                    "assure"
+                  ]
+                },
+                {
+                  "f": [
+                    "auteur",
+                    "famille"
+                  ]
+                },
+                {
+                  "et": [
+                    {
+                      "f": [
+                        "auteur",
+                        "personnel_prive"
+                      ]
+                    },
+                    {
+                      "ou": [
+                        {
+                          "f": [
+                            "heures_service",
+                            "oui"
+                          ]
+                        },
+                        {
+                          "non": {
+                            "ou": [
+                              {
+                                "f": [
+                                  "effraction",
+                                  "oui"
+                                ]
+                              },
+                              {
+                                "f": [
+                                  "violence",
+                                  "oui"
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": true,
+            "article": "3.1.7.2",
+            "texte": "les vols commis par ou avec la complicité de ou du : n Preneur d’assurance, son conjoint, leurs ascendants ou descendants ainsi que les conjoints de ces personnes ; n l’Assuré ; n toute personne au service de l’Assuré pendant les heures de service et, si ces vols ont été commis en dehors de celles-ci, autrement que par effraction ou avec violence. En ce qui concerne les pièces mentionnées aux points"
           }
         ],
         "limites": []
@@ -474,66 +535,6 @@
         "a_demander": false,
         "article": "3.1.7.2",
         "texte": "les dommages causés au contenu des appareils"
-      },
-      {
-        "condition": {
-          "ou": [
-            {
-              "f": [
-                "auteur",
-                "assure"
-              ]
-            },
-            {
-              "f": [
-                "auteur",
-                "famille"
-              ]
-            },
-            {
-              "et": [
-                {
-                  "f": [
-                    "auteur",
-                    "personnel_prive"
-                  ]
-                },
-                {
-                  "ou": [
-                    {
-                      "f": [
-                        "heures_service",
-                        "oui"
-                      ]
-                    },
-                    {
-                      "non": {
-                        "ou": [
-                          {
-                            "f": [
-                              "effraction",
-                              "oui"
-                            ]
-                          },
-                          {
-                            "f": [
-                              "violence",
-                              "oui"
-                            ]
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        "portee": "tout",
-        "a_demander": true,
-        "article": "3.1.7.2",
-        "texte": "les vols commis par ou avec la complicité de ou du : n Preneur d’assurance, son conjoint, leurs ascendants ou descendants ainsi que les conjoints de ces personnes ; n l’Assuré ; n toute personne au service de l’Assuré pendant les heures de service et, si ces vols ont été commis en dehors de celles-ci, autrement que par effraction ou avec violence. En ce qui concerne les pièces mentionnées aux points"
       }
     ],
     "vocabulaire_manquant": [
