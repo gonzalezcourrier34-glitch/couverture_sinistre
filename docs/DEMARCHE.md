@@ -4,6 +4,34 @@ Ce document garde le raisonnement, pas seulement le résultat : ce qu'on a essay
 a échoué, pourquoi, et ce qu'on en a tiré. Chaque version de consigne citée ici est
 archivée en texte intégral dans [`docs/consignes/`](consignes/README.md).
 
+**Comment le lire.** Ce document est long : c'est un journal, tenu au fil du travail, jusqu'au 24 novembre 2026.
+Pour le fil du raisonnement, la page qui suit suffit : onze tournants, chacun avec ce qu'on croyait, ce que la
+mesure a dit, et ce qui a changé. Les sections 1 à 6 posent le point de départ. La section 7 est le journal
+lui-même, en sept parties. La section 8 dit ce qui reste ouvert, la section 9 garde une leçon par ligne.
+
+## Le cheminement, en onze tournants
+
+Le principe n'a pas bougé du premier au dernier jour : **le modèle établit des faits, le code décide**. Tout le
+reste a changé, et presque toujours pour la même raison : une mesure a contredit ce qu'on croyait.
+
+| | Ce qu'on croyait | Ce que la mesure ou l'essai a montré | Ce qui a changé | Où |
+|---|---|---|---|---|
+| 1 | Le modèle peut, à chaque sinistre, trouver les clauses, en tirer les conditions et les confronter aux faits | Deux de ces trois tâches ne dépendent pas du sinistre : on les refaisait à chaque question, un peu différemment à chaque fois | Ce qui appartient au contrat se calcule une fois, et se contrôle une fois | 7.6 |
+| 2 | Corriger jusqu'à ce que le vélo et la bougie sortent juste | Quatre règles ajoutées en une matinée, aucune mesurée ailleurs : du surapprentissage sur deux cas. Première mesure : 13 « incertain » sur 14, prudent mais inutile | Mesurer avant de corriger ; un jeu de cas, avec des sinistres qui doivent sortir « couvert » | 7.11, 7.12 |
+| 3 | Des fiches de questions, compilées par le modèle, suffisent à représenter un contrat | Une seule clause réelle contient cinq garanties, des obligations, leur sanction et son exception. Fiches : 74 % de justes, 2 couverts à tort, une minute. Règles Prolog : 100 %, 0, 3 à 4 secondes, sur les mêmes 14 cas | La structure se tire du contrat, pas des sinistres ; le contrat devient des règles, un moteur logique décide | 7.15 à 7.16 bis |
+| 4 | 100 % : les règles sont justes | Quinze cas nouveaux, annotés d'après l'article qui les tranche : deux couverts à tort. Le 100 % portait sur les cas qui avaient servi à écrire les règles | Un jeu de référence figé et un banc qui rejoue tout, avec des seuils fixés avant de mesurer | 7.17, 7.21 |
+| 5 | Une meilleure consigne fera mieux lire les déclarations | Chaque phrase ajoutée en défaisait une autre. Avec des faits exacts le moteur ne se trompe pas : toutes les erreurs viennent de la lecture | On ne fait plus confiance à la lecture, on la vérifie : chaque fait cite les mots de la déclaration ; les faits qui portent la décision sont confirmés, sinon la réponse devient « à préciser ». Justesse 87 → 90 %, en 2,9 secondes | 7.26, 7.43 à 7.50 |
+| 6 | Garder les quatre méthodes pour comparer | Elles coûtaient en code, en tests, en consignes, et les mesures avaient tranché | Une seule méthode ; plus d'un tiers du code retiré (7 400 → 4 700 lignes) | 7.36 |
+| 7 | Ce qui marche sur un contrat écrit à la main marchera sur un autre | Sur un deuxième assureur, les règles rédigées par un modèle arrivent fausses par endroits, et les contrôles ne voient pas tout | Chaque erreur se corrige dans la méthode (consigne, contrôles, moteur), pas dans le contrat ; la rédaction propose, le code contrôle, une personne relit | 7.51 à 7.61 |
+| 8 | Le jeu de référence mesure la fidélité au contrat | Il a été écrit en connaissant les règles. Sur un jeu fermé, écrit sans les voir : A 70 % au lieu de 90, B 57 % au lieu de 76 | Deux jeux : l'un pour mettre au point, l'autre, fermé, qui ne sert qu'à mesurer et jamais à corriger | 7.79 à 7.83 |
+| 9 | Une erreur de lecture se corrige par une phrase de plus | Trois corrections en une heure pour la même déclaration, aucune mesurée, la deuxième sans effet | « Pas de rustine » : une consigne ne contient que des principes ; une lecture se corrige par des exemples validés, mesurés sur des cas qui n'ont pas servi à les choisir. Et celui qui lit n'est pas celui qui vérifie | 7.133, 7.136 |
+| 10 | Un contrat de plus, c'est un fichier de plus | Le quatrième contrat, ajouté à froid : onze minutes de rédaction, 22 contrôles bloquants, et une erreur qu'aucun contrôle n'avait vue (les formules d'un autre contrat). Une de mes propres corrections a créé un couvert à tort | Le coût d'un contrat est mesuré et écrit ; ce qui est général et ce qui ne l'est pas, aussi : ce n'est pas un bouton | 7.148 à 7.159 |
+| 11 | Une décision juste suffit | Les deux questions de l'énoncé, rejouées en ligne la veille de la livraison : décisions justes, phrases hors sujet. Et une correction raisonnable de la lecture, qui passait les tests et trois bancs sur quatre, faisait couvrir à tort un cas du jeu fermé six fois sur six | La réponse ne parle que de ce qui a un rapport avec le sinistre ; la correction de lecture est retirée | 7.164 à 7.167 |
+
+**Où cela mène (24 novembre).** Quatre contrats d'assureurs différents. Décisions justes : 94 % et 100 % sur A
+(partie test, jeu fermé), 85 % sur B, 96 % sur D ; un couvert à tort qui se répète chez B, un refus à tort chez D.
+Le quatrième contrat est partiel et n'a pas de jeu de mesure. Les règles n'ont été relues par personne du métier.
+
 ---
 
 ## 1. Comprendre la consigne avant d'écrire du code
@@ -68,6 +96,11 @@ recherche **hybride** (BM25 + embeddings, fusion RRF), **deux juges** (qualité 
 à l'ingestion, relecture des conditions décisives), **dérive** (PSI), **bilan**, suivi
 **MLflow** avec consignes versionnées, tableaux **Grafana**.
 
+C'était le point de départ. Presque tout a été retiré depuis, à mesure que la méthode changeait
+(7.36, 7.110) : restent les consignes versionnées avec leur garde-fou, le journal des analyses
+et Grafana. Reprendre ce qui a marché ailleurs a fait gagner du temps ; le garder sans le mesurer
+en aurait fait perdre.
+
 ## 6. Brancher Mistral : les surprises de l'API
 
 - `top_p` doit valoir 1 quand `temperature` vaut 0 → paramètre ajouté.
@@ -76,7 +109,24 @@ recherche **hybride** (BM25 + embeddings, fusion RRF), **deux juges** (qualité 
 - Réponses **coupées** à la limite de longueur → erreur explicite (`ReponseTronquee`) au lieu
   de « aucun objet JSON ».
 
-## 7. Le 17 novembre : du premier échec à la remise en question
+## 7. Le journal, du 17 au 24 novembre
+
+Sept parties, dans l'ordre. Chaque étape garde son numéro, cité ailleurs dans le projet.
+
+| Partie | Étapes | La question du moment |
+|---|---|---|
+| I | 7.1 à 7.14 | Le modèle remplit une grille, puis le contrat est compilé en fiches : pourquoi ça ne tient pas |
+| II | 7.15 à 7.23 | Repartir de la clause : des règles, un moteur logique, un jeu de référence et un banc |
+| III | 7.24 à 7.50 | La lecture des déclarations, d'où viennent toutes les erreurs : la vérifier plutôt que la corriger |
+| IV | 7.51 à 7.101 | D'autres contrats (B, puis D) : ce que coûte un contrat, et un jeu fermé pour mesurer la fidélité |
+| V | 7.102 à 7.147 | Le produit : une API, un écran, des déclarations écrites comme les gens écrivent ; « pas de rustine » |
+| VI | 7.148 à 7.159 | Un quatrième contrat ajouté à froid : ce qui est général, ce qui ne l'est pas |
+| VII | 7.160 à 7.167 | Mettre en ligne, puis tout rejouer la veille de la livraison |
+
+---
+
+**Partie I — La grille, puis les fiches (17 novembre).** Le point de départ : à chaque sinistre, le modèle remplit
+une grille de conditions et le code décide.
 
 ### 7.1 Grille v1 : réponse coupée
 
@@ -523,6 +573,10 @@ analysant la clause vol (7.15) :
 Décision : ne plus corriger les fiches. Ces deux formes (condition déguisée en limite, exclusion
 dans une définition) sont ce qu'une représentation en règles exprime naturellement. Les fiches
 restent la **référence chiffrée** ; Prolog devra faire au moins aussi bien et corriger ces deux cas.
+
+---
+
+**Partie II — Repartir de la clause (17 et 18 novembre).** Les fiches plafonnent. La question devient : qu'est-ce qu'une clause, et que faut-il en garder ?
 
 ### 7.15 Repartir de la clause : comment structurer des conditions générales
 
@@ -1122,6 +1176,10 @@ changement d'instrument, pas un relâchement.
 3. les règles : clés, récipient, fumée, casier, et les périls non traduits nommés dans le vocabulaire ;
 4. la seconde lecture comparée par le code, contre les 8 cas instables.
 Chaque étape repassée au banc, une à la fois, pour savoir ce qu'elle apporte.
+
+---
+
+**Partie III — La lecture (18 novembre).** Les règles sont justes quand les faits le sont. Reste à lire juste, ou à savoir quand on a mal lu.
 
 ### 7.24 La lecture : nommer tous les périls, donner le sens des mots, retirer ce qui est hors sujet
 
@@ -1824,6 +1882,10 @@ des réponses fausses, et les cas « incertain » attendus le deviennent plus so
 
 Pistes : une règle de cohérence (une clé laissée à proximité n'est pas une clé volée), et, avant de
 couvrir, demander au modèle si la déclaration évoque l'une des exclusions que le moteur présume absentes.
+
+---
+
+**Partie IV — D'autres contrats (18 au 20 novembre).** La méthode tient-elle sur un contrat qu'on n'a pas écrit à la main, et que vaut la mesure ?
 
 ### 7.51 Trois contrats de plus : Assureur B, Assureur C, Assureur D
 
@@ -3455,6 +3517,10 @@ laissée ouverte (`f-b06`) est maintenant lue `acces_voleur = sans_effraction`, 
 la réponse reste incertaine parce que la violence n'est pas lue (le vol simple exige l'une et l'autre absentes). Le
 seul couvert à tort de B est `f-b18` (voiture fermée à clé, en attente).
 
+---
+
+**Partie V — Le produit (20 au 22 novembre).** Ce qu'un gestionnaire verrait : l'écran, les questions posées, la fiche ; et des déclarations que personne n'a écrites pour le système.
+
 ### 7.102 Une API qui englobe le produit
 
 L'ancienne interface (`web.py`, Starlette) servait la page de démonstration : trois routes, ni clé, ni
@@ -4486,6 +4552,10 @@ Chacune changerait la lecture de deux contrats, pour un gain d'une variable. Or 
 
 **La mesure (22 nov., 18 h 11).** Jeu fermé de D : 96 %, aucun couvert à tort, 1 refus à tort (`f-d08`, le même), aucun cas instable : dans la fourchette du jour (93 à 96 %). Les règles de D se chargent dans SWI-Prolog, 117 citations retrouvées, aucun fait hors vocabulaire.
 
+---
+
+**Partie VI — Un contrat ajouté à froid (22 novembre).** Répondre, par l'essai, à la question des centaines de contrats.
+
 ### 7.148 Le quatrième contrat : un PDF sans numéros d'article (Assureur C)
 
 **D'où l'on part.** Assureur C avait été ingéré le 18 nov. (7.51) et laissé « à vérifier » : 157 clauses, aucune définition reconnue, presque tout rangé sous un article « 2 » qui n'existe pas. C'est le contrat ajouté à froid du plan (point 6), repris le 22 nov. à 18 h 20.
@@ -4679,6 +4749,10 @@ La section « Tenir des centaines de contrats » est réécrite d'après ce qui 
 
 **Vérifié sur le poste (22 h 05 à 22 h 17).** Les deux sections sont acceptées sans contrôle bloquant ; 223 tests passent avec SWI-Prolog, dont la concordance des deux moteurs sur les biens tous exclus. Les quatre bancs, repassés après ce second changement du moteur et l'ajout de trois biens au vocabulaire commun, rendent exactement les chiffres de 21 h 27 : A partie test 94 %, A jeu fermé 100 %, B 85 % (un couvert à tort, le même), D 96 % (un refus à tort, le même).
 
+---
+
+**Partie VII — En ligne, et la veille (23 et 24 novembre).** Ce qu'il faut pour qu'un inconnu l'essaie, puis une dernière relecture par l'usage.
+
 ### 7.160 Masquer les noms dans le texte des contrats
 
 **Le constat (23 nov.).** Le dépôt est anonyme depuis 7.70 : les assureurs s'y appellent A, B, C, D. Mais la base, elle, contient le texte des conditions générales tel qu'il est : l'assureur, son assisteur, son siège, ses numéros d'immatriculation, ses courriels. C'est ce texte que l'écran et la fiche citent. Une capture, une vidéo ou une mise en ligne montrerait ces noms.
@@ -4774,46 +4848,37 @@ Avec 7.164 et 7.165, c'est la même idée sous quatre formes : la réponse ne pa
 
 ## 8. Ce qui reste à faire
 
-Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
+Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le ferais.
 
-**Le plan pour généraliser (22 nov.)**
+**1. La validation par le métier.** C'est la première limite du projet.
+- Faire relire les règles d'un contrat par un juriste ou un gestionnaire de sinistres, et mesurer sur ses propres cas.
+- Un jeu fermé écrit par une personne : celui de `data/ferme/` l'a été par deux annotateurs automatiques (7.79).
+- Valider le golden set (`data/golden/A_VALIDER.md`), en particulier la toiture et les clés.
 
-| | Ce qui manque | Pourquoi ça compte |
-|---|---|---|
-| 1 | Les variables sans événements contrôlées d'après les règles | **Fait et mesuré (7.138).** |
-| 2 | La victime demandée pour tout sinistre | **Écartée (7.139)** : aucune erreur mesurée n'en relève, et le risque est réel. |
-| 3 | Les doublons du vocabulaire entre contrats | **Fait pour le seul vrai doublon (7.147)**, avec l'outil pour les suivants. Les sept autres groupes sont des refontes, sous le bruit de mesure : décrites, pas faites. |
-| 4 | Les libellés proposés par la rédaction | **Fait (7.146)** : consigne v13. Reste à voir ce que le modèle propose, sur le prochain contrat. |
-| 5 | Des exemples validés pour B et D | **Fait (7.144)** : 28 exemples validés ; effet non mesurable sur les bancs, par construction. Reste : des déclarations nouvelles pour le mesurer. |
-| 6 | Un contrat ajouté à froid | **Vol et bris de glaces d'Assureur C rédigés et relus (7.148 à 7.151)** ; la question du vélo y reçoit sa réponse. Reste : les biens non assurés et les exclusions communes (S2-b, S35), repasser les bancs de A, B, D, puis écrire le coût dans le README. Un contrat hors habitation : après. |
-| 7 | Les conditions particulières lues dans le contrat du client | **Fait pour la saisie (7.141)** : la formule et les options se donnent avec la déclaration. Reste : lire le document du client. |
-| 8 | La loi applicable au contrat | **Écrite comme limite** (README, section 7) : elle dépend du contrat (A se dit régi par la loi belge du 4 avril 2014), elle s'impose aux conditions générales, le système ne lit que le contrat. |
+**2. La lecture.** Elle reste la source de toutes les erreurs mesurées.
+- Les identifiants montrés au modèle sans définition. Celui de « auteur » a été défini, mesuré et retiré (7.166) : la piste est générale, mais elle demande un jour de mesures, pas une matinée.
+- La bougie fondue lue « accident » : la réponse est juste, sans la citation qui l'expliquerait (7.165).
+- Des déclarations nouvelles, validées, pour mesurer les exemples de B et de D (7.144), et un second lot que rien n'a encore corrigé.
+- Les erreurs qui se répètent : le vol dans une voiture chez B, la crue chez D (README, section 4).
 
-**Le plan de lecture (7.35)**
-- La lecture vérifiée est la seule lecture (7.45, 7.110). Si un recours à Mistral Large revient un jour (cas douteux), il se mesurera sur la partie test.
-- La porte de latence passe (4,7 s pour 10) : la resserrer, par exemple à 8 s.
-- Les erreurs restantes (7.50) : la clé sous le paillasson (cohérence), les oublis (demander, avant de couvrir, si une exclusion présumée absente est évoquée).
+**3. Les contrats.**
+- Assureur C : les biens assurés, qui dépendent de la formule et de la qualité d'occupant, et un jeu de mesure (7.159).
+- Assureur A : l'assistance (2.13). Assureur B : l'assistance (3.1.12), la section 3.3 et le reste de la section 4. Assureur D : les mesures de protection contre le vol.
+- Un contrat hors habitation : le socle de la lecture (événement, bien, lieu) et les deux consignes sont à revoir pour lui (7.154). Aucun n'a été essayé.
+- Les conditions particulières lues dans le document du client : aujourd'hui elles se saisissent (7.141).
+- La loi applicable : écrite comme limite, non traitée.
 
-**La mesure honnête**
-- Un jeu fermé écrit par l'auteur lui-même, sans voir les règles (celui de `data/ferme/` est écrit par deux annotateurs automatiques).
-- **Valider le golden set** (`data/golden/A_VALIDER.md`), en particulier la toiture et les clés.
+**4. En ligne.**
+- Un tableau de bord et une alerte sur le journal, qui part aujourd'hui dans les journaux de l'hébergeur (7.163).
+- Le coût par analyse : les tokens ne sont pas relevés.
+- Le temps du premier chargement quand le service dort.
 
-**Le passage à l'échelle**
-- Assureur A : lots A et B, pack multimédia, responsabilité civile et défense et recours faits (7.63, 7.69, 7.71, 7.99). Reste : l'assistance (2.13).
-- Assureur B : vol, lot A et lot B faits (7.53 à 7.65, 7.72 à 7.74). La responsabilité de l'immeuble, la vie privée et la protection juridique faites (7.99). Reste : l'assistance (3.1.12), la section 3.3 et le reste de la section 4. Puis un **jeu Assureur B écrit par l'auteur sans voir les règles**, et la **question métier** du vol simple au jardin (7.55).
-- Lecture : l'aide de `sejour_temporaire` (les biens hors de chez soi, pas le déclarant en vacances) ; ne lire les variables d'une accessoire que pour son domaine (7.70).
-- Contrôle mécanique à écrire : aucune exclusion commune ne doit rendre une extension impossible (leçon 70) ; le moteur peut le vérifier en prenant le périmètre de chaque garantie comme faits.
-- Le coût de la confirmation sur Assureur B (deux réponses justes suspendues sur 15) : mesurer si la confirmation peut épargner les faits que la lecture et la vérification donnent tous deux.
-- Faits idéaux Assureur B : retirer les valeurs par défaut que la déclaration ne dit pas (`auteur = tiers`, `proprietaire = assure`), qui sous-estiment le rappel.
+**5. Le reste.**
+- Contrôle mécanique à écrire : aucune exclusion commune ne doit rendre une extension impossible (leçon 70).
+- Plusieurs biens déclarés ensemble : « couvert » dès qu'un seul entre dans une garantie (README, section 7).
+- L'alerte de dépendance signalée par GitHub.
 
-**La lecture, sans cas particuliers (7.107)**
-- Les exemples sont la lecture par défaut (7.112), au temps 2 seulement (7.116) : le mesurer sur A et B. La valeur voisine mais fausse (le bain à bulles) reste à traiter, sans toucher à la consigne partagée avec la confirmation. Des exemples pour D : écrire et valider d'abord des cas de D.
-- Un second lot de déclarations, écrit par Mistral Large et validé, pour un test que rien n'a encore corrigé.
-- La question « qui a subi le dommage ? » dans l'appel 1, pour la responsabilité civile.
-
-**Le reste**
-- Les vulnérabilités signalées par GitHub : relire la liste après le retrait de MLflow (7.110).
-- Limites connues : la perte de clés (sans vol) n'est pas traduite ; les conditions particulières ne sont pas lues.
+**Fait depuis le plan du 22 novembre** : le contrôle des variables sans événements (7.138), le doublon du vocabulaire (7.147), les libellés proposés par la rédaction (7.146), les exemples de B et D (7.144), le quatrième contrat à froid et son coût (7.148 à 7.159), la saisie des conditions particulières (7.141), la mise en ligne (7.160 à 7.163). Écartée : demander la victime pour tout sinistre (7.139).
 
 ## 9. Les leçons, en une ligne chacune
 

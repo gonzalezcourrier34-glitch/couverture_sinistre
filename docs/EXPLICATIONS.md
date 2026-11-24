@@ -4,7 +4,7 @@
 >
 > **Noms anonymisés (19 nov. 2026).** Les assureurs s'appellent ici Assureur A, B, C et D (DEMARCHE 7.70). Depuis le 23 nov., leurs noms sont aussi masqués dans le texte des clauses, à l'ingestion (7.160).
 >
-> **En ligne (23 nov. 2026).** La démonstration tourne sur Azure, derrière un code d'accès (7.161, 7.162). Les passages touchés ce jour-là sont à jour ; le reste du document n'a pas été relu ligne à ligne depuis le 20 nov. : en cas d'écart, le README (sections 4 à 7) fait foi.
+> **En ligne (23 nov. 2026).** La démonstration tourne sur Azure, derrière un code d'accès (7.161, 7.162). Le document a été relu en entier le 24 nov., contre le code. Les chiffres de mesure, qui bougent, sont tenus à jour dans le README (section 4) : en cas d'écart, il fait foi.
 
 Ce document explique **ce que fait chaque partie du projet, et pourquoi elle est faite ainsi**. Il sert à préparer l'entretien : pour chaque choix, il donne la raison et ce qui a été écarté.
 
@@ -29,7 +29,7 @@ Sommaire :
 | Terme | Définition |
 |---|---|
 | **Conditions générales (CG)** | Le texte commun à tous les clients d'un produit d'assurance (par exemple « Habitation A, version 2025 »). Il décrit les garanties, les exclusions, les définitions, les plafonds. C'est ce que le système lit. |
-| **Conditions particulières (CP)** | Le document propre à chaque client : son adresse, les garanties et options qu'il a souscrites, ses capitaux, ses franchises. Non publiques ; pas encore lues par le système. |
+| **Conditions particulières (CP)** | Le document propre à chaque client : son adresse, les garanties et options qu'il a souscrites, ses capitaux, ses franchises. Non publiques. Le système ne lit pas ce document : la formule et les options se saisissent avec la déclaration (DEMARCHE 7.141). |
 | **Contrat** | Ici, une version des conditions générales d'un assureur. Un contrat client = CG + CP. |
 | **Sinistre** | L'événement qui cause un dommage (vol, incendie, fuite d'eau…) et que l'assuré déclare. |
 | **Garantie** | Ce que l'assureur prend en charge : « Nous garantissons le vol des biens… ». |
@@ -88,7 +88,7 @@ Sommaire :
 | **Faits** | Ce que la lecture tire de la déclaration, dans le vocabulaire : `evenement = vol`, `lieu = cave`. Ce qu'elle ne dit pas reste inconnu. |
 | **Règles d'un contrat** | `regles/<contrat>.pl` : pour chaque garantie, son périmètre, ses circonstances, ses obligations, ses exclusions et ses limites, chacune avec la phrase du contrat qu'elle traduit. |
 | **Périmètre** | Ce qui fait qu'une garantie concerne le sinistre (événement, bien, lieu). Hors du périmètre, la garantie ne dit rien. |
-| **Réserve** | Une exclusion inconnue que la déclaration n'évoque pas : la réponse est « couvert, sous réserve de… », sans question. Les options des conditions particulières sont des réserves. |
+| **Réserve** | Une exclusion inconnue que la déclaration n'évoque pas : la réponse est « couvert, sous réserve de… », sans question. Une option des conditions particulières que personne n'a renseignée reste une réserve, ou une question si elle seule peut couvrir. |
 | **Exclusion entamée** | Une exclusion inconnue dont un fait est établi (des travaux sont mentionnés) : la question est posée. |
 | **Garantie accessoire** | Une garantie qui ne joue qu'après un sinistre couvert (frais de sauvetage, logement provisoire). Elle ne change jamais la décision ; si c'est couvert, elle est listée. |
 | **Extension de définition** | Une clause qui élargit un lieu ou un bien assuré (le contenu en séjour temporaire) : elle élargit la définition du contrat, pour toutes les garanties. |
@@ -271,6 +271,8 @@ Méthodes : `enregistrer` (remplace entièrement un contrat), `contrats`, `contr
 - `ingerer_dossier` : fait de même pour tous les fichiers de `data/contrats`, avec les métadonnées de `catalogue.json` (identifiant, assureur, produit, version, et le **profil d'assureur** s'il y en a un). Sans entrée au catalogue, l'identifiant est tiré du nom du fichier.
 - **L'empreinte** couvre le fichier, son profil **et** la liste des noms à masquer : modifier l'un des trois relance le découpage.
 
+**Pourquoi** : ajouter un contrat se résume à déposer un fichier et relancer `couverture ingerer`. La version du contrat compte : un client garde les CG en vigueur au moment de sa souscription.
+
 ### `src/couverture/anonymisation.py` — masquer les noms dans le texte
 
 **Rôle** : après le découpage, remplacer dans chaque clause et dans le texte brut le nom de l'assureur (« Assureur A »), de son assisteur, ses adresses, ses numéros. Les courriels, les sites et les téléphones sont masqués pour tout contrat ; le reste vient d'une liste propre à chaque contrat, `data/contrats/noms.prive.json`, qui n'est pas versionnée (la versionner publierait les noms). `ingerer` affiche le nombre de remplacements.
@@ -278,8 +280,6 @@ Méthodes : `enregistrer` (remplace entièrement un contrat), `contrats`, `contr
 **Pourquoi après le découpage** : masquer avant aurait pu changer les titres et les numéros que le découpage reconnaît. Les citations des règles restent exactes : elles ne portaient pas sur ces passages (vérifié, 567 sur 567).
 
 **Ce que ça ne fait pas** : le texte reste celui de l'assureur, reconnaissable par qui le connaît. C'est pourquoi les conditions générales ne sont pas redistribuées, et pourquoi, en ligne, on ne lit que les clauses citées.
-
-**Pourquoi** : ajouter un contrat se résume à déposer un fichier et relancer `couverture ingerer`. La version du contrat compte : un client garde les CG en vigueur au moment de sa souscription.
 
 ### `src/couverture/llm.py` — parler au modèle
 
@@ -304,10 +304,12 @@ Température 0 partout, pour des réponses stables d'une exécution à l'autre.
 
 ```
 MISTRAL_API_KEY=colle-ta-cle-ici
-COUVERTURE_MODELE=mistral-large-latest
+COUVERTURE_MODELE=mistral-medium-2604                 # lit les déclarations
+COUVERTURE_MODELE_VERIFICATION=mistral-small-2603     # vérifie et confirme les faits
+COUVERTURE_MODELE_CONTRAT=mistral-large-4-0           # rédige les règles, une fois par contrat
 ```
 
-`mistral-small-latest` coûte moins cher ; `COUVERTURE_MODELE_CONTRAT` choisit le modèle de la rédaction des règles. En déploiement, les mêmes variables sont passées au conteneur (`docker run --env-file .env`).
+Trois rôles, trois modèles, désignés par leur version datée : celui qui lit le mieux n'est pas celui qui vérifie le mieux (DEMARCHE 7.136), et un nom en « latest » change sans prévenir (7.145). Sans ces variables, le code prend `mistral-large-latest`. En déploiement, les mêmes variables sont passées au conteneur (`docker run --env-file .env`).
 
 ### `regles/`, `prolog.py`, `lecture.py` et `chaine.py` — le contrat en règles Prolog
 
@@ -449,7 +451,9 @@ Expose `Resultat`, `Verdict`, `Decision` pour un usage en Python, et la version 
 | `data/sinistres.jsonl`, `data/annotations/` | Le premier jeu (mise au point), écrit avant le code : les deux cas du recruteur et des variations qui changent **un seul fait**. |
 | `data/validation/`, `data/redaction/` | Deux jeux plus petits : des cas écrits après coup pour vérifier une correction, et des cas des garanties rédigées par le modèle. |
 | `data/bancs/` | Chaque passage du banc : un rapport lisible (`.md`) et ses chiffres (`.json`), comparés au passage précédent. |
-| `data/profils/<nom>.json` | Les profils d'assureur. Un seul aujourd'hui (assureur B) : les autres contrats sont lus correctement par les règles générales. |
+| `data/profils/<nom>.json` | Les profils d'assureur : B, C et D en ont un ; A est lu par les règles générales. |
+| `data/ferme/` | Le jeu fermé (65 cas pour A, B et D) : écrit à partir du seul texte des contrats par deux annotateurs indépendants, arbitré sur citations. Il mesure, il ne sert jamais à corriger (DEMARCHE 7.79). |
+| `data/lecture/` | La banque d'exemples de lecture, et le partage du golden set : 74 cas pour mettre au point, 38 pour tester. |
 | `tests/fixtures/cg_style_reel.pdf` | Un PDF fictif mis en page comme un vrai contrat (sommaire, en-têtes, lexique, intertitres sans numéro, mots coupés), produit par `generer_pdf.py`. |
 
 **Pourquoi des variations à un seul fait** : si la réponse change quand on passe du local commun à la cave privative fermée à clé, c'est que le système raisonne vraiment sur le contrat, et pas qu'il répète une réponse apprise.
@@ -458,9 +462,9 @@ Expose `Resultat`, `Verdict`, `Decision` pour un usage en Python, et la version 
 
 ## 6. Les tests
 
-`uv run pytest` lance 228 tests (23 nov. 2026 ; le nombre entre parenthèses compte les fonctions de test, dont certaines jouent plusieurs cas), sans appel réel à un modèle (les réponses sont préparées ou la connexion simulée) :
+`uv run pytest` lance 232 tests (24 nov. 2026 ; le nombre entre parenthèses compte les fonctions de test, dont certaines jouent plusieurs cas), sans appel réel à un modèle (les réponses sont préparées ou la connexion simulée) :
 - **`test_pipeline.py` (47)** — lecture et découpage d'un PDF (sommaire, en-têtes, mots coupés, intertitres, lexique éclaté, renvois), contrôles d'ingestion, base, contrôle des citations (une citation inventée fait passer COUVERT à INCERTAIN), configuration du modèle (`.env`, nouvelles tentatives, clé refusée, réponses coupées), profils, journal sans le texte du sinistre, versions des consignes, tableaux Grafana exécutés sur une vraie base ; le contrat réel A si son PDF est présent.
-- **`test_prolog.py` (68)** — le moteur : trois valeurs et questions, exclusions partielles, extensions de définition, garanties accessoires, événement non traduit jamais refusé, obligations, questions décisives et paires, arbre de preuve, faits sans injection possible ; la lecture (vocabulaire, deux temps, vérification, un doute ne fait jamais couvrir, confirmation) ; le moteur permanent ; et, si SWI-Prolog est installé, **Prolog et l'oracle Python concordent** sur tous les cas.
+- **`test_prolog.py` (71)** — le moteur : trois valeurs et questions, exclusions partielles, extensions de définition, garanties accessoires, événement non traduit jamais refusé, obligations, questions décisives et paires, arbre de preuve, faits sans injection possible ; la lecture (vocabulaire, deux temps, vérification, un doute ne fait jamais couvrir, confirmation) ; le moteur permanent ; et, si SWI-Prolog est installé, **Prolog et l'oracle Python concordent** sur tous les cas.
 - **`test_redaction.py` (52)** — la rédaction : Prolog généré et évalué par l'oracle, chaque contrôle (vocabulaire déclaré, fait inventé, citation réparée ou refusée, exclusion oubliée, réserves, conditions des conditions particulières mises en réserve, accessoires, extensions…), la reprise unique sur un écart au schéma, l'acceptation, la hiérarchie des valeurs.
 - **`test_banc.py` (18)** — le golden set (complet, cohérent, figé), les règles seules justes pour chaque contrat, les trois couches, les portes, la latence, la fiche de validation.
 - **`test_api_routes.py` (14)** et **`test_api_service.py` (7)** — les routes par HTTP, dépendances remplacées ; une route par fichier ; et le mode en ligne : le code d'accès remplace la clé, le contrat ne se télécharge pas, les analyses sont comptées.
@@ -480,7 +484,9 @@ Le banc (`couverture banc`) mesure trois couches sur le golden set, avec des por
 
 **Couverts à tort** : l'indicateur le plus important, car c'est une promesse faite au client. **Justes** compte aussi les réponses acceptables (un « incertain » défendable) ; **exactes**, seulement la réponse attendue.
 
-**Où on en est** (19 nov. 2026, détail et progression dans `docs/METRIQUES.md` et `docs/DEMARCHE.md`) : les règles seules sont justes à 100 % sur les deux contrats, sans couvert à tort ; la chaîne complète en est à 88 % de réponses justes pour l'assureur A, avec 4 à 5 couverts à tort par exécution, tous dus à la lecture (un lieu, une clé, une cause d'eau mal lus). La lecture est la marge de progrès.
+**Deux jeux, deux usages.** Le golden set a été écrit en connaissant les règles : il dit que le moteur applique les règles, pas que les règles disent le contrat. Le **jeu fermé** (`data/ferme/`, `couverture banc --jeu ferme`) a été écrit sans les voir : c'est lui qui mesure la fidélité au contrat. À sa première mesure, A est tombé de 90 à 70 % et B de 76 à 57 % (DEMARCHE 7.81). Ses cas ne servent jamais à corriger le vocabulaire, les règles ou les exemples.
+
+**Où on en est** (24 nov. 2026 ; détail dans le README, section 4) : avec des faits exacts, les règles sont justes à 100 %. La chaîne complète donne 94 % de réponses justes sur la partie test de A, 98 à 100 % sur son jeu fermé, 85 % sur celui de B, 96 % sur celui de D. Un couvert à tort se répète chez B, un refus à tort chez D, et un cas de A est couvert à tort une fois sur trois certains jours. Toutes ces erreurs viennent de la lecture.
 
 ---
 
@@ -498,6 +504,8 @@ Le banc (`couverture banc`) mesure trois couches sur le golden set, avec des por
 | Vocabulaire commun, lu contrat par contrat | Un même fait se lit pareil partout ; un contrat ne lit que ses variables | Un vocabulaire par contrat |
 | Accessoires, extensions, réserves distinguées | Trois sens d'« étendre » ; mélangés, ils dégradent des décisions qu'ils ne concernent pas | Tout traduire en garanties ordinaires |
 | Un doute ne fait jamais couvrir | Une vérification qui retire un fait ne peut pas rendre la réponse plus favorable | Retirer les faits sans regarder l'effet |
+| Un jeu fermé, écrit sans voir les règles | Mesurer la fidélité au contrat, pas l'accord du moteur avec ses propres règles ; il a arrêté une correction la veille de la livraison (7.166) | Corriger sur les cas qui mesurent |
+| Un modèle lit, un autre vérifie | Celui qui lit le mieux refuse trop quand il vérifie | Un seul modèle pour tout |
 | Golden set figé, banc en trois couches, portes | Savoir si une erreur vient des règles, de la lecture ou de leur combinaison ; une référence qui change le dit | Une exactitude unique, des cas qui bougent |
 | Profils d'assureur en JSON | Un assureur différent = un fichier, pas du code | Des cas particuliers dans `segmentation.py` |
 | Contrôle des citations par du code | Bloque les hallucinations de façon fiable | Faire confiance au modèle |
@@ -507,6 +515,7 @@ Le banc (`couverture banc`) mesure trois couches sur le golden set, avec des por
 | Grafana sur SQLite, tableaux générés et testés | Pas de base de plus à faire tourner ; requêtes lisibles et vérifiées | PostgreSQL pour une démonstration ; JSON édité à la main |
 | Pas de LangGraph | La chaîne est linéaire | Un graphe par habitude |
 | Mistral seul, derrière une interface `LLM` | Fournisseur européen ; un autre modèle se branche en une classe | Garder des fournisseurs qu'on ne teste pas |
+| En ligne : un code d'accès, le contrat non téléchargeable | Une page ouverte dépenserait le crédit du modèle et publierait le texte de quatre assureurs | Une démonstration publique |
 | API FastAPI et interface Angular | Restitution claire, sur le modèle de SortirIA ; Streamlit déconseillé par le recruteur | Streamlit |
 
 ---
@@ -520,13 +529,13 @@ Parce qu'en assurance, une réponse non vérifiable ne vaut rien. Le modèle fai
 L'exclusion qui décide ne ressemble pas à la question (« vol de vélo » ressemble à « les vélos sont garantis », pas à « vols commis dans les parties communes »). Une recherche par ressemblance la rate. Les règles, elles, rattachent chaque exclusion à sa garantie une fois pour toutes. Une recherche hybride a été essayée, puis retirée (DEMARCHE 7.36).
 
 **Comment tenir des centaines de contrats ?**
-Chaque contrat est lu une fois, contrôlé et stocké dans le même schéma. Ses garanties sont rédigées par Mistral Large (une vingtaine de minutes pour huit garanties, en parallèle), contrôlées par le code, relues, puis acceptées. Le moteur et le vocabulaire sont communs. Le deuxième assureur est passé de zéro règle à 76 % de réponses justes en une journée (82 % avec la confirmation par Mistral Large), et chaque erreur trouvée a amélioré la méthode pour tous.
+Par une méthode, pas par un bouton. Ce qui est commun ne change pas d'un contrat à l'autre : le moteur, la validation des citations, l'API, l'écran. Ce qui est propre à un contrat tient dans quatre fichiers de données. Ses garanties sont rédigées par Mistral Large, contrôlées par le code, relues, puis acceptées. Le quatrième contrat, ajouté à froid, a donné le coût réel : une heure de découpage, onze minutes de rédaction pour deux garanties, 22 contrôles bloquants, et une relecture qui ne se réduit pas (README, section 6). Pour des centaines de contrats, il faut des relecteurs du métier, un outil de relecture et un jeu de mesure par contrat.
 
 **Que fait le système quand il ne sait pas ?**
 Il répond INCERTAIN, avec la question qui tranche (« la cave était-elle fermée par une serrure de sûreté ? oui → couvert ; non → non couvert »). Quand seule une option des conditions particulières couvrirait, il répond « à préciser », avec le point à vérifier. Et un événement dont la garantie n'est pas encore traduite n'est jamais refusé : il est envoyé à un gestionnaire.
 
 **Comment savez-vous que les règles sont justes ?**
-Trois filets : les contrôles du code (citations mot pour mot, chaque exclusion du contrat traduite, vocabulaire, chargement), la relecture humaine (tracée dans chaque proposition), et le banc (les règles seules doivent être justes à 100 % sur les cas). Les cas de l'assureur B ont trouvé deux erreurs que la relecture n'avait pas vues.
+Je ne le sais pas entièrement, et il faut le dire. Quatre filets existent : les contrôles du code (citations mot pour mot, chaque exclusion du contrat traduite, vocabulaire, chargement), une relecture tracée dans chaque proposition, le banc (les règles seules doivent être justes à 100 % sur les cas), et le jeu fermé, écrit sans voir les règles. Mais la relecture a été faite par l'assistant qui a écrit le code, pas par quelqu'un du métier, et elle s'est trompée au moins une fois. Les règles n'ont été validées ni par un juriste ni par un gestionnaire de sinistres : c'est la première chose à faire.
 
 **Et si la lecture se trompe ?**
 C'est la principale source d'erreurs restantes, et elle est mesurée à part (couche « lecture » du banc). Trois défenses : un schéma qui n'admet que les valeurs du vocabulaire, une vérification des faits, et la confirmation des faits qui portent une réponse ferme. Un doute ne fait jamais couvrir.
@@ -541,7 +550,7 @@ Parce que c'est la consigne : un « je ne sais pas » étayé vaut mieux qu'une 
 Le même problème de fond : des sources hétérogènes à ramener dans un schéma commun et fiable. Ce projet en reprend le versionnage des consignes avec garde-fou en CI, le journal et les tableaux Grafana générés et testés. La différence : SortirIA recommande, une approximation reste utile ; ici le système décide, une erreur est une promesse faite au client, d'où la décision calculée, le contrôle des citations et le droit de répondre INCERTAIN.
 
 **Comment avez-vous utilisé l'IA ?**
-Pour écrire le code plus vite, comme le recruteur l'encourage, et dans le système lui-même pour lire les déclarations et rédiger les règles. Les choix d'architecture, l'évaluation et la relecture des règles restent les vôtres : vous devez pouvoir expliquer chaque fichier de ce document.
+Pour écrire le code plus vite, comme le recruteur l'encourage, et dans le système lui-même pour lire les déclarations et rédiger les règles. Sa part dans le code est grande, et visible dans chaque commit ; il a aussi relu les règles, ce qui est une limite (voir la question précédente sur leur justesse). Le cadrage, les arbitrages et les décisions restent les vôtres : mesurer avant de corriger, « pas de rustine », ne jamais corriger sur le jeu fermé. Vous devez pouvoir expliquer chaque fichier de ce document, et raconter les onze tournants de la démarche sans notes.
 
 ---
 

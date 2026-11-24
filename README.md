@@ -12,11 +12,15 @@ Dit si un sinistre est couvert par un contrat d'assurance habitation, **pourquoi
 
 *Pendant les 4 à 5 secondes de l'analyse, l'écran dit ce qui se fait : lire, vérifier chaque fait, appliquer les règles, confirmer.*
 
+**Démonstration en ligne** depuis le 23 novembre 2026, sur Azure, derrière un code d'accès donné sur demande. Quatre contrats d'assureurs différents, anonymisés.
+
+**Comment ce projet a été fait.** Avec un assistant de code (Claude) : sa part est visible dans chaque commit. Le cadrage, les arbitrages et les décisions sont les miens ; [la démarche](docs/DEMARCHE.md) les garde dans l'ordre, y compris les fois où une mesure m'a donné tort.
+
 - [Ce que j'ai déjà mis en production](#ce-que-jai-déjà-mis-en-production-et-ce-que-ça-a-donné) : SortirIA, et ce que j'en ai repris ici
 - [Note de conception](#note-de-conception) : le besoin, le choix, les résultats, ce qui a été essayé, les limites
 - [Démonstration en 5 minutes](#démonstration-en-5-minutes)
 - [Installation](#installation) et [utilisation](#utilisation)
-- Pour aller plus loin : [la démarche](docs/DEMARCHE.md) (chaque essai et sa mesure, échecs compris), [les explications](docs/EXPLICATIONS.md) (chaque fichier, un lexique), [les mesures](docs/METRIQUES.md), [les consignes versionnées](docs/consignes/README.md), [le suivi](monitoring/README.md)
+- Pour aller plus loin : [la démarche](docs/DEMARCHE.md) (le raisonnement en onze tournants, puis chaque essai et sa mesure, échecs compris), [les explications](docs/EXPLICATIONS.md) (chaque fichier, un lexique), [les mesures](docs/METRIQUES.md), [les consignes versionnées](docs/consignes/README.md), [le suivi](monitoring/README.md)
 
 ## Ce que j'ai déjà mis en production, et ce que ça a donné
 
@@ -77,14 +81,20 @@ Le moteur reprend le raisonnement d'un gestionnaire : un périmètre contraire �
 
 ### 3. Les deux questions de l'énoncé
 
-| Question | Réponse | Clause citée |
+Posées aux quatre contrats, sur la démonstration en ligne, le 24 novembre :
+
+| Contrat | Vélo volé dans le local commun de l'immeuble, non fermé à clé | Bougie laissée sur la table du jardin, fondue par la chaleur |
 |---|---|---|
-| Vélo volé dans le local commun de l'immeuble, non fermé à clé | **Non couvert** | Art. 2.10-a : « le vol ou le vandalisme dans les parties communes du bâtiment » |
-| Bougie laissée sur la table du jardin, fondue par la chaleur | **Non couvert** | Aucune garantie ne s'applique. La réponse cite les garanties de dommage accidentel et dit qu'elles ne jouent pas ; elle ne cite pas la définition de l'incendie (art. 12, « sans qu'il y ait embrasement »), qui le dirait mieux : voir les limites |
+| A | **Non couvert.** Art. 2.10-a : « le vol ou le vandalisme dans les parties communes du bâtiment » | **Non couvert** : aucune garantie ne s'applique |
+| B | **Non couvert.** Art. 3.1.6.2 : les vols des biens se trouvant « dans les couloirs et passages d'accès » et les dépendances sans serrure à cylindre | **À examiner par un gestionnaire** |
+| C | **Non couvert.** Section « Vol » : l'exclusion des « biens déposés dans les locaux à usage commun des occupants de l'immeuble », ou la condition d'effraction non remplie, selon la lecture | **À examiner par un gestionnaire** |
+| D | **Non couvert.** Art. 2.5-a : la garantie demande une effraction, une escalade, des menaces ou un vol des clés | **À examiner par un gestionnaire** |
 
-Contrat « Assureur A » (48 pages, 147 clauses). Les réponses attendues ont été établies d'après le texte des conditions générales, avec l'aide de Claude ; elles sont à relire par un juriste.
+**Le vélo** reçoit quatre fois la même décision, pour des raisons que chaque contrat écrit à sa façon : une exclusion des parties communes chez A et C, des lieux exclus chez B, une condition d'effraction chez D. C'est ce que le système doit savoir faire. Chez C, deux raisons valent en même temps, et la réponse n'en montre qu'une : le matin du 24 novembre l'exclusion, deux heures plus tard la condition, parce que la lecture avait retenu en plus « pas de violences ». La décision ne change pas ; la phrase citée, si.
 
-La question du vélo a aussi été posée à un quatrième contrat (C), ajouté à froid le 22 novembre ([ce qu'il a coûté](#6-tenir-des-centaines-de-contrats)) : **non couvert**, section « Vol », « Les vols des biens déposés dans les locaux à usage commun des occupants de l'immeuble ». La bougie y reste « à examiner » : son incendie n'est pas encore traduit.
+**La bougie** est le cas difficile, et la réponse est moins bonne. La déclaration est lue comme un dommage accidentel. Chez A, aucune garantie ne porte sur ce dommage : « non couvert », ce qui est la bonne décision, mais sans la phrase du lexique qui l'expliquerait le mieux (un excès de chaleur « sans qu'il y ait embrasement » n'est pas un incendie). Chez B, C et D, le dommage accidentel relève de garanties qui ne sont pas traduites en règles : le système le dit et passe la main, plutôt que de répondre. Voir [les limites](#7-limites).
+
+Les réponses attendues ont été établies d'après le texte des conditions générales, avec l'aide de Claude ; elles sont à relire par un juriste.
 
 ### 4. Ce que cela donne
 
@@ -123,6 +133,7 @@ Chaque essai est mesuré avant d'être gardé ; les échecs sont dans [la démar
 | Remplacer les cas particuliers de la consigne par des exemples | Une phrase retirée sans perte ; une autre faisait perdre un cas chez D | Une sur deux gardée |
 | Une graine fixe pour stabiliser la lecture | Faits identiques aux trois passages : 35 déclarations sur 96, contre 30 sans | Sans effet |
 | Relire deux fois et comparer | Non codé : les erreurs restantes se répètent à l'identique, deux lectures seraient d'accord sur l'erreur | Écarté |
+| Définir, pour le modèle, chaque valeur de « auteur » (24 nov.) | Elle corrigeait une lecture fausse (« personnel de maison » pour « j'ai laissé »), passait les tests et trois bancs sur quatre ; sur le jeu fermé de A, un couvert à tort 6 fois sur 6, contre 0 sur 6 sans elle | Retirée |
 | Vérifier par le code tout ce qu'on demande au client | 8 défauts d'affichage, vus à l'écran puis par une revue de 267 situations (question hors sujet, déjà répondue, sans réponse possible) ; les bancs ne les voyaient pas | Corrigés, et la revue reste en test |
 
 Ce que cela apprend : un modèle sait dire si un fait est **écrit** ; il ne se corrige pas lui-même sur le choix d'une **catégorie** ; et un bon lecteur n'est pas forcément un bon vérificateur. Les rôles se mesurent un par un, et se confient au modèle qui les tient le mieux.
@@ -159,18 +170,29 @@ Pour des centaines de contrats, il faut donc une équipe de relecteurs du métie
 
 ### 7. Limites
 
-- Les assureurs sont **anonymisés** : dans le dépôt, et dans le texte des clauses que l'écran et la fiche citent, où le nom, l'assisteur, les adresses et les numéros sont remplacés à l'ingestion d'après une liste gardée hors du dépôt. Le texte reste le leur, reconnaissable par qui le connaît : c'est pourquoi les conditions générales ne sont pas redistribuées. La démonstration est en ligne depuis le 23 novembre 2026, derrière un code d'accès donné sur demande : on n'y télécharge pas un contrat, seules les clauses qu'une réponse cite s'y lisent, une à une.
-- Les **conditions particulières** du client : la formule et les options se donnent avec la déclaration (à l'écran, ou par l'API), et la réponse en tient compte sans rien demander. Mais le document lui-même n'est pas lu, ni les capitaux ; non renseignée, une réponse qui en dépend reste « à préciser ».
+**Ce qui n'est pas validé**
+- Les **règles n'ont pas été relues par un juriste ni par un gestionnaire de sinistres**. Je ne viens pas de l'assurance ; la relecture a été faite par l'assistant qui a écrit le code, et elle s'est trompée au moins une fois (section 6).
+- Les réponses attendues des jeux de référence ont été proposées par des modèles, puis arbitrées sur citations ; elles n'ont pas été validées par un juriste.
 - La **loi applicable** n'est pas traitée : le contrat A se dit régi par la loi belge du 4 avril 2014, d'autres relèvent de la loi luxembourgeoise du 27 juillet 1997 ou du code des assurances français. Ces textes s'imposent aux conditions générales ; le système ne lit que le contrat.
+
+**La lecture des déclarations**
 - La **lecture** reste la source de toutes les erreurs. Quand un fait qui porte la réponse n'est pas confirmé, le garde-fou en fait une question, pas une bonne réponse.
 - Le moteur n'est pas plus juste que son vocabulaire : il ne sait pas dire « une fuite, mais pas le gel ».
 - **Un sinistre qu'aucune garantie ne vise** (la bougie fondue de l'énoncé, lue comme un dommage accidentel) : la réponse est juste, mais elle ne cite que les garanties voisines qui ne jouent pas, pas la phrase du contrat qui explique le refus. La même déclaration fait aussi lire, sur trois contrats, un « auteur : personnel de maison » que rien ne dit. Une correction a été essayée le 24 novembre (définir chaque valeur de « auteur ») : elle réglait ce point, et faisait couvrir à tort le fer à repasser du jeu fermé trois fois sur trois, contre zéro sans elle. Elle a été retirée ([démarche, 7.166](docs/DEMARCHE.md)).
+
+**Ce que la réponse dit**
+- Quand **deux raisons** écartent une garantie (une condition non remplie et une exclusion), la réponse n'en cite qu'une, et laquelle dépend des faits lus : d'un passage à l'autre, la même déclaration peut recevoir la même décision avec une autre citation.
+- Quand aucune garantie ne s'applique, la réponse cite la clause qui exclut le cas si le contrat en a une (un vase brisé : « les objets en verre autres que des vitres »). S'il n'en a pas, elle ne cite que les garanties qui portent sur l'événement déclaré, pour dire qu'elles ne jouent pas ; s'il n'y en a aucune, elle ne cite rien.
 - **Plusieurs biens déclarés ensemble** : la réponse est « couvert » dès qu'un seul entre dans une garantie (une vitre et une télévision brisées : couvert, pour la vitre). Elle nomme les biens qu'une clause exclut, pas ceux qu'aucune garantie ne vise.
-- Quand aucune garantie ne s'applique, la réponse cite la clause qui exclut le cas si le contrat en a une (un vase brisé : « les objets en verre autres que des vitres ») ; s'il n'en a pas, elle dit qu'aucune garantie ne s'applique et cite, faute de mieux, les premières garanties du contrat.
+- Les **conditions particulières** du client : la formule et les options se donnent avec la déclaration (à l'écran, ou par l'API), et la réponse en tient compte sans rien demander. Mais le document lui-même n'est pas lu, ni les capitaux ; non renseignée, une réponse qui en dépend reste « à préciser ».
+
+**Les contrats**
 - Le **contrat C** n'est traduit que pour le vol et le bris de glaces, avec ses exclusions communes et ses biens non assurés. Ses biens assurés, qui dépendent de la formule et de la qualité d'occupant (propriétaire, locataire), ne sont pas traduits, et il n'a pas de jeu de mesure.
 - Chez D, les **mesures de protection contre le vol** ne sont pas traduites : elles ne sont pas vérifiées.
 - Seuls des **PDF** de conditions générales sont lus. Un seul document est produit : la fiche d'analyse d'un sinistre, en PDF.
-- Les réponses attendues des jeux de référence ont été proposées par des modèles, puis arbitrées sur citations ; elles n'ont pas été validées par un juriste.
+- Les assureurs sont **anonymisés** : dans le dépôt, et dans le texte des clauses que l'écran et la fiche citent, où le nom, l'assisteur, les adresses et les numéros sont remplacés à l'ingestion d'après une liste gardée hors du dépôt. Le texte reste le leur, reconnaissable par qui le connaît : c'est pourquoi les conditions générales ne sont pas redistribuées. La démonstration est en ligne depuis le 23 novembre 2026, derrière un code d'accès donné sur demande : on n'y télécharge pas un contrat, seules les clauses qu'une réponse cite s'y lisent, une à une.
+
+**En ligne**
 - **En ligne**, la démonstration n'a pas d'utilisateurs réels. Son journal part dans les journaux de l'hébergeur, sans tableau de bord ni alerte ; le compteur d'analyses repart de zéro à chaque réveil du service ; le temps du premier chargement n'est pas mesuré.
 
 ## Démonstration en 5 minutes

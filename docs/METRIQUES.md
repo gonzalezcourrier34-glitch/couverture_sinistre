@@ -2,7 +2,7 @@
 
 Ce qu'on mesure, sur quels cas, avec quels seuils, et ce que valent les chiffres.
 Commande unique : `uv run couverture banc --contrat assureur-a-habitation-2025` (rapports dans `data/bancs/`).
-Démarche et historique des mesures : [DEMARCHE.md](DEMARCHE.md), parties 7.21 et suivantes.
+Démarche et historique des mesures : [DEMARCHE.md](DEMARCHE.md), parties 7.21 et suivantes. Relu en entier le 24 nov. 2026 ; les chiffres du jour sont en tête de la section 5.
 
 ---
 
@@ -10,18 +10,15 @@ Démarche et historique des mesures : [DEMARCHE.md](DEMARCHE.md), parties 7.21 e
 
 | Jeu | Où | Cas | Rôle | Limite |
 |---|---|---|---|---|
-| **Golden set** (référence) | `data/golden/` (v10, figé par empreinte, par contrat) | 97 (A) + 15 (B) | Rejoué à chaque changement ; toutes les métriques ci-dessous | Écrit par Claude, ayant servi à corriger le système : mesure la **mise au point** |
+| **Golden set** (référence) | `data/golden/` (v13, figé par empreinte, par contrat) | 97 (A) + 15 (B) | Rejoué à chaque changement ; toutes les métriques ci-dessous | Écrit par Claude en connaissant les règles, et il a servi à corriger le système : il mesure la **mise au point** |
+| … dont la **partie test** | `data/lecture/partage.json` | 38 sur 112 (31 pour A, 7 pour B) | Mise de côté le 20 nov. (7.107) : ne sert jamais à corriger le vocabulaire, les règles ou les exemples | Tirée du même jeu : même auteur, même biais |
+| **Jeu fermé** | `data/ferme/` | 20 (A) + 20 (B) + 25 (D) | La mesure de la **fidélité au contrat** : écrit à partir du seul texte des conditions générales, sans voir les règles (7.79) ; on ne corrige jamais en le regardant | Écrit par deux annotateurs automatiques et arbitré sur citations, pas par une personne du métier. C n'en a pas |
 | Mise au point d'origine | `data/sinistres.jsonl` | 14 | Les 2 cas du recruteur et 12 variations | Inclus dans le golden set |
 | Ancienne validation | `data/validation/` | 15 | Historique (7.17) | Inclus dans le golden set |
 | Rédaction | `data/redaction/` | 10 | Tempête et bris, écrits avant les règles | Inclus dans le golden set |
-| **Jeu fermé** (à créer) | `data/ferme/` | ≥ 20 | La **seule vraie mesure** : écrit par l'auteur ou un gestionnaire, sans voir les règles ; passé rarement ; on ne corrige jamais en le regardant | À écrire |
 
-**Composition du golden set (v5)** : 58 nouveaux, 15 ex-validation, 12 mise au point, 10 rédaction, 2 recruteur.
-Réponses attendues : 44 couvert, 40 non couvert, **13 incertain** (3 en v4).
-Thèmes : piège (55), hors règles (24), information manquante (16), variante (13), langue (11), multiple (8).
-Garanties : toutes celles du contrat, plus les exclusions générales (1.4).
-Réponses attendues : 33 couverts, 32 non couverts, **3 incertains seulement** (déséquilibre à corriger :
-les cas où « je ne sais pas » est la bonne réponse sont sous-représentés).
+**Composition du golden set (v13).** Assureur A, 97 cas : 44 couverts, 39 non couverts, 14 incertains. Assureur B, 15 cas : 5, 8 et 2.
+Les cas où « je ne sais pas » est la bonne réponse restent sous-représentés dans le golden set ; le jeu fermé en a environ un tiers.
 
 **Chaque cas porte** : la réponse attendue, les réponses tolérées (`acceptables`), les clauses et les
 questions attendues, la garantie, des thèmes, l'origine, l'auteur, une note qui cite le contrat, et ses
@@ -36,6 +33,8 @@ Le banc mesure séparément, pour savoir **où** naît une erreur :
 1. **Règles** : les faits idéaux passent dans le moteur, sans modèle. Une erreur ici vient des règles ou du vocabulaire.
 2. **Lecture** : les faits lus par le modèle passent dans les mêmes règles. On compare les deux décisions.
 3. **Chaîne** : la méthode complète (le modèle lit, le moteur décide), 3 exécutions.
+
+Le jeu fermé n'a pas de faits idéaux : seule la chaîne complète y est mesurée.
 
 ---
 
@@ -109,6 +108,15 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 ---
 
 ## 5. Dernières mesures
+
+Les plus récentes d'abord. Sous la première, l'historique complet depuis le 17 novembre : il n'est pas à lire d'un trait, il sert à retrouver ce qu'une modification a déplacé.
+
+**24 nov. 2026, 10 h 40 à 10 h 47, état livré** (Mistral Medium lit, Mistral Small vérifie ; après quatre retouches de la phrase de réponse, qui ne changent aucune décision, 7.164 à 7.167) : partie test de A **94 %** (0 couvert à tort), jeu fermé de A **100 %** (0), de B **85 %** (1 couvert à tort, `f-b18`), de D **96 %** (0 ; 1 refus à tort). 4 à 4,8 s par cas en médiane, 7 s au plus au 95e centile. 231 tests passés.
+
+**24 nov. 2026, 10 h 18 à 10 h 28, un essai retiré** (une définition pour chaque valeur de « auteur », 7.166) : jeu fermé de A **95 %**, `f-a02` couvert à tort **3 fois sur 3**, deux bancs de suite ; sans la définition, dans la minute, **0 sur 3**. Les trois autres bancs ne bougeaient pas. Retirée.
+
+**24 nov. 2026, 9 h 17 à 9 h 54** (avant et après la première retouche) : partie test de A 94 %, jeu fermé de A 98 % puis 100 % (`f-a02` couvert à tort une fois sur trois, puis zéro), B 85 %, D 96 %.
+
 
 **22 nov. 2026, 17 h 25 à 17 h 31** (28 exemples validés de plus dans la banque, 7.144) : partie test de A **90 %** (1 couvert à tort : `val-09`, aux trois passages), jeu fermé de A **100 %**, de B **85 %** (1 couvert à tort, `f-b18`), de D **96 %** (1 refus à tort, `f-d08`). Instables : 0 sur 96. Effet des exemples non mesurable (267 lectures justes sur 288, contre 265).
 
@@ -346,7 +354,10 @@ poste) : 2 incertains sur 16 tranchables par une ou deux questions, 8 questions 
   moyenne avec le minimum et le maximum de 3 exécutions.
 - **Tolérance** : « acceptable » couvre les cas ambigus ; l'exactitude stricte est toujours affichée à côté.
 - **Biais** : le golden set est écrit par Claude et a servi à corriger le système. Le jeu fermé est la
-  seule mesure de généralisation.
+  seule mesure de fidélité au contrat ; il reste écrit et arbitré par des modèles, pas par quelqu'un du métier.
+- **Variation de la lecture** : le même modèle, à température 0 et graine fixe, ne lit pas toujours la même
+  déclaration de la même façon. Un cas (`f-a02`) passe de « non couvert » à « couvert » d'une série à l'autre sans
+  que rien ne change. Avant d'attribuer un écart à une modification, le banc se rejoue dans les deux états (7.166).
 - **Comparabilité** : chaque rapport note la version du golden set, son empreinte et le modèle de lecture.
 
 ---
@@ -371,7 +382,7 @@ Sources utiles :
 Usage prévu : s'inspirer de situations réelles pour le **jeu fermé** (réécrites en déclarations et
 annotées selon les CG d'Assureur A par l'auteur), et LegalBench comme **second banc** de généralisation.
 
-### Le second banc : LegalBench (`couverture legalbench`)
+### Le second banc : LegalBench (passé le 18 nov., commande retirée depuis)
 
 Chaque cas a sa propre clause, en anglais, sans règles ni vocabulaire écrits pour elle. Le banc mesure
 donc le **principe** du projet sans les règles : le modèle répond et **cite mot pour mot** la phrase de
@@ -387,17 +398,17 @@ devient « incertain ». Deux colonnes : la réponse du modèle, et la réponse 
 | Couverts / refus à tort | Comme le banc | Le coût métier |
 | Citations introuvables | Réponses fermes dont la phrase citée n'est pas dans la clause | Ce que le contrôle attrape |
 
-Données : `couverture legalbench --telecharger` (Hugging Face, sur le poste) dans `data/externes/legalbench/`,
-avec leur attribution (CC BY 4.0). Rapports : `data/bancs/<date>-legalbench-<modèle>.md`.
+Résultat (18 nov., Mistral Small, 133 cas) : le modèle cite juste, mais tranche 90 % des cas que des lecteurs jugent ambigus (README, section 5). C'est ce que les règles évitent. La commande a été retirée avec la simplification du 20 nov. (7.110) ; les données restent dans `data/externes/legalbench/`, avec leur attribution (CC BY 4.0).
 
 ---
 
 ## 8. À faire
 
-0. Assureur B : un jeu de cas écrit par l'auteur sans voir les règles ; les faits idéaux sans valeurs par défaut.
+1. **Un jeu fermé écrit par une personne du métier**, pour chaque contrat ; et un jeu de mesure pour C, qui n'en a pas.
+2. **Valider le golden set** (`couverture banc --fiche`, puis `--figer "validation"`) : ses réponses sont proposées, pas validées.
+3. Plus de cas dont la bonne réponse est « incertain » dans le golden set.
+4. Assureur B : les faits idéaux sans valeurs par défaut que la déclaration ne dit pas.
+5. Relever les tokens, pour donner un coût par analyse.
+6. Resserrer la porte de latence (10 s ; mesuré à 7 s au plus).
 
-1. Créer le jeu fermé (`data/ferme/`, ≥ 20 cas, auteur), avec plus de cas dont la bonne réponse est « incertain ».
-2. Valider le golden set (`couverture banc --fiche`, puis `--figer "validation"`).
-3. Mesurer la lecture par Mistral Large, puis la double lecture si elle aide.
-4. Passer LegalBench (`couverture legalbench`), avec Mistral Small puis Large.
-5. Suite possible : faire rédiger des règles pour chaque clause de LegalBench, pour tester aussi le moteur.
+Fait depuis la première version de cette liste : le jeu fermé (7.79), le partage mise au point / test (7.107), la lecture par Mistral Large et par Medium mesurées (7.37, 7.118, 7.136), LegalBench passé (7.37).
