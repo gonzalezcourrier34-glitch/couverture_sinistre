@@ -4846,6 +4846,34 @@ Toujours le 24 nov., toujours sans toucher à une décision.
 
 Avec 7.164 et 7.165, c'est la même idée sous quatre formes : la réponse ne parle que de ce qui a un rapport avec le sinistre.
 
+### 7.168 Quatre sinistres, quatre lignes
+
+Le 24 nov., en fin de matinée. Un essai sur une déclaration longue (un retour de vacances : garage forcé, vélo et tondeuse disparus, congélateur débranché, parquet gondolé, vitre fêlée) rend « couvert, confiance 70 % », au titre des dégâts des eaux. Rien sur le vol, rien sur la vitre.
+
+**La cause.** La réponse est « couvert » dès qu'un bien entre dans une garantie, et la lecture rend des listes (événements, biens, lieux) sans dire quel bien va avec quel événement. Le moteur ne peut donc pas répondre sinistre par sinistre : on ne lui donne pas les sinistres.
+
+**Le choix.** Ne pas toucher au moteur ni aux règles, mesurés depuis une semaine. Découper avant lui :
+
+- la déclaration est d'abord analysée d'un bloc, comme toujours ; si la lecture y trouve un seul événement, rien d'autre ne se passe ;
+- à partir de deux événements, une consigne nouvelle (`decoupage-sinistres` v1) demande au modèle s'ils font un seul sinistre ou plusieurs. Un sinistre, c'est un fait générateur et ce qu'il entraîne : une tempête et la pluie qui entre, un incendie et l'eau des pompiers restent un sinistre. Dans le doute, un seul ;
+- le modèle recopie les phrases de chaque sinistre, et le code ne garde que celles qui figurent mot pour mot dans la déclaration : le même garde-fou que pour les citations du contrat ;
+- la chaîne entière (lecture, vérification, moteur, confirmation) est rejouée sur chaque sinistre ;
+- la réponse liste les sinistres, une ligne chacun, avec sa décision et ses articles. La décision d'ensemble n'est ferme que si toutes sont les mêmes.
+
+Une variable (`COUVERTURE_DECOUPAGE=non`) coupe le tout sans reconstruire l'image.
+
+**Les essais à la main, sur A.** Garage forcé, congélateur et vitre fêlée : deux sinistres, « à préciser » pour le vol (la serrure de sûreté du garage, qui est bien la question de ce contrat), « couvert » pour la vitre (2.9). La tempête et l'incendie, avec leurs suites : pas de découpage, la réponse d'avant. Une réserve : le congélateur est rangé avec le vol, ce que la déclaration ne dit pas.
+
+**Les bancs.** A 94 % et 100 %, D 96 % : inchangés. B : 78 %, contre 85 % le matin. Avant de conclure, lecture du rapport puis rejeu sur le code d'avant (`git stash`), comme le veut la leçon 162 :
+
+- le cas qui bascule (une chaudière qui fuit deux semaines après la signature) ne contient qu'un événement : le découpage n'y est pas appelé ;
+- ses faits lus sont ceux du matin ; ce qui change, c'est la confirmation, qui ne retrouve plus le bien dans la déclaration ;
+- avec l'ancien code, B donne 82 %, et le même cas échoue deux fois sur trois.
+
+La baisse ne vient donc pas du découpage : le modèle de confirmation ne répond plus comme le matin sur ce cas. La fourchette publiée de B passe de 82–85 % à 78–85 %.
+
+**Ce qui n'est pas fait.** Aucun jeu ne mesure le découpage lui-même : les cas existants ont une à trois phrases. L'écran affiche les lignes mais ne propose pas de répondre aux questions d'un sinistre en particulier. La réponse coûte une lecture de plus par sinistre.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le ferais.
@@ -5044,3 +5072,4 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 160. Rejouer la question de l'énoncé sur chaque contrat, et lire la phrase comme quelqu'un du métier : une décision juste peut être mal dite.
 161. Ce qu'un document annonce de l'écran se vérifie à l'écran, pas dans les notes d'un cas de test.
 162. Une correction qui améliore le cas qu'on regarde se juge sur ceux qu'on ne regarde pas ; et un écart se rejoue dans les deux états avant d'être attribué au hasard.
+163. Rejouer dans les deux états sert aussi à innocenter : la baisse de B est apparue juste après un changement, et ne venait pas de lui. Un modèle appelé par une API n'est pas un point fixe ; une fourchette publiée doit dire sur combien de passages elle repose.

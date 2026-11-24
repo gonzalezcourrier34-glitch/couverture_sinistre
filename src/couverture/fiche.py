@@ -125,7 +125,7 @@ def fiche_pdf(sinistre: str, reponse: dict, contrat: dict | None = None, date: d
                                   ("VALIGN", (0, 0), (-1, -1), "MIDDLE"), ("LEFTPADDING", (0, 0), (-1, -1), 10),
                                   ("RIGHTPADDING", (0, 0), (-1, -1), 10), ("TOPPADDING", (0, 0), (-1, -1), 6),
                                   ("BOTTOMPADDING", (0, 0), (-1, -1), 7)]))
-    blocs += [pastille, Spacer(1, 6), Paragraph(propre(reponse.get("justification", "")), TEXTE)]
+    blocs += [pastille, Spacer(1, 6), Paragraph(propre(reponse.get("justification", "")).replace("\n", "<br/>"), TEXTE)]
 
     # Une réponse d'avant les libellés n'a que `faits` : les libellés se recalculent du vocabulaire.
     faits = reponse.get("faits_affiches") or prolog.faits_affiches(reponse.get("faits") or {})

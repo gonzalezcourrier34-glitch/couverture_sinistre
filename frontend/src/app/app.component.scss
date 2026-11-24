@@ -445,9 +445,11 @@ textarea {
     color: var(--attention-fonce);
 }
 
+// « pre-line » : une déclaration à plusieurs sinistres reçoit une ligne par sinistre (7.168).
 .justification {
     margin: 0;
     font-size: 17px;
+    white-space: pre-line;
 }
 
 

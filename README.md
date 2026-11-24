@@ -105,7 +105,7 @@ Trois contrats de trois assureurs (anonymisés A, B, D), sur le même moteur. Mi
 | Règles seules, faits exacts (A, les 31 cas de test) | 100 % | 0 | 0 |
 | A, partie test du golden set (31 cas jamais utilisés pour régler) | 90 % | 0 à 1 | 0 |
 | A, jeu fermé (20 cas écrits sans voir les règles) | 98 à 100 % | 0 à 0,3 | 0 |
-| B, jeu fermé (20 cas) | 82 à 85 % | 1 | 0 |
+| B, jeu fermé (20 cas) | 78 à 85 % | 1 | 0 |
 | D, jeu fermé (25 cas) | 93 à 96 % | 0 | 1 |
 
 - **Toutes les erreurs viennent de la lecture**, pas des règles : avec des faits exacts, le moteur ne se trompe pas.
@@ -116,6 +116,7 @@ Trois contrats de trois assureurs (anonymisés A, B, D), sur le même moteur. Mi
 - Les jeux sont petits : un écart de 3 ou 4 points entre deux séries n'est pas significatif.
 - **Le soir du même jour**, après l'ajout du contrat C et un changement du moteur, les quatre bancs ont été repassés : A 94 % et 100 %, B 85 %, D 96 %, avec les deux mêmes erreurs et aucune nouvelle. Ajouter un contrat n'a pas dégradé les autres, à la précision de ces jeux.
 - **Le 24 novembre**, veille de la livraison, les quatre bancs ont été repassés trois fois, avant et après deux retouches de la phrase de réponse (qui ne changent aucune décision) : A 94 % (partie test) et 98 à 100 % (jeu fermé), B 85 %, D 96 %. Les deux erreurs répétées sont là ; le fer à repasser est couvert à tort zéro ou une fois sur trois. Les chiffres restent dans les fourchettes du tableau.
+- **Le même jour à midi**, après l'ajout de la réponse par sinistre : A 94 % et 100 %, D 96 %, inchangés ; B 78 %. Rejoué aussitôt sur le code d'avant, B donne 82 % : la baisse ne vient pas de l'ajout. Un cas de B (une chaudière qui fuit deux semaines après la signature), refusé à raison neuf fois sur neuf le matin, reçoit maintenant « à préciser » deux fois sur trois avec l'ancien code comme avec le nouveau : le modèle qui confirme les faits ne retrouve plus toujours le bien dans la déclaration. La fourchette de B est élargie en conséquence ; ses erreurs restent des questions de trop, plus le vol dans la voiture.
 - La **« confiance »** affichée à l'écran (85 % pour un couvert ou un refus, 40 % pour un « à préciser », moins quand une réserve subsiste) est une valeur fixe par type de réponse, pas une probabilité mesurée.
 
 ### 5. Ce qui a été essayé, et ce que la mesure a dit
@@ -183,7 +184,7 @@ Pour des centaines de contrats, il faut donc une équipe de relecteurs du métie
 **Ce que la réponse dit**
 - Quand **deux raisons** écartent une garantie (une condition non remplie et une exclusion), la réponse n'en cite qu'une, et laquelle dépend des faits lus : d'un passage à l'autre, la même déclaration peut recevoir la même décision avec une autre citation.
 - Quand aucune garantie ne s'applique, la réponse cite la clause qui exclut le cas si le contrat en a une (un vase brisé : « les objets en verre autres que des vitres »). S'il n'en a pas, elle ne cite que les garanties qui portent sur l'événement déclaré, pour dire qu'elles ne jouent pas ; s'il n'y en a aucune, elle ne cite rien.
-- **Plusieurs biens déclarés ensemble** : la réponse est « couvert » dès qu'un seul entre dans une garantie (une vitre et une télévision brisées : couvert, pour la vitre). Elle nomme les biens qu'une clause exclut, pas ceux qu'aucune garantie ne vise.
+- **Une déclaration longue, avec plusieurs sinistres** : chaque sinistre reçoit sa ligne, avec sa décision et ses clauses (ajouté le 24 novembre). Avant, le tout recevait une seule réponse : un retour de vacances avec un garage forcé, un congélateur débranché, un parquet gondolé et une vitre fêlée était « couvert », au titre des dégâts des eaux, sans un mot du vol ni de la vitre. Maintenant, quand la lecture trouve au moins deux événements, le modèle dit s'ils font un seul sinistre (une cause et ses conséquences : une tempête et la pluie qui entre) ou plusieurs ; dans le second cas, la chaîne entière est rejouée sur les phrases de chaque sinistre, que le code vérifie mot pour mot dans la déclaration, et le moteur, inchangé, répond une fois par sinistre. **Ce qui est vérifié** : trois essais à la main (un garage forcé et une vitre fêlée : deux lignes, « à préciser » pour le vol, « couvert » pour la vitre ; une tempête et un incendie avec leurs suites : une seule réponse, comme avant), et les quatre bancs repassés sans décision changée par le découpage. **Ce qui ne l'est pas** : aucun jeu de cas ne mesure le découpage lui-même, les jeux étant faits de déclarations d'une à trois phrases. Dans l'essai, le congélateur débranché a été rangé avec le vol, ce que la déclaration ne dit pas. La réponse est aussi plus lente (une lecture de plus par sinistre), et l'écran ne propose pas encore de répondre aux questions d'un sinistre en particulier. `COUVERTURE_DECOUPAGE=non` revient à une réponse pour le tout.
 - Les **conditions particulières** du client : la formule et les options se donnent avec la déclaration (à l'écran, ou par l'API), et la réponse en tient compte sans rien demander. Mais le document lui-même n'est pas lu, ni les capitaux ; non renseignée, une réponse qui en dépend reste « à préciser ».
 
 **Les contrats**

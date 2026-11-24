@@ -97,6 +97,10 @@ class Decision(BaseModel):
         Les faits retenus, à renvoyer à `POST /api/v1/decisions` avec les réponses aux questions.
     faits_affiches : list[FaitAffiche]
         Les mêmes faits, avec les libellés du vocabulaire, pour l'affichage.
+    sinistres : list[dict]
+        Quand la déclaration contient plusieurs sinistres : la réponse complète de chacun, avec son `titre` et les
+        phrases de la déclaration qui le concernent (`declaration`). La `justification` d'ensemble les résume, une
+        ligne par sinistre ; la `decision` d'ensemble n'est ferme que s'ils reçoivent tous la même.
     """
 
     contrat_id: str | None
@@ -113,6 +117,7 @@ class Decision(BaseModel):
     raisonnement: list[str]
     mode: str
     durees_ms: dict[str, int]
+    sinistres: list[dict[str, Any]] = Field(default_factory=list)
 
 
 class FicheRequest(BaseModel):

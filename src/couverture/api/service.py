@@ -118,6 +118,7 @@ def reponse(r: Resultat, d: dict | None = None) -> dict[str, Any]:
                     for c in v.conditions if c.nature == "limite"],
         "faits": faits_depuis(r.faits),
         "faits_affiches": prolog.faits_affiches(faits_depuis(r.faits)),
+        "sinistres": [],
         "avertissements": v.avertissements,
         "raisonnement": v.raisonnement,
         "mode": v.mode,
@@ -138,6 +139,18 @@ def analyser(pipeline, sinistre: str, suivi=None, souscription: dict | None = No
     réponse que la confirmation a suspendue."""
     options = ({"suivi": suivi} if suivi is not None else {}) | ({"souscription": souscription} if souscription else {})
     r = pipeline.analyser(sinistre, **options)
+    if r.parties:
+        # Plusieurs sinistres (7.168) : une réponse par sinistre. Rien n'est à demander pour l'ensemble : les
+        # questions appartiennent à chaque sinistre, et se lisent dans sa ligne et dans `sinistres`.
+        sortie = reponse(r, None)
+        sortie["sinistres"] = [reponse_complete(pipeline, p) | {"titre": p.titre, "declaration": p.sinistre}
+                               for p in r.parties]
+        return r, sortie
+    return r, reponse_complete(pipeline, r)
+
+
+def reponse_complete(pipeline, r: Resultat) -> dict[str, Any]:
+    """La réponse de l'API pour un résultat : ses questions classées par le moteur, ses faits à renvoyer."""
     faits = faits_depuis(r.faits)
     doutes = [a.removesuffix(NON_CONFIRME) for a in r.verdict.avertissements if a.endswith(NON_CONFIRME)]
     for v in doutes:
@@ -155,7 +168,7 @@ def analyser(pipeline, sinistre: str, suivi=None, souscription: dict | None = No
                                  "aide": voc["evenement"].get("aide", {})}]
     sortie["faits"] = faits
     sortie["faits_affiches"] = prolog.faits_affiches(faits)
-    return r, sortie
+    return sortie
 
 
 def decider(base: Base, contrat_id: str, faits: dict[str, Any], decideur=None) -> tuple[Resultat, dict[str, Any]]:

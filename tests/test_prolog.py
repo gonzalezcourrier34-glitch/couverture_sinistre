@@ -414,6 +414,81 @@ def test_la_phrase_regroupe_par_article_et_se_tait_quand_le_dossier_part_chez_un
     assert [c.clause_id for c in v.citations] == ["3.1.5.1"]
 
 
+class FauxLLMPlusieurs:
+    """Lit « vol » ou « bris » selon le texte reçu, et découpe la déclaration comme on le lui a dit."""
+    nom = "faux"
+
+    def __init__(self, decoupage):
+        self.decoupage, self.decoupes = decoupage, 0
+
+    def completer(self, systeme, message):
+        if systeme == lecture.SYSTEME_DECOUPAGE:
+            self.decoupes += 1
+            return json.dumps({"sinistres": self.decoupage})
+        if systeme == lecture.SYSTEME_VERIFICATION:
+            return json.dumps({"verdicts": {}})
+        declaration = message.split("Déclaration")[-1]
+        evenements = [e for e, mot in (("vol", "volé"), ("bris", "fêlée")) if mot in declaration]
+        return json.dumps({"faits": {"evenement": evenements, "lieu": ["garage"]}})
+
+
+def test_plusieurs_sinistres_une_reponse_pour_chacun(monkeypatch):
+    """7.168. Une déclaration qui raconte deux sinistres reçoit deux lignes, chacune avec sa décision et sa clause ;
+    une cause et ses conséquences restent un seul sinistre ; une phrase que la déclaration ne contient pas est écartée."""
+    from couverture.api import service
+    from couverture.models import Clause, TypeClause
+
+    declaration = "On m'a volé mon vélo dans le garage. J'ai porté plainte. Une vitre de la véranda est fêlée."
+    clauses = [Clause(id=i, article=i, titre="t", chemin=[i], type=t, texte=x, pages=[1]) for i, t, x in (
+        ("2.10-a", TypeClause.EXCLUSION, "le vol sans effraction"), ("2.9", TypeClause.GARANTIE, "le bris des vitres"))]
+
+    def decideur(faits):
+        if faits.get("evenement") == ["vol"]:
+            return {"decision": "NON_COUVERT", "possibles": [], "retenues": [{
+                "id": "vol", "garantie": "Vol", "article": "2.10", "rattachement": "rattachée", "decision": "NON_COUVERT",
+                "motif": "une exclusion s'applique", "questions": [], "reserves": [], "partielles": [],
+                "preuves": [{"article": "2.10-a", "texte": "le vol sans effraction", "role": "exclusion"}]}]}
+        return {"decision": "COUVERT", "possibles": [], "retenues": [{
+            "id": "bris", "garantie": "Bris de vitres", "article": "2.9", "rattachement": "rattachée", "decision": "COUVERT",
+            "motif": "s'applique", "questions": [], "reserves": [], "partielles": [],
+            "preuves": [{"article": "2.9", "texte": "le bris des vitres", "role": "garantie"}]}]}
+
+    deux = [{"titre": "Vol du vélo", "phrases": ["On m'a volé mon vélo dans le garage.", "J'ai porté plainte.",
+                                                "Le voleur portait un masque."]},
+            {"titre": "Vitre fêlée", "phrases": ["Une vitre de la véranda est fêlée."]}]
+    llm = FauxLLMPlusieurs(deux)
+    p = chaine.PipelineRegles(CONTRAT, clauses, llm, decideur=decideur)
+    r = p.analyser(declaration)
+    assert [x.titre for x in r.parties] == ["Vol du vélo", "Vitre fêlée"]
+    assert r.parties[0].sinistre == "On m'a volé mon vélo dans le garage. J'ai porté plainte.", "la phrase inventée est écartée"
+    assert [x.verdict.decision for x in r.parties] == [Decision.NON_COUVERT, Decision.COUVERT]
+    assert r.verdict.decision == Decision.INCERTAIN, "pas de réponse ferme pour le tout quand les sinistres diffèrent"
+    lignes = r.verdict.justification.split("\n")
+    assert lignes[0].startswith("2 sinistres dans cette déclaration")
+    assert lignes[1].startswith("1. Vol du vélo : Non couvert.") and "(2.10)" in lignes[1]
+    assert lignes[2].startswith("2. Vitre fêlée : Couvert.") and "(2.9)" in lignes[2]
+    assert {c.clause_id for c in r.verdict.citations} == {"2.10-a", "2.9"}
+
+    _, sortie = service.analyser(p, declaration)
+    assert [s["titre"] for s in sortie["sinistres"]] == ["Vol du vélo", "Vitre fêlée"]
+    assert [s["decision"] for s in sortie["sinistres"]] == ["NON_COUVERT", "COUVERT"]
+    assert sortie["a_preciser"] == [] and sortie["sinistres"][1]["citations"][0]["clause_id"] == "2.9"
+
+    # Une cause et ses conséquences : le modèle ne rend qu'un sinistre, la réponse est celle d'avant.
+    p = chaine.PipelineRegles(CONTRAT, clauses, FauxLLMPlusieurs([deux[0]]), decideur=decideur)
+    r = p.analyser(declaration)
+    assert r.parties == [] and "\n" not in r.verdict.justification
+    # Un seul événement lu : le découpage n'est pas demandé.
+    llm = FauxLLMPlusieurs(deux)
+    chaine.PipelineRegles(CONTRAT, clauses, llm, decideur=decideur).analyser("On m'a volé mon vélo dans le garage.")
+    assert llm.decoupes == 0
+    # Et il se désactive.
+    monkeypatch.setenv("COUVERTURE_DECOUPAGE", "non")
+    llm = FauxLLMPlusieurs(deux)
+    assert chaine.PipelineRegles(CONTRAT, clauses, llm, decideur=decideur).analyser(declaration).parties == []
+    assert llm.decoupes == 0
+
+
 def test_verdict_evenement_non_traduit():
     reponse = {"decision": "INCERTAIN", "non_traduits": ["tempete"], "aucune": False, "possibles": [], "retenues": [{
         "id": "degats_eaux", "garantie": "Dégâts causés par l’eau", "article": "2.7", "rattachement": "rattachée",

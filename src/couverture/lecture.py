@@ -56,6 +56,52 @@ Réponds uniquement par un objet JSON : {"faits": {"variable": "valeur"}}"""
 INCONNU = "inconnu"
 
 
+SYSTEME_DECOUPAGE = """Tu lis une déclaration de sinistre en assurance habitation et tu dis combien de sinistres distincts elle contient.
+
+Un sinistre, c'est un fait générateur et tout ce qu'il a entraîné. Une cause et ses conséquences font UN seul sinistre :
+- une tempête arrache des tuiles et la pluie entre : un sinistre ;
+- une fuite abîme un parquet, puis des moisissures apparaissent : un sinistre ;
+- un cambriolage, avec la porte forcée, les objets volés et ce qui a été abîmé : un sinistre ;
+- un incendie et les dégâts de l'eau des pompiers : un sinistre.
+
+Il y a plusieurs sinistres quand des faits générateurs indépendants sont racontés ensemble : un vol, et par ailleurs une vitre fêlée dont on ne sait pas l'origine ; une fuite, et un autre jour un objet cassé.
+
+Règles :
+- dans le doute, un seul sinistre ;
+- pour chaque sinistre, un titre court dans les mots de la déclaration, et les phrases de la déclaration qui le concernent, recopiées mot pour mot, sans rien ajouter ni reformuler ;
+- les phrases de contexte qui valent pour plusieurs sinistres (une absence, le lieu, une plainte) se recopient dans chacun de ceux qu'elles concernent ;
+- quand la déclaration dit ne pas savoir si deux faits sont liés, recopie cette phrase dans chacun des deux.
+
+Réponds en JSON : {"sinistres": [{"titre": "...", "phrases": ["...", "..."]}]}"""
+
+SCHEMA_DECOUPAGE = {"type": "object", "additionalProperties": False, "required": ["sinistres"], "properties": {
+    "sinistres": {"type": "array", "items": {"type": "object", "additionalProperties": False,
+                                             "required": ["titre", "phrases"], "properties": {
+                                                 "titre": {"type": "string"},
+                                                 "phrases": {"type": "array", "items": {"type": "string"}}}}}}}
+
+
+def decouper_sinistres(sinistre: str, llm: LLM) -> list[dict]:
+    """Les sinistres distincts d'une déclaration (7.168) : [{"titre", "texte"}], ou [] s'il n'y en a qu'un.
+
+    Le modèle recopie pour chaque sinistre les phrases qui le concernent ; le code ne garde que celles qui figurent
+    mot pour mot dans la déclaration (le même garde-fou que pour les citations du contrat). Un sinistre sans phrase
+    retrouvée est écarté ; à moins de deux sinistres restants, la déclaration se traite d'un bloc, comme avant."""
+    from .texte import normaliser
+    reponse = extraire_json(completer_avec_schema(llm, SYSTEME_DECOUPAGE, f"## Déclaration\n{sinistre}", SCHEMA_DECOUPAGE))
+    entier = normaliser(sinistre)
+    parties = []
+    for s in (reponse.get("sinistres") or []) if isinstance(reponse, dict) else []:
+        if not isinstance(s, dict):
+            continue
+        phrases = [p.strip() for p in s.get("phrases") or [] if isinstance(p, str) and p.strip()
+                   and normaliser(p) in entier]
+        if phrases:
+            parties.append({"titre": str(s.get("titre") or "").strip() or f"Sinistre {len(parties) + 1}",
+                            "texte": " ".join(dict.fromkeys(phrases))})
+    return parties if len(parties) >= 2 else []
+
+
 def schema_faits(variables: dict) -> dict:
     """Le schéma JSON de la réponse : chaque variable avec ses seules valeurs permises (listes fermées),
     « inconnu » en premier. **Aucune variable n'est obligatoire** : quand le schéma les exigeait toutes,

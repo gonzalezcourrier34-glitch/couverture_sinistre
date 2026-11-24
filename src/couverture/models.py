@@ -124,3 +124,10 @@ class Resultat(BaseModel):
     verdict: Verdict
     # Temps par étape, en millisecondes (méthode « regles ») : lecture des faits, décision du moteur.
     durees_ms: dict[str, int] = Field(default_factory=dict)
+    # Une déclaration qui contient plusieurs sinistres (7.168) : un résultat par sinistre, chacun avec son titre
+    # et les phrases de la déclaration qui le concernent (dans `sinistre`). Vide pour un seul sinistre.
+    titre: str = ""
+    parties: list["Resultat"] = Field(default_factory=list)
+
+
+Resultat.model_rebuild()

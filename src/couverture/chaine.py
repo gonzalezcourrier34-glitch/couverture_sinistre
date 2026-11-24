@@ -7,7 +7,7 @@ import os
 import time
 
 from . import prolog
-from .lecture import (extraire_faits_regles, faits_decisifs, juger_affirmations, question,
+from .lecture import (decouper_sinistres, extraire_faits_regles, faits_decisifs, juger_affirmations, question,
                       sources_impliquees, variables_du_contrat)
 from .llm import LLM, ErreurLLM
 from .models import Citation, Clause, ClauseRetenue, Condition, Decision, EtatCondition, Faits, Resultat, Verdict
@@ -74,6 +74,32 @@ class PipelineRegles:
         return p
 
     def analyser(self, sinistre: str, suivi=None, souscription: dict | None = None) -> Resultat:
+        """L'analyse d'une déclaration. Si elle contient plusieurs sinistres, chacun reçoit sa réponse (7.168).
+
+        La déclaration est d'abord analysée d'un bloc, comme toujours. Si la lecture y trouve au moins deux
+        événements, le modèle dit s'ils font un seul sinistre (une cause et ses conséquences) ou plusieurs ; dans le
+        second cas, la chaîne entière est rejouée sur les phrases de chaque sinistre, et la réponse les liste.
+        `COUVERTURE_DECOUPAGE=non` revient à une réponse pour le tout."""
+        r = self.analyser_un(sinistre, suivi=suivi, souscription=souscription)
+        if len(r.faits.evenements) < 2 or os.environ.get("COUVERTURE_DECOUPAGE", "oui").lower() in {"non", "0", "false"}:
+            return r
+        try:
+            parties = decouper_sinistres(sinistre, self.llm)
+        except Exception as e:  # noqa: BLE001 - sans découpage, la réponse d'un bloc reste valable
+            r.verdict.avertissements = r.verdict.avertissements + [f"découpage en sinistres impossible ({e})"]
+            return r
+        if not parties:
+            return r
+        if suivi:
+            suivi("confirmation", f"{len(parties)} sinistres dans la déclaration : chacun est analysé à part")
+        analyses = []
+        for p in parties:
+            x = self.analyser_un(p["texte"], souscription=souscription)
+            x.titre = p["titre"]
+            analyses.append(x)
+        return plusieurs_sinistres(r, analyses)
+
+    def analyser_un(self, sinistre: str, suivi=None, souscription: dict | None = None) -> Resultat:
         """`suivi(etape, detail=None)` : le fil de l'analyse, étape par étape (7.134) ; None : rien.
         `souscription` : ce que disent les conditions particulières du client ({variable: valeur} : la formule,
         les options) ; ces faits s'ajoutent à ceux lus dans la déclaration, et l'emportent sur eux (7.141)."""
@@ -278,6 +304,62 @@ class PipelineRegles:
 # --- Arbre de preuve, en lignes lisibles --------------------------------------------------------------
 
 MARQUE = {"oui": "[oui]", "non": "[non]", "inconnu": "[ ? ]"}
+
+
+LIBELLES_DECISION = {Decision.COUVERT: "Couvert", Decision.NON_COUVERT: "Non couvert", Decision.INCERTAIN: "À préciser"}
+
+
+def ligne_du_sinistre(numero_: int, r: Resultat) -> str:
+    """« 2. Titre : Non couvert. La raison, avec son article. À demander : … » : une ligne par sinistre."""
+    v = r.verdict
+    reste = v.justification
+    for prefixe in ("Couvert. ", "Non couvert. ", "Non couvert : ", "À préciser. "):
+        if reste.startswith(prefixe):
+            reste = reste[len(prefixe):]
+            break
+    reste = reste[:1].upper() + reste[1:]
+    # Les questions que la raison ne pose pas déjà : la phrase du moteur cite souvent celles qui tranchent.
+    a_poser = [q for q in v.informations_manquantes[:2] if q not in reste] if v.decision == Decision.INCERTAIN else []
+    demander = " À demander : " + " ; ".join(a_poser) if a_poser else ""
+    return f"{numero_}. {r.titre} : {LIBELLES_DECISION[v.decision]}. {reste}{demander}"
+
+
+def plusieurs_sinistres(ensemble: Resultat, analyses: list[Resultat]) -> Resultat:
+    """La réponse à une déclaration qui contient plusieurs sinistres (7.168) : une ligne par sinistre, chacun avec
+    sa décision. La décision d'ensemble n'est ferme que si tous les sinistres reçoivent la même ; sinon « à
+    préciser » : il n'y a pas une réponse pour le tout. Les citations sont celles des sinistres, sans doublon."""
+    decisions = {x.verdict.decision for x in analyses}
+    decision = decisions.pop() if len(decisions) == 1 else Decision.INCERTAIN
+    citations, conditions, consultees = [], [], []
+    vus_c, vus_k, vus_cl = set(), set(), set()
+    for x in analyses:
+        for c in x.verdict.citations:
+            if (c.clause_id, c.extrait) not in vus_c:
+                vus_c.add((c.clause_id, c.extrait))
+                citations.append(c)
+        for k in x.verdict.conditions:
+            if (k.clause_id, k.extrait, k.nature) not in vus_k:
+                vus_k.add((k.clause_id, k.extrait, k.nature))
+                conditions.append(k)
+        for cl in x.clauses_consultees:
+            if cl.clause.id not in vus_cl:
+                vus_cl.add(cl.clause.id)
+                consultees.append(cl)
+    raisonnement = [ligne for i, x in enumerate(analyses, 1)
+                    for ligne in [f"— Sinistre {i} : {x.titre} —", *x.verdict.raisonnement]]
+    avertissements = ensemble.verdict.avertissements + [a for x in analyses for a in x.verdict.avertissements]
+    v = Verdict(decision=decision, citations=citations, conditions=conditions, informations_manquantes=[],
+                confiance=min(x.verdict.confiance for x in analyses), mode=ensemble.verdict.mode,
+                justification=f"{len(analyses)} sinistres dans cette déclaration, une réponse pour chacun.\n"
+                + "\n".join(ligne_du_sinistre(i, x) for i, x in enumerate(analyses, 1)),
+                avertissements=list(dict.fromkeys(avertissements)), raisonnement=raisonnement,
+                decision_initiale=decision)
+    durees = dict(ensemble.durees_ms)
+    for x in analyses:
+        for k, ms in x.durees_ms.items():
+            durees[k] = durees.get(k, 0) + ms
+    return Resultat(sinistre=ensemble.sinistre, contrat_id=ensemble.contrat_id, methode=ensemble.methode,
+                    faits=ensemble.faits, clauses_consultees=consultees, verdict=v, durees_ms=durees, parties=analyses)
 
 
 def _vu(n: dict) -> str:

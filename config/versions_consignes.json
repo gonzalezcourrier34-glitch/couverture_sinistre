@@ -1,4 +1,9 @@
 {
+  "couverture-decoupage-sinistres": {
+    "version": "v1",
+    "empreinte": "f5556291b81006b0",
+    "source": "couverture.lecture.SYSTEME_DECOUPAGE"
+  },
   "couverture-lecture-details": {
     "version": "v3",
     "empreinte": "b3a1d14cea1d66af",

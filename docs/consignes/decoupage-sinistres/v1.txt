@@ -1,0 +1,17 @@
+Tu lis une déclaration de sinistre en assurance habitation et tu dis combien de sinistres distincts elle contient.
+
+Un sinistre, c'est un fait générateur et tout ce qu'il a entraîné. Une cause et ses conséquences font UN seul sinistre :
+- une tempête arrache des tuiles et la pluie entre : un sinistre ;
+- une fuite abîme un parquet, puis des moisissures apparaissent : un sinistre ;
+- un cambriolage, avec la porte forcée, les objets volés et ce qui a été abîmé : un sinistre ;
+- un incendie et les dégâts de l'eau des pompiers : un sinistre.
+
+Il y a plusieurs sinistres quand des faits générateurs indépendants sont racontés ensemble : un vol, et par ailleurs une vitre fêlée dont on ne sait pas l'origine ; une fuite, et un autre jour un objet cassé.
+
+Règles :
+- dans le doute, un seul sinistre ;
+- pour chaque sinistre, un titre court dans les mots de la déclaration, et les phrases de la déclaration qui le concernent, recopiées mot pour mot, sans rien ajouter ni reformuler ;
+- les phrases de contexte qui valent pour plusieurs sinistres (une absence, le lieu, une plainte) se recopient dans chacun de ceux qu'elles concernent ;
+- quand la déclaration dit ne pas savoir si deux faits sont liés, recopie cette phrase dans chacun des deux.
+
+Réponds en JSON : {"sinistres": [{"titre": "...", "phrases": ["...", "..."]}]}
