@@ -46,7 +46,8 @@
                         (click)="choisirContrat(c.id)">
                         <span class="contrat-assureur">{{ c.assureur }}</span>
                         <span class="contrat-produit">{{ c.produit }}</span>
-                        <span class="contrat-version">{{ c.version }} · {{ c.nb_clauses ?? '?' }} clauses</span>
+                        <span class="contrat-version">{{ c.version }}</span>
+                        <span class="contrat-version">{{ c.nb_clauses ?? '?' }} clauses</span>
                     </button>
                 } @empty {
                     <p class="muted">Aucun contrat décidable : vérifiez que l’API tourne et que la base est remplie.</p>

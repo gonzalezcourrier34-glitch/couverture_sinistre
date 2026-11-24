@@ -20,6 +20,22 @@ def numero(article: str) -> str:
     return str(article).split("~")[0]
 
 
+# Le motif d'une garantie que le moteur écarte par une exclusion certaine sans savoir si elle s'appliquerait
+# (regles/moteur.pl, `issue` avec un périmètre inconnu). Le même texte des deux côtés : un test le vérifie.
+EXCLUE_SANS_ETRE_ETABLIE = "exclue, que la garantie s'applique ou non"
+
+
+def phrases_des_garanties(retenues: list[dict]) -> list[str]:
+    """Une phrase par article et par motif (7.167) : trois garanties du même article écartées pour la même raison
+    se disent une fois, « A », « B », « C » (2.7-a) : hors de son périmètre."""
+    groupes: dict[tuple[str, str], list[str]] = {}
+    for r in retenues:
+        noms = groupes.setdefault((numero(r["article"]), r["motif"]), [])
+        if r["garantie"] not in noms:
+            noms.append(r["garantie"])
+    return [", ".join(f"« {n} »" for n in noms) + f" ({article}) : {motif}" for (article, motif), noms in groupes.items()]
+
+
 SANS_EVENEMENT = ("À préciser. Je n'ai pas reconnu de sinistre dans ce texte : il ne dit pas ce qui s'est passé "
                   "(un vol, un incendie, un dégât des eaux, un dommage causé à quelqu'un…). Aucune garantie n'a été "
                   "examinée.")
@@ -165,8 +181,17 @@ class PipelineRegles:
     def verdict(self, d: dict, faits: dict) -> tuple[Verdict, list[ClauseRetenue]]:
         decision = Decision(d["decision"])
         retenues = d.get("retenues", [])
-        motifs = [f"« {r['garantie']} » ({numero(r['article'])}) : {r['motif']}" for r in retenues]
+        if "visent_evenement" in d:
+            # 7.165 : une garantie écartée dès son périmètre n'est nommée et citée que si elle porte sur l'événement
+            # déclaré. Les garanties du vol n'ont rien à dire d'une bougie fondue.
+            vises = set(d["visent_evenement"])
+            retenues = [r for r in retenues if r.get("rattachement") != "hors" or r.get("id") in vises]
         non_traduits = d.get("non_traduits") or []
+        if non_traduits:
+            # 7.167 : quand le dossier part chez un gestionnaire, dire des garanties traduites qu'elles ne jouent pas
+            # n'apporte rien. Restent celles qui s'appliquent ou pourraient s'appliquer.
+            retenues = [r for r in retenues if r.get("rattachement") != "hors"]
+        motifs = phrases_des_garanties(retenues)
         # Aucune garantie ne s'applique, mais le contrat exclut ce cas en toutes lettres (7.157) : on cite la clause
         # qui l'exclut, plutôt que le texte de garanties sans rapport.
         exclues = (d.get("exclusions_etablies") or []) if d.get("aucune") else []
@@ -174,10 +199,21 @@ class PipelineRegles:
             motif = ("Non couvert : aucune garantie ne s'applique, et le contrat l'exclut expressément ("
                      + " ; ".join(dict.fromkeys(f"« {x['garantie']} », {numero(x['article'])}" for x in exclues[:3])) + ").")
         elif d.get("aucune"):
-            motif = "Non couvert : aucune garantie ne s'applique."
+            motif = ("Non couvert : aucune garantie ne s'applique." if retenues
+                     else "Non couvert : aucune garantie de ce contrat ne porte sur cet événement.")
+        elif decision == Decision.NON_COUVERT and retenues and all(r.get("motif") == EXCLUE_SANS_ETRE_ETABLIE
+                                                                  for r in retenues):
+            # 7.164 : aucune garantie n'est établie, une exclusion les écarte toutes. La phrase cite l'exclusion,
+            # pas des garanties dont rien ne dit qu'elles concernaient ce sinistre.
+            articles = dict.fromkeys(numero(p["article"]) for r in retenues for p in r.get("preuves", []))
+            motif = "Non couvert : le contrat exclut ce cas" + (f" ({' ; '.join(list(articles)[:3])})" if articles else "") + "."
         else:
+            # Une garantie n'est nommée que si le sinistre s'y rattache : celles qu'une exclusion écarte sans qu'elles
+            # soient établies ne le sont pas (leur clause d'exclusion reste citée).
+            nommees = phrases_des_garanties([r for r in retenues if decision != Decision.NON_COUVERT
+                                             or r.get("motif") != EXCLUE_SANS_ETRE_ETABLIE])
             motif = {"COUVERT": "Couvert. ", "NON_COUVERT": "Non couvert. ", "INCERTAIN": "À préciser. "}[decision.value] \
-                + " ; ".join(motifs[:3]) + "."
+                + " ; ".join(nommees[:3]) + "."
         accessoires = d.get("accessoires") or []
         if accessoires and decision == Decision.COUVERT:
             # 7.68 : ce qui peut s'ajouter à la garantie qui couvre, sans changer la décision.
@@ -187,7 +223,8 @@ class PipelineRegles:
         if non_traduits:
             evts = ", ".join(non_traduits)
             motif = (f"À examiner par un gestionnaire : l'événement « {evts} » relève d'une garantie qui n'est pas "
-                     f"encore traduite en règles. Ce que disent les garanties traduites : " + (" ; ".join(motifs[:3]) or "rien") + ".")
+                     f"encore traduite en règles." + (" Ce que disent les garanties traduites : " + " ; ".join(motifs[:3]) + "."
+                                                    if motifs else ""))
         vars_ = [v for v, _ in points_a_preciser(d, prolog.vocabulaire(), faits)]
         demander = list(dict.fromkeys(question(v) for v in vars_))
         exploration = d.get("exploration")

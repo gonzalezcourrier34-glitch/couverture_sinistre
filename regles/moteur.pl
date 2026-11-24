@@ -282,10 +282,12 @@ issue(_, _, _, _, Cs, _, _, _, _, I) :-
           preuves:[P], questions:[], reserves:[], partielles:[]}.
 %  Une exclusion certaine écarte la garantie même si l'on ne sait pas encore si elle s'appliquerait :
 %  un vol dans le casier du club est exclu, inutile de demander s'il a été commis sur la personne.
+%  Le motif le dit (7.164) : la garantie est écartée sans être établie. La réponse cite alors l'exclusion, sans
+%  nommer cette garantie, dont rien ne dit qu'elle concernait le sinistre.
 issue(_, inconnu, _, _, _, Xs, _, _, _, I) :-
     member(x(totale, A, T, _), Xs), !,
     preuve(A, T, "exclusion", P),
-    I = _{rattachement:"rattachée", decision:"NON_COUVERT", motif:"une exclusion s'applique",
+    I = _{rattachement:"rattachée", decision:"NON_COUVERT", motif:"exclue, que la garantie s'applique ou non",
           preuves:[P], questions:[], reserves:[], partielles:[]}.
 issue(_, inconnu, Ps, _, Cs, _, _, Art, Texte, I) :- !,
     inconnues(et(Ps), Q1),
@@ -398,7 +400,14 @@ decider(D) :-
     plafonner(NT, D0, D1),
     accessoires(D1, Acc),
     exclusions_etablies(D1, Rs, Xe),
-    put_dict(_{garanties:Rs, accessoires:Acc, exclusions_etablies:Xe}, D1, D).
+    visent_evenement(Rs, Vs),
+    put_dict(_{garanties:Rs, accessoires:Acc, exclusions_etablies:Xe, visent_evenement:Vs}, D1, D).
+
+%!  visent_evenement(+Garanties, -Ids)
+%   Les garanties dont le périmètre porte sur l'événement déclaré (7.165). La réponse ne nomme ni ne cite une
+%   garantie écartée dès son périmètre quand elle n'en fait pas partie : un vol n'a rien à dire d'une bougie fondue.
+visent_evenement(Rs, Vs) :-
+    findall(G, ( member(R, Rs), get_dict(id, R, G), concerne_evenement(G) ), Vs).
 
 %!  exclusions_etablies(+Decision, +Garanties, -Exclusions)
 %   Aucune garantie ne s'applique (DEMARCHE 7.157) : les exclusions que les faits établissent, parmi celles des

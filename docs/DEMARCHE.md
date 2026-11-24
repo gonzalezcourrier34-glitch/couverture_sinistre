@@ -4726,6 +4726,52 @@ La section « Tenir des centaines de contrats » est réécrite d'après ce qui 
 
 **La documentation relue.** Le README, `EXPLICATIONS.md` et le guide du suivi décrivaient le projet d'avant la mise en ligne : routes, clé et code d'accès, arborescence, nombre de tests, « déployer pour avoir une URL » parmi les suites. Corrigés. `EXPLICATIONS.md` n'a été relu en entier nulle part ailleurs que sur ces passages : son en-tête le dit, et renvoie au README en cas d'écart.
 
+### 7.164 La réponse ne nomme que les garanties établies
+
+**Trouvé le 24 nov., veille de la livraison**, en rejouant en ligne la première question de l'énoncé sur les quatre contrats. Les quatre décisions sont justes. Chez B, la phrase disait : « Vol Privilège concierge : une exclusion s'applique ; Vol par agression : une exclusion s'applique ». Pour un vélo volé dans un local commun, ces deux garanties n'ont rien à faire là.
+
+**La cause.** Une règle voulue du moteur : une exclusion certaine écarte une garantie même quand on ne sait pas si elle s'appliquerait (inutile de demander si le vol a été commis sur la personne quand le lieu est exclu). Les garanties de vol ordinaires de B étaient hors périmètre ; restaient ces deux-là, au périmètre inconnu, écartées par l'exclusion, et donc nommées.
+
+**La règle, de présentation.** Une garantie n'est nommée que si le sinistre s'y rattache de façon établie. Le moteur donne un motif propre aux garanties écartées sans être établies ; la chaîne ne les nomme pas. Si toutes le sont : « Non couvert : le contrat exclut ce cas (3.1.6.2) », et la clause d'exclusion reste citée. Rien ne dépend d'un contrat, d'une garantie ou d'un sinistre.
+
+**Vérifié avant de déposer.** La logique du moteur n'est pas touchée : une chaîne de caractères change dans une clause, le double Python est inchangé, donc aucune décision ne peut changer. Sur 480 jeux de faits tirés au hasard (120 par contrat), la nouvelle phrase remplace une garantie sans rapport dans 36 cas (un vol de bijoux dans un casier ne nomme plus « Vol commis sur l'assuré avec violences ») ; dans 2 cas mélangés, seules les garanties établies restent nommées. Le vélo : A et C inchangés, B corrigé.
+
+**Ce que la règle coûte.** Quand la garantie écartée était la bonne mais que son périmètre n'était pas établi faute d'un fait, la phrase ne la nomme plus : elle dit que le contrat exclut le cas, et cite la clause.
+
+**À vérifier sur le poste** : les tests avec SWI-Prolog, puis les quatre bancs, dont les décisions ne doivent pas bouger.
+
+### 7.165 Une garantie sans rapport avec l'événement n'est ni nommée ni citée
+
+**Trouvé le même matin**, sur la seconde question de l'énoncé. La bougie fondue est lue « accident ». Chez A, aucune garantie ne s'applique : réponse juste, mais accompagnée des articles du vol, les trois premières garanties du fichier. Chez C et D, « à examiner par un gestionnaire », suivi de « Vol… hors de son périmètre ; Tempête… hors de son périmètre ». Le README annonçait pour A « art. 12 : l'excès de chaleur sans embrasement n'est pas un incendie » : la réponse ne l'a jamais cité sous cette forme. Je l'avais écrit d'après la note du cas, pas d'après l'écran.
+
+**La règle.** Le moteur dit quelles garanties portent sur l'événement déclaré (`visent_evenement`, le même critère que 7.157). Une garantie écartée dès son périmètre n'est nommée et citée que si elle en fait partie. Si aucune : « aucune garantie de ce contrat ne porte sur cet événement », sans citation. Aucune décision ne change : le calcul est ajouté à la sortie, après la décision.
+
+**Mesuré sur le double Python.** Bougie : A cite « Bris et fêlure de vitrages » et « Pack multimédia » (17 garanties écartées de la phrase), C le bris de glaces, D le bris de glaces et l'incendie. Vélo : rien ne change sur les quatre contrats.
+
+**Ce que la règle ne fait pas.** Elle retire le hors-sujet, elle n'apporte pas la bonne citation : pour la bougie, la phrase du lexique sur l'embrasement reste absente. Et la lecture « auteur : personnel de maison », vue sur B, C et D pour cette déclaration, n'est pas expliquée. Les deux sont écrits dans les limites du README, et la ligne du tableau est corrigée.
+
+### 7.166 Définir les valeurs de « auteur » : essayé, mesuré, retiré
+
+**Le constat.** Pour la bougie, sur B, C et D, la lecture donnait « auteur : personnel de maison ». Le modèle ne voit de cette valeur que son identifiant, `personnel_prive`, sans définition : pour « j'ai laissé une bougie », « personnel, privé » peut se lire « moi-même ».
+
+**L'essai.** Une définition pour chaque valeur de « auteur » dans le vocabulaire commun (tiers, assuré, famille, personnel de maison). Sur la bougie, l'effet attendu : `auteur = assure`.
+
+**La mesure.** Partie test de A, B et D : inchangés. Jeu fermé de A : le fer à repasser (`f-a02`), couvert à tort 0 à 1 fois sur 3 jusque-là, l'est 3 fois sur 3. Rejoué pour séparer le hasard de la cause : avec les définitions, 3 sur 3 une seconde fois ; sans elles, dans la minute, 0 sur 3. Six contre zéro : la modification est en cause.
+
+**La décision.** Retirée. Une lecture plus juste sur un fait (qui a agi) fait couvrir à tort un sinistre qui ne l'était pas : ce fait, une fois lu, rencontre une règle ou une autre lecture que je n'ai pas le droit d'aller régler sur ce cas, puisqu'il vient du jeu fermé. Le « personnel de maison » reste donc une erreur de lecture connue, sans effet sur les décisions observées, écrite dans les limites.
+
+**Ce que ça montre.** Le jeu fermé a fait son travail la veille de la livraison : il a arrêté une correction raisonnable, qui passait les tests et trois bancs sur quatre.
+
+### 7.167 Deux retouches de la phrase, une de l'écran
+
+Toujours le 24 nov., toujours sans toucher à une décision.
+
+- **Une phrase par article.** Pour la bougie chez D, la réponse nommait trois fois « Bris de glace… (2.7-a) : hors de son périmètre ». Les garanties d'un même article écartées pour le même motif se disent une fois.
+- **Quand le dossier part chez un gestionnaire**, la réponse ne dit plus des garanties traduites qu'elles ne jouent pas, et ne cite plus leurs clauses. Restent celles qui s'appliquent ou pourraient s'appliquer.
+- **Les cartes de contrat** : la date et le nombre de clauses sur deux lignes, sans coupure.
+
+Avec 7.164 et 7.165, c'est la même idée sous quatre formes : la réponse ne parle que de ce qui a un rapport avec le sinistre.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
@@ -4930,3 +4976,6 @@ Tenu à jour le 22 nov. 2026 ; ce qui est fait est dans les sections 7.
 157. Mettre en ligne change qui peut appeler quoi : relire chaque route en se demandant ce qu'elle donne à un inconnu, avant de choisir l'hébergeur.
 158. Un message d'erreur exact sur l'effet peut tromper sur la cause : « clé non configurée » voulait dire « fichier d'environnement vide ».
 159. Ce qu'on écrit dans un fichier du conteneur disparaît avec lui : en ligne, ce qui doit rester sort par la sortie standard ou par un service.
+160. Rejouer la question de l'énoncé sur chaque contrat, et lire la phrase comme quelqu'un du métier : une décision juste peut être mal dite.
+161. Ce qu'un document annonce de l'écran se vérifie à l'écran, pas dans les notes d'un cas de test.
+162. Une correction qui améliore le cas qu'on regarde se juge sur ceux qu'on ne regarde pas ; et un écart se rejoue dans les deux états avant d'être attribué au hasard.

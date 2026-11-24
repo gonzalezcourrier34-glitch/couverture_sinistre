@@ -326,6 +326,94 @@ def test_verdict_mis_en_forme():
     assert "2.10-a" not in v.justification or "exclusion" in v.justification
 
 
+def test_la_reponse_ne_nomme_que_les_garanties_etablies():
+    """7.164. Une exclusion certaine écarte une garantie même quand on ne sait pas si elle s'appliquerait. La réponse
+    cite alors l'exclusion, sans nommer cette garantie : rien ne dit qu'elle concernait le sinistre."""
+    from pathlib import Path
+    assert chaine.EXCLUE_SANS_ETRE_ETABLIE in Path(prolog.MOTEUR).read_text(encoding="utf-8"), \
+        "le moteur et la chaîne doivent employer le même motif"
+
+    def retenue(nom, motif, article="3.1.6.2", texte="les vols des biens se trouvant à l'extérieur"):
+        return {"id": nom, "garantie": nom, "article": "3.1.6.1", "rattachement": "rattachée", "decision": "NON_COUVERT",
+                "motif": motif, "preuves": [{"article": article, "texte": texte, "role": "exclusion"}],
+                "questions": [], "reserves": [], "partielles": []}
+
+    def phrase(retenues):
+        reponse = {"decision": "NON_COUVERT", "possibles": [], "retenues": retenues}
+        p = chaine.PipelineRegles(CONTRAT, [], FauxLLM({"evenement": "vol"}), decideur=lambda faits: reponse)
+        return p.verdict(reponse, {"evenement": ["vol"]})[0]
+
+    sans = chaine.EXCLUE_SANS_ETRE_ETABLIE
+    v = phrase([retenue("Vol Privilège concierge", sans), retenue("Vol par agression", sans)])
+    assert v.justification == "Non couvert : le contrat exclut ce cas (3.1.6.2)."
+    assert [c.clause_id for c in v.citations] == ["3.1.6.2"], "la clause d'exclusion reste citée"
+
+    v = phrase([retenue("Vol du contenu", "une exclusion s'applique", "2.10-a"), retenue("Vol par agression", sans)])
+    assert "Vol du contenu" in v.justification and "agression" not in v.justification
+    assert {c.clause_id for c in v.citations} == {"2.10-a", "3.1.6.2"}
+
+    v = phrase([retenue("Vol du contenu", "une exclusion s'applique", "2.10-a")])
+    assert v.justification == "Non couvert. « Vol du contenu » (3.1.6.1) : une exclusion s'applique."
+
+
+def test_une_garantie_sans_rapport_avec_l_evenement_n_est_ni_nommee_ni_citee():
+    """7.165. La bougie fondue de l'énoncé : aucune garantie ne s'applique. La réponse ne cite pas les articles du vol."""
+    def hors(nom, article):
+        return {"id": nom, "garantie": nom, "article": article, "rattachement": "hors", "decision": "NON_COUVERT",
+                "motif": "hors de son périmètre", "preuves": [{"article": article, "texte": "…", "role": "garantie"}],
+                "questions": [], "reserves": [], "partielles": []}
+
+    def verdict(reponse):
+        p = chaine.PipelineRegles(CONTRAT, [], FauxLLM({"evenement": "accident"}), decideur=lambda faits: reponse)
+        return p.verdict(reponse, {"evenement": ["accident"]})[0]
+
+    rs = [hors("vol_batiment", "2.10"), hors("incendie", "2.1")]
+    v = verdict({"decision": "NON_COUVERT", "aucune": True, "possibles": [], "retenues": rs, "visent_evenement": []})
+    assert v.justification == "Non couvert : aucune garantie de ce contrat ne porte sur cet événement." and not v.citations
+    v = verdict({"decision": "NON_COUVERT", "aucune": True, "possibles": [], "retenues": rs, "visent_evenement": ["incendie"]})
+    assert v.justification == "Non couvert : aucune garantie ne s'applique." and [c.clause_id for c in v.citations] == ["2.1"]
+    v = verdict({"decision": "INCERTAIN", "aucune": False, "non_traduits": ["accident"], "possibles": [], "retenues": rs,
+                 "visent_evenement": []})
+    assert "pas encore traduite en règles." in v.justification and "vol_batiment" not in v.justification and not v.citations
+    v = verdict({"decision": "NON_COUVERT", "aucune": True, "possibles": [], "retenues": rs})
+    assert len(v.citations) == 2, "sans l'indication du moteur, rien ne change"
+
+    from moteur_reference import Contrat, Explorateur
+    a = Contrat(prolog.fichier_regles(CONTRAT))
+    d = Explorateur(a, {"evenement": ["accident"], "bien": ["mobilier_jardin"], "lieu": ["jardin"]}).decider()
+    assert d["decision"] == "NON_COUVERT" and d["aucune"] and "vol_batiment" not in d["visent_evenement"]
+    d = Explorateur(a, {"evenement": ["vol"], "bien": ["velo"], "lieu": ["parties_communes"]}).decider()
+    assert "vol_batiment" in d["visent_evenement"]
+
+
+def test_la_phrase_regroupe_par_article_et_se_tait_quand_le_dossier_part_chez_un_gestionnaire():
+    """7.167. Trois garanties du même article écartées pour la même raison se disent une fois. Et quand l'événement
+    relève d'une garantie non traduite, les garanties qui ne jouent pas ne sont ni nommées ni citées."""
+    def retenue(nom, article, rattachement="hors", motif="hors de son périmètre"):
+        return {"id": nom, "garantie": nom, "article": article, "rattachement": rattachement, "decision": "NON_COUVERT",
+                "motif": motif, "preuves": [{"article": article, "texte": nom, "role": "garantie"}],
+                "questions": [], "reserves": [], "partielles": []}
+
+    def verdict(reponse):
+        p = chaine.PipelineRegles(CONTRAT, [], FauxLLM({"evenement": "accident"}), decideur=lambda faits: reponse)
+        return p.verdict(reponse, {"evenement": ["accident"]})[0]
+
+    bris = [retenue("Bris de glaces", "2.7-a"), retenue("Bris de glace +", "2.7-a"), retenue("Incendie", "2.1-a")]
+    ids = [r["id"] for r in bris]
+    v = verdict({"decision": "NON_COUVERT", "possibles": [], "retenues": [dict(r, rattachement="rattachée") for r in bris]})
+    assert v.justification == ("Non couvert. « Bris de glaces », « Bris de glace + » (2.7-a) : hors de son périmètre ; "
+                               "« Incendie » (2.1-a) : hors de son périmètre.")
+
+    v = verdict({"decision": "INCERTAIN", "aucune": False, "non_traduits": ["accident"], "possibles": [], "retenues": bris,
+                 "visent_evenement": ids})
+    assert v.justification.endswith("pas encore traduite en règles.") and not v.citations
+    possible = retenue("Bris de vitrages", "3.1.5.1", "possible", "pourrait s'appliquer, selon des faits non précisés")
+    v = verdict({"decision": "INCERTAIN", "aucune": False, "non_traduits": ["accident"], "possibles": [],
+                 "retenues": bris + [possible], "visent_evenement": ids + ["Bris de vitrages"]})
+    assert "« Bris de vitrages » (3.1.5.1) : pourrait s'appliquer" in v.justification and "2.7-a" not in v.justification
+    assert [c.clause_id for c in v.citations] == ["3.1.5.1"]
+
+
 def test_verdict_evenement_non_traduit():
     reponse = {"decision": "INCERTAIN", "non_traduits": ["tempete"], "aucune": False, "possibles": [], "retenues": [{
         "id": "degats_eaux", "garantie": "Dégâts causés par l’eau", "article": "2.7", "rattachement": "rattachée",
@@ -356,6 +444,7 @@ def test_prolog_et_oracle_concordent(contrat, cas, cas_validation):
         assert p.get("exploration") == o.get("exploration"), i
         assert p["preuve"] == o["preuve"], i
         assert p.get("exclusions_etablies") == o.get("exclusions_etablies"), i
+        assert sorted(p.get("visent_evenement")) == sorted(o.get("visent_evenement")), i
 
 
 @avec_swipl

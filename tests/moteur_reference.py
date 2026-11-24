@@ -394,6 +394,7 @@ class Moteur:
         if nt:  # 7.84 : même un « couvert » ; couvrir une partie n'est pas couvrir la demande
             d.update(decision="INCERTAIN", non_traduits=nt, aucune=False)
         d["exclusions_etablies"] = self.exclusions_etablies(d)
+        d["visent_evenement"] = [r["id"] for r in d["garanties"] if self.concerne_evenement(r["id"])]   # 7.165
         d["accessoires"] = []
         if d["decision"] == "COUVERT":           # 7.68 : une garantie accessoire ne joue qu'après un sinistre couvert
             for g in self.c.regles("garantie", 4):

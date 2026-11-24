@@ -80,7 +80,7 @@ Le moteur reprend le raisonnement d'un gestionnaire : un périmètre contraire �
 | Question | Réponse | Clause citée |
 |---|---|---|
 | Vélo volé dans le local commun de l'immeuble, non fermé à clé | **Non couvert** | Art. 2.10-a : « le vol ou le vandalisme dans les parties communes du bâtiment » |
-| Bougie laissée sur la table du jardin, fondue par la chaleur | **Non couvert** | Art. 12 : l'excès de chaleur sans embrasement n'est pas un incendie ; le contenu du jardin n'est pas du contenu assuré |
+| Bougie laissée sur la table du jardin, fondue par la chaleur | **Non couvert** | Aucune garantie ne s'applique. La réponse cite les garanties de dommage accidentel et dit qu'elles ne jouent pas ; elle ne cite pas la définition de l'incendie (art. 12, « sans qu'il y ait embrasement »), qui le dirait mieux : voir les limites |
 
 Contrat « Assureur A » (48 pages, 147 clauses). Les réponses attendues ont été établies d'après le texte des conditions générales, avec l'aide de Claude ; elles sont à relire par un juriste.
 
@@ -105,6 +105,7 @@ Trois contrats de trois assureurs (anonymisés A, B, D), sur le même moteur. Mi
 - Une analyse prend 4 à 5 secondes (95e centile : 6 à 7 secondes ; un passage à 19 secondes chez B, un appel lent).
 - Les jeux sont petits : un écart de 3 ou 4 points entre deux séries n'est pas significatif.
 - **Le soir du même jour**, après l'ajout du contrat C et un changement du moteur, les quatre bancs ont été repassés : A 94 % et 100 %, B 85 %, D 96 %, avec les deux mêmes erreurs et aucune nouvelle. Ajouter un contrat n'a pas dégradé les autres, à la précision de ces jeux.
+- **Le 24 novembre**, veille de la livraison, les quatre bancs ont été repassés trois fois, avant et après deux retouches de la phrase de réponse (qui ne changent aucune décision) : A 94 % (partie test) et 98 à 100 % (jeu fermé), B 85 %, D 96 %. Les deux erreurs répétées sont là ; le fer à repasser est couvert à tort zéro ou une fois sur trois. Les chiffres restent dans les fourchettes du tableau.
 - La **« confiance »** affichée à l'écran (85 % pour un couvert ou un refus, 40 % pour un « à préciser », moins quand une réserve subsiste) est une valeur fixe par type de réponse, pas une probabilité mesurée.
 
 ### 5. Ce qui a été essayé, et ce que la mesure a dit
@@ -163,6 +164,7 @@ Pour des centaines de contrats, il faut donc une équipe de relecteurs du métie
 - La **loi applicable** n'est pas traitée : le contrat A se dit régi par la loi belge du 4 avril 2014, d'autres relèvent de la loi luxembourgeoise du 27 juillet 1997 ou du code des assurances français. Ces textes s'imposent aux conditions générales ; le système ne lit que le contrat.
 - La **lecture** reste la source de toutes les erreurs. Quand un fait qui porte la réponse n'est pas confirmé, le garde-fou en fait une question, pas une bonne réponse.
 - Le moteur n'est pas plus juste que son vocabulaire : il ne sait pas dire « une fuite, mais pas le gel ».
+- **Un sinistre qu'aucune garantie ne vise** (la bougie fondue de l'énoncé, lue comme un dommage accidentel) : la réponse est juste, mais elle ne cite que les garanties voisines qui ne jouent pas, pas la phrase du contrat qui explique le refus. La même déclaration fait aussi lire, sur trois contrats, un « auteur : personnel de maison » que rien ne dit. Une correction a été essayée le 24 novembre (définir chaque valeur de « auteur ») : elle réglait ce point, et faisait couvrir à tort le fer à repasser du jeu fermé trois fois sur trois, contre zéro sans elle. Elle a été retirée ([démarche, 7.166](docs/DEMARCHE.md)).
 - **Plusieurs biens déclarés ensemble** : la réponse est « couvert » dès qu'un seul entre dans une garantie (une vitre et une télévision brisées : couvert, pour la vitre). Elle nomme les biens qu'une clause exclut, pas ceux qu'aucune garantie ne vise.
 - Quand aucune garantie ne s'applique, la réponse cite la clause qui exclut le cas si le contrat en a une (un vase brisé : « les objets en verre autres que des vitres ») ; s'il n'en a pas, elle dit qu'aucune garantie ne s'applique et cite, faute de mieux, les premières garanties du contrat.
 - Le **contrat C** n'est traduit que pour le vol et le bris de glaces, avec ses exclusions communes et ses biens non assurés. Ses biens assurés, qui dépendent de la formule et de la qualité d'occupant (propriétaire, locataire), ne sont pas traduits, et il n'a pas de jeu de mesure.
@@ -179,7 +181,7 @@ Pour des centaines de contrats, il faut donc une équipe de relecteurs du métie
 |---|---|---|
 | 0:00 | L'écran d'accueil | Le modèle lit, la logique décide, le code vérifie |
 | 0:30 | Assureur A, la question 1 de l'énoncé : le vélo volé dans le local commun | Non couvert ; l'article est cité ; un clic sur son numéro ouvre le texte entier, le passage surligné |
-| 1:30 | La question 2 : la bougie sur la table du jardin | Non couvert, pour deux raisons que le contrat écrit lui-même |
+| 1:30 | La question 2 : la bougie sur la table du jardin | Non couvert : aucune garantie ne s'applique ; sur les autres contrats, « à examiner par un gestionnaire » |
 | 2:15 | Une déclaration incomplète (un vol sans dire comment le local était fermé) | « À préciser » : la question à poser, les réponses possibles ; la réponse du client donne la décision tout de suite, sans nouvel appel au modèle |
 | 3:00 | « Télécharger la fiche (PDF) » | Une page à verser au dossier : la décision, les articles cités, ce qu'il reste à demander |
 | 3:15 | La même déclaration sur Assureur B ou D | Autre contrat, autres règles, même moteur |

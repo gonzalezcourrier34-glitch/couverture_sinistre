@@ -196,9 +196,11 @@ $rayon: 12px;
     color: var(--texte-doux);
 }
 
+// La date et le nombre de clauses, chacun sur sa ligne, sans coupure au milieu.
 .contrat-version {
     font-size: 12px;
     color: var(--plume-fonce);
+    white-space: nowrap;
 }
 
 
