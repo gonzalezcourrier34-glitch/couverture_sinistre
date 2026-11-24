@@ -374,6 +374,10 @@ issue(G, oui, Ps, _, Cs, Xs, Os, Art, Texte, I) :-
 %  COUVERT si une garantie rattachée l'est ; sinon INCERTAIN si une rattachée l'est ; sinon refus si une
 %  rattachée refuse (les garanties seulement « possibles » ajoutent leurs questions) ; sinon INCERTAIN
 %  si une garantie est possible ; sinon refus (aucune garantie ne s'applique) ; sinon INCERTAIN.
+%  Une exception au refus (7.179) : quand toutes les garanties qui refusent sont seulement écartées par une
+%  exclusion, sans que le sinistre leur soit rattaché, et qu'une autre garantie reste possible, on ne refuse
+%  pas. L'exclusion des bagages n'a rien à dire d'un vol dont on ne sait pas s'il a eu lieu en voyage, tant
+%  que le vol par agression peut encore s'appliquer.
 combiner(Rs, D) :-
     include(rattachement("rattachée"), Rs, Ratt),
     include(rattachement("possible"), Rs, Poss),
@@ -381,6 +385,8 @@ combiner(Rs, D) :-
     ->  D = _{decision:"COUVERT", retenues:[C], possibles:[]}
     ;   include(decision_est("INCERTAIN"), Ratt, In), In \== []
     ->  D = _{decision:"INCERTAIN", retenues:In, possibles:Poss}
+    ;   Poss \== [], forall(member(R, Ratt), ecartee(R))
+    ->  D = _{decision:"INCERTAIN", retenues:Poss, possibles:[]}
     ;   Ratt \== []
     ->  D = _{decision:"NON_COUVERT", retenues:Ratt, possibles:Poss}
     ;   Poss \== []
@@ -391,6 +397,8 @@ combiner(Rs, D) :-
     ).
 
 rattachement(V, R) :- get_dict(rattachement, R, V).
+%  Écartée : « exclue, que la garantie s'applique ou non » (le motif que pose issue/10 sur un périmètre inconnu).
+ecartee(R) :- get_dict(motif, R, "exclue, que la garantie s'applique ou non").
 decision_est(V, R) :- get_dict(decision, R, V).
 
 decider(D) :-

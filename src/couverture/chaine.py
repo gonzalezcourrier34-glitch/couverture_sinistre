@@ -23,6 +23,7 @@ def numero(article: str) -> str:
 # Le motif d'une garantie que le moteur écarte par une exclusion certaine sans savoir si elle s'appliquerait
 # (regles/moteur.pl, `issue` avec un périmètre inconnu). Le même texte des deux côtés : un test le vérifie.
 EXCLUE_SANS_ETRE_ETABLIE = "exclue, que la garantie s'applique ou non"
+SANS_GARANTIE = "Non couvert : aucune garantie de ce contrat ne porte sur cet événement."
 
 
 def phrases_des_garanties(retenues: list[dict]) -> list[str]:
@@ -171,7 +172,7 @@ class PipelineRegles:
             verdict.raisonnement = [f"Réponse suspendue : fait décisif non confirmé ({', '.join(doutes)}) ; "
                                     "ci-dessous, le raisonnement sans ce fait."] + verdict.raisonnement
         verdict.avertissements = ecarts + verdict.avertissements
-        verdict = valider(verdict, consultees, roles_des_regles=True)
+        verdict = self.valider(verdict, consultees)
         return Resultat(sinistre=sinistre, contrat_id=self.contrat_id, methode=self.methode,
                         faits=faits_lisibles(faits), clauses_consultees=consultees, verdict=verdict,
                         durees_ms={"lecture": int((lu - debut) * 1000), "decision": int((decide - lu) * 1000)})
@@ -204,6 +205,14 @@ class PipelineRegles:
         sans = {k: x for k, x in faits.items() if k not in doutes}
         return self.decideur(sans), doutes, [f"{v} : fait décisif non confirmé par la déclaration" for v in doutes]
 
+    def valider(self, verdict: Verdict, consultees: list[ClauseRetenue]) -> Verdict:
+        """La validation des citations, avec la seule exception admise (7.177) : dans un contrat traduit en entier,
+        « aucune garantie ne porte sur cet événement » est un refus qui n'a aucune phrase à citer. Sans cette
+        exception, la validation le ramenait à « à préciser », sous une phrase qui disait « non couvert »."""
+        sans_citation = (verdict.decision == Decision.NON_COUVERT and verdict.justification == SANS_GARANTIE
+                         and prolog.traduction_complete(self.contrat_id))
+        return valider(verdict, consultees, roles_des_regles=True, refus_sans_citation=sans_citation)
+
     def verdict(self, d: dict, faits: dict) -> tuple[Verdict, list[ClauseRetenue]]:
         decision = Decision(d["decision"])
         retenues = d.get("retenues", [])
@@ -213,7 +222,20 @@ class PipelineRegles:
             vises = set(d["visent_evenement"])
             retenues = [r for r in retenues if r.get("rattachement") != "hors" or r.get("id") in vises]
         non_traduits = d.get("non_traduits") or []
-        if non_traduits:
+        sans_garantie = []
+        if non_traduits and prolog.traduction_complete(self.contrat_id):
+            # 7.177 : « pas encore traduite » est faux quand tout le contrat est traduit. Il n'a alors aucune
+            # garantie pour cet événement. Si la déclaration ne porte que sur lui, c'est un refus ; si elle porte
+            # aussi sur autre chose, le dossier reste à examiner, mais la phrase dit ce qui manque et pourquoi.
+            evenements = faits.get("evenement") or []
+            evenements = evenements if isinstance(evenements, list) else [evenements]
+            sans_garantie, non_traduits = non_traduits, []
+            if evenements and set(evenements) <= set(sans_garantie):
+                decision = Decision.NON_COUVERT
+                d = d | {"decision": "NON_COUVERT", "aucune": True, "retenues": [], "possibles": [], "non_traduits": [],
+                         "exclusions_etablies": [], "accessoires": [], "exploration": None}
+                retenues, sans_garantie = [], []
+        if non_traduits or sans_garantie:
             # 7.167 : quand le dossier part chez un gestionnaire, dire des garanties traduites qu'elles ne jouent pas
             # n'apporte rien. Restent celles qui s'appliquent ou pourraient s'appliquer.
             retenues = [r for r in retenues if r.get("rattachement") != "hors"]
@@ -226,7 +248,7 @@ class PipelineRegles:
                      + " ; ".join(dict.fromkeys(f"« {x['garantie']} », {numero(x['article'])}" for x in exclues[:3])) + ").")
         elif d.get("aucune"):
             motif = ("Non couvert : aucune garantie ne s'applique." if retenues
-                     else "Non couvert : aucune garantie de ce contrat ne porte sur cet événement.")
+                     else SANS_GARANTIE)
         elif decision == Decision.NON_COUVERT and retenues and all(r.get("motif") == EXCLUE_SANS_ETRE_ETABLIE
                                                                   for r in retenues):
             # 7.164 : aucune garantie n'est établie, une exclusion les écarte toutes. La phrase cite l'exclusion,
@@ -251,13 +273,18 @@ class PipelineRegles:
             motif = (f"À examiner par un gestionnaire : l'événement « {evts} » relève d'une garantie qui n'est pas "
                      f"encore traduite en règles." + (" Ce que disent les garanties traduites : " + " ; ".join(motifs[:3]) + "."
                                                     if motifs else ""))
+        elif sans_garantie:
+            evts = ", ".join(sans_garantie)
+            motif = (f"À examiner par un gestionnaire : aucune garantie de ce contrat ne porte sur « {evts} », et la "
+                     f"déclaration parle aussi d'autre chose." + (" Pour le reste : " + " ; ".join(motifs[:3]) + "."
+                                                                  if motifs else ""))
         vars_ = [v for v, _ in points_a_preciser(d, prolog.vocabulaire(), faits)]
         demander = list(dict.fromkeys(question(v) for v in vars_))
         exploration = d.get("exploration")
         if exploration:
             demander, motif = questions_explorees(exploration, vars_, motif)
         confiance = {"COUVERT": 0.85, "NON_COUVERT": 0.85, "INCERTAIN": 0.4}[decision.value]
-        if non_traduits:
+        if non_traduits or sans_garantie:
             confiance = 0.3
         if decision == Decision.COUVERT and any(r.get("reserves") for r in retenues):
             if vars_:

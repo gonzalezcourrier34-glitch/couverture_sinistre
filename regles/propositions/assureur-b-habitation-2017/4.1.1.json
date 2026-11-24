@@ -42,7 +42,8 @@
               ]
             },
             "article": "4.1.1",
-            "texte": "la garantie “ responsabilité civile vie privée ” est accordée"
+            "texte": "la garantie “ responsabilité civile vie privée ” est accordée",
+            "option": true
           }
         ],
         "obligations": [],

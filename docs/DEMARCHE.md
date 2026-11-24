@@ -5032,6 +5032,70 @@ Le 24 nov., 21 h 35 à 22 h.
 
 **Mesure.** B 90 %, zéro couvert à tort, aucun cas instable, portes passées, 249 tests. Ce zéro compte deux cas vus sur vingt (`f-b19`, `f-b18`) ; c'est écrit dans le tableau du README.
 
+### 7.177 Relire le code après une journée de travail à la main
+
+Le 24 nov., 22 h 10 à 22 h 40.
+
+**La question de l'utilisateur** : jeter un œil au code, voir ce qui peut être généralisé. Je n'ai pas relu les 8 500 lignes : j'ai cherché ce que j'avais fait à la main dans la journée, parce que c'est là qu'une règle du code manque. Aucun nom de contrat ne décide de rien dans `src/` ; six points restaient manuels ou en double.
+
+**Fait ce soir, trois points.**
+
+*Un contrat complet refuse ce qu'il ne garantit pas.* « Relève d'une garantie qui n'est pas encore traduite » était écrit en dur dans la chaîne, alors que `regles/traduction.json` dit quels contrats sont traduits en entier. Pour ceux-là, un événement sans garantie est un refus quand la déclaration ne porte que sur lui (« aucune garantie de ce contrat ne porte sur cet événement », phrase qui existait). Si elle porte aussi sur autre chose, le dossier reste à examiner, et la phrase dit ce qui manque. L'événement « autre » n'est pas concerné : le moteur ne le compte pas parmi les non traduits. Le moteur n'est pas modifié ; la règle est dans la chaîne, là où la phrase se construit. Les tests ne dépendent plus de l'état déclaré : par défaut aucun contrat n'y est complet, et le test qui porte sur un contrat complet le dit.
+
+*L'acceptation du vocabulaire recopie ce que le relecteur écrit.* La mention « fait des conditions particulières » et une restriction de lecture se rajoutaient à la main après chaque acceptation : sept fois dans la journée, et un oubli à midi. Elles sont recopiées, si la source est celle que le code connaît et si la restriction porte sur des valeurs du vocabulaire.
+
+*Deux listes en dur.* La table des contrats du jeu fermé (A, B, D) se lit dans les cas et dans le dossier des règles ; l'export rejoué donne les mêmes fichiers, octet pour octet. Le fichier de construction de l'image copie le dossier des règles entier, moins ce qui ne sert qu'à rédiger : c'est la copie fichier par fichier qui avait oublié l'état de traduction (7.173).
+
+**Laissé, puis repris.** Les options (7.178) et l'exclusion qui refuse avant qu'on sache si sa garantie est en jeu (7.179) : les deux ont été faits dans l'heure, à la demande de l'utilisateur. Ce qui suit est ce que j'en disais avant de les regarder. C'est un changement du moteur : une demi-journée, avec les quatre bancs. La veille d'une livraison, l'écrire ici vaut mieux que le faire mal. Un troisième point, plus petit, reste aussi : étendre de lui-même les faits « pour tous les sinistres » quand un événement est ajouté (leçon 177).
+
+**Mesure, et un défaut que le test n'avait pas vu.** 255 tests chez l'utilisateur ; A 94 % et 100 %, B 88 %, D 96 %, zéro couvert à tort sur A et B. Mais l'essai du voyage annulé chez A affichait « Décision : INCERTAIN » sous la phrase « Non couvert », avec « faire examiner par un gestionnaire ». La validation des citations ramène à « à préciser » toute réponse ferme sans citation vérifiable, et ce refus n'a rien à citer. Mon test s'arrêtait à la construction du verdict, une étape avant. Corrigé : c'est la seule exception admise à la validation, pour un contrat traduit en entier et cette phrase-là ; le test va maintenant jusqu'au bout de la chaîne.
+
+### 7.178 Une seule façon d'écrire une option
+
+Le 24 nov., 22 h 20 à 22 h 50.
+
+**La demande.** J'avais classé ce point « non, la veille du gel » : trois écritures d'une option coexistent, et les unifier me semblait demander de réécrire les règles de A, B et D. L'utilisateur l'a demandé quand même. En regardant de plus près, le risque que je décrivais n'était pas dans ce qu'il fallait faire.
+
+**Ce qui se décide pareil, et ce qui ne se décide pas pareil.** La déclaration en tête de fichier (`option(…)`, 7.109) et la circonstance « option = oui » donnent la même réponse : « à préciser » tant que l'option est inconnue, refus si elle n'est pas souscrite. La troisième écriture, elle, décide autre chose : la mise en réserve automatique d'une phrase qui cite les conditions particulières répond « couvert, sous réserve ». L'erreur de 17 h n'était pas d'avoir deux écritures équivalentes, mais que rien ne dise au relecteur laquelle des deux décisions il était en train de choisir : je la choisissais sans le voir, par les mots de la phrase que je citais.
+
+**La règle.** Une circonstance peut porter la marque « option ». Marquée, elle reste une question, quel que soit le texte cité. Non marquée et citant les conditions particulières, elle devient une réserve, et la note de contrôle rappelle la marque. Un contrôle bloquant refuse une marque sur autre chose que « fait = oui », ou sur un fait qui n'est pas un fait des conditions particulières. Le code ne devine pas si un article est une option : les titres « Option » de B ne sont pas tous dans la base (3.2 et 3.3 manquent, 4.1 est lu « O ption »). C'est le relecteur qui le dit, une fois, à un endroit que le contrôle vérifie.
+
+**Dix propositions marquées, zéro règle changée.** Neuf articles de B et un de D portent maintenant la marque. Pour chacun, les règles générées avant et après sont identiques au caractère près : rien à réaccepter, aucun banc à repasser pour ce point.
+
+**Ce qui reste double.** Huit options plus anciennes (trois chez B, une chez A, quatre chez D) sont déclarées en tête de leur fichier de règles. Elles décident comme les autres. Les convertir changerait le texte de règles mesurées, pour aucun changement de réponse : pas ce soir. La consigne de rédaction donnée au modèle ne parle pas encore de la marque.
+
+**Ce que j'avais mal estimé.** J'ai annoncé « une demi-journée, risque élevé » pour un travail que j'imaginais comme une réécriture. Posé comme « où le relecteur dit-il que c'est une option, et qui le vérifie ? », c'était un champ, un contrôle et deux tests : 236 tests ici, sans Prolog.
+
+### 7.179 Une garantie écartée ne refuse pas à la place d'une garantie possible
+
+Le 24 nov., 22 h 25 à 23 h.
+
+**Le défaut.** Quand le périmètre d'une garantie est inconnu et qu'une de ses exclusions est établie, le moteur la tient pour « exclue, que la garantie s'applique ou non » (7.164). C'est juste : elle ne peut pas couvrir. Mais la combinaison la comptait comme une garantie qui refuse, et un refus l'emporte sur les garanties seulement possibles. De l'argent volé dans la rue était refusé par l'exclusion des bagages (« les valeurs ne sont pas des bagages ») sans qu'on sache si le vol avait eu lieu en voyage, alors que le vol par agression pouvait encore s'appliquer. Je l'avais contourné à la main le soir même : « et en voyage » dans dix-huit exclusions des bagages, « et l'un des cinq risques » dans cinq de la protection numérique (leçon 174).
+
+**La règle.** Une garantie écartée ne peut pas couvrir, et rien ne lui rattache le sinistre : elle n'a pas à refuser pour les autres. Quand toutes les garanties qui refusent sont seulement écartées et qu'une autre reste possible, la réponse est « à préciser », avec les questions de celle-ci. Si aucune n'est possible, le refus demeure, et sa phrase cite l'exclusion comme avant. Si le sinistre est rattaché à la garantie (périmètre établi), rien ne change. Quatre lignes dans le moteur Prolog, autant dans le moteur de référence.
+
+**Mesuré avant de déposer, avec le moteur de référence.** Les 141 cas à faits exacts du dépôt (97 du golden set de A, 15 de B, les cas de validation et de non-régression) : une seule réponse changeait, un portefeuille volé à la tire dans le tram chez B, de « non couvert » à « à préciser ». C'était ma précaution manuelle qui parlait : en cachant l'exclusion des valeurs tant que le voyage n'était pas dit, elle laissait la garantie des bagages « possible ». La règle du moteur rend la précaution inutile ; retirée, le cas redevient un refus. Les deux se tenaient : on ne pouvait pas garder l'une avec l'autre.
+
+**Sur des faits tirés au hasard**, 400 par contrat : une réponse change chez A, une chez D, aucune chez C ; chez B, 12 sur 500 avec les précautions retirées. Toutes passent de « non couvert » à « à préciser », et celles que j'ai lues sont des corrections : une catastrophe naturelle refusée parce que l'option « tremblement de terre » n'est pas souscrite, alors que rien ne dit que ce n'est pas une inondation, que l'autre option couvre.
+
+**Ce que cela coûte.** Des refus deviennent des questions : c'est le sens du changement, et un banc peut y perdre un « non couvert » juste. Seul le banc le dira ; 237 tests ici, sans Prolog, et le moteur Prolog modifié n'a pas tourné sur ma machine.
+
+**Ce que j'avais mal estimé, une seconde fois.** « Une demi-journée, risque élevé. » La règle tenait en quatre lignes ; ce qui demandait du temps était de savoir ce qu'elle changeait, et les cas à faits exacts l'ont dit en une minute.
+
+**Mesuré le soir même, 22 h 40 à 22 h 53, sur le poste où tourne SWI-Prolog.** Les deux articles réacceptés sans contrôle bloquant. 257 tests passés, un ignoré : le moteur Prolog modifié et le moteur de référence concordent. L'annulation d'un voyage chez A : « non couvert », et cette fois la décision affichée le dit aussi (7.177). A : 94 % (partie test) et 100 % (jeu fermé) ; B : 90 %, deux cas instables ; D : 96 %. Aucun couvert à tort, aucun refus à tort, sur les quatre bancs. Rien n'a baissé.
+
+Deux choses à dire à côté de ces chiffres. *Le portefeuille volé dans le tram*, redevenu un refus avec des faits exacts, sort « à préciser » dans la chaîne complète : la lecture donne bien « pas de violence », mais la déclaration ne le dit pas en toutes lettres (« subtilisé sans que je m'en rende compte »), le fait porte la décision, il n'est pas confirmé, et la chaîne pose la question au lieu de refuser (7.43 à 7.50). C'est une question dont la réponse se devine ; ce n'est pas le changement du moteur, et je ne l'ai pas corrigé. *La porte de A sur les décisions changées par la lecture* échoue toujours, à 3 pour un seuil de 2, avec les trois mêmes cas qu'à 21 h 28 et 22 h 29 (`velo-06`, `g-h03`, `g2-p01`) : elle échouait avant ce soir, et le seuil n'est pas relevé.
+
+### 7.180 Un événement nouveau n'enlève plus à un fait qu'il vaut pour tous les sinistres
+
+Le 24 nov., 22 h 40 à 23 h 10.
+
+**Le défaut.** Certains faits sont lus pour tous les événements : « avez-vous signalé votre déménagement ? » chez A. Parce qu'ils valent pour tous les sinistres, leur réserve n'est pas répétée sous chaque réponse. « Pour tous » se calcule : la liste des événements où le fait est lu couvre toute la liste des événements. Le jour où « voyage » est entré dans le vocabulaire, ces faits n'étaient plus lus « pour tous », et la réserve du déménagement serait revenue sous chaque réponse couverte de A. Un test l'a rattrapé ; j'ai étendu les deux faits à la main.
+
+**La règle.** Quand l'acceptation ajoute un événement, elle étend elle-même la liste de tout fait qui couvrait jusque-là tous les événements, et le dit dans son compte rendu (« vaut pour tous les sinistres, lue aussi pour… »). Un fait lu pour quelques événements seulement n'est pas touché : rien ne dit qu'il concerne le nouveau.
+
+**Mesure.** Un test : un événement inventé est accepté, les faits généraux le reçoivent, un fait partiel ne le reçoit pas. Aucune réponse actuelle ne peut changer : la règle ne joue qu'à l'ajout d'un événement, et les bancs ne sont pas rejoués pour elle.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le ferais.
@@ -5049,7 +5113,7 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 
 **3. Les contrats.**
 - Assureur C : les biens assurés, qui dépendent de la formule et de la qualité d'occupant, et un jeu de mesure (7.159).
-- Assureur B : traduit en entier (7.175) ; à mesurer : des cas de voyage et de litige sur Internet dans son jeu fermé. La phrase « garantie pas encore traduite » pour un contrat complet (7.175). Assureur D : les options, les assistances, les mesures de protection contre le vol.
+- Assureur B : traduit en entier (7.175) ; à mesurer : des cas de voyage et de litige sur Internet dans son jeu fermé. Assureur D : les options, les assistances, les mesures de protection contre le vol.
 - Un contrat hors habitation : le socle de la lecture (événement, bien, lieu) et les deux consignes sont à revoir pour lui (7.154). Aucun n'a été essayé.
 - Les conditions particulières lues dans le document du client : aujourd'hui elles se saisissent (7.141).
 - La loi applicable : écrite comme limite, non traitée.
@@ -5248,3 +5312,11 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 178. « Traduit en entier » et « mesuré » sont deux affirmations : le vert dit la première, le banc la seconde, et il faut écrire laquelle manque.
 179. Avant de corriger un écart avec une réponse attendue, vérifier que l'attente tient encore : le refus du vélo chez B datait d'avant l'option, et j'ai réglé une aide pour retrouver une réponse devenue fausse.
 180. Quand la lecture rend les mêmes faits « à côté » à chaque passage, la règle peut les accueillir, à condition de seulement poser la question du contrat, et de dire que le cas a été vu.
+181. Ce qu'on a refait à la main plusieurs fois dans la journée désigne la règle qui manque au code : c'est par là que commence une relecture.
+182. Un test qui lit l'état déclaré du projet change de résultat quand le projet avance : il fixe lui-même l'état dont il parle.
+183. Avant de refuser un chantier pour son risque, séparer ce qui change une réponse de ce qui change une écriture : unifier les options ne demandait de toucher à aucune règle mesurée.
+184. Quand deux écritures voisines donnent deux décisions, le choix doit être un mot que le relecteur écrit et que le contrôle vérifie, pas un effet des mots de la citation.
+185. Une précaution écrite dans les règles pour pallier le moteur doit sortir le jour où le moteur est corrigé : gardée, elle a transformé un refus juste en question.
+186. Le coût d'un changement du moteur se mesure d'abord sur les cas à faits exacts, sans modèle : c'est rapide, et cela dit quelles réponses bougent avant tout banc.
+187. Un test qui s'arrête à l'étape modifiée ne voit pas ce que l'étape suivante en fait : la décision se vérifie là où l'utilisateur la lit.
+188. Ce qu'un test a rattrapé une fois et qu'on a réparé à la main reviendra au prochain ajout : la réparation va dans le code qui fait l'ajout.

@@ -16,8 +16,8 @@
         "limite : une fraude à la carte racontée comme un vol (« on m'a volé ma carte et vidé mon compte ») est lue « vol », pas « litige » ; elle n'atteint pas cette garantie, comme avant",
         "aucun fait du vocabulaire commun n'est étendu au litige : « usage professionnel » et « pays » auraient été lus dans les litiges de A, C et D ; l'activité professionnelle passe par le domaine du litige, le territoire par un fait propre à B",
         "essai retiré : écarter dans le périmètre les domaines de litige sans rapport avec Internet. Il faisait demander le domaine du litige à une usurpation d'identité établie. Un litige avec l'employeur dont la lecture ne dit pas qu'il est sans rapport avec Internet reçoit donc la question « est-ce lié à Internet ? » ; à surveiller au banc",
-        "les exclusions ne jouent que si l'un des cinq risques est établi : sans cela, un litige dont on ne savait pas encore s'il touchait Internet était refusé par une exclusion de l'E-protection (vu sur 2 500 jeux de faits, comme pour les bagages)",
-        "reprise après la mesure du 24 nov. au soir : un litige avec l'employeur, lu « domaine du litige = travail », recevait la question « est-ce lié à Internet ? ». Le périmètre écarte maintenant les domaines sans rapport avec Internet (travail, logement, voisinage, santé, famille…). Le domaine reste possible quand il n'est pas dit : une usurpation d'identité sans domaine lu le demande, comme le demande déjà la protection juridique (4.1.3) pour le même litige"
+        "reprise après la mesure du 24 nov. au soir : un litige avec l'employeur, lu « domaine du litige = travail », recevait la question « est-ce lié à Internet ? ». Le périmètre écarte maintenant les domaines sans rapport avec Internet (travail, logement, voisinage, santé, famille…). Le domaine reste possible quand il n'est pas dit : une usurpation d'identité sans domaine lu le demande, comme le demande déjà la protection juridique (4.1.3) pour le même litige",
+        "24 nov., 22 h 40 : les exclusions n'attendent plus que l'un des cinq risques soit établi ; le moteur s'en charge (7.179)"
       ]
     }
   },
@@ -167,7 +167,8 @@
               ]
             },
             "article": "4.1.4",
-            "texte": "la garantie “ E-protection ” est accordée"
+            "texte": "la garantie “ E-protection ” est accordée",
+            "option": true
           },
           {
             "condition": {
@@ -224,47 +225,9 @@
         "exclusions": [
           {
             "condition": {
-              "et": [
-                {
-                  "ou": [
-                    {
-                      "f": [
-                        "litige_internet",
-                        "usurpation_identite"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_internet",
-                        "fraude_paiement"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_internet",
-                        "e_reputation"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_internet",
-                        "achat_bien_internet"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_internet",
-                        "achat_service_internet"
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "f": [
-                    "anciennete_garantie",
-                    "moins_30_jours"
-                  ]
-                }
+              "f": [
+                "anciennete_garantie",
+                "moins_30_jours"
               ]
             },
             "portee": "tout",
@@ -274,47 +237,9 @@
           },
           {
             "condition": {
-              "et": [
-                {
-                  "ou": [
-                    {
-                      "f": [
-                        "litige_internet",
-                        "usurpation_identite"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_internet",
-                        "fraude_paiement"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_internet",
-                        "e_reputation"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_internet",
-                        "achat_bien_internet"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_internet",
-                        "achat_service_internet"
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "f": [
-                    "litige_connu_avant_souscription",
-                    "oui"
-                  ]
-                }
+              "f": [
+                "litige_connu_avant_souscription",
+                "oui"
               ]
             },
             "portee": "tout",
@@ -324,47 +249,9 @@
           },
           {
             "condition": {
-              "et": [
-                {
-                  "ou": [
-                    {
-                      "f": [
-                        "litige_internet",
-                        "usurpation_identite"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_internet",
-                        "fraude_paiement"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_internet",
-                        "e_reputation"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_internet",
-                        "achat_bien_internet"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_internet",
-                        "achat_service_internet"
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "f": [
-                    "domaine_litige",
-                    "activite_professionnelle"
-                  ]
-                }
+              "f": [
+                "domaine_litige",
+                "activite_professionnelle"
               ]
             },
             "portee": "tout",
@@ -374,91 +261,53 @@
           },
           {
             "condition": {
-              "et": [
+              "ou": [
                 {
-                  "ou": [
-                    {
-                      "f": [
-                        "litige_internet",
-                        "usurpation_identite"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_internet",
-                        "fraude_paiement"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_internet",
-                        "e_reputation"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_internet",
-                        "achat_bien_internet"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_internet",
-                        "achat_service_internet"
-                      ]
-                    }
+                  "f": [
+                    "litige_nature_exclue",
+                    "propriete_intellectuelle"
                   ]
                 },
                 {
-                  "ou": [
-                    {
-                      "f": [
-                        "litige_nature_exclue",
-                        "propriete_intellectuelle"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_nature_exclue",
-                        "douane_fiscalite"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_nature_exclue",
-                        "gestion_societe"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_nature_exclue",
-                        "delai_paiement"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_nature_exclue",
-                        "politique_syndical"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_nature_exclue",
-                        "droits_tiers_ou_cedes"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_nature_exclue",
-                        "action_collective"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_nature_exclue",
-                        "caution_mandat"
-                      ]
-                    }
+                  "f": [
+                    "litige_nature_exclue",
+                    "douane_fiscalite"
+                  ]
+                },
+                {
+                  "f": [
+                    "litige_nature_exclue",
+                    "gestion_societe"
+                  ]
+                },
+                {
+                  "f": [
+                    "litige_nature_exclue",
+                    "delai_paiement"
+                  ]
+                },
+                {
+                  "f": [
+                    "litige_nature_exclue",
+                    "politique_syndical"
+                  ]
+                },
+                {
+                  "f": [
+                    "litige_nature_exclue",
+                    "droits_tiers_ou_cedes"
+                  ]
+                },
+                {
+                  "f": [
+                    "litige_nature_exclue",
+                    "action_collective"
+                  ]
+                },
+                {
+                  "f": [
+                    "litige_nature_exclue",
+                    "caution_mandat"
                   ]
                 }
               ]
@@ -470,47 +319,9 @@
           },
           {
             "condition": {
-              "et": [
-                {
-                  "ou": [
-                    {
-                      "f": [
-                        "litige_internet",
-                        "usurpation_identite"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_internet",
-                        "fraude_paiement"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_internet",
-                        "e_reputation"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_internet",
-                        "achat_bien_internet"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "litige_internet",
-                        "achat_service_internet"
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "f": [
-                    "enjeu_moins_150",
-                    "oui"
-                  ]
-                }
+              "f": [
+                "enjeu_moins_150",
+                "oui"
               ]
             },
             "portee": "tout",

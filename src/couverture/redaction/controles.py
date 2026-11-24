@@ -90,12 +90,18 @@ def conditions_particulieres_en_reserve(prop: dict) -> list[str]:
             continue
         garder = []
         for c in g.get("circonstances") or []:
-            if isinstance(c, dict) and "condition" in c and vise_les_cp(c.get("texte"), c["condition"]):
+            # 7.178 : une option se demande. Marquée « option », la circonstance reste une circonstance, donc une
+            # question, quel que soit le texte cité. Sans la marque, c'est une garantie que le contrat donne par
+            # défaut « si les conditions particulières la mentionnent » : une réserve.
+            if isinstance(c, dict) and c.get("option") is True:
+                garder.append(c)
+            elif isinstance(c, dict) and "condition" in c and vise_les_cp(c.get("texte"), c["condition"]):
                 g.setdefault("exclusions", []).append({"condition": {"non": c["condition"]}, "portee": "tout",
                                                        "a_demander": True, "article": c.get("article"),
                                                        "texte": c.get("texte", "")})
                 notes.append(f"garantie {g.get('id')} : {json.dumps(c['condition'], ensure_ascii=False)[:60]} "
-                             f"(conditions particulières) mise en réserve, et non en question")
+                             f"(conditions particulières) mise en réserve, et non en question ; si le contrat range "
+                             f"cette garantie sous un titre « Option », marquer la circonstance « option »")
             else:
                 garder.append(c)
         if "circonstances" in g:
@@ -112,6 +118,33 @@ def conditions_particulieres_en_reserve(prop: dict) -> list[str]:
         if "perimetre" in g:
             g["perimetre"] = perimetre
     return notes
+
+
+def options_mal_declarees(prop: dict) -> list[str]:
+    """Une garantie que le contrat range sous un titre « Option » se demande : sa circonstance porte la marque
+    « option » (7.178). Trois écritures coexistaient, et une option écrite comme une garantie de base a donné un
+    « couvert, sous réserve » à tort (7.173). La marque n'a de sens que sur « fait = oui », pour un fait des
+    conditions particulières : sinon la question serait cherchée dans la déclaration comme un fait ordinaire."""
+    sources = {}
+    try:
+        sources.update({v: d.get("source") for v, d in prolog.vocabulaire().items()})
+    except (OSError, ValueError, KeyError):
+        pass
+    sources.update({m.get("variable"): m.get("source") for m in prop.get("vocabulaire_manquant") or []
+                    if isinstance(m, dict) and m.get("source")})
+    fautes = []
+    for g in prop.get("garanties") or []:
+        for c in (g.get("circonstances") or []) if isinstance(g, dict) else []:
+            if not (isinstance(c, dict) and c.get("option") is True):
+                continue
+            f = c.get("condition", {}).get("f") if isinstance(c.get("condition"), dict) else None
+            if not (isinstance(f, list) and len(f) == 2 and f[1] == "oui"):
+                fautes.append(f"garantie {g.get('id')} : une option s'écrit « fait = oui » "
+                              f"({json.dumps(c.get('condition'), ensure_ascii=False)[:60]})")
+            elif sources.get(f[0]) != prolog.CONDITIONS_PARTICULIERES:
+                fautes.append(f"garantie {g.get('id')} : l'option « {f[0]} » n'est pas un fait des conditions "
+                              f"particulières (« source » dans le vocabulaire)")
+    return fautes
 
 
 def circonstances_par_evenement(prop: dict) -> list[str]:
@@ -401,6 +434,8 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str,
         noter(A_RELIRE, "structure", note)
     for note in conditions_particulieres_en_reserve(prop) if isinstance(prop, dict) and not erreurs_schema(prop) else []:
         noter(INFO, "couverture", note)
+    for faute in options_mal_declarees(prop) if isinstance(prop, dict) and not erreurs_schema(prop) else []:
+        noter(BLOQUANT, "option", faute)
     for note in circonstances_par_evenement(prop) if isinstance(prop, dict) and not erreurs_schema(prop) else []:
         noter(INFO, "couverture", note)
     for note in obligations_mal_formees(prop) if isinstance(prop, dict) and not erreurs_schema(prop) else []:

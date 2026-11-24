@@ -60,7 +60,8 @@
               ]
             },
             "article": "4.2.1",
-            "texte": "la garantie “ annulation” est souscrite"
+            "texte": "la garantie “ annulation” est souscrite",
+            "option": true
           },
           {
             "condition": {

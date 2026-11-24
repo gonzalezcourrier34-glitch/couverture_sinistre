@@ -303,7 +303,9 @@ class Moteur:
             # Périmètre seulement inconnu : la garantie ne joue pas, mais rien ne lui rattache le sinistre (7.105).
             return {"rattachement": "hors" if ep == INCONNU else "rattachée", "decision": "NON_COUVERT", "questions": []}
         if ep == INCONNU and any(x[0] == "totale" for x in xs):
-            return {"rattachement": "rattachée", "decision": "NON_COUVERT", "questions": []}
+            # « écartée » (7.179) : exclue, que la garantie s'applique ou non. Elle ne peut pas couvrir, mais rien ne
+            # lui rattache le sinistre : son refus ne l'emporte pas sur une garantie encore possible.
+            return {"rattachement": "rattachée", "decision": "NON_COUVERT", "questions": [], "ecartee": True}
         if ep == INCONNU:
             q = set(self.inconnues(Terme(("et", ps))))
             for c, _, _, e in cs:
@@ -446,6 +448,10 @@ class Moteur:
             return {"decision": "COUVERT", "retenues": couverts[:1], "possibles": [], "garanties": rs}
         if incertains:
             return {"decision": "INCERTAIN", "retenues": incertains, "possibles": poss, "garanties": rs}
+        if poss and all(r.get("ecartee") for r in ratt):
+            # 7.179 : toutes les garanties qui refusent sont seulement écartées par une exclusion, et une autre
+            # garantie pourrait encore s'appliquer. On ne refuse pas : on demande ce qui la départage.
+            return {"decision": "INCERTAIN", "retenues": poss, "possibles": [], "garanties": rs}
         if ratt:
             return {"decision": "NON_COUVERT", "retenues": ratt, "possibles": poss, "garanties": rs}
         if poss:

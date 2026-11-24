@@ -22,8 +22,23 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 DOSSIER = Path("data") / "ferme"
-CONTRATS = {"assureur-a": "assureur-a-habitation-2025", "assureur-b": "assureur-b-habitation-2017",
-            "assureur-d": "assureur-d-habitation-2026"}
+
+
+def contrats_des_cas(cas: list[dict]) -> dict[str, str]:
+    """Le nom court d'un contrat dans les cas (« assureur-a ») vers son identifiant. La table était écrite ici, pour
+    trois contrats : elle se lit maintenant dans les cas et dans le dossier des règles, et un contrat de plus ne
+    demande pas de toucher au code (7.177)."""
+    from . import prolog
+    connus = sorted(f.stem for f in prolog.DOSSIER.glob("*.pl") if f != prolog.MOTEUR)
+    table = {}
+    for court in sorted({c["contrat"] for c in cas}):
+        trouves = [i for i in connus if i.startswith(court + "-")]
+        if len(trouves) != 1:
+            raise LookupError(f"« {court} » : {len(trouves)} fichier(s) de règles dans {prolog.DOSSIER} (un seul attendu)")
+        table[court] = trouves[0]
+    return table
+
+
 REPONSES = ("COUVERT", "NON_COUVERT", "INCERTAIN")
 
 SYSTEME_SECOND_AVIS = """Tu es gestionnaire de sinistres. On te donne les conditions générales d'un contrat d'assurance habitation et la déclaration d'un sinistre. Dis si, d'après le seul texte de ces conditions générales, le sinistre est couvert.
@@ -68,7 +83,7 @@ def annoter(modele: str, paralleles: int = 2) -> None:
     faits = {a["id"]: a for a in lire(sortie)}
     # Le texte entier d'un contrat (jusqu'à 70 000 tokens) à chaque appel : 120 s ne suffisaient pas (19 nov.).
     base, llm = Base(Path("data") / "base.sqlite"), MistralLLM(modele=modele, timeout=600)
-    textes = {c: base.texte_brut(i) for c, i in CONTRATS.items()}
+    textes = {c: base.texte_brut(i) for c, i in contrats_des_cas(cas).items()}
     a_faire = [c for c in cas if c["id"] not in faits]
     print(f"{len(a_faire)} cas à annoter par {modele} ({len(faits)} déjà faits)…", flush=True)
 
@@ -139,7 +154,8 @@ def exporter() -> None:
     if chemin.exists():
         with chemin.open(encoding="utf-8-sig", newline="") as f:
             choix = {l["id"]: (l.get("choix") or "").strip().lower() for l in csv.DictReader(f, delimiter=";")}
-    sinistres, annotations, ecartes, en_attente = [], {c: [] for c in CONTRATS.values()}, [], []
+    contrats = contrats_des_cas(cas)
+    sinistres, annotations, ecartes, en_attente = [], {c: [] for c in contrats.values()}, [], []
     for c in cas:
         b = avis.get(c["id"])
         if b is None:
@@ -159,7 +175,7 @@ def exporter() -> None:
             retenu, origine = c, f"accord {k}"
         acceptables = sorted(set(c.get("acceptables") or []) | set(b.get("acceptables") or [])
                              | ({c["attendu"], b["attendu"]} if k == "souple" else set()) - {retenu["attendu"]})
-        contrat = CONTRATS[c["contrat"]]
+        contrat = contrats[c["contrat"]]
         sinistres.append({"id": c["id"], "famille": ", ".join(retenu.get("articles") or []), "source": "ferme",
                           "sinistre": c["declaration"]})
         annotations[contrat].append({

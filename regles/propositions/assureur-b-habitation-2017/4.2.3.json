@@ -114,7 +114,8 @@
               ]
             },
             "article": "4.2.3",
-            "texte": "la garantie “assistance voyage” est souscrite"
+            "texte": "la garantie “assistance voyage” est souscrite",
+            "option": true
           },
           {
             "condition": {

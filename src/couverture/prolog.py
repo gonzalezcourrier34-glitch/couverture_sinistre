@@ -160,6 +160,16 @@ def a_des_garanties(contrat_id: str) -> bool:
     return fichier.exists() and re.search(r"^garantie\(", fichier.read_text(encoding="utf-8"), flags=re.M) is not None
 
 
+def traduction_complete(contrat_id: str) -> bool:
+    """Les conditions générales de ce contrat sont-elles déclarées traduites en entier (`regles/traduction.json`,
+    7.169) ? Faux quand le fichier manque ou ne dit rien du contrat : on ne refuse pas sur une absence."""
+    try:
+        etat = json.loads((DOSSIER / "traduction.json").read_text(encoding="utf-8")).get(contrat_id) or {}
+    except (OSError, ValueError):
+        return False
+    return etat.get("complet") is True
+
+
 def contrats_regles() -> list[str]:
     """Les contrats dont les règles traduisent au moins une garantie."""
     return sorted(f.stem for f in DOSSIER.glob("*.pl") if f != MOTEUR and a_des_garanties(f.stem))

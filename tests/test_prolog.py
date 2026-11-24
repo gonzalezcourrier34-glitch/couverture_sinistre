@@ -1462,3 +1462,102 @@ def test_b_voyage_et_numerique_sur_faits_exacts(nom, faits, attendu):
     assert Moteur(Contrat(prolog.fichier_regles(cid)), faits).decider()["decision"] == attendu, nom
     if prolog.swipl() is not None:
         assert prolog.decider(cid, faits)["decision"] == attendu, nom
+
+
+def test_contrat_traduit_en_entier_un_evenement_sans_garantie_est_un_refus(monkeypatch):
+    """7.177. Un voyage annulé déclaré chez A recevait « relève d'une garantie qui n'est pas encore traduite » : A est
+    traduit en entier et n'a pas de garantie de voyage. Seul sujet de la déclaration, l'événement est refusé ; avec
+    autre chose, le dossier reste à examiner et la phrase dit ce qui manque."""
+    monkeypatch.setattr(prolog, "traduction_complete", lambda contrat_id: True)
+    garantie = {"id": "degats_eaux", "garantie": "Dégâts causés par l’eau", "article": "2.7", "rattachement": "rattachée",
+                "decision": "COUVERT", "motif": "périmètre et conditions établis", "preuves": [], "questions": [],
+                "reserves": [], "partielles": []}
+
+    def verdict(evenements, retenues):
+        reponse = {"decision": "INCERTAIN", "non_traduits": ["voyage"], "aucune": False, "possibles": [],
+                   "retenues": retenues}
+        p = chaine.PipelineRegles(CONTRAT, [], FauxLLM({"evenement": evenements}), decideur=lambda f: reponse)
+        return p.verdict(reponse, {"evenement": evenements})[0]
+
+    seul = verdict(["voyage"], [])
+    assert seul.decision == Decision.NON_COUVERT and seul.confiance == 0.85 and not seul.informations_manquantes
+    assert seul.justification == "Non couvert : aucune garantie de ce contrat ne porte sur cet événement."
+    mixte = verdict(["voyage", "degat_eaux"], [garantie])
+    assert mixte.decision == Decision.INCERTAIN and mixte.confiance <= 0.3
+    assert "aucune garantie de ce contrat ne porte sur « voyage »" in mixte.justification
+    assert "pas encore traduite" not in mixte.justification
+    # Jusqu'au bout de la chaîne : la validation des citations ne ramène pas ce refus à « à préciser ». C'est ce
+    # qu'elle faisait au premier essai (« Décision : INCERTAIN », sous « Non couvert »), le refus n'ayant rien à citer.
+    reponse = {"decision": "INCERTAIN", "non_traduits": ["voyage"], "aucune": False, "possibles": [], "retenues": []}
+    p = chaine.PipelineRegles(CONTRAT, [], FauxLLM({"evenement": ["voyage"]}), decideur=lambda f: reponse)
+    v = p.analyser("J'ai dû annuler mon voyage.").verdict
+    assert v.decision == Decision.NON_COUVERT and not v.informations_manquantes and not v.citations
+    monkeypatch.setattr(prolog, "traduction_complete", lambda contrat_id: False)
+    v = p.analyser("J'ai dû annuler mon voyage.").verdict
+    assert v.decision == Decision.INCERTAIN and "pas encore traduite" in v.justification
+
+
+def test_contrat_en_partie_traduit_l_evenement_part_chez_un_gestionnaire():
+    """Sans déclaration de traduction complète, rien ne change : jamais un refus sur une garantie non traduite."""
+    reponse = {"decision": "INCERTAIN", "non_traduits": ["voyage"], "aucune": False, "possibles": [], "retenues": []}
+    p = chaine.PipelineRegles(CONTRAT, [], FauxLLM({"evenement": ["voyage"]}), decideur=lambda f: reponse)
+    v = p.verdict(reponse, {"evenement": ["voyage"]})[0]
+    assert v.decision == Decision.INCERTAIN and "pas encore traduite" in v.justification
+
+
+def test_traduction_complete_lue_dans_le_fichier(tmp_path, monkeypatch):
+    monkeypatch.undo()                                   # le vrai `traduction_complete`, pas celui de conftest
+    monkeypatch.setattr(prolog, "DOSSIER", tmp_path)
+    assert prolog.traduction_complete("x") is False, "fichier absent : pas complet"
+    (tmp_path / "traduction.json").write_text(json.dumps({"x": {"complet": True}, "y": {"complet": "oui"}}), encoding="utf-8")
+    assert prolog.traduction_complete("x") is True
+    assert prolog.traduction_complete("y") is False and prolog.traduction_complete("z") is False
+
+
+REGLES_ECARTEE = """
+evenement_traduit(vol).
+garantie(bagages, "Bagages", '1', "les bagages emportés en voyage").
+perimetre(bagages, f(evenement, vol)).
+perimetre(bagages, f(en_voyage, oui)).
+exclusion(bagages, f(bien, valeurs), tout, non, '1', "les valeurs ne sont pas des bagages").
+garantie(agression, "Vol par agression", '2', "le vol par agression").
+perimetre(agression, f(evenement, vol)).
+perimetre(agression, f(violence, oui)).
+exclusion(agression, f(auteur, famille), tout, non, '2', "les vols commis par un proche").
+"""
+
+
+def test_une_garantie_ecartee_ne_l_emporte_pas_sur_une_garantie_possible(tmp_path):
+    """7.179. De l'argent volé, sans qu'on sache si c'était en voyage ni avec violence. L'exclusion des bagages est
+    établie, mais rien ne rattache le vol aux bagages : la garantie est écartée, elle ne refuse pas à la place du
+    vol par agression, encore possible. Le moteur refusait ; chaque exclusion des bagages portait, à la main, « et
+    en voyage » pour l'éviter (leçon 174)."""
+    f = tmp_path / "contrat.pl"
+    f.write_text(REGLES_ECARTEE, encoding="utf-8")
+    contrat = Contrat(f)
+    vol = {"evenement": ["vol"], "bien": ["valeurs"]}
+    d = Moteur(contrat, vol).decider()
+    assert d["decision"] == "INCERTAIN" and [r["id"] for r in d["retenues"]] == ["agression"]
+    assert d["retenues"][0]["questions"] == ["violence"]
+    assert Moteur(contrat, vol | {"auteur": "famille"}).decider()["decision"] == "NON_COUVERT", \
+        "toutes les garanties écartées, aucune possible : refus"
+    assert Moteur(contrat, vol | {"violence": "non"}).decider()["decision"] == "NON_COUVERT", \
+        "l'autre garantie hors de son périmètre : refus"
+    assert Moteur(contrat, vol | {"en_voyage": "oui"}).decider()["decision"] == "NON_COUVERT", \
+        "rattaché aux bagages, le vol est refusé par leur exclusion : la règle d'avant, inchangée"
+    assert Moteur(contrat, vol | {"violence": "oui"}).decider()["decision"] == "COUVERT"
+
+
+@avec_swipl
+def test_garantie_ecartee_prolog_et_reference_concordent():
+    """La même règle dans les deux moteurs, sur un contrat réel : l'option « tremblement de terre » non souscrite
+    écarte cette garantie, sans refuser une catastrophe naturelle que « pluies et inondations » peut couvrir."""
+    cid = "assureur-b-habitation-2017"
+    if "pluies_inondations" not in prolog.fichier_regles(cid).read_text(encoding="utf-8"):
+        pytest.skip("la section 3.2 de B n'est pas traduite")
+    base = {"evenement": ["catastrophe_naturelle"], "bien": ["mobilier"], "lieu": ["logement"],
+            "option_tremblement_terre": "non"}
+    for faits, attendu in ((base, "INCERTAIN"), (base | {"option_pluies_inondations": "non"}, "NON_COUVERT"),
+                           (base | {"catastrophe": "tremblement_terre"}, "NON_COUVERT")):
+        p, o = prolog.decider(cid, faits), Moteur(Contrat(prolog.fichier_regles(cid)), faits).decider()
+        assert p["decision"] == o["decision"] == attendu, faits

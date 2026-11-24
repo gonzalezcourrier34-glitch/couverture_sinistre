@@ -16,8 +16,8 @@
         "la casse d'un objet fragile : demandée (l'accident de la circulation) quand le bien est un instrument, un miroir ou un objet en verre ; les exclusions qui retirent un cas ne se demandent pas (leçon 165)",
         "le bagage qui n'appartient pas à l'assuré : exclu pour le vol et la casse, pas pour l'incendie ou le dégât des eaux. L'y étendre ferait lire « propriétaire des biens » sur ces événements pour les quatre contrats : un changement du vocabulaire commun, à mesurer à part",
         "un véhicule ou une remorque ne sont pas des bagages : dans le périmètre, pas en exclusion. En exclusion, le moteur refusait un sinistre dont on ne savait pas encore s'il était survenu en voyage, y compris quand une autre garantie restait possible (comparaison sur 3 000 jeux de faits)",
-        "les exclusions de ces garanties ne jouent que si le voyage est établi. Sans cela, le moteur refusait par une exclusion des bagages (les valeurs, l'objet laissé sans surveillance) un sinistre dont on ne savait pas s'il était survenu en voyage, alors qu'une autre garantie restait possible : vu sur 2 500 jeux de faits tirés au hasard. Les deux exclusions qui se demandent (objet fragile, bagage à l'extérieur du véhicule) n'en ont pas besoin",
-        "la perte d'un bagage est une cinquième garantie, sur l'événement « voyage » ajouté pour l'annulation et l'assistance ; les exclusions communes (oubli, saisie) y sont reprises, pas celle du bagage prêté (même raison que pour l'incendie)"
+        "la perte d'un bagage est une cinquième garantie, sur l'événement « voyage » ajouté pour l'annulation et l'assistance ; les exclusions communes (oubli, saisie) y sont reprises, pas celle du bagage prêté (même raison que pour l'incendie)",
+        "24 nov., 22 h 40 : les exclusions n'attendent plus « en voyage ». Le moteur ne laisse plus une exclusion d'une garantie seulement possible l'emporter sur une autre garantie possible (7.179) : la précaution écrite à la main dans chaque exclusion n'a plus d'objet, et elle cachait l'exclusion des valeurs tant que le voyage n'était pas dit"
       ]
     }
   },
@@ -101,7 +101,8 @@
               ]
             },
             "article": "4.2.2",
-            "texte": "la garantie “ bagages” est souscrite"
+            "texte": "la garantie “ bagages” est souscrite",
+            "option": true
           },
           {
             "condition": {
@@ -168,27 +169,17 @@
         "exclusions": [
           {
             "condition": {
-              "et": [
+              "ou": [
                 {
                   "f": [
-                    "en_voyage",
-                    "oui"
+                    "auteur",
+                    "assure"
                   ]
                 },
                 {
-                  "ou": [
-                    {
-                      "f": [
-                        "auteur",
-                        "assure"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "auteur",
-                        "famille"
-                      ]
-                    }
+                  "f": [
+                    "auteur",
+                    "famille"
                   ]
                 }
               ]
@@ -201,12 +192,6 @@
           {
             "condition": {
               "et": [
-                {
-                  "f": [
-                    "en_voyage",
-                    "oui"
-                  ]
-                },
                 {
                   "f": [
                     "lieu",
@@ -231,12 +216,6 @@
               "et": [
                 {
                   "f": [
-                    "en_voyage",
-                    "oui"
-                  ]
-                },
-                {
-                  "f": [
                     "lieu",
                     "vehicule"
                   ]
@@ -259,12 +238,6 @@
               "et": [
                 {
                   "f": [
-                    "en_voyage",
-                    "oui"
-                  ]
-                },
-                {
-                  "f": [
                     "surveillance_directe",
                     "non"
                   ]
@@ -284,19 +257,9 @@
           },
           {
             "condition": {
-              "et": [
-                {
-                  "f": [
-                    "bien",
-                    "valeurs"
-                  ]
-                },
-                {
-                  "f": [
-                    "en_voyage",
-                    "oui"
-                  ]
-                }
+              "f": [
+                "bien",
+                "valeurs"
               ]
             },
             "portee": {
@@ -308,19 +271,9 @@
           },
           {
             "condition": {
-              "et": [
-                {
-                  "f": [
-                    "en_voyage",
-                    "oui"
-                  ]
-                },
-                {
-                  "f": [
-                    "proprietaire",
-                    "hote"
-                  ]
-                }
+              "f": [
+                "proprietaire",
+                "hote"
               ]
             },
             "portee": "tout",
@@ -411,7 +364,8 @@
               ]
             },
             "article": "4.2.2",
-            "texte": "la garantie “ bagages” est souscrite"
+            "texte": "la garantie “ bagages” est souscrite",
+            "option": true
           },
           {
             "condition": {
@@ -438,27 +392,17 @@
         "exclusions": [
           {
             "condition": {
-              "et": [
+              "ou": [
                 {
                   "f": [
-                    "en_voyage",
-                    "oui"
+                    "auteur",
+                    "assure"
                   ]
                 },
                 {
-                  "ou": [
-                    {
-                      "f": [
-                        "auteur",
-                        "assure"
-                      ]
-                    },
-                    {
-                      "f": [
-                        "auteur",
-                        "famille"
-                      ]
-                    }
+                  "f": [
+                    "auteur",
+                    "famille"
                   ]
                 }
               ]
@@ -470,19 +414,9 @@
           },
           {
             "condition": {
-              "et": [
-                {
-                  "f": [
-                    "en_voyage",
-                    "oui"
-                  ]
-                },
-                {
-                  "f": [
-                    "proprietaire",
-                    "hote"
-                  ]
-                }
+              "f": [
+                "proprietaire",
+                "hote"
               ]
             },
             "portee": "tout",
@@ -567,7 +501,8 @@
               ]
             },
             "article": "4.2.2",
-            "texte": "la garantie “ bagages” est souscrite"
+            "texte": "la garantie “ bagages” est souscrite",
+            "option": true
           }
         ],
         "obligations": [],
@@ -614,19 +549,9 @@
           },
           {
             "condition": {
-              "et": [
-                {
-                  "f": [
-                    "en_voyage",
-                    "oui"
-                  ]
-                },
-                {
-                  "f": [
-                    "bagage_dommage_esthetique",
-                    "oui"
-                  ]
-                }
+              "f": [
+                "bagage_dommage_esthetique",
+                "oui"
               ]
             },
             "portee": "tout",
@@ -636,19 +561,9 @@
           },
           {
             "condition": {
-              "et": [
-                {
-                  "f": [
-                    "en_voyage",
-                    "oui"
-                  ]
-                },
-                {
-                  "f": [
-                    "deterioration_lente_ou_parasites",
-                    "oui"
-                  ]
-                }
+              "f": [
+                "deterioration_lente_ou_parasites",
+                "oui"
               ]
             },
             "portee": "tout",
@@ -658,19 +573,9 @@
           },
           {
             "condition": {
-              "et": [
-                {
-                  "f": [
-                    "en_voyage",
-                    "oui"
-                  ]
-                },
-                {
-                  "f": [
-                    "cause_intemperie",
-                    "oui"
-                  ]
-                }
+              "f": [
+                "cause_intemperie",
+                "oui"
               ]
             },
             "portee": "tout",
@@ -680,19 +585,9 @@
           },
           {
             "condition": {
-              "et": [
-                {
-                  "f": [
-                    "bien",
-                    "valeurs"
-                  ]
-                },
-                {
-                  "f": [
-                    "en_voyage",
-                    "oui"
-                  ]
-                }
+              "f": [
+                "bien",
+                "valeurs"
               ]
             },
             "portee": {
@@ -704,19 +599,9 @@
           },
           {
             "condition": {
-              "et": [
-                {
-                  "f": [
-                    "en_voyage",
-                    "oui"
-                  ]
-                },
-                {
-                  "f": [
-                    "proprietaire",
-                    "hote"
-                  ]
-                }
+              "f": [
+                "proprietaire",
+                "hote"
               ]
             },
             "portee": "tout",
@@ -817,26 +702,17 @@
               ]
             },
             "article": "4.2.2",
-            "texte": "la garantie “ bagages” est souscrite"
+            "texte": "la garantie “ bagages” est souscrite",
+            "option": true
           }
         ],
         "obligations": [],
         "exclusions": [
           {
             "condition": {
-              "et": [
-                {
-                  "f": [
-                    "en_voyage",
-                    "oui"
-                  ]
-                },
-                {
-                  "f": [
-                    "deterioration_lente_ou_parasites",
-                    "oui"
-                  ]
-                }
+              "f": [
+                "deterioration_lente_ou_parasites",
+                "oui"
               ]
             },
             "portee": "tout",
@@ -846,19 +722,9 @@
           },
           {
             "condition": {
-              "et": [
-                {
-                  "f": [
-                    "en_voyage",
-                    "oui"
-                  ]
-                },
-                {
-                  "f": [
-                    "cause_intemperie",
-                    "oui"
-                  ]
-                }
+              "f": [
+                "cause_intemperie",
+                "oui"
               ]
             },
             "portee": "tout",
@@ -868,19 +734,9 @@
           },
           {
             "condition": {
-              "et": [
-                {
-                  "f": [
-                    "bien",
-                    "valeurs"
-                  ]
-                },
-                {
-                  "f": [
-                    "en_voyage",
-                    "oui"
-                  ]
-                }
+              "f": [
+                "bien",
+                "valeurs"
               ]
             },
             "portee": {
@@ -927,7 +783,8 @@
               ]
             },
             "article": "4.2.2",
-            "texte": "la garantie “ bagages” est souscrite"
+            "texte": "la garantie “ bagages” est souscrite",
+            "option": true
           }
         ],
         "obligations": [],
@@ -983,19 +840,9 @@
     "exclusions_communes": [
       {
         "condition": {
-          "et": [
-            {
-              "f": [
-                "en_voyage",
-                "oui"
-              ]
-            },
-            {
-              "f": [
-                "bagage_oublie",
-                "oui"
-              ]
-            }
+          "f": [
+            "bagage_oublie",
+            "oui"
           ]
         },
         "portee": "tout",
@@ -1005,19 +852,9 @@
       },
       {
         "condition": {
-          "et": [
-            {
-              "f": [
-                "en_voyage",
-                "oui"
-              ]
-            },
-            {
-              "f": [
-                "saisie_autorites",
-                "oui"
-              ]
-            }
+          "f": [
+            "saisie_autorites",
+            "oui"
           ]
         },
         "portee": "tout",
@@ -1409,6 +1246,11 @@
       "gravite": "info",
       "controle": "couverture",
       "message": "hors décision (4.2.2.1) : la définition du bagage : portée par le périmètre des garanties (en voyage, hors du domicile, ni véhicule ni remorque), pas par une exclusion"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "non-régression",
+      "message": "b-v06 : INCERTAIN → NON_COUVERT avec les nouvelles règles"
     }
   ]
 }

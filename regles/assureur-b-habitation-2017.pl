@@ -713,51 +713,6 @@ exclusion(rc_chasse, f(pays, hors_europe), tout, non, '4.1.2.5',
     "L’assurance est valable en Europe à l’exception des pays suivants : Albanie, Turquie et tous les pays de l’ex-URSS et de l’ex-Yougoslavie non intégrés à l’Union Européenne").
 limite(rc_chasse, '4.1.2.2', "12.000.000 f par sinistre au titre des dommages corporels", "12000000").
 limite(rc_chasse, '4.1.2.2', "250.000 f par sinistre au titre des dommages matériels et des dommages immatériels", "250000").
-% --- Art. 4.1.4 : proposition rédigée par le modèle — mistral:mistral-large-4-0 (proposition écartée), 2026-11-24 ---
-evenement_traduit(litige).
-garantie(e_protection, "E-protection : litiges liés à Internet (option)", '4.1.4.3~1',
-    "La présente protection juridique a pour vocation de protéger l’Assuré contre les risques liés à Internet dans le cadre de sa vie privée aux conditions telles que prévues ci-dessous").
-perimetre(e_protection, f(evenement, litige)).
-perimetre(e_protection, ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)])).
-perimetre(e_protection, non(ou([f(domaine_litige, travail), f(domaine_litige, logement), f(domaine_litige, travaux), f(domaine_litige, sante), f(domaine_litige, voisinage), f(domaine_litige, employeur_domestique), f(domaine_litige, location_vacances), f(domaine_litige, bateau), f(domaine_litige, association), f(domaine_litige, famille), f(domaine_litige, vehicule_moteur), f(domaine_litige, activite_professionnelle), f(domaine_litige, divorce_succession)]))).
-circonstance(e_protection, f(option_e_protection, oui), '4.1.4',
-    "la garantie “ E-protection ” est accordée").
-circonstance(e_protection, si(ou([f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(vendeur_lu_be_fr_nl, oui)), '4.1.4.3~1',
-    "être acquis auprès d’un professionnel domicilié au Luxembourg, en Belgique, en France, ou aux Pays-Bas").
-circonstance(e_protection, si(f(litige_internet, achat_bien_internet), f(achat_bien_conditions, oui)), '4.1.4.3~1',
-    "être neuf, n être d’une valeur comprise entre 150 E et 5000 E TTC").
-exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(anciennete_garantie, moins_30_jours)]), tout, non, '4.1.4.4',
-    "Pour tous les sinistres, le délai d’attente est d’1 mois à partir de la prise d’effet du contrat").
-exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(litige_connu_avant_souscription, oui)]), tout, non, '4.1.4.4',
-    "le fait générateur du sinistre ne doit pas être connu de l’Assuré à la date de prise d’effet de la présente garantie").
-exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(domaine_litige, activite_professionnelle)]), tout, non, '4.1.4.3~1',
-    "d’une activité rémunérée ou professionnelle").
-exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), ou([f(litige_nature_exclue, propriete_intellectuelle), f(litige_nature_exclue, douane_fiscalite), f(litige_nature_exclue, gestion_societe), f(litige_nature_exclue, delai_paiement), f(litige_nature_exclue, politique_syndical), f(litige_nature_exclue, droits_tiers_ou_cedes), f(litige_nature_exclue, action_collective), f(litige_nature_exclue, caution_mandat)])]), tout, non, '4.1.4.3~1',
-    "de litiges liés à la propriété intellectuelle ou autres droits similaires (marques, copyright, droit d’auteur, etc…) ; n de litiges liés à des questions douanières ou fiscales ; n de la participation à l’administration ou à la gestion d’une association ou d’une société civile ou commerciale").
-exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(enjeu_moins_150, oui)]), tout, non, '4.1.4.4',
-    "les sinistres dont l’enjeu en principal ne dépasse pas 150 R").
-exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation)]), ou([f(auteur, assure), f(auteur, famille)])]), tout, non, '4.1.4.3~2',
-    "Le Prestataire ne prend pas en charge les sinistres résultant d’une usurpation d’identité ou d’une utilisation frauduleuse des moyens de paiement ou d’une atteinte à l’e-réputation par une personne assurée au titre des présentes garanties").
-exclusion(e_protection, et([f(litige_internet, fraude_paiement), f(code_secret_divulgue, oui)]), tout, non, '4.1.4.3~2',
-    "donner la possibilité à un tiers (y compris le (la) conjoint(e), un membre de la famille et des amis) de prendre connaissance du code secret et/ou d’utiliser la carte de crédit ou de débit ; indiquer son code secret sur un support de quelle que forme qu’il soit").
-exclusion(e_protection, et([f(litige_internet, fraude_paiement), f(banque_prevenue, non)]), tout, non, '4.1.4.3~2',
-    "ne pas notifier immédiatement à sa banque, dès que l’Assuré a connaissance de la perte, du vol ou de l’usage abusif de sa carte de crédit ou de débit, ou de toute utilisation non autorisée de sa carte de crédit ou de débit").
-exclusion(e_protection, et([f(litige_internet, e_reputation), f(diffusion_volontaire, oui)]), tout, non, '4.1.4.3~2',
-    "une e-réputation que l’Assuré s’est lui-même constituée au travers des réseaux sociaux, commentaires sur les sites Internet ou encore utilisation de son courrier électronique ; n une diffusion volontaire d’informations de données personnelles de la part de l’Assuré").
-exclusion(e_protection, et([f(litige_internet, e_reputation), f(auteur_presse, oui)]), tout, non, '4.1.4.3~2',
-    "une atteinte à l’e-réputation par une société de presse ou un journaliste").
-exclusion(e_protection, et([f(litige_internet, achat_bien_internet), ou([f(bien, animal), f(bien, plantation), f(bien, bijoux), f(bien, objet_art), f(bien, tapis_fourrure), f(bien, valeurs), f(bien, collection), f(bien, collection_timbres_monnaies), f(bien, denrees_alimentaires), f(bien, vehicule_moteur)])]), tout, non, '4.1.4.3~2',
-    "d’animaux et de végétaux ; n de bijoux, d’orfèvrerie, de pierres précieuses, de peintures, de sculptures, de tapis, d’espèces").
-exclusion(e_protection, et([f(litige_internet, achat_bien_internet), f(achat_bien_exclu, oui)]), tout, non, '4.1.4.3~2',
-    "de biens et denrées périssables ; n de médicaments au sens du droit luxembourgeois ; n d’armes de toutes catégories au sens du droit luxembourgeois ; n de véhicules terrestres à moteur ; n de données numériques à visualiser ou à télécharger en ligne").
-exclusion(e_protection, et([ou([f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(achat_enchere, oui)]), tout, non, '4.1.4.3~2',
-    "s ur un site de vente aux enchères").
-exclusion(e_protection, et([ou([f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(prix_conteste, oui)]), tout, non, '4.1.4.3~2',
-    "dont le prix d’achat est contesté").
-exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement)]), f(litige_hors_europe, oui)]), tout, non, '4.1.4.5',
-    "dans un pays membre de l’Union européenne, en ce compris la Suisse, Monaco, Andorre, Saint-Marin, le Vatican, le Liechtenstein et la Norvège pour la garantie en cas d’usurpation d’identité et la garantie en cas d’utilisation frauduleuse des moyens de paiement").
-limite(e_protection, '4.1.4.3~1', "l’indemnisation du préjudice s’effectue dans la limite globale de 5000 E toutes taxes comprises (TTC) par année d’assurance", "5000").
-
 % --- Art. 4.2.1 : proposition rédigée par le modèle — mistral:mistral-large-4-0 (proposition écartée), 2026-11-24 ---
 evenement_traduit(voyage).
 garantie(annulation_voyage, "Annulation ou interruption de voyage (option)", '4.2.1.1',
@@ -797,109 +752,6 @@ exclusion(annulation_voyage, f(cause_annulation_exclue, radioactivite_ou_interdi
 exclusion(annulation_voyage, f(cause_annulation_exclue, ivg), tout, non, '4.2.1.4',
     "les annulations et modifications consécutives à une interruption volontaire de grossesse").
 limite(annulation_voyage, '4.2.1.1', "La prise en charge totale de ces frais se fait à concurrence de 15.000 E maximum par sinistre et par année d’assurance", "15000").
-% --- Art. 4.2.2 : proposition rédigée par le modèle — mistral:mistral-large-4-0 (proposition écartée), 2026-11-24 ---
-evenement_traduit(vol).
-evenement_traduit(bris).
-evenement_traduit(accident).
-evenement_traduit(incendie).
-evenement_traduit(explosion).
-evenement_traduit(degat_eaux).
-evenement_traduit(voyage).
-garantie(bagages_vol, "Bagages en voyage : vol (option)", '4.2.2.1',
-    "La Compagnie garantit à l’Assuré la couverture de ses bagages emportés dans le cadre d’un voyage contre : n le vol,pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes ; n la perte, n les dégâts dus à toute circonstance fortuite survenue pendant le voyage").
-perimetre(bagages_vol, f(evenement, vol)).
-perimetre(bagages_vol, ou([f(lieu, voie_publique), f(lieu, vehicule), f(lieu, autre_batiment)])).
-perimetre(bagages_vol, f(en_voyage, oui)).
-perimetre(bagages_vol, non(ou([f(bien, vehicule_moteur), f(bien, remorque)]))).
-circonstance(bagages_vol, f(option_bagages, oui), '4.2.2',
-    "la garantie “ bagages” est souscrite").
-circonstance(bagages_vol, et([f(plainte_deposee, oui), ou([non(f(lieu, vehicule)), f(bagage_enregistre, oui), et([non(f(vol_de_nuit, oui)), ou([f(vehicule_vole, oui), f(effraction, oui)])])])]), '4.2.2.3',
-    "Lorsque les bagages sont non enregistrés et se trouvent à l’intérieur d’un véhicule, d’une caravane, d’une remorque ou d’un bateau, le vol est couvert entre sept heures et vingt-deux heures et à condition qu’il soit accompagné : n du vol simultané du véhicule, de la caravane, de la remorque ou du bateau ; n de l’effraction caractérisée du véhicule, du coffre ou de la cabine du bateau").
-exclusion(bagages_vol, et([f(en_voyage, oui), ou([f(auteur, assure), f(auteur, famille)])]), tout, non, '4.2.2.4',
-    "les vols commis par ou avec la complicité de ou du : n Preneur d’assurance, son conjoint, leurs ascendants ou descendants ainsi que les conjoints de ces personnes ; n l’Assuré").
-exclusion(bagages_vol, et([f(en_voyage, oui), f(lieu, vehicule), f(vehicule_ferme_cle, non)]), tout, non, '4.2.2.3',
-    "toutes les portes du véhicule ou de la cabine de bateau où se trouvent les objets garantis y compris le volet ou la porte fermant le coffre aménagé dans la carrosserie de la voiture ou de la caravane ou encore dans la coque du bateau, sont bloqués en position de fermeture ; n les vitrages sont fermés et le “toit ouvrant” est bloqué en position de fermeture").
-exclusion(bagages_vol, et([f(en_voyage, oui), f(lieu, vehicule), f(vehicule_toit_souple, oui)]), tout, non, '4.2.2.3',
-    "La garantie n’est pas acquise si les bagages se trouvent dans l’habitacle d’un véhicule équipé d’un toit non rigide").
-exclusion(bagages_vol, et([f(en_voyage, oui), f(surveillance_directe, non), f(lieu, voie_publique)]), tout, non, '4.2.2.4',
-    "les bagages laissés sans surveillance dans un lieu public").
-exclusion(bagages_vol, et([f(bien, valeurs), f(en_voyage, oui)]), bien(valeurs), non, '4.2.2.1',
-    "Les valeurs ne sont pas assimilées à des bagages").
-exclusion(bagages_vol, et([f(en_voyage, oui), f(proprietaire, hote)]), tout, non, '4.2.2.4',
-    "les bagages dont l’Assuré n’est pas propriétaire").
-limite(bagages_vol, '4.2.2.1', "à concurrence de 5.000 € par sinistre", "5000").
-garantie(bagages_valeurs_agression, "Valeurs emportées en voyage : vol par agression (option)", '4.2.2.1',
-    "Pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes, la Compagnie garantit toutefois à l’Assuré le vol par agression des valeurs emportées en voyage").
-perimetre(bagages_valeurs_agression, f(evenement, vol)).
-perimetre(bagages_valeurs_agression, f(bien, valeurs)).
-perimetre(bagages_valeurs_agression, ou([f(lieu, voie_publique), f(lieu, vehicule), f(lieu, autre_batiment)])).
-perimetre(bagages_valeurs_agression, f(en_voyage, oui)).
-perimetre(bagages_valeurs_agression, non(ou([f(bien, vehicule_moteur), f(bien, remorque)]))).
-circonstance(bagages_valeurs_agression, f(option_bagages, oui), '4.2.2',
-    "la garantie “ bagages” est souscrite").
-circonstance(bagages_valeurs_agression, et([f(plainte_deposee, oui), f(violence, oui)]), '4.2.2.1',
-    "Pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes, la Compagnie garantit toutefois à l’Assuré le vol par agression des valeurs emportées en voyage").
-exclusion(bagages_valeurs_agression, et([f(en_voyage, oui), ou([f(auteur, assure), f(auteur, famille)])]), tout, non, '4.2.2.4',
-    "les vols commis par ou avec la complicité de ou du : n Preneur d’assurance, son conjoint, leurs ascendants ou descendants ainsi que les conjoints de ces personnes ; n l’Assuré").
-exclusion(bagages_valeurs_agression, et([f(en_voyage, oui), f(proprietaire, hote)]), tout, non, '4.2.2.4',
-    "les bagages dont l’Assuré n’est pas propriétaire").
-limite(bagages_valeurs_agression, '4.2.2.1', "à concurrence de 5.000 € par sinistre", "5000").
-garantie(bagages_bris, "Bagages en voyage : casse accidentelle (option)", '4.2.2.1',
-    "La Compagnie garantit à l’Assuré la couverture de ses bagages emportés dans le cadre d’un voyage contre : n le vol,pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes ; n la perte, n les dégâts dus à toute circonstance fortuite survenue pendant le voyage").
-perimetre(bagages_bris, f(evenement, bris)).
-perimetre(bagages_bris, ou([f(lieu, voie_publique), f(lieu, vehicule), f(lieu, autre_batiment)])).
-perimetre(bagages_bris, f(en_voyage, oui)).
-perimetre(bagages_bris, non(ou([f(bien, vehicule_moteur), f(bien, remorque)]))).
-circonstance(bagages_bris, f(option_bagages, oui), '4.2.2',
-    "la garantie “ bagages” est souscrite").
-exclusion(bagages_bris, et([ou([f(bien, instrument_musique), f(bien, miroir), f(bien, objet_verre_non_vitre)]), non(f(accident_circulation, oui))]), tout, oui, '4.2.2.4',
-    "la casse d’objets fragiles tels pendules, porcelaines, glaces, instruments de musique, à moins que celle-ci ne résulte d’un incendie, d’un vol ou d’un accident de la circulation impliquant le moyen de transport").
-exclusion(bagages_bris, et([f(en_voyage, oui), f(bagage_dommage_esthetique, oui)]), tout, non, '4.2.2.4',
-    "les dommages d’ordre purement esthétique").
-exclusion(bagages_bris, et([f(en_voyage, oui), f(deterioration_lente_ou_parasites, oui)]), tout, non, '4.2.2.4',
-    "de l’usure, de la détérioration lente, de la vétusté ou d’un défaut d’entretien ; n de l’humidité, des mites, des vers ou des parasites").
-exclusion(bagages_bris, et([f(en_voyage, oui), f(cause_intemperie, oui)]), tout, non, '4.2.2.4',
-    "de la pluie, de la grêle et de toute autre manifestation atmosphérique").
-exclusion(bagages_bris, et([f(bien, valeurs), f(en_voyage, oui)]), bien(valeurs), non, '4.2.2.1',
-    "Les valeurs ne sont pas assimilées à des bagages").
-exclusion(bagages_bris, et([f(en_voyage, oui), f(proprietaire, hote)]), tout, non, '4.2.2.4',
-    "les bagages dont l’Assuré n’est pas propriétaire").
-limite(bagages_bris, '4.2.2.1', "à concurrence de 5.000 € par sinistre", "5000").
-garantie(bagages_sinistre, "Bagages en voyage : incendie, explosion, dégât des eaux (option)", '4.2.2.1',
-    "La Compagnie garantit à l’Assuré la couverture de ses bagages emportés dans le cadre d’un voyage contre : n le vol,pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes ; n la perte, n les dégâts dus à toute circonstance fortuite survenue pendant le voyage").
-perimetre(bagages_sinistre, ou([f(evenement, incendie), f(evenement, explosion), f(evenement, degat_eaux)])).
-perimetre(bagages_sinistre, ou([f(lieu, voie_publique), f(lieu, vehicule), f(lieu, autre_batiment)])).
-perimetre(bagages_sinistre, f(en_voyage, oui)).
-perimetre(bagages_sinistre, non(ou([f(bien, vehicule_moteur), f(bien, remorque)]))).
-circonstance(bagages_sinistre, f(option_bagages, oui), '4.2.2',
-    "la garantie “ bagages” est souscrite").
-exclusion(bagages_sinistre, et([f(en_voyage, oui), f(deterioration_lente_ou_parasites, oui)]), tout, non, '4.2.2.4',
-    "de l’usure, de la détérioration lente, de la vétusté ou d’un défaut d’entretien ; n de l’humidité, des mites, des vers ou des parasites").
-exclusion(bagages_sinistre, et([f(en_voyage, oui), f(cause_intemperie, oui)]), tout, non, '4.2.2.4',
-    "de la pluie, de la grêle et de toute autre manifestation atmosphérique").
-exclusion(bagages_sinistre, et([f(bien, valeurs), f(en_voyage, oui)]), bien(valeurs), non, '4.2.2.1',
-    "Les valeurs ne sont pas assimilées à des bagages").
-limite(bagages_sinistre, '4.2.2.1', "à concurrence de 5.000 € par sinistre", "5000").
-garantie(bagages_perte, "Bagages en voyage : perte (option)", '4.2.2.1',
-    "La Compagnie garantit à l’Assuré la couverture de ses bagages emportés dans le cadre d’un voyage contre : n le vol,pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes ; n la perte, n les dégâts dus à toute circonstance fortuite survenue pendant le voyage").
-perimetre(bagages_perte, f(evenement, voyage)).
-perimetre(bagages_perte, f(objet_voyage, perte_bagage)).
-circonstance(bagages_perte, f(option_bagages, oui), '4.2.2',
-    "la garantie “ bagages” est souscrite").
-exclusion(bagages_perte, f(bagage_oublie, oui), tout, non, '4.2.2.4',
-    "les bagages oubliés").
-exclusion(bagages_perte, f(saisie_autorites, oui), tout, non, '4.2.2.4',
-    "les pertes et dégâts causés à l’occasion d’une saisie par les autorités publiques (police, douane, …)").
-exclusion(bagages_perte, f(bien, valeurs), bien(valeurs), non, '4.2.2.1',
-    "Les valeurs ne sont pas assimilées à des bagages").
-limite(bagages_perte, '4.2.2.1', "à concurrence de 5.000 € par sinistre", "5000").
-exclusion([bagages_vol, bagages_valeurs_agression, bagages_bris, bagages_sinistre, bagages_perte], et([f(en_voyage, oui), f(bagage_oublie, oui)]), tout, non, '4.2.2.4',
-    "les bagages oubliés").
-exclusion([bagages_vol, bagages_valeurs_agression, bagages_bris, bagages_sinistre, bagages_perte], et([f(en_voyage, oui), f(saisie_autorites, oui)]), tout, non, '4.2.2.4',
-    "les pertes et dégâts causés à l’occasion d’une saisie par les autorités publiques (police, douane, …)").
-exclusion([bagages_vol, bagages_valeurs_agression, bagages_bris, bagages_sinistre, bagages_perte], et([f(bagage_exterieur_vehicule, oui), non(f(accident_circulation, oui))]), tout, oui, '4.2.2.1',
-    "Les bagages transportés à l’extérieur d’un véhicule sont uniquement couverts contre les conséquences d’un accident de la circulation impliquant le moyen de transport").
-
 % --- Art. 4.2.3 : proposition rédigée par le modèle — mistral:mistral-large-4-0 (proposition écartée), 2026-11-24 ---
 evenement_traduit(voyage).
 garantie(assistance_voyage, "Assistance voyage (option)", '4.2.3.2',
@@ -974,3 +826,151 @@ exclusion([materiel_multimedia_bris, materiel_multimedia_vol], ou([f(auteur, ass
     "les vols commis par ou avec la complicité de ou du : n Preneur d’assurance, son conjoint, leurs ascendants ou descendants ainsi que les conjoints de ces personnes ; n l’Assuré ; n toute personne au service de l’Assuré pendant les heures de service et, si ces vols ont été commis en dehors de celles-ci, autrement que par effraction ou avec violence. En ce qui concerne les pièces mentionnées aux points").
 exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(option_materiel_multimedia, non), tout, oui, '3.1.7',
     "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “matériel multimédia” est accordée.").
+
+% --- Art. 4.2.2 : proposition rédigée par le modèle — mistral:mistral-large-4-0 (proposition écartée), 2026-11-24 ---
+evenement_traduit(vol).
+evenement_traduit(bris).
+evenement_traduit(accident).
+evenement_traduit(incendie).
+evenement_traduit(explosion).
+evenement_traduit(degat_eaux).
+evenement_traduit(voyage).
+garantie(bagages_vol, "Bagages en voyage : vol (option)", '4.2.2.1',
+    "La Compagnie garantit à l’Assuré la couverture de ses bagages emportés dans le cadre d’un voyage contre : n le vol,pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes ; n la perte, n les dégâts dus à toute circonstance fortuite survenue pendant le voyage").
+perimetre(bagages_vol, f(evenement, vol)).
+perimetre(bagages_vol, ou([f(lieu, voie_publique), f(lieu, vehicule), f(lieu, autre_batiment)])).
+perimetre(bagages_vol, f(en_voyage, oui)).
+perimetre(bagages_vol, non(ou([f(bien, vehicule_moteur), f(bien, remorque)]))).
+circonstance(bagages_vol, f(option_bagages, oui), '4.2.2',
+    "la garantie “ bagages” est souscrite").
+circonstance(bagages_vol, et([f(plainte_deposee, oui), ou([non(f(lieu, vehicule)), f(bagage_enregistre, oui), et([non(f(vol_de_nuit, oui)), ou([f(vehicule_vole, oui), f(effraction, oui)])])])]), '4.2.2.3',
+    "Lorsque les bagages sont non enregistrés et se trouvent à l’intérieur d’un véhicule, d’une caravane, d’une remorque ou d’un bateau, le vol est couvert entre sept heures et vingt-deux heures et à condition qu’il soit accompagné : n du vol simultané du véhicule, de la caravane, de la remorque ou du bateau ; n de l’effraction caractérisée du véhicule, du coffre ou de la cabine du bateau").
+exclusion(bagages_vol, ou([f(auteur, assure), f(auteur, famille)]), tout, non, '4.2.2.4',
+    "les vols commis par ou avec la complicité de ou du : n Preneur d’assurance, son conjoint, leurs ascendants ou descendants ainsi que les conjoints de ces personnes ; n l’Assuré").
+exclusion(bagages_vol, et([f(lieu, vehicule), f(vehicule_ferme_cle, non)]), tout, non, '4.2.2.3',
+    "toutes les portes du véhicule ou de la cabine de bateau où se trouvent les objets garantis y compris le volet ou la porte fermant le coffre aménagé dans la carrosserie de la voiture ou de la caravane ou encore dans la coque du bateau, sont bloqués en position de fermeture ; n les vitrages sont fermés et le “toit ouvrant” est bloqué en position de fermeture").
+exclusion(bagages_vol, et([f(lieu, vehicule), f(vehicule_toit_souple, oui)]), tout, non, '4.2.2.3',
+    "La garantie n’est pas acquise si les bagages se trouvent dans l’habitacle d’un véhicule équipé d’un toit non rigide").
+exclusion(bagages_vol, et([f(surveillance_directe, non), f(lieu, voie_publique)]), tout, non, '4.2.2.4',
+    "les bagages laissés sans surveillance dans un lieu public").
+exclusion(bagages_vol, f(bien, valeurs), bien(valeurs), non, '4.2.2.1',
+    "Les valeurs ne sont pas assimilées à des bagages").
+exclusion(bagages_vol, f(proprietaire, hote), tout, non, '4.2.2.4',
+    "les bagages dont l’Assuré n’est pas propriétaire").
+limite(bagages_vol, '4.2.2.1', "à concurrence de 5.000 € par sinistre", "5000").
+garantie(bagages_valeurs_agression, "Valeurs emportées en voyage : vol par agression (option)", '4.2.2.1',
+    "Pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes, la Compagnie garantit toutefois à l’Assuré le vol par agression des valeurs emportées en voyage").
+perimetre(bagages_valeurs_agression, f(evenement, vol)).
+perimetre(bagages_valeurs_agression, f(bien, valeurs)).
+perimetre(bagages_valeurs_agression, ou([f(lieu, voie_publique), f(lieu, vehicule), f(lieu, autre_batiment)])).
+perimetre(bagages_valeurs_agression, f(en_voyage, oui)).
+perimetre(bagages_valeurs_agression, non(ou([f(bien, vehicule_moteur), f(bien, remorque)]))).
+circonstance(bagages_valeurs_agression, f(option_bagages, oui), '4.2.2',
+    "la garantie “ bagages” est souscrite").
+circonstance(bagages_valeurs_agression, et([f(plainte_deposee, oui), f(violence, oui)]), '4.2.2.1',
+    "Pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes, la Compagnie garantit toutefois à l’Assuré le vol par agression des valeurs emportées en voyage").
+exclusion(bagages_valeurs_agression, ou([f(auteur, assure), f(auteur, famille)]), tout, non, '4.2.2.4',
+    "les vols commis par ou avec la complicité de ou du : n Preneur d’assurance, son conjoint, leurs ascendants ou descendants ainsi que les conjoints de ces personnes ; n l’Assuré").
+exclusion(bagages_valeurs_agression, f(proprietaire, hote), tout, non, '4.2.2.4',
+    "les bagages dont l’Assuré n’est pas propriétaire").
+limite(bagages_valeurs_agression, '4.2.2.1', "à concurrence de 5.000 € par sinistre", "5000").
+garantie(bagages_bris, "Bagages en voyage : casse accidentelle (option)", '4.2.2.1',
+    "La Compagnie garantit à l’Assuré la couverture de ses bagages emportés dans le cadre d’un voyage contre : n le vol,pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes ; n la perte, n les dégâts dus à toute circonstance fortuite survenue pendant le voyage").
+perimetre(bagages_bris, f(evenement, bris)).
+perimetre(bagages_bris, ou([f(lieu, voie_publique), f(lieu, vehicule), f(lieu, autre_batiment)])).
+perimetre(bagages_bris, f(en_voyage, oui)).
+perimetre(bagages_bris, non(ou([f(bien, vehicule_moteur), f(bien, remorque)]))).
+circonstance(bagages_bris, f(option_bagages, oui), '4.2.2',
+    "la garantie “ bagages” est souscrite").
+exclusion(bagages_bris, et([ou([f(bien, instrument_musique), f(bien, miroir), f(bien, objet_verre_non_vitre)]), non(f(accident_circulation, oui))]), tout, oui, '4.2.2.4',
+    "la casse d’objets fragiles tels pendules, porcelaines, glaces, instruments de musique, à moins que celle-ci ne résulte d’un incendie, d’un vol ou d’un accident de la circulation impliquant le moyen de transport").
+exclusion(bagages_bris, f(bagage_dommage_esthetique, oui), tout, non, '4.2.2.4',
+    "les dommages d’ordre purement esthétique").
+exclusion(bagages_bris, f(deterioration_lente_ou_parasites, oui), tout, non, '4.2.2.4',
+    "de l’usure, de la détérioration lente, de la vétusté ou d’un défaut d’entretien ; n de l’humidité, des mites, des vers ou des parasites").
+exclusion(bagages_bris, f(cause_intemperie, oui), tout, non, '4.2.2.4',
+    "de la pluie, de la grêle et de toute autre manifestation atmosphérique").
+exclusion(bagages_bris, f(bien, valeurs), bien(valeurs), non, '4.2.2.1',
+    "Les valeurs ne sont pas assimilées à des bagages").
+exclusion(bagages_bris, f(proprietaire, hote), tout, non, '4.2.2.4',
+    "les bagages dont l’Assuré n’est pas propriétaire").
+limite(bagages_bris, '4.2.2.1', "à concurrence de 5.000 € par sinistre", "5000").
+garantie(bagages_sinistre, "Bagages en voyage : incendie, explosion, dégât des eaux (option)", '4.2.2.1',
+    "La Compagnie garantit à l’Assuré la couverture de ses bagages emportés dans le cadre d’un voyage contre : n le vol,pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes ; n la perte, n les dégâts dus à toute circonstance fortuite survenue pendant le voyage").
+perimetre(bagages_sinistre, ou([f(evenement, incendie), f(evenement, explosion), f(evenement, degat_eaux)])).
+perimetre(bagages_sinistre, ou([f(lieu, voie_publique), f(lieu, vehicule), f(lieu, autre_batiment)])).
+perimetre(bagages_sinistre, f(en_voyage, oui)).
+perimetre(bagages_sinistre, non(ou([f(bien, vehicule_moteur), f(bien, remorque)]))).
+circonstance(bagages_sinistre, f(option_bagages, oui), '4.2.2',
+    "la garantie “ bagages” est souscrite").
+exclusion(bagages_sinistre, f(deterioration_lente_ou_parasites, oui), tout, non, '4.2.2.4',
+    "de l’usure, de la détérioration lente, de la vétusté ou d’un défaut d’entretien ; n de l’humidité, des mites, des vers ou des parasites").
+exclusion(bagages_sinistre, f(cause_intemperie, oui), tout, non, '4.2.2.4',
+    "de la pluie, de la grêle et de toute autre manifestation atmosphérique").
+exclusion(bagages_sinistre, f(bien, valeurs), bien(valeurs), non, '4.2.2.1',
+    "Les valeurs ne sont pas assimilées à des bagages").
+limite(bagages_sinistre, '4.2.2.1', "à concurrence de 5.000 € par sinistre", "5000").
+garantie(bagages_perte, "Bagages en voyage : perte (option)", '4.2.2.1',
+    "La Compagnie garantit à l’Assuré la couverture de ses bagages emportés dans le cadre d’un voyage contre : n le vol,pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes ; n la perte, n les dégâts dus à toute circonstance fortuite survenue pendant le voyage").
+perimetre(bagages_perte, f(evenement, voyage)).
+perimetre(bagages_perte, f(objet_voyage, perte_bagage)).
+circonstance(bagages_perte, f(option_bagages, oui), '4.2.2',
+    "la garantie “ bagages” est souscrite").
+exclusion(bagages_perte, f(bagage_oublie, oui), tout, non, '4.2.2.4',
+    "les bagages oubliés").
+exclusion(bagages_perte, f(saisie_autorites, oui), tout, non, '4.2.2.4',
+    "les pertes et dégâts causés à l’occasion d’une saisie par les autorités publiques (police, douane, …)").
+exclusion(bagages_perte, f(bien, valeurs), bien(valeurs), non, '4.2.2.1',
+    "Les valeurs ne sont pas assimilées à des bagages").
+limite(bagages_perte, '4.2.2.1', "à concurrence de 5.000 € par sinistre", "5000").
+exclusion([bagages_vol, bagages_valeurs_agression, bagages_bris, bagages_sinistre, bagages_perte], f(bagage_oublie, oui), tout, non, '4.2.2.4',
+    "les bagages oubliés").
+exclusion([bagages_vol, bagages_valeurs_agression, bagages_bris, bagages_sinistre, bagages_perte], f(saisie_autorites, oui), tout, non, '4.2.2.4',
+    "les pertes et dégâts causés à l’occasion d’une saisie par les autorités publiques (police, douane, …)").
+exclusion([bagages_vol, bagages_valeurs_agression, bagages_bris, bagages_sinistre, bagages_perte], et([f(bagage_exterieur_vehicule, oui), non(f(accident_circulation, oui))]), tout, oui, '4.2.2.1',
+    "Les bagages transportés à l’extérieur d’un véhicule sont uniquement couverts contre les conséquences d’un accident de la circulation impliquant le moyen de transport").
+
+% --- Art. 4.1.4 : proposition rédigée par le modèle — mistral:mistral-large-4-0 (proposition écartée), 2026-11-24 ---
+evenement_traduit(litige).
+garantie(e_protection, "E-protection : litiges liés à Internet (option)", '4.1.4.3~1',
+    "La présente protection juridique a pour vocation de protéger l’Assuré contre les risques liés à Internet dans le cadre de sa vie privée aux conditions telles que prévues ci-dessous").
+perimetre(e_protection, f(evenement, litige)).
+perimetre(e_protection, ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)])).
+perimetre(e_protection, non(ou([f(domaine_litige, travail), f(domaine_litige, logement), f(domaine_litige, travaux), f(domaine_litige, sante), f(domaine_litige, voisinage), f(domaine_litige, employeur_domestique), f(domaine_litige, location_vacances), f(domaine_litige, bateau), f(domaine_litige, association), f(domaine_litige, famille), f(domaine_litige, vehicule_moteur), f(domaine_litige, activite_professionnelle), f(domaine_litige, divorce_succession)]))).
+circonstance(e_protection, f(option_e_protection, oui), '4.1.4',
+    "la garantie “ E-protection ” est accordée").
+circonstance(e_protection, si(ou([f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(vendeur_lu_be_fr_nl, oui)), '4.1.4.3~1',
+    "être acquis auprès d’un professionnel domicilié au Luxembourg, en Belgique, en France, ou aux Pays-Bas").
+circonstance(e_protection, si(f(litige_internet, achat_bien_internet), f(achat_bien_conditions, oui)), '4.1.4.3~1',
+    "être neuf, n être d’une valeur comprise entre 150 E et 5000 E TTC").
+exclusion(e_protection, f(anciennete_garantie, moins_30_jours), tout, non, '4.1.4.4',
+    "Pour tous les sinistres, le délai d’attente est d’1 mois à partir de la prise d’effet du contrat").
+exclusion(e_protection, f(litige_connu_avant_souscription, oui), tout, non, '4.1.4.4',
+    "le fait générateur du sinistre ne doit pas être connu de l’Assuré à la date de prise d’effet de la présente garantie").
+exclusion(e_protection, f(domaine_litige, activite_professionnelle), tout, non, '4.1.4.3~1',
+    "d’une activité rémunérée ou professionnelle").
+exclusion(e_protection, ou([f(litige_nature_exclue, propriete_intellectuelle), f(litige_nature_exclue, douane_fiscalite), f(litige_nature_exclue, gestion_societe), f(litige_nature_exclue, delai_paiement), f(litige_nature_exclue, politique_syndical), f(litige_nature_exclue, droits_tiers_ou_cedes), f(litige_nature_exclue, action_collective), f(litige_nature_exclue, caution_mandat)]), tout, non, '4.1.4.3~1',
+    "de litiges liés à la propriété intellectuelle ou autres droits similaires (marques, copyright, droit d’auteur, etc…) ; n de litiges liés à des questions douanières ou fiscales ; n de la participation à l’administration ou à la gestion d’une association ou d’une société civile ou commerciale").
+exclusion(e_protection, f(enjeu_moins_150, oui), tout, non, '4.1.4.4',
+    "les sinistres dont l’enjeu en principal ne dépasse pas 150 R").
+exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation)]), ou([f(auteur, assure), f(auteur, famille)])]), tout, non, '4.1.4.3~2',
+    "Le Prestataire ne prend pas en charge les sinistres résultant d’une usurpation d’identité ou d’une utilisation frauduleuse des moyens de paiement ou d’une atteinte à l’e-réputation par une personne assurée au titre des présentes garanties").
+exclusion(e_protection, et([f(litige_internet, fraude_paiement), f(code_secret_divulgue, oui)]), tout, non, '4.1.4.3~2',
+    "donner la possibilité à un tiers (y compris le (la) conjoint(e), un membre de la famille et des amis) de prendre connaissance du code secret et/ou d’utiliser la carte de crédit ou de débit ; indiquer son code secret sur un support de quelle que forme qu’il soit").
+exclusion(e_protection, et([f(litige_internet, fraude_paiement), f(banque_prevenue, non)]), tout, non, '4.1.4.3~2',
+    "ne pas notifier immédiatement à sa banque, dès que l’Assuré a connaissance de la perte, du vol ou de l’usage abusif de sa carte de crédit ou de débit, ou de toute utilisation non autorisée de sa carte de crédit ou de débit").
+exclusion(e_protection, et([f(litige_internet, e_reputation), f(diffusion_volontaire, oui)]), tout, non, '4.1.4.3~2',
+    "une e-réputation que l’Assuré s’est lui-même constituée au travers des réseaux sociaux, commentaires sur les sites Internet ou encore utilisation de son courrier électronique ; n une diffusion volontaire d’informations de données personnelles de la part de l’Assuré").
+exclusion(e_protection, et([f(litige_internet, e_reputation), f(auteur_presse, oui)]), tout, non, '4.1.4.3~2',
+    "une atteinte à l’e-réputation par une société de presse ou un journaliste").
+exclusion(e_protection, et([f(litige_internet, achat_bien_internet), ou([f(bien, animal), f(bien, plantation), f(bien, bijoux), f(bien, objet_art), f(bien, tapis_fourrure), f(bien, valeurs), f(bien, collection), f(bien, collection_timbres_monnaies), f(bien, denrees_alimentaires), f(bien, vehicule_moteur)])]), tout, non, '4.1.4.3~2',
+    "d’animaux et de végétaux ; n de bijoux, d’orfèvrerie, de pierres précieuses, de peintures, de sculptures, de tapis, d’espèces").
+exclusion(e_protection, et([f(litige_internet, achat_bien_internet), f(achat_bien_exclu, oui)]), tout, non, '4.1.4.3~2',
+    "de biens et denrées périssables ; n de médicaments au sens du droit luxembourgeois ; n d’armes de toutes catégories au sens du droit luxembourgeois ; n de véhicules terrestres à moteur ; n de données numériques à visualiser ou à télécharger en ligne").
+exclusion(e_protection, et([ou([f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(achat_enchere, oui)]), tout, non, '4.1.4.3~2',
+    "s ur un site de vente aux enchères").
+exclusion(e_protection, et([ou([f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(prix_conteste, oui)]), tout, non, '4.1.4.3~2',
+    "dont le prix d’achat est contesté").
+exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement)]), f(litige_hors_europe, oui)]), tout, non, '4.1.4.5',
+    "dans un pays membre de l’Union européenne, en ce compris la Suisse, Monaco, Andorre, Saint-Marin, le Vatican, le Liechtenstein et la Norvège pour la garantie en cas d’usurpation d’identité et la garantie en cas d’utilisation frauduleuse des moyens de paiement").
+limite(e_protection, '4.1.4.3~1', "l’indemnisation du préjudice s’effectue dans la limite globale de 5000 E toutes taxes comprises (TTC) par année d’assurance", "5000").

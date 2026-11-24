@@ -860,3 +860,81 @@ def test_une_exclusion_hors_du_perimetre_est_signalee():
     assert exclusions_hors_perimetre(prop, voc) == []
     prop["garanties"][0]["perimetre"][1] = {"concept": "batiment"}          # un concept du contrat, qu'on ne sait pas ouvrir
     assert exclusions_hors_perimetre(prop, voc) == [], "sans certitude, pas d'alerte"
+
+
+def test_acceptation_recopie_la_source_et_la_restriction_de_lecture(voc_etendu):
+    """7.177. Une option (« source » : conditions particulières) et une restriction de lecture écrite par le relecteur
+    se rajoutaient à la main dans le vocabulaire après chaque acceptation : sept fois le 24 novembre."""
+    prop = copy.deepcopy(BONNE)
+    prop["vocabulaire_manquant"] = [
+        {"variable": "option_essai", "valeurs": ["oui", "non"], "question": "Avez-vous souscrit l'option d'essai ?",
+         "libelle": "Option d'essai", "source": "conditions_particulieres"},
+        {"variable": "en_deplacement", "valeurs": ["oui", "non"], "question": "Étiez-vous en déplacement ?",
+         "libelle": "En déplacement", "seulement_si": {"lieu": ["voie_publique"]}},
+        {"variable": "mal_restreinte", "valeurs": ["oui", "non"], "question": "?", "libelle": "Mal restreinte",
+         "seulement_si": {"lieu": ["sur_la_lune"]}, "source": "ailleurs"}]
+    redaction.accepter_vocabulaire(prop, voc_etendu)
+    voc = prolog.vocabulaire(voc_etendu)
+    assert voc["option_essai"]["source"] == prolog.CONDITIONS_PARTICULIERES
+    assert voc["en_deplacement"]["seulement_si"] == {"lieu": ["voie_publique"]} and "source" not in voc["en_deplacement"]
+    assert "source" not in voc["mal_restreinte"], "une source inconnue n'est pas recopiée"
+    assert voc["mal_restreinte"].get("seulement_si") != {"lieu": ["sur_la_lune"]}, "ni une valeur que le vocabulaire ignore"
+
+
+def test_une_option_marquee_se_demande_une_garantie_de_base_reste_en_reserve():
+    """7.178. Deux garanties qui citent la même phrase (« si les conditions particulières mentionnent… ») : celle que
+    le contrat range sous un titre « Option » porte la marque et reste une question ; l'autre devient une réserve,
+    et la note rappelle la marque. Écrite sans marque, une option avait répondu « couvert, sous réserve » (7.173)."""
+    phrase = "applicables si les conditions particulières mentionnent que la garantie est accordée"
+    condition = {"f": ["option_essai", "oui"]}
+
+    def proposition(marque):
+        prop = copy.deepcopy(BONNE)
+        c = {"condition": condition, "article": "2.2", "texte": phrase} | ({"option": True} if marque else {})
+        prop["garanties"][0]["circonstances"] = [c]
+        prop["vocabulaire_manquant"] = [{"variable": "option_essai", "valeurs": ["oui", "non"], "question": "Option ?",
+                                         "source": "conditions_particulieres"}]
+        return prop
+
+    option = proposition(True)
+    assert redaction.conditions_particulieres_en_reserve(option) == []
+    assert option["garanties"][0]["circonstances"][0]["condition"] == condition, "la circonstance reste une question"
+    assert "circonstance(tempete_batiment, f(option_essai, oui)" in redaction.en_prolog(option, "2.2")
+    base = proposition(False)
+    notes = redaction.conditions_particulieres_en_reserve(base)
+    assert base["garanties"][0]["circonstances"] == [] and "marquer la circonstance « option »" in notes[0]
+    assert {"non": condition} in [x["condition"] for x in base["garanties"][0]["exclusions"]]
+
+
+def test_une_option_mal_declaree_est_bloquante():
+    from couverture.redaction.controles import options_mal_declarees
+    prop = copy.deepcopy(BONNE)
+    prop["garanties"][0]["circonstances"] = [
+        {"condition": {"f": ["vent_fort", "oui"]}, "article": "2.2", "texte": "…", "option": True},
+        {"condition": {"et": [{"f": ["option_essai", "oui"]}]}, "article": "2.2", "texte": "…", "option": True},
+        {"condition": {"f": ["option_essai", "oui"]}, "article": "2.2", "texte": "…", "option": True}]
+    prop["vocabulaire_manquant"] = [{"variable": "option_essai", "valeurs": ["oui", "non"], "question": "Option ?",
+                                     "source": "conditions_particulieres"}]
+    fautes = options_mal_declarees(prop)
+    assert len(fautes) == 2 and "vent_fort" in fautes[0] and "fait = oui" in fautes[1]
+
+
+def test_un_evenement_nouveau_etend_les_faits_qui_valent_pour_tous(voc_etendu):
+    """7.180. Un fait lu pour tous les événements le reste quand un événement s'ajoute : sans cela, la réserve du
+    déménagement réapparaissait sur chaque réponse couverte (vu le 24 novembre, avec l'événement « voyage »)."""
+    avant = prolog.vocabulaire(voc_etendu)
+    tous = set(avant["evenement"]["valeurs"])
+    generaux = [v for v, d in avant.items() if d.get("pour") and tous <= set(d["pour"])]
+    partiel = next(v for v, d in avant.items() if d.get("pour") and not tous <= set(d["pour"])
+                   and "jamais" not in d["pour"])
+    assert generaux, "le vocabulaire a au moins un fait lu pour tous les événements"
+    prop = copy.deepcopy(BONNE)
+    prop["vocabulaire_manquant"] = [{"variable": "evenement", "valeurs": ["eruption"], "question": "Que s'est-il passé ?",
+                                     "aide": {"eruption": "une éruption volcanique"}}]
+    ajouts = redaction.accepter_vocabulaire(prop, voc_etendu)
+    apres = prolog.vocabulaire(voc_etendu)
+    assert "eruption" in apres["evenement"]["valeurs"]
+    for v in generaux:
+        assert "eruption" in apres[v]["pour"], v
+    assert any(x.startswith(f"{generaux[0]} : vaut pour tous les sinistres") for x in ajouts)
+    assert "eruption" not in apres[partiel]["pour"], "un fait lu pour quelques événements n'est pas étendu"

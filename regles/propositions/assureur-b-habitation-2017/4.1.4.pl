@@ -11,15 +11,15 @@ circonstance(e_protection, si(ou([f(litige_internet, achat_bien_internet), f(lit
     "être acquis auprès d’un professionnel domicilié au Luxembourg, en Belgique, en France, ou aux Pays-Bas").
 circonstance(e_protection, si(f(litige_internet, achat_bien_internet), f(achat_bien_conditions, oui)), '4.1.4.3~1',
     "être neuf, n être d’une valeur comprise entre 150 E et 5000 E TTC").
-exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(anciennete_garantie, moins_30_jours)]), tout, non, '4.1.4.4',
+exclusion(e_protection, f(anciennete_garantie, moins_30_jours), tout, non, '4.1.4.4',
     "Pour tous les sinistres, le délai d’attente est d’1 mois à partir de la prise d’effet du contrat").
-exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(litige_connu_avant_souscription, oui)]), tout, non, '4.1.4.4',
+exclusion(e_protection, f(litige_connu_avant_souscription, oui), tout, non, '4.1.4.4',
     "le fait générateur du sinistre ne doit pas être connu de l’Assuré à la date de prise d’effet de la présente garantie").
-exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(domaine_litige, activite_professionnelle)]), tout, non, '4.1.4.3~1',
+exclusion(e_protection, f(domaine_litige, activite_professionnelle), tout, non, '4.1.4.3~1',
     "d’une activité rémunérée ou professionnelle").
-exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), ou([f(litige_nature_exclue, propriete_intellectuelle), f(litige_nature_exclue, douane_fiscalite), f(litige_nature_exclue, gestion_societe), f(litige_nature_exclue, delai_paiement), f(litige_nature_exclue, politique_syndical), f(litige_nature_exclue, droits_tiers_ou_cedes), f(litige_nature_exclue, action_collective), f(litige_nature_exclue, caution_mandat)])]), tout, non, '4.1.4.3~1',
+exclusion(e_protection, ou([f(litige_nature_exclue, propriete_intellectuelle), f(litige_nature_exclue, douane_fiscalite), f(litige_nature_exclue, gestion_societe), f(litige_nature_exclue, delai_paiement), f(litige_nature_exclue, politique_syndical), f(litige_nature_exclue, droits_tiers_ou_cedes), f(litige_nature_exclue, action_collective), f(litige_nature_exclue, caution_mandat)]), tout, non, '4.1.4.3~1',
     "de litiges liés à la propriété intellectuelle ou autres droits similaires (marques, copyright, droit d’auteur, etc…) ; n de litiges liés à des questions douanières ou fiscales ; n de la participation à l’administration ou à la gestion d’une association ou d’une société civile ou commerciale").
-exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation), f(litige_internet, achat_bien_internet), f(litige_internet, achat_service_internet)]), f(enjeu_moins_150, oui)]), tout, non, '4.1.4.4',
+exclusion(e_protection, f(enjeu_moins_150, oui), tout, non, '4.1.4.4',
     "les sinistres dont l’enjeu en principal ne dépasse pas 150 R").
 exclusion(e_protection, et([ou([f(litige_internet, usurpation_identite), f(litige_internet, fraude_paiement), f(litige_internet, e_reputation)]), ou([f(auteur, assure), f(auteur, famille)])]), tout, non, '4.1.4.3~2',
     "Le Prestataire ne prend pas en charge les sinistres résultant d’une usurpation d’identité ou d’une utilisation frauduleuse des moyens de paiement ou d’une atteinte à l’e-réputation par une personne assurée au titre des présentes garanties").

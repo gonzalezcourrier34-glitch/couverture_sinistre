@@ -175,6 +175,17 @@ def accepter_vocabulaire(prop: dict, dossier: Path | None = None, contrat_id: st
             continue
         if v in voc:
             nouvelles = [x for x in valeurs if x not in voc[v]["valeurs"]]
+            if v == "evenement" and nouvelles:
+                # 7.180 : un fait lu pour tous les événements (« avez-vous signalé votre déménagement ? ») vaut
+                # pour tous les sinistres, et sa réserve n'est jamais montrée. Avec un événement de plus, il ne
+                # valait plus « pour tous » : la réserve serait revenue sur chaque réponse couverte. Un test l'a
+                # rattrapé le jour où « voyage » est entré ; l'acceptation l'étend désormais elle-même.
+                tous = set(voc[v]["valeurs"])
+                for w, dw in voc.items():
+                    pour = dw.get("pour") or []
+                    if pour and tous <= set(pour):
+                        dw["pour"] = pour + [x for x in nouvelles if x not in pour]
+                        ajouts.append(f"{w} : vaut pour tous les sinistres, lue aussi pour {', '.join(nouvelles)}")
             voc[v]["valeurs"] += nouvelles
             # Une variable dont chaque contrat a ses noms (la formule) : les noms déclarés deviennent ceux de ce
             # contrat, y compris un nom qu'un autre porte déjà (« confort » chez C et chez D, 7.150).
@@ -234,6 +245,17 @@ def accepter_vocabulaire(prop: dict, dossier: Path | None = None, contrat_id: st
                 continue
             if lieux.get(v):
                 voc[v]["seulement_si"] = {"lieu": lieux[v]}
+            # 7.177 : ce que le relecteur a écrit dans la proposition est recopié. Un fait des conditions
+            # particulières (« source ») n'est pas cherché dans la déclaration comme un autre ; une restriction de
+            # lecture (« seulement_si ») écrite à la main l'emporte sur celle que le code déduit des lieux. Les deux
+            # se rajoutaient dans le vocabulaire après chaque acceptation, et un oubli coûtait un essai.
+            if m.get("source") == prolog.CONDITIONS_PARTICULIERES:
+                voc[v]["source"] = prolog.CONDITIONS_PARTICULIERES
+            restriction = m.get("seulement_si")
+            if isinstance(restriction, dict) and restriction and all(
+                    k in voc and isinstance(x, list) and set(map(str, x)) <= set(voc[k]["valeurs"])
+                    for k, x in restriction.items()):
+                voc[v]["seulement_si"] = {k: [str(i) for i in x] for k, x in restriction.items()}
             ajouts.append(f"{v} ({', '.join(valeurs)}) : « {voc[v]['question']} »")
     ajouts += etendre_pour(prop, voc)
     # Une variable d'extension (le séjour temporaire élargit le bâtiment) vaut pour toutes les garanties qui

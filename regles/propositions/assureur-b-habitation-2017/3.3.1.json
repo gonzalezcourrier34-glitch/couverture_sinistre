@@ -92,7 +92,8 @@
               ]
             },
             "article": "3.3.1",
-            "texte": "la garantie “dommages aux biens” est accordée"
+            "texte": "la garantie “dommages aux biens” est accordée",
+            "option": true
           }
         ],
         "obligations": [],
@@ -198,7 +199,8 @@
               ]
             },
             "article": "3.3.1",
-            "texte": "la garantie “dommages aux biens” est accordée"
+            "texte": "la garantie “dommages aux biens” est accordée",
+            "option": true
           },
           {
             "condition": {

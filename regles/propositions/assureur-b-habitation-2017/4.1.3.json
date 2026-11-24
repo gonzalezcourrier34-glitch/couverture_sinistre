@@ -64,7 +64,8 @@
               ]
             },
             "article": "4.1.3",
-            "texte": "la garantie “ protection juridique ” est accordée"
+            "texte": "la garantie “ protection juridique ” est accordée",
+            "option": true
           }
         ],
         "obligations": [],

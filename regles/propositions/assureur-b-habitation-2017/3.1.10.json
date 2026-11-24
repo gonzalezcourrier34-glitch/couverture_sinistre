@@ -48,7 +48,8 @@
               ]
             },
             "article": "3.1.10",
-            "texte": "la garantie “ responsabilité civile immeuble ” est accordée"
+            "texte": "la garantie “ responsabilité civile immeuble ” est accordée",
+            "option": true
           }
         ],
         "obligations": [],

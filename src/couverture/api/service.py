@@ -21,7 +21,6 @@ from typing import Any
 from couverture import chaine, lecture, prolog
 from couverture.base import Base, Contrat
 from couverture.models import Clause, Faits, Resultat
-from couverture.validation import valider
 
 
 class SansModele:
@@ -205,7 +204,7 @@ def decider(base: Base, contrat_id: str, faits: dict[str, Any], decideur=None) -
     p = chaine.PipelineRegles(contrat_id, clauses, SansModele(), decideur=decideur)
     verdict, consultees = p.verdict(d, retenus)
     verdict.avertissements = ecarts + verdict.avertissements
-    verdict = valider(verdict, consultees, roles_des_regles=True)
+    verdict = p.valider(verdict, consultees)
     r = Resultat(sinistre="", contrat_id=contrat_id, methode="regles", faits=chaine.faits_lisibles(retenus),
                  clauses_consultees=consultees, verdict=verdict)
     return r, reponse(r, d)

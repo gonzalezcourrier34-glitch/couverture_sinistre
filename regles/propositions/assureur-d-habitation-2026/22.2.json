@@ -116,7 +116,8 @@
               ]
             },
             "article": "22.2",
-            "texte": "(garantie optionnelle)"
+            "texte": "(garantie optionnelle)",
+            "option": true
           }
         ],
         "obligations": [],

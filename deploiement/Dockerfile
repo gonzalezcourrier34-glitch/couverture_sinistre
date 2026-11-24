@@ -31,13 +31,10 @@ WORKDIR /app
 COPY pyproject.toml README.md ./
 COPY src ./src
 COPY config ./config
-# Les règles, le moteur et le vocabulaire ; pas les propositions ni les brouillons de rédaction.
-COPY regles/moteur.pl ./regles/
-COPY regles/assureur-*.pl ./regles/
-COPY regles/vocabulaire ./regles/vocabulaire
-COPY regles/formules ./regles/formules
-# L'état de traduction de chaque jeu de conditions (contour vert ou orange à l'écran, 7.169).
-COPY regles/traduction.json ./regles/
+# Tout le dossier des règles : le moteur, les règles, le vocabulaire, les formules, l'état de traduction. Les
+# fichiers étaient copiés un par un, et `traduction.json` avait été oublié (7.173). Ce qui ne sert qu'à rédiger
+# (propositions, cas de non-régression) est écarté par .dockerignore.
+COPY regles ./regles
 # Installation « éditable » : le code cherche regles/ et config/ à côté de src/, donc dans /app.
 RUN pip install --no-cache-dir -e .
 COPY data/lecture ./data/lecture

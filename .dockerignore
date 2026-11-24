@@ -14,3 +14,5 @@ data/mlflow
 data/bancs
 data/contrats/*.prive.*
 deploiement/*.env
+regles/propositions
+regles/cas

@@ -62,13 +62,16 @@ RETROGRADE = ("À préciser : la réponse « couvert » ne s'appuie sur aucune g
 
 
 def valider(verdict: Verdict, retenues: list[ClauseRetenue], relocaliser: bool = False,
-            roles_des_regles: bool = False) -> Verdict:
+            roles_des_regles: bool = False, refus_sans_citation: bool = False) -> Verdict:
     """`relocaliser` : si l'extrait n'est pas dans la clause annoncée, le chercher dans les autres.
     Utilisé pour la méthode « document brut », où le modèle ne connaît pas nos identifiants.
     `roles_des_regles` : le rôle d'une citation est celui que la règle lui donne (la phrase d'une garantie, d'une
     exclusion), pas le type de la clause entière. Pour la méthode « règles » (7.143) : la phrase citée est
     retrouvée mot pour mot, et une clause typée à l'ingestion « exclusion » ou « autre » peut contenir la phrase
-    qui accorde la garantie. Sans cela (le modèle cite), le rôle vient du contrat, pas du modèle."""
+    qui accorde la garantie. Sans cela (le modèle cite), le rôle vient du contrat, pas du modèle.
+    `refus_sans_citation` : un refus qui n'a rien à citer est admis. Un seul cas (7.177) : le contrat est traduit en
+    entier et aucune de ses garanties ne porte sur l'événement ; la preuve est l'absence, que l'arbre montre garantie
+    par garantie. Partout ailleurs, une réponse ferme sans citation vérifiable redevient « à préciser »."""
     v = verdict.model_copy(deep=True)
     v.decision_initiale = verdict.decision
     clauses = {r.clause.id: r.clause for r in retenues}
@@ -99,7 +102,8 @@ def valider(verdict: Verdict, retenues: list[ClauseRetenue], relocaliser: bool =
         # La justification ne doit pas dire « Couvert. » sous une réponse « à préciser » (7.143).
         v.justification = RETROGRADE + v.justification
         v.confiance = min(v.confiance, 0.4)
-    if v.decision != Decision.INCERTAIN and not valides:
+    if v.decision != Decision.INCERTAIN and not valides \
+            and not (refus_sans_citation and v.decision == Decision.NON_COUVERT):
         v.decision = Decision.INCERTAIN
         v.avertissements.append("Décision rétrogradée en INCERTAIN : aucune citation vérifiable.")
     if v.decision == Decision.INCERTAIN and not (v.ambiguites or v.informations_manquantes):
