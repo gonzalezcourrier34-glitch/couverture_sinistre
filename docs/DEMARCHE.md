@@ -5012,6 +5012,26 @@ Le 24 nov., 21 h à 21 h 45.
 
 **B en vert, et ce que cela veut dire.** Tous les articles de B ont leurs règles, et aucune proposition n'a de passage non traduit. Recompté : trois passages restent « laissés au gestionnaire » ou « non distingués », tous dans la protection numérique (l'antivirus, la grève du transporteur, le domicile des membres du ménage) ; ce sont des faits qu'une déclaration ne peut pas établir. Les limites : l'assistance voyage ne vérifie pas l'étranger ; la gravité d'une maladie n'est pas jugée ; et le banc de B ne contient aucun cas de voyage ni de litige sur Internet. Le vert de B dit que le texte est traduit, pas que ces garanties sont mesurées.
 
+### 7.176 Finir B : l'étranger, seize essais, le vélo du hall et la voiture devant la gare
+
+Le 24 nov., 21 h 35 à 22 h.
+
+**À la question « B est-il terminé ? »**, la réponse était oui pour la traduction et cinq points ouverts pour le reste. Les voici.
+
+**L'étranger.** Sept prestations de l'assistance voyage ne valent qu'à l'étranger : une circonstance, avec un fait propre à B. Un médecin payé au Luxembourg : non couvert.
+
+**Seize essais de règles.** Les articles de la soirée n'ont aucun cas dans le jeu fermé, et je ne peux pas en écrire : je connais les règles. Seize jeux de faits exacts, avec la réponse attendue, sont entrés dans les tests ; le moteur Prolog et le moteur de référence doivent concorder. Ils ne mesurent pas la chaîne, la lecture n'y est pas : ils empêchent une régression des règles.
+
+**Le vélo du hall : je visais la mauvaise réponse.** J'ai réécrit l'aide du fait « sous votre surveillance » pour retrouver le refus d'avant. Les deux essais sont restés « à préciser », et c'est la réponse exacte : l'option « dommages aux biens » couvre un vélo volé sous la surveillance directe de l'assuré, où qu'il soit, et « volé dans le hall » ne dit pas s'il l'était. Le refus net datait d'avant la traduction de l'option. C'est le README qui était faux, corrigé : le vélo est refusé chez A, C et D, « à préciser » chez B.
+
+**La voiture devant la gare (`f-b18`).** Couvert à tort depuis le 20 novembre, attribué à la lecture, et laissé. L'essai montre ce que la lecture rend : la voiture comme bien touché, avec l'ordinateur, et le lieu « voie publique ». Les règles étaient justes sur des faits exacts (« dans un véhicule » : la question est posée), mais ces faits-là n'arrivaient jamais. Trois corrections de l'aide du lieu, les 20 et 21 novembre, n'y avaient rien changé.
+
+**La règle.** L'obligation de 3.1.7.4 (véhicule fermé à clé, matériel non visible) se déclenche aussi quand un véhicule figure parmi les biens touchés et que le lieu lu est la voie publique. Elle ne conclut rien : elle pose la question du contrat. Comparé sur 700 jeux de faits ciblés : seuls changent les cas « véhicule touché, voie publique », de « couvert » à « à préciser ». Un cambriolage où la voiture du garage est abîmée n'est pas concerné : le lieu n'est pas la voie publique.
+
+**Ce que c'est, dit sans détour.** Une règle écrite pour rattraper une lecture, en regardant un cas du jeu fermé. Je l'ai proposée à l'utilisateur comme un choix, avec ce que chaque branche coûte : un couvert à tort connu et un jeu fermé intact, ou un produit qui pose la question et un cas de moins jamais vu. Il a accepté. Ma recommandation allait dans ce sens : un « couvert » donné à tort est l'erreur la plus chère.
+
+**Mesure.** B 90 %, zéro couvert à tort, aucun cas instable, portes passées, 249 tests. Ce zéro compte deux cas vus sur vingt (`f-b19`, `f-b18`) ; c'est écrit dans le tableau du README.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le ferais.
@@ -5226,3 +5246,5 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 176. Un risque vu avant le dépôt s'annonce avec son essai et son critère de retrait ; l'essai l'a confirmé en une commande.
 177. Ajouter une valeur au socle commun (un événement) change ce que « pour tous » veut dire : chercher qui raisonne sur l'ensemble des valeurs avant de l'étendre.
 178. « Traduit en entier » et « mesuré » sont deux affirmations : le vert dit la première, le banc la seconde, et il faut écrire laquelle manque.
+179. Avant de corriger un écart avec une réponse attendue, vérifier que l'attente tient encore : le refus du vélo chez B datait d'avant l'option, et j'ai réglé une aide pour retrouver une réponse devenue fausse.
+180. Quand la lecture rend les mêmes faits « à côté » à chaque passage, la règle peut les accueillir, à condition de seulement poser la question du contrat, et de dire que le cas a été vu.

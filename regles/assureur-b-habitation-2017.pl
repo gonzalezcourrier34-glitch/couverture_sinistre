@@ -632,54 +632,6 @@ obligation(attentats, f(plainte_deposee, oui), faux, non, '3.1.1.2',
 limite(attentats, '3.1.1.2', "La Compagnie prend en charge à concurrence de 745.000 € par sinistre les dégâts causés directement aux biens désignés", "745000 EUR").
 exclusion([incendie_base, decongelation, linge, heurt, degradations_vol, vandalisme, attentats], f(option_incendie, non), tout, oui, '3.1.1',
     "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ incendie et périls assimilés ” est accordée.").
-
-% --- Art. 3.1.7 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
-evenement_traduit(bris).
-evenement_traduit(vol).
-evenement_traduit(accident).
-garantie(materiel_multimedia_bris, "Bris du matériel multimédia", '3.1.7.1',
-    "La Compagnie couvre tout bris ou destruction accidentel résultant d’une chute, d’un choc ou de la pénétration d’un corps étranger et qui rend nécessaire la réparation ou le remplacement du matériel multimédia. Sont également couverts au titre de cette garantie les équipements suivants : n équipement d’alarme et de surveillance, en activité ou au repos, pendant les opérations de démontage, de déplacement sur les lieux assurés ou de remontage nécessitées pour leur entretien ou leur révision, pour autant que la mise en exploitation desdits matériels ait donné entière satisfaction ; n équipement domotique").
-perimetre(materiel_multimedia_bris, f(evenement, bris)).
-perimetre(materiel_multimedia_bris, ou([f(bien, electronique), f(bien, equipement_alarme_surveillance), f(bien, equipement_domotique)])).
-obligation(materiel_multimedia_bris, si(f(lieu, vehicule), et([f(vehicule_ferme_cle, oui), non(f(materiel_laisse_en_vue, oui))])), faux, non, '3.1.7.4',
-    "Lorsque les biens assurés se trouvent à l’intérieur d’un véhicule inoccupé, la garantie intervient uniquement si les deux conditions suivantes sont remplies simultanément : n le véhicule a été fermé à clé ; n le matériel assuré n’a pas été laissé en vue à l’intérieur de l’habitacle du véhicule").
-exclusion(materiel_multimedia_bris, et([f(bien, equipement_alarme_surveillance), f(mise_en_exploitation_satisfaction, non)]), bien(equipement_alarme_surveillance), non, '3.1.7.1',
-    "pour autant que la mise en exploitation desdits matériels ait donné entière satisfaction").
-limite(materiel_multimedia_bris, '3.1.7.1', "1 0.000 € par sinistre lorsque les conditions particulières mentionnent que la formule «Privilège» est souscrite", "10000").
-limite(materiel_multimedia_bris, '3.1.7.1', "5.000 € par sinistre lorsque les conditions particulières mentionnent que la formule «Active» est souscrite", "5000").
-garantie(materiel_multimedia_vol, "Vol du matériel multimédia", '3.1.7.1',
-    "Sous réserve que la garantie vol ait été accordée, la Compagnie couvre également : n le vol du matériel multimédia lorsque le vol a eu lieu à l’extérieur du bâtiment désigné ; n le vol de ces équipements se trouvant à l’intérieur d’un véhicule terrestre automoteur à condition que ledit véhicule soit également volé ou qu’il y ait effraction caractérisée du véhicule ; n le vol de ces équipements qu’un Assuré déplace à l’occasion d’un séjour temporaire dans un bâtiment situé n’importe où dans le monde, pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes").
-perimetre(materiel_multimedia_vol, f(evenement, vol)).
-perimetre(materiel_multimedia_vol, ou([f(bien, electronique), f(bien, equipement_alarme_surveillance), f(bien, equipement_domotique)])).
-circonstance(materiel_multimedia_vol, ou([non(concept(batiment_designe)), et([f(lieu, vehicule), ou([f(vehicule_vole, oui), f(effraction, oui)])]), et([f(sejour_temporaire, oui), f(plainte_deposee, oui)])]), '3.1.7.1',
-    "le vol du matériel multimédia lorsque le vol a eu lieu à l’extérieur du bâtiment désigné ; n le vol de ces équipements se trouvant à l’intérieur d’un véhicule terrestre automoteur à condition que ledit véhicule soit également volé ou qu’il y ait effraction caractérisée du véhicule ; n le vol de ces équipements qu’un Assuré déplace à l’occasion d’un séjour temporaire dans un bâtiment situé n’importe où dans le monde, pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes").
-obligation(materiel_multimedia_vol, si(f(lieu, vehicule), et([f(vehicule_ferme_cle, oui), non(f(materiel_laisse_en_vue, oui))])), faux, non, '3.1.7.4',
-    "Lorsque les biens assurés se trouvent à l’intérieur d’un véhicule inoccupé, la garantie intervient uniquement si les deux conditions suivantes sont remplies simultanément : n le véhicule a été fermé à clé ; n le matériel assuré n’a pas été laissé en vue à l’intérieur de l’habitacle du véhicule").
-exclusion(materiel_multimedia_vol, f(option_vol, non), tout, oui, '3.1.7.1',
-    "Sous réserve que la garantie vol ait été accordée").
-exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(proprietaire, hote), tout, oui, '3.1.7.2',
-    "le matériel dont l'Assuré n'est pas propriétaire").
-exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(cause_dommage, virus), tout, non, '3.1.7.2',
-    "les pertes liées à l'action d'un virus et tous préjudices consécutifs").
-exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(vice_defaut_connu, oui), tout, non, '3.1.7.2',
-    "les pertes ou dommages dus à des vices ou défauts qui existaient à la date d'effet de la présente assurance et qui étaient connus de l'Assuré ou de ses mandataires").
-exclusion([materiel_multimedia_bris, materiel_multimedia_vol], ou([f(manque_entretien, oui), f(fonctionnement_defectueux, oui)]), tout, non, '3.1.7.2',
-    "les pertes ou dommages qui sont la conséquence directe : n des effets continuels de l’exploitation (usure) ; n d’un fonctionnement défectueux").
-exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(garantie_fabricant, oui), tout, non, '3.1.7.2',
-    "les pertes ou dommages dont le fabricant ou le fournisseur est légalement ou contractuellement responsable").
-exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(bien, consommable), bien(consommable), non, '3.1.7.2',
-    "les pertes ou dommages causés aux lampes,tubes, bandes transporteuses, fusibles, joints, courroies, chaînes").
-exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(type_dommage, rayure_ou_ecaillement), tout, non, '3.1.7.2',
-    "les défauts d'ordre esthétique, tels que les bosses, égratignures, rayures ou écaillements").
-exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(evenement, electricite), tout, oui, '3.1.7.2',
-    "les dommages d'origine électrique").
-exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(bien, denrees_alimentaires), bien(denrees_alimentaires), non, '3.1.7.2',
-    "les dommages causés au contenu des appareils").
-exclusion([materiel_multimedia_bris, materiel_multimedia_vol], ou([f(auteur, assure), f(auteur, famille), et([f(auteur, personnel_prive), ou([f(heures_service, oui), non(ou([f(effraction, oui), f(violence, oui)]))])])]), tout, oui, '3.1.7.2',
-    "les vols commis par ou avec la complicité de ou du : n Preneur d’assurance, son conjoint, leurs ascendants ou descendants ainsi que les conjoints de ces personnes ; n l’Assuré ; n toute personne au service de l’Assuré pendant les heures de service et, si ces vols ont été commis en dehors de celles-ci, autrement que par effraction ou avec violence. En ce qui concerne les pièces mentionnées aux points").
-exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(option_materiel_multimedia, non), tout, oui, '3.1.7',
-    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “matériel multimédia” est accordée.").
-
 % --- Art. 3.3.1 : proposition rédigée par le modèle — mistral:mistral-large-4-0 (proposition écartée), 2026-11-24 ---
 evenement_traduit(bris).
 evenement_traduit(vol).
@@ -845,33 +797,6 @@ exclusion(annulation_voyage, f(cause_annulation_exclue, radioactivite_ou_interdi
 exclusion(annulation_voyage, f(cause_annulation_exclue, ivg), tout, non, '4.2.1.4',
     "les annulations et modifications consécutives à une interruption volontaire de grossesse").
 limite(annulation_voyage, '4.2.1.1', "La prise en charge totale de ces frais se fait à concurrence de 15.000 E maximum par sinistre et par année d’assurance", "15000").
-
-% --- Art. 4.2.3 : proposition rédigée par le modèle — mistral:mistral-large-4-0 (proposition écartée), 2026-11-24 ---
-evenement_traduit(voyage).
-garantie(assistance_voyage, "Assistance voyage (option)", '4.2.3.2',
-    "Assureur B Assistance garantit, à concurrence des montants indiqués, taxes comprises, un service d’assistance lorsque les Assurés sont victimes des événements aléatoires définis dans le présent contrat").
-perimetre(assistance_voyage, f(evenement, voyage)).
-perimetre(assistance_voyage, ou([f(objet_voyage, incident_medical), f(objet_voyage, soins_sans_hospitalisation), f(objet_voyage, sauvetage_ou_ski), f(objet_voyage, deces), f(objet_voyage, retour_anticipe), f(objet_voyage, perte_bagage), f(objet_voyage, retard_bagage), f(objet_voyage, perte_papiers), f(objet_voyage, poursuites_etranger), f(objet_voyage, enfant_hospitalise), f(objet_voyage, animal)])).
-circonstance(assistance_voyage, f(option_assistance_voyage, oui), '4.2.3',
-    "la garantie “assistance voyage” est souscrite").
-circonstance(assistance_voyage, ou([ou([f(objet_voyage, soins_sans_hospitalisation), f(objet_voyage, sauvetage_ou_ski), f(objet_voyage, animal)]), f(assistance_voyage_appelee, oui)]), '4.2.3.3',
-    "Ces événements doivent obligatoirement faire l’objet d’une demande d’intervention auprès d’Assureur B Assistance au moment des faits, sauf disposition contraire expresse propre à certaines garanties").
-exclusion(assistance_voyage, f(voyage_plus_90_jours, oui), tout, non, '4.2.3.3',
-    "La garantie de la présente convention est limitée aux déplacements de 90 jours calendaires consécutifs au maximum").
-exclusion(assistance_voyage, f(destination_deconseillee, oui), tout, non, '4.2.3.3',
-    "La garantie n’est pas acquise lorsque, nonobstant la déclaration officielle du Ministère desAffaires Etrangères qui déconseille à ses ressortissants de se rendre dans un pays en état de troubles, d’émeutes, de guerres ou de guerres civiles, l’Assuré décide néanmoins d’entreprendre son voyage").
-exclusion(assistance_voyage, ou([f(cause_assistance_exclue, activite_dangereuse), f(cause_assistance_exclue, acte_intentionnel), f(cause_assistance_exclue, ivresse_ou_defi), f(cause_assistance_exclue, guerre_greve_emeute), f(cause_assistance_exclue, nucleaire), f(cause_assistance_exclue, competition_ou_sport_dangereux)]), tout, non, '4.2.3.8',
-    "les activités à caractère dangereux telles que celles d’acrobate, de dompteur ou scaphandrier").
-exclusion(assistance_voyage, et([ou([f(objet_voyage, incident_medical), f(objet_voyage, soins_sans_hospitalisation)]), ou([f(etat_sante_exclu, affection_benigne), f(etat_sante_exclu, maladie_mentale_deja_traitee), f(etat_sante_exclu, grossesse_avancee_ou_ivg), f(etat_sante_exclu, maladie_chronique_ou_en_traitement), f(etat_sante_exclu, soins_au_pays), f(etat_sante_exclu, prothese_cure_prevention)])]), tout, non, '4.2.3.8',
-    "les affections ou lésions bénignes qui n’empêchent pas l’Assuré de poursuivre son voyage ; n les maladies mentales et les états psychiatriques ayant déjà fait l’objet d’un traitement ; n les états de grossesse après la 26ème semaine et les interruptions volontaires de grossesse").
-exclusion(assistance_voyage, et([f(objet_voyage, sauvetage_ou_ski), f(ski_hors_piste, oui)]), tout, non, '4.2.3.4',
-    "Cette garantie est exclue lorsque le sinistre survient suite à la pratique du ski effectué hors pistes balisées sans guide agréé par les autorités du pays").
-exclusion(assistance_voyage, et([f(objet_voyage, retour_anticipe), f(evenement_previsible_au_depart, oui)]), tout, non, '4.2.3.4',
-    "uniquement si la maladie ou le décès présente un caractère imprévisible au moment du départ de l’Assuré à l’étranger").
-exclusion(assistance_voyage, et([f(objet_voyage, poursuites_etranger), f(suite_accident_circulation, non)]), tout, non, '4.2.3.6',
-    "Si, à la suite d’un accident de la circulation à l’étranger, l’Assuré tombe sous le coup de poursuites judiciaires").
-limite(assistance_voyage, '4.2.3.4', "à concurrence d’un maximum de 150.000 f par Assuré", "150000").
-
 % --- Art. 4.2.2 : proposition rédigée par le modèle — mistral:mistral-large-4-0 (proposition écartée), 2026-11-24 ---
 evenement_traduit(vol).
 evenement_traduit(bris).
@@ -974,3 +899,78 @@ exclusion([bagages_vol, bagages_valeurs_agression, bagages_bris, bagages_sinistr
     "les pertes et dégâts causés à l’occasion d’une saisie par les autorités publiques (police, douane, …)").
 exclusion([bagages_vol, bagages_valeurs_agression, bagages_bris, bagages_sinistre, bagages_perte], et([f(bagage_exterieur_vehicule, oui), non(f(accident_circulation, oui))]), tout, oui, '4.2.2.1',
     "Les bagages transportés à l’extérieur d’un véhicule sont uniquement couverts contre les conséquences d’un accident de la circulation impliquant le moyen de transport").
+
+% --- Art. 4.2.3 : proposition rédigée par le modèle — mistral:mistral-large-4-0 (proposition écartée), 2026-11-24 ---
+evenement_traduit(voyage).
+garantie(assistance_voyage, "Assistance voyage (option)", '4.2.3.2',
+    "Assureur B Assistance garantit, à concurrence des montants indiqués, taxes comprises, un service d’assistance lorsque les Assurés sont victimes des événements aléatoires définis dans le présent contrat").
+perimetre(assistance_voyage, f(evenement, voyage)).
+perimetre(assistance_voyage, ou([f(objet_voyage, incident_medical), f(objet_voyage, soins_sans_hospitalisation), f(objet_voyage, sauvetage_ou_ski), f(objet_voyage, deces), f(objet_voyage, retour_anticipe), f(objet_voyage, perte_bagage), f(objet_voyage, retard_bagage), f(objet_voyage, perte_papiers), f(objet_voyage, poursuites_etranger), f(objet_voyage, enfant_hospitalise), f(objet_voyage, animal)])).
+circonstance(assistance_voyage, f(option_assistance_voyage, oui), '4.2.3',
+    "la garantie “assistance voyage” est souscrite").
+circonstance(assistance_voyage, ou([ou([f(objet_voyage, soins_sans_hospitalisation), f(objet_voyage, sauvetage_ou_ski), f(objet_voyage, animal)]), f(assistance_voyage_appelee, oui)]), '4.2.3.3',
+    "Ces événements doivent obligatoirement faire l’objet d’une demande d’intervention auprès d’Assureur B Assistance au moment des faits, sauf disposition contraire expresse propre à certaines garanties").
+circonstance(assistance_voyage, ou([non(ou([f(objet_voyage, soins_sans_hospitalisation), f(objet_voyage, sauvetage_ou_ski), f(objet_voyage, deces), f(objet_voyage, retour_anticipe), f(objet_voyage, perte_papiers), f(objet_voyage, poursuites_etranger), f(objet_voyage, animal)])), f(sinistre_a_l_etranger, oui)]), '4.2.3.4',
+    "Suite à un incident médical à l’étranger Assureur B Assistance prend en charge").
+exclusion(assistance_voyage, f(voyage_plus_90_jours, oui), tout, non, '4.2.3.3',
+    "La garantie de la présente convention est limitée aux déplacements de 90 jours calendaires consécutifs au maximum").
+exclusion(assistance_voyage, f(destination_deconseillee, oui), tout, non, '4.2.3.3',
+    "La garantie n’est pas acquise lorsque, nonobstant la déclaration officielle du Ministère desAffaires Etrangères qui déconseille à ses ressortissants de se rendre dans un pays en état de troubles, d’émeutes, de guerres ou de guerres civiles, l’Assuré décide néanmoins d’entreprendre son voyage").
+exclusion(assistance_voyage, ou([f(cause_assistance_exclue, activite_dangereuse), f(cause_assistance_exclue, acte_intentionnel), f(cause_assistance_exclue, ivresse_ou_defi), f(cause_assistance_exclue, guerre_greve_emeute), f(cause_assistance_exclue, nucleaire), f(cause_assistance_exclue, competition_ou_sport_dangereux)]), tout, non, '4.2.3.8',
+    "les activités à caractère dangereux telles que celles d’acrobate, de dompteur ou scaphandrier").
+exclusion(assistance_voyage, et([ou([f(objet_voyage, incident_medical), f(objet_voyage, soins_sans_hospitalisation)]), ou([f(etat_sante_exclu, affection_benigne), f(etat_sante_exclu, maladie_mentale_deja_traitee), f(etat_sante_exclu, grossesse_avancee_ou_ivg), f(etat_sante_exclu, maladie_chronique_ou_en_traitement), f(etat_sante_exclu, soins_au_pays), f(etat_sante_exclu, prothese_cure_prevention)])]), tout, non, '4.2.3.8',
+    "les affections ou lésions bénignes qui n’empêchent pas l’Assuré de poursuivre son voyage ; n les maladies mentales et les états psychiatriques ayant déjà fait l’objet d’un traitement ; n les états de grossesse après la 26ème semaine et les interruptions volontaires de grossesse").
+exclusion(assistance_voyage, et([f(objet_voyage, sauvetage_ou_ski), f(ski_hors_piste, oui)]), tout, non, '4.2.3.4',
+    "Cette garantie est exclue lorsque le sinistre survient suite à la pratique du ski effectué hors pistes balisées sans guide agréé par les autorités du pays").
+exclusion(assistance_voyage, et([f(objet_voyage, retour_anticipe), f(evenement_previsible_au_depart, oui)]), tout, non, '4.2.3.4',
+    "uniquement si la maladie ou le décès présente un caractère imprévisible au moment du départ de l’Assuré à l’étranger").
+exclusion(assistance_voyage, et([f(objet_voyage, poursuites_etranger), f(suite_accident_circulation, non)]), tout, non, '4.2.3.6',
+    "Si, à la suite d’un accident de la circulation à l’étranger, l’Assuré tombe sous le coup de poursuites judiciaires").
+limite(assistance_voyage, '4.2.3.4', "à concurrence d’un maximum de 150.000 f par Assuré", "150000").
+
+% --- Art. 3.1.7 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
+evenement_traduit(bris).
+evenement_traduit(vol).
+evenement_traduit(accident).
+garantie(materiel_multimedia_bris, "Bris du matériel multimédia", '3.1.7.1',
+    "La Compagnie couvre tout bris ou destruction accidentel résultant d’une chute, d’un choc ou de la pénétration d’un corps étranger et qui rend nécessaire la réparation ou le remplacement du matériel multimédia. Sont également couverts au titre de cette garantie les équipements suivants : n équipement d’alarme et de surveillance, en activité ou au repos, pendant les opérations de démontage, de déplacement sur les lieux assurés ou de remontage nécessitées pour leur entretien ou leur révision, pour autant que la mise en exploitation desdits matériels ait donné entière satisfaction ; n équipement domotique").
+perimetre(materiel_multimedia_bris, f(evenement, bris)).
+perimetre(materiel_multimedia_bris, ou([f(bien, electronique), f(bien, equipement_alarme_surveillance), f(bien, equipement_domotique)])).
+obligation(materiel_multimedia_bris, si(ou([f(lieu, vehicule), et([f(bien, vehicule_moteur), f(lieu, voie_publique)])]), et([f(vehicule_ferme_cle, oui), non(f(materiel_laisse_en_vue, oui))])), faux, non, '3.1.7.4',
+    "Lorsque les biens assurés se trouvent à l’intérieur d’un véhicule inoccupé, la garantie intervient uniquement si les deux conditions suivantes sont remplies simultanément : n le véhicule a été fermé à clé ; n le matériel assuré n’a pas été laissé en vue à l’intérieur de l’habitacle du véhicule").
+exclusion(materiel_multimedia_bris, et([f(bien, equipement_alarme_surveillance), f(mise_en_exploitation_satisfaction, non)]), bien(equipement_alarme_surveillance), non, '3.1.7.1',
+    "pour autant que la mise en exploitation desdits matériels ait donné entière satisfaction").
+limite(materiel_multimedia_bris, '3.1.7.1', "1 0.000 € par sinistre lorsque les conditions particulières mentionnent que la formule «Privilège» est souscrite", "10000").
+limite(materiel_multimedia_bris, '3.1.7.1', "5.000 € par sinistre lorsque les conditions particulières mentionnent que la formule «Active» est souscrite", "5000").
+garantie(materiel_multimedia_vol, "Vol du matériel multimédia", '3.1.7.1',
+    "Sous réserve que la garantie vol ait été accordée, la Compagnie couvre également : n le vol du matériel multimédia lorsque le vol a eu lieu à l’extérieur du bâtiment désigné ; n le vol de ces équipements se trouvant à l’intérieur d’un véhicule terrestre automoteur à condition que ledit véhicule soit également volé ou qu’il y ait effraction caractérisée du véhicule ; n le vol de ces équipements qu’un Assuré déplace à l’occasion d’un séjour temporaire dans un bâtiment situé n’importe où dans le monde, pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes").
+perimetre(materiel_multimedia_vol, f(evenement, vol)).
+perimetre(materiel_multimedia_vol, ou([f(bien, electronique), f(bien, equipement_alarme_surveillance), f(bien, equipement_domotique)])).
+circonstance(materiel_multimedia_vol, ou([non(concept(batiment_designe)), et([f(lieu, vehicule), ou([f(vehicule_vole, oui), f(effraction, oui)])]), et([f(sejour_temporaire, oui), f(plainte_deposee, oui)])]), '3.1.7.1',
+    "le vol du matériel multimédia lorsque le vol a eu lieu à l’extérieur du bâtiment désigné ; n le vol de ces équipements se trouvant à l’intérieur d’un véhicule terrestre automoteur à condition que ledit véhicule soit également volé ou qu’il y ait effraction caractérisée du véhicule ; n le vol de ces équipements qu’un Assuré déplace à l’occasion d’un séjour temporaire dans un bâtiment situé n’importe où dans le monde, pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes").
+obligation(materiel_multimedia_vol, si(ou([f(lieu, vehicule), et([f(bien, vehicule_moteur), f(lieu, voie_publique)])]), et([f(vehicule_ferme_cle, oui), non(f(materiel_laisse_en_vue, oui))])), faux, non, '3.1.7.4',
+    "Lorsque les biens assurés se trouvent à l’intérieur d’un véhicule inoccupé, la garantie intervient uniquement si les deux conditions suivantes sont remplies simultanément : n le véhicule a été fermé à clé ; n le matériel assuré n’a pas été laissé en vue à l’intérieur de l’habitacle du véhicule").
+exclusion(materiel_multimedia_vol, f(option_vol, non), tout, oui, '3.1.7.1',
+    "Sous réserve que la garantie vol ait été accordée").
+exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(proprietaire, hote), tout, oui, '3.1.7.2',
+    "le matériel dont l'Assuré n'est pas propriétaire").
+exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(cause_dommage, virus), tout, non, '3.1.7.2',
+    "les pertes liées à l'action d'un virus et tous préjudices consécutifs").
+exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(vice_defaut_connu, oui), tout, non, '3.1.7.2',
+    "les pertes ou dommages dus à des vices ou défauts qui existaient à la date d'effet de la présente assurance et qui étaient connus de l'Assuré ou de ses mandataires").
+exclusion([materiel_multimedia_bris, materiel_multimedia_vol], ou([f(manque_entretien, oui), f(fonctionnement_defectueux, oui)]), tout, non, '3.1.7.2',
+    "les pertes ou dommages qui sont la conséquence directe : n des effets continuels de l’exploitation (usure) ; n d’un fonctionnement défectueux").
+exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(garantie_fabricant, oui), tout, non, '3.1.7.2',
+    "les pertes ou dommages dont le fabricant ou le fournisseur est légalement ou contractuellement responsable").
+exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(bien, consommable), bien(consommable), non, '3.1.7.2',
+    "les pertes ou dommages causés aux lampes,tubes, bandes transporteuses, fusibles, joints, courroies, chaînes").
+exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(type_dommage, rayure_ou_ecaillement), tout, non, '3.1.7.2',
+    "les défauts d'ordre esthétique, tels que les bosses, égratignures, rayures ou écaillements").
+exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(evenement, electricite), tout, oui, '3.1.7.2',
+    "les dommages d'origine électrique").
+exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(bien, denrees_alimentaires), bien(denrees_alimentaires), non, '3.1.7.2',
+    "les dommages causés au contenu des appareils").
+exclusion([materiel_multimedia_bris, materiel_multimedia_vol], ou([f(auteur, assure), f(auteur, famille), et([f(auteur, personnel_prive), ou([f(heures_service, oui), non(ou([f(effraction, oui), f(violence, oui)]))])])]), tout, oui, '3.1.7.2',
+    "les vols commis par ou avec la complicité de ou du : n Preneur d’assurance, son conjoint, leurs ascendants ou descendants ainsi que les conjoints de ces personnes ; n l’Assuré ; n toute personne au service de l’Assuré pendant les heures de service et, si ces vols ont été commis en dehors de celles-ci, autrement que par effraction ou avec violence. En ce qui concerne les pièces mentionnées aux points").
+exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(option_materiel_multimedia, non), tout, oui, '3.1.7',
+    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “matériel multimédia” est accordée.").

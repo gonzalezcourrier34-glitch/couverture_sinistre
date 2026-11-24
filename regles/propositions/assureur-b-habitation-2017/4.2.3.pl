@@ -8,6 +8,8 @@ circonstance(assistance_voyage, f(option_assistance_voyage, oui), '4.2.3',
     "la garantie “assistance voyage” est souscrite").
 circonstance(assistance_voyage, ou([ou([f(objet_voyage, soins_sans_hospitalisation), f(objet_voyage, sauvetage_ou_ski), f(objet_voyage, animal)]), f(assistance_voyage_appelee, oui)]), '4.2.3.3',
     "Ces événements doivent obligatoirement faire l’objet d’une demande d’intervention auprès d’Assureur B Assistance au moment des faits, sauf disposition contraire expresse propre à certaines garanties").
+circonstance(assistance_voyage, ou([non(ou([f(objet_voyage, soins_sans_hospitalisation), f(objet_voyage, sauvetage_ou_ski), f(objet_voyage, deces), f(objet_voyage, retour_anticipe), f(objet_voyage, perte_papiers), f(objet_voyage, poursuites_etranger), f(objet_voyage, animal)])), f(sinistre_a_l_etranger, oui)]), '4.2.3.4',
+    "Suite à un incident médical à l’étranger Assureur B Assistance prend en charge").
 exclusion(assistance_voyage, f(voyage_plus_90_jours, oui), tout, non, '4.2.3.3',
     "La garantie de la présente convention est limitée aux déplacements de 90 jours calendaires consécutifs au maximum").
 exclusion(assistance_voyage, f(destination_deconseillee, oui), tout, non, '4.2.3.3',

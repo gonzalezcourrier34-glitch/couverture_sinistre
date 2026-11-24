@@ -12,7 +12,7 @@
         "une seule garantie : les quinze prestations de l'assistance répondent toutes à la même question de couverture, l'option souscrite et l'assistance appelée ; le détail des montants n'est pas la question",
         "l'appel à l'assistance au moment des faits est une circonstance, donc une question (leçon 165), sauf pour les trois cas que le contrat en dispense : soins sans hospitalisation, sauvetage ou ski, frais de vétérinaire. Écrit d'abord en exclusion à demander : le moteur de référence ne posait pas la question et couvrait",
         "les exclusions sont lues par deux faits à plusieurs valeurs",
-        "limite : la plupart des prestations ne valent qu'à l'étranger ; le lieu n'est pas vérifié, le vocabulaire des pays étant écrit pour la responsabilité civile"
+        "l'étranger est une circonstance pour les sept prestations que le contrat y limite, avec un fait propre à B ; l'assistance médicale, les bagages et l'enfant hospitalisé au pays n'en dépendent pas"
       ]
     }
   },
@@ -151,6 +151,68 @@
             },
             "article": "4.2.3.3",
             "texte": "Ces événements doivent obligatoirement faire l’objet d’une demande d’intervention auprès d’Assureur B Assistance au moment des faits, sauf disposition contraire expresse propre à certaines garanties"
+          },
+          {
+            "condition": {
+              "ou": [
+                {
+                  "non": {
+                    "ou": [
+                      {
+                        "f": [
+                          "objet_voyage",
+                          "soins_sans_hospitalisation"
+                        ]
+                      },
+                      {
+                        "f": [
+                          "objet_voyage",
+                          "sauvetage_ou_ski"
+                        ]
+                      },
+                      {
+                        "f": [
+                          "objet_voyage",
+                          "deces"
+                        ]
+                      },
+                      {
+                        "f": [
+                          "objet_voyage",
+                          "retour_anticipe"
+                        ]
+                      },
+                      {
+                        "f": [
+                          "objet_voyage",
+                          "perte_papiers"
+                        ]
+                      },
+                      {
+                        "f": [
+                          "objet_voyage",
+                          "poursuites_etranger"
+                        ]
+                      },
+                      {
+                        "f": [
+                          "objet_voyage",
+                          "animal"
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "f": [
+                    "sinistre_a_l_etranger",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "article": "4.2.3.4",
+            "texte": "Suite à un incident médical à l’étranger Assureur B Assistance prend en charge"
           }
         ],
         "obligations": [],
@@ -625,6 +687,24 @@
         ],
         "pourquoi": "4.2.3.6",
         "plus_proche": "aucune"
+      },
+      {
+        "variable": "sinistre_a_l_etranger",
+        "libelle": "Sinistre survenu à l'étranger",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Cela s'est-il passé à l'étranger, hors du Luxembourg ?",
+        "aide": {
+          "oui": "dans un autre pays que le Luxembourg",
+          "non": "au Luxembourg"
+        },
+        "pour": [
+          "voyage"
+        ],
+        "pourquoi": "4.2.3.4 à 4.2.3.6 : les frais médicaux, le sauvetage, le rapatriement funéraire, le retour anticipé, les papiers perdus, les poursuites et les frais de vétérinaire ne valent qu'à l'étranger",
+        "plus_proche": "pays, écrit pour la responsabilité civile et lu sur d'autres événements"
       }
     ],
     "non_traduit": [],

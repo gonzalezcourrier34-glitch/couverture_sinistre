@@ -1,6 +1,21 @@
 {
   "_description": "Variables que seules les règles de ce contrat emploient (regles/assureur-b-habitation-2017.pl). Même format que commun.json. Rangé par `couverture regles --ranger` : une variable qu'un autre contrat se met à employer passe dans commun.json.",
   "variables": {
+    "sinistre_a_l_etranger": {
+      "libelle": "Sinistre survenu à l'étranger",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Cela s'est-il passé à l'étranger, hors du Luxembourg ?",
+      "aide": {
+        "oui": "dans un autre pays que le Luxembourg",
+        "non": "au Luxembourg"
+      },
+      "pour": [
+        "voyage"
+      ]
+    },
     "option_assistance_voyage": {
       "libelle": "Garantie « assistance voyage » souscrite",
       "source": "conditions_particulieres",
@@ -1103,8 +1118,8 @@
       ],
       "question": "L'objet était-il sous votre surveillance directe, ou celle d'une personne qui vous accompagnait, au moment du vol ?",
       "aide": {
-        "oui": "l'objet était avec vous ou sous vos yeux : porté, tenu, posé à côté de vous",
-        "non": "l'objet était laissé sans surveillance : dans un hall, une cour, attaché dehors, dans un local ou un véhicule"
+        "oui": "vous teniez ou portiez l'objet, ou vous étiez à côté de lui au moment du vol",
+        "non": "vous n'étiez pas auprès de l'objet : il était rangé, garé, attaché ou laissé dans un hall, un local commun, une cave, une cour, la rue ou un véhicule"
       },
       "pour": [
         "vol"

@@ -1390,3 +1390,75 @@ def test_biens_tous_exclus_prolog_et_reference_concordent():
         faits = base | {"bien": biens}
         p, o = prolog.decider(cid, faits), Explorateur(Contrat(prolog.fichier_regles(cid)), faits).decider()
         assert p["decision"] == o["decision"] == attendu, biens
+
+
+CAS_B_SOIR = [
+    # Bagages (4.2.2), protection numérique (4.1.4), annulation (4.2.1), assistance voyage (4.2.3) : écrits le
+    # 24 nov. au soir, sans cas dans le jeu fermé de B. Ces essais ne mesurent rien : ils fixent ce que les règles
+    # répondent sur des faits exacts, et que le moteur Prolog et le moteur de référence concordent (7.176).
+    ("valise volée en voyage, option, plainte",
+     {"evenement": ["vol"], "bien": ["objet_divers"], "lieu": ["voie_publique"], "en_voyage": "oui",
+      "option_bagages": "oui", "plainte_deposee": "oui"}, "COUVERT"),
+    ("valise volée en voyage, option inconnue",
+     {"evenement": ["vol"], "bien": ["objet_divers"], "lieu": ["voie_publique"], "en_voyage": "oui",
+      "plainte_deposee": "oui"}, "INCERTAIN"),
+    ("valise oubliée",
+     {"evenement": ["vol"], "bien": ["objet_divers"], "lieu": ["voie_publique"], "en_voyage": "oui",
+      "option_bagages": "oui", "plainte_deposee": "oui", "bagage_oublie": "oui"}, "NON_COUVERT"),
+    ("valise perdue, option",
+     {"evenement": ["voyage"], "objet_voyage": "perte_bagage", "option_bagages": "oui"}, "COUVERT"),
+    ("usurpation d'identité, option",
+     {"evenement": ["litige"], "litige_internet": "usurpation_identite", "domaine_litige": "autre",
+      "option_e_protection": "oui"}, "COUVERT"),
+    ("carte utilisée, code communiqué",
+     {"evenement": ["litige"], "litige_internet": "fraude_paiement", "domaine_litige": "autre",
+      "option_e_protection": "oui", "code_secret_divulgue": "oui"}, "NON_COUVERT"),
+    ("litige avec l'employeur",
+     {"evenement": ["litige"], "domaine_litige": "travail"}, "NON_COUVERT"),
+    ("achat en ligne, vendeur inconnu",
+     {"evenement": ["litige"], "litige_internet": "achat_bien_internet", "domaine_litige": "consommation",
+      "option_e_protection": "oui", "bien": ["electronique"]}, "INCERTAIN"),
+    ("voyage annulé, proche hospitalisé, option",
+     {"evenement": ["voyage"], "objet_voyage": "annulation", "motif_annulation": "sante_ou_deces_proche",
+      "option_annulation": "oui"}, "COUVERT"),
+    ("voyage annulé, changement d'avis",
+     {"evenement": ["voyage"], "objet_voyage": "annulation", "motif_annulation": "autre",
+      "option_annulation": "oui"}, "NON_COUVERT"),
+    ("voyage annulé pour une épidémie",
+     {"evenement": ["voyage"], "objet_voyage": "annulation", "motif_annulation": "sante_ou_deces_proche",
+      "option_annulation": "oui", "cause_annulation_exclue": "epidemie_pollution_catastrophe"}, "NON_COUVERT"),
+    ("rapatriement, assistance appelée",
+     {"evenement": ["voyage"], "objet_voyage": "incident_medical", "option_assistance_voyage": "oui",
+      "assistance_voyage_appelee": "oui"}, "COUVERT"),
+    ("rapatriement, appel non dit",
+     {"evenement": ["voyage"], "objet_voyage": "incident_medical", "option_assistance_voyage": "oui"}, "INCERTAIN"),
+    ("rapatriement organisé seul",
+     {"evenement": ["voyage"], "objet_voyage": "incident_medical", "option_assistance_voyage": "oui",
+      "assistance_voyage_appelee": "non"}, "NON_COUVERT"),
+    ("médecin payé à l'étranger, sans hospitalisation",
+     {"evenement": ["voyage"], "objet_voyage": "soins_sans_hospitalisation", "option_assistance_voyage": "oui",
+      "assistance_voyage_appelee": "non", "sinistre_a_l_etranger": "oui"}, "COUVERT"),
+    ("médecin payé au Luxembourg",
+     {"evenement": ["voyage"], "objet_voyage": "soins_sans_hospitalisation", "option_assistance_voyage": "oui",
+      "sinistre_a_l_etranger": "non"}, "NON_COUVERT"),
+]
+
+
+def _b_soir_traduit() -> bool:
+    cid = "assureur-b-habitation-2017"
+    if not prolog.a_des_garanties(cid):
+        return False
+    texte = prolog.fichier_regles(cid).read_text(encoding="utf-8")
+    return all(g in texte for g in ("bagages_perte", "e_protection", "annulation_voyage", "assistance_voyage",
+                                    "sinistre_a_l_etranger"))
+
+
+@pytest.mark.parametrize("nom,faits,attendu", CAS_B_SOIR, ids=[c[0] for c in CAS_B_SOIR])
+def test_b_voyage_et_numerique_sur_faits_exacts(nom, faits, attendu):
+    from moteur_reference import Contrat, Moteur
+    if not _b_soir_traduit():
+        pytest.skip("les articles 4.1.4 et 4.2.1 à 4.2.3 de B ne sont pas tous acceptés")
+    cid = "assureur-b-habitation-2017"
+    assert Moteur(Contrat(prolog.fichier_regles(cid)), faits).decider()["decision"] == attendu, nom
+    if prolog.swipl() is not None:
+        assert prolog.decider(cid, faits)["decision"] == attendu, nom

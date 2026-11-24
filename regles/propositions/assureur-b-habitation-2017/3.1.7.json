@@ -18,7 +18,8 @@
         "defaut_fonctionnement et fonctionnement_defectueux : une seule variable ; auteur = preneur → assure",
         "les six passages « non traduits » (extension des autres garanties en séjour, indemnisation, obligations après sinistre) : hors décision",
         "personnel au service de l'Assuré : exclu pendant les heures de service, et en dehors sauf effraction ou violence (variable heures_service) ; 7.75",
-        "24 nov. : « accident » déclaré traduit chez B. Le périmètre reste l'événement « bris », que le vocabulaire donne pour parent à « accident » : un objet tombé y entre déjà. Écrit « bris ou accident », le périmètre devenait incertain pour un heurt"
+        "24 nov. : « accident » déclaré traduit chez B. Le périmètre reste l'événement « bris », que le vocabulaire donne pour parent à « accident » : un objet tombé y entre déjà. Écrit « bris ou accident », le périmètre devenait incertain pour un heurt",
+        "24 nov. au soir : « à l'intérieur d'un véhicule » vaut aussi quand un véhicule figure parmi les biens touchés et que le lieu lu est la voie publique. Vu sur un cas du jeu fermé (f-b18, la voiture fracturée devant la gare) : la lecture nomme la voiture comme bien et situe le tout « dans la rue », l'obligation du véhicule fermé ne se déclenchait pas et le matériel était couvert sans question. La règle ne conclut rien de plus : elle fait poser la question du contrat. Ce cas n'est plus un cas jamais vu"
       ],
       "question_metier": "Le matériel multimédia en séjour temporaire est couvert par les garanties incendie, tempête, eaux… « sous réserve qu'elles aient été accordées » : non traduit ici (hors décision), à vérifier avec un souscripteur."
     }
@@ -72,9 +73,29 @@
             "condition": {
               "si": [
                 {
-                  "f": [
-                    "lieu",
-                    "vehicule"
+                  "ou": [
+                    {
+                      "f": [
+                        "lieu",
+                        "vehicule"
+                      ]
+                    },
+                    {
+                      "et": [
+                        {
+                          "f": [
+                            "bien",
+                            "vehicule_moteur"
+                          ]
+                        },
+                        {
+                          "f": [
+                            "lieu",
+                            "voie_publique"
+                          ]
+                        }
+                      ]
+                    }
                   ]
                 },
                 {
@@ -239,9 +260,29 @@
             "condition": {
               "si": [
                 {
-                  "f": [
-                    "lieu",
-                    "vehicule"
+                  "ou": [
+                    {
+                      "f": [
+                        "lieu",
+                        "vehicule"
+                      ]
+                    },
+                    {
+                      "et": [
+                        {
+                          "f": [
+                            "bien",
+                            "vehicule_moteur"
+                          ]
+                        },
+                        {
+                          "f": [
+                            "lieu",
+                            "voie_publique"
+                          ]
+                        }
+                      ]
+                    }
                   ]
                 },
                 {
