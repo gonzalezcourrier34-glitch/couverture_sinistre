@@ -1,128 +1,156 @@
 {
   "meta": {
     "article": "4.2.2",
-    "modele": "mistral:mistral-large-4-0",
+    "modele": "mistral:mistral-large-4-0 (proposition écartée)",
     "date": "2026-11-24",
-    "consigne": "redaction-regles v13"
+    "consigne": "redaction-regles v13",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-24",
+      "modifications": [
+        "réécrite à la main sur le modèle de l'option « dommages aux biens » (3.3.1) : la proposition du modèle avait vingt et un contrôles bloquants et faisait de « bagage » un concept sur le bien",
+        "quatre garanties : le vol, le vol par agression des valeurs, la casse accidentelle, et l'incendie, l'explosion ou le dégât des eaux",
+        "« en voyage » : un fait propre à ce contrat, dans le périmètre, avec un lieu où l'on voyage (voie publique, véhicule, autre bâtiment). Chez soi, chez un réparateur ou dans un casier, la garantie ne se rattache pas : un vélo volé dans le hall n'appelle pas la question du voyage",
+        "l'option est une question, comme pour 3.3.1 et 4.1.2 (7.173)",
+        "la perte d'un bagage n'est pas traduite ici : le vocabulaire n'a pas d'événement « perte ». Elle entre avec les événements de voyage, dans un lot mesuré à part",
+        "le vol dans un véhicule : mêmes conditions et mêmes faits que 3.3.1.5 (de jour, véhicule volé ou forcé, portes fermées, pas de toit souple)",
+        "la casse d'un objet fragile : demandée (l'accident de la circulation) quand le bien est un instrument, un miroir ou un objet en verre ; les exclusions qui retirent un cas ne se demandent pas (leçon 165)",
+        "le bagage qui n'appartient pas à l'assuré : exclu pour le vol et la casse, pas pour l'incendie ou le dégât des eaux. L'y étendre ferait lire « propriétaire des biens » sur ces événements pour les quatre contrats : un changement du vocabulaire commun, à mesurer à part",
+        "un véhicule ou une remorque ne sont pas des bagages : dans le périmètre, pas en exclusion. En exclusion, le moteur refusait un sinistre dont on ne savait pas encore s'il était survenu en voyage, y compris quand une autre garantie restait possible (comparaison sur 3 000 jeux de faits)",
+        "les exclusions de ces garanties ne jouent que si le voyage est établi. Sans cela, le moteur refusait par une exclusion des bagages (les valeurs, l'objet laissé sans surveillance) un sinistre dont on ne savait pas s'il était survenu en voyage, alors qu'une autre garantie restait possible : vu sur 2 500 jeux de faits tirés au hasard. Les deux exclusions qui se demandent (objet fragile, bagage à l'extérieur du véhicule) n'en ont pas besoin"
+      ]
+    }
   },
   "proposition": {
     "evenements": [
       "vol",
-      "autre",
-      "accident"
+      "bris",
+      "accident",
+      "incendie",
+      "explosion",
+      "degat_eaux"
     ],
-    "definitions": [
-      {
-        "concept": "bagage",
-        "condition": {
-          "ou": [
-            {
-              "f": [
-                "bien",
-                "objet_divers"
-              ]
-            },
-            {
-              "et": [
-                {
-                  "f": [
-                    "bien",
-                    "valeurs"
-                  ]
-                },
-                {
-                  "f": [
-                    "vol_sur_personne",
-                    "oui"
-                  ]
-                },
-                {
-                  "f": [
-                    "plainte_deposee",
-                    "oui"
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        "article": "4.2.2.1",
-        "texte": "On entend par bagage tout objet à usage personnel que l’Assuré emporte pendant un voyage ou qui, dûment enregistré, le précède ou le suit, ainsi que les biens personnels achetés au cours du voyage pour être ramenés au domicile habituel de l’Assuré. Les valeurs ne sont pas assimilées à des bagages. Pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes, la Compagnie garantit toutefois à l’Assuré le vol par agression des valeurs emportées en voyage."
-      }
-    ],
+    "definitions": [],
     "garanties": [
       {
-        "id": "bagages_voyage",
-        "nom": "Bagages en voyage",
+        "id": "bagages_vol",
+        "nom": "Bagages en voyage : vol (option)",
         "article": "4.2.2.1",
         "texte": "La Compagnie garantit à l’Assuré la couverture de ses bagages emportés dans le cadre d’un voyage contre : n le vol,pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes ; n la perte, n les dégâts dus à toute circonstance fortuite survenue pendant le voyage",
         "perimetre": [
           {
-            "concept": "bagage"
+            "f": [
+              "evenement",
+              "vol"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "lieu",
+                  "voie_publique"
+                ]
+              },
+              {
+                "f": [
+                  "lieu",
+                  "vehicule"
+                ]
+              },
+              {
+                "f": [
+                  "lieu",
+                  "autre_batiment"
+                ]
+              }
+            ]
           },
           {
             "f": [
-              "sejour_temporaire",
+              "en_voyage",
               "oui"
             ]
+          },
+          {
+            "non": {
+              "ou": [
+                {
+                  "f": [
+                    "bien",
+                    "vehicule_moteur"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "remorque"
+                  ]
+                }
+              ]
+            }
           }
         ],
         "circonstances": [
           {
             "condition": {
-              "si": [
-                {
-                  "f": [
-                    "evenement",
-                    "vol"
-                  ]
-                },
+              "f": [
+                "option_bagages",
+                "oui"
+              ]
+            },
+            "article": "4.2.2",
+            "texte": "la garantie “ bagages” est souscrite"
+          },
+          {
+            "condition": {
+              "et": [
                 {
                   "f": [
                     "plainte_deposee",
                     "oui"
                   ]
-                }
-              ]
-            },
-            "article": "4.2.2.1",
-            "texte": "pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes"
-          },
-          {
-            "condition": {
-              "si": [
-                {
-                  "f": [
-                    "lieu",
-                    "vehicule"
-                  ]
                 },
                 {
-                  "et": [
+                  "ou": [
+                    {
+                      "non": {
+                        "f": [
+                          "lieu",
+                          "vehicule"
+                        ]
+                      }
+                    },
                     {
                       "f": [
                         "bagage_enregistre",
-                        "non"
+                        "oui"
                       ]
                     },
                     {
-                      "f": [
-                        "periode_horaire",
-                        "jour_7h_22h"
-                      ]
-                    },
-                    {
-                      "ou": [
+                      "et": [
                         {
-                          "f": [
-                            "vehicule_vole",
-                            "oui"
-                          ]
+                          "non": {
+                            "f": [
+                              "vol_de_nuit",
+                              "oui"
+                            ]
+                          }
                         },
                         {
-                          "f": [
-                            "effraction",
-                            "oui"
+                          "ou": [
+                            {
+                              "f": [
+                                "vehicule_vole",
+                                "oui"
+                              ]
+                            },
+                            {
+                              "f": [
+                                "effraction",
+                                "oui"
+                              ]
+                            }
                           ]
                         }
                       ]
@@ -139,154 +167,440 @@
         "exclusions": [
           {
             "condition": {
-              "f": [
-                "proprietaire",
-                "hote"
+              "et": [
+                {
+                  "f": [
+                    "en_voyage",
+                    "oui"
+                  ]
+                },
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "auteur",
+                        "assure"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "auteur",
+                        "famille"
+                      ]
+                    }
+                  ]
+                }
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "4.2.2.4",
-            "texte": "les bagages dont l’Assuré n’est pas propriétaire"
-          },
-          {
-            "condition": {
-              "f": [
-                "laisse_sans_surveillance",
-                "oui"
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "4.2.2.4",
-            "texte": "les bagages laissés sans surveillance dans un lieu public"
-          },
-          {
-            "condition": {
-              "f": [
-                "simple_disparition",
-                "oui"
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "4.2.2.4",
-            "texte": "les bagages oubliés"
-          },
-          {
-            "condition": {
-              "f": [
-                "saisie_autorites",
-                "oui"
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "4.2.2.4",
-            "texte": "les pertes et dégâts causés à l’occasion d’une saisie par les autorités publiques (police, douane, …)"
-          },
-          {
-            "condition": {
-              "f": [
-                "manque_entretien",
-                "oui"
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "4.2.2.4",
-            "texte": "de l’usure, de la détérioration lente, de la vétusté ou d’un défaut d’entretien"
-          },
-          {
-            "condition": {
-              "f": [
-                "cause_eau",
-                "infiltration_exterieure"
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "4.2.2.4",
-            "texte": "de l’humidité, des mites, des vers ou des parasites"
-          },
-          {
-            "condition": {
-              "f": [
-                "alea_tempete",
-                "grele"
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "4.2.2.4",
-            "texte": "de la pluie, de la grêle et de toute autre manifestation atmosphérique"
-          },
-          {
-            "condition": {
-              "f": [
-                "fonctionnement_defectueux",
-                "oui"
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "4.2.2.4",
-            "texte": "les frais exposés pour réparer des défauts de fonctionnement, sauf si ces défauts sont la conséquence d’une perte ou d’un dommage indemnisable causé aux bagages"
-          },
-          {
-            "condition": {
-              "f": [
-                "perte_indirecte",
-                "oui"
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "4.2.2.4",
-            "texte": "les pertes indirectes de quelque nature que ce soit"
-          },
-          {
-            "condition": {
-              "f": [
-                "dommage_esthetique",
-                "oui"
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "4.2.2.4",
-            "texte": "les dommages d’ordre purement esthétique"
+            "texte": "les vols commis par ou avec la complicité de ou du : n Preneur d’assurance, son conjoint, leurs ascendants ou descendants ainsi que les conjoints de ces personnes ; n l’Assuré"
           },
           {
             "condition": {
               "et": [
                 {
                   "f": [
-                    "type_dommage",
-                    "bris"
+                    "en_voyage",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "lieu",
+                    "vehicule"
+                  ]
+                },
+                {
+                  "f": [
+                    "vehicule_ferme_cle",
+                    "non"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.2.2.3",
+            "texte": "toutes les portes du véhicule ou de la cabine de bateau où se trouvent les objets garantis y compris le volet ou la porte fermant le coffre aménagé dans la carrosserie de la voiture ou de la caravane ou encore dans la coque du bateau, sont bloqués en position de fermeture ; n les vitrages sont fermés et le “toit ouvrant” est bloqué en position de fermeture"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "en_voyage",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "lieu",
+                    "vehicule"
+                  ]
+                },
+                {
+                  "f": [
+                    "vehicule_toit_souple",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.2.2.3",
+            "texte": "La garantie n’est pas acquise si les bagages se trouvent dans l’habitacle d’un véhicule équipé d’un toit non rigide"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "en_voyage",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "surveillance_directe",
+                    "non"
+                  ]
+                },
+                {
+                  "f": [
+                    "lieu",
+                    "voie_publique"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.2.2.4",
+            "texte": "les bagages laissés sans surveillance dans un lieu public"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "bien",
+                    "valeurs"
+                  ]
+                },
+                {
+                  "f": [
+                    "en_voyage",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": {
+              "bien": "valeurs"
+            },
+            "a_demander": false,
+            "article": "4.2.2.1",
+            "texte": "Les valeurs ne sont pas assimilées à des bagages"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "en_voyage",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "proprietaire",
+                    "hote"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.2.2.4",
+            "texte": "les bagages dont l’Assuré n’est pas propriétaire"
+          }
+        ],
+        "limites": [
+          {
+            "article": "4.2.2.1",
+            "texte": "à concurrence de 5.000 € par sinistre",
+            "montant": "5000"
+          }
+        ]
+      },
+      {
+        "id": "bagages_valeurs_agression",
+        "nom": "Valeurs emportées en voyage : vol par agression (option)",
+        "article": "4.2.2.1",
+        "texte": "Pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes, la Compagnie garantit toutefois à l’Assuré le vol par agression des valeurs emportées en voyage",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "vol"
+            ]
+          },
+          {
+            "f": [
+              "bien",
+              "valeurs"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "lieu",
+                  "voie_publique"
+                ]
+              },
+              {
+                "f": [
+                  "lieu",
+                  "vehicule"
+                ]
+              },
+              {
+                "f": [
+                  "lieu",
+                  "autre_batiment"
+                ]
+              }
+            ]
+          },
+          {
+            "f": [
+              "en_voyage",
+              "oui"
+            ]
+          },
+          {
+            "non": {
+              "ou": [
+                {
+                  "f": [
+                    "bien",
+                    "vehicule_moteur"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "remorque"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "option_bagages",
+                "oui"
+              ]
+            },
+            "article": "4.2.2",
+            "texte": "la garantie “ bagages” est souscrite"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "plainte_deposee",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "violence",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "article": "4.2.2.1",
+            "texte": "Pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes, la Compagnie garantit toutefois à l’Assuré le vol par agression des valeurs emportées en voyage"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "en_voyage",
+                    "oui"
+                  ]
+                },
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "auteur",
+                        "assure"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "auteur",
+                        "famille"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.2.2.4",
+            "texte": "les vols commis par ou avec la complicité de ou du : n Preneur d’assurance, son conjoint, leurs ascendants ou descendants ainsi que les conjoints de ces personnes ; n l’Assuré"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "en_voyage",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "proprietaire",
+                    "hote"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.2.2.4",
+            "texte": "les bagages dont l’Assuré n’est pas propriétaire"
+          }
+        ],
+        "limites": [
+          {
+            "article": "4.2.2.1",
+            "texte": "à concurrence de 5.000 € par sinistre",
+            "montant": "5000"
+          }
+        ]
+      },
+      {
+        "id": "bagages_bris",
+        "nom": "Bagages en voyage : casse accidentelle (option)",
+        "article": "4.2.2.1",
+        "texte": "La Compagnie garantit à l’Assuré la couverture de ses bagages emportés dans le cadre d’un voyage contre : n le vol,pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes ; n la perte, n les dégâts dus à toute circonstance fortuite survenue pendant le voyage",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "bris"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "lieu",
+                  "voie_publique"
+                ]
+              },
+              {
+                "f": [
+                  "lieu",
+                  "vehicule"
+                ]
+              },
+              {
+                "f": [
+                  "lieu",
+                  "autre_batiment"
+                ]
+              }
+            ]
+          },
+          {
+            "f": [
+              "en_voyage",
+              "oui"
+            ]
+          },
+          {
+            "non": {
+              "ou": [
+                {
+                  "f": [
+                    "bien",
+                    "vehicule_moteur"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "remorque"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "option_bagages",
+                "oui"
+              ]
+            },
+            "article": "4.2.2",
+            "texte": "la garantie “ bagages” est souscrite"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "et": [
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "bien",
+                        "instrument_musique"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "bien",
+                        "miroir"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "bien",
+                        "objet_verre_non_vitre"
+                      ]
+                    }
                   ]
                 },
                 {
                   "non": {
-                    "ou": [
-                      {
-                        "f": [
-                          "evenement",
-                          "incendie"
-                        ]
-                      },
-                      {
-                        "f": [
-                          "evenement",
-                          "vol"
-                        ]
-                      },
-                      {
-                        "f": [
-                          "evenement",
-                          "accident"
-                        ]
-                      }
+                    "f": [
+                      "accident_circulation",
+                      "oui"
                     ]
                   }
                 }
@@ -299,216 +613,647 @@
           },
           {
             "condition": {
-              "f": [
-                "auteur",
-                "assure"
+              "et": [
+                {
+                  "f": [
+                    "en_voyage",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "bagage_dommage_esthetique",
+                    "oui"
+                  ]
+                }
               ]
             },
             "portee": "tout",
-            "a_demander": true,
-            "article": "4.2.2.4.10",
-            "texte": "les vols commis par ou avec la complicité de ou du : Preneur d’assurance, son conjoint, leurs ascendants ou descendants ainsi que les conjoints de ces personnes ; l’Assuré"
+            "a_demander": false,
+            "article": "4.2.2.4",
+            "texte": "les dommages d’ordre purement esthétique"
           },
           {
             "condition": {
-              "non": {
-                "f": [
-                  "option_bagages",
-                  "oui"
-                ]
-              }
+              "et": [
+                {
+                  "f": [
+                    "en_voyage",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "deterioration_lente_ou_parasites",
+                    "oui"
+                  ]
+                }
+              ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
+            "article": "4.2.2.4",
+            "texte": "de l’usure, de la détérioration lente, de la vétusté ou d’un défaut d’entretien ; n de l’humidité, des mites, des vers ou des parasites"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "en_voyage",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "cause_intemperie",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.2.2.4",
+            "texte": "de la pluie, de la grêle et de toute autre manifestation atmosphérique"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "bien",
+                    "valeurs"
+                  ]
+                },
+                {
+                  "f": [
+                    "en_voyage",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": {
+              "bien": "valeurs"
+            },
+            "a_demander": false,
             "article": "4.2.2.1",
-            "texte": "La Compagnie garantit à l’Assuré la couverture de ses bagages emportés dans le cadre d’un voyage contre : n le vol,pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes ; n la perte, n les dégâts dus à toute circonstance fortuite survenue pendant le voyage"
+            "texte": "Les valeurs ne sont pas assimilées à des bagages"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "en_voyage",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "proprietaire",
+                    "hote"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.2.2.4",
+            "texte": "les bagages dont l’Assuré n’est pas propriétaire"
           }
         ],
         "limites": [
           {
             "article": "4.2.2.1",
-            "texte": "La Compagnie garantit le remboursement sans application de règle proportionnelle à concurrence de 5.000 € par sinistre.",
-            "montant": 5000
+            "texte": "à concurrence de 5.000 € par sinistre",
+            "montant": "5000"
+          }
+        ]
+      },
+      {
+        "id": "bagages_sinistre",
+        "nom": "Bagages en voyage : incendie, explosion, dégât des eaux (option)",
+        "article": "4.2.2.1",
+        "texte": "La Compagnie garantit à l’Assuré la couverture de ses bagages emportés dans le cadre d’un voyage contre : n le vol,pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes ; n la perte, n les dégâts dus à toute circonstance fortuite survenue pendant le voyage",
+        "perimetre": [
+          {
+            "ou": [
+              {
+                "f": [
+                  "evenement",
+                  "incendie"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "explosion"
+                ]
+              },
+              {
+                "f": [
+                  "evenement",
+                  "degat_eaux"
+                ]
+              }
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "lieu",
+                  "voie_publique"
+                ]
+              },
+              {
+                "f": [
+                  "lieu",
+                  "vehicule"
+                ]
+              },
+              {
+                "f": [
+                  "lieu",
+                  "autre_batiment"
+                ]
+              }
+            ]
+          },
+          {
+            "f": [
+              "en_voyage",
+              "oui"
+            ]
+          },
+          {
+            "non": {
+              "ou": [
+                {
+                  "f": [
+                    "bien",
+                    "vehicule_moteur"
+                  ]
+                },
+                {
+                  "f": [
+                    "bien",
+                    "remorque"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "option_bagages",
+                "oui"
+              ]
+            },
+            "article": "4.2.2",
+            "texte": "la garantie “ bagages” est souscrite"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "en_voyage",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "deterioration_lente_ou_parasites",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.2.2.4",
+            "texte": "de l’usure, de la détérioration lente, de la vétusté ou d’un défaut d’entretien ; n de l’humidité, des mites, des vers ou des parasites"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "en_voyage",
+                    "oui"
+                  ]
+                },
+                {
+                  "f": [
+                    "cause_intemperie",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.2.2.4",
+            "texte": "de la pluie, de la grêle et de toute autre manifestation atmosphérique"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "bien",
+                    "valeurs"
+                  ]
+                },
+                {
+                  "f": [
+                    "en_voyage",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": {
+              "bien": "valeurs"
+            },
+            "a_demander": false,
+            "article": "4.2.2.1",
+            "texte": "Les valeurs ne sont pas assimilées à des bagages"
+          }
+        ],
+        "limites": [
+          {
+            "article": "4.2.2.1",
+            "texte": "à concurrence de 5.000 € par sinistre",
+            "montant": "5000"
           }
         ]
       }
     ],
-    "exclusions_communes": [],
-    "extensions": [],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "en_voyage",
+                "oui"
+              ]
+            },
+            {
+              "f": [
+                "bagage_oublie",
+                "oui"
+              ]
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "4.2.2.4",
+        "texte": "les bagages oubliés"
+      },
+      {
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "en_voyage",
+                "oui"
+              ]
+            },
+            {
+              "f": [
+                "saisie_autorites",
+                "oui"
+              ]
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "4.2.2.4",
+        "texte": "les pertes et dégâts causés à l’occasion d’une saisie par les autorités publiques (police, douane, …)"
+      },
+      {
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "bagage_exterieur_vehicule",
+                "oui"
+              ]
+            },
+            {
+              "non": {
+                "f": [
+                  "accident_circulation",
+                  "oui"
+                ]
+              }
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "4.2.2.1",
+        "texte": "Les bagages transportés à l’extérieur d’un véhicule sont uniquement couverts contre les conséquences d’un accident de la circulation impliquant le moyen de transport"
+      }
+    ],
     "vocabulaire_manquant": [
       {
         "variable": "option_bagages",
+        "libelle": "Garantie « bagages » souscrite",
         "valeurs": [
           "oui",
           "non"
         ],
-        "libelle": "Garantie bagages",
-        "question": "Vos conditions particulières mentionnent-elles la garantie « bagages » ?",
-        "pourquoi": "condition d'application 4.2.2",
-        "plus_proche": "option_vol",
+        "question": "Avez-vous souscrit l'option « bagages » ?",
         "aide": {
-          "oui": "garantie bagages souscrite",
-          "non": "non souscrite"
-        }
+          "oui": "la garantie figure à votre contrat",
+          "non": "elle n'y figure pas"
+        },
+        "pour": [
+          "vol",
+          "bris",
+          "incendie",
+          "explosion",
+          "degat_eaux"
+        ],
+        "pourquoi": "une option : le contrat la range sous un titre « Option », elle se demande (7.173)",
+        "plus_proche": "aucune ; fait des conditions particulières",
+        "source": "conditions_particulieres"
       },
       {
-        "variable": "bagage_enregistre",
+        "variable": "en_voyage",
+        "libelle": "Sinistre survenu en voyage",
         "valeurs": [
           "oui",
           "non"
         ],
-        "libelle": "Bagages enregistrés",
-        "question": "Les bagages étaient-ils enregistrés auprès d'un transporteur ?",
-        "pourquoi": "condition 4.2.2.3 pour le vol dans un véhicule",
-        "plus_proche": "depot_moins_30j",
+        "question": "Le sinistre est-il survenu pendant un voyage, sur des affaires que vous aviez emportées ?",
         "aide": {
-          "oui": "enregistrés, confiés à un transporteur",
-          "non": "non enregistrés, dans le véhicule personnel"
-        }
+          "oui": "pendant un voyage ou un déplacement : vacances, week-end, voyage d'affaires, trajet en train ou en avion, hôtel, aéroport",
+          "non": "dans la vie de tous les jours, près de chez vous : au travail, à l'école, en ville"
+        },
+        "pour": [
+          "vol",
+          "bris",
+          "incendie",
+          "explosion",
+          "degat_eaux"
+        ],
+        "pourquoi": "4.2.2.1 : la garantie ne porte que sur les bagages emportés en voyage",
+        "plus_proche": "sejour_temporaire, qui ne se lit que dans un autre bâtiment : un vol dans un train ou un aéroport n'y entre pas"
+      },
+      {
+        "variable": "bagage_oublie",
+        "libelle": "Bagage oublié",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le bagage a-t-il été oublié quelque part ?",
+        "aide": {
+          "oui": "oublié dans un train, un taxi, un hôtel, un restaurant",
+          "non": "volé, perdu par le transporteur ou abîmé"
+        },
+        "pour": [
+          "vol",
+          "bris",
+          "incendie",
+          "explosion",
+          "degat_eaux"
+        ],
+        "pourquoi": "4.2.2.4.3",
+        "plus_proche": "aucune"
       },
       {
         "variable": "saisie_autorites",
+        "libelle": "Saisie par les autorités",
         "valeurs": [
           "oui",
           "non"
         ],
-        "libelle": "Saisie par autorités",
-        "question": "Les dégâts résultent-ils d'une saisie par la police ou la douane ?",
-        "pourquoi": "exclusion 4.2.2.4.4",
-        "plus_proche": "cause_dommage",
+        "question": "La perte ou le dégât vient-il d'une saisie par la police ou la douane ?",
         "aide": {
-          "oui": "saisie par police/douane",
-          "non": "autre cause"
-        }
+          "oui": "bagage saisi, fouillé ou retenu par la police ou la douane",
+          "non": "aucune intervention des autorités"
+        },
+        "pour": [
+          "vol",
+          "bris",
+          "incendie",
+          "explosion",
+          "degat_eaux"
+        ],
+        "pourquoi": "4.2.2.4.4",
+        "plus_proche": "aucune"
       },
       {
-        "variable": "perte_indirecte",
+        "variable": "deterioration_lente_ou_parasites",
+        "libelle": "Usure, humidité ou parasites",
         "valeurs": [
           "oui",
           "non"
         ],
-        "libelle": "Perte indirecte",
-        "question": "S'agit-il d'une perte indirecte (ex: frais d'hôtel suite à vol) ?",
-        "pourquoi": "exclusion 4.2.2.4.7",
-        "plus_proche": "evenement",
+        "question": "Le dommage vient-il de l'usure, de l'humidité, de mites ou de parasites ?",
         "aide": {
-          "oui": "perte indirecte, conséquence du sinistre",
-          "non": "dommage direct aux bagages"
-        }
+          "oui": "usure, vétusté, défaut d'entretien, humidité, moisissure, mites, vers",
+          "non": "un événement soudain : chute, choc, incendie, fuite"
+        },
+        "pour": [
+          "bris",
+          "degat_eaux"
+        ],
+        "pourquoi": "4.2.2.4.5",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "cause_intemperie",
+        "libelle": "Dommage causé par la pluie ou la grêle",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le dommage vient-il de la pluie, de la grêle ou d'une autre intempérie ?",
+        "aide": {
+          "oui": "bagage trempé par la pluie, abîmé par la grêle ou la neige",
+          "non": "une autre cause"
+        },
+        "pour": [
+          "bris",
+          "degat_eaux"
+        ],
+        "pourquoi": "4.2.2.4.5",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "bagage_exterieur_vehicule",
+        "libelle": "Bagage transporté à l'extérieur du véhicule",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le bagage était-il transporté à l'extérieur du véhicule (galerie, coffre de toit, porte-vélos) ?",
+        "aide": {
+          "oui": "sur une galerie, dans un coffre de toit, sur un porte-vélos, sur une remorque ouverte",
+          "non": "à l'intérieur du véhicule ou du coffre"
+        },
+        "pour": [
+          "vol",
+          "bris",
+          "incendie",
+          "explosion",
+          "degat_eaux"
+        ],
+        "pourquoi": "4.2.2.1 : couvert seulement en cas d'accident de la circulation",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "accident_circulation",
+        "libelle": "Accident de la circulation du moyen de transport",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le dommage vient-il d'un accident de la circulation du véhicule, du train, du car ou de l'avion qui transportait le bagage ?",
+        "aide": {
+          "oui": "le moyen de transport a eu un accident",
+          "non": "aucun accident du moyen de transport : chute, manutention, autre cause"
+        },
+        "pour": [
+          "bris",
+          "vol",
+          "incendie",
+          "explosion",
+          "degat_eaux"
+        ],
+        "pourquoi": "4.2.2.1 et 4.2.2.4.9",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "bagage_dommage_esthetique",
+        "libelle": "Bagage : dommage purement esthétique",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le dommage au bagage est-il purement esthétique (rayure, tache, éraflure) ?",
+        "aide": {
+          "oui": "rayure, tache, éraflure : le bagage reste utilisable",
+          "non": "bagage cassé, déchiré, inutilisable"
+        },
+        "pour": [
+          "bris"
+        ],
+        "pourquoi": "4.2.2.4.8 ; un fait à part de « dommage purement esthétique » (tempête), pour qu'il ne soit lu qu'en voyage",
+        "plus_proche": "dommage_esthetique, lu pour la tempête"
       }
     ],
-    "non_traduit": []
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "4.2.2.1",
+        "texte": "ou qui, dûment enregistré, le précède ou le suit, ainsi que les biens personnels achetés au cours du voyage pour être ramenés au domicile habituel de l’Assuré",
+        "pourquoi": "une extension de ce qu'est un bagage, pas un refus"
+      },
+      {
+        "article": "4.2.2.2",
+        "texte": "La garantie ainsi définie s’exerce dans le monde entier",
+        "pourquoi": "aucune limite de territoire : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.2.3",
+        "texte": "La garantie est acquise dans ce second cas si : n la caravane ou la remorque est entièrement close et construite en bois, métal ou plastique rigide et vitrage",
+        "pourquoi": "une précision de l'effraction pour une caravane ou une remorque, que le vocabulaire des lieux ne sépare pas du véhicule ; la fermeture des portes et des vitres, elle, est une règle"
+      },
+      {
+        "article": "4.2.2.3",
+        "texte": "Toutefois, la garantie de la Compagnie porte également sur les bagages dans le coffre d’une voiture découverte ou décapotable, mais seulement si ledit coffre est fermé à clé et inaccessible de l’intérieur du véhicule et pour autant que le vol, la détérioration ou la destruction de ces bagages ait été précédée d’une effraction du coffre",
+        "pourquoi": "une extension pour le coffre d'un cabriolet, sous la condition d'effraction déjà demandée"
+      },
+      {
+        "article": "4.2.2.4",
+        "texte": "les frais exposés pour réparer des défauts de fonctionnement, sauf si ces défauts sont la conséquence d’une perte ou d’un dommage indemnisable causé aux bagages",
+        "pourquoi": "des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.2.4",
+        "texte": "les pertes indirectes de quelque nature que ce soit",
+        "pourquoi": "des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.2.5",
+        "texte": "Les sinistres causés par la simple perte ou dus à la négligence de l’Assuré sont sujets à une franchise de 125 €",
+        "pourquoi": "des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.2.1",
+        "texte": "La Compagnie garantit le remboursement sans application de règle proportionnelle",
+        "pourquoi": "procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.2.2.1",
+        "texte": "On entend par bagage tout objet à usage personnel que l’Assuré emporte pendant un voyage",
+        "pourquoi": "la définition du bagage : portée par le périmètre des garanties (en voyage, hors du domicile, ni véhicule ni remorque), pas par une exclusion"
+      }
+    ]
   },
   "controles": [
     {
       "gravite": "info",
       "controle": "couverture",
-      "message": "garantie bagages_voyage : {\"f\": [\"option_bagages\", \"oui\"]} retiré du périmètre (conditions particulières) et mis en réserve"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "bagage_enregistre = non : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "saisie_autorites = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "perte_indirecte = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "option_bagages = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.2.2`) ou à remplacer"
+      "message": "hors décision (4.2.2.1) : une extension de ce qu'est un bagage, pas un refus"
     },
     {
       "gravite": "info",
-      "controle": "citation",
-      "message": "garantie (4.2.2.1) : citation réparée en « La Compagnie garantit à l’Assuré la couverture de ses bagages emportés dans le c »"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "circonstance (4.2.2.3) : citation réparée en « Lorsque les bagages sont non enregistrés et se trouvent à l’intérieur d’un véhic »"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.2.4 (et non 4.2.2.4.1)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.2.4 (et non 4.2.2.4.2)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.2.4 (et non 4.2.2.4.3)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.2.4 (et non 4.2.2.4.4)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.2.4 (et non 4.2.2.4.5)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.2.4 (et non 4.2.2.4.5)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.2.4 (et non 4.2.2.4.5)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.2.4 (et non 4.2.2.4.6)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.2.4 (et non 4.2.2.4.7)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.2.4 (et non 4.2.2.4.8)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.2.2.4 (et non 4.2.2.4.9)"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "citation",
-      "message": "exclusion : article 4.2.2.4.10 inconnu"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion (4.2.2.1) : citation réparée en « La Compagnie garantit à l’Assuré la couverture de ses bagages emportés dans le c »"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "réserve",
-      "message": "exclusion « les frais exposés pour réparer des défauts de fonctionnement » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
-    },
-    {
-      "gravite": "bloquant",
       "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (4.2.2.4) : « les vols commis par ou avec la complicité de ou du : n Preneur d’assurance, son conjoint, leurs asce »"
+      "message": "hors décision (4.2.2.2) : aucune limite de territoire : sans effet sur la question de couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (4.2.2.3) : une précision de l'effraction pour une caravane ou une remorque, que le vocabulaire des lieux ne sépare pas du véhicule ; la fermeture des portes et des vitres, elle, est une règle"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (4.2.2.3) : une extension pour le coffre d'un cabriolet, sous la condition d'effraction déjà demandée"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (4.2.2.4) : des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (4.2.2.4) : des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (4.2.2.5) : des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (4.2.2.1) : procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (4.2.2.1) : la définition du bagage : portée par le périmètre des garanties (en voyage, hors du domicile, ni véhicule ni remorque), pas par une exclusion"
     }
   ]
 }

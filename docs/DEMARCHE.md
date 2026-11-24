@@ -4964,11 +4964,33 @@ Le 24 nov., 15 h 45 à 17 h.
 
 **Ce que ce chiffre vaut.** `f-b19` a servi à corriger une règle. La règle vient du titre de l'article, pas du cas ; mais ce cas n'est plus un cas jamais vu, comme `f-a20` pour A (7.170), et c'est écrit à côté du chiffre dans le README.
 
-**Laissé ouvert.** La section 3.2 du contrat s'intitule aussi « Option » (tremblement de terre, pluies et inondations, pertes indirectes), et ses garanties sont en réserve depuis qu'elles sont écrites. Par cohérence, elles devraient se demander. Les bancs de B les mesurent dans cet état ; je n'y touche pas sans décision.
+**Un point que je croyais ouvert, et qui ne l'était pas.** J'ai écrit ici, puis dit à l'utilisateur, que la section 3.2 du contrat (« Option » : tremblement de terre, pluies et inondations, pertes indirectes) était restée en réserve. C'était faux. Vérifié une heure plus tard avec le moteur : ces trois options sont déclarées comme telles depuis 7.109, et un tremblement de terre répond « à préciser », avec la question de l'option. Le mécanisme existait ; je ne l'ai pas relu avant d'écrire 3.3.1 et 4.1.2, ni avant d'annoncer un écart.
 
 **Une image sans son fichier.** L'image mise en ligne à 15 h 50 montrait quatre cartes orange : le fichier de construction ne copiait pas `regles/traduction.json`. Une ligne ajoutée ; l'image suivante reste à construire.
 
 **Reste à B** : la protection numérique (4.1.4), l'annulation de voyage (4.2.1), les bagages (4.2.2), l'assistance voyage (4.2.3).
+
+### 7.174 Les bagages et la protection numérique de B
+
+Le 24 nov., 17 h à 21 h.
+
+**Deux articles écrits à la main.** Les propositions du modèle avaient plus de vingt contrôles bloquants chacune. Les deux articles sont propres à B : vingt-quatre faits nouveaux, aucun dans le vocabulaire commun, donc seul le banc de B à passer.
+
+**Les bagages (4.2.2).** Quatre garanties : le vol, le vol par agression des valeurs, la casse, et l'incendie, l'explosion ou le dégât des eaux. « En voyage » est un fait du périmètre, avec un lieu où l'on voyage (voie publique, véhicule, autre bâtiment) ; les faits nouveaux ne sont lus que dans ces lieux. La perte d'un bagage n'est pas traduite : le vocabulaire n'a pas d'événement « perte ».
+
+**Ce que la comparaison a attrapé avant le banc.** Sur 2 500 jeux de faits tirés au hasard, avant et après (leçon 155), trois écritures successives produisaient des refus nouveaux. Un véhicule et une remorque écrits en exclusion, puis les valeurs, puis l'objet laissé sans surveillance : chaque fois, le moteur refusait par une exclusion des bagages un sinistre dont on ne savait pas s'il était survenu en voyage, alors qu'une autre garantie restait possible. C'est une règle du moteur (un périmètre seulement inconnu, une exclusion établie : refus) qui convient quand le périmètre inconnu est un lieu, pas quand il est le fait même qui définit la garantie. Retenu : véhicule et remorque dans le périmètre ; les exclusions qui ne se demandent pas ne jouent que si le voyage est établi. Reste un coût mesuré : un incendie ou un dégât des eaux hors de chez soi, sans mention de voyage, passe de « non couvert » à « à préciser » (86 jeux sur 2 500).
+
+**Une tentative qui aurait touché les quatre contrats.** Exclure le bagage prêté pour l'incendie faisait lire « propriétaire des biens » sur trois événements de plus, dans le vocabulaire commun. Vu dans le diff du vocabulaire après l'acceptation, retiré : le bagage prêté qui brûle n'est pas exclu, et c'est écrit dans la proposition.
+
+**Mesure.** B 83 % (85 % au passage précédent), un couvert à tort. Les trois cas qui bougent se passent dans le logement, où ces garanties ne se rattachent pas et où leurs faits ne sont pas lus. Je n'ai pas rejoué le banc sur les règles d'avant (leçon 162) : c'est un raisonnement, pas une mesure.
+
+**La protection numérique (4.1.4).** Une garantie de protection juridique sur l'événement « litige », déjà traduit chez B, avec un fait « litige lié à Internet » à cinq valeurs. Les conditions d'un achat (vendeur de quatre pays, bien neuf entre 150 et 5 000 €) sont des circonstances : la prestation en dépend et seul l'assuré les connaît. Deux faits communs (« usage professionnel », « pays ») avaient été étendus au litige par l'acceptation : remplacés par le domaine du litige et par un fait propre à B.
+
+**L'employeur.** La comparaison montrait un seul changement : un litige avec l'employeur passait de « non couvert » à « à préciser », avec la question « est-ce lié à Internet ? ». J'avais essayé d'écarter du périmètre les domaines sans rapport avec Internet, puis retiré l'essai parce qu'il faisait demander le domaine à une usurpation d'identité. J'ai déposé en l'annonçant comme le point à regarder, avec son critère de retrait. L'essai chez l'utilisateur l'a confirmé. L'essai retiré est revenu : entre une question de trop pour un litige du travail, cas courant, et une question de domaine pour une usurpation dont la lecture ne donne pas le domaine, la seconde coûte moins, et la protection juridique 4.1.3 pose déjà cette question pour le même litige.
+
+**Mesure.** B 85 % avant la correction, 90 % après, un couvert à tort (`f-b18`), aucun cas instable, 233 tests. Le 90 % est le haut de la fourchette, pas un progrès : aucun des cas du banc n'est un litige sur Internet.
+
+**Vu à l'essai, non corrigé.** « Quelqu'un a ouvert un compte en ligne à mon nom et a commandé pour 900 euros » est lu « vol de valeurs », pas « litige ». La garantie n'est pas atteinte. La correction est dans la lecture de l'événement, donc dans le vocabulaire commun : avec les événements de voyage, quatre bancs.
 
 ## 8. Ce qui reste à faire
 
@@ -4987,7 +5009,7 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 
 **3. Les contrats.**
 - Assureur C : les biens assurés, qui dépendent de la formule et de la qualité d'occupant, et un jeu de mesure (7.159).
-- Assureur B : quatre articles de la section 4 (protection numérique, annulation de voyage, bagages, assistance voyage), et la section 3.2, dont l'option est en réserve au lieu d'être demandée (7.173). Assureur D : les options, les assistances, les mesures de protection contre le vol.
+- Assureur B : l'annulation de voyage (4.2.1), l'assistance voyage (4.2.3) et la perte d'un bagage, qui demandent des événements nouveaux ; la lecture d'une fraude en ligne racontée comme un vol (7.174). Assureur D : les options, les assistances, les mesures de protection contre le vol.
 - Un contrat hors habitation : le socle de la lecture (événement, bien, lieu) et les deux consignes sont à revoir pour lui (7.154). Aucun n'a été essayé.
 - Les conditions particulières lues dans le document du client : aujourd'hui elles se saisissent (7.141).
 - La loi applicable : écrite comme limite, non traitée.
@@ -5178,3 +5200,7 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 170. Une garantie que le contrat range sous un titre « Option » se demande ; « couvert sous réserve » est pour ce que le contrat donne par défaut. Le titre de l'article décide, pas l'habitude prise sur l'article d'à côté.
 171. Un essai conforme à ce qu'on attendait ne prouve que l'attente : la guitare « couverte sous réserve » était le résultat prévu, et le défaut.
 172. Ce qu'une image embarque se lit dans son fichier de construction, pas dans le dépôt : un fichier ajouté au projet n'y entre que si une ligne le copie.
+173. Avant d'annoncer un écart, le vérifier avec le moteur : la section que je disais mal traitée l'était correctement depuis des jours, par un mécanisme que j'avais écrit et oublié.
+174. Une exclusion d'une garantie définie par un fait (« en voyage », « lié à Internet ») ne doit jouer que si ce fait est établi : sinon elle refuse un sinistre qui relève peut-être d'une autre garantie.
+175. Après une acceptation, lire le diff du vocabulaire commun : une règle propre à un contrat peut y étendre la lecture d'un fait pour les quatre.
+176. Un risque vu avant le dépôt s'annonce avec son essai et son critère de retrait ; l'essai l'a confirmé en une commande.

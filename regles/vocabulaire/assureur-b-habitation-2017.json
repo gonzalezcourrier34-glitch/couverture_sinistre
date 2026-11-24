@@ -1,6 +1,491 @@
 {
   "_description": "Variables que seules les règles de ce contrat emploient (regles/assureur-b-habitation-2017.pl). Même format que commun.json. Rangé par `couverture regles --ranger` : une variable qu'un autre contrat se met à employer passe dans commun.json.",
   "variables": {
+    "litige_internet": {
+      "libelle": "Litige lié à Internet",
+      "valeurs": [
+        "usurpation_identite",
+        "fraude_paiement",
+        "e_reputation",
+        "achat_bien_internet",
+        "achat_service_internet",
+        "non"
+      ],
+      "question": "Le litige porte-t-il sur l'un de ces risques liés à Internet ?",
+      "libelles": {
+        "usurpation_identite": "usurpation d'identité",
+        "fraude_paiement": "utilisation frauduleuse d'un moyen de paiement",
+        "e_reputation": "atteinte à l'e-réputation",
+        "achat_bien_internet": "achat d'un bien sur Internet",
+        "achat_service_internet": "achat d'un service sur Internet",
+        "non": "sans rapport avec Internet"
+      },
+      "aide": {
+        "usurpation_identite": "quelqu'un utilise votre nom, vos papiers, vos identifiants ou votre adresse e-mail pour agir à votre place",
+        "fraude_paiement": "un tiers a utilisé votre carte bancaire, vos chèques ou votre monnaie électronique sans votre accord",
+        "e_reputation": "diffamation, injure, photo ou information privée publiée contre vous sur un site, un blog, un forum ou un réseau social",
+        "achat_bien_internet": "un objet acheté sur Internet non livré, livré cassé, incomplet ou non conforme",
+        "achat_service_internet": "un service acheté sur Internet mal exécuté ou pas exécuté",
+        "non": "un litige sans rapport avec Internet"
+      },
+      "pour": [
+        "litige"
+      ]
+    },
+    "option_e_protection": {
+      "libelle": "Garantie « E-protection » souscrite",
+      "source": "conditions_particulieres",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Avez-vous souscrit l'option « E-protection » ?",
+      "aide": {
+        "oui": "la garantie figure à votre contrat",
+        "non": "elle n'y figure pas"
+      },
+      "pour": [
+        "litige"
+      ]
+    },
+    "vendeur_lu_be_fr_nl": {
+      "libelle": "Vendeur établi au Benelux ou en France",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le vendeur en ligne est-il un professionnel établi au Luxembourg, en Belgique, en France ou aux Pays-Bas ?",
+      "aide": {
+        "oui": "site d'un professionnel établi dans l'un de ces quatre pays",
+        "non": "particulier, ou vendeur établi ailleurs"
+      },
+      "pour": [
+        "litige"
+      ]
+    },
+    "achat_bien_conditions": {
+      "libelle": "Bien neuf, entre 150 et 5 000 €, livré au domicile",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le bien était-il neuf, d'une valeur entre 150 € et 5 000 €, et à livrer à votre domicile au Luxembourg ?",
+      "aide": {
+        "oui": "bien neuf, prix entre 150 € et 5 000 €, livré chez vous au Luxembourg",
+        "non": "bien d'occasion, moins de 150 € ou plus de 5 000 €, ou livré ailleurs"
+      },
+      "pour": [
+        "litige"
+      ]
+    },
+    "litige_connu_avant_souscription": {
+      "libelle": "Litige connu avant la souscription",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Connaissiez-vous déjà le problème avant de souscrire la garantie ?",
+      "aide": {
+        "oui": "le problème existait et vous le connaissiez avant la souscription",
+        "non": "il est apparu après"
+      },
+      "pour": [
+        "litige"
+      ]
+    },
+    "litige_nature_exclue": {
+      "libelle": "Nature du litige exclue",
+      "valeurs": [
+        "propriete_intellectuelle",
+        "douane_fiscalite",
+        "gestion_societe",
+        "delai_paiement",
+        "politique_syndical",
+        "droits_tiers_ou_cedes",
+        "action_collective",
+        "caution_mandat",
+        "non"
+      ],
+      "question": "Le litige porte-t-il sur l'une de ces questions ?",
+      "aide": {
+        "propriete_intellectuelle": "droit d'auteur, marque, copyright",
+        "douane_fiscalite": "douane ou impôts",
+        "gestion_societe": "la gestion d'une association ou d'une société",
+        "delai_paiement": "un délai de paiement, sans contester la dette",
+        "politique_syndical": "une activité politique, syndicale, un mandat électif",
+        "droits_tiers_ou_cedes": "les droits d'un autre que vous faites valoir, ou des droits qu'on vous a cédés",
+        "action_collective": "une action collective d'au moins dix personnes",
+        "caution_mandat": "une caution, un aval, une reprise de dette ou un mandat",
+        "non": "rien de cela"
+      },
+      "pour": [
+        "litige"
+      ]
+    },
+    "enjeu_moins_150": {
+      "libelle": "Enjeu inférieur à 150 €",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le montant en jeu est-il inférieur à 150 € ?",
+      "aide": {
+        "oui": "le litige porte sur moins de 150 €",
+        "non": "150 € ou plus"
+      },
+      "pour": [
+        "litige"
+      ]
+    },
+    "code_secret_divulgue": {
+      "libelle": "Code secret communiqué ou noté",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Aviez-vous communiqué votre code secret à quelqu'un, ou l'aviez-vous noté quelque part ?",
+      "aide": {
+        "oui": "code donné à un proche, noté sur un papier ou dans le téléphone",
+        "non": "code gardé secret"
+      },
+      "pour": [
+        "litige"
+      ]
+    },
+    "banque_prevenue": {
+      "libelle": "Banque prévenue sans délai",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Avez-vous prévenu votre banque dès que vous avez su que la carte était utilisée ?",
+      "aide": {
+        "oui": "banque prévenue tout de suite, carte bloquée",
+        "non": "banque prévenue tardivement, ou pas encore"
+      },
+      "pour": [
+        "litige"
+      ]
+    },
+    "diffusion_volontaire": {
+      "libelle": "Information publiée par l'assuré lui-même",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'information litigieuse avait-elle été publiée ou autorisée par vous-même ?",
+      "aide": {
+        "oui": "vous l'aviez publiée vous-même ou donné votre accord",
+        "non": "publiée sans votre accord"
+      },
+      "pour": [
+        "litige"
+      ]
+    },
+    "auteur_presse": {
+      "libelle": "Atteinte par la presse",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'atteinte vient-elle d'un journal ou d'un journaliste ?",
+      "aide": {
+        "oui": "un article de presse, un journaliste",
+        "non": "un particulier, un site, un réseau social"
+      },
+      "pour": [
+        "litige"
+      ]
+    },
+    "achat_bien_exclu": {
+      "libelle": "Bien exclu de l'E-protection",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le bien acheté était-il périssable, un médicament, une arme, un véhicule ou un contenu numérique à télécharger ?",
+      "aide": {
+        "oui": "denrée, médicament, arme, véhicule, film, jeu ou musique à télécharger",
+        "non": "un autre objet"
+      },
+      "pour": [
+        "litige"
+      ]
+    },
+    "achat_enchere": {
+      "libelle": "Achat sur un site d'enchères",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'achat a-t-il été fait sur un site de vente aux enchères ?",
+      "aide": {
+        "oui": "site d'enchères",
+        "non": "site marchand ordinaire"
+      },
+      "pour": [
+        "litige"
+      ]
+    },
+    "prix_conteste": {
+      "libelle": "Prix contesté",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le litige porte-t-il sur le prix lui-même ?",
+      "aide": {
+        "oui": "vous contestez le prix payé",
+        "non": "le bien ou le service est en cause, pas le prix"
+      },
+      "pour": [
+        "litige"
+      ]
+    },
+    "litige_hors_europe": {
+      "libelle": "Litige à mener hors d'Europe",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le litige se déroule-t-il hors de l'Union européenne, de la Suisse et de la Norvège ?",
+      "aide": {
+        "oui": "l'usurpateur, le fraudeur ou la banque en cause sont hors d'Europe",
+        "non": "au Luxembourg ou ailleurs en Europe"
+      },
+      "pour": [
+        "litige"
+      ]
+    },
+    "option_bagages": {
+      "libelle": "Garantie « bagages » souscrite",
+      "source": "conditions_particulieres",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Avez-vous souscrit l'option « bagages » ?",
+      "aide": {
+        "oui": "la garantie figure à votre contrat",
+        "non": "elle n'y figure pas"
+      },
+      "pour": [
+        "vol",
+        "bris",
+        "incendie",
+        "explosion",
+        "degat_eaux"
+      ],
+      "seulement_si": {
+        "lieu": [
+          "voie_publique",
+          "vehicule",
+          "autre_batiment"
+        ]
+      }
+    },
+    "en_voyage": {
+      "libelle": "Sinistre survenu en voyage",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le sinistre est-il survenu pendant un voyage, sur des affaires que vous aviez emportées ?",
+      "aide": {
+        "oui": "pendant un voyage ou un déplacement : vacances, week-end, voyage d'affaires, trajet en train ou en avion, hôtel, aéroport",
+        "non": "dans la vie de tous les jours, près de chez vous : au travail, à l'école, en ville"
+      },
+      "pour": [
+        "vol",
+        "bris",
+        "incendie",
+        "explosion",
+        "degat_eaux"
+      ],
+      "seulement_si": {
+        "lieu": [
+          "voie_publique",
+          "vehicule",
+          "autre_batiment"
+        ]
+      }
+    },
+    "bagage_oublie": {
+      "libelle": "Bagage oublié",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le bagage a-t-il été oublié quelque part ?",
+      "aide": {
+        "oui": "oublié dans un train, un taxi, un hôtel, un restaurant",
+        "non": "volé, perdu par le transporteur ou abîmé"
+      },
+      "pour": [
+        "vol",
+        "bris",
+        "incendie",
+        "explosion",
+        "degat_eaux"
+      ],
+      "seulement_si": {
+        "lieu": [
+          "voie_publique",
+          "vehicule",
+          "autre_batiment"
+        ]
+      }
+    },
+    "saisie_autorites": {
+      "libelle": "Saisie par les autorités",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La perte ou le dégât vient-il d'une saisie par la police ou la douane ?",
+      "aide": {
+        "oui": "bagage saisi, fouillé ou retenu par la police ou la douane",
+        "non": "aucune intervention des autorités"
+      },
+      "pour": [
+        "vol",
+        "bris",
+        "incendie",
+        "explosion",
+        "degat_eaux"
+      ],
+      "seulement_si": {
+        "lieu": [
+          "voie_publique",
+          "vehicule",
+          "autre_batiment"
+        ]
+      }
+    },
+    "deterioration_lente_ou_parasites": {
+      "libelle": "Usure, humidité ou parasites",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage vient-il de l'usure, de l'humidité, de mites ou de parasites ?",
+      "aide": {
+        "oui": "usure, vétusté, défaut d'entretien, humidité, moisissure, mites, vers",
+        "non": "un événement soudain : chute, choc, incendie, fuite"
+      },
+      "pour": [
+        "bris",
+        "incendie",
+        "explosion",
+        "degat_eaux"
+      ],
+      "seulement_si": {
+        "lieu": [
+          "voie_publique",
+          "vehicule",
+          "autre_batiment"
+        ]
+      }
+    },
+    "cause_intemperie": {
+      "libelle": "Dommage causé par la pluie ou la grêle",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage vient-il de la pluie, de la grêle ou d'une autre intempérie ?",
+      "aide": {
+        "oui": "bagage trempé par la pluie, abîmé par la grêle ou la neige",
+        "non": "une autre cause"
+      },
+      "pour": [
+        "bris",
+        "incendie",
+        "explosion",
+        "degat_eaux"
+      ],
+      "seulement_si": {
+        "lieu": [
+          "voie_publique",
+          "vehicule",
+          "autre_batiment"
+        ]
+      }
+    },
+    "bagage_exterieur_vehicule": {
+      "libelle": "Bagage transporté à l'extérieur du véhicule",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le bagage était-il transporté à l'extérieur du véhicule (galerie, coffre de toit, porte-vélos) ?",
+      "aide": {
+        "oui": "sur une galerie, dans un coffre de toit, sur un porte-vélos, sur une remorque ouverte",
+        "non": "à l'intérieur du véhicule ou du coffre"
+      },
+      "pour": [
+        "vol",
+        "bris",
+        "incendie",
+        "explosion",
+        "degat_eaux"
+      ],
+      "seulement_si": {
+        "lieu": [
+          "voie_publique",
+          "vehicule",
+          "autre_batiment"
+        ]
+      }
+    },
+    "accident_circulation": {
+      "libelle": "Accident de la circulation du moyen de transport",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage vient-il d'un accident de la circulation du véhicule, du train, du car ou de l'avion qui transportait le bagage ?",
+      "aide": {
+        "oui": "le moyen de transport a eu un accident",
+        "non": "aucun accident du moyen de transport : chute, manutention, autre cause"
+      },
+      "pour": [
+        "bris",
+        "vol",
+        "incendie",
+        "explosion",
+        "degat_eaux"
+      ],
+      "seulement_si": {
+        "lieu": [
+          "voie_publique",
+          "vehicule",
+          "autre_batiment"
+        ]
+      }
+    },
+    "bagage_dommage_esthetique": {
+      "libelle": "Bagage : dommage purement esthétique",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage au bagage est-il purement esthétique (rayure, tache, éraflure) ?",
+      "aide": {
+        "oui": "rayure, tache, éraflure : le bagage reste utilisable",
+        "non": "bagage cassé, déchiré, inutilisable"
+      },
+      "pour": [
+        "bris"
+      ],
+      "seulement_si": {
+        "lieu": [
+          "voie_publique",
+          "vehicule",
+          "autre_batiment"
+        ]
+      }
+    },
     "option_rc_chasse": {
       "libelle": "Garantie « responsabilité civile chasse » souscrite",
       "source": "conditions_particulieres",
@@ -459,7 +944,8 @@
         "plus_30_jours": "contrat plus ancien"
       },
       "pour": [
-        "assistance"
+        "assistance",
+        "litige"
       ]
     },
     "coupure_reseau": {
