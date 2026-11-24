@@ -1,6 +1,163 @@
 {
   "_description": "Variables que seules les règles de ce contrat emploient (regles/assureur-b-habitation-2017.pl). Même format que commun.json. Rangé par `couverture regles --ranger` : une variable qu'un autre contrat se met à employer passe dans commun.json.",
   "variables": {
+    "option_dommages_biens": {
+      "libelle": "Garantie « dommages aux biens » souscrite",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Vos conditions particulières mentionnent-elles la garantie « dommages aux biens » ?",
+      "aide": {
+        "oui": "la garantie figure aux conditions particulières",
+        "non": "elle n'y figure pas"
+      },
+      "pour": [
+        "bris",
+        "vol"
+      ]
+    },
+    "surveillance_directe": {
+      "libelle": "Objet sous la surveillance de l'assuré",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'objet était-il sous votre surveillance directe, ou celle d'une personne qui vous accompagnait, au moment du vol ?",
+      "aide": {
+        "oui": "l'objet était avec vous ou sous vos yeux : porté, tenu, posé à côté de vous",
+        "non": "l'objet était laissé sans surveillance : dans un hall, une cour, attaché dehors, dans un local ou un véhicule"
+      },
+      "pour": [
+        "vol"
+      ]
+    },
+    "local_ferme_cle": {
+      "libelle": "Local fermé à clé",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le local où se trouvait l'objet était-il clos, couvert et fermé à clé ?",
+      "aide": {
+        "oui": "une cave, un garage, un vestiaire ou une pièce fermés à clé",
+        "non": "un lieu ouvert, non fermé à clé, ou un abri sans porte"
+      },
+      "pour": [
+        "vol"
+      ]
+    },
+    "vol_de_nuit": {
+      "libelle": "Vol entre 22 h et 7 h",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le vol dans le véhicule a-t-il eu lieu entre vingt-deux heures et sept heures ?",
+      "aide": {
+        "oui": "pendant la nuit, entre 22 h et 7 h",
+        "non": "en journée ou en soirée, entre 7 h et 22 h"
+      },
+      "pour": [
+        "vol"
+      ],
+      "seulement_si": {
+        "lieu": [
+          "vehicule"
+        ]
+      }
+    },
+    "bagage_enregistre": {
+      "libelle": "Bagage enregistré",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'objet était-il confié comme bagage enregistré à une entreprise de transport ?",
+      "aide": {
+        "oui": "bagage enregistré en soute, confié au transporteur",
+        "non": "gardé avec soi ou laissé ailleurs"
+      },
+      "pour": [
+        "vol"
+      ]
+    },
+    "dommage_voile_seule": {
+      "libelle": "Voile seule endommagée",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Seule la voile du matériel (planche, parapente, kite) est-elle endommagée ?",
+      "aide": {
+        "oui": "la voile est déchirée ou abîmée, le reste est intact",
+        "non": "d'autres parties du matériel sont aussi endommagées, ou il n'y a pas de voile"
+      },
+      "pour": [
+        "bris"
+      ]
+    },
+    "usure_instrument": {
+      "libelle": "Cordes, peaux, anches ou sonorité",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage se limite-t-il à des cordes cassées, une peau ou une anche abîmée, ou un défaut de sonorité ?",
+      "aide": {
+        "oui": "corde cassée, peau de tambour crevée, anche abîmée, instrument qui sonne mal, sans autre dégât",
+        "non": "l'instrument lui-même est cassé ou fendu"
+      },
+      "pour": [
+        "bris"
+      ]
+    },
+    "emballage_inadapte": {
+      "libelle": "Instrument transporté sans emballage adapté",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'instrument a-t-il été abîmé pendant un transport, sans étui ou dans un emballage inadapté ?",
+      "aide": {
+        "oui": "transporté sans étui ni housse, ou mal emballé",
+        "non": "dans son étui, ou pas pendant un transport"
+      },
+      "pour": [
+        "bris"
+      ]
+    },
+    "evacuation_ordonnee": {
+      "libelle": "Locaux évacués sur ordre",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les locaux étaient-ils évacués sur ordre des autorités, ou du fait d'une guerre ou de troubles civils ?",
+      "aide": {
+        "oui": "évacuation ordonnée ou imposée par des troubles",
+        "non": "aucune évacuation"
+      },
+      "pour": [
+        "bris",
+        "vol"
+      ]
+    },
+    "option_pj_immeuble": {
+      "libelle": "Garantie « protection juridique immeuble » souscrite",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Vos conditions particulières mentionnent-elles la garantie « protection juridique immeuble » ?",
+      "aide": {
+        "oui": "la garantie figure aux conditions particulières",
+        "non": "elle n'y figure pas"
+      },
+      "pour": [
+        "litige"
+      ]
+    },
     "option_assistance_urgence": {
       "libelle": "Garantie « assistance d’urgence » souscrite",
       "source": "conditions_particulieres",

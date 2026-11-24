@@ -4916,6 +4916,34 @@ Six exclusions deviennent des règles : la chasse, le gibier et les animaux sauv
 
 **Mesure.** À l'acceptation, aucun cas de test ne change de décision. Un accident de chasse : non couvert, 5.5-a cité. Des lunettes cassées au foot : couvert. L'outil a rangé les cinq faits dans le vocabulaire commun : ils sont lus pour les quatre contrats, donc les quatre bancs sont repassés. A 94 % et 100 %, B 83 %, D 96 % : rien ne bouge. `regles/traduction.json` déclare A traduit en entier ; sa carte passe au vert.
 
+### 7.172 Finir A pour de bon, avancer B
+
+Le 24 nov., 14 h 30 à 15 h 45.
+
+**Un recensement que j'aurais dû faire avant de déclarer A vert.** En ouvrant un article de B, dix exclusions classées « rares » dans sa responsabilité civile. Compté partout : dix-huit passages chez A, vingt-deux chez B. Chez A, seul l'article 5 avait été repris ; les articles 2.5 et 2.14 avaient les mêmes classements. Le vert de 7.171 était prématuré, et il a été dit comme tel.
+
+**A, la fin.** Neuf exclusions deviennent des règles : l'amiante, le contrôle des citernes, l'ascenseur non conforme, le terrain de plus de cinq hectares (2.5) ; la procédure à l'étranger sans accord, le recours entre assurés (2.14) ; les actes collectifs de violence, les jet-skis et engins aériens, plus de cinq chevaux (5). Sept faits nouveaux. Vérifié par un comptage, pas à l'œil : plus aucun « rare » dans les propositions de A. Ce qui reste hors décision : des extensions de garantie, de la procédure et des frais, le recours de l'assureur. Aucun cas de test ne change de décision ; A 94 % et 100 %.
+
+**B, trois articles.**
+
+- *Assistance pour petits travaux (3.3.2).* Le contrat organise la venue d'un artisan et ne paie jamais sa facture. Une garantie qui « couvre » aurait répondu couvert à une demande que le délai de carence de l'assistance d'urgence refuse. C'est donc un service qui ne décide rien, et la facture à la charge de l'assuré est dans son nom.
+- *Protection juridique de l'immeuble (3.1.11).* Calquée sur la protection juridique déjà traduite (4.1.3) : une garantie, trois exclusions lues par des faits existants, un seul fait nouveau, l'option.
+- *Option « dommages aux biens » (3.3.1).* Le bris accidentel et le vol d'instruments, de matériel de sport, de vélos, de matériel médical, de bijoux. Construite sur le matériel multimédia (3.1.7), dont l'article reprend la rédaction. Cinq valeurs de bien nouvelles, rattachées à « objet divers » pour les règles déjà écrites.
+
+**Ce que 3.3.1 change à la question de l'énoncé.** Un vélo volé dans un hall : toujours non couvert chez B si la lecture comprend qu'il n'était pas surveillé ; « à préciser », avec la question de la surveillance, sinon. Un vélo volé dans une cave fermée à clé, plainte déposée : couvert, sous réserve de l'option. Avant, le premier était un refus ferme et le second une question.
+
+**Trois écritures du vol, deux retirées.**
+
+- La plainte et le lieu en deux conditions : pour le vélo du hall, seule la plainte était demandée.
+- La plainte en formalité à vérifier : la bonne question était posée, mais un vol sans plainte n'était plus refusé.
+- La plainte et le lieu en une seule condition : retenue.
+
+**Un essai retiré : ouvrir le bris à l'événement « accident ».** Une guitare tombée est lue « accident », que rien ne traduit chez B. Déclarer cet événement traduit suffit à faire couvrir un vase tombé par la garantie « heurt » (3.1.1.2), dont l'exclusion des dégâts causés par l'assuré n'est pas demandée. La mention « à examiner par un gestionnaire » masquait ce défaut depuis le début. Retiré avant dépôt ; B ne sera pas déclaré complet tant que cette garantie n'est pas reprise.
+
+**Une erreur de dépôt.** Le poste a reçu une version intermédiaire de 3.3.1 : j'avais réutilisé le dossier de dépôt, contre la règle. Vu en lisant la sortie de l'utilisateur, qui annonçait une obligation que ma version n'avait pas. Redéposé d'un dossier neuf, relu après dépôt, banc repassé.
+
+**Mesure.** Sur 900 jeux de faits tirés au hasard, avant et après 3.3.1, aucune décision ne change hors des vélos, des bijoux et des nouveaux biens. Bancs : A 94 % et 100 % ; B 87 puis 88 % ; D 95 % (un cas juste deux fois sur trois, la confirmation écartant une fois un bien lu comme avant) ; 233 tests. `regles/traduction.json` : A traduit en entier, B dix-neuf articles sur vingt-quatre avec ses deux réserves.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le ferais.
@@ -5118,3 +5146,6 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 164. Ce qu'un écran ne dit pas, on finit par le croire complet : l'état de la traduction se montre, et se déclare à la main quand le comptage automatique se trompe.
 165. Quand la prestation n'est due que sous une condition que seul l'assuré connaît, cette condition se demande. Une exclusion qui retire un cas d'une garantie par ailleurs acquise ne se demande pas : elle joue quand la déclaration la dit.
 166. Un jeu fermé qui révèle une erreur de règle a fait son travail une fois ; après la correction, ce cas est vu, et il faut l'écrire à côté du chiffre.
+167. Avant d'écrire « complet », compter ce qui a été classé plutôt que traduit, dans tous les articles et pas seulement celui qu'on vient d'ouvrir.
+168. Un garde-fou peut masquer un défaut : « à examiner par un gestionnaire » cachait une garantie qui couvrait trop. Lever un garde-fou se vérifie comme un changement de règle.
+169. Un dépôt se relit après coup, sur le poste : « écrit » ne dit pas quelle version.

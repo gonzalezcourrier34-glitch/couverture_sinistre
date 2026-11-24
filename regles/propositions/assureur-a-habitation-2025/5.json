@@ -11,7 +11,8 @@
         "une garantie de vie privée au lieu de huit : seul ce qui a causé le dommage les distinguait (`origine_rc`)",
         "les exclusions : le tiers, la profession, le contrat, les biens gardés, les véhicules à moteur, le feu parti du bâtiment assuré, l'intention ; le reste hors décision, cité",
         "les seize variables proposées (âge, faute lourde, nombre d'enfants gardés…) : aucune retenue",
-        "24 nov. : six exclusions jusque-là classées « rares » deviennent des règles (chasse, gibier, ivresse et violence de l'assuré majeur, terrorisme, nucléaire, pollution graduelle) ; elles ne s'appliquent que si la déclaration le dit"
+        "24 nov. : six exclusions jusque-là classées « rares » deviennent des règles (chasse, gibier, ivresse et violence de l'assuré majeur, terrorisme, nucléaire, pollution graduelle) ; elles ne s'appliquent que si la déclaration le dit",
+        "24 nov. : les dernières exclusions classées « rares » deviennent des règles (actes collectifs de violence, jet-skis et engins aériens, plus de cinq chevaux) ; ce qui reste hors décision est une extension ou un recours, pas un refus"
       ]
     }
   },
@@ -250,6 +251,52 @@
             "a_demander": false,
             "article": "5.10",
             "texte": "les dommages découlant de la pollution graduelle"
+          },
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "evenement",
+                    "attentat"
+                  ]
+                },
+                {
+                  "f": [
+                    "evenement",
+                    "conflit_du_travail"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "5.10",
+            "texte": "Les dommages résultant d’actes collectifs de violence, d’émeute, de sabotage, de mouvement populaire, de conflit de travail ou de terrorisme."
+          },
+          {
+            "condition": {
+              "f": [
+                "origine_rc",
+                "vehicule_moteur"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "5.4-a",
+            "texte": "l’emploi de jet-skis ainsi que l’emploi de véhicules aériens"
+          },
+          {
+            "condition": {
+              "f": [
+                "plus_de_5_chevaux",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "5.3",
+            "texte": "La garantie est acquise pour 5 chevaux de selle dont vous êtes propriétaire, ou plus si leur nombre est mentionné en conditions particulières"
           }
         ],
         "limites": [
@@ -356,15 +403,25 @@
         },
         "pourquoi": "5.10 : la pollution graduelle est exclue",
         "plus_proche": "aucune"
+      },
+      {
+        "variable": "plus_de_5_chevaux",
+        "libelle": "Plus de cinq chevaux de selle",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Possédez-vous plus de cinq chevaux de selle ?",
+        "aide": {
+          "oui": "plus de cinq chevaux de selle en propriété",
+          "non": "cinq ou moins, ou aucun cheval en cause"
+        },
+        "pourquoi": "5.3",
+        "plus_proche": "aucune"
       }
     ],
     "non_traduit": [],
     "hors_decision": [
-      {
-        "article": "5.3",
-        "texte": "La garantie est acquise pour 5 chevaux de selle dont vous êtes propriétaire, ou plus si leur nombre est mentionné en conditions particulières",
-        "pourquoi": "le nombre de chevaux : rare ; le vocabulaire ne le distingue pas"
-      },
       {
         "article": "5.4~1",
         "texte": "pour les dommages causés par des chaises roulantes électriques pour personnes à mobilité réduite",
@@ -388,7 +445,7 @@
       {
         "article": "5.4~1",
         "texte": "pour les dommages corporels causés à un tiers (au sens du présent contrat) en conduisant conformément à la loi un véhicule automoteur qui vous est confié occasionnellement",
-        "pourquoi": "une extension rare ; le vocabulaire ne distingue pas le véhicule confié"
+        "pourquoi": "une extension de la garantie, pas un refus"
       },
       {
         "article": "5.4~2",
@@ -403,7 +460,7 @@
       {
         "article": "5.10",
         "texte": "les dommages découlant de la responsabilité civile soumise à une assurance légalement obligatoire",
-        "pourquoi": "lu par les véhicules à moteur ; le reste (chasse…) rare"
+        "pourquoi": "lu par deux exclusions : les véhicules à moteur (5.4-a) et la chasse (5.5-a), les deux assurances obligatoires qu'une déclaration peut énoncer"
       },
       {
         "article": "12/contenu",
@@ -411,29 +468,19 @@
         "pourquoi": "le contenu assuré en dommages ; en responsabilité civile, ce qui a causé le dommage est lu par `origine_rc`"
       },
       {
-        "article": "5.4-a",
-        "texte": "l’emploi de jet-skis ainsi que l’emploi de véhicules aériens",
-        "pourquoi": "lu comme un véhicule à moteur ; sinon rare"
-      },
-      {
         "article": "5.6",
         "texte": "lorsque vous assurez la garde, contre rémunération, de maximum 5 enfants de tiers",
-        "pourquoi": "une activité rémunérée tenue pour privée : rare ; le vocabulaire ne la distingue pas"
+        "pourquoi": "une extension de la garantie, pas un refus ; point faible connu : cette garde peut être lue comme une activité professionnelle"
       },
       {
         "article": "5.7",
         "texte": "Dans le cadre de l’économie de partage",
-        "pourquoi": "rare ; le vocabulaire ne distingue pas l'économie de partage"
+        "pourquoi": "une extension de la garantie, pas un refus"
       },
       {
         "article": "5.8",
         "texte": "Nous vous assurons pour les dommages subis par un tiers qui aurait participé, dans le cadre de votre vie privée et en cas de danger imminent, à votre sauvetage",
-        "pourquoi": "rare ; le vocabulaire ne distingue pas le sauvetage"
-      },
-      {
-        "article": "5.10",
-        "texte": "Les dommages résultant d’actes collectifs de violence, d’émeute, de sabotage, de mouvement populaire, de conflit de travail ou de terrorisme.",
-        "pourquoi": "rare en responsabilité civile ; lu par l'événement pour les dommages aux biens"
+        "pourquoi": "une extension de la garantie, pas un refus"
       }
     ]
   },
@@ -446,11 +493,6 @@
     {
       "gravite": "info",
       "controle": "couverture",
-      "message": "hors décision (5.3) : le nombre de chevaux : rare ; le vocabulaire ne le distingue pas"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
       "message": "hors décision (5.4~1) : pas une exclusion : un engin que la garantie couvre ; le vocabulaire range les engins lents avec la personne et les rapides avec les véhicules à moteur (`origine_rc`)"
     },
     {
@@ -471,7 +513,7 @@
     {
       "gravite": "info",
       "controle": "couverture",
-      "message": "hors décision (5.4~1) : une extension rare ; le vocabulaire ne distingue pas le véhicule confié"
+      "message": "hors décision (5.4~1) : une extension de la garantie, pas un refus"
     },
     {
       "gravite": "info",
@@ -486,7 +528,7 @@
     {
       "gravite": "info",
       "controle": "couverture",
-      "message": "hors décision (5.10) : lu par les véhicules à moteur ; le reste (chasse…) rare"
+      "message": "hors décision (5.10) : lu par deux exclusions : les véhicules à moteur (5.4-a) et la chasse (5.5-a), les deux assurances obligatoires qu'une déclaration peut énoncer"
     },
     {
       "gravite": "info",
@@ -496,27 +538,17 @@
     {
       "gravite": "info",
       "controle": "couverture",
-      "message": "hors décision (5.4-a) : lu comme un véhicule à moteur ; sinon rare"
+      "message": "hors décision (5.6) : une extension de la garantie, pas un refus ; point faible connu : cette garde peut être lue comme une activité professionnelle"
     },
     {
       "gravite": "info",
       "controle": "couverture",
-      "message": "hors décision (5.6) : une activité rémunérée tenue pour privée : rare ; le vocabulaire ne la distingue pas"
+      "message": "hors décision (5.7) : une extension de la garantie, pas un refus"
     },
     {
       "gravite": "info",
       "controle": "couverture",
-      "message": "hors décision (5.7) : rare ; le vocabulaire ne distingue pas l'économie de partage"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (5.8) : rare ; le vocabulaire ne distingue pas le sauvetage"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (5.10) : rare en responsabilité civile ; lu par l'événement pour les dommages aux biens"
+      "message": "hors décision (5.8) : une extension de la garantie, pas un refus"
     }
   ]
 }

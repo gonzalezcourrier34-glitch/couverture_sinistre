@@ -2,11 +2,11 @@
  "_description": "Pour chaque jeu de conditions générales : sont-elles traduites en règles en entier ? Déclaré à la main, article par article, et non calculé (7.169). « complet » : chaque passage de chaque article de garantie est traduit en règle ou classé sans effet sur la décision. L'écran entoure la carte en vert (complet) ou en orange (en partie).",
  "assureur-a-habitation-2025": {
   "complet": true,
-  "detail": "Toutes les garanties ont leurs règles, assistance comprise, et toutes les exclusions qu'une déclaration peut énoncer sont lues. Un point faible connu : la garde d'enfants rémunérée, que le contrat couvre, peut être lue comme une activité professionnelle."
+  "detail": "Toutes les garanties ont leurs règles, assistance comprise, et toutes les exclusions qu'une déclaration peut énoncer sont lues. Ce qui reste hors décision : des extensions de garantie, de la procédure et des frais. Un point faible connu : la garde d'enfants rémunérée, que le contrat couvre, peut être lue comme une activité professionnelle."
  },
  "assureur-b-habitation-2017": {
   "complet": false,
-  "detail": "Seize articles traduits : toutes les garanties des biens (3.1.1 à 3.1.10, 3.2.1 à 3.2.3), l'assistance d'urgence, la responsabilité civile vie privée et la protection juridique. Restent huit articles : protection juridique de l'immeuble, dommages aux biens en option, assistance pour petits travaux, chasse, protection numérique, annulation de voyage, bagages, assistance voyage."
+  "detail": "Dix-neuf articles traduits sur vingt-quatre : toutes les garanties des biens, les deux assistances de l'habitation, la protection juridique, l'option dommages aux biens, la responsabilité civile vie privée. Restent : chasse, protection numérique, annulation de voyage, bagages, assistance voyage. Deux réserves : un objet cassé par maladresse est renvoyé à un gestionnaire, et une quinzaine d'exclusions de la responsabilité civile ne sont pas encore lues."
  },
  "assureur-c-habitation-2025": {
   "complet": false,

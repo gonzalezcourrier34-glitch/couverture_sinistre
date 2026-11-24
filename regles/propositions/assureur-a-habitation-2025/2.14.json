@@ -9,7 +9,8 @@
       "date": "2026-11-20",
       "modifications": [
         "l'événement `litige` et `domaine_litige` (vocabulaire de D) : la défense pénale et le recours après un dommage",
-        "`tiers_insolvable` : hors décision"
+        "`tiers_insolvable` : hors décision",
+        "24 nov. : deux exclusions jusque-là non lues deviennent des règles (procédure à l'étranger sans accord, recours entre assurés)"
       ]
     }
   },
@@ -40,7 +41,20 @@
         ],
         "circonstances": [],
         "obligations": [],
-        "exclusions": [],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "procedure_etranger_sans_accord",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "2.14~2",
+            "texte": "une action ou procédure menée à l’étranger sans notre accord écrit préalable"
+          }
+        ],
         "limites": [
           {
             "article": "2.14~2",
@@ -70,7 +84,32 @@
         ],
         "circonstances": [],
         "obligations": [],
-        "exclusions": [],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "procedure_etranger_sans_accord",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "2.14~2",
+            "texte": "une action ou procédure menée à l’étranger sans notre accord écrit préalable"
+          },
+          {
+            "condition": {
+              "f": [
+                "adversaire_assure",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "2.14~2",
+            "texte": "les recours entre assurés"
+          }
+        ],
         "limites": [
           {
             "article": "2.14~2",
@@ -82,23 +121,49 @@
     ],
     "exclusions_communes": [],
     "extensions": [],
-    "vocabulaire_manquant": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "procedure_etranger_sans_accord",
+        "libelle": "Procédure à l'étranger sans accord",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Une action ou une procédure a-t-elle été menée à l'étranger sans l'accord écrit de l'assureur ?",
+        "aide": {
+          "oui": "procédure engagée à l'étranger, sans accord écrit préalable",
+          "non": "procédure en Belgique, ou avec l'accord de l'assureur"
+        },
+        "pourquoi": "2.14",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "adversaire_assure",
+        "libelle": "Recours contre une autre personne assurée",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le recours vise-t-il une autre personne assurée par le même contrat ?",
+        "aide": {
+          "oui": "contre un membre du foyer ou une autre personne assurée",
+          "non": "contre un tiers"
+        },
+        "pourquoi": "2.14",
+        "plus_proche": "aucune"
+      }
+    ],
     "non_traduit": [],
     "hors_decision": [
       {
         "article": "2.14~1",
         "texte": "Nous couvrons également l’insolvabilité des tiers",
-        "pourquoi": "le vocabulaire ne distingue pas l'insolvabilité du tiers"
+        "pourquoi": "une extension de la garantie, pas un refus"
       },
       {
         "article": "2.14~1",
         "texte": "les amendes et les dépens de l’instance pénale, ainsi que pour les frais de poursuites pénales",
         "pourquoi": "des frais non remboursés, pas un refus du sinistre"
-      },
-      {
-        "article": "2.14~2",
-        "texte": "les recours entre assurés",
-        "pourquoi": "le vocabulaire ne dit pas contre qui le recours est exercé"
       },
       {
         "article": "2.14~2",
@@ -109,11 +174,6 @@
         "article": "2.14~2",
         "texte": "pour un pourvoi en Cassation ou devant une juridiction supranationale, si les intérêts en cause n’atteignent pas 1.250 EUR en principal",
         "pourquoi": "une étape de la procédure, pas la déclaration"
-      },
-      {
-        "article": "2.14~2",
-        "texte": "une action ou procédure menée à l’étranger sans notre accord écrit préalable",
-        "pourquoi": "le vocabulaire ne distingue pas le pays de la procédure"
       }
     ]
   },
@@ -121,17 +181,12 @@
     {
       "gravite": "info",
       "controle": "couverture",
-      "message": "hors décision (2.14~1) : le vocabulaire ne distingue pas l'insolvabilité du tiers"
+      "message": "hors décision (2.14~1) : une extension de la garantie, pas un refus"
     },
     {
       "gravite": "info",
       "controle": "couverture",
       "message": "hors décision (2.14~1) : des frais non remboursés, pas un refus du sinistre"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (2.14~2) : le vocabulaire ne dit pas contre qui le recours est exercé"
     },
     {
       "gravite": "info",
@@ -142,11 +197,6 @@
       "gravite": "info",
       "controle": "couverture",
       "message": "hors décision (2.14~2) : une étape de la procédure, pas la déclaration"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (2.14~2) : le vocabulaire ne distingue pas le pays de la procédure"
     }
   ]
 }

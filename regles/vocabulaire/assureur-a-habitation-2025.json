@@ -1,6 +1,111 @@
 {
   "_description": "Variables que seules les règles de ce contrat emploient (regles/assureur-a-habitation-2025.pl). Même format que commun.json. Rangé par `couverture regles --ranger` : une variable qu'un autre contrat se met à employer passe dans commun.json.",
   "variables": {
+    "plus_de_5_chevaux": {
+      "libelle": "Plus de cinq chevaux de selle",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Possédez-vous plus de cinq chevaux de selle ?",
+      "aide": {
+        "oui": "plus de cinq chevaux de selle en propriété",
+        "non": "cinq ou moins, ou aucun cheval en cause"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "procedure_etranger_sans_accord": {
+      "libelle": "Procédure à l'étranger sans accord",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Une action ou une procédure a-t-elle été menée à l'étranger sans l'accord écrit de l'assureur ?",
+      "aide": {
+        "oui": "procédure engagée à l'étranger, sans accord écrit préalable",
+        "non": "procédure en Belgique, ou avec l'accord de l'assureur"
+      },
+      "pour": [
+        "litige"
+      ]
+    },
+    "adversaire_assure": {
+      "libelle": "Recours contre une autre personne assurée",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le recours vise-t-il une autre personne assurée par le même contrat ?",
+      "aide": {
+        "oui": "contre un membre du foyer ou une autre personne assurée",
+        "non": "contre un tiers"
+      },
+      "pour": [
+        "litige"
+      ]
+    },
+    "cause_amiante": {
+      "libelle": "Dommage causé par l'amiante",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage vient-il de l'amiante ?",
+      "aide": {
+        "oui": "des fibres ou des matériaux contenant de l'amiante",
+        "non": "aucun rapport avec l'amiante"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "controle_citerne_respecte": {
+      "libelle": "Contrôle de la citerne en règle",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La citerne en cause était-elle à jour de son contrôle réglementaire ?",
+      "aide": {
+        "oui": "la citerne était contrôlée comme la réglementation l'exige",
+        "non": "contrôle non fait ou périmé"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "ascenseur_non_conforme": {
+      "libelle": "Ascenseur non conforme ou non entretenu",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'ascenseur ou le monte-charge en cause était-il non conforme, ou sans entretien annuel ?",
+      "aide": {
+        "oui": "pas de contrôle de conformité, ou pas d'entretien annuel par une entreprise agréée",
+        "non": "ascenseur contrôlé et entretenu, ou pas d'ascenseur en cause"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "terrain_plus_5_hectares": {
+      "libelle": "Terrain de plus de cinq hectares",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le terrain attenant au bâtiment dépasse-t-il cinq hectares au total ?",
+      "aide": {
+        "oui": "plus de cinq hectares",
+        "non": "cinq hectares ou moins"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
     "pratique_chasse": {
       "libelle": "Dommage causé en chassant",
       "valeurs": [

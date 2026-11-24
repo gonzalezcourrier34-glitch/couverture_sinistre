@@ -1,419 +1,925 @@
 {
   "meta": {
     "article": "3.3.1",
-    "modele": "mistral:mistral-large-4-0",
+    "modele": "mistral:mistral-large-4-0 (proposition écartée)",
     "date": "2026-11-24",
-    "consigne": "redaction-regles v13"
+    "consigne": "redaction-regles v13",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-24",
+      "modifications": [
+        "réécrite à la main sur le modèle du matériel multimédia (3.1.7), dont l'article reprend la construction : une garantie pour le bris, une pour le vol, des exclusions communes, l'option en réserve",
+        "le vol : couvert partout sous la surveillance de l'assuré ; sinon dans un autre bâtiment (résidence secondaire, locaux professionnels), pour un vélo dans une cave, un grenier ou un garage fermés à clé, dans un autre local fermé à clé, dans un véhicule entre 7 h et 22 h s'il est volé ou forcé, ou en bagage enregistré ; toujours avec plainte",
+        "un hall ou un local commun n'est pas un « local clos fermé à clé » : le vol d'un vélo laissé là n'y entre que sous surveillance",
+        "cinq valeurs de bien nouvelles, rattachées à objet_divers pour les règles déjà écrites (7.64)",
+        "les précisions du véhicule (caravane close, toit non rigide, coffre) : hors décision, citées ; le vocabulaire ne les distingue pas",
+        "le bagage enregistré : une voie possible seulement quand l'objet n'était ni chez l'assuré ni dans un local ou un véhicule ; sinon un vélo volé dans un hall restait « à préciser » faute de savoir s'il était en soute",
+        "le bris accidentel reste sur l'événement « bris », comme pour le matériel multimédia (3.1.7). Essai fait puis retiré : l'ouvrir à « accident » déclare cet événement traduit chez B, et la garantie « heurt » (3.1.1.2) couvre alors un vase tombé ; tant que cette garantie n'est pas reprise, un objet cassé lu « accident » reste à examiner par un gestionnaire",
+        "la plainte et le lieu : une seule circonstance (« plainte déposée, et l'une de ces situations »). Séparées, seule la plainte était demandée pour un vélo volé dans un hall ; en obligation, un vol sans plainte n'était plus refusé"
+      ]
+    }
   },
   "proposition": {
     "evenements": [
-      "bris"
+      "bris",
+      "vol"
     ],
     "definitions": [],
     "garanties": [
       {
-        "id": "dommages_biens_confort",
-        "nom": "Dommages aux biens (Option Confort)",
+        "id": "dommages_biens_bris",
+        "nom": "Dommages aux biens : bris accidentel (option)",
         "article": "3.3.1.1",
-        "texte": "La Compagnie couvre tout bris ou destruction accidentel résultant d'une chute, d'un choc ou de la pénétration d'un corps étranger et qui rend nécessaire la réparation ou le remplacement des",
+        "texte": "La Compagnie couvre tout bris ou destruction accidentel résultant d’une chute, d’un choc ou de la pénétration d’un corps étranger",
         "perimetre": [
           {
             "f": [
               "evenement",
               "bris"
             ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "bien",
+                  "instrument_musique"
+                ]
+              },
+              {
+                "f": [
+                  "bien",
+                  "materiel_sport"
+                ]
+              },
+              {
+                "f": [
+                  "bien",
+                  "velo"
+                ]
+              },
+              {
+                "f": [
+                  "bien",
+                  "materiel_medical"
+                ]
+              },
+              {
+                "f": [
+                  "bien",
+                  "materiel_photo"
+                ]
+              },
+              {
+                "f": [
+                  "bien",
+                  "bijoux"
+                ]
+              }
+            ]
           }
         ],
         "circonstances": [],
-        "obligations": [
-          {
-            "condition": {
-              "f": [
-                "plainte_deposee",
-                "oui"
-              ]
-            },
-            "article": "3.3.1.7",
-            "texte": "déposer une plainte auprès du Parquet",
-            "lien_causal": false
-          }
-        ],
+        "obligations": [],
         "exclusions": [
           {
             "condition": {
               "f": [
-                "proprietaire",
-                "hote"
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "3.3.1.3",
-            "texte": "les objets et matériels dont l'Assuré n'est pas propriétaire"
-          },
-          {
-            "condition": {
-              "f": [
-                "usage_professionnel",
+                "dommage_voile_seule",
                 "oui"
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "3.3.1.3",
-            "texte": "les objets et matériels utilisés à des fins professionnelles"
-          },
-          {
-            "condition": {
-              "f": [
-                "bien",
-                "vehicule_moteur"
               ]
             },
             "portee": "tout",
             "a_demander": false,
             "article": "3.3.1.3",
-            "texte": "les dommages aux véhicules automoteurs"
+            "texte": "les dommages aux voiles des matériels utilisés dans le cadre de sports nautiques, aériens ou de glisse ; la Compagnie est tenue de payer une indemnité lorsque les voiles ne sont pas seules endommagées"
           },
           {
             "condition": {
               "f": [
-                "vice_defaut_connu",
+                "usure_instrument",
                 "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.3.1.3",
+            "texte": "les vices de sonorité, la casse des cordes ainsi que les dommages aux peaux et aux anches des instruments de musique"
+          },
+          {
+            "condition": {
+              "f": [
+                "emballage_inadapte",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.3.1.3",
+            "texte": "les dommages aux instruments de musique survenus en cours de transport et résultant d’une absence d’emballage ou d’un emballage inapproprié"
+          }
+        ],
+        "limites": []
+      },
+      {
+        "id": "dommages_biens_vol",
+        "nom": "Dommages aux biens : vol (option)",
+        "article": "3.3.1.1-a",
+        "texte": "Sous réserve qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes, la Compagnie couvre également : 3.3.1.1.1 le vol de ces objets lorsqu’ils sont sous la surveillance directe et immédiate de l’Assuré ou des personnes qui l’accompagnent",
+        "perimetre": [
+          {
+            "f": [
+              "evenement",
+              "vol"
+            ]
+          },
+          {
+            "ou": [
+              {
+                "f": [
+                  "bien",
+                  "instrument_musique"
+                ]
+              },
+              {
+                "f": [
+                  "bien",
+                  "materiel_sport"
+                ]
+              },
+              {
+                "f": [
+                  "bien",
+                  "velo"
+                ]
+              },
+              {
+                "f": [
+                  "bien",
+                  "materiel_medical"
+                ]
+              },
+              {
+                "f": [
+                  "bien",
+                  "materiel_photo"
+                ]
+              },
+              {
+                "f": [
+                  "bien",
+                  "bijoux"
+                ]
+              }
+            ]
+          }
+        ],
+        "circonstances": [
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "plainte_deposee",
+                    "oui"
+                  ]
+                },
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "surveillance_directe",
+                        "oui"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "lieu",
+                        "autre_batiment"
+                      ]
+                    },
+                    {
+                      "et": [
+                        {
+                          "f": [
+                            "bien",
+                            "velo"
+                          ]
+                        },
+                        {
+                          "ou": [
+                            {
+                              "f": [
+                                "lieu",
+                                "cave"
+                              ]
+                            },
+                            {
+                              "f": [
+                                "lieu",
+                                "grenier"
+                              ]
+                            },
+                            {
+                              "f": [
+                                "lieu",
+                                "garage"
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "f": [
+                            "local_ferme_cle",
+                            "oui"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "et": [
+                        {
+                          "f": [
+                            "local_ferme_cle",
+                            "oui"
+                          ]
+                        },
+                        {
+                          "ou": [
+                            {
+                              "f": [
+                                "lieu",
+                                "casier"
+                              ]
+                            },
+                            {
+                              "f": [
+                                "lieu",
+                                "chambre_etudiant"
+                              ]
+                            },
+                            {
+                              "f": [
+                                "lieu",
+                                "maison_repos"
+                              ]
+                            },
+                            {
+                              "f": [
+                                "lieu",
+                                "local_fete_privee"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "et": [
+                        {
+                          "f": [
+                            "lieu",
+                            "vehicule"
+                          ]
+                        },
+                        {
+                          "non": {
+                            "f": [
+                              "vol_de_nuit",
+                              "oui"
+                            ]
+                          }
+                        },
+                        {
+                          "ou": [
+                            {
+                              "f": [
+                                "vehicule_vole",
+                                "oui"
+                              ]
+                            },
+                            {
+                              "f": [
+                                "effraction",
+                                "oui"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "et": [
+                        {
+                          "f": [
+                            "bagage_enregistre",
+                            "oui"
+                          ]
+                        },
+                        {
+                          "non": {
+                            "ou": [
+                              {
+                                "concept": "batiment_designe"
+                              },
+                              {
+                                "f": [
+                                  "lieu",
+                                  "parties_communes"
+                                ]
+                              },
+                              {
+                                "f": [
+                                  "lieu",
+                                  "vehicule"
+                                ]
+                              },
+                              {
+                                "f": [
+                                  "lieu",
+                                  "annexe"
+                                ]
+                              },
+                              {
+                                "f": [
+                                  "lieu",
+                                  "jardin"
+                                ]
+                              },
+                              {
+                                "f": [
+                                  "lieu",
+                                  "terrasse"
+                                ]
+                              },
+                              {
+                                "f": [
+                                  "lieu",
+                                  "abri_jardin"
+                                ]
+                              },
+                              {
+                                "f": [
+                                  "lieu",
+                                  "autre_batiment"
+                                ]
+                              },
+                              {
+                                "f": [
+                                  "lieu",
+                                  "casier"
+                                ]
+                              },
+                              {
+                                "f": [
+                                  "lieu",
+                                  "veranda"
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "article": "3.3.1.1-a",
+            "texte": "Sous réserve qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes, la Compagnie couvre également : 3.3.1.1.1 le vol de ces objets lorsqu’ils sont sous la surveillance directe et immédiate de l’Assuré ou des personnes qui l’accompagnent ; 3.3.1.1.2 le vol de ces objets lorsqu’ils sont hors de la surveillance directe et immédiate de l’Assuré ou des personnes qui l’accompagnent : 3.3.1.1.2.1 dans la(les) résidence(s) secondaire(s) de l’Assuré ou dans ses locaux professionnels ; le vol des bicyclettes est également couvert dans les greniers, caves et garages fermés à clé et situés dans un immeuble collectif ; 3.3.1.1.2.2 occasionnellement, dans tous autres locaux clos, couverts et fermés à clé"
+          }
+        ],
+        "obligations": [],
+        "exclusions": [
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "auteur",
+                    "assure"
+                  ]
+                },
+                {
+                  "f": [
+                    "auteur",
+                    "famille"
+                  ]
+                },
+                {
+                  "et": [
+                    {
+                      "f": [
+                        "auteur",
+                        "personnel_prive"
+                      ]
+                    },
+                    {
+                      "ou": [
+                        {
+                          "f": [
+                            "heures_service",
+                            "oui"
+                          ]
+                        },
+                        {
+                          "non": {
+                            "ou": [
+                              {
+                                "f": [
+                                  "effraction",
+                                  "oui"
+                                ]
+                              },
+                              {
+                                "f": [
+                                  "violence",
+                                  "oui"
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
               ]
             },
             "portee": "tout",
             "a_demander": true,
             "article": "3.3.1.3",
-            "texte": "les dommages dus à des vices ou défauts qui existaient à la date d'effet de la présente assurance et qui étaient connus de l'Assuré ou de ses mandataires"
-          },
-          {
-            "condition": {
+            "texte": "les vols commis par ou avec la complicité de ou du : n Preneur d’assurance, son conjoint, leurs ascendants ou descendants ainsi que les conjoints de ces personnes ; n l’Assuré ; n toute personne au service de l’Assuré pendant les heures de service et, si ces vols ont été commis en dehors de celles-ci, autrement que par effraction ou avec violence"
+          }
+        ],
+        "limites": []
+      }
+    ],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "f": [
+            "proprietaire",
+            "hote"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "3.3.1.3",
+        "texte": "les objets et matériels dont l’Assuré n’est pas propriétaire"
+      },
+      {
+        "condition": {
+          "f": [
+            "usage_professionnel",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "3.3.1.3",
+        "texte": "les objets et matériels utilisés à des fins professionnelles"
+      },
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "vehicule_moteur"
+          ]
+        },
+        "portee": {
+          "bien": "vehicule_moteur"
+        },
+        "a_demander": false,
+        "article": "3.3.1.3",
+        "texte": "les dommages aux véhicules automoteurs"
+      },
+      {
+        "condition": {
+          "f": [
+            "bien",
+            "vetement_accessoire"
+          ]
+        },
+        "portee": {
+          "bien": "vetement_accessoire"
+        },
+        "a_demander": false,
+        "article": "3.3.1.3",
+        "texte": "les dommages aux vêtements et accessoires (casque, lunettes, gants, bottes, combinaison, …)"
+      },
+      {
+        "condition": {
+          "f": [
+            "vice_defaut_connu",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "3.3.1.3",
+        "texte": "les dommages dus à des vices ou défauts qui existaient à la date d’effet de la présente assurance et qui étaient connus de l’Assuré ou de ses mandataires"
+      },
+      {
+        "condition": {
+          "ou": [
+            {
               "f": [
                 "manque_entretien",
                 "oui"
               ]
             },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "3.3.1.3.7",
-            "texte": "les dommages qui sont la conséquence directe de l'usure, de la détérioration lente, de la vétusté ou d'un défaut d'entretien"
-          },
-          {
-            "condition": {
+            {
               "f": [
                 "fonctionnement_defectueux",
                 "oui"
               ]
             },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "3.3.1.3",
-            "texte": "d'un fonctionnement défectueux"
-          },
-          {
-            "condition": {
+            {
               "f": [
-                "garantie_fabricant",
-                "oui"
+                "evenement",
+                "tempete"
               ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "3.3.1.3",
-            "texte": "les dommages dont le fabricant ou le fournisseur est légalement ou contractuellement responsable"
-          },
-          {
-            "condition": {
-              "f": [
-                "dommage_esthetique",
-                "oui"
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "3.3.1.3",
-            "texte": "les dommages d'ordre purement esthétique"
-          },
-          {
-            "condition": {
-              "f": [
-                "auteur",
-                "assure"
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "3.3.1.3.17",
-            "texte": "les vols commis par ou avec la complicité de l'Assuré"
-          }
-        ],
-        "limites": [
-          {
-            "article": "3.3.1.4.1",
-            "texte": "Le calcul de l'indemnité tient compte d'une vétusté de 10% par année d'ancienneté révolue, sans que cette vétusté ne puisse dépasser 80%",
-            "montant": "vétusté 10%/an max 80%"
-          },
-          {
-            "article": "3.3.1.4",
-            "texte": "Pour le matériel d'assistance médicale de type pompe à oxygène ou à insuline, et prothèse auditive, le calcul de l'indemnité tient compte d'une vétusté de 20% par année d'ancienneté révolue",
-            "montant": "vétusté 20%/an"
-          }
-        ]
-      }
-    ],
-    "exclusions_communes": [],
-    "extensions": [
-      {
-        "concept": "lieu_assure",
-        "condition": {
-          "f": [
-            "pays",
-            "monde"
+            }
           ]
         },
-        "article": "3.3.1.2",
-        "texte": "La garantie ainsi définie s'exerce dans le monde entier"
+        "portee": "tout",
+        "a_demander": false,
+        "article": "3.3.1.3",
+        "texte": "les dommages qui sont la conséquence directe : n de l’usure, de la détérioration lente, de la vétusté ou d’un défaut d’entretien ; n d’un fonctionnement défectueux ; n de la pluie, de la grêle et de toute autre manifestation atmosphérique"
+      },
+      {
+        "condition": {
+          "f": [
+            "garantie_fabricant",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "3.3.1.3",
+        "texte": "les dommages dont le fabricant ou le fournisseur est légalement ou contractuellement responsable"
+      },
+      {
+        "condition": {
+          "f": [
+            "type_dommage",
+            "rayure_ou_ecaillement"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "3.3.1.3",
+        "texte": "les dommages d’ordre purement esthétique"
+      },
+      {
+        "condition": {
+          "f": [
+            "evenement",
+            "electricite"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "3.3.1.3",
+        "texte": "les dommages d’origine électrique"
+      },
+      {
+        "condition": {
+          "f": [
+            "evacuation_ordonnee",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "3.3.1.6",
+        "texte": "les effets du contrat sont suspendus de plein droit pendant la durée de l’évacuation des locaux renfermant les biens garantis lorsque celle-ci est ordonnée par les Autorités ou nécessitée par des faits de guerre ou des troubles civils"
+      },
+      {
+        "condition": {
+          "f": [
+            "option_dommages_biens",
+            "non"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "3.3.1",
+        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “dommages aux biens” est accordée."
       }
     ],
     "vocabulaire_manquant": [
       {
-        "variable": "pays",
+        "variable": "bien",
         "valeurs": [
-          "monde"
+          "instrument_musique",
+          "materiel_sport",
+          "materiel_medical",
+          "materiel_photo",
+          "vetement_accessoire"
         ],
-        "libelle": "Lieu monde entier",
-        "question": "Le sinistre s'est-il produit hors de l'Europe ou dans un pays spécifique ?",
-        "pourquoi": "extension territoriale mondiale de la garantie",
-        "plus_proche": "pays : valeurs par pays",
+        "question": "Quels biens ?",
         "aide": {
-          "monde": "partout dans le monde, quel que soit le pays"
+          "instrument_musique": "guitare, piano, violon, flûte, batterie",
+          "materiel_sport": "skis, raquette, clubs de golf, planche, matériel de chasse ou de pêche ; pas un vélo, qui a sa valeur",
+          "materiel_medical": "prothèse auditive, pompe à insuline ou à oxygène",
+          "materiel_photo": "appareil photo argentique, objectif d'appareil photo",
+          "vetement_accessoire": "vêtement, casque, gants, bottes, combinaison"
+        },
+        "libelles": {
+          "instrument_musique": "instrument de musique",
+          "materiel_sport": "matériel de sport, de chasse ou de pêche",
+          "materiel_medical": "matériel d'assistance médicale",
+          "materiel_photo": "appareil photo argentique ou objectif",
+          "vetement_accessoire": "vêtement ou accessoire"
+        },
+        "pourquoi": "3.3.1.1 : la liste des objets que l'option couvre, et 3.3.1.3.5 pour les vêtements",
+        "plus_proche": "objet_divers",
+        "parent": {
+          "instrument_musique": "objet_divers",
+          "materiel_sport": "objet_divers",
+          "materiel_medical": "objet_divers",
+          "materiel_photo": "objet_divers",
+          "vetement_accessoire": "objet_divers"
         }
+      },
+      {
+        "variable": "option_dommages_biens",
+        "libelle": "Garantie « dommages aux biens » souscrite",
+        "source": "conditions_particulieres",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Vos conditions particulières mentionnent-elles la garantie « dommages aux biens » ?",
+        "aide": {
+          "oui": "la garantie figure aux conditions particulières",
+          "non": "elle n'y figure pas"
+        },
+        "pourquoi": "garantie optionnelle : réserve tant que les conditions particulières ne sont pas lues",
+        "plus_proche": "aucune ; fait des conditions particulières"
+      },
+      {
+        "variable": "surveillance_directe",
+        "libelle": "Objet sous la surveillance de l'assuré",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "L'objet était-il sous votre surveillance directe, ou celle d'une personne qui vous accompagnait, au moment du vol ?",
+        "aide": {
+          "oui": "l'objet était avec vous ou sous vos yeux : porté, tenu, posé à côté de vous",
+          "non": "l'objet était laissé sans surveillance : dans un hall, une cour, attaché dehors, dans un local ou un véhicule"
+        },
+        "pourquoi": "3.3.1.1.1 et 3.3.1.1.2 : le vol est couvert partout sous surveillance, et seulement dans certains lieux sinon",
+        "plus_proche": "vol_sur_personne : plus étroit (objet arraché ou pris sur soi)"
+      },
+      {
+        "variable": "local_ferme_cle",
+        "libelle": "Local fermé à clé",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le local où se trouvait l'objet était-il clos, couvert et fermé à clé ?",
+        "aide": {
+          "oui": "une cave, un garage, un vestiaire ou une pièce fermés à clé",
+          "non": "un lieu ouvert, non fermé à clé, ou un abri sans porte"
+        },
+        "pourquoi": "3.3.1.1.2 : hors surveillance, le vol n'est couvert que dans des locaux fermés à clé",
+        "plus_proche": "serrure_surete, serrure_cylindre : le type de serrure, pas le fait de fermer"
+      },
+      {
+        "variable": "vol_de_nuit",
+        "libelle": "Vol entre 22 h et 7 h",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le vol dans le véhicule a-t-il eu lieu entre vingt-deux heures et sept heures ?",
+        "aide": {
+          "oui": "pendant la nuit, entre 22 h et 7 h",
+          "non": "en journée ou en soirée, entre 7 h et 22 h"
+        },
+        "pourquoi": "3.3.1.5 : dans un véhicule, la garantie ne s'exerce qu'entre sept heures et vingt-deux heures",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "bagage_enregistre",
+        "libelle": "Bagage enregistré",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "L'objet était-il confié comme bagage enregistré à une entreprise de transport ?",
+        "aide": {
+          "oui": "bagage enregistré en soute, confié au transporteur",
+          "non": "gardé avec soi ou laissé ailleurs"
+        },
+        "pourquoi": "3.3.1.1.2.4",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "dommage_voile_seule",
+        "libelle": "Voile seule endommagée",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Seule la voile du matériel (planche, parapente, kite) est-elle endommagée ?",
+        "aide": {
+          "oui": "la voile est déchirée ou abîmée, le reste est intact",
+          "non": "d'autres parties du matériel sont aussi endommagées, ou il n'y a pas de voile"
+        },
+        "pourquoi": "3.3.1.3.3",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "usure_instrument",
+        "libelle": "Cordes, peaux, anches ou sonorité",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le dommage se limite-t-il à des cordes cassées, une peau ou une anche abîmée, ou un défaut de sonorité ?",
+        "aide": {
+          "oui": "corde cassée, peau de tambour crevée, anche abîmée, instrument qui sonne mal, sans autre dégât",
+          "non": "l'instrument lui-même est cassé ou fendu"
+        },
+        "pourquoi": "3.3.1.3.12",
+        "plus_proche": "manque_entretien : l'usure en général"
+      },
+      {
+        "variable": "emballage_inadapte",
+        "libelle": "Instrument transporté sans emballage adapté",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "L'instrument a-t-il été abîmé pendant un transport, sans étui ou dans un emballage inadapté ?",
+        "aide": {
+          "oui": "transporté sans étui ni housse, ou mal emballé",
+          "non": "dans son étui, ou pas pendant un transport"
+        },
+        "pourquoi": "3.3.1.3.13",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "evacuation_ordonnee",
+        "libelle": "Locaux évacués sur ordre",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Les locaux étaient-ils évacués sur ordre des autorités, ou du fait d'une guerre ou de troubles civils ?",
+        "aide": {
+          "oui": "évacuation ordonnée ou imposée par des troubles",
+          "non": "aucune évacuation"
+        },
+        "pourquoi": "3.3.1.6 : la garantie est suspendue pendant l'évacuation",
+        "plus_proche": "cause_guerre : la cause du dommage, pas l'évacuation"
       }
     ],
-    "non_traduit": [
+    "non_traduit": [],
+    "hors_decision": [
       {
-        "article": "3.3.1.3.3",
-        "texte": "les dommages aux voiles des matériels utilisés dans le cadre de sports nautiques, aériens ou de glisse",
-        "pourquoi": "pas de variable pour voiles de sport"
+        "article": "3.3.1.1-a",
+        "texte": "Sous réserve que les garanties incendie et périls assimilés, tempête, dégâts des eaux, tremblement de terre ou pluies & inondations aient été accordées, la Compagnie étend leur portée respective à tous ces objets",
+        "pourquoi": "une extension des autres garanties en séjour temporaire, comme en 3.1.7 : pas un refus"
       },
       {
-        "article": "3.3.1.3.5",
-        "texte": "les dommages aux vêtements et accessoires (casque, lunettes, gants, bottes, combinaison, …)",
-        "pourquoi": "pas de variable pour vêtements/accessoires"
+        "article": "3.3.1.1-a",
+        "texte": "Pour chaque sinistre, l’intervention de la Compagnie se fait, sans application de la règle proportionnelle à concurrence du montant indiqué aux conditions particulières",
+        "pourquoi": "procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
       },
       {
-        "article": "3.3.1.3.7",
-        "texte": "de la pluie, de la grêle et de toute autre manifestation atmosphérique",
-        "pourquoi": "pas de valeur atmosphérique dans cause_dommage"
+        "article": "3.3.1.3",
+        "texte": "les frais exposés pour réparer des défauts de fonctionnement, sauf si ces défauts sont la conséquence d’une perte ou d’un dommage indemnisable causé aux matériels assurés",
+        "pourquoi": "des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
       },
       {
-        "article": "3.3.1.3.8",
-        "texte": "les frais exposés pour réparer des défauts de fonctionnement, sauf si ces défauts sont la conséquence d'une perte ou d'un dommage indemnisable causé aux matériels assurés",
-        "pourquoi": "condition complexe"
+        "article": "3.3.1.3",
+        "texte": "les frais d’entretien des matériels assurés, y compris le coût des pièces remplacées pendant les travaux d’entretien",
+        "pourquoi": "des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
       },
       {
-        "article": "3.3.1.3.9",
-        "texte": "les frais d'entretien des matériels assurés, y compris le coût des pièces remplacées pendant les travaux d'entretien",
-        "pourquoi": "frais d'entretien non couverts"
-      },
-      {
-        "article": "3.3.1.3.11",
+        "article": "3.3.1.3",
         "texte": "les pertes indirectes de quelque nature que ce soit",
-        "pourquoi": "pas de variable perte_indirecte"
+        "pourquoi": "des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
       },
       {
-        "article": "3.3.1.3.12",
-        "texte": "les vices de sonorité, la casse des cordes ainsi que les dommages aux peaux et aux anches des instruments de musique",
-        "pourquoi": "détails spécifiques instruments"
+        "article": "3.3.1.3",
+        "texte": "les dommages d’un montant inférieur à 100 €",
+        "pourquoi": "des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
       },
       {
-        "article": "3.3.1.3.13",
-        "texte": "les dommages aux instruments de musique survenus en cours de transport et résultant d'une absence d'emballage ou d'un emballage inapproprié",
-        "pourquoi": "condition transport spécifique"
+        "article": "3.3.1.3",
+        "texte": "et 3.3.1.3.14, la Compagnie est tenue de payer une indemnité lorsqu’elles ont été endommagées à la suite d’une perte ou d’un dommage indemnisable causé au matériel assuré",
+        "pourquoi": "une précision des exclusions 3.3.1.3.12 et 3.3.1.3.14 : elles ne jouent que si ce dommage est seul, ce que disent déjà leurs conditions"
       },
       {
-        "article": "3.3.1.3.15",
-        "texte": "les dommages d'origine électrique",
-        "pourquoi": "pas de variable cause électrique distincte"
-      },
-      {
-        "article": "3.3.1.3.16",
-        "texte": "les dommages d'un montant inférieur à 100 €",
-        "pourquoi": "pas de variable montant du dommage"
+        "article": "3.3.1.4",
+        "texte": "3.3.1.4.1 Pour les instruments de musique et matériels utilisés dans le cadre d’une activité sportive, de la chasse ou de la pêche, l’indemnisation se fait par le paiement des frais nécessaires pour leur réparation ou leur remplacement",
+        "pourquoi": "procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
       },
       {
         "article": "3.3.1.5",
-        "texte": "Mesures obligatoires de sécurité lorsque les objets se trouvent hors de la surveillance directe et immédiate de l'Assuré",
-        "pourquoi": "conditions de sécurité complexes (horaires, effraction, etc.)"
+        "texte": "La garantie est acquise dans ce second cas si : n la caravane ou la remorque est entièrement close et construite en bois, métal ou plastique rigide et vitrage",
+        "pourquoi": "précisions de la condition du véhicule (caravane close, portes bloquées, toit rigide, coffre) que le vocabulaire ne distingue pas ; l'heure, le vol du véhicule et l'effraction sont lus"
       },
       {
-        "article": "3.3.1.6",
-        "texte": "Pour les risques autres que ceux d'incendie et d'explosion, les effets du contrat sont suspendus de plein droit pendant la durée de l'évacuation des locaux",
-        "pourquoi": "suspension de garantie, pas exclusion"
+        "article": "3.3.1.5",
+        "texte": "Par contre, la garantie n’est pas acquise si les objets assurés se trouvent dans l’habitacle d’un véhicule équipé d’un toit non rigide",
+        "pourquoi": "précisions de la condition du véhicule (caravane close, portes bloquées, toit rigide, coffre) que le vocabulaire ne distingue pas ; l'heure, le vol du véhicule et l'effraction sont lus"
+      },
+      {
+        "article": "3.3.1.7",
+        "texte": "prévenir la police locale dans les douze heures suivant le moment où il a eu connaissance du vol ou de la tentative de vol",
+        "pourquoi": "procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
       },
       {
         "article": "3.3.1.8",
-        "texte": "Aucune réparation ne peut être entreprise sans l'accord formel de la Compagnie",
-        "pourquoi": "obligation préalable complexe"
+        "texte": "Aucune réparation ne peut être entreprise sans l’accord formel de la Compagnie",
+        "pourquoi": "procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
       },
       {
         "article": "3.3.1.9",
-        "texte": "En cas de récupération, en totalité ou en partie, d'objets volés, l'Assuré doit en aviser immédiatement la Compagnie",
-        "pourquoi": "procédure post-sinistre"
+        "texte": "En cas de récupération, en totalité ou en partie, d’objets volés, l’Assuré doit en aviser immédiatement la Compagnie",
+        "pourquoi": "procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
       }
     ]
   },
   "controles": [
     {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "pays = monde : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.3.1`) ou à remplacer"
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.3.1.1-a) : une extension des autres garanties en séjour temporaire, comme en 3.1.7 : pas un refus"
     },
     {
       "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.3.1.3 (et non 3.3.1.3.1)"
+      "controle": "couverture",
+      "message": "hors décision (3.3.1.1-a) : procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
     },
     {
       "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.3.1.3 (et non 3.3.1.3.2)"
+      "controle": "couverture",
+      "message": "hors décision (3.3.1.3) : des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
     },
     {
       "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.3.1.3 (et non 3.3.1.3.4)"
+      "controle": "couverture",
+      "message": "hors décision (3.3.1.3) : des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
     },
     {
       "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.3.1.3 (et non 3.3.1.3.6)"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "citation",
-      "message": "exclusion : article 3.3.1.3.7 inconnu"
+      "controle": "couverture",
+      "message": "hors décision (3.3.1.3) : des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
     },
     {
       "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.3.1.3 (et non 3.3.1.3.7)"
+      "controle": "couverture",
+      "message": "hors décision (3.3.1.3) : des frais, des pertes indirectes ou une franchise : sans effet sur la question de couverture"
     },
     {
       "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.3.1.3 (et non 3.3.1.3.10)"
+      "controle": "couverture",
+      "message": "hors décision (3.3.1.3) : une précision des exclusions 3.3.1.3.12 et 3.3.1.3.14 : elles ne jouent que si ce dommage est seul, ce que disent déjà leurs conditions"
     },
     {
       "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 3.3.1.3 (et non 3.3.1.3.14)"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "citation",
-      "message": "exclusion : article 3.3.1.3.17 inconnu"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "citation",
-      "message": "limite : article 3.3.1.4.1 inconnu"
+      "controle": "couverture",
+      "message": "hors décision (3.3.1.4) : procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
     },
     {
       "gravite": "info",
-      "controle": "citation",
-      "message": "limite : citation rattachée à 3.3.1.4 (et non 3.3.1.4.2)"
+      "controle": "couverture",
+      "message": "hors décision (3.3.1.5) : précisions de la condition du véhicule (caravane close, portes bloquées, toit rigide, coffre) que le vocabulaire ne distingue pas ; l'heure, le vol du véhicule et l'effraction sont lus"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.3.1.5) : précisions de la condition du véhicule (caravane close, portes bloquées, toit rigide, coffre) que le vocabulaire ne distingue pas ; l'heure, le vol du véhicule et l'effraction sont lus"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.3.1.7) : procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.3.1.8) : procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (3.3.1.9) : procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
     },
     {
       "gravite": "à relire",
-      "controle": "portée",
-      "message": "exclusion « les dommages aux véhicules automoteurs » : ne vise que vehicule_moteur, mais exclut tout le sinistre ; portée {\"bien\": …} ?"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (3.3.1.3) : « les vols commis par ou avec la complicité de ou du : n Preneur d’assurance, son conjoint, leurs asce »"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "exclusion du contrat absente des règles (3.3.1.3) : « et 3.3.1.3.14, la Compagnie est tenue de payer une indemnité lorsqu’elles ont été endommagées à la s »"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "déclaré non traduit (3.3.1.3.3) : « les dommages aux voiles des matériels utilisés dans le cadre de sports nautiques, aériens ou de glis » — pas de variable pour voiles de sport"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "déclaré non traduit (3.3.1.3.5) : « les dommages aux vêtements et accessoires (casque, lunettes, gants, bottes, combinaison, …) » — pas de variable pour vêtements/accessoires"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "déclaré non traduit (3.3.1.3.7) : « de la pluie, de la grêle et de toute autre manifestation atmosphérique » — pas de valeur atmosphérique dans cause_dommage"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "déclaré non traduit (3.3.1.3.8) : « les frais exposés pour réparer des défauts de fonctionnement, sauf si ces défauts sont la conséquenc » — condition complexe"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "déclaré non traduit (3.3.1.3.9) : « les frais d'entretien des matériels assurés, y compris le coût des pièces remplacées pendant les tra » — frais d'entretien non couverts"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "déclaré non traduit (3.3.1.3.11) : « les pertes indirectes de quelque nature que ce soit » — pas de variable perte_indirecte"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "déclaré non traduit (3.3.1.3.12) : « les vices de sonorité, la casse des cordes ainsi que les dommages aux peaux et aux anches des instru » — détails spécifiques instruments"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "déclaré non traduit (3.3.1.3.13) : « les dommages aux instruments de musique survenus en cours de transport et résultant d'une absence d' » — condition transport spécifique"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "déclaré non traduit (3.3.1.3.15) : « les dommages d'origine électrique » — pas de variable cause électrique distincte"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "déclaré non traduit (3.3.1.3.16) : « les dommages d'un montant inférieur à 100 € » — pas de variable montant du dommage"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "déclaré non traduit (3.3.1.5) : « Mesures obligatoires de sécurité lorsque les objets se trouvent hors de la surveillance directe et i » — conditions de sécurité complexes (horaires, effraction, etc.)"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "déclaré non traduit (3.3.1.6) : « Pour les risques autres que ceux d'incendie et d'explosion, les effets du contrat sont suspendus de  » — suspension de garantie, pas exclusion"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "déclaré non traduit (3.3.1.8) : « Aucune réparation ne peut être entreprise sans l'accord formel de la Compagnie » — obligation préalable complexe"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "déclaré non traduit (3.3.1.9) : « En cas de récupération, en totalité ou en partie, d'objets volés, l'Assuré doit en aviser immédiatem » — procédure post-sinistre"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "concept",
-      "message": "extension d'un concept inconnu : lieu_assure (concepts de ce contrat : batiment_designe, incendie, tempete, vol_simple)"
+      "controle": "non-régression",
+      "message": "b-v03 : INCERTAIN → NON_COUVERT avec les nouvelles règles"
     }
   ]
 }

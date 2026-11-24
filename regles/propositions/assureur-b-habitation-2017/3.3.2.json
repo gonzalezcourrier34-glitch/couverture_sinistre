@@ -85,11 +85,6 @@
       "gravite": "info",
       "controle": "couverture",
       "message": "hors décision (3.3.2.2) : dit par la limite de la garantie et par son nom : la facture reste à l'assuré ; le service ne décide d'aucune indemnité"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "prolog",
-      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
     }
   ]
 }

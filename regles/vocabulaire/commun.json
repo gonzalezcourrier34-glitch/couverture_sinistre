@@ -169,7 +169,12 @@
         "marquise",
         "caravane",
         "bateau",
-        "collection_timbres_monnaies"
+        "collection_timbres_monnaies",
+        "instrument_musique",
+        "materiel_sport",
+        "materiel_medical",
+        "materiel_photo",
+        "vetement_accessoire"
       ],
       "libelles": {
         "velo": "vélo",
@@ -203,7 +208,12 @@
         "tapis_fourrure": "tapis ou fourrure",
         "insert": "vitre d'insert",
         "paroi_douche": "paroi de douche",
-        "collection_timbres_monnaies": "collection de timbres, de monnaies ou de médailles"
+        "collection_timbres_monnaies": "collection de timbres, de monnaies ou de médailles",
+        "instrument_musique": "instrument de musique",
+        "materiel_sport": "matériel de sport, de chasse ou de pêche",
+        "materiel_medical": "matériel d'assistance médicale",
+        "materiel_photo": "appareil photo argentique ou objectif",
+        "vetement_accessoire": "vêtement ou accessoire"
       },
       "question": "Quels biens sont endommagés ou volés ?",
       "parents": {
@@ -320,6 +330,21 @@
         ],
         "collection_timbres_monnaies": [
           "collection"
+        ],
+        "instrument_musique": [
+          "objet_divers"
+        ],
+        "materiel_sport": [
+          "objet_divers"
+        ],
+        "materiel_medical": [
+          "objet_divers"
+        ],
+        "materiel_photo": [
+          "objet_divers"
+        ],
+        "vetement_accessoire": [
+          "objet_divers"
         ]
       },
       "aide": {
@@ -360,7 +385,12 @@
         "marquise": "une marquise, auvent vitré au-dessus d'une porte",
         "caravane": "une caravane",
         "bateau": "un bateau à voile ou à moteur, un jet-ski",
-        "collection_timbres_monnaies": "une collection de timbres, de pièces de monnaie ou de médailles"
+        "collection_timbres_monnaies": "une collection de timbres, de pièces de monnaie ou de médailles",
+        "instrument_musique": "guitare, piano, violon, flûte, batterie",
+        "materiel_sport": "skis, raquette, clubs de golf, planche, matériel de chasse ou de pêche ; pas un vélo, qui a sa valeur",
+        "materiel_medical": "prothèse auditive, pompe à insuline ou à oxygène",
+        "materiel_photo": "appareil photo argentique, objectif d'appareil photo",
+        "vetement_accessoire": "vêtement, casque, gants, bottes, combinaison"
       }
     },
     "lieu": {
@@ -1025,7 +1055,9 @@
         "non": "le bien sert uniquement pour la vie privée, les loisirs"
       },
       "pour": [
-        "electricite"
+        "electricite",
+        "bris",
+        "vol"
       ]
     },
     "garantie_fabricant": {
@@ -1334,7 +1366,8 @@
         "velo_trottinette": "un vélo ou une trottinette sans moteur, à la force des jambes"
       },
       "pour": [
-        "responsabilite"
+        "responsabilite",
+        "litige"
       ],
       "parents": {
         "velo_trottinette": [
@@ -1364,7 +1397,8 @@
         "prepose": "un employé de maison, un gardien, un jardinier, pendant son service"
       },
       "pour": [
-        "responsabilite"
+        "responsabilite",
+        "litige"
       ]
     },
     "domaine_litige": {

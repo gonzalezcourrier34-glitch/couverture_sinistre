@@ -29,6 +29,12 @@ exclusion(rc_vie_privee, f(cause_nucleaire, oui), tout, non, '5.10',
     "les dommages ou l’aggravation des dommages causés par la modification de la structure du noyau de l’atome").
 exclusion(rc_vie_privee, f(pollution_graduelle, oui), tout, non, '5.10',
     "les dommages découlant de la pollution graduelle").
+exclusion(rc_vie_privee, ou([f(evenement, attentat), f(evenement, conflit_du_travail)]), tout, non, '5.10',
+    "Les dommages résultant d’actes collectifs de violence, d’émeute, de sabotage, de mouvement populaire, de conflit de travail ou de terrorisme.").
+exclusion(rc_vie_privee, f(origine_rc, vehicule_moteur), tout, non, '5.4-a',
+    "l’emploi de jet-skis ainsi que l’emploi de véhicules aériens").
+exclusion(rc_vie_privee, f(plus_de_5_chevaux, oui), tout, non, '5.3',
+    "La garantie est acquise pour 5 chevaux de selle dont vous êtes propriétaire, ou plus si leur nombre est mentionné en conditions particulières").
 limite(rc_vie_privee, '5.1', "les dommages résultant de lésions corporelles à concurrence de 24.763.874,96 EUR", "24763874.96").
 limite(rc_vie_privee, '5.1', "les dommages matériels à concurrence de 7.131.995,99 EUR", "7131995.99").
 limite(rc_vie_privee, '5.1', "Une franchise de 258,70 EUR est d’application pour les dommages matériels", "franchise 258.70").

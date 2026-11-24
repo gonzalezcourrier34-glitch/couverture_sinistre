@@ -432,32 +432,6 @@ exclusion(pack_multimedia, et([f(evenement, vol), f(simple_disparition, oui)]), 
 exclusion(pack_multimedia, non(f(option_materiel_multimedia, oui)), tout, oui, '6.1',
     "Pour autant que vos conditions particulières en fassent mention, vos garanties sont étendues au matériel informatique. Dans ce cadre, nous prenons en charge les dommages causés par : • la chute, le heurt et l’introduction d’un corps étrangers • le vol survenu à l’extérieur du bâtiment assuré, pour autant qu’une plainte soit déposée auprès des autorités judiciaires ou de polices compétentes. Il faut noter que ces couvertures sont acquises dans le monde entier.").
 limite(pack_multimedia, '6.1-a', "Limite par sinistre (à l’indice ABEX 775) 5.750 EUR", "5750 EUR à l'indice ABEX 775").
-
-% --- Art. 2.5 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-20 ---
-evenement_traduit(responsabilite).
-garantie(rc_immeuble, "Responsabilité civile immeuble", '2.5',
-    "Nous prenons en charge la responsabilité civile que vous pouvez encourir sur base : • du livre 6 du Code civil • de l’article 1721 du Code civil c'est-à-dire le recours des locataires pour les dommages causés aux tiers du fait : • du bâtiment, du contenu").
-perimetre(rc_immeuble, f(evenement, responsabilite)).
-perimetre(rc_immeuble, ou([f(origine_rc, immeuble), f(origine_rc, habitation)])).
-exclusion(rc_immeuble, ou([f(victime, assure), f(victime, conjoint)]), tout, non, '12/tiers',
-    "Toute personne qui n’est pas considérée comme assurée.").
-exclusion(rc_immeuble, f(bien_confie, oui), tout, non, '2.5-a',
-    "à des biens dont vous avez la garde").
-limite(rc_immeuble, '2.5', "18.425.000 EUR pour l’indemnisation des dommages résultant de lésions corporelles", "18425000").
-limite(rc_immeuble, '2.5', "3.685.000 EUR pour l’indemnisation des dommages résultant de dégâts matériels", "3685000").
-
-% --- Art. 2.14 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-20 ---
-evenement_traduit(litige).
-garantie(defense_penale, "Défense pénale", '2.14~1',
-    "que vous et toutes les personnes assurées auront exposés pour leur défense devant une juridiction pénale où ils sont cités à la suite d’un événement garanti par la présente assurance").
-perimetre(defense_penale, f(evenement, litige)).
-perimetre(defense_penale, f(domaine_litige, defense_penale)).
-limite(defense_penale, '2.14~2', "Défense et recours 6.500 EUR", "6500").
-garantie(recours, "Recours contre les tiers responsables", '2.14~1',
-    "que les assurés, à l’exception du personnel même occasionnel à leur service privé auront exposés pour l’exercice de recours contre les tiers responsables de dommages").
-perimetre(recours, f(evenement, litige)).
-perimetre(recours, f(domaine_litige, recours_dommage)).
-limite(recours, '2.14~2', "Défense et recours 6.500 EUR", "6500").
 % --- Art. 2.6 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-18 ---
 evenement_traduit(electricite).
 garantie(action_electricite, "Action de l'électricité", '2.6',
@@ -498,6 +472,45 @@ exclusion(depannage_serrurier, et([f(intervention_mandatee, non), non(f(contact_
     "Les prestations qui ne peuvent être demandées au moment du sinistre et qui ne sont pas exécutées en accord avec Assureur A Assistance ne sont pas garanties. Néanmoins, lorsque l’assuré n’a matériellement pas été en mesure de prendre contact avec la centrale de Assureur A Assistance, la couverture continuera à s’appliquer").
 limite(depannage_serrurier, '2.13~6', "Assureur A Assistance prend ces frais en charge à concurrence de 300 EUR au maximum par sinistre et par année assurée", "300").
 accessoire(assistance_apres_sinistre).
+% --- Art. 2.5 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-20 ---
+evenement_traduit(responsabilite).
+garantie(rc_immeuble, "Responsabilité civile immeuble", '2.5',
+    "Nous prenons en charge la responsabilité civile que vous pouvez encourir sur base : • du livre 6 du Code civil • de l’article 1721 du Code civil c'est-à-dire le recours des locataires pour les dommages causés aux tiers du fait : • du bâtiment, du contenu").
+perimetre(rc_immeuble, f(evenement, responsabilite)).
+perimetre(rc_immeuble, ou([f(origine_rc, immeuble), f(origine_rc, habitation)])).
+exclusion(rc_immeuble, ou([f(victime, assure), f(victime, conjoint)]), tout, non, '12/tiers',
+    "Toute personne qui n’est pas considérée comme assurée.").
+exclusion(rc_immeuble, f(bien_confie, oui), tout, non, '2.5-a',
+    "à des biens dont vous avez la garde").
+exclusion(rc_immeuble, f(cause_amiante, oui), tout, non, '2.5-a',
+    "par l’amiante sous toutes ses formes").
+exclusion(rc_immeuble, f(controle_citerne_respecte, non), tout, non, '2.5-a',
+    "en cas de non-respect de la réglementation applicable au contrôle des citernes").
+exclusion(rc_immeuble, f(ascenseur_non_conforme, oui), tout, non, '2.5',
+    "des ascenseurs et monte-charge pour autant qu’ils soient déclarés conformes à la réglementation en vigueur par un organisme de contrôle entretenus annuellement par une entreprise agréée").
+exclusion(rc_immeuble, f(terrain_plus_5_hectares, oui), tout, non, '2.5',
+    "du terrain attenant au bâtiment, sans dépasser au total 5 hectares").
+limite(rc_immeuble, '2.5', "18.425.000 EUR pour l’indemnisation des dommages résultant de lésions corporelles", "18425000").
+limite(rc_immeuble, '2.5', "3.685.000 EUR pour l’indemnisation des dommages résultant de dégâts matériels", "3685000").
+
+% --- Art. 2.14 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-20 ---
+evenement_traduit(litige).
+garantie(defense_penale, "Défense pénale", '2.14~1',
+    "que vous et toutes les personnes assurées auront exposés pour leur défense devant une juridiction pénale où ils sont cités à la suite d’un événement garanti par la présente assurance").
+perimetre(defense_penale, f(evenement, litige)).
+perimetre(defense_penale, f(domaine_litige, defense_penale)).
+exclusion(defense_penale, f(procedure_etranger_sans_accord, oui), tout, non, '2.14~2',
+    "une action ou procédure menée à l’étranger sans notre accord écrit préalable").
+limite(defense_penale, '2.14~2', "Défense et recours 6.500 EUR", "6500").
+garantie(recours, "Recours contre les tiers responsables", '2.14~1',
+    "que les assurés, à l’exception du personnel même occasionnel à leur service privé auront exposés pour l’exercice de recours contre les tiers responsables de dommages").
+perimetre(recours, f(evenement, litige)).
+perimetre(recours, f(domaine_litige, recours_dommage)).
+exclusion(recours, f(procedure_etranger_sans_accord, oui), tout, non, '2.14~2',
+    "une action ou procédure menée à l’étranger sans notre accord écrit préalable").
+exclusion(recours, f(adversaire_assure, oui), tout, non, '2.14~2',
+    "les recours entre assurés").
+limite(recours, '2.14~2', "Défense et recours 6.500 EUR", "6500").
 
 % --- Art. 5 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-20 ---
 evenement_traduit(responsabilite).
@@ -530,6 +543,12 @@ exclusion(rc_vie_privee, f(cause_nucleaire, oui), tout, non, '5.10',
     "les dommages ou l’aggravation des dommages causés par la modification de la structure du noyau de l’atome").
 exclusion(rc_vie_privee, f(pollution_graduelle, oui), tout, non, '5.10',
     "les dommages découlant de la pollution graduelle").
+exclusion(rc_vie_privee, ou([f(evenement, attentat), f(evenement, conflit_du_travail)]), tout, non, '5.10',
+    "Les dommages résultant d’actes collectifs de violence, d’émeute, de sabotage, de mouvement populaire, de conflit de travail ou de terrorisme.").
+exclusion(rc_vie_privee, f(origine_rc, vehicule_moteur), tout, non, '5.4-a',
+    "l’emploi de jet-skis ainsi que l’emploi de véhicules aériens").
+exclusion(rc_vie_privee, f(plus_de_5_chevaux, oui), tout, non, '5.3',
+    "La garantie est acquise pour 5 chevaux de selle dont vous êtes propriétaire, ou plus si leur nombre est mentionné en conditions particulières").
 limite(rc_vie_privee, '5.1', "les dommages résultant de lésions corporelles à concurrence de 24.763.874,96 EUR", "24763874.96").
 limite(rc_vie_privee, '5.1', "les dommages matériels à concurrence de 7.131.995,99 EUR", "7131995.99").
 limite(rc_vie_privee, '5.1', "Une franchise de 258,70 EUR est d’application pour les dommages matériels", "franchise 258.70").

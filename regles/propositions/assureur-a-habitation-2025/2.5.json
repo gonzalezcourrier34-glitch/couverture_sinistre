@@ -9,7 +9,8 @@
       "date": "2026-11-20",
       "modifications": [
         "le bâtiment, le terrain, le feu ou l'eau partis du logement : `origine_rc` ; les biens gardés : `bien_confie`",
-        "les cinq variables proposées (amiante, ascenseur, trouble de voisinage…) : hors décision, citées"
+        "les cinq variables proposées (amiante, ascenseur, trouble de voisinage…) : hors décision, citées",
+        "24 nov. : quatre exclusions jusque-là classées « rares » deviennent des règles (amiante, contrôle des citernes, ascenseur non conforme, terrain de plus de cinq hectares) ; elles ne jouent que si la déclaration le dit"
       ]
     }
   },
@@ -84,6 +85,54 @@
             "a_demander": false,
             "article": "2.5-a",
             "texte": "à des biens dont vous avez la garde"
+          },
+          {
+            "condition": {
+              "f": [
+                "cause_amiante",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "2.5-a",
+            "texte": "par l’amiante sous toutes ses formes"
+          },
+          {
+            "condition": {
+              "f": [
+                "controle_citerne_respecte",
+                "non"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "2.5-a",
+            "texte": "en cas de non-respect de la réglementation applicable au contrôle des citernes"
+          },
+          {
+            "condition": {
+              "f": [
+                "ascenseur_non_conforme",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "2.5",
+            "texte": "des ascenseurs et monte-charge pour autant qu’ils soient déclarés conformes à la réglementation en vigueur par un organisme de contrôle entretenus annuellement par une entreprise agréée"
+          },
+          {
+            "condition": {
+              "f": [
+                "terrain_plus_5_hectares",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "2.5",
+            "texte": "du terrain attenant au bâtiment, sans dépasser au total 5 hectares"
           }
         ],
         "limites": [
@@ -102,33 +151,74 @@
     ],
     "exclusions_communes": [],
     "extensions": [],
-    "vocabulaire_manquant": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "cause_amiante",
+        "libelle": "Dommage causé par l'amiante",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le dommage vient-il de l'amiante ?",
+        "aide": {
+          "oui": "des fibres ou des matériaux contenant de l'amiante",
+          "non": "aucun rapport avec l'amiante"
+        },
+        "pourquoi": "2.5-a",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "controle_citerne_respecte",
+        "libelle": "Contrôle de la citerne en règle",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La citerne en cause était-elle à jour de son contrôle réglementaire ?",
+        "aide": {
+          "oui": "la citerne était contrôlée comme la réglementation l'exige",
+          "non": "contrôle non fait ou périmé"
+        },
+        "pourquoi": "2.5-a",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "ascenseur_non_conforme",
+        "libelle": "Ascenseur non conforme ou non entretenu",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "L'ascenseur ou le monte-charge en cause était-il non conforme, ou sans entretien annuel ?",
+        "aide": {
+          "oui": "pas de contrôle de conformité, ou pas d'entretien annuel par une entreprise agréée",
+          "non": "ascenseur contrôlé et entretenu, ou pas d'ascenseur en cause"
+        },
+        "pourquoi": "2.5",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "terrain_plus_5_hectares",
+        "libelle": "Terrain de plus de cinq hectares",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le terrain attenant au bâtiment dépasse-t-il cinq hectares au total ?",
+        "aide": {
+          "oui": "plus de cinq hectares",
+          "non": "cinq hectares ou moins"
+        },
+        "pourquoi": "2.5",
+        "plus_proche": "aucune"
+      }
+    ],
     "non_traduit": [],
     "hors_decision": [
       {
         "article": "2.5",
         "texte": "Notre garantie s’étend au trouble de voisinage au sens de l’article 3.101, à l'exclusion de l'article 3.102, du Code civil s’ils découlent d’un événement soudain, imprévisible pour vous, sauf s’il oppose les occupants d'un même immeuble à logements multiples",
-        "pourquoi": "le vocabulaire ne distingue pas le trouble de voisinage"
-      },
-      {
-        "article": "2.5",
-        "texte": "des ascenseurs et monte-charge pour autant qu’ils soient déclarés conformes à la réglementation en vigueur par un organisme de contrôle entretenus annuellement par une entreprise agréée",
-        "pourquoi": "lu comme le bâtiment ; la conformité de l'ascenseur : rare, le vocabulaire ne la distingue pas"
-      },
-      {
-        "article": "2.5",
-        "texte": "sans dépasser au total 5 hectares",
-        "pourquoi": "la superficie du terrain : rare ; le vocabulaire ne la distingue pas"
-      },
-      {
-        "article": "2.5-a",
-        "texte": "par l’amiante sous toutes ses formes",
-        "pourquoi": "rare ; le vocabulaire ne distingue pas l'amiante"
-      },
-      {
-        "article": "2.5-a",
-        "texte": "en cas de non-respect de la réglementation applicable au contrôle des citernes",
-        "pourquoi": "rare ; le vocabulaire ne distingue pas le contrôle des citernes"
+        "pourquoi": "une extension de la garantie, pas un refus ; un trouble de voisinage soudain est lu comme une responsabilité du fait de l'immeuble"
       }
     ]
   },
@@ -136,27 +226,7 @@
     {
       "gravite": "info",
       "controle": "couverture",
-      "message": "hors décision (2.5) : le vocabulaire ne distingue pas le trouble de voisinage"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (2.5) : lu comme le bâtiment ; la conformité de l'ascenseur : rare, le vocabulaire ne la distingue pas"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (2.5) : la superficie du terrain : rare ; le vocabulaire ne la distingue pas"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (2.5-a) : rare ; le vocabulaire ne distingue pas l'amiante"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (2.5-a) : rare ; le vocabulaire ne distingue pas le contrôle des citernes"
+      "message": "hors décision (2.5) : une extension de la garantie, pas un refus ; un trouble de voisinage soudain est lu comme une responsabilité du fait de l'immeuble"
     }
   ]
 }
