@@ -1,9 +1,18 @@
 {
   "meta": {
     "article": "3.3.2",
-    "modele": "mistral:mistral-large-4-0",
+    "modele": "mistral:mistral-large-4-0 (proposition écartée)",
     "date": "2026-11-24",
-    "consigne": "redaction-regles v13"
+    "consigne": "redaction-regles v13",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-24",
+      "modifications": [
+        "réécrite à la main : le modèle en faisait une garantie qui couvre ; le contrat dit que l'assureur organise la venue d'un artisan et ne paie jamais sa facture",
+        "une garantie accessoire, qui ne décide rien : une garantie qui « couvre » aurait répondu couvert à une demande d'assistance que le délai de carence de 3.1.12 refuse",
+        "les faits proposés (facture, impossibilité technique, manque de sécurité, option) : aucun retenu, aucune décision n'en dépend"
+      ]
+    }
   },
   "proposition": {
     "evenements": [
@@ -12,176 +21,47 @@
     "definitions": [],
     "garanties": [
       {
-        "id": "assistance_handyman",
-        "nom": "Assistance Handyman",
-        "article": "3.3.2",
-        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie ” Assistance Handyman ” est accordée.",
-        "perimetre": [
-          {
-            "f": [
-              "evenement",
-              "assistance"
-            ]
-          },
-          {
-            "concept": "batiment_designe"
-          }
-        ],
+        "id": "mise_en_relation_artisan",
+        "nom": "Mise en relation avec un artisan (facture à la charge de l’assuré)",
+        "article": "3.3.2.1",
+        "accessoire": true,
+        "texte": "Si l’Assuré a besoin d’un prestataire dans le cadre domestique pour exercer des petits travaux à domicile, Assureur B Assistance envoie un prestataire dans le domaine concerné",
+        "perimetre": [],
         "circonstances": [],
         "obligations": [],
-        "exclusions": [
+        "exclusions": [],
+        "limites": [
           {
-            "condition": {
-              "f": [
-                "facture_prestataire",
-                "oui"
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
             "article": "3.3.2.2",
-            "texte": "Le montant total de la facture relative à l’intervention du prestataire n’est jamais prise en charge par Assureur B Assistance. Il reste à la charge exclusive de l’Assuré."
-          },
-          {
-            "condition": {
-              "ou": [
-                {
-                  "f": [
-                    "impossibilite_technique",
-                    "oui"
-                  ]
-                },
-                {
-                  "f": [
-                    "manque_securite",
-                    "oui"
-                  ]
-                }
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "3.3.2.1",
-            "texte": "Si la prestation ne peut pas être assurée vu le manque de sécurité ou en raison de son impossibilité technique, l’Assuré n’a pas droit à une indemnisation."
-          },
-          {
-            "condition": {
-              "non": {
-                "f": [
-                  "option_assistance_handyman",
-                  "oui"
-                ]
-              }
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "3.3.2",
-            "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie ” Assistance Handyman ” est accordée."
+            "texte": "Le montant total de la facture relative à l’intervention du prestataire n’est jamais prise en charge par Assureur B Assistance. Il reste à la charge exclusive de l’Assuré.",
+            "montant": "facture à la charge de l'assuré"
           }
-        ],
-        "limites": [],
-        "accessoire": false
+        ]
       }
     ],
     "exclusions_communes": [],
-    "extensions": [],
-    "vocabulaire_manquant": [
-      {
-        "variable": "option_assistance_handyman",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "libelle": "Option Assistance Handyman",
-        "question": "Vos conditions particulières mentionnent-elles la garantie « Assistance Handyman » ?",
-        "pourquoi": "La garantie ne s'applique que si l'option est souscrite dans les conditions particulières",
-        "plus_proche": "option_vol, option_incendie, option_degats_eaux : aucune ne correspond à cette option d'assistance spécifique",
-        "aide": {
-          "oui": "les conditions particulières mentionnent la garantie Assistance Handyman",
-          "non": "la garantie Assistance Handyman n'est pas mentionnée"
-        }
-      },
-      {
-        "variable": "facture_prestataire",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "libelle": "Facture du prestataire",
-        "question": "Le sinistre concerne-t-il la facture de l'intervention du prestataire ?",
-        "pourquoi": "Exclusion de la prise en charge de la facture de l'intervention",
-        "plus_proche": "bien : ne permet pas de distinguer une facture d'un bien endommagé",
-        "aide": {
-          "oui": "la facture du plombier, électricien, etc. est réclamée à l'assureur",
-          "non": "il s'agit de la prestation d'assistance (mise en relation) elle-même"
-        }
-      },
-      {
-        "variable": "impossibilite_technique",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "libelle": "Impossibilité technique",
-        "question": "La réparation est-elle techniquement impossible ?",
-        "pourquoi": "Exclusion si la prestation ne peut être assurée pour impossibilité technique",
-        "plus_proche": "aucune variable existante ne décrit la faisabilité technique de la réparation",
-        "aide": {
-          "oui": "le prestataire juge la réparation techniquement impossible",
-          "non": "la réparation est techniquement possible"
-        }
-      },
-      {
-        "variable": "manque_securite",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "libelle": "Manque de sécurité",
-        "question": "La situation présente-t-elle un manque de sécurité ?",
-        "pourquoi": "Exclusion si la prestation ne peut être assurée pour manque de sécurité",
-        "plus_proche": "aucune variable existante ne décrit le niveau de sécurité de la situation",
-        "aide": {
-          "oui": "la situation est dangereuse ou non sécurisée pour intervenir",
-          "non": "la situation est suffisamment sûre"
-        }
-      }
-    ],
-    "non_traduit": [
+    "vocabulaire_manquant": [],
+    "non_traduit": [],
+    "hors_decision": [
       {
         "article": "3.3.2",
-        "texte": "Il y a lieu d’entendre aux termes de la présente garantie par «Assureur B Assistance», la société d’assistance [société d’assistance], agréée par la Commission Bancaire, Financière et des Assurances sous le numéro 0487, pour les opérations d’assurances suivantes : accidents, maladie, autre dommage aux biens, responsabilité civile auto, responsabilité civile générale, diverses pertes pécuniaires, assistance juridique et assistance (A.R. des 4 et 13 juillet 1979, M.B. du 14 juillet 1979), dont le siège social est établi à 1050 Bruxelles, [adresse], n° d’entreprise [numéro] ; Assureur B Assistance s’engage à effectuer pour le compte de la Compagnie toutes les prestations d’assistance garanties. Les données à caractère personnel concernant l’Assuré qui sont communiquées à Assureur B Assistance dans le cadre de ce contrat, sont traitées à des fins de gestion d’assurance, gestion de la clientèle, lutte contre la fraude et gestion du contentieux, par la Compagnie et par Assureur B Assistance, et sont susceptibles d’être transférées par Assureur B Assistance à des prestataires et sous-traitants auxquels elle fait appel et pouvant être situés hors Union Européenne, dont entre autres la société une société du groupe, pour les données recueillies par elle lors des prestations d’assistance.",
-        "pourquoi": "Informations juridiques sur la société d'assistance et traitement des données personnelles, non pertinentes pour la logique de décision de couverture du sinistre"
+        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie",
+        "pourquoi": "une option des conditions particulières pour un service qui n'indemnise rien : sans effet sur la question de couverture"
       },
       {
         "article": "3.3.2.1",
-        "texte": "Assureur B Assistance peut mettre en relation avec les corps de métier suivants : n plombier ; n chauffagiste ; n électricien ; n charpentier ; n serrurier ; n société de sécurisation ; n jardinier ; n bricoleur.",
-        "pourquoi": "Liste descriptive des prestataires disponibles, sans condition d'exclusion ou de restriction de couverture par métier"
-      },
-      {
-        "article": "3.3.2.1",
-        "texte": "Dans un délai de 2 heures, le rendez-vous sera fixé. Le prestataire se rend sur les lieux dans un délai de 48 heures, sauf si l’Assuré choisit un autre moment.",
-        "pourquoi": "Délais de service contractuels, sans impact sur la décision de couverture ou d'exclusion du sinistre"
-      },
-      {
-        "article": "3.3.2.1",
-        "texte": "Si le prestataire arrive au domicile de l’Assuré à la date et l’heure convenue et que ce dernier est absent ou si l’endroit où les travaux doivent être réalisés n’est pas accessible, un montant de 50 € sera dû par l’Assuré au prestataire. Si le prestataire arrive au domicile de l’Assuré à la date et l’heure convenue et que l’Assuré décide de ne pas faire appel aux services de ce prestataire, des frais de déplacement pourront être réclamés par le prestataire.",
-        "pourquoi": "Conséquences financières à la charge de l'assuré envers le prestataire, non des exclusions de la garantie d'assistance elle-même"
-      },
-      {
-        "article": "3.3.2.1",
-        "texte": "Ni la responsabilité d’Assureur B Assistance, ni celle de la Compagnie ne pourront être recherchées en cas de défaillance ou de mauvaise exécution de la prestation par le prestataire. Assureur B Assistance n’intervenant en effet que dans le cadre d’une mise en relation entre ce prestataire et l’Assuré.",
-        "pourquoi": "Clause de non-responsabilité de l'assureur pour l'exécution du prestataire, non traduisible en condition logique de garantie"
+        "texte": "Si la prestation ne peut pas être assurée vu le manque de sécurité ou en raison de son impossibilité technique, l’Assuré n’a pas droit à une indemnisation",
+        "pourquoi": "un service de mise en relation, sans indemnité : sans effet sur la question de couverture"
       },
       {
         "article": "3.3.2.3",
-        "texte": "L’Assuré s’engage à : n être présent au rendez-vous fixé et à donner au technicien accès à son domicile. n payer tout montant dû au prestataire dans les délais.",
-        "pourquoi": "Obligations contractuelles sans mention explicite de refus de garantie (« pas de garantie », « refuser son intervention ») en cas de non-respect ; ne peut être modélisé comme obligation avec sanction de refus selon les règles du moteur"
+        "texte": "être présent au rendez-vous fixé et à donner au technicien accès à son domicile",
+        "pourquoi": "les engagements de l'assuré envers l'artisan : sans effet sur la question de couverture"
       },
       {
-        "article": "3.3.2.4",
-        "texte": "En cas de plainte relative aux services de mise en relation, l’Assuré peut s’adresser au département Qualité d’Assureur B Assistance : Par e-mail : [courriel] Par fax : [téléphone] Par courrier : Customer Care",
-        "pourquoi": "Procédure de réclamation administrative, sans impact sur la logique de couverture du sinistre"
+        "article": "3.3.2.2",
+        "texte": "Le montant total de la facture relative à l’intervention du prestataire n’est jamais prise en charge par Assureur B Assistance. Il reste à la charge exclusive de l’Assuré.",
+        "pourquoi": "dit par la limite de la garantie et par son nom : la facture reste à l'assuré ; le service ne décide d'aucune indemnité"
       }
     ]
   },
@@ -189,62 +69,27 @@
     {
       "gravite": "info",
       "controle": "couverture",
-      "message": "garantie assistance_handyman : {\"f\": [\"option_assistance_handyman\", \"oui\"]} (conditions particulières) mise en réserve, et non en question"
+      "message": "hors décision (3.3.2) : une option des conditions particulières pour un service qui n'indemnise rien : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "facture_prestataire = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.3.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "impossibilite_technique = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.3.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "manque_securite = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.3.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "option_assistance_handyman = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 3.3.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "déclaré non traduit (3.3.2) : « Il y a lieu d’entendre aux termes de la présente garantie par «Assureur B Assistance», la société d’ » — Informations juridiques sur la société d'assistance et traitement des données personnelles, non pertinentes pour la logique de décision de couverture du sinistre"
+      "message": "hors décision (3.3.2.1) : un service de mise en relation, sans indemnité : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "déclaré non traduit (3.3.2.1) : « Assureur B Assistance peut mettre en relation avec les corps de métier suivants : n plombier ; n cha » — Liste descriptive des prestataires disponibles, sans condition d'exclusion ou de restriction de couverture par métier"
+      "message": "hors décision (3.3.2.3) : les engagements de l'assuré envers l'artisan : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "déclaré non traduit (3.3.2.1) : « Dans un délai de 2 heures, le rendez-vous sera fixé. Le prestataire se rend sur les lieux dans un dé » — Délais de service contractuels, sans impact sur la décision de couverture ou d'exclusion du sinistre"
+      "message": "hors décision (3.3.2.2) : dit par la limite de la garantie et par son nom : la facture reste à l'assuré ; le service ne décide d'aucune indemnité"
     },
     {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "déclaré non traduit (3.3.2.1) : « Si le prestataire arrive au domicile de l’Assuré à la date et l’heure convenue et que ce dernier est » — Conséquences financières à la charge de l'assuré envers le prestataire, non des exclusions de la garantie d'assistance elle-même"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "déclaré non traduit (3.3.2.1) : « Ni la responsabilité d’Assureur B Assistance, ni celle de la Compagnie ne pourront être recherchées  » — Clause de non-responsabilité de l'assureur pour l'exécution du prestataire, non traduisible en condition logique de garantie"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "déclaré non traduit (3.3.2.3) : « L’Assuré s’engage à : n être présent au rendez-vous fixé et à donner au technicien accès à son domic » — Obligations contractuelles sans mention explicite de refus de garantie (« pas de garantie », « refuser son intervention ») en cas de non-respect ; ne peut être modélisé comme obligation avec sanction de refus selon les règles du moteur"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "couverture",
-      "message": "déclaré non traduit (3.3.2.4) : « En cas de plainte relative aux services de mise en relation, l’Assuré peut s’adresser au département » — Procédure de réclamation administrative, sans impact sur la logique de couverture du sinistre"
+      "gravite": "à relire",
+      "controle": "prolog",
+      "message": "SWI-Prolog absent : chargement et non-régression non vérifiés"
     }
   ]
 }
