@@ -1,8 +1,8 @@
 {
  "_description": "Pour chaque jeu de conditions générales : sont-elles traduites en règles en entier ? Déclaré à la main, article par article, et non calculé (7.169). « complet » : chaque passage de chaque article de garantie est traduit en règle ou classé sans effet sur la décision. L'écran entoure la carte en vert (complet) ou en orange (en partie).",
  "assureur-a-habitation-2025": {
-  "complet": false,
-  "detail": "Toutes les garanties ont leurs règles, assistance comprise. Restent des exclusions de la responsabilité civile encore classées « rares » et non lues : chasse, gibier, ivresse, terrorisme, pollution graduelle, économie de partage."
+  "complet": true,
+  "detail": "Toutes les garanties ont leurs règles, assistance comprise, et toutes les exclusions qu'une déclaration peut énoncer sont lues. Un point faible connu : la garde d'enfants rémunérée, que le contrat couvre, peut être lue comme une activité professionnelle."
  },
  "assureur-b-habitation-2017": {
   "complet": false,

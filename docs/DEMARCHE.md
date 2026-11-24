@@ -4904,6 +4904,18 @@ Le même après-midi. Objectif fixé : A et B en vert ; C et D restent en partie
 
 **Bancs après les deux assistances.** A 94 % (partie test) et 100 % (jeu fermé) ; B 83 % ; D 96 % ; 233 tests. Aucun gain sur B : le cas de la chaudière dépend de la lecture, qui ne retient pas toujours l'événement « assistance » quand une panne est racontée avec lui. Essai écrit pour l'occasion : un chauffage en panne et un appel à l'assistance sont lus « dégât électrique ». C'est le prochain point, et il touche le vocabulaire commun.
 
+### 7.171 A traduit en entier
+
+Le 24 nov., 14 h. Il restait à A, après l'assistance, les exclusions de la responsabilité civile que la relecture du 20 nov. avait classées « rares ; le vocabulaire ne les distingue pas ». Aucune des seize variables proposées alors n'avait été retenue, pour protéger la lecture. Conséquence, vue en dressant l'inventaire : un accident de chasse était couvert chez A, que le contrat exclut en une ligne (5.5-a).
+
+Six exclusions deviennent des règles : la chasse, le gibier et les animaux sauvages (sauf les cervidés), l'ivresse et la violence de l'assuré majeur, le terrorisme, le nucléaire, la pollution graduelle. Cinq faits nouveaux ; les deux autres existaient.
+
+**Demander ou non.** Une heure plus tôt, la leçon du serrurier disait : ce que seul l'assuré sait se demande. Appliquée ici, elle ferait demander « était-ce à la chasse ? » après chaque accident de sport. La différence : sans appel à l'assistance, le dépannage n'est jamais dû, la question porte sur la condition de la prestation ; un accident de sport est couvert, sauf chasse, et l'exclusion ne joue que si la déclaration la dit. La leçon 165 est précisée en conséquence.
+
+**Ce qui reste classé sans effet** dans l'article 5 : quinze passages, dont aucun n'est une exclusion à lire dans une déclaration. Des extensions que la garantie couvre déjà, et le recours de l'assureur contre l'auteur. Un point faible : la garde d'enfants rémunérée, couverte (5.6), peut être lue « activité professionnelle » et refusée à tort.
+
+**Mesure.** À l'acceptation, aucun cas de test ne change de décision. Un accident de chasse : non couvert, 5.5-a cité. Des lunettes cassées au foot : couvert. L'outil a rangé les cinq faits dans le vocabulaire commun : ils sont lus pour les quatre contrats, donc les quatre bancs sont repassés. A 94 % et 100 %, B 83 %, D 96 % : rien ne bouge. `regles/traduction.json` déclare A traduit en entier ; sa carte passe au vert.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le ferais.
@@ -5104,5 +5116,5 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 162. Une correction qui améliore le cas qu'on regarde se juge sur ceux qu'on ne regarde pas ; et un écart se rejoue dans les deux états avant d'être attribué au hasard.
 163. Rejouer dans les deux états sert aussi à innocenter : la baisse de B est apparue juste après un changement, et ne venait pas de lui. Un modèle appelé par une API n'est pas un point fixe ; une fourchette publiée doit dire sur combien de passages elle repose.
 164. Ce qu'un écran ne dit pas, on finit par le croire complet : l'état de la traduction se montre, et se déclare à la main quand le comptage automatique se trompe.
-165. Une exclusion que seul l'assuré peut renseigner est une question, pas une chose que l'assureur prouvera. Se le demander pour chaque exclusion écrite : qui sait ?
+165. Quand la prestation n'est due que sous une condition que seul l'assuré connaît, cette condition se demande. Une exclusion qui retire un cas d'une garantie par ailleurs acquise ne se demande pas : elle joue quand la déclaration la dit.
 166. Un jeu fermé qui révèle une erreur de règle a fait son travail une fois ; après la correction, ce cas est vu, et il faut l'écrire à côté du chiffre.

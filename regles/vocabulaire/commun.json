@@ -720,7 +720,8 @@
         "fumee",
         "vandalisme",
         "merule",
-        "assistance"
+        "assistance",
+        "responsabilite"
       ],
       "valeurs": [
         "oui",
@@ -990,7 +991,8 @@
       },
       "pour": [
         "attentat",
-        "conflit_du_travail"
+        "conflit_du_travail",
+        "responsabilite"
       ]
     },
     "graffiti_mur_exterieur": {

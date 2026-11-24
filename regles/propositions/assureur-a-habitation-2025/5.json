@@ -10,7 +10,8 @@
       "modifications": [
         "une garantie de vie privée au lieu de huit : seul ce qui a causé le dommage les distinguait (`origine_rc`)",
         "les exclusions : le tiers, la profession, le contrat, les biens gardés, les véhicules à moteur, le feu parti du bâtiment assuré, l'intention ; le reste hors décision, cité",
-        "les seize variables proposées (âge, faute lourde, nombre d'enfants gardés…) : aucune retenue"
+        "les seize variables proposées (âge, faute lourde, nombre d'enfants gardés…) : aucune retenue",
+        "24 nov. : six exclusions jusque-là classées « rares » deviennent des règles (chasse, gibier, ivresse et violence de l'assuré majeur, terrorisme, nucléaire, pollution graduelle) ; elles ne s'appliquent que si la déclaration le dit"
       ]
     }
   },
@@ -155,6 +156,100 @@
             "a_demander": false,
             "article": "5.10",
             "texte": "pour les sinistres intentionnels"
+          },
+          {
+            "condition": {
+              "f": [
+                "pratique_chasse",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "5.5-a",
+            "texte": "Nous n’indemnisons pas les dommages causés par la pratique de la chasse."
+          },
+          {
+            "condition": {
+              "f": [
+                "animal_sauvage",
+                "gibier_ou_sauvage"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "5.3-a",
+            "texte": "causés par le gibier ou les animaux sauvages, domptés ou non, à l’exception des cervidés"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "ou": [
+                    {
+                      "f": [
+                        "faute_lourde",
+                        "ivresse"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "faute_lourde",
+                        "violence"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "non": {
+                    "f": [
+                      "auteur_mineur",
+                      "oui"
+                    ]
+                  }
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "5.10",
+            "texte": "la responsabilité civile personnelle de l’assuré qui a atteint l’âge de 18 ans pour les sinistres causés en raison d’une des fautes lourdes suivantes : ivresse ou état analogue résultant de l’utilisation de produits autres que des boissons alcoolisées, actes de violence commis sur les personnes"
+          },
+          {
+            "condition": {
+              "f": [
+                "evenement",
+                "attentat"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "5.10",
+            "texte": "pour les actes de terrorisme"
+          },
+          {
+            "condition": {
+              "f": [
+                "cause_nucleaire",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "5.10",
+            "texte": "les dommages ou l’aggravation des dommages causés par la modification de la structure du noyau de l’atome"
+          },
+          {
+            "condition": {
+              "f": [
+                "pollution_graduelle",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "5.10",
+            "texte": "les dommages découlant de la pollution graduelle"
           }
         ],
         "limites": [
@@ -178,18 +273,97 @@
     ],
     "exclusions_communes": [],
     "extensions": [],
-    "vocabulaire_manquant": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "pratique_chasse",
+        "libelle": "Dommage causé en chassant",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le dommage a-t-il été causé en pratiquant la chasse ?",
+        "aide": {
+          "oui": "une partie de chasse, un tir de chasseur, une battue",
+          "non": "un autre sport ou loisir : ball-trap, tir sportif, compétition"
+        },
+        "pourquoi": "5.5-a : la chasse est exclue, les autres sports sont couverts",
+        "plus_proche": "origine_rc = chasse_sport : range la chasse avec les sports, que ce contrat couvre"
+      },
+      {
+        "variable": "animal_sauvage",
+        "libelle": "Gibier ou animal sauvage",
+        "valeurs": [
+          "gibier_ou_sauvage",
+          "cervide",
+          "non"
+        ],
+        "question": "L'animal en cause est-il du gibier ou un animal sauvage ?",
+        "aide": {
+          "gibier_ou_sauvage": "un sanglier, un renard, un animal sauvage même dompté ou tenu en captivité",
+          "cervide": "un cerf, un chevreuil, un daim",
+          "non": "un animal domestique ou d'élevage"
+        },
+        "pourquoi": "5.3-a : le gibier et les animaux sauvages sont exclus, sauf les cervidés",
+        "plus_proche": "origine_rc = animal_autre : ne distingue pas les animaux sauvages",
+        "libelles": {
+          "gibier_ou_sauvage": "gibier ou animal sauvage",
+          "cervide": "cervidé"
+        }
+      },
+      {
+        "variable": "faute_lourde",
+        "libelle": "Ivresse ou violence de l'auteur",
+        "valeurs": [
+          "ivresse",
+          "violence",
+          "non"
+        ],
+        "question": "L'auteur du dommage était-il ivre ou drogué, ou a-t-il commis un acte de violence ?",
+        "aide": {
+          "ivresse": "l'auteur avait bu ou pris des stupéfiants",
+          "violence": "l'auteur a frappé ou agressé quelqu'un",
+          "non": "ni l'un ni l'autre"
+        },
+        "pourquoi": "5.10 : fautes lourdes de l'assuré majeur",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "auteur_mineur",
+        "libelle": "Auteur de moins de 18 ans",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "L'auteur du dommage avait-il moins de 18 ans ?",
+        "aide": {
+          "oui": "un enfant ou un adolescent du foyer",
+          "non": "un adulte"
+        },
+        "pourquoi": "5.10 : l'exclusion des fautes lourdes ne vise que l'assuré qui a atteint 18 ans",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "pollution_graduelle",
+        "libelle": "Pollution graduelle",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le dommage vient-il d'une pollution lente, installée dans la durée ?",
+        "aide": {
+          "oui": "une fuite ou un rejet qui a pollué peu à peu le terrain du voisin",
+          "non": "un accident soudain"
+        },
+        "pourquoi": "5.10 : la pollution graduelle est exclue",
+        "plus_proche": "aucune"
+      }
+    ],
     "non_traduit": [],
     "hors_decision": [
       {
         "article": "5.3",
         "texte": "La garantie est acquise pour 5 chevaux de selle dont vous êtes propriétaire, ou plus si leur nombre est mentionné en conditions particulières",
         "pourquoi": "le nombre de chevaux : rare ; le vocabulaire ne le distingue pas"
-      },
-      {
-        "article": "5.3-a",
-        "texte": "causés par le gibier ou les animaux sauvages, domptés ou non, à l’exception des cervidés",
-        "pourquoi": "rare ; le vocabulaire ne distingue pas les animaux sauvages"
       },
       {
         "article": "5.4~1",
@@ -228,16 +402,6 @@
       },
       {
         "article": "5.10",
-        "texte": "pour les actes de terrorisme",
-        "pourquoi": "rare en responsabilité civile ; le vocabulaire ne distingue pas le terrorisme"
-      },
-      {
-        "article": "5.10",
-        "texte": "les dommages ou l’aggravation des dommages causés par la modification de la structure du noyau de l’atome",
-        "pourquoi": "rare ; le vocabulaire ne distingue pas le nucléaire"
-      },
-      {
-        "article": "5.10",
         "texte": "les dommages découlant de la responsabilité civile soumise à une assurance légalement obligatoire",
         "pourquoi": "lu par les véhicules à moteur ; le reste (chasse…) rare"
       },
@@ -250,11 +414,6 @@
         "article": "5.4-a",
         "texte": "l’emploi de jet-skis ainsi que l’emploi de véhicules aériens",
         "pourquoi": "lu comme un véhicule à moteur ; sinon rare"
-      },
-      {
-        "article": "5.5-a",
-        "texte": "Nous n’indemnisons pas les dommages causés par la pratique de la chasse.",
-        "pourquoi": "le vocabulaire range la chasse avec les sports en club et les compétitions, que A couvre (5.5)"
       },
       {
         "article": "5.6",
@@ -273,16 +432,6 @@
       },
       {
         "article": "5.10",
-        "texte": "ivresse ou état analogue résultant de l’utilisation de produits autres que des boissons alcoolisées, actes de violence commis sur les personnes",
-        "pourquoi": "l'ivresse et la violence : le vocabulaire ne les distingue pas"
-      },
-      {
-        "article": "5.10",
-        "texte": "les dommages découlant de la pollution graduelle",
-        "pourquoi": "rare ; le vocabulaire ne distingue pas la pollution"
-      },
-      {
-        "article": "5.10",
         "texte": "Les dommages résultant d’actes collectifs de violence, d’émeute, de sabotage, de mouvement populaire, de conflit de travail ou de terrorisme.",
         "pourquoi": "rare en responsabilité civile ; lu par l'événement pour les dommages aux biens"
       }
@@ -290,14 +439,14 @@
   },
   "controles": [
     {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (5.3) : le nombre de chevaux : rare ; le vocabulaire ne le distingue pas"
+      "gravite": "à relire",
+      "controle": "réserve",
+      "message": "exclusion « causés par le gibier ou les animaux sauvages, domptés ou non » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
     },
     {
       "gravite": "info",
       "controle": "couverture",
-      "message": "hors décision (5.3-a) : rare ; le vocabulaire ne distingue pas les animaux sauvages"
+      "message": "hors décision (5.3) : le nombre de chevaux : rare ; le vocabulaire ne le distingue pas"
     },
     {
       "gravite": "info",
@@ -337,16 +486,6 @@
     {
       "gravite": "info",
       "controle": "couverture",
-      "message": "hors décision (5.10) : rare en responsabilité civile ; le vocabulaire ne distingue pas le terrorisme"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (5.10) : rare ; le vocabulaire ne distingue pas le nucléaire"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
       "message": "hors décision (5.10) : lu par les véhicules à moteur ; le reste (chasse…) rare"
     },
     {
@@ -362,11 +501,6 @@
     {
       "gravite": "info",
       "controle": "couverture",
-      "message": "hors décision (5.5-a) : le vocabulaire range la chasse avec les sports en club et les compétitions, que A couvre (5.5)"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
       "message": "hors décision (5.6) : une activité rémunérée tenue pour privée : rare ; le vocabulaire ne la distingue pas"
     },
     {
@@ -378,16 +512,6 @@
       "gravite": "info",
       "controle": "couverture",
       "message": "hors décision (5.8) : rare ; le vocabulaire ne distingue pas le sauvetage"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (5.10) : l'ivresse et la violence : le vocabulaire ne les distingue pas"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (5.10) : rare ; le vocabulaire ne distingue pas la pollution"
     },
     {
       "gravite": "info",

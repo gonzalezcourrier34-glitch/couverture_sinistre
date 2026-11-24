@@ -1,6 +1,89 @@
 {
   "_description": "Variables que seules les règles de ce contrat emploient (regles/assureur-a-habitation-2025.pl). Même format que commun.json. Rangé par `couverture regles --ranger` : une variable qu'un autre contrat se met à employer passe dans commun.json.",
   "variables": {
+    "pratique_chasse": {
+      "libelle": "Dommage causé en chassant",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage a-t-il été causé en pratiquant la chasse ?",
+      "aide": {
+        "oui": "une partie de chasse, un tir de chasseur, une battue",
+        "non": "un autre sport ou loisir : ball-trap, tir sportif, compétition"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "animal_sauvage": {
+      "libelle": "Gibier ou animal sauvage",
+      "valeurs": [
+        "gibier_ou_sauvage",
+        "cervide",
+        "non"
+      ],
+      "question": "L'animal en cause est-il du gibier ou un animal sauvage ?",
+      "libelles": {
+        "gibier_ou_sauvage": "gibier ou animal sauvage",
+        "cervide": "cervidé"
+      },
+      "aide": {
+        "gibier_ou_sauvage": "un sanglier, un renard, un animal sauvage même dompté ou tenu en captivité",
+        "cervide": "un cerf, un chevreuil, un daim",
+        "non": "un animal domestique ou d'élevage"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "faute_lourde": {
+      "libelle": "Ivresse ou violence de l'auteur",
+      "valeurs": [
+        "ivresse",
+        "violence",
+        "non"
+      ],
+      "question": "L'auteur du dommage était-il ivre ou drogué, ou a-t-il commis un acte de violence ?",
+      "aide": {
+        "ivresse": "l'auteur avait bu ou pris des stupéfiants",
+        "violence": "l'auteur a frappé ou agressé quelqu'un",
+        "non": "ni l'un ni l'autre"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "auteur_mineur": {
+      "libelle": "Auteur de moins de 18 ans",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "L'auteur du dommage avait-il moins de 18 ans ?",
+      "aide": {
+        "oui": "un enfant ou un adolescent du foyer",
+        "non": "un adulte"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "pollution_graduelle": {
+      "libelle": "Pollution graduelle",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage vient-il d'une pollution lente, installée dans la durée ?",
+      "aide": {
+        "oui": "une fuite ou un rejet qui a pollué peu à peu le terrain du voisin",
+        "non": "un accident soudain"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
     "contact_assistance_impossible": {
       "libelle": "Assistance impossible à joindre",
       "valeurs": [
