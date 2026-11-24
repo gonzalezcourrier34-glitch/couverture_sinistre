@@ -9,7 +9,8 @@
       "date": "2026-11-20",
       "modifications": [
         "la défense pénale, le recours après un dommage, le trouble de voisinage : `domaine_litige` ; l'option en circonstance",
-        "les treize variables proposées : aucune retenue ; les restrictions (animaux, immeubles, environnement) hors décision"
+        "les treize variables proposées : aucune retenue ; les restrictions (animaux, immeubles, environnement) hors décision",
+        "24 nov. : deux exclusions jusque-là classées « rares » deviennent des règles (animaux non domestiques, environnement)"
       ]
     }
   },
@@ -67,7 +68,42 @@
           }
         ],
         "obligations": [],
-        "exclusions": [],
+        "exclusions": [
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "animal_sauvage",
+                    "gibier_ou_sauvage"
+                  ]
+                },
+                {
+                  "f": [
+                    "animal_sauvage",
+                    "cervide"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.1.3.1",
+            "texte": "Toutefois, en ce qui concerne les animaux, la Compagnie ne couvre pas les sinistres relatifs aux animaux non domestiques dont l’Assuré est propriétaire ou gardien"
+          },
+          {
+            "condition": {
+              "f": [
+                "litige_environnement",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.1.3.1",
+            "texte": "En ce qui concerne l’environnement, la Compagnie ne couvre pas les dommages subis par l’Assuré"
+          }
+        ],
         "limites": [
           {
             "article": "4.1.3.3",
@@ -79,37 +115,38 @@
     ],
     "exclusions_communes": [],
     "extensions": [],
-    "vocabulaire_manquant": [],
+    "vocabulaire_manquant": [
+      {
+        "variable": "litige_environnement",
+        "libelle": "Litige d'environnement",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le litige porte-t-il sur une atteinte à l'environnement (pollution, nuisance) ?",
+        "aide": {
+          "oui": "pollution du sol, de l'eau ou de l'air, nuisances",
+          "non": "un autre litige"
+        },
+        "pourquoi": "4.1.3.1",
+        "plus_proche": "aucune"
+      }
+    ],
     "non_traduit": [],
     "hors_decision": [
-      {
-        "article": "4.1.3.1",
-        "texte": "Toutefois, en ce qui concerne les animaux, la Compagnie ne couvre pas les sinistres relatifs aux animaux non domestiques dont l’Assuré est propriétaire ou gardien",
-        "pourquoi": "rare ; le vocabulaire ne distingue pas les animaux non domestiques"
-      },
       {
         "article": "4.1.3.1",
         "texte": "En ce qui concerne les immeubles, la Compagnie ne couvre que les litiges relatifs",
         "pourquoi": "les litiges immobiliers ne sont pas dans le périmètre (défense pénale, recours, voisinage)"
       },
       {
-        "article": "4.1.3.1",
-        "texte": "En ce qui concerne l’environnement, la Compagnie ne couvre pas les dommages subis par l’Assuré",
-        "pourquoi": "rare ; le vocabulaire ne distingue pas l'environnement"
-      },
-      {
         "article": "4.1.3.4",
         "texte": "La Compagnie accorde sa garantie lorsqu’il résulte des renseignements obtenus que le tiers considéré comme responsable est insolvable",
-        "pourquoi": "le vocabulaire ne distingue pas l'insolvabilité du tiers"
+        "pourquoi": "une extension de la garantie, pas un refus"
       }
     ]
   },
   "controles": [
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (4.1.3.1) : rare ; le vocabulaire ne distingue pas les animaux non domestiques"
-    },
     {
       "gravite": "info",
       "controle": "couverture",
@@ -118,12 +155,7 @@
     {
       "gravite": "info",
       "controle": "couverture",
-      "message": "hors décision (4.1.3.1) : rare ; le vocabulaire ne distingue pas l'environnement"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (4.1.3.4) : le vocabulaire ne distingue pas l'insolvabilité du tiers"
+      "message": "hors décision (4.1.3.4) : une extension de la garantie, pas un refus"
     }
   ]
 }

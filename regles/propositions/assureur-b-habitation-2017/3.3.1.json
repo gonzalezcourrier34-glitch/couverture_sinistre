@@ -15,14 +15,18 @@
         "les précisions du véhicule (caravane close, toit non rigide, coffre) : hors décision, citées ; le vocabulaire ne les distingue pas",
         "le bagage enregistré : une voie possible seulement quand l'objet n'était ni chez l'assuré ni dans un local ou un véhicule ; sinon un vélo volé dans un hall restait « à préciser » faute de savoir s'il était en soute",
         "le bris accidentel reste sur l'événement « bris », comme pour le matériel multimédia (3.1.7). Essai fait puis retiré : l'ouvrir à « accident » déclare cet événement traduit chez B, et la garantie « heurt » (3.1.1.2) couvre alors un vase tombé ; tant que cette garantie n'est pas reprise, un objet cassé lu « accident » reste à examiner par un gestionnaire",
-        "la plainte et le lieu : une seule circonstance (« plainte déposée, et l'une de ces situations »). Séparées, seule la plainte était demandée pour un vélo volé dans un hall ; en obligation, un vol sans plainte n'était plus refusé"
+        "la plainte et le lieu : une seule circonstance (« plainte déposée, et l'une de ces situations »). Séparées, seule la plainte était demandée pour un vélo volé dans un hall ; en obligation, un vol sans plainte n'était plus refusé",
+        "les précisions du véhicule deviennent des règles : portes et vitres non fermées, habitacle d'un véhicule à toit souple",
+        "24 nov. : « accident » déclaré traduit chez B. Le périmètre reste l'événement « bris », que le vocabulaire donne pour parent à « accident » : un objet tombé y entre déjà. Écrit « bris ou accident », le périmètre devenait incertain pour un heurt",
+        "24 nov. : l'option devient une question (« avez-vous souscrit l'option… ? »), et non une réserve. Le contrat range cette garantie sous un titre « Option » : sans savoir si elle est souscrite, répondre « couvert » serait trop dire. Les garanties de base (3.1), « applicables si les conditions particulières les mentionnent », restent en réserve"
       ]
     }
   },
   "proposition": {
     "evenements": [
       "bris",
-      "vol"
+      "vol",
+      "accident"
     ],
     "definitions": [],
     "garanties": [
@@ -79,7 +83,18 @@
             ]
           }
         ],
-        "circonstances": [],
+        "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "option_dommages_biens",
+                "oui"
+              ]
+            },
+            "article": "3.3.1",
+            "texte": "la garantie “dommages aux biens” est accordée"
+          }
+        ],
         "obligations": [],
         "exclusions": [
           {
@@ -175,6 +190,16 @@
           }
         ],
         "circonstances": [
+          {
+            "condition": {
+              "f": [
+                "option_dommages_biens",
+                "oui"
+              ]
+            },
+            "article": "3.3.1",
+            "texte": "la garantie “dommages aux biens” est accordée"
+          },
           {
             "condition": {
               "et": [
@@ -450,6 +475,50 @@
             "a_demander": true,
             "article": "3.3.1.3",
             "texte": "les vols commis par ou avec la complicité de ou du : n Preneur d’assurance, son conjoint, leurs ascendants ou descendants ainsi que les conjoints de ces personnes ; n l’Assuré ; n toute personne au service de l’Assuré pendant les heures de service et, si ces vols ont été commis en dehors de celles-ci, autrement que par effraction ou avec violence"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "lieu",
+                    "vehicule"
+                  ]
+                },
+                {
+                  "f": [
+                    "vehicule_ferme_cle",
+                    "non"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.3.1.5",
+            "texte": "La garantie est acquise dans ce second cas si : n la caravane ou la remorque est entièrement close et construite en bois, métal ou plastique rigide et vitrage"
+          },
+          {
+            "condition": {
+              "et": [
+                {
+                  "f": [
+                    "lieu",
+                    "vehicule"
+                  ]
+                },
+                {
+                  "f": [
+                    "vehicule_toit_souple",
+                    "oui"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.3.1.5",
+            "texte": "Par contre, la garantie n’est pas acquise si les objets assurés se trouvent dans l’habitacle d’un véhicule équipé d’un toit non rigide"
           }
         ],
         "limites": []
@@ -595,18 +664,6 @@
         "a_demander": false,
         "article": "3.3.1.6",
         "texte": "les effets du contrat sont suspendus de plein droit pendant la durée de l’évacuation des locaux renfermant les biens garantis lorsque celle-ci est ordonnée par les Autorités ou nécessitée par des faits de guerre ou des troubles civils"
-      },
-      {
-        "condition": {
-          "f": [
-            "option_dommages_biens",
-            "non"
-          ]
-        },
-        "portee": "tout",
-        "a_demander": true,
-        "article": "3.3.1",
-        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “dommages aux biens” est accordée."
       }
     ],
     "vocabulaire_manquant": [
@@ -652,12 +709,12 @@
           "oui",
           "non"
         ],
-        "question": "Vos conditions particulières mentionnent-elles la garantie « dommages aux biens » ?",
+        "question": "Avez-vous souscrit l'option « dommages aux biens » (option Confort) ?",
         "aide": {
           "oui": "la garantie figure aux conditions particulières",
           "non": "elle n'y figure pas"
         },
-        "pourquoi": "garantie optionnelle : réserve tant que les conditions particulières ne sont pas lues",
+        "pourquoi": "une option : le contrat la range sous un titre « Option », elle se demande, comme les options responsabilité civile et protection juridique",
         "plus_proche": "aucune ; fait des conditions particulières"
       },
       {
@@ -779,6 +836,21 @@
         },
         "pourquoi": "3.3.1.6 : la garantie est suspendue pendant l'évacuation",
         "plus_proche": "cause_guerre : la cause du dommage, pas l'évacuation"
+      },
+      {
+        "variable": "vehicule_toit_souple",
+        "libelle": "Véhicule à toit non rigide",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Les objets étaient-ils dans l'habitacle d'un véhicule à toit souple ?",
+        "aide": {
+          "oui": "cabriolet à capote, véhicule bâché",
+          "non": "véhicule à toit rigide, ou objets dans le coffre fermé à clé"
+        },
+        "pourquoi": "3.3.1.5",
+        "plus_proche": "aucune"
       }
     ],
     "non_traduit": [],
@@ -822,16 +894,6 @@
         "article": "3.3.1.4",
         "texte": "3.3.1.4.1 Pour les instruments de musique et matériels utilisés dans le cadre d’une activité sportive, de la chasse ou de la pêche, l’indemnisation se fait par le paiement des frais nécessaires pour leur réparation ou leur remplacement",
         "pourquoi": "procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
-      },
-      {
-        "article": "3.3.1.5",
-        "texte": "La garantie est acquise dans ce second cas si : n la caravane ou la remorque est entièrement close et construite en bois, métal ou plastique rigide et vitrage",
-        "pourquoi": "précisions de la condition du véhicule (caravane close, portes bloquées, toit rigide, coffre) que le vocabulaire ne distingue pas ; l'heure, le vol du véhicule et l'effraction sont lus"
-      },
-      {
-        "article": "3.3.1.5",
-        "texte": "Par contre, la garantie n’est pas acquise si les objets assurés se trouvent dans l’habitacle d’un véhicule équipé d’un toit non rigide",
-        "pourquoi": "précisions de la condition du véhicule (caravane close, portes bloquées, toit rigide, coffre) que le vocabulaire ne distingue pas ; l'heure, le vol du véhicule et l'effraction sont lus"
       },
       {
         "article": "3.3.1.7",
@@ -894,16 +956,6 @@
     {
       "gravite": "info",
       "controle": "couverture",
-      "message": "hors décision (3.3.1.5) : précisions de la condition du véhicule (caravane close, portes bloquées, toit rigide, coffre) que le vocabulaire ne distingue pas ; l'heure, le vol du véhicule et l'effraction sont lus"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (3.3.1.5) : précisions de la condition du véhicule (caravane close, portes bloquées, toit rigide, coffre) que le vocabulaire ne distingue pas ; l'heure, le vol du véhicule et l'effraction sont lus"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
       "message": "hors décision (3.3.1.7) : procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
     },
     {
@@ -915,11 +967,6 @@
       "gravite": "info",
       "controle": "couverture",
       "message": "hors décision (3.3.1.9) : procédure après le sinistre ou calcul de l'indemnité : sans effet sur la question de couverture"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "non-régression",
-      "message": "b-v03 : INCERTAIN → NON_COUVERT avec les nouvelles règles"
     }
   ]
 }

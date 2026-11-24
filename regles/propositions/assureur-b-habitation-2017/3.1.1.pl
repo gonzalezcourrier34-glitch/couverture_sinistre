@@ -33,6 +33,8 @@ perimetre(heurt, f(evenement, heurt)).
 perimetre(heurt, concept(batiment_designe)).
 exclusion(heurt, ou([f(auteur, assure), f(bien, animal)]), tout, oui, '3.1.1.2',
     "les dégâts causés au contenu par un Assuré ou par un animal lui appartenant ou lui ayant été confié").
+exclusion(heurt, f(evenement, accident), tout, non, '3.1.1.2',
+    "les dégâts causés au contenu par un Assuré ou par un animal lui appartenant ou lui ayant été confié").
 exclusion(heurt, et([f(bien, element_batiment), f(demenagement, oui)]), tout, non, '3.1.1.2',
     "les dégâts causés au bâtiment désigné en cas de déménagement du mobilier").
 exclusion(heurt, f(bien_a_l_origine_sinistre, oui), tout, oui, '3.1.1.2',

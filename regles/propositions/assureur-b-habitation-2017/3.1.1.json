@@ -17,7 +17,8 @@
         "occupation régulière, choc entre corps durs, déménagement : des faits que l'assureur établit, pas des questions à chaque sinistre",
         "attentat : « auteur = tiers » retiré du périmètre (inconnu, il faisait demander qui sont les terroristes)",
         "3.1.1.1.6 : contact direct avec un foyer ou une substance incandescente (contact_incandescent) ; un tel dégât n'a pas à être un incendie au sens de 3.1.1.1.1 (7.83)",
-        "décongélation : l'événement (incendie, explosion, foudre, électricité) au périmètre, plus en circonstance"
+        "décongélation : l'événement (incendie, explosion, foudre, électricité) au périmètre, plus en circonstance",
+        "24 nov. : une exclusion de plus sur le heurt, pour l'événement « accident », qui est par définition une casse due à l'assuré ou à un proche (« les dégâts causés au contenu par un Assuré »). Écrite à part et non demandée : jointe à l'exclusion existante, elle rendait incertain un heurt causé par un tiers. Sans elle, déclarer « accident » traduit chez B faisait couvrir un vase tombé"
       ]
     }
   },
@@ -342,6 +343,18 @@
             },
             "portee": "tout",
             "a_demander": true,
+            "article": "3.1.1.2",
+            "texte": "les dégâts causés au contenu par un Assuré ou par un animal lui appartenant ou lui ayant été confié"
+          },
+          {
+            "condition": {
+              "f": [
+                "evenement",
+                "accident"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
             "article": "3.1.1.2",
             "texte": "les dégâts causés au contenu par un Assuré ou par un animal lui appartenant ou lui ayant été confié"
           },

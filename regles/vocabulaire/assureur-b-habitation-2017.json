@@ -1,13 +1,266 @@
 {
   "_description": "Variables que seules les règles de ce contrat emploient (regles/assureur-b-habitation-2017.pl). Même format que commun.json. Rangé par `couverture regles --ranger` : une variable qu'un autre contrat se met à employer passe dans commun.json.",
   "variables": {
-    "option_dommages_biens": {
-      "libelle": "Garantie « dommages aux biens » souscrite",
+    "option_rc_chasse": {
+      "libelle": "Garantie « responsabilité civile chasse » souscrite",
+      "source": "conditions_particulieres",
       "valeurs": [
         "oui",
         "non"
       ],
-      "question": "Vos conditions particulières mentionnent-elles la garantie « dommages aux biens » ?",
+      "question": "Avez-vous souscrit l'option « responsabilité civile chasse » ?",
+      "aide": {
+        "oui": "la garantie figure aux conditions particulières",
+        "non": "elle n'y figure pas"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "dommage_corporel_arme_chasse": {
+      "libelle": "Blessure par une arme de chasse",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La victime a-t-elle été blessée par une arme de chasse, pendant la chasse ?",
+      "aide": {
+        "oui": "une blessure par balle ou par plomb, pendant la chasse",
+        "non": "un dommage matériel, ou une autre cause"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "produit_apres_livraison": {
+      "libelle": "Produit livré",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage a-t-il été causé par un produit ou une marchandise après sa livraison ?",
+      "aide": {
+        "oui": "du gibier vendu ou donné, un produit livré",
+        "non": "rien de tel"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "produit_toxique_non_autorise": {
+      "libelle": "Produit toxique non autorisé",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage vient-il d'un produit toxique employé sans autorisation préalable des autorités ?",
+      "aide": {
+        "oui": "poison ou produit employé sans autorisation",
+        "non": "aucun produit toxique, ou emploi autorisé"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "degat_gibier_cultures": {
+      "libelle": "Dégâts du gibier aux cultures",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "S'agit-il de dégâts causés par le gibier à des cultures ou des plantations ?",
+      "aide": {
+        "oui": "des sangliers ou du gibier ont abîmé un champ, des plantations",
+        "non": "un autre dommage"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "abri_chasse_en_cause": {
+      "libelle": "Bâtiment ou abri de chasse en cause",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage vient-il d'un bâtiment ou d'un abri de chasse que vous possédez, louez ou occupez ?",
+      "aide": {
+        "oui": "un pavillon, une cabane, un abri de chasse",
+        "non": "rien de tel ; un mirador n'est pas un abri"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "vehicule_toit_souple": {
+      "libelle": "Véhicule à toit non rigide",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Les objets étaient-ils dans l'habitacle d'un véhicule à toit souple ?",
+      "aide": {
+        "oui": "cabriolet à capote, véhicule bâché",
+        "non": "véhicule à toit rigide, ou objets dans le coffre fermé à clé"
+      },
+      "pour": [
+        "vol"
+      ],
+      "seulement_si": {
+        "lieu": [
+          "vehicule"
+        ]
+      }
+    },
+    "litige_environnement": {
+      "libelle": "Litige d'environnement",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le litige porte-t-il sur une atteinte à l'environnement (pollution, nuisance) ?",
+      "aide": {
+        "oui": "pollution du sol, de l'eau ou de l'air, nuisances",
+        "non": "un autre litige"
+      },
+      "pour": [
+        "litige"
+      ]
+    },
+    "terrain_plus_1_hectare": {
+      "libelle": "Terrain de plus d'un hectare",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le terrain attenant au bâtiment dépasse-t-il un hectare ?",
+      "aide": {
+        "oui": "plus d'un hectare",
+        "non": "un hectare ou moins"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "terrain_non_attenant": {
+      "libelle": "Terrain non attenant",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage vient-il d'un terrain qui ne touche pas le bâtiment assuré ?",
+      "aide": {
+        "oui": "un autre terrain, séparé du bâtiment",
+        "non": "le terrain du bâtiment, ou pas de terrain en cause"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "sport_aerien": {
+      "libelle": "Sport aérien",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage a-t-il été causé en pratiquant un sport aérien ?",
+      "aide": {
+        "oui": "parapente, deltaplane, parachutisme, ULM, planeur",
+        "non": "un autre sport ou aucune activité aérienne"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "concours_hippique": {
+      "libelle": "Concours hippique",
+      "valeurs": [
+        "hors_calendrier_officiel",
+        "calendrier_officiel",
+        "non"
+      ],
+      "question": "Le dommage est-il survenu pendant un concours hippique ?",
+      "libelles": {
+        "hors_calendrier_officiel": "concours non officiel",
+        "calendrier_officiel": "concours inscrit à un calendrier officiel"
+      },
+      "aide": {
+        "hors_calendrier_officiel": "un concours ou une course qui n'est pas inscrit au calendrier d'une fédération officielle européenne",
+        "calendrier_officiel": "un concours inscrit au calendrier d'une fédération officielle d'un pays européen",
+        "non": "pas de concours hippique"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "pari_ou_defi": {
+      "libelle": "Pari ou défi",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage vient-il d'un pari ou d'un défi ?",
+      "aide": {
+        "oui": "un pari, un défi lancé ou relevé",
+        "non": "rien de tel"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "aide_benevole_accident_travail": {
+      "libelle": "Aide bénévole relevant des accidents du travail",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "La victime vous apportait-elle une aide gratuite, et son dommage relève-t-il de la législation sur les accidents du travail ?",
+      "aide": {
+        "oui": "une personne venue aider gratuitement, indemnisée au titre des accidents du travail",
+        "non": "une autre victime"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "piece_eau_autre_adresse": {
+      "libelle": "Pièce d'eau hors de la résidence principale",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage vient-il d'un étang ou d'une pièce d'eau situé ailleurs qu'à la résidence principale ?",
+      "aide": {
+        "oui": "un étang, une mare sur un autre terrain",
+        "non": "non, ou à la résidence principale"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "glissement_terrain": {
+      "libelle": "Glissement ou tassement de terrain",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le dommage est-il lié à un glissement, un affaissement ou un tassement de terrain ?",
+      "aide": {
+        "oui": "le terrain a glissé, s'est affaissé ou tassé",
+        "non": "aucun mouvement de terrain"
+      },
+      "pour": [
+        "responsabilite"
+      ]
+    },
+    "option_dommages_biens": {
+      "libelle": "Garantie « dommages aux biens » souscrite",
+      "source": "conditions_particulieres",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Avez-vous souscrit l'option « dommages aux biens » (option Confort) ?",
       "aide": {
         "oui": "la garantie figure aux conditions particulières",
         "non": "elle n'y figure pas"
@@ -145,6 +398,7 @@
     },
     "option_pj_immeuble": {
       "libelle": "Garantie « protection juridique immeuble » souscrite",
+      "source": "conditions_particulieres",
       "valeurs": [
         "oui",
         "non"

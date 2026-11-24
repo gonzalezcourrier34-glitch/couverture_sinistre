@@ -36,6 +36,8 @@ COPY regles/moteur.pl ./regles/
 COPY regles/assureur-*.pl ./regles/
 COPY regles/vocabulaire ./regles/vocabulaire
 COPY regles/formules ./regles/formules
+# L'état de traduction de chaque jeu de conditions (contour vert ou orange à l'écran, 7.169).
+COPY regles/traduction.json ./regles/
 # Installation « éditable » : le code cherche regles/ et config/ à côté de src/, donc dans /app.
 RUN pip install --no-cache-dir -e .
 COPY data/lecture ./data/lecture

@@ -9,7 +9,8 @@
       "date": "2026-11-20",
       "modifications": [
         "l'option en circonstance ; le bâtiment et le terrain : `origine_rc = immeuble` ; le tiers, les biens confiés, la profession",
-        "les vingt-six variables proposées (soudain, imprévu, conjoint cohabitant, superficie…) : aucune retenue"
+        "les vingt-six variables proposées (soudain, imprévu, conjoint cohabitant, superficie…) : aucune retenue",
+        "24 nov. : quatre exclusions jusque-là classées « rares » deviennent des règles (ascenseur non conforme, terrain de plus d'un hectare, amiante, terrain non attenant)"
       ]
     }
   },
@@ -97,6 +98,54 @@
             "a_demander": false,
             "article": "3.1.10.3",
             "texte": "par le fait de l’exercice d’une profession"
+          },
+          {
+            "condition": {
+              "f": [
+                "ascenseur_non_conforme",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.1.10.1",
+            "texte": "d ’ascenseurs et d’appareils élévateurs à moteur du bâtiment désigné pour autant qu’ils soient conformes à la réglementation en vigueur et fassent l’objet d’un entretien annuel"
+          },
+          {
+            "condition": {
+              "f": [
+                "terrain_plus_1_hectare",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.1.10.1",
+            "texte": "d es terrains y attenant pour autant qu’ils ne dépassent pas un hectare"
+          },
+          {
+            "condition": {
+              "f": [
+                "cause_amiante",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.1.10.3",
+            "texte": "par la présence ou la dispersion d’amiante, de fibres d’amiante ou de produits contenant de l’amiante"
+          },
+          {
+            "condition": {
+              "f": [
+                "terrain_non_attenant",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.1.10.3",
+            "texte": "par le fait des terrains non attenant dont l’Assuré est propriétaire"
           }
         ],
         "limites": [
@@ -129,6 +178,36 @@
           "non": "elle ne l'est pas"
         },
         "plus_proche": "aucune"
+      },
+      {
+        "variable": "terrain_plus_1_hectare",
+        "libelle": "Terrain de plus d'un hectare",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le terrain attenant au bâtiment dépasse-t-il un hectare ?",
+        "aide": {
+          "oui": "plus d'un hectare",
+          "non": "un hectare ou moins"
+        },
+        "pourquoi": "3.1.10.1",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "terrain_non_attenant",
+        "libelle": "Terrain non attenant",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le dommage vient-il d'un terrain qui ne touche pas le bâtiment assuré ?",
+        "aide": {
+          "oui": "un autre terrain, séparé du bâtiment",
+          "non": "le terrain du bâtiment, ou pas de terrain en cause"
+        },
+        "pourquoi": "3.1.10.3.5",
+        "plus_proche": "aucune"
       }
     ],
     "non_traduit": [],
@@ -139,29 +218,9 @@
         "pourquoi": "lu par l'option : sans elle, la garantie ne joue pas"
       },
       {
-        "article": "3.1.10.1",
-        "texte": "d ’ascenseurs et d’appareils élévateurs à moteur du bâtiment désigné pour autant qu’ils soient conformes à la réglementation en vigueur et fassent l’objet d’un entretien annuel",
-        "pourquoi": "lu comme le bâtiment ; la conformité : rare, le vocabulaire ne la distingue pas"
-      },
-      {
-        "article": "3.1.10.1",
-        "texte": "d es terrains y attenant pour autant qu’ils ne dépassent pas un hectare",
-        "pourquoi": "la superficie du terrain : rare ; le vocabulaire ne la distingue pas"
-      },
-      {
         "article": "3.1.10.3",
         "texte": "aux biens par le feu, la fumée, l’eau, l’explosion, l’implosion, le déplacement du sol ou du bâtiment",
         "pourquoi": "hors du périmètre : la garantie ne vise que le bâtiment ou le terrain lui-même (`origine_rc = immeuble`)"
-      },
-      {
-        "article": "3.1.10.3",
-        "texte": "par la présence ou la dispersion d’amiante, de fibres d’amiante ou de produits contenant de l’amiante",
-        "pourquoi": "rare ; le vocabulaire ne distingue pas l'amiante"
-      },
-      {
-        "article": "3.1.10.3",
-        "texte": "par le fait des terrains non attenant dont l’Assuré est propriétaire",
-        "pourquoi": "rare ; le vocabulaire ne distingue pas les terrains non attenants"
       }
     ]
   },
@@ -174,27 +233,7 @@
     {
       "gravite": "info",
       "controle": "couverture",
-      "message": "hors décision (3.1.10.1) : lu comme le bâtiment ; la conformité : rare, le vocabulaire ne la distingue pas"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (3.1.10.1) : la superficie du terrain : rare ; le vocabulaire ne la distingue pas"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
       "message": "hors décision (3.1.10.3) : hors du périmètre : la garantie ne vise que le bâtiment ou le terrain lui-même (`origine_rc = immeuble`)"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (3.1.10.3) : rare ; le vocabulaire ne distingue pas l'amiante"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (3.1.10.3) : rare ; le vocabulaire ne distingue pas les terrains non attenants"
     }
   ]
 }

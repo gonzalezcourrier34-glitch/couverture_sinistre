@@ -1,9 +1,20 @@
 {
   "meta": {
     "article": "4.1.2",
-    "modele": "mistral:mistral-large-4-0",
+    "modele": "mistral:mistral-large-4-0 (proposition écartée)",
     "date": "2026-11-24",
-    "consigne": "redaction-regles v13"
+    "consigne": "redaction-regles v13",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-24",
+      "modifications": [
+        "réécrite à la main : une garantie de responsabilité civile, quand le dommage est causé en chassant (pratique_chasse, le fait déjà lu pour l'exclusion de la chasse ailleurs)",
+        "les dix-huit faits proposés ramenés à six ; les douze « détails de l'activité de chasse » décrivaient ce que la garantie couvre, sans changer une décision",
+        "les proches : exclus, sauf blessure par une arme de chasse (4.1.2.4.2)",
+        "limite connue : l'Albanie, la Turquie et les pays de l'ex-URSS, exclus par 4.1.2.5, ne sont pas distingués par le vocabulaire des pays ; seule « hors d'Europe » est lue",
+        "24 nov. : l'option devient une question (« avez-vous souscrit l'option… ? »), et non une réserve. Le contrat range cette garantie sous un titre « Option » : sans savoir si elle est souscrite, répondre « couvert » serait trop dire. Les garanties de base (3.1), « applicables si les conditions particulières les mentionnent », restent en réserve"
+      ]
+    }
   },
   "proposition": {
     "evenements": [
@@ -13,9 +24,9 @@
     "garanties": [
       {
         "id": "rc_chasse",
-        "nom": "Responsabilité civile chasse",
-        "article": "4.1.2",
-        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ responsabilité civile chasse ” est accordée.",
+        "nom": "Responsabilité civile chasse (option)",
+        "article": "4.1.2.1",
+        "texte": "la Compagnie assure le Preneur d’assurance contre les conséquences pécuniaires de la responsabilité civile qu’il peut encourir aux termes des articles 1382 à 1384 du Code Civil ou par application de l’article 136 du Code de la Sécurité Sociale, à raison de dégâts corporels et matériels causés à des tiers par maladresse ou imprudence",
         "perimetre": [
           {
             "f": [
@@ -25,141 +36,21 @@
           },
           {
             "f": [
-              "origine_rc",
-              "chasse_sport"
+              "pratique_chasse",
+              "oui"
             ]
-          },
-          {
-            "f": [
-              "victime",
-              "tiers"
-            ]
-          },
-          {
-            "ou": [
-              {
-                "f": [
-                  "dommage_tiers",
-                  "corporel"
-                ]
-              },
-              {
-                "f": [
-                  "dommage_tiers",
-                  "materiel"
-                ]
-              }
-            ]
-          },
-          {
-            "non": {
-              "f": [
-                "pays",
-                "hors_europe"
-              ]
-            }
           }
         ],
         "circonstances": [
           {
             "condition": {
-              "ou": [
-                {
-                  "f": [
-                    "detail_rc_chasse",
-                    "acte_chasse"
-                  ]
-                },
-                {
-                  "f": [
-                    "detail_rc_chasse",
-                    "arme_chasse"
-                  ]
-                },
-                {
-                  "f": [
-                    "detail_rc_chasse",
-                    "organisateur_chasse"
-                  ]
-                },
-                {
-                  "f": [
-                    "detail_rc_chasse",
-                    "materiel_chasse"
-                  ]
-                },
-                {
-                  "f": [
-                    "detail_rc_chasse",
-                    "chiens_chasse"
-                  ]
-                },
-                {
-                  "f": [
-                    "detail_rc_chasse",
-                    "personnel_chasse"
-                  ]
-                },
-                {
-                  "f": [
-                    "detail_rc_chasse",
-                    "feu_explosion_terrain"
-                  ]
-                },
-                {
-                  "f": [
-                    "detail_rc_chasse",
-                    "produits_toxiques_autorises"
-                  ]
-                },
-                {
-                  "f": [
-                    "detail_rc_chasse",
-                    "proprietaire_chien_1385"
-                  ]
-                },
-                {
-                  "f": [
-                    "detail_rc_chasse",
-                    "arme_competition"
-                  ]
-                },
-                {
-                  "f": [
-                    "detail_rc_chasse",
-                    "personnel_rc_perso"
-                  ]
-                }
+              "f": [
+                "option_rc_chasse",
+                "oui"
               ]
             },
-            "article": "4.1.2.1",
-            "texte": "Sont couverts plus particulièrement, les dommages causés à des tiers à raison des accidents occasionnés : 4.1.2.1.1 par un acte de chasse ; 4.1.2.1.2 par une arme de chasse ou de destruction au cours et à l’occasion de la chasse depuis le moment où l’Assuré a quitté sa résidence pour se rendre sur les lieux de chasse jusqu’à son retour, ainsi qu’à l’occasion de son nettoyage à domicile ; 4.1.2.1.3 comme organisateur de parties de chasse à raison de dommages causés par les invités ou autres personnes pour lesquelles il serait reconnu civilement responsable, étant précisé que la responsabilité civile de ces personnes reste toutefois exclue de la garantie. 4.1.2.1.4 comme propriétaire, détenteur ou usager de matériel de chasse y compris les miradors de chasse ; 4.1.2.1.5 comme propriétaire et détenteurs de chiens de chasse ; 4.1.2.1.6 par le personnel de chasse dans l’exercice de ses fonctions pour compte du Preneur d’assurance à l’occasion de la chasse et des activités y relatives ; 4.1.2.1.7 par le feu ou les explosions ayant pris naissance sur le terrain de chasse à l’occasion de la chasse et des activités y relatives ; 4.1.2.1.8 par l’emploi de produits toxiques autorisé préalablement par les autorités compétentes."
-          },
-          {
-            "condition": {
-              "ou": [
-                {
-                  "f": [
-                    "detail_rc_chasse",
-                    "proprietaire_chien_1385"
-                  ]
-                },
-                {
-                  "f": [
-                    "detail_rc_chasse",
-                    "arme_competition"
-                  ]
-                },
-                {
-                  "f": [
-                    "detail_rc_chasse",
-                    "personnel_rc_perso"
-                  ]
-                }
-              ]
-            },
-            "article": "4.1.2.3",
-            "texte": "En plus des risques visés au point 4.1.2.1 ci-dessus, la Compagnie garantit également sans surprime : 4.1.2.3.1 la responsabilité civile du Preneur d’assurance encourue en vertu de l’article 1385 du code Civil en sa qualité de propriétaire ou gardien de chiens de chasse ; 4.1.2.3.2 la responsabilité civile du Preneur d’assurance en sa qualité de propriétaire, détenteur ou usager d’armes, à l’occasion de compétitions sportives de chasse et de concours ou exercices de tir non militaires dans un cadre réglementé et autorisé par les lois et règlements en vigueur ; 4.1.2.3.3 la responsabilité civile personnelle que peut encourir le personnel de chasse à l’égard de tiers dans l’exercice de ses fonctions pour compte du Preneur d’assurance à l’occasion de la chasse et des activités y relatives. Toutefois, la responsabilité civile du personnel de chasse comme tireur ou chasseur à l’aide d’armes à feu reste exclue de la garantie."
+            "article": "4.1.2",
+            "texte": "la garantie “ responsabilité civile chasse ” est accordée"
           }
         ],
         "obligations": [],
@@ -172,77 +63,43 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "4.1.2.4",
-            "texte": "le Preneur d’assurance et tous ceux dont la responsabilité civile est couverte par le présent contrat, étant précisé que le rabatteur non salarié ayant subi un dommage corporel est indemnisé"
+            "texte": "4.1.2.4.1 le Preneur d’assurance et tous ceux dont la responsabilité civile est couverte par le présent contrat"
           },
           {
             "condition": {
               "et": [
                 {
-                  "f": [
-                    "victime",
-                    "conjoint"
+                  "ou": [
+                    {
+                      "f": [
+                        "victime",
+                        "conjoint"
+                      ]
+                    },
+                    {
+                      "f": [
+                        "victime",
+                        "famille"
+                      ]
+                    }
                   ]
                 },
                 {
                   "non": {
-                    "et": [
-                      {
-                        "f": [
-                          "dommage_tiers",
-                          "corporel"
-                        ]
-                      },
-                      {
-                        "f": [
-                          "detail_rc_chasse",
-                          "arme_chasse"
-                        ]
-                      }
+                    "f": [
+                      "dommage_corporel_arme_chasse",
+                      "oui"
                     ]
                   }
                 }
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "4.1.2.4",
-            "texte": "le conjoint des personnes visées à l’alinéa qui précède, non séparé de corps ou de fait, les partenaires au sens de la loi modifiée du 9 juillet 2004 relative aux effets légaux de certains partenariats de ces mêmes personnes ainsi que les parents ou alliés en ligne directe des mêmes personnes, à la condition qu’ils habitent sous leur toit et soient entretenus de leurs deniers, étant précisé que sont cependant indemnisés les dommages corporels causés par un accident résultant, lors de l’activité de chasse, d’une arme de chasse"
-          },
-          {
-            "condition": {
-              "et": [
-                {
-                  "f": [
-                    "victime",
-                    "famille"
-                  ]
-                },
-                {
-                  "non": {
-                    "et": [
-                      {
-                        "f": [
-                          "dommage_tiers",
-                          "corporel"
-                        ]
-                      },
-                      {
-                        "f": [
-                          "detail_rc_chasse",
-                          "arme_chasse"
-                        ]
-                      }
-                    ]
-                  }
-                }
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "4.1.2.4",
-            "texte": "le conjoint des personnes visées à l’alinéa qui précède, non séparé de corps ou de fait, les partenaires au sens de la loi modifiée du 9 juillet 2004 relative aux effets légaux de certains partenariats de ces mêmes personnes ainsi que les parents ou alliés en ligne directe des mêmes personnes, à la condition qu’ils habitent sous leur toit et soient entretenus de leurs deniers, étant précisé que sont cependant indemnisés les dommages corporels causés par un accident résultant, lors de l’activité de chasse, d’une arme de chasse"
+            "texte": "4.1.2.4.2 le conjoint des personnes visées à l’alinéa qui précède, non séparé de corps ou de fait, les partenaires au sens de la loi modifiée du 9 juillet 2004 relative aux effets légaux de certains partenariats de ces mêmes personnes ainsi que les parents ou alliés en ligne directe des mêmes personnes, à la condition qu’ils habitent sous leur toit et soient entretenus de leurs deniers, étant précisé que sont cependant indemnisés les dommages corporels causés par un accident résultant, lors de l’activité de chasse, d’une arme de chasse"
           },
           {
             "condition": {
@@ -252,21 +109,9 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "4.1.2.4",
-            "texte": "les personnes bénéficiant de lois spéciales sur la réparation des dommages résultant d’accidents de travail, sauf dans la mesure où ces personnes conservent une action en responsabilité civile contre l’Assuré"
-          },
-          {
-            "condition": {
-              "f": [
-                "detail_rc_chasse",
-                "personnel_rc_perso_tireur"
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "4.1.2.3",
-            "texte": "Toutefois, la responsabilité civile du personnel de chasse comme tireur ou chasseur à l’aide d’armes à feu reste exclue de la garantie"
+            "texte": "4.1.2.4.3 les personnes bénéficiant de lois spéciales sur la réparation des dommages résultant d’accidents de travail"
           },
           {
             "condition": {
@@ -276,9 +121,9 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "4.1.2.7",
-            "texte": "les dommages causés par des produits ou marchandises après leur livraison"
+            "texte": "4.1.2.7.1 les dommages causés par des produits ou marchandises après leur livraison"
           },
           {
             "condition": {
@@ -288,9 +133,9 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "4.1.2.7",
-            "texte": "les dommages causés par l’emploi de produits toxiques non autorisé préalablement par les autorités compétentes"
+            "texte": "4.1.2.7.2 les dommages causés par l’emploi de produits toxiques non autorisé préalablement par les autorités compétentes"
           },
           {
             "condition": {
@@ -300,45 +145,33 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "4.1.2.7",
-            "texte": "les dégâts causés par le gibier aux cultures et plantations"
+            "texte": "4.1.2.7.3 les dégâts causés par le gibier aux cultures et plantations"
           },
           {
             "condition": {
               "f": [
-                "proprietaire_abri_chasse",
+                "abri_chasse_en_cause",
                 "oui"
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "4.1.2.7",
-            "texte": "la responsabilité civile du Preneur d’assurance comme propriétaire, locataire ou occupant à quelque titre que ce soit, de bâtiments et abris de chasse fixes ou mobiles, sauf convention contraire. En cas de convention contraire, restent toujours exclus les dégâts matériels causés par le feu ou les explosions, si ces événements ont pris naissance dans le bâtiment ou l’abri de chasse"
+            "texte": "4.1.2.7.4 la responsabilité civile du Preneur d’assurance comme propriétaire, locataire ou occupant à quelque titre que ce soit, de bâtiments et abris de chasse fixes ou mobiles, sauf convention contraire"
           },
           {
             "condition": {
               "f": [
-                "feu_explosion_abri_chasse",
-                "oui"
+                "origine_rc",
+                "vehicule_moteur"
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "4.1.2.7",
-            "texte": "En cas de convention contraire, restent toujours exclus les dégâts matériels causés par le feu ou les explosions, si ces événements ont pris naissance dans le bâtiment ou l’abri de chasse"
-          },
-          {
-            "condition": {
-              "f": [
-                "vehicule_moteur_implique",
-                "oui"
-              ]
-            },
-            "portee": "tout",
-            "a_demander": true,
-            "article": "4.1.2.7",
-            "texte": "la responsabilité découlant de la propriété, de la garde ou de l’usage d’un véhicule à moteur de toute catégorie"
+            "texte": "4.1.2.7.5 la responsabilité découlant de la propriété, de la garde ou de l’usage d’un véhicule à moteur de toute catégorie"
           },
           {
             "condition": {
@@ -348,337 +181,195 @@
               ]
             },
             "portee": "tout",
-            "a_demander": true,
+            "a_demander": false,
             "article": "4.1.2.7",
-            "texte": "les dommages causés aux objets ou animaux confiés au Preneur d’assurance ou Assuré à quelque titre que ce soit"
+            "texte": "4.1.2.7.6 les dommages causés aux objets ou animaux confiés au Preneur d’assurance ou Assuré à quelque titre que ce soit"
+          },
+          {
+            "condition": {
+              "f": [
+                "pays",
+                "hors_europe"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.1.2.5",
+            "texte": "L’assurance est valable en Europe à l’exception des pays suivants : Albanie, Turquie et tous les pays de l’ex-URSS et de l’ex-Yougoslavie non intégrés à l’Union Européenne"
           }
         ],
         "limites": [
           {
             "article": "4.1.2.2",
-            "texte": "Le montant de la garantie de la Compagnie, pour chaque sinistre, a pour limite en principal, intérêts et frais : n 12.000.000 f par sinistre au titre des dommages corporels ; n 250.000 f par sinistre au titre des dommages matériels et des dommages immatériels. S’il y a plusieurs lésés et si la totalité des indemnités dues excède la garantie, les droits des lésés contre la Compagnie sont réduits proportionnellement jusqu’à concurrence de la garantie.",
-            "montant": "12000000 corporel / 250000 materiel"
+            "texte": "12.000.000 f par sinistre au titre des dommages corporels",
+            "montant": "12000000"
+          },
+          {
+            "article": "4.1.2.2",
+            "texte": "250.000 f par sinistre au titre des dommages matériels et des dommages immatériels",
+            "montant": "250000"
           }
         ]
       }
     ],
     "exclusions_communes": [],
-    "extensions": [],
     "vocabulaire_manquant": [
       {
-        "variable": "detail_rc_chasse",
+        "variable": "option_rc_chasse",
+        "libelle": "Garantie « responsabilité civile chasse » souscrite",
+        "source": "conditions_particulieres",
         "valeurs": [
-          "acte_chasse",
-          "arme_chasse",
-          "organisateur_chasse",
-          "materiel_chasse",
-          "chiens_chasse",
-          "personnel_chasse",
-          "feu_explosion_terrain",
-          "produits_toxiques_autorises",
-          "proprietaire_chien_1385",
-          "arme_competition",
-          "personnel_rc_perso",
-          "personnel_rc_perso_tireur"
+          "oui",
+          "non"
         ],
-        "libelle": "Détail de l'activité de chasse",
-        "question": "Quel est le détail précis de l'activité de chasse à l'origine du dommage ?",
-        "pourquoi": "Les clauses 4.1.2.1 et 4.1.2.3 énumèrent des risques couverts spécifiques qui doivent être distingués",
-        "plus_proche": "origine_rc : la valeur chasse_sport est trop générale et ne permet pas de distinguer les différents cas couverts ou exclus",
+        "question": "Avez-vous souscrit l'option « responsabilité civile chasse » ?",
         "aide": {
-          "acte_chasse": "l'accident est survenu lors d'un acte de chasse proprement dit",
-          "arme_chasse": "l'accident a été causé par une arme de chasse ou de destruction pendant la chasse ou son nettoyage",
-          "organisateur_chasse": "l'assuré organisait une partie de chasse et est responsable des dommages causés par les invités",
-          "materiel_chasse": "le dommage vient du matériel de chasse (y compris mirador)",
-          "chiens_chasse": "le dommage a été causé par un chien de chasse",
-          "personnel_chasse": "le dommage a été causé par le personnel de chasse dans l'exercice de ses fonctions",
-          "feu_explosion_terrain": "le dommage vient d'un feu ou d'une explosion sur le terrain de chasse",
-          "produits_toxiques_autorises": "le dommage vient de produits toxiques autorisés par les autorités",
-          "proprietaire_chien_1385": "responsabilité du propriétaire/gardien de chien de chasse (article 1385)",
-          "arme_competition": "l'accident est survenu lors d'une compétition sportive de chasse ou d'un concours de tir autorisé",
-          "personnel_rc_perso": "responsabilité civile personnelle du personnel de chasse envers des tiers",
-          "personnel_rc_perso_tireur": "le personnel de chasse agissait comme tireur ou chasseur à l'aide d'armes à feu"
-        }
+          "oui": "la garantie figure aux conditions particulières",
+          "non": "elle n'y figure pas"
+        },
+        "pourquoi": "une option : le contrat la range sous un titre « Option », elle se demande, comme les options responsabilité civile et protection juridique",
+        "plus_proche": "aucune ; fait des conditions particulières"
+      },
+      {
+        "variable": "dommage_corporel_arme_chasse",
+        "libelle": "Blessure par une arme de chasse",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La victime a-t-elle été blessée par une arme de chasse, pendant la chasse ?",
+        "aide": {
+          "oui": "une blessure par balle ou par plomb, pendant la chasse",
+          "non": "un dommage matériel, ou une autre cause"
+        },
+        "pourquoi": "4.1.2.4.2 : les proches ne sont indemnisés que dans ce cas",
+        "plus_proche": "aucune"
       },
       {
         "variable": "produit_apres_livraison",
+        "libelle": "Produit livré",
         "valeurs": [
           "oui",
           "non"
         ],
-        "libelle": "Produit après livraison",
         "question": "Le dommage a-t-il été causé par un produit ou une marchandise après sa livraison ?",
-        "pourquoi": "Exclusion 4.1.2.7.1",
-        "plus_proche": "aucune variable existante ne couvre cette notion",
         "aide": {
-          "oui": "le produit avait déjà été livré au client",
-          "non": "le produit n'avait pas encore été livré"
-        }
+          "oui": "du gibier vendu ou donné, un produit livré",
+          "non": "rien de tel"
+        },
+        "pourquoi": "4.1.2.7.1",
+        "plus_proche": "aucune"
       },
       {
         "variable": "produit_toxique_non_autorise",
+        "libelle": "Produit toxique non autorisé",
         "valeurs": [
           "oui",
           "non"
         ],
-        "libelle": "Produit toxique non autorisé",
-        "question": "Le dommage a-t-il été causé par un produit toxique non autorisé préalablement par les autorités compétentes ?",
-        "pourquoi": "Exclusion 4.1.2.7.2",
-        "plus_proche": "aucune variable existante ne couvre l'autorisation préalable des autorités pour les produits toxiques",
+        "question": "Le dommage vient-il d'un produit toxique employé sans autorisation préalable des autorités ?",
         "aide": {
-          "oui": "le produit toxique utilisé n'avait pas reçu d'autorisation préalable des autorités",
-          "non": "le produit toxique était autorisé ou il ne s'agissait pas d'un produit toxique"
-        }
+          "oui": "poison ou produit employé sans autorisation",
+          "non": "aucun produit toxique, ou emploi autorisé"
+        },
+        "pourquoi": "4.1.2.7.2",
+        "plus_proche": "aucune"
       },
       {
         "variable": "degat_gibier_cultures",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
         "libelle": "Dégâts du gibier aux cultures",
-        "question": "S'agit-il de dégâts causés par le gibier aux cultures et plantations ?",
-        "pourquoi": "Exclusion 4.1.2.7.3",
-        "plus_proche": "aucune variable existante ne distingue les dégâts causés par le gibier",
-        "aide": {
-          "oui": "les dégâts ont été causés par le gibier (sangliers, cerfs, etc.) aux cultures ou plantations",
-          "non": "les dégâts ne viennent pas du gibier"
-        }
-      },
-      {
-        "variable": "proprietaire_abri_chasse",
         "valeurs": [
           "oui",
           "non"
         ],
-        "libelle": "Propriétaire d'abri de chasse",
-        "question": "L'assuré est-il propriétaire, locataire ou occupant d'un bâtiment ou abri de chasse (fixe ou mobile) à l'origine du dommage ?",
-        "pourquoi": "Exclusion 4.1.2.7.4",
-        "plus_proche": "aucune variable existante ne couvre la qualité de propriétaire d'abri de chasse",
+        "question": "S'agit-il de dégâts causés par le gibier à des cultures ou des plantations ?",
         "aide": {
-          "oui": "l'assuré possède, loue ou occupe un bâtiment ou abri de chasse concerné par le sinistre",
-          "non": "l'assuré n'est pas propriétaire/locataire/occupant d'un abri de chasse"
-        }
+          "oui": "des sangliers ou du gibier ont abîmé un champ, des plantations",
+          "non": "un autre dommage"
+        },
+        "pourquoi": "4.1.2.7.3",
+        "plus_proche": "aucune"
       },
       {
-        "variable": "feu_explosion_abri_chasse",
+        "variable": "abri_chasse_en_cause",
+        "libelle": "Bâtiment ou abri de chasse en cause",
         "valeurs": [
           "oui",
           "non"
         ],
-        "libelle": "Feu ou explosion dans abri de chasse",
-        "question": "Les dégâts matériels viennent-ils d'un feu ou d'une explosion ayant pris naissance dans un bâtiment ou abri de chasse ?",
-        "pourquoi": "Exclusion 4.1.2.7.4 (même en cas de convention contraire)",
-        "plus_proche": "aucune variable existante ne localise le feu/explosion dans un abri de chasse",
+        "question": "Le dommage vient-il d'un bâtiment ou d'un abri de chasse que vous possédez, louez ou occupez ?",
         "aide": {
-          "oui": "le feu ou l'explosion a pris naissance dans le bâtiment ou l'abri de chasse",
-          "non": "le feu ou l'explosion ne vient pas d'un abri de chasse"
-        }
-      },
-      {
-        "variable": "vehicule_moteur_implique",
-        "valeurs": [
-          "oui",
-          "non"
-        ],
-        "libelle": "Véhicule à moteur impliqué",
-        "question": "La responsabilité découle-t-elle de la propriété, de la garde ou de l'usage d'un véhicule à moteur ?",
-        "pourquoi": "Exclusion 4.1.2.7.5",
-        "plus_proche": "origine_rc a vehicule_moteur mais le périmètre restreint déjà à chasse_sport, donc besoin d'une variable indiquant si un véhicule est impliqué dans la responsabilité chasse",
-        "aide": {
-          "oui": "le dommage découle de l'utilisation d'un véhicule à moteur (voiture, tracteur, etc.)",
-          "non": "aucun véhicule à moteur n'est impliqué dans la responsabilité"
-        }
+          "oui": "un pavillon, une cabane, un abri de chasse",
+          "non": "rien de tel ; un mirador n'est pas un abri"
+        },
+        "pourquoi": "4.1.2.7.4",
+        "plus_proche": "aucune"
       }
     ],
-    "non_traduit": [
+    "non_traduit": [],
+    "hors_decision": [
       {
-        "article": "4.1.2.5",
-        "texte": "L’assurance est valable en Europe à l’exception des pays suivants : Albanie, Turquie et tous les pays de l’ex-URSS et de l’ex-Yougoslavie non intégrés à l’Union Européenne.",
-        "pourquoi": "La variable pays ne contient pas les pays exclus (Albanie, Turquie, ex-URSS, ex-Yougoslavie non UE) ; la condition actuelle couvre l'Europe via les valeurs existantes mais ne peut exclure spécifiquement ces pays absents du vocabulaire"
+        "article": "4.1.2.2",
+        "texte": "S’il y a plusieurs lésés et si la totalité des indemnités dues excède la garantie, les droits des lésés contre la Compagnie sont réduits proportionnellement",
+        "pourquoi": "le partage de l'indemnité et les délais de réclamation : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.1.2.3",
+        "texte": "En plus des risques visés au point 4.1.2.1 ci-dessus, la Compagnie garantit également sans surprime",
+        "pourquoi": "des extensions de la garantie (chiens de chasse, concours de tir, personnel de chasse), pas des refus"
+      },
+      {
+        "article": "4.1.2.3",
+        "texte": "Toutefois, la responsabilité civile du personnel de chasse comme tireur ou chasseur à l’aide d’armes à feu reste exclue de la garantie",
+        "pourquoi": "la responsabilité personnelle d'un employé, pas celle du preneur qui déclare"
       },
       {
         "article": "4.1.2.6",
-        "texte": "Aucune déchéance n’est opposable aux victimes d’accidents ou leurs ayants droit sauf celle résultant de la suspension ou de l’annulation du contrat conformément à l’article 66 de la loi du 25 mai 2011 relative à la Chasse.",
-        "pourquoi": "Cette clause concerne l'inopposabilité des déchéances aux victimes, notion juridique non traduisible en condition logique simple sur les faits du sinistre"
+        "texte": "Aucune déchéance n’est opposable aux victimes d’accidents ou leurs ayants droit",
+        "pourquoi": "une règle de droit entre l'assureur et la victime : sans effet sur la question de couverture"
+      },
+      {
+        "article": "4.1.2.7",
+        "texte": "En cas de convention contraire, restent toujours exclus les dégâts matériels causés par le feu ou les explosions",
+        "pourquoi": "ne joue que si une convention particulière couvre les abris de chasse ; sans elle, l'exclusion 4.1.2.7.4 s'applique déjà"
       }
     ]
   },
   "controles": [
     {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "detail_rc_chasse = acte_chasse : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "detail_rc_chasse = arme_chasse : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "detail_rc_chasse = organisateur_chasse : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "detail_rc_chasse = materiel_chasse : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "detail_rc_chasse = chiens_chasse : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "detail_rc_chasse = personnel_chasse : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "detail_rc_chasse = feu_explosion_terrain : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "detail_rc_chasse = produits_toxiques_autorises : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "detail_rc_chasse = proprietaire_chien_1385 : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "detail_rc_chasse = arme_competition : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "detail_rc_chasse = personnel_rc_perso : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "detail_rc_chasse = personnel_rc_perso_tireur : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "produit_apres_livraison = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "produit_toxique_non_autorise = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "degat_gibier_cultures = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "proprietaire_abri_chasse = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "feu_explosion_abri_chasse = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "bloquant",
-      "controle": "vocabulaire",
-      "message": "vehicule_moteur_implique = oui : fait nouveau déclaré par le modèle, à accepter (`--accepter-vocabulaire 4.1.2`) ou à remplacer"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.1.2.4 (et non 4.1.2.4.1)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.1.2.4 (et non 4.1.2.4.2)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.1.2.4 (et non 4.1.2.4.2)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.1.2.4 (et non 4.1.2.4.3)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.1.2.3 (et non 4.1.2.3.3)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.1.2.7 (et non 4.1.2.7.1)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.1.2.7 (et non 4.1.2.7.2)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.1.2.7 (et non 4.1.2.7.3)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.1.2.7 (et non 4.1.2.7.4)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.1.2.7 (et non 4.1.2.7.4)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.1.2.7 (et non 4.1.2.7.5)"
-    },
-    {
-      "gravite": "info",
-      "controle": "citation",
-      "message": "exclusion : citation rattachée à 4.1.2.7 (et non 4.1.2.7.6)"
+      "gravite": "à relire",
+      "controle": "réserve",
+      "message": "exclusion « 4.1.2.7.4 la responsabilité civile du Preneur d’assurance co » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
     },
     {
       "gravite": "à relire",
       "controle": "réserve",
-      "message": "exclusion « les personnes bénéficiant de lois spéciales sur la réparatio » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
+      "message": "exclusion « L’assurance est valable en Europe à l’exception des pays sui » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
     },
     {
-      "gravite": "à relire",
-      "controle": "réserve",
-      "message": "exclusion « la responsabilité civile du Preneur d’assurance comme propri » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
-    },
-    {
-      "gravite": "à relire",
-      "controle": "limite",
-      "message": "limite « Le montant de la garantie de la Compagnie, pour chaque sinis » (rc_chasse) : elle pose une condition ; circonstance ou garantie à part ?"
-    },
-    {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "déclaré non traduit (4.1.2.5) : « L’assurance est valable en Europe à l’exception des pays suivants : Albanie, Turquie et tous les pay » — La variable pays ne contient pas les pays exclus (Albanie, Turquie, ex-URSS, ex-Yougoslavie non UE) ; la condition actuelle couvre l'Europe via les valeurs existantes mais ne peut exclure spécifiquement ces pays absents du vocabulaire"
+      "message": "hors décision (4.1.2.2) : le partage de l'indemnité et les délais de réclamation : sans effet sur la question de couverture"
     },
     {
-      "gravite": "bloquant",
+      "gravite": "info",
       "controle": "couverture",
-      "message": "déclaré non traduit (4.1.2.6) : « Aucune déchéance n’est opposable aux victimes d’accidents ou leurs ayants droit sauf celle résultant » — Cette clause concerne l'inopposabilité des déchéances aux victimes, notion juridique non traduisible en condition logique simple sur les faits du sinistre"
+      "message": "hors décision (4.1.2.3) : des extensions de la garantie (chiens de chasse, concours de tir, personnel de chasse), pas des refus"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (4.1.2.3) : la responsabilité personnelle d'un employé, pas celle du preneur qui déclare"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (4.1.2.6) : une règle de droit entre l'assureur et la victime : sans effet sur la question de couverture"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (4.1.2.7) : ne joue que si une convention particulière couvre les abris de chasse ; sans elle, l'exclusion 4.1.2.7.4 s'applique déjà"
     }
   ]
 }

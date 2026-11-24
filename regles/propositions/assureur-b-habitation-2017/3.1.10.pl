@@ -12,5 +12,13 @@ exclusion(rc_immeuble, f(bien_confie, oui), tout, non, '3.1.10.3',
     "à des biens dont l’assuré est locataire ou occupant à titre gratuit, ainsi qu’à ceux qui lui ont été confiés").
 exclusion(rc_immeuble, f(origine_rc, activite_professionnelle), tout, non, '3.1.10.3',
     "par le fait de l’exercice d’une profession").
+exclusion(rc_immeuble, f(ascenseur_non_conforme, oui), tout, non, '3.1.10.1',
+    "d ’ascenseurs et d’appareils élévateurs à moteur du bâtiment désigné pour autant qu’ils soient conformes à la réglementation en vigueur et fassent l’objet d’un entretien annuel").
+exclusion(rc_immeuble, f(terrain_plus_1_hectare, oui), tout, non, '3.1.10.1',
+    "d es terrains y attenant pour autant qu’ils ne dépassent pas un hectare").
+exclusion(rc_immeuble, f(cause_amiante, oui), tout, non, '3.1.10.3',
+    "par la présence ou la dispersion d’amiante, de fibres d’amiante ou de produits contenant de l’amiante").
+exclusion(rc_immeuble, f(terrain_non_attenant, oui), tout, non, '3.1.10.3',
+    "par le fait des terrains non attenant dont l’Assuré est propriétaire").
 limite(rc_immeuble, '3.1.10.1', "15.554.864 € par sinistre au titre des dommages corporels", "15554864").
 limite(rc_immeuble, '3.1.10.1', "896.823 € par sinistre au titre des dommages matériels et des dommages immatériels", "896823").

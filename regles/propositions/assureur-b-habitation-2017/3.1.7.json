@@ -17,7 +17,8 @@
         "frais d'entretien, de réparation de défauts, pertes indirectes, pertes de données, franchise de 60 € : hors décision ; « dommages d'origine électrique » = événement électricité",
         "defaut_fonctionnement et fonctionnement_defectueux : une seule variable ; auteur = preneur → assure",
         "les six passages « non traduits » (extension des autres garanties en séjour, indemnisation, obligations après sinistre) : hors décision",
-        "personnel au service de l'Assuré : exclu pendant les heures de service, et en dehors sauf effraction ou violence (variable heures_service) ; 7.75"
+        "personnel au service de l'Assuré : exclu pendant les heures de service, et en dehors sauf effraction ou violence (variable heures_service) ; 7.75",
+        "24 nov. : « accident » déclaré traduit chez B. Le périmètre reste l'événement « bris », que le vocabulaire donne pour parent à « accident » : un objet tombé y entre déjà. Écrit « bris ou accident », le périmètre devenait incertain pour un heurt"
       ],
       "question_metier": "Le matériel multimédia en séjour temporaire est couvert par les garanties incendie, tempête, eaux… « sous réserve qu'elles aient été accordées » : non traduit ici (hors décision), à vérifier avec un souscripteur."
     }
@@ -25,7 +26,8 @@
   "proposition": {
     "evenements": [
       "bris",
-      "vol"
+      "vol",
+      "accident"
     ],
     "definitions": [],
     "garanties": [
@@ -695,6 +697,16 @@
     ]
   },
   "controles": [
+    {
+      "gravite": "à relire",
+      "controle": "couverture",
+      "message": "garantie materiel_multimedia_bris : l'obligation « Lorsque les biens assurés se trouvent à l’intérieur d’un véh » : sa clause (3.1.7.4) parle d'une réduction ; vérifier que ce devoir-ci refuse"
+    },
+    {
+      "gravite": "à relire",
+      "controle": "couverture",
+      "message": "garantie materiel_multimedia_vol : l'obligation « Lorsque les biens assurés se trouvent à l’intérieur d’un véh » : sa clause (3.1.7.4) parle d'une réduction ; vérifier que ce devoir-ci refuse"
+    },
     {
       "gravite": "à relire",
       "controle": "limite",

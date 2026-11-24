@@ -4944,6 +4944,32 @@ Le 24 nov., 14 h 30 à 15 h 45.
 
 **Mesure.** Sur 900 jeux de faits tirés au hasard, avant et après 3.3.1, aucune décision ne change hors des vélos, des bijoux et des nouveaux biens. Bancs : A 94 % et 100 % ; B 87 puis 88 % ; D 95 % (un cas juste deux fois sur trois, la confirmation écartant une fois un bien lu comme avant) ; 233 tests. `regles/traduction.json` : A traduit en entier, B dix-neuf articles sur vingt-quatre avec ses deux réserves.
 
+### 7.173 Les exclusions rares de B, la chasse, l'accident, et une option mal rangée
+
+Le 24 nov., 15 h 45 à 17 h.
+
+**Les exclusions « rares » de B.** Même recensement que pour A (7.172) : vingt-deux passages classés plutôt que traduits, dans la responsabilité civile vie privée (4.1.1), les catastrophes naturelles (3.1.10), les deux protections juridiques (4.1.3, 3.1.11) et l'option « dommages aux biens » (3.3.1). Ils deviennent des règles : sports aériens, concours hippiques, paris et défis, faute lourde, aide bénévole relevant d'un accident du travail, terrain de plus d'un hectare ou non attenant, glissement de terrain, litige d'environnement, et les autres. Recompté après coup : il ne reste dans les propositions de B qu'un passage qui réponde au mot « rare », et c'est une extension (des garages à une autre adresse), pas un refus.
+
+**La chasse (4.1.2).** Vingtième article de B. Une garantie de responsabilité civile, portée par un fait, « pratique de la chasse », que A lisait déjà pour l'exclure. Dix exclusions. Une limite assumée : le contrat exclut deux pays d'Europe que le vocabulaire des lieux ne distingue pas.
+
+**Mesure du premier lot.** A 94 % et 100 %, B 85 %, D 95 %.
+
+**L'accident, et la garantie « heurt ».** Le garde-fou de 7.172 tenait à une garantie : le « heurt » (3.1.1.2) couvrait un vase tombé dès que l'événement « accident » était déclaré traduit, parce qu'un accident satisfait une règle écrite sur le heurt. Première écriture, une exclusion jointe à l'exclusion des dégâts causés par l'assuré : elle rendait incertain un heurt par un tiers. Retenue : une exclusion à part, « l'événement est un accident », qui ne se demande pas. Puis l'accident est déclaré traduit dans le bris du matériel multimédia (3.1.7) et dans l'option (3.3.1), sans toucher à leur périmètre. Trois essais conformes à ce que j'attendais : la bougie « à préciser », le vase « non couvert », la guitare « couvert sous réserve de l'option ».
+
+**B à 77 %, deux couverts à tort.** Le troisième essai était le défaut. Le jeu fermé contient un violon tombé de son pupitre, attendu « à préciser » : l'option n'est peut-être pas souscrite. Mon critère d'arrêt était atteint.
+
+**La cause : une option rangée avec les garanties de base.** Les règles de B connaissent deux cas. Les garanties de base, « applicables si les conditions particulières les mentionnent », répondent « couvert sous réserve ». Les options (responsabilité civile, protection juridique) se demandent : « avez-vous souscrit l'option ? ». J'avais écrit les dommages aux biens et la chasse dans le premier cas, alors que le contrat les place lui-même sous un titre « Option ». Dire « couvert » pour une option que l'assuré n'a peut-être pas, c'est trop dire. Le défaut datait de l'après-midi ; la mention « à examiner par un gestionnaire » le masquait pour les objets cassés, pas pour le vélo volé dans une cave fermée, qui répondait déjà « couvert sous réserve » (7.172).
+
+**La correction.** Pour ces deux articles, l'option est une condition de la garantie, avec sa question. Un violon tombé, un accident de chasse, un vélo volé dans une cave fermée avec plainte : « à préciser », une seule question. Le vélo du hall et le vase restent des refus. B repassé : 85 %, un couvert à tort (le vol dans la voiture, connu), deux cas instables ; 233 tests.
+
+**Ce que ce chiffre vaut.** `f-b19` a servi à corriger une règle. La règle vient du titre de l'article, pas du cas ; mais ce cas n'est plus un cas jamais vu, comme `f-a20` pour A (7.170), et c'est écrit à côté du chiffre dans le README.
+
+**Laissé ouvert.** La section 3.2 du contrat s'intitule aussi « Option » (tremblement de terre, pluies et inondations, pertes indirectes), et ses garanties sont en réserve depuis qu'elles sont écrites. Par cohérence, elles devraient se demander. Les bancs de B les mesurent dans cet état ; je n'y touche pas sans décision.
+
+**Une image sans son fichier.** L'image mise en ligne à 15 h 50 montrait quatre cartes orange : le fichier de construction ne copiait pas `regles/traduction.json`. Une ligne ajoutée ; l'image suivante reste à construire.
+
+**Reste à B** : la protection numérique (4.1.4), l'annulation de voyage (4.2.1), les bagages (4.2.2), l'assistance voyage (4.2.3).
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le ferais.
@@ -4961,7 +4987,7 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 
 **3. Les contrats.**
 - Assureur C : les biens assurés, qui dépendent de la formule et de la qualité d'occupant, et un jeu de mesure (7.159).
-- Assureur A : l'assistance (2.13). Assureur B : l'assistance (3.1.12), la section 3.3 et le reste de la section 4. Assureur D : les mesures de protection contre le vol.
+- Assureur B : quatre articles de la section 4 (protection numérique, annulation de voyage, bagages, assistance voyage), et la section 3.2, dont l'option est en réserve au lieu d'être demandée (7.173). Assureur D : les options, les assistances, les mesures de protection contre le vol.
 - Un contrat hors habitation : le socle de la lecture (événement, bien, lieu) et les deux consignes sont à revoir pour lui (7.154). Aucun n'a été essayé.
 - Les conditions particulières lues dans le document du client : aujourd'hui elles se saisissent (7.141).
 - La loi applicable : écrite comme limite, non traitée.
@@ -5149,3 +5175,6 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 167. Avant d'écrire « complet », compter ce qui a été classé plutôt que traduit, dans tous les articles et pas seulement celui qu'on vient d'ouvrir.
 168. Un garde-fou peut masquer un défaut : « à examiner par un gestionnaire » cachait une garantie qui couvrait trop. Lever un garde-fou se vérifie comme un changement de règle.
 169. Un dépôt se relit après coup, sur le poste : « écrit » ne dit pas quelle version.
+170. Une garantie que le contrat range sous un titre « Option » se demande ; « couvert sous réserve » est pour ce que le contrat donne par défaut. Le titre de l'article décide, pas l'habitude prise sur l'article d'à côté.
+171. Un essai conforme à ce qu'on attendait ne prouve que l'attente : la guitare « couverte sous réserve » était le résultat prévu, et le défaut.
+172. Ce qu'une image embarque se lit dans son fichier de construction, pas dans le dépôt : un fichier ajouté au projet n'y entre que si une ligne le copie.

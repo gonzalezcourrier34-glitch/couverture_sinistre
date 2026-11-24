@@ -1,21 +1,6 @@
 {
   "_description": "Variables que seules les règles de ce contrat emploient (regles/assureur-a-habitation-2025.pl). Même format que commun.json. Rangé par `couverture regles --ranger` : une variable qu'un autre contrat se met à employer passe dans commun.json.",
   "variables": {
-    "plus_de_5_chevaux": {
-      "libelle": "Plus de cinq chevaux de selle",
-      "valeurs": [
-        "oui",
-        "non"
-      ],
-      "question": "Possédez-vous plus de cinq chevaux de selle ?",
-      "aide": {
-        "oui": "plus de cinq chevaux de selle en propriété",
-        "non": "cinq ou moins, ou aucun cheval en cause"
-      },
-      "pour": [
-        "responsabilite"
-      ]
-    },
     "procedure_etranger_sans_accord": {
       "libelle": "Procédure à l'étranger sans accord",
       "valeurs": [
@@ -46,21 +31,6 @@
         "litige"
       ]
     },
-    "cause_amiante": {
-      "libelle": "Dommage causé par l'amiante",
-      "valeurs": [
-        "oui",
-        "non"
-      ],
-      "question": "Le dommage vient-il de l'amiante ?",
-      "aide": {
-        "oui": "des fibres ou des matériaux contenant de l'amiante",
-        "non": "aucun rapport avec l'amiante"
-      },
-      "pour": [
-        "responsabilite"
-      ]
-    },
     "controle_citerne_respecte": {
       "libelle": "Contrôle de la citerne en règle",
       "valeurs": [
@@ -76,21 +46,6 @@
         "responsabilite"
       ]
     },
-    "ascenseur_non_conforme": {
-      "libelle": "Ascenseur non conforme ou non entretenu",
-      "valeurs": [
-        "oui",
-        "non"
-      ],
-      "question": "L'ascenseur ou le monte-charge en cause était-il non conforme, ou sans entretien annuel ?",
-      "aide": {
-        "oui": "pas de contrôle de conformité, ou pas d'entretien annuel par une entreprise agréée",
-        "non": "ascenseur contrôlé et entretenu, ou pas d'ascenseur en cause"
-      },
-      "pour": [
-        "responsabilite"
-      ]
-    },
     "terrain_plus_5_hectares": {
       "libelle": "Terrain de plus de cinq hectares",
       "valeurs": [
@@ -101,59 +56,6 @@
       "aide": {
         "oui": "plus de cinq hectares",
         "non": "cinq hectares ou moins"
-      },
-      "pour": [
-        "responsabilite"
-      ]
-    },
-    "pratique_chasse": {
-      "libelle": "Dommage causé en chassant",
-      "valeurs": [
-        "oui",
-        "non"
-      ],
-      "question": "Le dommage a-t-il été causé en pratiquant la chasse ?",
-      "aide": {
-        "oui": "une partie de chasse, un tir de chasseur, une battue",
-        "non": "un autre sport ou loisir : ball-trap, tir sportif, compétition"
-      },
-      "pour": [
-        "responsabilite"
-      ]
-    },
-    "animal_sauvage": {
-      "libelle": "Gibier ou animal sauvage",
-      "valeurs": [
-        "gibier_ou_sauvage",
-        "cervide",
-        "non"
-      ],
-      "question": "L'animal en cause est-il du gibier ou un animal sauvage ?",
-      "libelles": {
-        "gibier_ou_sauvage": "gibier ou animal sauvage",
-        "cervide": "cervidé"
-      },
-      "aide": {
-        "gibier_ou_sauvage": "un sanglier, un renard, un animal sauvage même dompté ou tenu en captivité",
-        "cervide": "un cerf, un chevreuil, un daim",
-        "non": "un animal domestique ou d'élevage"
-      },
-      "pour": [
-        "responsabilite"
-      ]
-    },
-    "faute_lourde": {
-      "libelle": "Ivresse ou violence de l'auteur",
-      "valeurs": [
-        "ivresse",
-        "violence",
-        "non"
-      ],
-      "question": "L'auteur du dommage était-il ivre ou drogué, ou a-t-il commis un acte de violence ?",
-      "aide": {
-        "ivresse": "l'auteur avait bu ou pris des stupéfiants",
-        "violence": "l'auteur a frappé ou agressé quelqu'un",
-        "non": "ni l'un ni l'autre"
       },
       "pour": [
         "responsabilite"

@@ -9,7 +9,8 @@
       "date": "2026-11-20",
       "modifications": [
         "l'option en circonstance (f-b16 : incertain) ; une garantie, les exclusions par `origine_rc`, `victime`, `bien_confie`",
-        "4.1.1.8.6 : le feu, l'explosion, l'eau partis du logement (`origine_rc = habitation`) exclus ; f-b12 relève du recours des tiers"
+        "4.1.1.8.6 : le feu, l'explosion, l'eau partis du logement (`origine_rc = habitation`) exclus ; f-b12 relève du recours des tiers",
+        "24 nov. : onze exclusions jusque-là classées « rares » ou seulement « lues » deviennent des règles (sports aériens, concours hippiques, amiante, paris, faute lourde, six chevaux et plus, assurance obligatoire lue par la chasse, véhicules attelés, aide bénévole, pièces d'eau, glissement de terrain)"
       ]
     }
   },
@@ -127,6 +128,154 @@
             "a_demander": false,
             "article": "4.1.1.8",
             "texte": "les dommages matériels et immatériels d’incendie, d’explosion, ou d’eau, lorsque l’événement dommageable a son origine dans les locaux ou immeubles appartenant à l’Assuré ou occupés par lui à quelque titre que ce soit"
+          },
+          {
+            "condition": {
+              "f": [
+                "sport_aerien",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.1.1.8",
+            "texte": "de la pratique par l’Assuré de sports aériens"
+          },
+          {
+            "condition": {
+              "f": [
+                "concours_hippique",
+                "hors_calendrier_officiel"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.1.1.8",
+            "texte": "de la participation de l’Assuré à des concours hippiques"
+          },
+          {
+            "condition": {
+              "f": [
+                "cause_amiante",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.1.1.8",
+            "texte": "de la présence ou de la dispersion d’amiante, de fibres d’amiante ou de produits contenant de l’amiante"
+          },
+          {
+            "condition": {
+              "f": [
+                "pari_ou_defi",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.1.1.8",
+            "texte": "de la participation à des paris ou défis"
+          },
+          {
+            "condition": {
+              "ou": [
+                {
+                  "f": [
+                    "faute_lourde",
+                    "ivresse"
+                  ]
+                },
+                {
+                  "f": [
+                    "faute_lourde",
+                    "activite_sans_qualification"
+                  ]
+                },
+                {
+                  "f": [
+                    "faute_lourde",
+                    "maladie_contagieuse"
+                  ]
+                }
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.1.1.8",
+            "texte": "d’une faute lourde de l’Assuré"
+          },
+          {
+            "condition": {
+              "f": [
+                "plus_de_5_chevaux",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.1.1.8",
+            "texte": "les chevaux propriété de l’Assuré ou gardés à titre gratuit par l’Assuré dès que leur nombre total est supérieur ou égal à six"
+          },
+          {
+            "condition": {
+              "f": [
+                "pratique_chasse",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.1.1.8",
+            "texte": "les dommages engageant une responsabilité civile soumise à une assurance rendue obligatoire au Grand-Duché du Luxembourg"
+          },
+          {
+            "condition": {
+              "f": [
+                "origine_rc",
+                "vehicule_moteur"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.1.1.8",
+            "texte": "tous véhicules terrestres construits en vue d’être attelés à un véhicule terrestre à moteur"
+          },
+          {
+            "condition": {
+              "f": [
+                "aide_benevole_accident_travail",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.1.1.8",
+            "texte": "les dommages subis par une personne apportant une aide à titre gratuit à l’Assuré, lorsque ceux-ci relèvent de l’application de la législation sur les Accidents du Travail"
+          },
+          {
+            "condition": {
+              "f": [
+                "piece_eau_autre_adresse",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.1.1.8",
+            "texte": "les dommages causés par les étangs et autres pièces d’eau situés à une autre adresse que la résidence principale"
+          },
+          {
+            "condition": {
+              "f": [
+                "glissement_terrain",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "4.1.1.8",
+            "texte": "les dommages liés à un glissement, affaissement ou tassement de terrain"
           }
         ],
         "limites": [
@@ -159,6 +308,120 @@
           "non": "elle ne l'est pas"
         },
         "plus_proche": "aucune"
+      },
+      {
+        "variable": "sport_aerien",
+        "libelle": "Sport aérien",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le dommage a-t-il été causé en pratiquant un sport aérien ?",
+        "aide": {
+          "oui": "parapente, deltaplane, parachutisme, ULM, planeur",
+          "non": "un autre sport ou aucune activité aérienne"
+        },
+        "pourquoi": "4.1.1.8.1.2",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "concours_hippique",
+        "libelle": "Concours hippique",
+        "valeurs": [
+          "hors_calendrier_officiel",
+          "calendrier_officiel",
+          "non"
+        ],
+        "libelles": {
+          "hors_calendrier_officiel": "concours non officiel",
+          "calendrier_officiel": "concours inscrit à un calendrier officiel"
+        },
+        "question": "Le dommage est-il survenu pendant un concours hippique ?",
+        "aide": {
+          "hors_calendrier_officiel": "un concours ou une course qui n'est pas inscrit au calendrier d'une fédération officielle européenne",
+          "calendrier_officiel": "un concours inscrit au calendrier d'une fédération officielle d'un pays européen",
+          "non": "pas de concours hippique"
+        },
+        "pourquoi": "4.1.1.8.1.3 : exclus, sauf les concours des calendriers officiels",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "pari_ou_defi",
+        "libelle": "Pari ou défi",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le dommage vient-il d'un pari ou d'un défi ?",
+        "aide": {
+          "oui": "un pari, un défi lancé ou relevé",
+          "non": "rien de tel"
+        },
+        "pourquoi": "4.1.1.8.1.6",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "faute_lourde",
+        "valeurs": [
+          "activite_sans_qualification",
+          "maladie_contagieuse"
+        ],
+        "libelles": {
+          "activite_sans_qualification": "activité sans la qualification requise",
+          "maladie_contagieuse": "maladie contagieuse transmise"
+        },
+        "question": "L'auteur du dommage était-il ivre ou drogué, ou a-t-il commis un acte de violence ?",
+        "aide": {
+          "activite_sans_qualification": "l'auteur a fait lui-même un travail qui demande une qualification professionnelle qu'il n'a pas (gaz, électricité)",
+          "maladie_contagieuse": "l'auteur, ou un de ses animaux malades, a transmis une maladie"
+        },
+        "pourquoi": "4.1.1.8.1.7 : la faute lourde, que le contrat définit",
+        "plus_proche": "faute_lourde = ivresse, déjà lue"
+      },
+      {
+        "variable": "aide_benevole_accident_travail",
+        "libelle": "Aide bénévole relevant des accidents du travail",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "La victime vous apportait-elle une aide gratuite, et son dommage relève-t-il de la législation sur les accidents du travail ?",
+        "aide": {
+          "oui": "une personne venue aider gratuitement, indemnisée au titre des accidents du travail",
+          "non": "une autre victime"
+        },
+        "pourquoi": "4.1.1.8.5",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "piece_eau_autre_adresse",
+        "libelle": "Pièce d'eau hors de la résidence principale",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le dommage vient-il d'un étang ou d'une pièce d'eau situé ailleurs qu'à la résidence principale ?",
+        "aide": {
+          "oui": "un étang, une mare sur un autre terrain",
+          "non": "non, ou à la résidence principale"
+        },
+        "pourquoi": "4.1.1.8.8",
+        "plus_proche": "aucune"
+      },
+      {
+        "variable": "glissement_terrain",
+        "libelle": "Glissement ou tassement de terrain",
+        "valeurs": [
+          "oui",
+          "non"
+        ],
+        "question": "Le dommage est-il lié à un glissement, un affaissement ou un tassement de terrain ?",
+        "aide": {
+          "oui": "le terrain a glissé, s'est affaissé ou tassé",
+          "non": "aucun mouvement de terrain"
+        },
+        "pourquoi": "4.1.1.8.9",
+        "plus_proche": "aucune"
       }
     ],
     "non_traduit": [],
@@ -170,63 +433,8 @@
       },
       {
         "article": "4.1.1.8",
-        "texte": "de la pratique par l’Assuré de sports aériens",
-        "pourquoi": "rare ; le vocabulaire range ces sports avec la chasse et les sports en club"
-      },
-      {
-        "article": "4.1.1.8",
-        "texte": "de la participation de l’Assuré à des concours hippiques",
-        "pourquoi": "rare ; le vocabulaire ne distingue pas les concours hippiques"
-      },
-      {
-        "article": "4.1.1.8",
-        "texte": "de la présence ou de la dispersion d’amiante, de fibres d’amiante ou de produits contenant de l’amiante",
-        "pourquoi": "rare ; le vocabulaire ne distingue pas l'amiante"
-      },
-      {
-        "article": "4.1.1.8",
-        "texte": "de la participation à des paris ou défis",
-        "pourquoi": "rare ; le vocabulaire ne distingue pas les paris"
-      },
-      {
-        "article": "4.1.1.8",
-        "texte": "d’une faute lourde de l’Assuré",
-        "pourquoi": "l'ivresse, la maladie contagieuse : le vocabulaire ne les distingue pas"
-      },
-      {
-        "article": "4.1.1.8",
-        "texte": "les chevaux propriété de l’Assuré ou gardés à titre gratuit par l’Assuré dès que leur nombre total est supérieur ou égal à six",
-        "pourquoi": "le nombre de chevaux : rare ; le vocabulaire ne le distingue pas"
-      },
-      {
-        "article": "4.1.1.8",
         "texte": "les vols, lorsque l’Assuré responsable est considéré comme auteur, coauteur ou complice",
         "pourquoi": "un vol commis par l'assuré n'est pas une responsabilité civile déclarée"
-      },
-      {
-        "article": "4.1.1.8",
-        "texte": "les dommages engageant une responsabilité civile soumise à une assurance rendue obligatoire au Grand-Duché du Luxembourg",
-        "pourquoi": "lu par les véhicules à moteur ; le reste (chasse…) rare"
-      },
-      {
-        "article": "4.1.1.8",
-        "texte": "tous véhicules terrestres construits en vue d’être attelés à un véhicule terrestre à moteur",
-        "pourquoi": "la liste des véhicules exclus : lue par `origine_rc = vehicule_moteur` ; les remorques et les aéronefs, rares"
-      },
-      {
-        "article": "4.1.1.8",
-        "texte": "les dommages subis par une personne apportant une aide à titre gratuit à l’Assuré, lorsque ceux-ci relèvent de l’application de la législation sur les Accidents du Travail",
-        "pourquoi": "rare ; le vocabulaire ne distingue pas les accidents du travail"
-      },
-      {
-        "article": "4.1.1.8",
-        "texte": "les dommages causés par les étangs et autres pièces d’eau situés à une autre adresse que la résidence principale",
-        "pourquoi": "rare ; le vocabulaire ne distingue pas les pièces d'eau"
-      },
-      {
-        "article": "4.1.1.8",
-        "texte": "les dommages liés à un glissement, affaissement ou tassement de terrain",
-        "pourquoi": "rare ; le vocabulaire ne le distingue pas en responsabilité civile"
       }
     ]
   },
@@ -244,62 +452,7 @@
     {
       "gravite": "info",
       "controle": "couverture",
-      "message": "hors décision (4.1.1.8) : rare ; le vocabulaire range ces sports avec la chasse et les sports en club"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (4.1.1.8) : rare ; le vocabulaire ne distingue pas les concours hippiques"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (4.1.1.8) : rare ; le vocabulaire ne distingue pas l'amiante"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (4.1.1.8) : rare ; le vocabulaire ne distingue pas les paris"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (4.1.1.8) : l'ivresse, la maladie contagieuse : le vocabulaire ne les distingue pas"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (4.1.1.8) : le nombre de chevaux : rare ; le vocabulaire ne le distingue pas"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
       "message": "hors décision (4.1.1.8) : un vol commis par l'assuré n'est pas une responsabilité civile déclarée"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (4.1.1.8) : lu par les véhicules à moteur ; le reste (chasse…) rare"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (4.1.1.8) : la liste des véhicules exclus : lue par `origine_rc = vehicule_moteur` ; les remorques et les aéronefs, rares"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (4.1.1.8) : rare ; le vocabulaire ne distingue pas les accidents du travail"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (4.1.1.8) : rare ; le vocabulaire ne distingue pas les pièces d'eau"
-    },
-    {
-      "gravite": "info",
-      "controle": "couverture",
-      "message": "hors décision (4.1.1.8) : rare ; le vocabulaire ne le distingue pas en responsabilité civile"
     }
   ]
 }
