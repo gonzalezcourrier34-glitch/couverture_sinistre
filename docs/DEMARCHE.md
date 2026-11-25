@@ -109,7 +109,7 @@ en aurait fait perdre.
 - Réponses **coupées** à la limite de longueur → erreur explicite (`ReponseTronquee`) au lieu
   de « aucun objet JSON ».
 
-## 7. Le journal, du 17 au 24 novembre
+## 7. Le journal, du 17 au 25 novembre
 
 Sept parties, dans l'ordre. Chaque étape garde son numéro, cité ailleurs dans le projet.
 
@@ -5179,6 +5179,70 @@ La nuit du 24 au 25 nov., vers 2 h.
 
 **Ce que j'avais mal estimé.** J'avais refusé ce découpage deux fois, comme « du code mesuré qu'on ne réécrit pas la veille du gel ». L'objection était juste tant qu'il n'y avait pas de mesure ; elle tombait dès qu'on pouvait comparer chaque fonction à elle-même. Je n'avais pas pensé à le faire.
 
+### 7.185 Un second jeu écrit sans voir les règles, et C dit pour ce qu'il est
+
+*25 novembre, 11 h.*
+
+**Après le rangement, les mêmes chiffres.** Quatre bancs relancés sur le code rangé et découpé (7.183, 7.184) :
+A 93,5 % sur la partie test (la porte de lecture échoue toujours, 3 décisions changées pour 2 admises, comme
+avant le rangement), A 100 % sur le jeu fermé, B 90 % (91,7 % la veille : un passage sur soixante, dans le
+bruit), D 96 %. Aucun couvert à tort, aucun refus à tort.
+
+**Le contrat C.** Le README le rangeait parmi les limites. Ce n'en est pas une : C a été intégré pour mesurer
+ce que coûte un contrat de plus, étape par étape, et deux garanties suffisaient à cette mesure. Le README et
+`COMPRENDRE.md` le disent maintenant ainsi.
+
+**Le jeu « aveugle ».** Trois cas du jeu fermé (`f-a20`, `f-b19`, `f-b18`) ont servi à corriger une règle : ce
+jeu n'est plus tout à fait fermé. Un second est monté de la même façon (7.79), dans `data/aveugle` : 60
+déclarations, 20 pour A, 20 pour B, 20 pour D, écrites par trois agents neufs, un par contrat, qui n'ont reçu
+que le texte des conditions générales. Je ne les ai pas écrites : je connais les règles. Chaque citation a été
+retrouvée mot pour mot dans le texte et chaque article existe. Par contrat : 7 couverts, 7 non couverts, 6
+incertains. Les annotateurs ont signalé leurs propres doutes (la responsabilité locative de A, la formule des
+dommages électriques de D) : je n'y ai pas touché, le second avis et l'arbitrage sont là pour cela.
+
+Dans le code, peu de chose : `evaluation.JEUX_FERMES = ("ferme", "aveugle")`, l'option `--jeu` de
+`couverture.mesure.ferme` et du banc, et la banque d'exemples qui tient ses exemples loin des déclarations des
+deux jeux. Un test monte un jeu « aveugle » de bout en bout.
+
+**Le second avis et l'arbitrage (11 h 25).** Mistral Large a répondu aux 60 déclarations sans voir la première
+réponse : 54 accords stricts, 5 souples, 1 désaccord (`av-a09`, de l'eau de pluie passée par le bas d'une
+fenêtre : non couvert pour l'agent, couvert pour Mistral au titre de l'inondation). Un troisième agent, neuf, qui
+n'a reçu que le texte et les deux avis, a retenu le premier : le contrat exclut les infiltrations par les
+fenêtres, et de fortes pluies ne font pas une inondation au sens du lexique. Aucun cas écarté.
+
+**La mesure (11 h 37), une seule fois, trois passages par banc.**
+
+| Contrat | Justes | Exactes | Couverts à tort | Refus à tort | Instables | Portes |
+|---|---|---|---|---|---|---|
+| A | 95 % | 75 % | 0 | 0 | 0 | passe |
+| B | 58 % | 58 % | 1,3 | 2,7 | 4 | échoue |
+| D | 78 % | 73 % | 2 | 1 | 2 | échoue |
+
+Sur les jeux fermés, une heure plus tôt : A 100 %, B 90 %, D 96 %. L'écart est donc de 5 points pour A, de 32
+pour B, de 18 pour D. Les couverts à tort : chez B, `av-b13` (un rocher tombé d'un talus, exclusion commune des
+chutes de pierres) à chaque passage et `av-b11` (une tablette volée dans une voiture) une fois sur trois ; chez
+D, `av-d11` (des bijoux volés, qui relèvent de l'option objets de valeur) et `av-d16` (une trottinette
+électrique) à chaque passage. Chez B, dix cas sur vingt se trompent ou varient ; les thèmes « base » (33 %) et
+« définition » (0 %) tombent, les thèmes « option » et « manque » tiennent (100 %).
+
+**Une ressemblance trouvée par le contrôle.** Une fois le jeu exporté, le test qui tient les exemples de lecture
+loin des cas de mesure a échoué : `ex-d14`, un exemple de la banque (des tags sur un mur, plainte déposée),
+ressemble à `av-d13` (indice 0,40). L'exemple est antérieur, l'annotateur ne l'a pas vu : c'est un hasard, sur un
+sinistre banal. Retirer l'exemple changerait la lecture qu'on vient de mesurer ; retirer le cas retoucherait le
+jeu après la mesure. Les deux restent, et le couple est déclaré dans `data/lecture/proches_declares.json`, que
+le contrôle lit : toute autre ressemblance reste refusée. Ce cas était juste aux trois passages ; sans lui, D
+serait à 77 % au lieu de 78 %.
+
+**Ce que je n'ai pas fait.** Je n'ai ouvert ni les faits lus ni les règles pour ces cas : chercher la cause,
+c'est déjà commencer à régler, et ce jeu perdrait ce qui le rend utile. Les chiffres sont dans le README, à côté
+des autres, avec la phrase qui convient : A est le contrat le plus travaillé et il tient ; B et D ont été
+réglés sur des jeux que je regardais, et ces jeux les flattaient de vingt à trente points.
+
+**Ce que cela change.** Rien dans le code avant la livraison. Dans le discours : la promesse « jamais couvert à
+tort » n'est tenue que sur les cas qui ont servi à régler ; sur des cas neufs, B et D couvrent à tort une à
+deux fois sur vingt. La suite logique, après la livraison : corriger d'après ces cas en les déclarant vus,
+puis écrire un troisième jeu, et recommencer jusqu'à ce que l'écart entre jeu vu et jeu neuf se ferme.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le ferais.
@@ -5407,3 +5471,5 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 190. Essayer une phrase qu'aucun jeu de cas ne contient, et lire la preuve citée, pas seulement la décision : un refus juste en apparence citait une exclusion du vol pour un objet tombé.
 191. Un rangement se prouve comme un calcul : même arbre syntaxique hors imports, chaque import résolu, puis les tests ; « ça a l'air pareil » n'est pas une preuve.
 192. « On ne réécrit pas du code mesuré » vaut tant qu'on ne peut pas comparer l'ancien et le nouveau ; quand on le peut, le refus n'est plus de la prudence, c'est une mesure qu'on n'a pas faite.
+193. Un jeu de test dont on a regardé trois cas pour corriger une règle n'est plus fermé : on le dit à côté des chiffres, et on en écrit un autre, par quelqu'un qui n'a pas vu les règles.
+194. Le chiffre d'un jeu qu'on a regardé pendant les réglages mesure les réglages : B passe de 90 % à 58 % sur vingt cas neufs. Le seul chiffre qui parle d'un contrat est celui du jeu qu'on n'a jamais ouvert.

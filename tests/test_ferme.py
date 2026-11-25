@@ -44,3 +44,30 @@ def test_accords_desaccords_arbitrage_et_banc(tmp_path, monkeypatch):
     assert a["f-a02"]["attendu"] == "NON_COUVERT" and a["f-a02"]["acceptables"] == ["INCERTAIN"]
     cas_banc, etat = banc.charger(tmp_path, "assureur-a-habitation-2025", "ferme")
     assert etat["jeu"] == "ferme" and etat["n"] == 2 and all(c.get("faits") is None for c in cas_banc)
+
+
+def test_le_second_jeu_ferme_se_monte_et_se_rejoue_comme_le_premier(tmp_path, monkeypatch):
+    """7.185. « aveugle » : un second jeu écrit sans voir les règles, dans son dossier, avec les mêmes commandes.
+    Ses déclarations comptent parmi les cas de mesure dont les exemples de lecture doivent rester loin."""
+    from couverture.analyse import exemples
+    from couverture.mesure import evaluation
+
+    assert "aveugle" in evaluation.JEUX_FERMES and "aveugle" in evaluation.JEUX
+    s, a = evaluation.fichiers_jeu(tmp_path, "assureur-a-habitation-2025", "aveugle")
+    assert s == tmp_path / "aveugle" / "sinistres.jsonl" and a.parent == tmp_path / "aveugle" / "annotations"
+    monkeypatch.chdir(tmp_path)
+    d = tmp_path / "data" / "aveugle"
+    cas = [{"id": "av-a01", "contrat": "assureur-a", "declaration": "Incendie de la cuisine.", "attendu": "COUVERT",
+            "acceptables": [], "articles": ["2.1"], "citation": "c", "question_attendue": "", "theme": "base", "justification": "j"}]
+    ecrire(d / "cas_agent.jsonl", cas)
+    ecrire(d / "avis_second.jsonl", [{"id": "av-a01", "attendu": "COUVERT", "acceptables": []}])
+    monkeypatch.setattr(ferme, "DOSSIER", ferme.DOSSIER)          # main() le change : le remettre après le test
+    ferme.main(["--jeu", "aveugle", "comparer"])
+    ferme.main(["--jeu", "aveugle", "exporter"])
+    sinistres = ferme.lire(d / "sinistres.jsonl")
+    assert [x["id"] for x in sinistres] == ["av-a01"] and sinistres[0]["source"] == "aveugle"
+    cas_banc, etat = banc.charger(tmp_path / "data", "assureur-a-habitation-2025", "aveugle")
+    assert etat["jeu"] == "aveugle" and etat["n"] == 1
+    (tmp_path / "data" / "golden").mkdir()
+    ecrire(tmp_path / "data" / "golden" / "sinistres.jsonl", [])
+    assert "av-a01" in {c["id"] for c in exemples.cas_de_mesure(tmp_path / "data")}

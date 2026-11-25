@@ -183,3 +183,17 @@ def test_seuls_les_exemples_valides_entrent_dans_la_banque(tmp_path):
         "validé mais hors sujet : refusé, et signalé"
     assert exemples.valider_ajoutes(donnees, [], ["ex-x2"])["retires"] == 1
     assert [x["id"] for x in exemples.exemples_ajoutes(donnees)] == ["ex-x1"]
+
+
+def test_une_ressemblance_declaree_ne_bloque_pas_mais_elle_seule(tmp_path):
+    """7.185. Un exemple antérieur à un jeu écrit à l'aveugle peut lui ressembler par hasard : le couple est déclaré
+    dans lecture/proches_declares.json, pas effacé. Tout autre exemple trop proche reste refusé."""
+    import json
+    import shutil
+
+    for nom in ("lecture", "golden", "aveugle", "ferme"):
+        shutil.copytree(DONNEES / nom, tmp_path / nom)
+    assert ("ex-d14", "av-d13") in exemples.proches_declares(tmp_path)
+    assert exemples.controler_ajoutes(tmp_path) == []
+    (tmp_path / "lecture" / "proches_declares.json").write_text("[]", encoding="utf-8")
+    assert any("ex-d14" in p and "av-d13" in p for p in exemples.controler_ajoutes(tmp_path))

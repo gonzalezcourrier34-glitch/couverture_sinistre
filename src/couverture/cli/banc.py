@@ -7,6 +7,7 @@ from pathlib import Path
 
 from ..contrat.base import Base
 from ..mesure import banc
+from ..mesure.evaluation import JEUX_FERMES
 from .commun import chaine
 
 
@@ -21,8 +22,8 @@ def ajouter(sous) -> None:
     p.add_argument("--figer", nargs="?", const="", metavar="NOTE",
                    help="Enregistrer la version du golden set (après l'avoir modifié ou validé)")
     p.add_argument("--fiche", action="store_true", help="Écrire data/golden/A_VALIDER.md, la fiche de relecture des cas")
-    p.add_argument("--jeu", choices=["golden", "ferme"], default="golden",
-                   help="ferme : les cas écrits sans voir les règles (data/ferme), chaîne complète seule")
+    p.add_argument("--jeu", choices=["golden", *JEUX_FERMES], default="golden",
+                   help="ferme, aveugle : les cas écrits sans voir les règles (data/ferme, data/aveugle), chaîne complète seule")
     p.add_argument("--partie", choices=["tout", "mise_au_point", "test"], default="tout",
                    help="golden : les seuls cas de mise au point, ou de test (data/lecture/partage.json)")
     p.set_defaults(executer=executer)

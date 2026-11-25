@@ -25,7 +25,10 @@ def lire_jsonl(chemin: str | Path) -> list[dict]:
         return [json.loads(l) for l in f if l.strip()]
 
 
-JEUX = ("mise_au_point", "validation", "redaction", "golden", "ferme")
+# Les jeux écrits sans voir les règles, par deux annotateurs à l'aveugle : sans faits idéaux, chaîne complète seule.
+# « aveugle » est le second (25 nov. 2026, 7.185) : trois cas du premier avaient fini par servir à corriger une règle.
+JEUX_FERMES = ("ferme", "aveugle")
+JEUX = ("mise_au_point", "validation", "redaction", "golden", *JEUX_FERMES)
 
 
 def fichiers_jeu(donnees: str | Path, contrat_id: str, jeu: str = "mise_au_point") -> tuple[Path, Path]:
@@ -38,7 +41,8 @@ def fichiers_jeu(donnees: str | Path, contrat_id: str, jeu: str = "mise_au_point
       écrits d'après le texte du contrat avant la rédaction ;
     - golden : data/golden/…, le banc d'essai figé (tous les cas, étiquetés), voir `couverture banc` ;
     - ferme : data/ferme/…, des cas écrits sans voir les règles, par deux annotateurs à l'aveugle (7.79),
-      sans faits idéaux : `couverture banc --jeu ferme`."""
+      sans faits idéaux : `couverture banc --jeu ferme` ;
+    - aveugle : data/aveugle/…, un second jeu écrit de la même façon (7.185), jamais regardé pour régler."""
     if jeu not in JEUX:
         raise ValueError(f"jeu inconnu : {jeu}")
     racine = Path(donnees) / ("" if jeu == "mise_au_point" else jeu)

@@ -31,7 +31,7 @@ import sqlite3
 from array import array
 from pathlib import Path
 
-from ..mesure.evaluation import lire_jsonl
+from ..mesure.evaluation import JEUX_FERMES, lire_jsonl
 from . import prolog
 
 PARTIES = ("mise_au_point", "test")
@@ -178,9 +178,20 @@ def cas_de_mesure(donnees: Path) -> list[dict]:
     """Les déclarations qui servent à mesurer : la partie test du golden set et les jeux fermés."""
     test = set(charger_partage(donnees)["test"])
     sinistres = lire_jsonl(Path(donnees) / "golden" / "sinistres.jsonl")
-    ferme = Path(donnees) / "ferme" / "sinistres.jsonl"
+    fermes = [Path(donnees) / jeu / "sinistres.jsonl" for jeu in JEUX_FERMES]
     return ([{"id": s["id"], "declaration": s["sinistre"]} for s in sinistres if s["id"] in test]
-            + [{"id": s["id"], "declaration": s["sinistre"]} for s in (lire_jsonl(ferme) if ferme.exists() else [])])
+            + [{"id": s["id"], "declaration": s["sinistre"]} for f in fermes if f.exists() for s in lire_jsonl(f)])
+
+
+def proches_declares(donnees: Path) -> set[tuple[str, str]]:
+    """Les couples (exemple, cas de mesure) qui se ressemblent et qu'on a déclarés au lieu de les effacer
+    (`lecture/proches_declares.json`). Le cas d'usage : un jeu écrit à l'aveugle après la banque d'exemples peut
+    tomber par hasard sur une déclaration voisine d'un exemple. Retirer l'exemple changerait la lecture déjà mesurée,
+    retirer le cas retoucherait le jeu après la mesure : on garde les deux, et on le dit à côté des chiffres."""
+    chemin = Path(donnees) / "lecture" / "proches_declares.json"
+    if not chemin.exists():
+        return set()
+    return {(d["exemple"], d["cas"]) for d in json.loads(chemin.read_text(encoding="utf-8"))}
 
 
 def valider_ajoutes(donnees: Path, ids: list[str] | None = None, retirer: list[str] | None = None) -> dict:
@@ -204,6 +215,7 @@ def controler_ajoutes(donnees: Path) -> list[str]:
     - un identifiant en double, ou déjà pris par un cas du golden set."""
     ajoutes, problemes = exemples_ajoutes(donnees), []
     mesure = cas_de_mesure(donnees)
+    declares = proches_declares(donnees)
     pris = {s["id"] for s in lire_jsonl(Path(donnees) / "golden" / "sinistres.jsonl")}
     vus: set[str] = set()
     for x in ajoutes:
@@ -215,6 +227,8 @@ def controler_ajoutes(donnees: Path) -> list[str]:
         if not x["faits"].get("evenement"):
             problemes.append(f"{x['id']} : pas d'événement")
         proche = max(mesure, key=lambda c: proximite(x["declaration"], c["declaration"]), default=None)
+        if proche and (x["id"], proche["id"]) in declares:
+            continue
         if proche and proximite(x["declaration"], proche["declaration"]) >= PROXIMITE_MAX:
             problemes.append(f"{x['id']} : trop proche du cas de mesure {proche['id']} "
                              f"({proximite(x['declaration'], proche['declaration']):.2f})")

@@ -178,7 +178,8 @@ src/couverture/
 ```
 
 Le sens des dépendances : `contrat` ne connaît personne ; `analyse` lit `contrat` ; `redaction` et `mesure` lisent
-`analyse` ; `cli` et `api` appellent le tout. Chaque sous-dossier s'ouvre sur un `__init__.py` qui dit ce qu'il contient.
+`analyse` ; `cli` et `api` appellent le tout. Une exception : la banque d'exemples (`analyse/exemples.py`) lit les
+jeux de cas de `mesure`, pour tenir ses exemples loin des déclarations qui servent à mesurer. Chaque sous-dossier s'ouvre sur un `__init__.py` qui dit ce qu'il contient.
 
 ### `src/couverture/models.py` — les structures de données
 

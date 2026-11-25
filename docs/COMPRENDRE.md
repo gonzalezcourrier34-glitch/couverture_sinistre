@@ -70,7 +70,7 @@ Ce n'est pas moi qui écris ces règles à la main, ou rarement. Un modèle de l
 
 **Troisième étape : le vocabulaire.** Pour que les règles et les déclarations se rencontrent, il faut une langue commune. C'est une liste fermée de faits possibles : l'événement (vol, incendie, dégât des eaux…), le bien (vélo, bijoux, ordinateur…), le lieu (cave, jardin, parties communes…), et les précisions qui comptent pour un contrat (y a-t-il eu effraction ? le local était-il fermé, et comment ?) : environ 250 faits en tout. Chaque fait a sa question en français, celle qu'on posera à l'assuré s'il manque. Une partie du vocabulaire est commune à tous les contrats, le reste est propre à chacun.
 
-Quatre contrats de quatre assureurs sont préparés, rendus anonymes (A, B, C, D). A et B sont traduits en entier ; C et D en partie, et l'écran le montre par une couleur.
+Quatre contrats de quatre assureurs sont préparés, rendus anonymes (A, B, C, D). A et B sont traduits en entier. C et D ne le sont qu'en partie, et c'est voulu : ils ont servi à mesurer le temps et le travail que demande un contrat de plus, pas à tout couvrir. L'écran le montre par une couleur, et un sinistre dont la garantie n'est pas encore traduite y reçoit « à examiner par un gestionnaire » plutôt qu'une réponse devinée.
 
 ## 5. Les pièces de la machine
 
@@ -107,21 +107,20 @@ Et si le vélo était dans le hall de l'immeuble : une exclusion s'applique (« 
 
 ## 7. Les points forts
 
-- **Le système ne promet pas à tort.** Sur les derniers passages des bancs (24 novembre 2026), aucun sinistre n'a été déclaré couvert à tort, sur les trois contrats mesurés. Les réponses sont justes à 94 % et 100 % pour A, 92 % pour B, 96 % pour D.
+- **Sur les cas qui ont servi à le régler, le système ne promet pas à tort.** Sur les derniers passages de ces bancs (24 et 25 novembre 2026), aucun sinistre n'a été déclaré couvert à tort, sur les trois contrats mesurés. Les réponses sont justes à 94 % et 100 % pour A, 90 à 92 % pour B, 96 % pour D. Sur des cas tout neufs, c'est moins bon pour B et D : voir les points faibles.
 - **Chaque réponse se vérifie.** La phrase citée existe dans le contrat, le code le garantit. Le raisonnement est affiché, pas raconté.
 - **Il sait ne pas savoir.** Les erreurs qui restent sont presque toutes des questions de trop : il demande une précision qu'il aurait pu lire. C'est le sens d'erreur le moins coûteux.
 - **Les erreurs ont une adresse.** Avec des faits exacts, le moteur donne la bonne réponse sur tous les cas de test du contrat A. Les erreurs viennent de la lecture, c'est-à-dire de l'étape confiée au modèle. On sait donc où chercher.
 - **Un nouveau contrat n'abîme pas les autres.** Le moteur est le même pour tous ; ajouter le quatrième contrat n'a pas fait baisser les trois premiers.
 - **Tout est mesuré, y compris les échecs.** La démarche garde les essais qui n'ont pas marché et les fois où une mesure m'a donné tort.
 
-## 8. Les points faibles
+## 8. Les points faibles, et ce qui est prévu
 
 - **La lecture reste fragile.** Le modèle lit parfois plus que ce qui est écrit, ou lit différemment le même texte d'un passage à l'autre. Les garde-fous transforment ces erreurs en questions, pas en mauvaises décisions, mais ils ne les suppriment pas.
 - **Préparer un contrat demande du travail humain.** Le modèle propose les règles, le code les contrôle, mais quelqu'un relit, et c'est la partie la plus longue du projet. Pour des centaines de contrats, cette relecture serait le coût principal.
-- **Deux contrats sur quatre sont incomplets.** Chez C et D, certains sinistres reçoivent « à examiner par un gestionnaire » parce que leur garantie n'est pas encore traduite. C'est dit clairement, mais ce n'est pas une réponse.
-- **Les jeux de test sont petits.** Vingt à trente cas par contrat : un écart de trois ou quatre points entre deux passages ne veut rien dire. Certaines parties (les voyages, la protection numérique du contrat B) sont vérifiées par des essais de règles, pas par un banc. Et trois cas des jeux « fermés » ont fini par servir à corriger une règle : ils sont signalés à côté des chiffres, et ne comptent plus comme des cas jamais vus.
-- **Les bonnes réponses n'ont pas été relues par un juriste.** Elles ont été établies d'après le texte des contrats. Un professionnel pourrait en contester certaines.
-- **Ce n'est pas un service en production.** Il n'a pas d'utilisateurs réels. Mon expérience d'un service en ligne vient de SortirIA, pas d'ici.
+- **Les jeux de test sont petits.** Vingt à trente cas par contrat : un écart de trois ou quatre points entre deux passages ne veut rien dire. Certaines parties (les voyages, la protection numérique du contrat B) sont vérifiées par des essais de règles, pas par un banc. Et trois cas des jeux « fermés » ont fini par servir à corriger une règle : ils sont signalés à côté des chiffres, et ne comptent plus comme des cas jamais vus. **Ce qui a été fait le dernier jour** : un nouveau jeu de soixante déclarations (vingt par contrat pour A, B et D), écrit par des annotateurs qui n'ont lu que le texte des contrats, et mesuré une seule fois sans rien régler ensuite. Le résultat est moins flatteur, et c'est lui qu'il faut croire : 95 % de réponses justes sur A sans aucune erreur grave, mais 58 % sur B et 78 % sur D, avec chaque fois un ou deux sinistres annoncés couverts alors qu'ils ne le sont pas. Autrement dit : la méthode empêche de répondre sans preuve, elle n'empêche pas de mal traduire un contrat, et chaque nouveau contrat demande son propre jeu de test jamais vu.
+- **Les bonnes réponses n'ont pas encore été relues par un juriste.** Elles ont été établies d'après le texte des contrats, et un professionnel pourrait en contester certaines. Cette relecture est à faire : c'est la prochaine étape avant tout usage réel.
+- **Ce n'est pas encore un service en production.** Il n'a pas d'utilisateurs réels. Mon expérience d'un service en ligne vient de SortirIA, pas d'ici.
 - **Il ne dit rien du montant.** Il répond à « est-ce couvert ? », pas à « combien ? ». Les plafonds et franchises sont cités, pas calculés.
 
 ## 9. En une phrase

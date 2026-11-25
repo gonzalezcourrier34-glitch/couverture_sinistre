@@ -21,6 +21,8 @@ import sys
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+from .evaluation import JEUX_FERMES
+
 DOSSIER = Path("data") / "ferme"
 
 
@@ -185,13 +187,13 @@ def exporter() -> None:
         acceptables = sorted(set(c.get("acceptables") or []) | set(b.get("acceptables") or [])
                              | ({c["attendu"], b["attendu"]} if k == "souple" else set()) - {retenu["attendu"]})
         contrat = contrats[c["contrat"]]
-        sinistres.append({"id": c["id"], "famille": ", ".join(retenu.get("articles") or []), "source": "ferme",
+        sinistres.append({"id": c["id"], "famille": ", ".join(retenu.get("articles") or []), "source": DOSSIER.name,
                           "sinistre": c["declaration"]})
         annotations[contrat].append({
             "sinistre_id": c["id"], "attendu": retenu["attendu"], "acceptables": acceptables,
             "clauses_attendues": retenu.get("articles") or [],
             "questions_attendues": [q for q in [retenu.get("question_attendue")] if q],
-            "themes": [c.get("theme") or "base"], "origine": "ferme", "auteur": "agent+mistral-large",
+            "themes": [c.get("theme") or "base"], "origine": DOSSIER.name, "auteur": "agent+mistral-large",
             "note": retenu.get("justification", ""),
             "statut": f"jeu fermé, écrit sans voir les règles ; {origine}"})
     if en_attente:
@@ -209,6 +211,8 @@ def main(argv: list[str] | None = None) -> None:
 
     charger_env(".env")
     p = argparse.ArgumentParser(prog="python -m couverture.mesure.ferme", description=__doc__.splitlines()[0])
+    p.add_argument("--jeu", choices=JEUX_FERMES, default="ferme",
+                   help="Le jeu à monter : ferme (data/ferme) ou aveugle (data/aveugle, le second, 7.185)")
     sous = p.add_subparsers(dest="commande", required=True)
     pa = sous.add_parser("annoter", help="Second avis par un autre modèle, à l'aveugle")
     pa.add_argument("--modele", default="mistral-large-latest")
@@ -216,6 +220,8 @@ def main(argv: list[str] | None = None) -> None:
     sous.add_parser("comparer", help="Accords et désaccords ; écrit arbitrage.csv")
     sous.add_parser("exporter", help="Écrit le jeu fermé au format du banc")
     a = p.parse_args(argv)
+    global DOSSIER
+    DOSSIER = Path("data") / a.jeu
     if a.commande == "annoter":
         annoter(a.modele, a.paralleles)
     elif a.commande == "comparer":

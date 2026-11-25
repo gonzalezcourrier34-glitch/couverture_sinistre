@@ -10,7 +10,7 @@ from ..analyse import chaine, prolog
 from ..analyse.validation import extrait_present
 from ..contrat import tableaux
 from ..contrat.base import Base
-from ..mesure.evaluation import charger_cas, fichiers_jeu, lire_jsonl
+from ..mesure.evaluation import JEUX, charger_cas, fichiers_jeu, lire_jsonl
 
 
 def ajouter(sous) -> None:
@@ -18,7 +18,7 @@ def ajouter(sous) -> None:
     p = sous.add_parser("regles", help="Vérifier les règles Prolog d'un contrat (chargement, vocabulaire, citations, cas)")
     p.add_argument("--contrat", required=True)
     p.add_argument("--faits", help="Décider un cas : JSON des faits, ex. '{\"evenement\": \"vol\", \"lieu\": [\"cave\"]}'")
-    p.add_argument("--jeu", choices=["mise_au_point", "validation", "redaction", "golden", "ferme"], default="mise_au_point",
+    p.add_argument("--jeu", choices=list(JEUX), default="mise_au_point",
                    help="Cas de mise au point (défaut), de validation (data/validation) ou des garanties rédigées par le modèle (data/redaction)")
     p.add_argument("--ranger", action="store_true",
                    help="Ranger le vocabulaire : commun.json, et un fichier par contrat pour ce que lui seul emploie")
