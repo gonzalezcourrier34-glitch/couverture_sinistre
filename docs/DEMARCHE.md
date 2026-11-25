@@ -5404,6 +5404,76 @@ finale. Le banc recevra une option d'échantillon et affichera les tokens envoy�
 
 Le plan détaillé, étape par étape avec son critère, est dans `perso/FEUILLE_DE_ROUTE.md`.
 
+### 7.189 En tables d'abord : le principe d'un article, appliqué au contrat
+
+*25 novembre, 14 h 30.*
+
+**Le dossier de clauses, sans modèle.** Première pièce de la refonte : `analyse/dossier.py` compose ce que le
+modèle devra juger. Le modèle désigne des chapitres dans la table des matières ; le code ajoute, sans rien
+laisser à son choix, la garantie entière quand on n'en a désigné qu'un sous-article, les chapeaux au-dessus,
+les exclusions générales, les articles auxquels ces clauses renvoient, et les définitions du lexique dont le
+terme paraît. Sur les 120 cas déjà vus : les bons chapitres une fois désignés, le dossier contient tous les
+articles cités dans 119 cas. Avec des chapitres désignés par un lecteur qui ne voit que la table des matières
+(pas Mistral : un essai gratuit de la consigne), il est complet dans 114 cas ; les six manques tiennent à une
+garantie cachée sous un titre (le « heurt » sous « Incendie »), d'où les premiers mots de chaque garantie
+ajoutés à la table. Le dossier pèse 6 500 à 10 000 mots, un quart à un tiers du contrat : plus que ce que
+j'annonçais (« quelques milliers de tokens »), parce que la désignation est large. Je préfère cela à une
+exclusion oubliée.
+
+**L'article.** « Parse the Folder, Not Just the PDFs » (Towards Data Science) traite un dossier de sinistre :
+ses deux vraies questions, une pièce manque-t-elle, deux valeurs se contredisent-elles, ne sont pas des
+recherches. L'absence d'un document ne rend qu'un résultat vide ; on ne la constate que si l'on a écrit
+d'avance ce qui était attendu. D'où des tables : les pièces attendues par type de dossier, les pièces arrivées,
+une jointure (présente, manquante, non rattachée), et pour réponse l'état du dossier, chaque entrée avec sa
+source. Je n'en ai lu qu'un résumé fidèle, et c'est un billet, pas une étude mesurée : une idée voisine, pas
+une preuve.
+
+**Le lien.** C'est notre défaut du matin, vu de l'autre côté : la chaîne ne savait pas qu'une exclusion manquait
+à son examen, parce que rien ne lui disait ce qu'elle aurait dû examiner.
+
+**Ce qui est décidé.** La refonte se fait en tables d'abord, dans la base SQLite du projet : les *clauses
+attendues* par garantie, écrites une fois par contrat (le rôle de chacune, et si elle bloque la couverture) ;
+les *jugements*, une ligne par clause et par sinistre avec ses deux citations ; une *jointure*, où une clause
+attendue sans jugement fait refuser la réponse et où un jugement sur une clause non attendue est signalé ; et
+l'*état du sinistre* pour réponse. La décision devient une requête, plus un appel au modèle. C'est la même
+étape 2 de la feuille de route, construite en tables plutôt qu'en mémoire.
+
+**Ce qui n'est pas pour cette livraison.** Le système de l'article lui-même, la complétude et la cohérence d'un
+dossier de sinistre (formulaire, devis, factures, rapports), est une évolution future : il prolonge le projet
+(nos « à préciser » en sont l'amorce : la plainte, l'arrêté de catastrophe naturelle sont des pièces
+attendues), mais il n'y a ni dossiers ni jeu de référence pour le mesurer aujourd'hui.
+
+### 7.190 Deux essais sans frais, trois défauts trouvés, et une commande pour le premier essai payant
+
+**Le fait.** Avant de payer un seul appel, le jugement clause par clause a été essayé deux fois sur des cas déjà
+vus, avec un autre lecteur que Mistral et les chapitres désignés à l'étape 1. Premier essai, 12 cas : aucune
+clause oubliée, aucune citation fausse, 9 réponses justes. Second essai, 24 cas, après corrections : 22 réponses
+justes, aucun couvert à tort, aucun refus à tort ; les deux écarts sont des « à préciser » (une mesure de
+sécurité lue comme une exclusion, et un « couvre » tiré du chapitre qui liste les biens assurés). Ce ne sont pas
+des mesures : les cas sont vus, et le lecteur n'est pas celui de la démonstration.
+
+**Les trois défauts, et leur règle.** Aucun n'a été réglé par un cas particulier.
+
+- *Le chapeau d'un grand titre attendait tout le titre* : plus rien n'était jamais couvert, puisqu'une clause
+  attendue manquait toujours. Le chapeau n'attend plus que ses clauses propres (`attendu.py`, un test).
+- *Un « couvre » emprunté* : une clause citée dans une garantie par renvoi, en chapeau, en exclusion générale ou
+  en définition faisait couvrir cette garantie. Un « couvre » ne compte que dans la garantie propre de la clause
+  (`jugement.EMPRUNTS`, un test).
+- *La portée d'un refus* : des bijoux que le contrat n'assure que par option étaient lus « exclus pour cette
+  garantie », et une autre garantie couvrait. Quand une garantie couvre et qu'un refus vient d'une partie du
+  contrat qui n'est pas sa voisine (même chapitre parent), la décision est « à préciser » avec le motif « sa
+  portée est à examiner » (un test). La consigne dit aussi qu'une clause qui liste les biens assurés ne
+  « couvre » pas, et qu'un bien assuré seulement par option est « à vérifier » pour tout le contrat.
+
+**Ce qui reste prudent.** Les deux écarts vont dans le sens sûr (on demande au lieu d'affirmer). La consigne a
+été retouchée pour eux et n'a pas été réessayée : ce sera vu à l'essai chez Mistral.
+
+**La commande.** `couverture juger --contrat … "déclaration"`, ou `--jeu aveugle --cas av-d07` : la décision,
+l'attendu en regard, les clauses qui couvrent, excluent ou restent à vérifier avec leur extrait, les clauses
+attendues sans jugement et les jugements écartés. Deux appels à Mistral Large par cas, sur un dossier de 7 500 à
+16 000 mots : c'est une commande payante, lancée seulement aux moments annoncés. La chaîne de règles n'y est
+appelée qu'avec `--regles`. Suite : 273 tests passés.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le ferais.
@@ -5639,3 +5709,5 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 197. Neuf corrections tirées d'un jeu n'ont pas fait monter le suivant : ce qu'on corrige d'après vingt cas vaut pour ces vingt cas. Le chiffre honnête d'un système est celui du dernier jeu qu'il n'a pas vu, et il faut l'écrire même quand il baisse.
 198. Quand deux tours de corrections ne font pas monter le chiffre d'un jeu neuf, ce n'est plus une liste de défauts, c'est la méthode : s'arrêter de corriger, nommer le défaut de fond, et changer ce qui décide.
 199. Une date qu'on s'est fixée soi-même ne justifie pas de livrer ce qu'on sait insuffisant : on la déplace, on le dit, et on garde livrable ce qui marche.
+200. On ne constate un manque que si l'on a écrit d'avance ce qui devait être là : une liste de ce qui est attendu, puis une jointure, valent mieux qu'un lecteur à qui l'on demande de ne rien oublier.
+201. Un essai gratuit sur des cas déjà vus ne mesure rien, mais il trouve les défauts de construction avant qu'on paie pour les voir : trois ici, dont un qui empêchait toute réponse « couvert ».

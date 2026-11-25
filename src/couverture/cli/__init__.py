@@ -22,9 +22,9 @@ from pathlib import Path
 
 from ..config import charger_env
 from ..contrat.base import Base
-from . import analyser, api, banc, clauses, contrats, exemples, formules, ingerer, modele, rediger, regles, versions
+from . import analyser, api, banc, clauses, contrats, exemples, formules, ingerer, juger, modele, rediger, regles, versions
 
-COMMANDES = (ingerer, contrats, clauses, regles, formules, rediger, analyser, banc, exemples, api, versions, modele)
+COMMANDES = (ingerer, contrats, clauses, regles, formules, rediger, analyser, juger, banc, exemples, api, versions, modele)
 
 
 def main(argv: list[str] | None = None) -> int:
