@@ -120,7 +120,20 @@ Trois contrats de trois assureurs (anonymisés A, B, D), sur le même moteur. Mi
 - **C'est le chiffre à retenir pour un contrat qu'on vient de brancher** : A tient (95 %, aucune erreur dans un sens ni dans l'autre) ; B et D tombent nettement sous leurs jeux fermés (90 % et 96 %), et couvrent à tort.
 - **Les couverts à tort** : chez B, un rocher tombé d'un talus (le contrat exclut les chutes de pierres pour toutes les garanties), à chaque passage, et une tablette volée dans une voiture, une fois sur trois ; chez D, des bijoux volés (ils relèvent d'une option) et un accident de trottinette électrique (soumise à l'assurance obligatoire), à chaque passage.
 - **Les autres erreurs** sont surtout des « à préciser » là où le texte suffisait, et chez B trois refus à tort (une conduite rompue dans une cloison, un trampoline emporté par la tempête, la vitre d'une salle louée).
-- **Je n'ai rien corrigé d'après ces cas**, pas même cherché si la faute est à la lecture ou aux règles : un jeu qu'on regarde pour régler cesse de mesurer. La phrase « toutes les erreurs viennent de la lecture », plus bas, vaut pour les anciens jeux ; pour celui-ci, je ne le sais pas.
+- **Cette mesure a été faite et enregistrée avant toute correction** (commit du 25 novembre, 11 h 48). Ensuite seulement j'ai regardé pourquoi : à peu près la moitié des erreurs venait des règles (les exclusions communes de B jamais traduites, deux garanties de base de B traitées en options, les bijoux de D couverts sans leur option), l'autre du vocabulaire donné à la lecture (une trottinette électrique lue comme un vélo, un trampoline comme du matériel de sport). Neuf corrections, chacune écrite comme une règle générale (démarche 7.186). La phrase « toutes les erreurs viennent de la lecture », plus bas, ne vaut donc que pour les anciens jeux.
+- **Ce jeu est maintenant un jeu « vu »** : le gain des corrections se mesure sur un troisième, `data/neuf`, écrit de la même façon après elles.
+
+**Le troisième jeu (25 novembre, 12 h 37), mesuré une fois après ces corrections.** Soixante autres déclarations, écrites de la même façon, avec une consigne de plus : chercher des situations moins courantes que celles du second jeu (57 accords sur 60 entre les deux annotateurs, trois désaccords arbitrés sur le texte).
+
+| Banc « neuf » (20 cas par contrat, 3 passages) | Réponses justes | Couverts à tort | Refus à tort |
+|---|---|---|---|
+| A | 60 % | 4 | 1 |
+| B | 50 % | 2 | 0 |
+| D | 80 % | 1 | 1 |
+
+- **Les corrections du midi n'ont pas suffi** : sur des situations moins courantes, B ne fait pas mieux (50 %), et A, qui tenait à 95 % sur le second jeu, tombe à 60 % avec quatre sinistres couverts à tort. Seul D se maintient (80 %).
+- **Les deux jeux ne sont pas de même difficulté** (le troisième cherche l'inhabituel), donc l'écart ne mesure pas seulement les corrections. Mais la conclusion ne dépend pas de cette nuance : **sur des cas que je n'ai jamais regardés, le système répond juste une fois sur deux à quatre fois sur cinq, et il lui arrive de couvrir à tort.** Les 94 à 100 % du premier tableau sont ceux de jeux qui ont accompagné les réglages.
+- Ce que le système garde de solide dans les trois jeux : chaque réponse cite la clause qui la fonde, et le moteur, sur des faits exacts, applique les règles sans erreur. Ce qui manque est en amont : des clauses pas encore traduites ou traduites trop large, et un vocabulaire de lecture qui ne connaît pas encore assez de situations.
 - **Un cas de D ressemble à un exemple de lecture** écrit avant lui (des tags sur un mur, `av-d13` et `ex-d14`) : l'annotateur ne l'avait pas vu, c'est un hasard, mais ce cas a pu être aidé. Il reste dans le jeu, la ressemblance est déclarée dans `data/lecture/proches_declares.json` ; sans lui, D resterait à 77 %.
 - Ce que cela dit : la méthode empêche de répondre sans preuve, pas de mal traduire un contrat. Les jeux qui ont servi pendant les réglages flattent le système ; la relecture par un juriste et un jeu neuf à chaque contrat restent nécessaires.
 

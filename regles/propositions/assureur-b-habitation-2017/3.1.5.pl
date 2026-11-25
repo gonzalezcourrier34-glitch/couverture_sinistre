@@ -24,6 +24,8 @@ exclusion(bris_vitrages, f(manque_entretien, oui), tout, non, '3.1.5.2',
     "par un défaut de réparation ou d’entretien des châssis, soubassements et support de vitres, glaces et miroirs").
 exclusion(bris_vitrages, et([f(type_dommage, opacification_ou_perte_etancheite), ou([f(garantie_fabricant, oui), f(statut_logement, locataire)])]), tout, oui, '3.1.5.1',
     "à la perte d’étanchéité des vitrages isolants sauf s’ils sont sous garantie ou si l’Assuré est locataire").
+exclusion(bris_vitrages, f(lieu, vehicule), tout, non, '3.1.5.1',
+    "La Compagnie assure les biens désignés, contre les bris et fêlures accidentels des vitrages, des glaces et des miroirs.").
 limite(bris_vitrages, '3.1.5.1', "Les dommages matériels occasionnés aux vitrages des panneaux solaires et/ou installations photovoltaïques sont couverts à concurrence de 50.000€ par sinistre.", "50000").
 exclusion([bris_vitrages], f(option_bris_vitrages, non), tout, oui, '3.1.5',
     "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ bris de vitrages ” est souscrite.").

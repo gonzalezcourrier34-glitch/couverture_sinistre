@@ -1079,18 +1079,35 @@
       ]
     },
     "glissement_terrain": {
-      "libelle": "Glissement ou tassement de terrain",
+      "libelle": "Chute de pierres ou mouvement de terrain",
       "valeurs": [
         "oui",
         "non"
       ],
-      "question": "Le dommage est-il lié à un glissement, un affaissement ou un tassement de terrain ?",
+      "question": "Le dommage vient-il d'une chute de pierres ou de rochers, d'un glissement ou d'un affaissement de terrain ?",
       "aide": {
-        "oui": "le terrain a glissé, s'est affaissé ou tassé",
-        "non": "aucun mouvement de terrain"
+        "oui": "une pierre, un rocher ou un bloc qui se détache et tombe (d'une falaise, d'un talus) ; un terrain qui glisse, s'affaisse ou se tasse",
+        "non": "aucune chute de pierres, aucun mouvement de terrain"
       },
       "pour": [
-        "responsabilite"
+        "vol",
+        "incendie",
+        "explosion",
+        "foudre",
+        "degat_eaux",
+        "tempete",
+        "bris",
+        "autre",
+        "electricite",
+        "mazout",
+        "catastrophe_naturelle",
+        "attentat",
+        "fumee",
+        "vandalisme",
+        "merule",
+        "responsabilite",
+        "heurt",
+        "accident"
       ]
     },
     "option_dommages_biens": {

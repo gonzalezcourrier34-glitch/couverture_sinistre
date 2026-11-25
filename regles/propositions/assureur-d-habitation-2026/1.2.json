@@ -10,7 +10,8 @@
       "modifications": [
         "concept `contenu` : les biens mobiliers, dans les lieux assurés (`batiment`)",
         "exclusions de biens en portée `bien` ; objets précieux exclus sauf l'option « objets de valeur » (1.3)",
-        "fauteuil roulant, bouteilles, bateaux, timbres, matériel professionnel, armes : hors décision"
+        "fauteuil roulant, bouteilles, bateaux, timbres, matériel professionnel, armes : hors décision",
+        "25 nov. : les bijoux et les valeurs ne sont assurés que par l'option « objets de valeur » : l'exclusion se demande. Jamais demandée, elle laissait couvrir un vol de bijoux sans savoir si l'option était souscrite (jeu « aveugle », 7.186)"
       ]
     }
   },
@@ -164,7 +165,7 @@
         "portee": {
           "bien": "bijoux"
         },
-        "a_demander": false,
+        "a_demander": true,
         "article": "1.2-b",
         "texte": "les objets précieux, les espèces, titres et valeurs, les objets de valeur désignés",
         "cibles": [
@@ -210,7 +211,7 @@
         "portee": {
           "bien": "valeurs"
         },
-        "a_demander": false,
+        "a_demander": true,
         "article": "1.2-b",
         "texte": "les objets précieux, les espèces, titres et valeurs, les objets de valeur désignés",
         "cibles": [

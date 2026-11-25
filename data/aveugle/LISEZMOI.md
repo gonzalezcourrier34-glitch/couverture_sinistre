@@ -5,8 +5,9 @@ regardés pour corriger une règle. Celui-ci est neuf : 60 déclarations (20 pou
 le 25 novembre 2026 par trois agents Claude neufs, un par contrat, qui n'ont lu que le texte des conditions
 générales (noms anonymisés) : ni les règles, ni le vocabulaire, ni les autres jeux.
 
-**Règle : ce jeu ne sert qu'à mesurer.** Aucun de ses cas ne sert à régler le vocabulaire, les règles ou les
-exemples de lecture. Un cas n'est pas corrigé après avoir vu la réponse du système.
+**Ce jeu a mesuré une fois, à l'aveugle, le 25 novembre à 11 h 37** (chiffres ci-dessous). Ensuite ses erreurs ont
+été lues et neuf corrections en ont été tirées (DEMARCHE 7.186) : depuis, ses 60 cas sont des cas **vus**, et un
+banc relancé sur lui ne mesure plus que ces corrections. Le jeu jamais regardé est `data/neuf`.
 
 | Fichier | Contenu |
 |---|---|

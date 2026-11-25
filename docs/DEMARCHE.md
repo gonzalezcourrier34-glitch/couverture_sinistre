@@ -5243,6 +5243,68 @@ tort » n'est tenue que sur les cas qui ont servi à régler ; sur des cas neufs
 deux fois sur vingt. La suite logique, après la livraison : corriger d'après ces cas en les déclarant vus,
 puis écrire un troisième jeu, et recommencer jusqu'à ce que l'écart entre jeu vu et jeu neuf se ferme.
 
+### 7.186 Corriger d'après le jeu aveugle, et en écrire un troisième pour mesurer
+
+*25 novembre, midi.* 58 % sur B : « ce n'est pas bon du tout », et il reste six heures. Le commit de 7.185 fixe la
+mesure à l'aveugle ; à partir de là, les 60 cas du jeu « aveugle » sont des cas **vus**, et ce qui suit ne peut
+plus se mesurer sur eux.
+
+**Ce que les faits lus disaient.** Les rapports du banc gardent, pour chaque passage, les faits retenus par la
+lecture. Rejoués sur les règles sans modèle (les mêmes faits, le moteur de référence), ils redonnent les chiffres
+du banc à un cas près : de quoi séparer ce qui vient des règles de ce qui vient de la lecture, et voir l'effet
+d'une correction en une seconde.
+
+| Défaut | Cas | D'où il vient | Correction, écrite comme une règle |
+|---|---|---|---|
+| Les exclusions communes de B (2.10) n'étaient pas traduites | un rocher tombé d'un talus, couvert comme un heurt | règles | l'article 2.10 traduit pour toutes les garanties (`exclusion(tous, …)`) : chute de pierres et mouvement de terrain, faute intentionnelle, guerre, nucléaire ; jamais demandés |
+| Deux garanties de base de B traitées en options | un téléviseur tombé, un facteur qui glisse sur le verglas : « à préciser » | règles (ma décision de 7.181) | le contrat range 3.1.7 et 3.1.10 sous « 3.1 Garanties de base », avec la phrase de l'incendie et du vol : présumées souscrites, avec la réserve. Un test interdit une circonstance « option » dans un article 3.1.x |
+| La vitre d'une voiture comptait comme un vitrage du bâtiment | une tablette volée dans une voiture, couverte une fois sur trois | règles | bris de vitrages et dégradations lors d'un vol : pas dans un véhicule (exclusion jamais demandée, pour ne pas demander le lieu à chaque vitre) |
+| Chez D, les bijoux volés étaient couverts sans l'option | une bague et une chaîne volées | règles | l'exclusion « sauf option objets de valeur » se demande |
+| Une trottinette électrique lue comme un vélo | un piéton renversé, couvert chez D | vocabulaire | une valeur `engin_motorise_personnel`, enfant de `vehicule_moteur` : les règles écrites pour les véhicules à moteur s'appliquent, dans les quatre contrats |
+| Le trampoline lu « matériel de sport » | refusé chez B, dont le lexique le range dans le mobilier de jardin | vocabulaire | l'aide du mobilier de jardin nomme les jeux d'extérieur, le barbecue, le parasol |
+| Un parquet gonflé lu « moisissure » | une conduite rompue dans une cloison, refusée | vocabulaire | l'aide dit ce qui n'est pas une moisissure |
+| Une victime qui demande réparation lue « responsabilité » | un piéton renversé par un cycliste, refusé chez D | vocabulaire | l'aide de « litige » et de « responsabilité » dit de quel côté se trouve l'assuré |
+| Le serrurier demandé à l'assistance, ou appelé soi-même | « à préciser » chez A et B | vocabulaire | l'aide d'`intervention_mandatee` donne les deux situations |
+
+**Ce que je n'ai pas corrigé.** La salle des fêtes louée (B, 3.1.8.6) : j'ai essayé d'en faire une garantie qui
+décide seule ; elle posait alors ses questions (le pays, le séjour) à chaque incendie, et le test des questions
+hors sujet l'a refusé. Elle reste accessoire, et ce cas reste faux. Les « à préciser » instables (une porte non
+fermée à clé sans violence dite, un congélateur débranché, une tempête suivie de pluie) : ils tiennent à la
+lecture d'un passage à l'autre, pas à une règle.
+
+**Ce qui change ailleurs.** L'ordinateur tombé de la table (7.182) redevient « couvert », avec la réserve des
+conditions particulières : c'est la conséquence de la règle sur les garanties de base, et c'est ce que répondent
+deux lecteurs du texte. Un cas du golden set de B (`b-v07`, un téléphone volé sous la menace) passe pour la même
+raison de « à préciser » à « couvert » ; son annotation est corrigée et datée. Sur les 112 cas à faits exacts des
+trois contrats, c'est la seule décision qui bouge.
+
+**Sur les faits lus à 11 h 37, sans relire** : B passe de 58 % à 70 %, D de 73 % à 78 %, et les couverts à tort
+de 4 à 3 et de 6 à 3 passages. Le reste dépend de ce que la lecture fera du vocabulaire corrigé : cela ne se
+voit que sur un banc.
+
+**Le troisième jeu.** Mesurer ces corrections sur le jeu qui les a inspirées serait se flatter une seconde
+fois. Trois agents neufs écrivent `data/neuf` : 60 déclarations, mêmes consignes, avec une demande de plus,
+éviter les situations rebattues (je leur ai nommé celles du second jeu, pour qu'ils n'y retombent pas). Second
+avis, arbitrage, puis une mesure, qui ira dans le README à côté des deux autres.
+
+**La mesure sur le troisième jeu (12 h 37).** Second avis : 55 accords stricts, 2 souples, 3 désaccords, arbitrés
+par un agent neuf sur le seul texte, tous en faveur du premier annotateur (une coupure de courant dont la durée
+n'est pas dite, une responsabilité civile rangée sous un titre d'option, la télévision d'un frère). Puis une
+mesure, trois passages :
+
+| Contrat | Justes | Exactes | Couverts à tort | Refus à tort | Instables |
+|---|---|---|---|---|---|
+| A | 60 % | 55 % | 4 | 1 | 0 |
+| B | 50 % | 47 % | 2 | 0 | 4 |
+| D | 80 % | 58 % | 1 | 1 | 1 |
+
+C'est moins bon que le second jeu pour A (95 %) et pour B (58 %), un peu mieux pour D (78 %). Deux lectures
+possibles, et les deux sont vraies en partie : le troisième jeu est plus dur (j'ai demandé des situations
+inhabituelles), et mes neuf corrections ne valaient que pour les cas qui les avaient inspirées. Ce que je
+retiens : A n'était pas « bon à 95 % », il l'était sur vingt situations courantes ; et un contrat réglé pendant
+une semaine sur des jeux que je voyais ne répond juste, sur l'inconnu, qu'une fois sur deux à quatre fois sur
+cinq. Les chiffres vont tels quels dans le README, enregistrés avant que j'ouvre ces cas.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le ferais.
@@ -5473,3 +5535,6 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 192. « On ne réécrit pas du code mesuré » vaut tant qu'on ne peut pas comparer l'ancien et le nouveau ; quand on le peut, le refus n'est plus de la prudence, c'est une mesure qu'on n'a pas faite.
 193. Un jeu de test dont on a regardé trois cas pour corriger une règle n'est plus fermé : on le dit à côté des chiffres, et on en écrit un autre, par quelqu'un qui n'a pas vu les règles.
 194. Le chiffre d'un jeu qu'on a regardé pendant les réglages mesure les réglages : B passe de 90 % à 58 % sur vingt cas neufs. Le seul chiffre qui parle d'un contrat est celui du jeu qu'on n'a jamais ouvert.
+195. Quand un banc garde les faits lus, les rejouer sur les règles sans modèle sépare en une seconde ce qui vient des règles de ce qui vient de la lecture, et dit ce qu'une correction change avant de payer un passage.
+196. Corriger d'après un jeu neuf le brûle : la mesure d'après se fait sur un autre, écrit de la même façon, sinon on a seulement appris les réponses.
+197. Neuf corrections tirées d'un jeu n'ont pas fait monter le suivant : ce qu'on corrige d'après vingt cas vaut pour ces vingt cas. Le chiffre honnête d'un système est celui du dernier jeu qu'il n'a pas vu, et il faut l'écrire même quand il baisse.

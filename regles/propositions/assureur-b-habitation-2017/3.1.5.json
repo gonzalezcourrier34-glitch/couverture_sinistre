@@ -12,7 +12,8 @@
         "exclusions de biens (lunettes, objets en verre, enseignes, multimédia) : portée limitée au bien ; châssis de couche : la valeur proposée désignait un cadre de lit, retirée",
         "lien_causal_travaux_sinistre → lien_causal_travaux ; parties communes : quand l'assuré n'occupe qu'une partie du bâtiment",
         "« applicables si… » : réserve (option_bris_vitrages) ; valeurs nouvelles rattachées à leur parent",
-        "perte d'étanchéité : une exclusion à demander, plus une circonstance (le type de dommage inconnu ne suspend plus)"
+        "perte d'étanchéité : une exclusion à demander, plus une circonstance (le type de dommage inconnu ne suspend plus)",
+        "25 nov. : « les biens désignés » sont le bâtiment et son contenu : la vitre d'une voiture n'en est pas. Écrit en exclusion jamais demandée (lieu = vehicule), pour ne pas demander le lieu à chaque vitre cassée. Le jeu « aveugle » couvrait une vitre de voiture brisée pour un vol (7.186)"
       ]
     }
   },
@@ -287,6 +288,18 @@
             "a_demander": true,
             "article": "3.1.5.1",
             "texte": "à la perte d’étanchéité des vitrages isolants sauf s’ils sont sous garantie ou si l’Assuré est locataire"
+          },
+          {
+            "condition": {
+              "f": [
+                "lieu",
+                "vehicule"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.1.5.1",
+            "texte": "La Compagnie assure les biens désignés, contre les bris et fêlures accidentels des vitrages, des glaces et des miroirs."
           }
         ],
         "limites": [

@@ -21,7 +21,8 @@
         "24 nov. : « accident » déclaré traduit chez B. Le périmètre reste l'événement « bris », que le vocabulaire donne pour parent à « accident » : un objet tombé y entre déjà. Écrit « bris ou accident », le périmètre devenait incertain pour un heurt",
         "24 nov. au soir : « à l'intérieur d'un véhicule » vaut aussi quand un véhicule figure parmi les biens touchés et que le lieu lu est la voie publique. Vu sur un cas du jeu fermé (f-b18, la voiture fracturée devant la gare) : la lecture nomme la voiture comme bien et situe le tout « dans la rue », l'obligation du véhicule fermé ne se déclenchait pas et le matériel était couvert sans question. La règle ne conclut rien de plus : elle fait poser la question du contrat. Ce cas n'est plus un cas jamais vu",
         "24 nov., 23 h 30 : l'option s'écrit comme les autres, une circonstance marquée « option » (7.181) ; elle était une exclusion « option non souscrite »",
-        "24 nov., 23 h 45 : « les vols commis par l'Assuré ou sa famille » est une exclusion de la seule garantie vol. Commune aux deux garanties, elle refusait aussi le bris : un ordinateur tombé de la table, lu « causé par l'assuré », était refusé pour complicité de vol (7.182). Écrite « vol et auteur », elle aurait été entamée par l'événement et demandé l'auteur à chaque vol"
+        "24 nov., 23 h 45 : « les vols commis par l'Assuré ou sa famille » est une exclusion de la seule garantie vol. Commune aux deux garanties, elle refusait aussi le bris : un ordinateur tombé de la table, lu « causé par l'assuré », était refusé pour complicité de vol (7.182). Écrite « vol et auteur », elle aurait été entamée par l'événement et demandé l'auteur à chaque vol",
+        "25 nov. : le contrat range cette garantie sous « 3.1 Garanties de base » : elle est présumée souscrite comme l'incendie ou le vol, avec la réserve des conditions particulières, et ne se demande plus comme une option (7.186)"
       ],
       "question_metier": "Le matériel multimédia en séjour temporaire est couvert par les garanties incendie, tempête, eaux… « sous réserve qu'elles aient été accordées » : non traduit ici (hors décision), à vérifier avec un souscripteur."
     }
@@ -69,19 +70,7 @@
             ]
           }
         ],
-        "circonstances": [
-          {
-            "condition": {
-              "f": [
-                "option_materiel_multimedia",
-                "oui"
-              ]
-            },
-            "article": "3.1.7",
-            "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “matériel multimédia” est accordée.",
-            "option": true
-          }
-        ],
+        "circonstances": [],
         "obligations": [
           {
             "condition": {
@@ -267,17 +256,6 @@
             },
             "article": "3.1.7.1",
             "texte": "le vol du matériel multimédia lorsque le vol a eu lieu à l’extérieur du bâtiment désigné ; n le vol de ces équipements se trouvant à l’intérieur d’un véhicule terrestre automoteur à condition que ledit véhicule soit également volé ou qu’il y ait effraction caractérisée du véhicule ; n le vol de ces équipements qu’un Assuré déplace à l’occasion d’un séjour temporaire dans un bâtiment situé n’importe où dans le monde, pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes"
-          },
-          {
-            "condition": {
-              "f": [
-                "option_materiel_multimedia",
-                "oui"
-              ]
-            },
-            "article": "3.1.7",
-            "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “matériel multimédia” est accordée.",
-            "option": true
           }
         ],
         "obligations": [
@@ -414,6 +392,18 @@
       }
     ],
     "exclusions_communes": [
+      {
+        "condition": {
+          "f": [
+            "option_materiel_multimedia",
+            "non"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "3.1.7",
+        "texte": "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “matériel multimédia” est accordée."
+      },
       {
         "condition": {
           "f": [

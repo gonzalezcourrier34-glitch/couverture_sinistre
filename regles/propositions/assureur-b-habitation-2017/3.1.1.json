@@ -18,7 +18,8 @@
         "attentat : « auteur = tiers » retiré du périmètre (inconnu, il faisait demander qui sont les terroristes)",
         "3.1.1.1.6 : contact direct avec un foyer ou une substance incandescente (contact_incandescent) ; un tel dégât n'a pas à être un incendie au sens de 3.1.1.1.1 (7.83)",
         "décongélation : l'événement (incendie, explosion, foudre, électricité) au périmètre, plus en circonstance",
-        "24 nov. : une exclusion de plus sur le heurt, pour l'événement « accident », qui est par définition une casse due à l'assuré ou à un proche (« les dégâts causés au contenu par un Assuré »). Écrite à part et non demandée : jointe à l'exclusion existante, elle rendait incertain un heurt causé par un tiers. Sans elle, déclarer « accident » traduit chez B faisait couvrir un vase tombé"
+        "24 nov. : une exclusion de plus sur le heurt, pour l'événement « accident », qui est par définition une casse due à l'assuré ou à un proche (« les dégâts causés au contenu par un Assuré »). Écrite à part et non demandée : jointe à l'exclusion existante, elle rendait incertain un heurt causé par un tiers. Sans elle, déclarer « accident » traduit chez B faisait couvrir un vase tombé",
+        "25 nov. : les dégradations immobilières visent le bâtiment : la vitre d'une voiture fracturée n'en est pas (exclusion jamais demandée, lieu = vehicule ; 7.186)"
       ]
     }
   },
@@ -510,6 +511,18 @@
             "a_demander": true,
             "article": "3.1.1.2",
             "texte": "aux dégradations immobilières causées à l’occasion d’un vol ou d’une tentative de vol dans les locaux à occupation régulière"
+          },
+          {
+            "condition": {
+              "f": [
+                "lieu",
+                "vehicule"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "3.1.1.2",
+            "texte": "aux dégradations immobilières causées à l'occasion d'un vol ou d'une tentative de vol dans les locaux à occupation régulière ainsi que le vol de parties de bâtiment sauf : n les dommages ou le vol des biens se trouvant à l'extérieur du bâtiment ; n lorsque le bâtiment est en cours de construction, transformation ou rénovation, à moins que l'Assuré démontre que cette circonstance n'a pas contribué à la survenance ou à l'aggravation des conséquences du sinistre."
           }
         ],
         "limites": []
@@ -721,5 +734,11 @@
     ],
     "non_traduit": []
   },
-  "controles": []
+  "controles": [
+    {
+      "gravite": "à relire",
+      "controle": "réserve",
+      "message": "exclusion « aux dégradations immobilières causées à l'occasion d'un vol  » : le texte a une réserve (« à l'exception de… ») que la condition ne reprend pas"
+    }
+  ]
 }

@@ -53,6 +53,8 @@ exclusion(degradations_vol, et([f(travaux_construction, oui), non(f(lien_causal_
     "lorsque le bâtiment est en cours de construction, transformation ou rénovation, à moins que l'Assuré démontre que cette circonstance n'a pas contribué à la survenance ou à l'aggravation des conséquences du sinistre").
 exclusion(degradations_vol, f(occupation_irreguliere, oui), tout, oui, '3.1.1.2',
     "aux dégradations immobilières causées à l’occasion d’un vol ou d’une tentative de vol dans les locaux à occupation régulière").
+exclusion(degradations_vol, f(lieu, vehicule), tout, non, '3.1.1.2',
+    "aux dégradations immobilières causées à l'occasion d'un vol ou d'une tentative de vol dans les locaux à occupation régulière ainsi que le vol de parties de bâtiment sauf : n les dommages ou le vol des biens se trouvant à l'extérieur du bâtiment ; n lorsque le bâtiment est en cours de construction, transformation ou rénovation, à moins que l'Assuré démontre que cette circonstance n'a pas contribué à la survenance ou à l'aggravation des conséquences du sinistre.").
 garantie(vandalisme, "Vandalisme", '3.1.1.2',
     "aux dommages causés par un acte de vandalisme ou de malveillance au bâtiment désigné pour autant que les conditions suivantes soient remplies simultanément : n l'Assuré est propriétaire du bâtiment ; n le bâtiment fait l'objet d'une occupation régulière ; n le bâtiment n'est pas en cours de construction, ni de transformation, ni de rénovation. L'indemnisation des dégâts matériels causés par vandalisme ou malveillance est consentie sans application de la règle proportionnelle à concurrence de 2.500 € par sinistre.").
 perimetre(vandalisme, f(evenement, vandalisme)).

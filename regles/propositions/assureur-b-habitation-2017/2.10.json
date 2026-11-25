@@ -1,0 +1,142 @@
+{
+  "meta": {
+    "article": "2.10",
+    "modele": "aucun : écrite à la main",
+    "date": "2026-11-25",
+    "consigne": "redaction-regles v13",
+    "relecture": {
+      "par": "auteur + Claude",
+      "date": "2026-11-25",
+      "modifications": [
+        "25 nov. : les exclusions communes à toutes les garanties (2.10) n'avaient jamais été traduites ; le jeu « aveugle » l'a montré (un rocher tombé d'un talus, couvert comme un heurt, 7.186). Écrites à la main sur le modèle des exclusions générales de D (S25) : jamais demandées, l'assureur les établit",
+        "la chute de pierres et le mouvement de terrain ne valent pas pour la garantie « pluies & inondations », qui couvre le glissement de terrain (3.2.2)"
+      ]
+    }
+  },
+  "proposition": {
+    "evenements": [],
+    "definitions": [],
+    "garanties": [],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "intentionnel",
+                "oui"
+              ]
+            },
+            {
+              "non": {
+                "f": [
+                  "auteur",
+                  "tiers"
+                ]
+              }
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "2.10",
+        "texte": "les dommages occasionnés par la faute intentionnelle ou dolosive de l’Assuré ou bien avec sa complicité"
+      },
+      {
+        "condition": {
+          "et": [
+            {
+              "f": [
+                "glissement_terrain",
+                "oui"
+              ]
+            },
+            {
+              "non": {
+                "f": [
+                  "evenement",
+                  "catastrophe_naturelle"
+                ]
+              }
+            }
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "2.10",
+        "texte": "une chute de pierres ou de rochers, un glissement de terrain ou un affaissement"
+      },
+      {
+        "condition": {
+          "f": [
+            "cause_guerre",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "2.10",
+        "texte": "les dommages résultant d’une guerre ou des faits de même nature, d’une agression bactériologique ou chimique, d’une guerre civile"
+      },
+      {
+        "condition": {
+          "f": [
+            "cause_nucleaire",
+            "oui"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": false,
+        "article": "2.10",
+        "texte": "provenant de transmutation de noyaux d’atome ou de la radioactivité"
+      }
+    ],
+    "extensions": [],
+    "vocabulaire_manquant": [],
+    "non_traduit": [],
+    "hors_decision": [
+      {
+        "article": "2.10",
+        "texte": "un cataclysme de la Nature (irruption volcanique, …), à l’exception des dommages couverts au titre des garanties tempête et grêle, tremblement de terre et pluies & inondations",
+        "pourquoi": "aucun fait du vocabulaire ne dit un cataclysme hors des catastrophes naturelles, que le contrat ne couvre que par ses options"
+      },
+      {
+        "article": "2.10",
+        "texte": "les dommages se rattachant directement ou indirectement à une mesure de réquisition sous toute forme",
+        "pourquoi": "rare : jamais dit dans une déclaration ; l'assureur l'établit"
+      },
+      {
+        "article": "2.10",
+        "texte": "les dommages survenus alors que l’Assuré ne prend pas ou ne maintient pas certaines mesures que lui impose le contrat",
+        "pourquoi": "renvoie aux mesures de chaque garantie, traduites dans leurs articles"
+      },
+      {
+        "article": "2.10",
+        "texte": "les dommages causés au contenu par un changement de température résultant d’un arrêt ou d’un dérangement dans la production du froid ou de la chaleur",
+        "pourquoi": "dépend de la garantie du sinistre d'origine, déjà décidée par ailleurs"
+      }
+    ]
+  },
+  "controles": [
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.10) : aucun fait du vocabulaire ne dit un cataclysme hors des catastrophes naturelles, que le contrat ne couvre que par ses options"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.10) : rare : jamais dit dans une déclaration ; l'assureur l'établit"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.10) : renvoie aux mesures de chaque garantie, traduites dans leurs articles"
+    },
+    {
+      "gravite": "info",
+      "controle": "couverture",
+      "message": "hors décision (2.10) : dépend de la garantie du sinistre d'origine, déjà décidée par ailleurs"
+    }
+  ]
+}

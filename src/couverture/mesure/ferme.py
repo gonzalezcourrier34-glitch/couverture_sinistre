@@ -212,7 +212,7 @@ def main(argv: list[str] | None = None) -> None:
     charger_env(".env")
     p = argparse.ArgumentParser(prog="python -m couverture.mesure.ferme", description=__doc__.splitlines()[0])
     p.add_argument("--jeu", choices=JEUX_FERMES, default="ferme",
-                   help="Le jeu à monter : ferme (data/ferme) ou aveugle (data/aveugle, le second, 7.185)")
+                   help="Le jeu à monter, dans data/<jeu> : ferme, aveugle (le second, 7.185) ou neuf (le troisième, 7.186)")
     sous = p.add_subparsers(dest="commande", required=True)
     pa = sous.add_parser("annoter", help="Second avis par un autre modèle, à l'aveugle")
     pa.add_argument("--modele", default="mistral-large-latest")

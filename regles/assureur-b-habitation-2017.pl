@@ -85,35 +85,6 @@ exclusion(degats_electriques, ou([f(manque_entretien, oui), f(fonctionnement_def
 limite(degats_electriques, '3.1.3.1', "Les dommages matériels occasionnés aux panneaux solaires et/ou installations photovoltaïques sont couverts à concurrence de 50.000 € par sinistre.", "50000").
 exclusion([degats_electriques], f(option_degats_electriques, non), tout, oui, '3.1.3',
     "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ dégâts électriques” est souscrite.").
-% --- Art. 3.1.8 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
-extension(batiment_designe, et([f(residence_principale_inhabitable, oui), f(lieu, autre_batiment), f(pays, luxembourg)]), '3.1.8.2',
-    "Si le logement couvert par le présent contrat est devenu temporairement inhabitable en raison d'un sinistre couvert, les garanties sont automatiquement transférées sur le bâtiment pris en location au Grand-Duché de Luxembourg pour une période de 18 mois maximum").
-extension(batiment_designe, et([f(sejour_temporaire, oui), f(lieu, autre_batiment)]), '3.1.8.3',
-    "La Compagnie couvre également les dégâts causés aux objets personnels qu'un Assuré déplace à l'occasion d'un séjour temporaire privé ou professionnel dans un bâtiment situé n'importe où dans le monde").
-extension(batiment_designe, et([f(lieu, chambre_etudiant), ou([f(pays, luxembourg), f(pays, allemagne), f(pays, belgique), f(pays, france), f(pays, autre_ue), f(pays, suisse), f(pays, norvege)])]), '3.1.8.4',
-    "Les garanties sont étendues au contenu qui leur appartient et qui est entreposé dans ce logement").
-extension(batiment_designe, f(lieu, maison_repos), '3.1.8.5',
-    "La Compagnie couvre les dommages matériels accidentels causés au contenu appartenant au Preneur d'assurance, à son conjoint ou à leurs ascendants entreposé dans la chambre ou l'appartement occupé en maison de repos").
-extension(batiment_designe, et([f(bien, sepulture), f(pays, luxembourg)]), '3.1.8.7',
-    "La Compagnie couvre les dommages matériels accidentels causés aux sépultures dont un des assurés est propriétaire et situées au Grand-Duché de Luxembourg ou dans un rayon de maximum 50 km au-delà des frontières").
-extension(batiment_designe, et([f(demenagement, oui), f(pays, luxembourg), f(duree_demenagement, moins_90_jours)]), '3.1.8.8',
-    "En cas de déménagement au Grand-Duché de Luxembourg, les garanties souscrites sont acquises tant à l'ancienne qu'à la nouvelle adresse pendant 90 jours à compter du début du déménagement").
-garantie(rc_sejour_temporaire, "Dégâts causés à l'hôtel ou à la villégiature (responsabilité)", '3.1.8.3',
-    "Les dégâts matériels accidentels causés par un Assuré à l’occasion d’un séjour temporaire privé ou professionnel n’importe où dans le monde : n à un bâtiment de villégiature loué par un Assuré ; n à l’hôtel ou logement similaire occupé par un Assuré").
-perimetre(rc_sejour_temporaire, f(sejour_temporaire, oui)).
-perimetre(rc_sejour_temporaire, f(lieu, autre_batiment)).
-garantie(rc_logement_etudiant, "Dégâts causés au logement d'étudiant (responsabilité)", '3.1.8.4',
-    "La Compagnie couvre les dégâts matériels accidentels causés par les enfants assurés au logement –chambre ou studio– meublé ou non qu'ils louent pendant leurs études dans un des pays membre de l'Union Européenne, en Suisse ou en Norvège").
-perimetre(rc_logement_etudiant, f(lieu, chambre_etudiant)).
-perimetre(rc_logement_etudiant, ou([f(pays, luxembourg), f(pays, allemagne), f(pays, belgique), f(pays, france), f(pays, autre_ue), f(pays, suisse), f(pays, norvege)])).
-garantie(rc_local_fete, "Dégâts causés au local de fête (responsabilité)", '3.1.8.6',
-    "La Compagnie couvre les dommages matériels accidentels causés par un Assuré aux locaux situés au Grand-duché de Luxembourg, en Allemagne, en Belgique ou en France, pris en location à l'occasion d'une fête privée").
-perimetre(rc_local_fete, f(lieu, local_fete_privee)).
-perimetre(rc_local_fete, ou([f(pays, luxembourg), f(pays, allemagne), f(pays, belgique), f(pays, france)])).
-accessoire(rc_sejour_temporaire).
-accessoire(rc_logement_etudiant).
-accessoire(rc_local_fete).
-
 % --- Art. 3.1.9 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
 garantie(frais_sauvetage, "Frais de sauvetage", '3.1.9.1',
     "La Compagnie prend en charge les frais engagés pour arrêter ou limiter le sinistre, mais aussi pour soustraire les biens désignés aux effets d'un péril assuré.").
@@ -321,36 +292,6 @@ limite(degats_eaux_3_1_4, '3.1.4.1', "La perte d’eau subie à l’occasion d�
 limite(degats_eaux_3_1_4, '3.1.4.3', "Si l’Assuré ne respecte pas ces prescriptions, sauf cas de force majeure, et si un sinistre survient ou est aggravé de ce fait, l’indemnité due sera réduite de moitié.", "indemnité réduite de moitié si les conduites n'ont pas été vidangées ou protégées").
 exclusion([degats_eaux_3_1_4], f(option_degats_eaux, non), tout, oui, '3.1.4',
     "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ dégâts des eaux ” est souscrite.").
-% --- Art. 3.1.5 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
-evenement_traduit(bris).
-garantie(bris_vitrages, "Bris de vitrages", '3.1.5.1',
-    "La Compagnie assure les biens désignés, contre les bris et fêlures accidentels des vitrages, des glaces et des miroirs.").
-perimetre(bris_vitrages, f(evenement, bris)).
-perimetre(bris_vitrages, ou([f(bien, vitre), f(bien, miroir), f(bien, panneau_solaire), f(bien, sanitaire), f(bien, serre), f(bien, table_cuisson_vitroceramique), f(bien, appareil_electromenager), f(bien, cadre), f(bien, chassis), f(bien, soubassement), f(cause_projection_debris, oui)])).
-exclusion(bris_vitrages, f(type_dommage, rayure_ou_ecaillement), tout, non, '3.1.5.2',
-    "Les rayures, égratignures et écaillements ne sont jamais assurés.").
-exclusion(bris_vitrages, f(bien, appareil_audiovisuel), bien(appareil_audiovisuel), non, '3.1.5.2',
-    "aux parties vitrées du matériel multimédia").
-exclusion(bris_vitrages, et([f(travaux_construction, oui), non(f(lien_causal_travaux, non))]), tout, oui, '3.1.5.2',
-    "au bâtiment désigné lorsqu’il est en cours de construction, de transformation ou de rénovation, à moins que l’Assuré ne démontre que cette circonstance n’a pas contribué à la survenance ou à l’aggravation des conséquences du sinistre").
-exclusion(bris_vitrages, f(bien, verre_optique), bien(verre_optique), non, '3.1.5.2',
-    "aux verres optiques et lunettes").
-exclusion(bris_vitrages, f(bien, enseigne), bien(enseigne), non, '3.1.5.2',
-    "aux châssis de couche et aux enseignes").
-exclusion(bris_vitrages, ou([f(vitre_placee, non), f(vitrage_en_deplacement, oui)]), tout, oui, '3.1.5.2',
-    "aux vitrages non encore placés ou pendant leur déplacement").
-exclusion(bris_vitrages, et([f(lieu, parties_communes), f(occupation_partielle, oui)]), tout, oui, '3.1.5.2',
-    "aux vitrages relevant des parties communes du bâtiment désigné lorsque l’Assuré est propriétaire, locataire ou occupant partiel").
-exclusion(bris_vitrages, f(bien, objet_verre_non_vitre), bien(objet_verre_non_vitre), non, '3.1.5.2',
-    "aux objets en verre, par exemple lustres, vases, vaisselle").
-exclusion(bris_vitrages, f(manque_entretien, oui), tout, non, '3.1.5.2',
-    "par un défaut de réparation ou d’entretien des châssis, soubassements et support de vitres, glaces et miroirs").
-exclusion(bris_vitrages, et([f(type_dommage, opacification_ou_perte_etancheite), ou([f(garantie_fabricant, oui), f(statut_logement, locataire)])]), tout, oui, '3.1.5.1',
-    "à la perte d’étanchéité des vitrages isolants sauf s’ils sont sous garantie ou si l’Assuré est locataire").
-limite(bris_vitrages, '3.1.5.1', "Les dommages matériels occasionnés aux vitrages des panneaux solaires et/ou installations photovoltaïques sont couverts à concurrence de 50.000€ par sinistre.", "50000").
-exclusion([bris_vitrages], f(option_bris_vitrages, non), tout, oui, '3.1.5',
-    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ bris de vitrages ” est souscrite.").
-
 % --- Art. 3.1.12 : proposition rédigée par le modèle — aucun : la réponse du modèle a été coupée (16000 tokens), 2026-11-24 ---
 evenement_traduit(assistance).
 garantie(assistance_urgence, "Assistance d’urgence", '3.1.12.2',
@@ -433,32 +374,6 @@ exclusion(rc_vie_privee, f(glissement_terrain, oui), tout, non, '4.1.1.8',
     "les dommages liés à un glissement, affaissement ou tassement de terrain").
 limite(rc_vie_privee, '4.1.1.5', "8.658.260 € par sinistre au titre des dommages corporels", "8658260").
 limite(rc_vie_privee, '4.1.1.5', "865.826 € par sinistre au titre des dommages matériels et des dommages immatériels", "865826").
-
-% --- Art. 3.1.10 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-20 ---
-evenement_traduit(responsabilite).
-garantie(rc_immeuble, "Responsabilité civile immeuble (option)", '3.1.10.1',
-    "La Compagnie garantit la responsabilité civile qu’un Assuré pourrait encourir sur la base des articles 1382 à 1386 du Code civil, à l’égard d’un tiers, en raison de dommages causés par le fait").
-perimetre(rc_immeuble, f(evenement, responsabilite)).
-perimetre(rc_immeuble, f(origine_rc, immeuble)).
-circonstance(rc_immeuble, f(option_rc_immeuble, oui), '3.1.10',
-    "la garantie “ responsabilité civile immeuble ” est accordée").
-exclusion(rc_immeuble, ou([f(victime, assure), f(victime, conjoint)]), tout, non, '3.1.10.2',
-    "Toute personne autre que celle ayant la qualité d’Assuré.").
-exclusion(rc_immeuble, f(bien_confie, oui), tout, non, '3.1.10.3',
-    "à des biens dont l’assuré est locataire ou occupant à titre gratuit, ainsi qu’à ceux qui lui ont été confiés").
-exclusion(rc_immeuble, f(origine_rc, activite_professionnelle), tout, non, '3.1.10.3',
-    "par le fait de l’exercice d’une profession").
-exclusion(rc_immeuble, f(ascenseur_non_conforme, oui), tout, non, '3.1.10.1',
-    "d ’ascenseurs et d’appareils élévateurs à moteur du bâtiment désigné pour autant qu’ils soient conformes à la réglementation en vigueur et fassent l’objet d’un entretien annuel").
-exclusion(rc_immeuble, f(terrain_plus_1_hectare, oui), tout, non, '3.1.10.1',
-    "d es terrains y attenant pour autant qu’ils ne dépassent pas un hectare").
-exclusion(rc_immeuble, f(cause_amiante, oui), tout, non, '3.1.10.3',
-    "par la présence ou la dispersion d’amiante, de fibres d’amiante ou de produits contenant de l’amiante").
-exclusion(rc_immeuble, f(terrain_non_attenant, oui), tout, non, '3.1.10.3',
-    "par le fait des terrains non attenant dont l’Assuré est propriétaire").
-limite(rc_immeuble, '3.1.10.1', "15.554.864 € par sinistre au titre des dommages corporels", "15554864").
-limite(rc_immeuble, '3.1.10.1', "896.823 € par sinistre au titre des dommages matériels et des dommages immatériels", "896823").
-
 % --- Art. 4.1.3 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-20 ---
 evenement_traduit(litige).
 garantie(protection_juridique, "Protection juridique (option)", '4.1.3.1',
@@ -488,82 +403,6 @@ exclusion(protection_juridique_immeuble, ou([f(domaine_litige, activite_professi
 exclusion(protection_juridique_immeuble, non(f(option_pj_immeuble, oui)), tout, oui, '3.1.11',
     "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ protection juridique immeuble ” est accordée").
 limite(protection_juridique_immeuble, '3.1.11.3', "Les frais énoncés au point 3.1.11.2 sont pris en charge par la Compagnie à concurrence de 8.658 € par sinistre", "8658").
-% --- Art. 3.1.1 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
-evenement_traduit(incendie).
-evenement_traduit(explosion).
-evenement_traduit(foudre).
-evenement_traduit(electricite).
-evenement_traduit(fumee).
-evenement_traduit(heurt).
-evenement_traduit(vol).
-evenement_traduit(vandalisme).
-evenement_traduit(attentat).
-evenement_traduit(conflit_du_travail).
-definition(incendie, et([f(flammes, oui), ou([f(embrasement, oui), f(chaleur_sans_feu, non)])]), '3.1.1.1',
-    "L'incendie, c'est-à-dire la destruction par des flammes se propageant ou susceptibles de se propager en dehors de leur domaine normal ou d'objets dont la destination n'est pas, à ce moment, de brûler").
-garantie(incendie_base, "Incendie et périls de base", '3.1.1.1',
-    "La Compagnie assure les biens désignés, contre les périls suivants : 3.1.1.1.1 L'incendie, c'est-à-dire la destruction par des flammes se propageant ou susceptibles de se propager en dehors de leur domaine normal ou d'objets dont la destination n'est pas, à ce moment, de brûler ; 3.1.1.1.2 L'explosion ou l'implosion ; 3.1.1.1.3 La chute de la foudre ; 3.1.1.1.4 L'électrocution d'animaux ; 3.1.1.1.5 Les fumées et les suies ; 3.1.1.1.6 Les dégâts occasionnés au mobilier assuré et au bâtiment désigné par un événement soudain, résultant de l'action subite de la chaleur ou par le contact direct et immédiat avec un foyer ou une substance incandescente, même lorsqu'il n'y a pas eu embrasement, ni commencement d'incendie.").
-perimetre(incendie_base, ou([f(evenement, incendie), f(evenement, explosion), f(evenement, foudre), et([f(evenement, electricite), f(bien, animal)]), f(evenement, fumee), et([ou([f(evenement, incendie), f(evenement, autre)]), ou([f(chaleur_sans_feu, oui), f(contact_incandescent, oui)])])])).
-perimetre(incendie_base, concept(batiment_designe)).
-circonstance(incendie_base, si(f(evenement, incendie), ou([concept(incendie), ou([f(chaleur_sans_feu, oui), f(contact_incandescent, oui)])])), '3.1.1.1',
-    "L'incendie, c'est-à-dire la destruction par des flammes se propageant ou susceptibles de se propager en dehors de leur domaine normal ou d'objets dont la destination n'est pas, à ce moment, de brûler").
-garantie(decongelation, "Décongélation denrées", '3.1.1.2',
-    "à la décongélation de denrées alimentaires périssables contenues dans un surgélateur, congélateur ou réfrigérateur à usage domestique suite à un changement de température résultant d'un arrêt dans la production du froid imputable à la survenance d'un sinistre couvert par les présentes conditions spéciales ou par les conditions spéciales de la garantie \"dégâts électriques\"").
-perimetre(decongelation, f(bien, denrees_alimentaires)).
-perimetre(decongelation, ou([f(evenement, incendie), f(evenement, explosion), f(evenement, foudre), f(evenement, electricite)])).
-garantie(linge, "Dégradation linge", '3.1.1.2',
-    "à la dégradation du contenu des sèche-linge ou lave-linge à la suite d'un sinistre relevant de l'un des périls prévus aux présentes conditions spéciales de la garantie \"incendie et périls assimilés\" et aux conditions spéciales de la garantie \"dégâts électriques\"").
-perimetre(linge, f(bien, objet_divers)).
-perimetre(linge, f(lieu, logement)).
-circonstance(linge, ou([f(evenement, incendie), f(evenement, explosion), f(evenement, foudre), f(evenement, electricite)]), '3.1.1.2',
-    "à la suite d'un sinistre relevant de l'un des périls prévus aux présentes conditions spéciales de la garantie \"incendie et périls assimilés\" et aux conditions spéciales de la garantie \"dégâts électriques\"").
-garantie(heurt, "Heurt", '3.1.1.2',
-    "au heurt, sauf : n les dégâts causés au contenu par un Assuré ou par un animal lui appartenant ou lui ayant été confié ; n les dégâts causés au bâtiment désigné en cas de déménagement du mobilier ; n les dégâts au bien ou à l'animal ayant causé le heurt ; n les dégâts ne résultant pas directement d'un choc entre deux corps durs ; n les dégâts causés par la grêle.").
-perimetre(heurt, f(evenement, heurt)).
-perimetre(heurt, concept(batiment_designe)).
-exclusion(heurt, ou([f(auteur, assure), f(bien, animal)]), tout, oui, '3.1.1.2',
-    "les dégâts causés au contenu par un Assuré ou par un animal lui appartenant ou lui ayant été confié").
-exclusion(heurt, f(evenement, accident), tout, non, '3.1.1.2',
-    "les dégâts causés au contenu par un Assuré ou par un animal lui appartenant ou lui ayant été confié").
-exclusion(heurt, et([f(bien, element_batiment), f(demenagement, oui)]), tout, non, '3.1.1.2',
-    "les dégâts causés au bâtiment désigné en cas de déménagement du mobilier").
-exclusion(heurt, f(bien_a_l_origine_sinistre, oui), tout, oui, '3.1.1.2',
-    "les dégâts au bien ou à l'animal ayant causé le heurt").
-exclusion(heurt, f(choc_deux_corps_durs, non), tout, non, '3.1.1.2',
-    "les dégâts ne résultant pas directement d'un choc entre deux corps durs").
-exclusion(heurt, f(alea_tempete, grele), tout, non, '3.1.1.2',
-    "les dégâts causés par la grêle").
-garantie(degradations_vol, "Dégradations lors de vol", '3.1.1.2',
-    "aux dégradations immobilières causées à l'occasion d'un vol ou d'une tentative de vol dans les locaux à occupation régulière ainsi que le vol de parties de bâtiment sauf : n les dommages ou le vol des biens se trouvant à l'extérieur du bâtiment ; n lorsque le bâtiment est en cours de construction, transformation ou rénovation, à moins que l'Assuré démontre que cette circonstance n'a pas contribué à la survenance ou à l'aggravation des conséquences du sinistre.").
-perimetre(degradations_vol, f(evenement, vol)).
-perimetre(degradations_vol, f(bien, element_batiment)).
-exclusion(degradations_vol, et([ou([f(lieu, jardin), f(lieu, terrasse)]), non(f(bien, element_batiment))]), tout, oui, '3.1.1.2',
-    "les dommages ou le vol des biens se trouvant à l'extérieur du bâtiment").
-exclusion(degradations_vol, et([f(travaux_construction, oui), non(f(lien_causal_travaux, non))]), tout, oui, '3.1.1.2',
-    "lorsque le bâtiment est en cours de construction, transformation ou rénovation, à moins que l'Assuré démontre que cette circonstance n'a pas contribué à la survenance ou à l'aggravation des conséquences du sinistre").
-exclusion(degradations_vol, f(occupation_irreguliere, oui), tout, oui, '3.1.1.2',
-    "aux dégradations immobilières causées à l’occasion d’un vol ou d’une tentative de vol dans les locaux à occupation régulière").
-garantie(vandalisme, "Vandalisme", '3.1.1.2',
-    "aux dommages causés par un acte de vandalisme ou de malveillance au bâtiment désigné pour autant que les conditions suivantes soient remplies simultanément : n l'Assuré est propriétaire du bâtiment ; n le bâtiment fait l'objet d'une occupation régulière ; n le bâtiment n'est pas en cours de construction, ni de transformation, ni de rénovation. L'indemnisation des dégâts matériels causés par vandalisme ou malveillance est consentie sans application de la règle proportionnelle à concurrence de 2.500 € par sinistre.").
-perimetre(vandalisme, f(evenement, vandalisme)).
-perimetre(vandalisme, f(bien, element_batiment)).
-perimetre(vandalisme, concept(batiment_designe)).
-exclusion(vandalisme, f(statut_logement, locataire), tout, oui, '3.1.1.2',
-    "l’Assuré est propriétaire du bâtiment").
-exclusion(vandalisme, f(occupation_irreguliere, oui), tout, oui, '3.1.1.2',
-    "le bâtiment fait l’objet d’une occupation régulière").
-exclusion(vandalisme, f(travaux_construction, oui), tout, oui, '3.1.1.2',
-    "le bâtiment n’est pas en cours de construction, ni de transformation, ni de rénovation").
-limite(vandalisme, '3.1.1.2', "L'indemnisation des dégâts matériels causés par vandalisme ou malveillance est consentie sans application de la règle proportionnelle à concurrence de 2.500 € par sinistre.", "2500 EUR").
-garantie(attentats, "Attentats et conflits du travail", '3.1.1.2',
-    "aux attentats et conflits du travail : La Compagnie prend en charge à concurrence de 745.000 € par sinistre les dégâts causés directement aux biens désignés : n par des personnes tierces prenant part à de tels événements ; n qui résulteraient de mesures prises dans les cas précités par une autorité légalement constituée pour la sauvegarde et la protection des biens désignés. En cas de sinistre, l'Assuré s'engage à accomplir, dans les plus brefs délais, toutes les démarches en vue de l'indemnisation des dégâts matériels subis. L'Assuré s'engage à ne pas réclamer à la Compagnie, les indemnités relatives aux dégâts matériels à concurrence desquels il a été ou pourra être indemnisé par tout tiers. En cas de double paiement, l'Assuré doit rembourser à la Compagnie les indemnités que celle-ci lui a versées. Sur base de l'autorisation délivrée par les autorités publiques, la Compagnie se réserve le droit de suspendre cette garantie moyennant l'envoi d'une lettre recommandée. La suspension prend cours 7 jours après la notification faite au Preneur d'assurance.").
-perimetre(attentats, ou([f(evenement, attentat), f(evenement, conflit_du_travail)])).
-perimetre(attentats, concept(batiment_designe)).
-obligation(attentats, f(plainte_deposee, oui), faux, non, '3.1.1.2',
-    "En cas de sinistre, l'Assuré s'engage à accomplir, dans les plus brefs délais, toutes les démarches en vue de l'indemnisation des dégâts matériels subis.").
-limite(attentats, '3.1.1.2', "La Compagnie prend en charge à concurrence de 745.000 € par sinistre les dégâts causés directement aux biens désignés", "745000 EUR").
-exclusion([incendie_base, decongelation, linge, heurt, degradations_vol, vandalisme, attentats], f(option_incendie, non), tout, oui, '3.1.1',
-    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ incendie et périls assimilés ” est accordée.").
 % --- Art. 3.3.1 : proposition rédigée par le modèle — mistral:mistral-large-4-0 (proposition écartée), 2026-11-24 ---
 evenement_traduit(bris).
 evenement_traduit(vol).
@@ -932,8 +771,6 @@ garantie(materiel_multimedia_bris, "Bris du matériel multimédia", '3.1.7.1',
     "La Compagnie couvre tout bris ou destruction accidentel résultant d’une chute, d’un choc ou de la pénétration d’un corps étranger et qui rend nécessaire la réparation ou le remplacement du matériel multimédia. Sont également couverts au titre de cette garantie les équipements suivants : n équipement d’alarme et de surveillance, en activité ou au repos, pendant les opérations de démontage, de déplacement sur les lieux assurés ou de remontage nécessitées pour leur entretien ou leur révision, pour autant que la mise en exploitation desdits matériels ait donné entière satisfaction ; n équipement domotique").
 perimetre(materiel_multimedia_bris, f(evenement, bris)).
 perimetre(materiel_multimedia_bris, ou([f(bien, electronique), f(bien, equipement_alarme_surveillance), f(bien, equipement_domotique)])).
-circonstance(materiel_multimedia_bris, f(option_materiel_multimedia, oui), '3.1.7',
-    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “matériel multimédia” est accordée.").
 obligation(materiel_multimedia_bris, si(ou([f(lieu, vehicule), et([f(bien, vehicule_moteur), f(lieu, voie_publique)])]), et([f(vehicule_ferme_cle, oui), non(f(materiel_laisse_en_vue, oui))])), faux, non, '3.1.7.4',
     "Lorsque les biens assurés se trouvent à l’intérieur d’un véhicule inoccupé, la garantie intervient uniquement si les deux conditions suivantes sont remplies simultanément : n le véhicule a été fermé à clé ; n le matériel assuré n’a pas été laissé en vue à l’intérieur de l’habitacle du véhicule").
 exclusion(materiel_multimedia_bris, et([f(bien, equipement_alarme_surveillance), f(mise_en_exploitation_satisfaction, non)]), bien(equipement_alarme_surveillance), non, '3.1.7.1',
@@ -946,14 +783,14 @@ perimetre(materiel_multimedia_vol, f(evenement, vol)).
 perimetre(materiel_multimedia_vol, ou([f(bien, electronique), f(bien, equipement_alarme_surveillance), f(bien, equipement_domotique)])).
 circonstance(materiel_multimedia_vol, ou([non(concept(batiment_designe)), et([f(lieu, vehicule), ou([f(vehicule_vole, oui), f(effraction, oui)])]), et([f(sejour_temporaire, oui), f(plainte_deposee, oui)])]), '3.1.7.1',
     "le vol du matériel multimédia lorsque le vol a eu lieu à l’extérieur du bâtiment désigné ; n le vol de ces équipements se trouvant à l’intérieur d’un véhicule terrestre automoteur à condition que ledit véhicule soit également volé ou qu’il y ait effraction caractérisée du véhicule ; n le vol de ces équipements qu’un Assuré déplace à l’occasion d’un séjour temporaire dans un bâtiment situé n’importe où dans le monde, pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes").
-circonstance(materiel_multimedia_vol, f(option_materiel_multimedia, oui), '3.1.7',
-    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “matériel multimédia” est accordée.").
 obligation(materiel_multimedia_vol, si(ou([f(lieu, vehicule), et([f(bien, vehicule_moteur), f(lieu, voie_publique)])]), et([f(vehicule_ferme_cle, oui), non(f(materiel_laisse_en_vue, oui))])), faux, non, '3.1.7.4',
     "Lorsque les biens assurés se trouvent à l’intérieur d’un véhicule inoccupé, la garantie intervient uniquement si les deux conditions suivantes sont remplies simultanément : n le véhicule a été fermé à clé ; n le matériel assuré n’a pas été laissé en vue à l’intérieur de l’habitacle du véhicule").
 exclusion(materiel_multimedia_vol, f(option_vol, non), tout, oui, '3.1.7.1',
     "Sous réserve que la garantie vol ait été accordée").
 exclusion(materiel_multimedia_vol, ou([f(auteur, assure), f(auteur, famille), et([f(auteur, personnel_prive), ou([f(heures_service, oui), non(ou([f(effraction, oui), f(violence, oui)]))])])]), tout, oui, '3.1.7.2',
     "les vols commis par ou avec la complicité de ou du : n Preneur d’assurance, son conjoint, leurs ascendants ou descendants ainsi que les conjoints de ces personnes ; n l’Assuré ; n toute personne au service de l’Assuré pendant les heures de service et, si ces vols ont été commis en dehors de celles-ci, autrement que par effraction ou avec violence. En ce qui concerne les pièces mentionnées aux points").
+exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(option_materiel_multimedia, non), tout, oui, '3.1.7',
+    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “matériel multimédia” est accordée.").
 exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(proprietaire, hote), tout, oui, '3.1.7.2',
     "le matériel dont l'Assuré n'est pas propriétaire").
 exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(cause_dommage, virus), tout, non, '3.1.7.2',
@@ -972,3 +809,178 @@ exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(evenement, elec
     "les dommages d'origine électrique").
 exclusion([materiel_multimedia_bris, materiel_multimedia_vol], f(bien, denrees_alimentaires), bien(denrees_alimentaires), non, '3.1.7.2',
     "les dommages causés au contenu des appareils").
+
+% --- Art. 3.1.10 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-20 ---
+evenement_traduit(responsabilite).
+garantie(rc_immeuble, "Responsabilité civile immeuble", '3.1.10.1',
+    "La Compagnie garantit la responsabilité civile qu’un Assuré pourrait encourir sur la base des articles 1382 à 1386 du Code civil, à l’égard d’un tiers, en raison de dommages causés par le fait").
+perimetre(rc_immeuble, f(evenement, responsabilite)).
+perimetre(rc_immeuble, f(origine_rc, immeuble)).
+exclusion(rc_immeuble, ou([f(victime, assure), f(victime, conjoint)]), tout, non, '3.1.10.2',
+    "Toute personne autre que celle ayant la qualité d’Assuré.").
+exclusion(rc_immeuble, f(bien_confie, oui), tout, non, '3.1.10.3',
+    "à des biens dont l’assuré est locataire ou occupant à titre gratuit, ainsi qu’à ceux qui lui ont été confiés").
+exclusion(rc_immeuble, f(origine_rc, activite_professionnelle), tout, non, '3.1.10.3',
+    "par le fait de l’exercice d’une profession").
+exclusion(rc_immeuble, f(ascenseur_non_conforme, oui), tout, non, '3.1.10.1',
+    "d ’ascenseurs et d’appareils élévateurs à moteur du bâtiment désigné pour autant qu’ils soient conformes à la réglementation en vigueur et fassent l’objet d’un entretien annuel").
+exclusion(rc_immeuble, f(terrain_plus_1_hectare, oui), tout, non, '3.1.10.1',
+    "d es terrains y attenant pour autant qu’ils ne dépassent pas un hectare").
+exclusion(rc_immeuble, f(cause_amiante, oui), tout, non, '3.1.10.3',
+    "par la présence ou la dispersion d’amiante, de fibres d’amiante ou de produits contenant de l’amiante").
+exclusion(rc_immeuble, f(terrain_non_attenant, oui), tout, non, '3.1.10.3',
+    "par le fait des terrains non attenant dont l’Assuré est propriétaire").
+limite(rc_immeuble, '3.1.10.1', "15.554.864 € par sinistre au titre des dommages corporels", "15554864").
+limite(rc_immeuble, '3.1.10.1', "896.823 € par sinistre au titre des dommages matériels et des dommages immatériels", "896823").
+exclusion([rc_immeuble], f(option_rc_immeuble, non), tout, oui, '3.1.10',
+    "la garantie “ responsabilité civile immeuble ” est accordée").
+
+% --- Art. 2.10 : proposition rédigée par le modèle — aucun : écrite à la main, 2026-11-25 ---
+exclusion(tous, et([f(intentionnel, oui), non(f(auteur, tiers))]), tout, non, '2.10',
+    "les dommages occasionnés par la faute intentionnelle ou dolosive de l’Assuré ou bien avec sa complicité").
+exclusion(tous, et([f(glissement_terrain, oui), non(f(evenement, catastrophe_naturelle))]), tout, non, '2.10',
+    "une chute de pierres ou de rochers, un glissement de terrain ou un affaissement").
+exclusion(tous, f(cause_guerre, oui), tout, non, '2.10',
+    "les dommages résultant d’une guerre ou des faits de même nature, d’une agression bactériologique ou chimique, d’une guerre civile").
+exclusion(tous, f(cause_nucleaire, oui), tout, non, '2.10',
+    "provenant de transmutation de noyaux d’atome ou de la radioactivité").
+
+% --- Art. 3.1.5 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
+evenement_traduit(bris).
+garantie(bris_vitrages, "Bris de vitrages", '3.1.5.1',
+    "La Compagnie assure les biens désignés, contre les bris et fêlures accidentels des vitrages, des glaces et des miroirs.").
+perimetre(bris_vitrages, f(evenement, bris)).
+perimetre(bris_vitrages, ou([f(bien, vitre), f(bien, miroir), f(bien, panneau_solaire), f(bien, sanitaire), f(bien, serre), f(bien, table_cuisson_vitroceramique), f(bien, appareil_electromenager), f(bien, cadre), f(bien, chassis), f(bien, soubassement), f(cause_projection_debris, oui)])).
+exclusion(bris_vitrages, f(type_dommage, rayure_ou_ecaillement), tout, non, '3.1.5.2',
+    "Les rayures, égratignures et écaillements ne sont jamais assurés.").
+exclusion(bris_vitrages, f(bien, appareil_audiovisuel), bien(appareil_audiovisuel), non, '3.1.5.2',
+    "aux parties vitrées du matériel multimédia").
+exclusion(bris_vitrages, et([f(travaux_construction, oui), non(f(lien_causal_travaux, non))]), tout, oui, '3.1.5.2',
+    "au bâtiment désigné lorsqu’il est en cours de construction, de transformation ou de rénovation, à moins que l’Assuré ne démontre que cette circonstance n’a pas contribué à la survenance ou à l’aggravation des conséquences du sinistre").
+exclusion(bris_vitrages, f(bien, verre_optique), bien(verre_optique), non, '3.1.5.2',
+    "aux verres optiques et lunettes").
+exclusion(bris_vitrages, f(bien, enseigne), bien(enseigne), non, '3.1.5.2',
+    "aux châssis de couche et aux enseignes").
+exclusion(bris_vitrages, ou([f(vitre_placee, non), f(vitrage_en_deplacement, oui)]), tout, oui, '3.1.5.2',
+    "aux vitrages non encore placés ou pendant leur déplacement").
+exclusion(bris_vitrages, et([f(lieu, parties_communes), f(occupation_partielle, oui)]), tout, oui, '3.1.5.2',
+    "aux vitrages relevant des parties communes du bâtiment désigné lorsque l’Assuré est propriétaire, locataire ou occupant partiel").
+exclusion(bris_vitrages, f(bien, objet_verre_non_vitre), bien(objet_verre_non_vitre), non, '3.1.5.2',
+    "aux objets en verre, par exemple lustres, vases, vaisselle").
+exclusion(bris_vitrages, f(manque_entretien, oui), tout, non, '3.1.5.2',
+    "par un défaut de réparation ou d’entretien des châssis, soubassements et support de vitres, glaces et miroirs").
+exclusion(bris_vitrages, et([f(type_dommage, opacification_ou_perte_etancheite), ou([f(garantie_fabricant, oui), f(statut_logement, locataire)])]), tout, oui, '3.1.5.1',
+    "à la perte d’étanchéité des vitrages isolants sauf s’ils sont sous garantie ou si l’Assuré est locataire").
+exclusion(bris_vitrages, f(lieu, vehicule), tout, non, '3.1.5.1',
+    "La Compagnie assure les biens désignés, contre les bris et fêlures accidentels des vitrages, des glaces et des miroirs.").
+limite(bris_vitrages, '3.1.5.1', "Les dommages matériels occasionnés aux vitrages des panneaux solaires et/ou installations photovoltaïques sont couverts à concurrence de 50.000€ par sinistre.", "50000").
+exclusion([bris_vitrages], f(option_bris_vitrages, non), tout, oui, '3.1.5',
+    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ bris de vitrages ” est souscrite.").
+
+% --- Art. 3.1.1 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
+evenement_traduit(incendie).
+evenement_traduit(explosion).
+evenement_traduit(foudre).
+evenement_traduit(electricite).
+evenement_traduit(fumee).
+evenement_traduit(heurt).
+evenement_traduit(vol).
+evenement_traduit(vandalisme).
+evenement_traduit(attentat).
+evenement_traduit(conflit_du_travail).
+definition(incendie, et([f(flammes, oui), ou([f(embrasement, oui), f(chaleur_sans_feu, non)])]), '3.1.1.1',
+    "L'incendie, c'est-à-dire la destruction par des flammes se propageant ou susceptibles de se propager en dehors de leur domaine normal ou d'objets dont la destination n'est pas, à ce moment, de brûler").
+garantie(incendie_base, "Incendie et périls de base", '3.1.1.1',
+    "La Compagnie assure les biens désignés, contre les périls suivants : 3.1.1.1.1 L'incendie, c'est-à-dire la destruction par des flammes se propageant ou susceptibles de se propager en dehors de leur domaine normal ou d'objets dont la destination n'est pas, à ce moment, de brûler ; 3.1.1.1.2 L'explosion ou l'implosion ; 3.1.1.1.3 La chute de la foudre ; 3.1.1.1.4 L'électrocution d'animaux ; 3.1.1.1.5 Les fumées et les suies ; 3.1.1.1.6 Les dégâts occasionnés au mobilier assuré et au bâtiment désigné par un événement soudain, résultant de l'action subite de la chaleur ou par le contact direct et immédiat avec un foyer ou une substance incandescente, même lorsqu'il n'y a pas eu embrasement, ni commencement d'incendie.").
+perimetre(incendie_base, ou([f(evenement, incendie), f(evenement, explosion), f(evenement, foudre), et([f(evenement, electricite), f(bien, animal)]), f(evenement, fumee), et([ou([f(evenement, incendie), f(evenement, autre)]), ou([f(chaleur_sans_feu, oui), f(contact_incandescent, oui)])])])).
+perimetre(incendie_base, concept(batiment_designe)).
+circonstance(incendie_base, si(f(evenement, incendie), ou([concept(incendie), ou([f(chaleur_sans_feu, oui), f(contact_incandescent, oui)])])), '3.1.1.1',
+    "L'incendie, c'est-à-dire la destruction par des flammes se propageant ou susceptibles de se propager en dehors de leur domaine normal ou d'objets dont la destination n'est pas, à ce moment, de brûler").
+garantie(decongelation, "Décongélation denrées", '3.1.1.2',
+    "à la décongélation de denrées alimentaires périssables contenues dans un surgélateur, congélateur ou réfrigérateur à usage domestique suite à un changement de température résultant d'un arrêt dans la production du froid imputable à la survenance d'un sinistre couvert par les présentes conditions spéciales ou par les conditions spéciales de la garantie \"dégâts électriques\"").
+perimetre(decongelation, f(bien, denrees_alimentaires)).
+perimetre(decongelation, ou([f(evenement, incendie), f(evenement, explosion), f(evenement, foudre), f(evenement, electricite)])).
+garantie(linge, "Dégradation linge", '3.1.1.2',
+    "à la dégradation du contenu des sèche-linge ou lave-linge à la suite d'un sinistre relevant de l'un des périls prévus aux présentes conditions spéciales de la garantie \"incendie et périls assimilés\" et aux conditions spéciales de la garantie \"dégâts électriques\"").
+perimetre(linge, f(bien, objet_divers)).
+perimetre(linge, f(lieu, logement)).
+circonstance(linge, ou([f(evenement, incendie), f(evenement, explosion), f(evenement, foudre), f(evenement, electricite)]), '3.1.1.2',
+    "à la suite d'un sinistre relevant de l'un des périls prévus aux présentes conditions spéciales de la garantie \"incendie et périls assimilés\" et aux conditions spéciales de la garantie \"dégâts électriques\"").
+garantie(heurt, "Heurt", '3.1.1.2',
+    "au heurt, sauf : n les dégâts causés au contenu par un Assuré ou par un animal lui appartenant ou lui ayant été confié ; n les dégâts causés au bâtiment désigné en cas de déménagement du mobilier ; n les dégâts au bien ou à l'animal ayant causé le heurt ; n les dégâts ne résultant pas directement d'un choc entre deux corps durs ; n les dégâts causés par la grêle.").
+perimetre(heurt, f(evenement, heurt)).
+perimetre(heurt, concept(batiment_designe)).
+exclusion(heurt, ou([f(auteur, assure), f(bien, animal)]), tout, oui, '3.1.1.2',
+    "les dégâts causés au contenu par un Assuré ou par un animal lui appartenant ou lui ayant été confié").
+exclusion(heurt, f(evenement, accident), tout, non, '3.1.1.2',
+    "les dégâts causés au contenu par un Assuré ou par un animal lui appartenant ou lui ayant été confié").
+exclusion(heurt, et([f(bien, element_batiment), f(demenagement, oui)]), tout, non, '3.1.1.2',
+    "les dégâts causés au bâtiment désigné en cas de déménagement du mobilier").
+exclusion(heurt, f(bien_a_l_origine_sinistre, oui), tout, oui, '3.1.1.2',
+    "les dégâts au bien ou à l'animal ayant causé le heurt").
+exclusion(heurt, f(choc_deux_corps_durs, non), tout, non, '3.1.1.2',
+    "les dégâts ne résultant pas directement d'un choc entre deux corps durs").
+exclusion(heurt, f(alea_tempete, grele), tout, non, '3.1.1.2',
+    "les dégâts causés par la grêle").
+garantie(degradations_vol, "Dégradations lors de vol", '3.1.1.2',
+    "aux dégradations immobilières causées à l'occasion d'un vol ou d'une tentative de vol dans les locaux à occupation régulière ainsi que le vol de parties de bâtiment sauf : n les dommages ou le vol des biens se trouvant à l'extérieur du bâtiment ; n lorsque le bâtiment est en cours de construction, transformation ou rénovation, à moins que l'Assuré démontre que cette circonstance n'a pas contribué à la survenance ou à l'aggravation des conséquences du sinistre.").
+perimetre(degradations_vol, f(evenement, vol)).
+perimetre(degradations_vol, f(bien, element_batiment)).
+exclusion(degradations_vol, et([ou([f(lieu, jardin), f(lieu, terrasse)]), non(f(bien, element_batiment))]), tout, oui, '3.1.1.2',
+    "les dommages ou le vol des biens se trouvant à l'extérieur du bâtiment").
+exclusion(degradations_vol, et([f(travaux_construction, oui), non(f(lien_causal_travaux, non))]), tout, oui, '3.1.1.2',
+    "lorsque le bâtiment est en cours de construction, transformation ou rénovation, à moins que l'Assuré démontre que cette circonstance n'a pas contribué à la survenance ou à l'aggravation des conséquences du sinistre").
+exclusion(degradations_vol, f(occupation_irreguliere, oui), tout, oui, '3.1.1.2',
+    "aux dégradations immobilières causées à l’occasion d’un vol ou d’une tentative de vol dans les locaux à occupation régulière").
+exclusion(degradations_vol, f(lieu, vehicule), tout, non, '3.1.1.2',
+    "aux dégradations immobilières causées à l'occasion d'un vol ou d'une tentative de vol dans les locaux à occupation régulière ainsi que le vol de parties de bâtiment sauf : n les dommages ou le vol des biens se trouvant à l'extérieur du bâtiment ; n lorsque le bâtiment est en cours de construction, transformation ou rénovation, à moins que l'Assuré démontre que cette circonstance n'a pas contribué à la survenance ou à l'aggravation des conséquences du sinistre.").
+garantie(vandalisme, "Vandalisme", '3.1.1.2',
+    "aux dommages causés par un acte de vandalisme ou de malveillance au bâtiment désigné pour autant que les conditions suivantes soient remplies simultanément : n l'Assuré est propriétaire du bâtiment ; n le bâtiment fait l'objet d'une occupation régulière ; n le bâtiment n'est pas en cours de construction, ni de transformation, ni de rénovation. L'indemnisation des dégâts matériels causés par vandalisme ou malveillance est consentie sans application de la règle proportionnelle à concurrence de 2.500 € par sinistre.").
+perimetre(vandalisme, f(evenement, vandalisme)).
+perimetre(vandalisme, f(bien, element_batiment)).
+perimetre(vandalisme, concept(batiment_designe)).
+exclusion(vandalisme, f(statut_logement, locataire), tout, oui, '3.1.1.2',
+    "l’Assuré est propriétaire du bâtiment").
+exclusion(vandalisme, f(occupation_irreguliere, oui), tout, oui, '3.1.1.2',
+    "le bâtiment fait l’objet d’une occupation régulière").
+exclusion(vandalisme, f(travaux_construction, oui), tout, oui, '3.1.1.2',
+    "le bâtiment n’est pas en cours de construction, ni de transformation, ni de rénovation").
+limite(vandalisme, '3.1.1.2', "L'indemnisation des dégâts matériels causés par vandalisme ou malveillance est consentie sans application de la règle proportionnelle à concurrence de 2.500 € par sinistre.", "2500 EUR").
+garantie(attentats, "Attentats et conflits du travail", '3.1.1.2',
+    "aux attentats et conflits du travail : La Compagnie prend en charge à concurrence de 745.000 € par sinistre les dégâts causés directement aux biens désignés : n par des personnes tierces prenant part à de tels événements ; n qui résulteraient de mesures prises dans les cas précités par une autorité légalement constituée pour la sauvegarde et la protection des biens désignés. En cas de sinistre, l'Assuré s'engage à accomplir, dans les plus brefs délais, toutes les démarches en vue de l'indemnisation des dégâts matériels subis. L'Assuré s'engage à ne pas réclamer à la Compagnie, les indemnités relatives aux dégâts matériels à concurrence desquels il a été ou pourra être indemnisé par tout tiers. En cas de double paiement, l'Assuré doit rembourser à la Compagnie les indemnités que celle-ci lui a versées. Sur base de l'autorisation délivrée par les autorités publiques, la Compagnie se réserve le droit de suspendre cette garantie moyennant l'envoi d'une lettre recommandée. La suspension prend cours 7 jours après la notification faite au Preneur d'assurance.").
+perimetre(attentats, ou([f(evenement, attentat), f(evenement, conflit_du_travail)])).
+perimetre(attentats, concept(batiment_designe)).
+obligation(attentats, f(plainte_deposee, oui), faux, non, '3.1.1.2',
+    "En cas de sinistre, l'Assuré s'engage à accomplir, dans les plus brefs délais, toutes les démarches en vue de l'indemnisation des dégâts matériels subis.").
+limite(attentats, '3.1.1.2', "La Compagnie prend en charge à concurrence de 745.000 € par sinistre les dégâts causés directement aux biens désignés", "745000 EUR").
+exclusion([incendie_base, decongelation, linge, heurt, degradations_vol, vandalisme, attentats], f(option_incendie, non), tout, oui, '3.1.1',
+    "Les présentes conditions spéciales sont applicables si les conditions particulières mentionnent que la garantie “ incendie et périls assimilés ” est accordée.").
+
+% --- Art. 3.1.8 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
+extension(batiment_designe, et([f(residence_principale_inhabitable, oui), f(lieu, autre_batiment), f(pays, luxembourg)]), '3.1.8.2',
+    "Si le logement couvert par le présent contrat est devenu temporairement inhabitable en raison d'un sinistre couvert, les garanties sont automatiquement transférées sur le bâtiment pris en location au Grand-Duché de Luxembourg pour une période de 18 mois maximum").
+extension(batiment_designe, et([f(sejour_temporaire, oui), f(lieu, autre_batiment)]), '3.1.8.3',
+    "La Compagnie couvre également les dégâts causés aux objets personnels qu'un Assuré déplace à l'occasion d'un séjour temporaire privé ou professionnel dans un bâtiment situé n'importe où dans le monde").
+extension(batiment_designe, et([f(lieu, chambre_etudiant), ou([f(pays, luxembourg), f(pays, allemagne), f(pays, belgique), f(pays, france), f(pays, autre_ue), f(pays, suisse), f(pays, norvege)])]), '3.1.8.4',
+    "Les garanties sont étendues au contenu qui leur appartient et qui est entreposé dans ce logement").
+extension(batiment_designe, f(lieu, maison_repos), '3.1.8.5',
+    "La Compagnie couvre les dommages matériels accidentels causés au contenu appartenant au Preneur d'assurance, à son conjoint ou à leurs ascendants entreposé dans la chambre ou l'appartement occupé en maison de repos").
+extension(batiment_designe, et([f(bien, sepulture), f(pays, luxembourg)]), '3.1.8.7',
+    "La Compagnie couvre les dommages matériels accidentels causés aux sépultures dont un des assurés est propriétaire et situées au Grand-Duché de Luxembourg ou dans un rayon de maximum 50 km au-delà des frontières").
+extension(batiment_designe, et([f(demenagement, oui), f(pays, luxembourg), f(duree_demenagement, moins_90_jours)]), '3.1.8.8',
+    "En cas de déménagement au Grand-Duché de Luxembourg, les garanties souscrites sont acquises tant à l'ancienne qu'à la nouvelle adresse pendant 90 jours à compter du début du déménagement").
+garantie(rc_sejour_temporaire, "Dégâts causés à l'hôtel ou à la villégiature (responsabilité)", '3.1.8.3',
+    "Les dégâts matériels accidentels causés par un Assuré à l’occasion d’un séjour temporaire privé ou professionnel n’importe où dans le monde : n à un bâtiment de villégiature loué par un Assuré ; n à l’hôtel ou logement similaire occupé par un Assuré").
+perimetre(rc_sejour_temporaire, f(sejour_temporaire, oui)).
+perimetre(rc_sejour_temporaire, f(lieu, autre_batiment)).
+garantie(rc_logement_etudiant, "Dégâts causés au logement d'étudiant (responsabilité)", '3.1.8.4',
+    "La Compagnie couvre les dégâts matériels accidentels causés par les enfants assurés au logement –chambre ou studio– meublé ou non qu'ils louent pendant leurs études dans un des pays membre de l'Union Européenne, en Suisse ou en Norvège").
+perimetre(rc_logement_etudiant, f(lieu, chambre_etudiant)).
+perimetre(rc_logement_etudiant, ou([f(pays, luxembourg), f(pays, allemagne), f(pays, belgique), f(pays, france), f(pays, autre_ue), f(pays, suisse), f(pays, norvege)])).
+garantie(rc_local_fete, "Dégâts causés au local de fête (responsabilité)", '3.1.8.6',
+    "La Compagnie couvre les dommages matériels accidentels causés par un Assuré aux locaux situés au Grand-duché de Luxembourg, en Allemagne, en Belgique ou en France, pris en location à l'occasion d'une fête privée").
+perimetre(rc_local_fete, f(lieu, local_fete_privee)).
+perimetre(rc_local_fete, ou([f(pays, luxembourg), f(pays, allemagne), f(pays, belgique), f(pays, france)])).
+accessoire(rc_sejour_temporaire).
+accessoire(rc_logement_etudiant).
+accessoire(rc_local_fete).

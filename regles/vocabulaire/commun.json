@@ -55,10 +55,10 @@
         "merule": "champignon (mérule) qui attaque le bois du bâtiment",
         "conflit_du_travail": "grève, lock-out, manifestation de travailleurs",
         "heurt": "un véhicule, un arbre ou un objet a percuté le bâtiment ou les biens de l'assuré ; une tuile ou une branche de chez l'assuré tombée sur le bien d'un voisin, c'est « responsabilite »",
-        "responsabilite": "un dommage causé par l'assuré, un proche, son animal ou sa maison à quelqu'un d'autre, qui en demande réparation : un passant ou un skieur blessé, un objet emprunté cassé, la vitre ou la voiture d'un voisin abîmée, des dégâts chez un voisin",
+        "responsabilite": "un dommage causé par l'assuré, un proche, son animal ou sa maison à quelqu'un d'autre, qui en demande réparation : un passant ou un skieur blessé, un objet emprunté cassé, la vitre ou la voiture d'un voisin abîmée, des dégâts chez un voisin ; si c'est l'assuré qui a été blessé ou lésé par quelqu'un d'autre et veut obtenir réparation, c'est « litige »",
         "assistance": "un besoin d'aide ou de dépannage sans dommage à indemniser : serrurier après des clés oubliées, intervention d'urgence demandée",
         "accident": "casse ou dommage accidentel d'un objet (pas d'une vitre, d'un miroir ni d'un verre : c'est « bris ») par l'assuré ou un proche : chute, choc, objet renversé ou tombé ; pas un vol, un incendie, l'eau, la tempête ni l'électricité ; l'objet de quelqu'un d'autre cassé par l'assuré, c'est « responsabilite »",
-        "litige": "un différend avec quelqu'un (employeur, vendeur, artisan, voisin, administration, site Internet) pour lequel l'assuré veut être conseillé, aidé ou défendu ; aussi une usurpation d'identité, une fraude à la carte bancaire ou une atteinte à la réputation sur Internet ; pas un dommage à indemniser",
+        "litige": "un différend avec quelqu'un (employeur, vendeur, artisan, voisin, administration, site Internet) pour lequel l'assuré veut être conseillé, aidé ou défendu, ou obtenir réparation d'un dommage qu'un autre lui a causé (un cycliste qui l'a renversé et refuse de payer) ; aussi une usurpation d'identité, une fraude à la carte bancaire ou une atteinte à la réputation sur Internet ; pas un dommage à indemniser",
         "voyage": "un voyage ou une location de vacances annulé ou interrompu ; une maladie, un accident corporel ou un décès pendant un voyage ; un bagage ou des papiers perdus en voyage ; un besoin d'aide à l'étranger. Un bagage volé ou cassé en voyage reste « vol » ou « bris »"
       },
       "parents": {
@@ -354,7 +354,7 @@
         "electronique": "téléphone, ordinateur, tablette, électroménager, box",
         "appareil_audiovisuel": "télévision, écran, chaîne hi-fi",
         "objet_verre_non_vitre": "vase, verre, bibelot en verre",
-        "mobilier_jardin": "table, chaises, salon de jardin, même posés sur une terrasse",
+        "mobilier_jardin": "table, chaises, fauteuils, salon de jardin, parasol, tonnelle, barbecue, chauffage de terrasse, jeux d'extérieur des enfants (trampoline, balançoire, toboggan, maisonnette), même posés sur une terrasse",
         "element_batiment": "murs, sols, plafonds, portes, placards fixés ; pas un store banne, une marquise ni une antenne fixés dehors : « objet_divers »",
         "objet_divers": "tout autre objet",
         "plantation": "plantes, arbres, arbustes, haies du jardin",
@@ -390,7 +390,7 @@
         "bateau": "un bateau à voile ou à moteur, un jet-ski",
         "collection_timbres_monnaies": "une collection de timbres, de pièces de monnaie ou de médailles",
         "instrument_musique": "guitare, piano, violon, flûte, batterie",
-        "materiel_sport": "skis, raquette, clubs de golf, planche, matériel de chasse ou de pêche ; pas un vélo, qui a sa valeur",
+        "materiel_sport": "skis, raquette, clubs de golf, planche, matériel de chasse ou de pêche ; pas un vélo, qui a sa valeur, ni un trampoline ou une balançoire de jardin : « mobilier_jardin »",
         "materiel_medical": "prothèse auditive, pompe à insuline ou à oxygène",
         "materiel_photo": "appareil photo argentique, objectif d'appareil photo",
         "vetement_accessoire": "vêtement, casque, gants, bottes, combinaison"
@@ -715,7 +715,7 @@
         "catastrophe_naturelle"
       ],
       "aide": {
-        "moisissure": "champignons, moisissures, taches noires d'humidité, seulement si la déclaration en parle ; l'eau seule ne suffit pas"
+        "moisissure": "champignons, moisissures, taches noires d'humidité, seulement si la déclaration en parle ; l'eau seule ne suffit pas : un parquet gonflé, un mur détrempé, un meuble taché par l'eau ne sont pas des moisissures"
       }
     },
     "cause_dommage": {
@@ -1335,6 +1335,7 @@
       "valeurs": [
         "personne",
         "velo_trottinette",
+        "engin_motorise_personnel",
         "animal_compagnie",
         "animal_autre",
         "chien_dangereux",
@@ -1348,6 +1349,7 @@
       "libelles": {
         "personne": "une personne",
         "velo_trottinette": "vélo ou trottinette",
+        "engin_motorise_personnel": "trottinette électrique ou autre engin motorisé",
         "animal_compagnie": "animal de compagnie",
         "animal_autre": "autre animal",
         "chien_dangereux": "chien dangereux",
@@ -1367,7 +1369,8 @@
         "chasse_sport": "la chasse, le ball-trap, un sport aérien, une compétition, un sport en club ou professionnel",
         "contrat": "un service ou un travail promis à quelqu'un, mal fait ou pas fait",
         "activite_professionnelle": "le travail ou l'activité professionnelle de l'assuré",
-        "velo_trottinette": "un vélo ou une trottinette sans moteur, à la force des jambes"
+        "velo_trottinette": "un vélo ou une trottinette sans moteur, à la force des jambes ; un vélo à assistance électrique ordinaire aussi",
+        "engin_motorise_personnel": "une trottinette électrique, un gyropode, un hoverboard, une monoroue, un vélo électrique rapide (plus de 25 km/h) : un engin de déplacement personnel à moteur"
       },
       "pour": [
         "responsabilite",
@@ -1376,6 +1379,9 @@
       "parents": {
         "velo_trottinette": [
           "personne"
+        ],
+        "engin_motorise_personnel": [
+          "vehicule_moteur"
         ]
       }
     },
@@ -1695,8 +1701,8 @@
       ],
       "question": "L'intervention a-t-elle été demandée à l'assistance au moment des faits, et faite par le réparateur qu'elle a envoyé ?",
       "aide": {
-        "oui": "l'assuré a appelé l'assistance, qui a envoyé son réparateur",
-        "non": "l'assuré a fait venir lui-même un dépanneur, ou n'a prévenu qu'après coup"
+        "oui": "l'assuré appelle ou a appelé l'assistance pour qu'elle envoie son réparateur (« pouvez-vous m'envoyer un serrurier ? »)",
+        "non": "l'assuré a fait venir lui-même un dépanneur qu'il a trouvé et payé, et envoie la facture pour être remboursé, ou n'a prévenu qu'après coup"
       },
       "pour": [
         "assistance"

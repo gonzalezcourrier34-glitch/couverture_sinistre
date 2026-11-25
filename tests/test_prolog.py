@@ -1033,16 +1033,13 @@ def test_obligation_engagee_sans_lien_causal_se_demande():
     contrat_b = Contrat(prolog.fichier_regles("assureur-b-habitation-2017"))
     faits = {"evenement": ["vol"], "bien": ["appareil_informatique"], "lieu": ["vehicule"], "effraction": "oui",
              "plainte_deposee": "oui"}
-    # 7.181 : le matériel multimédia est une option. Tant qu'on ne sait pas si elle est souscrite, c'est elle qu'on
-    # demande d'abord (inutile de demander si la voiture était fermée pour une garantie qui n'est pas au contrat).
+    # 7.186 : le matériel multimédia est rangé par le contrat parmi ses garanties de base : présumé souscrit, ce sont
+    # les deux exigences de l'obligation qu'on demande, pas la souscription.
     d = Moteur(contrat_b, faits).decider()
     assert d["decision"] == "INCERTAIN"
     vol = next(r for r in d["garanties"] if r["id"] == "materiel_multimedia_vol")
-    assert vol["questions"] == ["option_materiel_multimedia"]
-    d = Moteur(contrat_b, faits | {"option_materiel_multimedia": "oui"}).decider()
-    assert d["decision"] == "INCERTAIN"
-    vol = next(r for r in d["garanties"] if r["id"] == "materiel_multimedia_vol")
-    assert "vehicule_ferme_cle" in vol["questions"]
+    assert vol["questions"] == ["materiel_laisse_en_vue", "vehicule_ferme_cle"]
+    assert Moteur(contrat_b, faits | {"option_materiel_multimedia": "non"}).decider()["decision"] == "NON_COUVERT"
     contrat_a = Contrat(prolog.fichier_regles("assureur-a-habitation-2025"))
     porte = {"evenement": ["vol"], "bien": ["mobilier"], "lieu": ["logement"], "absence": "oui", "portes_fermees": "oui",
              "effraction": "non", "plainte_deposee": "oui"}
@@ -1080,34 +1077,81 @@ def test_une_option_seule_a_couvrir_donne_a_preciser():
         assert prolog.decider("assureur-b-habitation-2017", faits)["decision"] == "INCERTAIN"
 
 
-def test_le_multimedia_de_b_est_une_option_qui_se_demande():
-    """7.181. Le « matériel multimédia » de B (3.1.7) est une option, mais elle n'était déclarée nulle part : écrite
-    en exclusion « option non souscrite », elle couvrait un ordinateur cassé sans demander si elle était souscrite.
-    Écrite comme les autres, elle se demande ; souscrite elle couvre, non souscrite elle refuse."""
+def test_les_garanties_de_base_de_b_sont_presumees_souscrites():
+    """7.186. Le contrat B range le « matériel multimédia » (3.1.7) et la « responsabilité civile immeuble » (3.1.10)
+    sous « 3.1 Garanties de base », avec la même phrase que l'incendie ou le vol (« applicables si les conditions
+    particulières mentionnent… »). Écrites en options depuis 7.181, elles répondaient « à préciser » là où deux
+    lecteurs du seul texte répondent « couvert » (jeu « aveugle »). Elles sont présumées souscrites, avec la réserve ;
+    dites non souscrites, elles refusent. Aucun article 3.1.x ne porte plus de circonstance « option »."""
+    import json
+
     cid = "assureur-b-habitation-2017"
     contrat_b = Contrat(prolog.fichier_regles(cid))
-    faits = {"evenement": ["bris"], "bien": ["appareil_informatique"], "lieu": ["logement"]}
-    attendus = [(faits, "INCERTAIN"), (faits | {"option_materiel_multimedia": "oui"}, "COUVERT"),
-                (faits | {"option_materiel_multimedia": "non"}, "NON_COUVERT")]
+    ordinateur = {"evenement": ["bris"], "bien": ["appareil_informatique"], "lieu": ["logement"]}
+    verglas = {"evenement": ["responsabilite"], "origine_rc": "immeuble", "victime": "tiers",
+               "statut_logement": "proprietaire"}
+    attendus = [(ordinateur, "COUVERT"), (ordinateur | {"option_materiel_multimedia": "non"}, "NON_COUVERT"),
+                (verglas, "COUVERT"), (verglas | {"option_rc_immeuble": "non"}, "INCERTAIN")]
     for f, attendu in attendus:
-        d = Moteur(contrat_b, f).decider()
-        assert d["decision"] == attendu, f
+        assert Moteur(contrat_b, f).decider()["decision"] == attendu, f
         if prolog.swipl() is not None:
             assert prolog.decider(cid, f)["decision"] == attendu, f
-    bris = next(r for r in Moteur(contrat_b, faits).decider()["garanties"] if r["id"] == "materiel_multimedia_bris")
-    assert bris["questions"] == ["option_materiel_multimedia"]
+    for chemin in sorted((prolog.DOSSIER / "propositions" / cid).glob("3.1.*.json")):
+        prop = json.loads(chemin.read_text(encoding="utf-8"))["proposition"]
+        assert not [c for g in prop["garanties"] for c in g.get("circonstances", []) if c.get("option")], chemin.name
     # 7.182 : « les vols commis par l'Assuré ou sa famille » ne vaut que pour un vol. Commune aux deux garanties,
     # l'exclusion refusait aussi le bris : un ordinateur tombé de la table, lu « causé par l'assuré », était refusé
     # pour complicité de vol. Un vol commis par un proche reste refusé.
-    par_l_assure = faits | {"evenement": ["accident"], "auteur": "assure"}
-    assert Moteur(contrat_b, par_l_assure).decider()["decision"] == "INCERTAIN"
-    assert Moteur(contrat_b, par_l_assure | {"option_materiel_multimedia": "oui"}).decider()["decision"] == "COUVERT"
+    par_l_assure = ordinateur | {"evenement": ["accident"], "auteur": "assure"}
+    assert Moteur(contrat_b, par_l_assure).decider()["decision"] == "COUVERT"
     vol = {"evenement": ["vol"], "bien": ["appareil_informatique"], "lieu": ["voie_publique"], "auteur": "famille",
-           "option_materiel_multimedia": "oui", "plainte_deposee": "oui"}
+           "plainte_deposee": "oui"}
     assert Moteur(contrat_b, vol).decider()["decision"] == "NON_COUVERT"
     if prolog.swipl() is not None:
-        assert prolog.decider(cid, par_l_assure)["decision"] == "INCERTAIN"
+        assert prolog.decider(cid, par_l_assure)["decision"] == "COUVERT"
         assert prolog.decider(cid, vol)["decision"] == "NON_COUVERT"
+
+
+def test_les_exclusions_communes_de_b_valent_pour_toutes_ses_garanties():
+    """7.186. L'article 2.10 de B (« applicables à toutes les garanties ») n'était pas traduit : un rocher tombé d'un
+    talus sur un garage était couvert comme un heurt. Chute de pierres et mouvement de terrain, faute intentionnelle
+    de l'assuré, guerre, nucléaire : jamais demandés, mais établis ils refusent, quelle que soit la garantie. Et la
+    vitre d'une voiture fracturée n'est pas un vitrage du bâtiment désigné."""
+    cid = "assureur-b-habitation-2017"
+    contrat_b = Contrat(prolog.fichier_regles(cid))
+    heurt = {"evenement": ["heurt"], "bien": ["element_batiment"], "lieu": ["garage"], "choc_deux_corps_durs": "oui"}
+    voiture = {"evenement": ["vol", "bris"], "bien": ["vitre"], "lieu": ["voie_publique", "vehicule"], "effraction": "oui",
+               "plainte_deposee": "oui"}
+    attendus = [(heurt, "COUVERT"), (heurt | {"glissement_terrain": "oui"}, "NON_COUVERT"),
+                ({"evenement": ["incendie"], "bien": ["mobilier"], "lieu": ["logement"], "flammes": "oui",
+                  "embrasement": "oui", "intentionnel": "oui", "auteur": "assure"}, "NON_COUVERT"),
+                ({"evenement": ["bris"], "bien": ["vitre"], "lieu": ["logement"]}, "COUVERT"),
+                ({"evenement": ["bris"], "bien": ["vitre"]}, "COUVERT")]
+    for f, attendu in attendus:
+        assert Moteur(contrat_b, f).decider()["decision"] == attendu, f
+        if prolog.swipl() is not None:
+            assert prolog.decider(cid, f)["decision"] == attendu, f
+    assert Moteur(contrat_b, voiture).decider()["decision"] != "COUVERT"
+
+
+def test_chez_d_les_bijoux_voles_attendent_l_option_et_la_trottinette_electrique_est_un_engin_a_moteur():
+    """7.186. D : les bijoux ne sont assurés que par l'option « objets de valeur » ; l'exclusion, jamais demandée,
+    laissait couvrir un vol de bijoux. Et une trottinette électrique est un engin motorisé : la valeur
+    `engin_motorise_personnel` du vocabulaire hérite des règles écrites pour `vehicule_moteur`."""
+    cid = "assureur-d-habitation-2026"
+    contrat_d = Contrat(prolog.fichier_regles(cid))
+    bijoux = {"evenement": ["vol"], "bien": ["bijoux"], "lieu": ["logement"], "effraction": "oui", "auteur": "tiers",
+              "plainte_deposee": "oui"}
+    rc = {"evenement": ["responsabilite"], "lieu": ["voie_publique"], "auteur": "famille", "victime": "tiers",
+          "dommage_tiers": "corporel"}
+    attendus = [(bijoux, "INCERTAIN"), (bijoux | {"option_objets_valeur": "oui"}, "COUVERT"),
+                (bijoux | {"option_objets_valeur": "non"}, "NON_COUVERT"),
+                (rc | {"origine_rc": "velo_trottinette"}, "COUVERT"),
+                (rc | {"origine_rc": "engin_motorise_personnel"}, "NON_COUVERT")]
+    for f, attendu in attendus:
+        assert Moteur(contrat_d, f).decider()["decision"] == attendu, f
+        if prolog.swipl() is not None:
+            assert prolog.decider(cid, f)["decision"] == attendu, f
 
 
 def test_une_option_qui_ouvre_une_garantie_ne_se_declare_plus_en_tete():

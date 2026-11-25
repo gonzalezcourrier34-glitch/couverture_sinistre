@@ -10,7 +10,8 @@
       "modifications": [
         "l'option en circonstance ; le bâtiment et le terrain : `origine_rc = immeuble` ; le tiers, les biens confiés, la profession",
         "les vingt-six variables proposées (soudain, imprévu, conjoint cohabitant, superficie…) : aucune retenue",
-        "24 nov. : quatre exclusions jusque-là classées « rares » deviennent des règles (ascenseur non conforme, terrain de plus d'un hectare, amiante, terrain non attenant)"
+        "24 nov. : quatre exclusions jusque-là classées « rares » deviennent des règles (ascenseur non conforme, terrain de plus d'un hectare, amiante, terrain non attenant)",
+        "25 nov. : le contrat range cette garantie sous « 3.1 Garanties de base » : elle est présumée souscrite comme l'incendie ou le vol, avec la réserve des conditions particulières, et ne se demande plus comme une option (7.186)"
       ]
     }
   },
@@ -22,7 +23,7 @@
     "garanties": [
       {
         "id": "rc_immeuble",
-        "nom": "Responsabilité civile immeuble (option)",
+        "nom": "Responsabilité civile immeuble",
         "article": "3.1.10.1",
         "texte": "La Compagnie garantit la responsabilité civile qu’un Assuré pourrait encourir sur la base des articles 1382 à 1386 du Code civil, à l’égard d’un tiers, en raison de dommages causés par le fait",
         "perimetre": [
@@ -39,19 +40,7 @@
             ]
           }
         ],
-        "circonstances": [
-          {
-            "condition": {
-              "f": [
-                "option_rc_immeuble",
-                "oui"
-              ]
-            },
-            "article": "3.1.10",
-            "texte": "la garantie “ responsabilité civile immeuble ” est accordée",
-            "option": true
-          }
-        ],
+        "circonstances": [],
         "obligations": [],
         "exclusions": [
           {
@@ -163,7 +152,20 @@
         ]
       }
     ],
-    "exclusions_communes": [],
+    "exclusions_communes": [
+      {
+        "condition": {
+          "f": [
+            "option_rc_immeuble",
+            "non"
+          ]
+        },
+        "portee": "tout",
+        "a_demander": true,
+        "article": "3.1.10",
+        "texte": "la garantie “ responsabilité civile immeuble ” est accordée"
+      }
+    ],
     "extensions": [],
     "vocabulaire_manquant": [
       {
