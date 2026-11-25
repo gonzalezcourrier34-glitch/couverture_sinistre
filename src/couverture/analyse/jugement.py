@@ -111,6 +111,18 @@ def _citation_du_contrat(j: Jugement, clause: Clause) -> bool:
     return bool(exact)
 
 
+POIDS = {"exclut": 0, "a_verifier": 1, "couvre": 2, "limite": 3, "sans_effet": 4}
+
+
+def _clause_mere(identifiant: str, par_id: dict) -> str | None:
+    """La clause du dossier dont l'identifiant est le début de celui-ci (« 3.1.6.2 » pour « 3.1.6.2.10 »)."""
+    morceaux = identifiant.strip().strip("[]").split(".")
+    for n in range(len(morceaux) - 1, 0, -1):
+        if ".".join(morceaux[:n]) in par_id:
+            return ".".join(morceaux[:n])
+    return None
+
+
 def _nu(identifiant: str) -> str:
     return identifiant.strip().strip("[]").lstrip("S§").strip().lower()
 
@@ -129,6 +141,7 @@ def controler(jugements: list[Jugement], clauses: list[Clause], declaration: str
     par_id = {c.id: c for c in clauses}
     declaration_n = normaliser(declaration)
     gardes, defauts, vus = [], [], set()
+    remontes: set[int] = set()
     for j in jugements:
         if j.clause_id not in par_id:
             # Le modèle a écrit « 25 » pour la clause « S25 » : l'identifiant est rétabli quand une seule clause
@@ -136,11 +149,20 @@ def controler(jugements: list[Jugement], clauses: list[Clause], declaration: str
             proches = [i for i in par_id if _nu(i) == _nu(j.clause_id)]
             if len(proches) == 1:
                 j.clause_id = proches[0]
+        if j.clause_id not in par_id and (mere := _clause_mere(j.clause_id, par_id)):
+            # Le modèle a jugé un alinéa numéroté dans le texte (« 3.1.6.2.1 les vols simples ») : le jugement
+            # revient à la clause qui le contient (7.198), et sa citation se vérifie dans cette clause.
+            j.clause_id = mere
+            remontes.add(id(j))
+    # Plusieurs alinéas d'une même clause : le jugement le plus lourd passe d'abord, les suivants s'y fondent.
+    jugements = sorted(jugements, key=lambda j: POIDS[j.effet] if id(j) in remontes else -1)
+    for j in jugements:
         c = par_id.get(j.clause_id)
         if c is None:
             defauts.append(f"{j.clause_id} ({j.effet}) : clause hors du dossier")
         elif j.clause_id in vus:
-            defauts.append(f"{j.clause_id} : jugée deux fois, le second jugement est ignoré")
+            if id(j) not in remontes:
+                defauts.append(f"{j.clause_id} : jugée deux fois, le second jugement est ignoré")
         elif j.effet != "sans_effet" and not _citation_du_contrat(j, c):
             if j.effet == "limite":
                 # Une limite ne pèse pas sur la décision : sans citation exacte, la clause compte pour lue, et

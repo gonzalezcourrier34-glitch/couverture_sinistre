@@ -24,12 +24,17 @@ class AnalyseRequest(BaseModel):
         Facultatif : ce que disent les conditions particulières du client (la formule, les options), parmi
         celles du contrat (`souscription` de `GET /api/v1/contrats`). Ce qui n'est pas renseigné reste une
         question ou une réserve.
+    methode : str | None
+        Facultatif : `regles` (la chaîne de règles, quelques secondes) ou `clauses` (chaque clause jugée par le
+        modèle, contresignée par les règles : deux à trois minutes). Sans valeur : celle du serveur
+        (`COUVERTURE_METHODE`).
     """
 
     contrat_id: str = Field(min_length=1, examples=["assureur-a-habitation-2025"])
     sinistre: str = Field(min_length=10, max_length=2000, examples=[
         "En faisant du vélo dans le parc, j'ai renversé un piéton. Il s'est cassé le poignet."])
     souscription: dict[str, str] = Field(default_factory=dict, examples=[{"formule": "privilege"}])
+    methode: Literal["regles", "clauses"] | None = None
 
 
 class DecisionRequest(BaseModel):

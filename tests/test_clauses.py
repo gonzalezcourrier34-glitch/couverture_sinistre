@@ -94,7 +94,7 @@ def test_la_commande_juger_affiche_la_decision_et_ses_clauses(base, monkeypatch,
     modele = Modele({"chapitres": ["3.1.2"], "motif": ""}, jugements(**{"3_1_2_1": "couvre", "3_1_2_2": "exclut"}))
     monkeypatch.setattr(llm, "MistralLLM", lambda **_: modele)
     a = argparse.Namespace(contrat="c1", sinistre=DECLARATION, jeu=None, cas=[], modele="m", regles=False, detail=True,
-                           echantillon=0, mesure_finale=False)
+                           echantillon=0, mesure_finale=False, paralleles=1)
     assert juger.executer(a, base, tmp_path) == 0
     sortie = capsys.readouterr().out
     assert sortie.startswith("NON_COUVERT") and "[exclut] 3.1.2.2 : « Les objets non fixés »" in sortie
@@ -134,7 +134,7 @@ def test_le_jeu_jamais_regarde_ne_se_lance_pas_par_megarde(base, tmp_path):
     from couverture.cli import juger
 
     a = argparse.Namespace(contrat="c1", sinistre=None, jeu="quatre", cas=[], modele="m", regles=False, detail=False,
-                           echantillon=0, mesure_finale=False)
+                           echantillon=0, mesure_finale=False, paralleles=1)
     with pytest.raises(SystemExit) as arret:
         juger.executer(a, base, tmp_path)
     assert "mesure finale" in str(arret.value)
@@ -148,3 +148,52 @@ def test_le_message_met_en_tete_ce_qui_revient_a_chaque_sinistre(base):
     envoi = modele.recus[1][1]
     places = [envoi.index(f"[{i}]") for i in ("2.10", "2.11", "3.1.2", "3.1.2.2", "1.28")]
     assert places == sorted(places) and envoi.endswith(DECLARATION)
+
+
+class Regles:
+    """La chaîne de règles, pour la contresignature : rend la décision qu'on lui a donnée, ou tombe en panne."""
+
+    def __init__(self, decision=None):
+        self.decision = decision
+
+    def analyser(self, sinistre, **_):
+        from couverture.models import Faits, Resultat, Verdict
+        if self.decision is None:
+            raise RuntimeError("panne du modèle")
+        return Resultat(sinistre=sinistre, contrat_id="c1", methode="regles", faits=Faits(), clauses_consultees=[],
+                        verdict=Verdict(decision=self.decision, justification="."))
+
+
+def test_l_api_rend_une_lecture_des_clauses_au_format_de_ses_reponses(base):
+    """7.201 : la même forme qu'une analyse par les règles (le schéma `Decision` l'accepte), les étapes racontées,
+    la clause qui couvre citée, et la contresignature faite."""
+    from couverture.api import service
+    from couverture.api.schemas import Decision as Reponse
+
+    etapes = []
+    modele = Modele({"chapitres": ["3.1.2"], "motif": ""}, jugements(**{"3_1_2_1": "couvre"}))
+    r, sortie = service.analyser_clauses(base, Regles(Decision.COUVERT), "c1", DECLARATION, modele,
+                                         suivi=lambda e, d=None: etapes.append((e, d)))
+    Reponse(**sortie)
+    assert sortie["decision"] == "COUVERT" and sortie["mode"] == "clauses" and r.methode == "clauses"
+    assert [c["clause_id"] for c in sortie["citations"]] == ["3.1.2.1"] and sortie["citations"][0]["role"] == "garantie"
+    assert any("« La tempête de samedi »" in ligne for ligne in sortie["raisonnement"])
+    vus = [e for e, d in etapes if d is not None]
+    assert {"designation", "jugement", "regles", "decision"} <= set(vus) and sortie["confiance"] == 1.0
+
+
+def test_un_couvert_que_les_regles_ne_peuvent_contresigner_reste_a_examiner(base):
+    """La chaîne de règles en panne : la lecture couvre, mais un couvert non contresigné devient « incertain »."""
+    from couverture.api import service
+
+    modele = Modele({"chapitres": ["3.1.2"], "motif": ""}, jugements(**{"3_1_2_1": "couvre"}))
+    _, sortie = service.analyser_clauses(base, Regles(None), "c1", DECLARATION, modele)
+    assert sortie["decision"] == "INCERTAIN" and "n'ont pas répondu" in sortie["avertissements"][0]
+
+
+def test_les_conditions_particulieres_s_ajoutent_a_la_declaration_en_mots(base):
+    from couverture.api import service
+
+    assert service.avec_souscription("Ma cave a été inondée.", "c1", {}) == "Ma cave a été inondée."
+    lu = service.avec_souscription("Ma cave a été inondée.", "c1", {"formule": "confort"})
+    assert lu.startswith("Ma cave a été inondée.\n\nConditions particulières du client : ") and lu.endswith(".")

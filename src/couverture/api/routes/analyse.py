@@ -14,7 +14,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 from couverture.api import service
 from couverture.api.acces import limiter_analyses
-from couverture.api.dependances import Pipelines, get_journal, get_pipelines
+from couverture.api.dependances import Pipelines, get_journal, get_pipelines, methode, modele_des_clauses
 from couverture.api.schemas import AnalyseRequest, Decision
 from couverture.api.securite import require_api_key
 from couverture.analyse.journal import Journal
@@ -45,9 +45,14 @@ def analyser(demande: AnalyseRequest, pipelines: Pipelines = Depends(get_pipelin
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(e)) from e
     debut = time.perf_counter()
     try:
-        resultat, reponse = service.analyser(chaine, demande.sinistre.strip(), souscription=demande.souscription)
-    except ErreurLLM as e:
-        journal.noter_erreur(demande.contrat_id, "regles", str(e))
+        if methode(demande) == "clauses":
+            resultat, reponse = service.analyser_clauses(pipelines.base, chaine, demande.contrat_id,
+                                                         demande.sinistre.strip(), modele_des_clauses(),
+                                                         souscription=demande.souscription)
+        else:
+            resultat, reponse = service.analyser(chaine, demande.sinistre.strip(), souscription=demande.souscription)
+    except (ErreurLLM, ValueError) as e:   # ValueError : une réponse du modèle coupée ou illisible
+        journal.noter_erreur(demande.contrat_id, methode(demande), str(e))
         raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=f"Le modèle n'a pas répondu : {e}") from e
     journal.noter(resultat, duree_ms=int((time.perf_counter() - debut) * 1000))
     return reponse

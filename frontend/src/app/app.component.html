@@ -131,13 +131,17 @@
 
                     <div class="etape-origine">
                         {{ etape.origine === 'analyse' ? 'Déclaration' : 'Après les réponses du client' }}
-                        <span class="small">· {{ etape.reponse.durees_ms['lecture'] !== undefined ? 'lue par le modèle' : 'moteur seul, sans modèle' }}</span>
+                        <span class="small">· {{ etape.reponse.mode === 'clauses' ? 'jugée clause par clause' : etape.reponse.durees_ms['lecture'] !== undefined ? 'lue par le modèle' : 'moteur seul, sans modèle' }}</span>
                     </div>
                     <blockquote class="etape-texte">{{ etape.texte }}</blockquote>
 
                     <div class="verdict" [class]="tons[etape.reponse.decision]">
                         <span class="verdict-libelle">{{ libelles[etape.reponse.decision] }}</span>
-                        <span class="verdict-confiance">confiance {{ pourcent(etape.reponse.confiance) }}</span>
+                        @if (etape.reponse.mode !== 'clauses') {
+                            <span class="verdict-confiance">confiance {{ pourcent(etape.reponse.confiance) }}</span>
+                        } @else {
+                            <span class="verdict-confiance">{{ etape.reponse.confiance === 1 ? 'les règles concordent' : 'les règles ne concordent pas' }}</span>
+                        }
                     </div>
                     <p class="justification">{{ etape.reponse.justification }}</p>
 
@@ -191,6 +195,20 @@
                                     Décider avec {{ nbReponses() }} réponse{{ nbReponses() > 1 ? 's' : '' }}
                                 </button>
                             </div>
+                        </div>
+                    }
+
+                    <!-- ### Lecture clause par clause : les questions, en phrases (pas de boutons : rien à renvoyer au moteur) -->
+
+                    @if (last && etape.reponse.mode === 'clauses' && etape.reponse.questions.length) {
+                        <div class="bloc a-preciser">
+                            <div class="bloc-titre">À demander au client</div>
+                            <ul class="limites">
+                                @for (q of etape.reponse.questions; track $index) {
+                                    <li>{{ q }}</li>
+                                }
+                            </ul>
+                            <div class="small">Ajoutez ses réponses à la déclaration, puis relancez l’analyse.</div>
                         </div>
                     }
 
@@ -306,10 +324,13 @@
                     <div>
                         <div class="fenetre-titre">Analyse en cours</div>
                         <div class="small">Le modèle lit, la logique décide, le code vérifie.</div>
+                        @if (annonceSuivi(); as annonce) {
+                            <div class="small">{{ annonce }}</div>
+                        }
                     </div>
                 </header>
                 <ol class="suivi">
-                    @for (e of etapesSuivi; track e.cle) {
+                    @for (e of etapesSuivi(); track e.cle) {
                         @let s = suivi()[e.cle];
                         <li class="suivi-etape" [class.suivi-encours]="s?.etat === 'encours'" [class.suivi-fait]="s?.etat === 'fait'">
                             <span class="suivi-marque" aria-hidden="true"></span>

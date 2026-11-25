@@ -64,3 +64,16 @@ class Pipelines:
 def get_pipelines() -> Pipelines:
     """Dépendance FastAPI : l'accès aux chaînes d'analyse (une par contrat, construite à la demande), sur la base de l'API."""
     return Pipelines(get_base())
+
+
+def methode(demande) -> str:
+    """La méthode d'une analyse : celle que la requête demande, sinon celle du serveur (`COUVERTURE_METHODE`)."""
+    return demande.methode or config.METHODE
+
+
+def modele_des_clauses():
+    """Le modèle de la lecture des clauses : un client par analyse, pour que le compte de ses tokens et de sa
+    réflexion lui soit propre ; une limite large, la réflexion de Mistral Large y comptant (7.200)."""
+    from couverture.llm import MistralLLM
+
+    return MistralLLM(modele=config.MODELE_CLAUSES, timeout=600, max_tokens=32000)

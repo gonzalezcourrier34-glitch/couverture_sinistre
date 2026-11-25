@@ -5615,6 +5615,171 @@ désignées changent d'un sinistre à l'autre. Sur l'ensemble des tokens envoyé
 économie réelle et modeste : l'essentiel du prix est dans ce que le modèle écrit, pas dans ce qu'il lit.
 Suite : 283 tests passés.
 
+### 7.197 Le modèle moyen après rattrapages : 14 secondes, et une exclusion qui n'écarte qu'un poste
+
+**Le fait.** Même cas, modèle moyen (25 nov., 18 h 55) : 14 secondes, trois appels, 31 746 tokens envoyés et
+1 115 reçus, soit environ 6 centimes de dollar. La réponse courte est respectée (1 115 tokens au lieu de
+4 192), la citation à trous de la fuite d'eau est écartée puis rattrapée par la relance, la clause oubliée
+aussi, la limite de l'article 4.2 est lue, la question hors sujet sur la formule a disparu. Le cache n'a repris
+que 996 tokens : c'était le premier envoi dans le nouvel ordre.
+
+**Ce qui empêche encore « couvert ».** La clause des exclusions de la garantie est jugée « exclut » sur cette
+phrase : « les frais de réparation ou de remplacement de l'élément à l'origine du dommage couvert par le
+contrat ». La lecture est exacte et l'effet est faux : la clause écarte un poste (le raccord), pas le sinistre
+(la cuisine inondée, le parquet), et elle le dit elle-même en parlant du « dommage couvert ». C'est la même
+famille que l'indemnité réduite : ce qui sera payé diminue, la garantie joue.
+
+**La règle.** L'effet « limite » couvre désormais trois cas, écrits dans la consigne : la sanction d'une
+obligation quand elle est une indemnité réduite, un plafond que le montant déclaré dépasse, et une exclusion
+qui n'écarte qu'un poste du dommage quand le reste demeure garanti. Reste « exclut » ce qui écarte tout ce que
+la déclaration réclame. Aucune règle de code ne peut le vérifier : c'est une lecture, confiée au modèle, et
+c'est à l'essai suivant de dire s'il la fait.
+
+**Toujours ouvert.** Le modèle moyen donne encore « couvre » à la clause qui liste les biens assurés. Sur ce
+cas cela ne change rien ; sur un autre, cela pourrait couvrir à tort, et seule la contresignature des règles
+l'arrête aujourd'hui.
+
+### 7.198 L'essai de fumée complet : cinq sur cinq pour A et D, zéro sur trois pour B
+
+**Le fait.** Après un dernier réglage de consigne, le cas av-d07 rend « couvert » en 13 secondes, avec ses deux
+limites et 9 004 tokens repris du cache. Puis les sept autres cas (25 nov., 19 h 02), modèle moyen, avec la
+contresignature des règles. Ce sont des cas déjà vus : un essai de fumée, pas une mesure.
+
+| Contrat | Cas | Justes | Ce qui s'est passé |
+|---|---|---|---|
+| A | n-a07, av-a05 | 2 sur 2 | 14 et 18 s |
+| D | av-d07, av-d01, av-d10 | 3 sur 3 | 12 à 16 s ; jusqu'à 25 544 tokens sur 26 050 repris du cache |
+| B | av-b05, av-b14, n-b06 | 0 sur 3 | deux refus à tort, un « à préciser » |
+
+Aucun couvert à tort. Huit cas pour environ 250 000 tokens envoyés et 13 000 reçus, de l'ordre de 45 centimes de
+dollar, 13 à 29 secondes par cas.
+
+**Les trois échecs de B, lus dans les réponses brutes.**
+
+- *av-b05, le trampoline emporté par la tempête* : la clause exclut les objets non fixés « à l'exception du
+  mobilier de jardin », et le lexique range le trampoline dans le mobilier de jardin. La définition était dans
+  l'envoi ; le modèle écrit lui-même « mobilier de jardin » dans son motif, et exclut quand même.
+- *n-b06, le vol avec les clés perdues* : le contrat exclut les vols simples, et le lexique dit qu'un vol commis
+  avec des clés perdues n'en est pas un. La définition était dans l'envoi ; le modèle exclut. Il juge aussi
+  « exclut » la phrase qui accorde la garantie vol, et cite pour les exclusions générales un alinéa sur les
+  changements de température : les deux citations sont exactes, leur rapport est nul, et aucun contrôle de code
+  ne voit cela.
+- *av-b14, le facteur qui glisse sur le verglas* : la garantie couvre, mais le modèle demande si elle est
+  souscrite et si le sinistre a été déclaré dans les huit jours, deux questions que la consigne écarte en toutes
+  lettres.
+
+Dans deux de ces cas, la chaîne de règles répondait « couvert », à raison, et la lecture des clauses l'a
+emporté, à tort : la contresignature est écrite pour arrêter un couvert, pas un refus.
+
+**Ce que le code rattrape de plus.** Le modèle juge des alinéas numérotés dans le texte d'une clause
+(« 3.1.6.2.1 les vols simples ») au lieu de la clause : ces jugements étaient écartés comme « hors du
+dossier ». Ils reviennent à la clause qui les contient, le plus lourd d'abord, et la citation se vérifie dans
+cette clause. La consigne dit maintenant que la définition du contrat l'emporte sur le sens courant, et qu'on
+juge sous l'identifiant entre crochets. Rejouées sur ce code, les trois réponses de B restent fausses : ce ne
+sont pas des défauts de contrôle, ce sont des lectures fausses.
+
+**Ce que cela dit.** La méthode tient sur A et D. Sur B, dont les dossiers sont plus gros (jusqu'à 123 clauses)
+et qui renvoie davantage à son lexique, le modèle moyen n'applique pas les définitions qu'on lui donne. Deux
+questions restent, dans cet ordre : est-ce le modèle (les mêmes trois cas avec Large le diront, pour une
+vingtaine de centimes) ; et que faire d'un désaccord où les règles couvrent et la lecture refuse (le rendre « à
+préciser » au lieu de laisser la lecture l'emporter). Ni l'une ni l'autre ne se décide sur trois cas vus.
+Suite : 284 tests passés.
+
+### 7.199 Les trois cas de B avec Mistral Large : c'était le modèle
+
+**Le fait.** Les trois cas de B manqués par le modèle moyen, rejoués avec Mistral Large et la contresignature
+des règles (25 nov., 19 h 16) :
+
+| Cas | Modèle moyen | Mistral Large | Ce que Large a lu |
+|---|---|---|---|
+| av-b05, le trampoline | refus à tort | « à préciser » | la tempête couvre ; les règles disent « non couvert » |
+| av-b14, le verglas | « à préciser » | **couvert, juste** | la responsabilité pour défaut d'enlèvement du verglas |
+| n-b06, les clés perdues | refus à tort | **couvert, juste** | la garantie vol, plainte déposée |
+
+La lecture seule de Large donne les trois réponses attendues ; sur le trampoline, la chaîne de règles répond
+« non couvert » (son erreur connue, 7.186), et la contresignature fait ce pour quoi elle est écrite : un couvert
+que les règles ne signent pas devient « à préciser ». Aucun couvert à tort, aucun refus à tort.
+
+**Le prix et le temps.** 81 000 tokens envoyés et 32 000 reçus pour trois cas, soit environ 25 centimes de
+dollar, 8 centimes par cas ; 100 à 163 secondes par cas. Large réfléchit avant de répondre (18 000 à
+30 000 caractères de réflexion par jugement), au niveau le plus bas qu'il accepte (« low » ; « none » est
+refusé, 7.112). C'est la réflexion qui coûte et qui dure, et c'est sans doute elle qui applique les définitions
+du lexique que le modèle moyen lisait sans s'en servir.
+
+**Ce que cela décide, et ce que cela ne décide pas.** Les échecs de B venaient du modèle, pas de la méthode :
+les mêmes dossiers, la même consigne, le même code donnent juste avec un lecteur qui réfléchit. Reste un choix
+qui n'est pas technique : un lecteur rapide (15 s, juste sur A et D, faux sur B) ou un lecteur lent (2 min, juste
+sur les trois contrats essayés). Choisir un modèle par contrat serait régler sur les cas vus ; il en faut un
+pour tous. Le choix se fera sur un échantillon plus large des jeux déjà vus, puis la mesure sur le jeu
+« quatre », une seule fois, avec le modèle choisi.
+
+### 7.200 Trente cas avec Mistral Large : aucune erreur grave, et 84 minutes
+
+**Le fait.** Les dix premiers cas du jeu « aveugle » pour chaque contrat, Mistral Large, contresignature des
+règles (25 nov., de 19 h 20 à 20 h 40). Ce sont des cas déjà vus : un essai, pas une mesure.
+
+| Contrat | Justes | Couverts à tort | Refus à tort | « À préciser » au lieu d'une réponse |
+|---|---|---|---|---|
+| A | 9 sur 10 | 0 | 0 | 1 (av-a06) |
+| B | 7 sur 10 | 0 | 0 | 3 (av-b05, av-b06, av-b10) |
+| D | 7 sur 10 | 0 | 0 | 3 (av-d04, av-d06, av-d07) |
+
+23 justes sur 30, et les sept écarts vont tous dans le sens prudent. Pour mémoire, la chaîne actuelle avait sur ce
+jeu entier 1 à 2 couverts à tort pour B et 2 pour D (7.186) ; les chiffres ne se comparent pas autrement, les
+échantillons n'étant pas les mêmes.
+
+**Les sept écarts.**
+
+- *Des questions sur les formalités* (av-a06, av-d07) : le délai de déclaration du sinistre, le plafond. Ce sont
+  des conditions de règlement, pas de couverture ; la consigne le dit, Large les pose quand même. Dans les deux
+  cas, les règles disaient « couvert ».
+- *Une question sur le calcul de l'indemnité* (av-b06) : l'âge de la plaque de cuisson, qui joue sur la vétusté,
+  pas sur la garantie.
+- *Une clause citée de travers* (av-b10) : une exclusion jugée « exclut » avec, pour citation, la phrase qui
+  accorde la garantie. La citation existe ; son rapport est nul (même défaut qu'en 7.198).
+- *La contresignature* (av-d04) : la lecture couvre, les règles disent « à préciser », la réponse est « à
+  préciser ». C'est la règle voulue ; c'est ici la chaîne de règles qui se trompe.
+- *Une prudence défendable* (av-d06) : des moisissures que le contrat exclut ; Large demande si l'assuré
+  connaissait le défaut d'aération. On attendait « non couvert ».
+- *Une réponse coupée* (av-b05) : la réflexion de Large compte dans la limite de 16 000 tokens. Portée à 32 000.
+
+**Le temps.** 84 minutes pour 30 cas, deux minutes et demie à trois minutes par cas, les cas l'un après l'autre.
+Environ 900 000 tokens envoyés et 400 000 reçus, de l'ordre de 2,50 à 3 $ ; c'est la réflexion de Large qui fait
+l'essentiel du prix et du temps. La commande lance maintenant 4 cas à la fois (`--paralleles`, comme le banc,
+chaque cas avec son propre client pour que les comptes de tokens ne se mélangent pas) : un passage de 30 cas
+devrait prendre une vingtaine de minutes. Cela ne change rien au temps d'une analyse : à l'écran, une
+déclaration attendrait toujours deux à trois minutes. C'est la question qui reste avant le branchement.
+
+### 7.201 Le branchement : la lecture des clauses dans l'API et à l'écran, derrière un réglage
+
+**Le choix.** Avec Mistral Large, une analyse par la lecture des clauses prend deux à trois minutes (7.200). On ne
+le cache pas : on le dit avant l'attente et on montre chaque étape pendant. Ni cascade de modèles ni double
+bouton : la cascade demanderait une mesure de plus, et un bouton « rapide » montrerait par défaut la méthode qui
+couvre à tort (choix du 25 nov., 20 h 48).
+
+**Ce qui est branché.**
+
+- *Le réglage* : `COUVERTURE_METHODE` (`regles` par défaut, `clauses`) et `COUVERTURE_MODELE_CLAUSES`
+  (`mistral-large-latest`). Une requête peut choisir sa méthode (`methode` dans `POST /analyses` et
+  `/analyses/suivi`). Par défaut, rien ne change : la décision entre les deux méthodes se prend après la mesure
+  sur le jeu « quatre ».
+- *La contresignature en même temps* : la chaîne de règles tourne dans un fil pendant que le modèle lit les
+  clauses ; elle ne rallonge pas l'attente. Si elle ne répond pas, un « couvert » n'est pas contresigné et devient
+  « à préciser » : la garde contre un couvert à tort ne se saute pas en silence.
+- *Le suivi* : la première ligne du flux annonce les étapes de cette méthode et le temps à prévoir ; puis
+  « trouver les chapitres », « juger chaque clause » (avec le compte : tant couvrent, tant excluent), « faire
+  contresigner », « décider ».
+- *La réponse* : le même format que la chaîne de règles, pour l'écran, la fiche PDF et le journal. Les citations
+  sont les phrases du contrat jugées ; le raisonnement donne, pour chaque clause qui pèse, la phrase du contrat et
+  celle de la déclaration ; les questions sont en phrases (pas de boutons : il n'y a pas de variable à renvoyer au
+  moteur, on complète la déclaration et on relance). Il n'y a pas de « confiance » chiffrée : l'écran dit si les
+  règles concordent.
+- *Les conditions particulières* choisies à l'écran (la formule, les options) sont ajoutées à la déclaration, en
+  mots, pour que le modèle les lise.
+
+**Ce qui reste à vérifier.** Une requête de trois à cinq minutes sur le site en ligne : la limite de durée d'une
+requête chez l'hébergeur est à vérifier avant d'y activer la méthode (étape 7). Suite : 287 tests passés.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le ferais.
@@ -5858,3 +6023,7 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 205. Garder la réponse brute du modèle avant de la lire : une réponse illisible qu'on n'a pas gardée se paie une seconde fois pour être comprise.
 206. Une règle qui fait passer le cas du jour mais contredit un test écrit pour éviter un couvert à tort se retire : le test disait déjà pourquoi.
 207. Un coût annoncé sur un tarif supposé se vérifie à la source avant de servir à choisir : le modèle « moyen » facturait ses réponses presque deux fois plus cher que le « grand ».
+208. Une exclusion peut n'écarter qu'un poste du dommage (« les frais de réparation de l'élément à l'origine du dommage couvert ») : la lire comme un refus du sinistre, c'est lire juste et conclure faux.
+209. Deux citations exactes ne font pas un jugement juste : le contrôle prouve que les phrases existent, pas qu'elles ont un rapport. Ce que le code ne peut pas vérifier se mesure, sur des cas.
+210. Avant de corriger une méthode qui échoue, changer seulement le lecteur sur les mêmes cas : si un meilleur modèle réussit avec le même dossier et la même consigne, le défaut n'était pas dans la méthode.
+211. Lancer les cas en parallèle raccourcit un passage, pas une analyse : le temps qu'attend l'utilisateur devant l'écran ne se règle qu'en changeant ce que fait le modèle.

@@ -3,6 +3,7 @@
 **Provenance** : nouveau (21/11/2026, DEMARCHE 7.134), sur le modèle du suivi en direct de SortirIA. La réponse est
 un flux de lignes JSON (`application/x-ndjson`), une par événement :
 
+- `{"etapes": [{"cle": ..., "titre": ...}]}` : en premier, avec la méthode `clauses` : la liste de ses étapes (7.201) ;
 - `{"etape": "socle"}` : une étape commence (`socle`, `details`, `verification`, `decision`, `confirmation`) ;
 - `{"etape": "socle", "detail": "evenement : vol ; bien : velo"}` : elle est finie, voici ce qu'elle a donné ;
 - `{"etape": "fin", "reponse": {...}}` : la décision, la même que celle de `/analyses` ;
@@ -24,7 +25,7 @@ from fastapi.responses import StreamingResponse
 
 from couverture.api import service
 from couverture.api.acces import limiter_analyses
-from couverture.api.dependances import Pipelines, get_journal, get_pipelines
+from couverture.api.dependances import Pipelines, get_journal, get_pipelines, methode, modele_des_clauses
 from couverture.api.schemas import AnalyseRequest
 from couverture.api.securite import require_api_key
 from couverture.analyse.journal import Journal
@@ -61,14 +62,23 @@ def analyser_avec_suivi(demande: AnalyseRequest, pipelines: Pipelines = Depends(
     def suivre(etape: str, detail: str | None = None) -> None:
         file.put({"etape": etape} if detail is None else {"etape": etape, "detail": detail})
 
+    par_clauses = methode(demande) == "clauses"
+    if par_clauses:
+        file.put({"etapes": service.ETAPES_CLAUSES, "annonce": service.ANNONCE_CLAUSES})
+
     def travailler() -> None:
         debut = time.perf_counter()
         try:
-            resultat, reponse = service.analyser(chaine, sinistre, suivi=suivre, souscription=demande.souscription)
+            if par_clauses:
+                resultat, reponse = service.analyser_clauses(pipelines.base, chaine, demande.contrat_id, sinistre,
+                                                             modele_des_clauses(), suivi=suivre,
+                                                             souscription=demande.souscription)
+            else:
+                resultat, reponse = service.analyser(chaine, sinistre, suivi=suivre, souscription=demande.souscription)
             journal.noter(resultat, duree_ms=int((time.perf_counter() - debut) * 1000))
             file.put({"etape": "fin", "reponse": reponse})
         except ErreurLLM as e:
-            journal.noter_erreur(demande.contrat_id, "regles", str(e))
+            journal.noter_erreur(demande.contrat_id, methode(demande), str(e))
             file.put({"etape": "erreur", "code": 502, "detail": f"Le modèle n'a pas répondu : {e}"})
         except Exception as e:  # noqa: BLE001 - le flux est ouvert : l'erreur doit y arriver, pas se perdre
             file.put({"etape": "erreur", "code": 500, "detail": f"L'analyse a échoué : {e}"})

@@ -20,7 +20,7 @@ from typing import Any
 
 from couverture.analyse import chaine, lecture, prolog
 from couverture.contrat.base import Base, Contrat
-from couverture.models import Clause, Faits, Resultat
+from couverture.models import Citation, Clause, Faits, Resultat
 
 
 class SansModele:
@@ -210,3 +210,118 @@ def decider(base: Base, contrat_id: str, faits: dict[str, Any], decideur=None) -
     r = Resultat(sinistre="", contrat_id=contrat_id, methode="regles", faits=chaine.faits_lisibles(retenus),
                  clauses_consultees=consultees, verdict=verdict)
     return r, reponse(r, d)
+
+
+# # La lecture des clauses (DEMARCHE 7.188, branchée en 7.201)
+
+ETAPES_CLAUSES = [
+    {"cle": "designation", "titre": "Trouver les chapitres du contrat qui concernent ce sinistre"},
+    {"cle": "jugement", "titre": "Juger chaque clause du dossier, citation à l'appui"},
+    {"cle": "regles", "titre": "Faire contresigner la réponse par les règles traduites"},
+    {"cle": "decision", "titre": "Décider : une logique fixe, pas le modèle"},
+]
+
+ANNONCE_CLAUSES = ("Chaque clause qui peut jouer est relue et jugée, citation à l'appui : comptez deux à trois "
+                   "minutes.")
+
+ROLE_DE_L_EFFET = {"couvre": "garantie", "exclut": "exclusion", "a_verifier": "condition"}
+
+
+def avec_souscription(sinistre: str, contrat_id: str, souscription: dict | None) -> str:
+    """La déclaration, suivie de ce que disent les conditions particulières du client, en mots : la lecture des
+    clauses n'a pas de variables, elle lit des phrases (et ses citations s'y vérifient comme dans le reste)."""
+    if not souscription:
+        return sinistre
+    voc = prolog.vocabulaire()
+    lignes = [f"{prolog.libelle(v, voc)} : {prolog.libelle(v, voc, x)}" for v, x in souscription.items() if x]
+    return sinistre + ("\n\nConditions particulières du client : " + " ; ".join(lignes) + "." if lignes else "")
+
+
+def analyser_clauses(base: Base, pipeline, contrat_id: str, sinistre: str, llm, suivi=None,
+                     souscription: dict | None = None) -> tuple[Resultat, dict[str, Any]]:
+    """La déclaration jugée clause par clause ; la chaîne de règles tourne en même temps, pour contresigner un
+    « couvert ». Rend le résultat (pour le journal) et la réponse de l'API, au même format que `analyser`.
+
+    Si la chaîne de règles ne répond pas, un « couvert » n'est pas contresigné et devient « incertain » : la
+    contresignature est la garde contre un couvert à tort, elle ne se saute pas en silence."""
+    import time
+    from concurrent.futures import ThreadPoolExecutor
+
+    from couverture.analyse import clauses as lecture_des_clauses
+    from couverture.models import Decision as D
+
+    suivre = suivi or (lambda etape, detail=None: None)
+    declaration = avec_souscription(sinistre, contrat_id, souscription)
+    debut = time.perf_counter()
+    temps: dict[str, int] = {}
+
+    def regles() -> Resultat | None:
+        suivre("regles")
+        t0 = time.perf_counter()
+        try:
+            r = pipeline.analyser(sinistre, **({"souscription": souscription} if souscription else {}))
+        except Exception as e:  # noqa: BLE001 - la contresignature manque, on le dit plus bas
+            suivre("regles", f"les règles n'ont pas répondu ({str(e)[:80]})")
+            return None
+        temps["regles"] = int((time.perf_counter() - t0) * 1000)
+        suivre("regles", f"les règles traduites répondent « {r.verdict.decision.value} »")
+        return r
+
+    with ThreadPoolExecutor(max_workers=1) as fil:
+        en_cours = fil.submit(regles)
+        lu = lecture_des_clauses.lire(base, contrat_id, llm, declaration, suivi=suivre,
+                                      regles=lambda: (r.verdict.decision if (r := en_cours.result()) else None))
+        r_regles = en_cours.result()
+    temps["lecture"] = int((time.perf_counter() - debut) * 1000)
+    decision, desaccord = lu.decision, lu.desaccord
+    if r_regles is None and decision == D.COUVERT:
+        decision, desaccord = D.INCERTAIN, "les règles traduites n'ont pas répondu : un « couvert » non contresigné reste à examiner"
+    return resultat_clauses(base, contrat_id, sinistre, lu, decision, desaccord, r_regles, temps)
+
+
+def resultat_clauses(base: Base, contrat_id: str, sinistre: str, lu, decision, desaccord: str,
+                     r_regles: Resultat | None, temps: dict[str, int]) -> tuple[Resultat, dict[str, Any]]:
+    """Une lecture des clauses, mise au format des réponses de l'API. Les faits sont vides : cette méthode ne lit pas
+    de variables ; ce qu'elle a retenu de la déclaration est dans les citations et le raisonnement."""
+    from couverture.models import Verdict
+
+    e = lu.etat
+    pages = {c.id: c.pages for c in base.clauses(contrat_id)}
+    citations = [Citation(clause_id=j.clause_id, extrait=j.extrait_contrat, role=ROLE_DE_L_EFFET[j.effet],
+                          pages=pages.get(j.clause_id, []))
+                 for j in [*e.couvrent, *e.excluent, *e.a_verifier] if j.extrait_contrat]
+    noms = {"couvre": "couvre", "exclut": "exclut", "limite": "limite", "a_verifier": "à vérifier"}
+    raisonnement = [f"Chapitres désignés : {', '.join(lu.designes) or 'aucun'}",
+                    f"Garanties examinées : {', '.join(lu.garanties) or 'aucune'} ({len(lu.dossier)} clauses au dossier)"]
+    raisonnement += [f"[{noms[j.effet]}] art. {j.clause_id} : « {j.extrait_contrat} »"
+                     + (f" ← « {j.extrait_declaration} »" if j.extrait_declaration else "")
+                     + (f" — {j.motif}" if j.motif else "")
+                     for j in [*e.couvrent, *e.excluent, *e.limitent, *e.a_verifier]]
+    if lu.relancees:
+        raisonnement.append(f"Clauses redemandées au modèle, faute de jugement : {', '.join(lu.relancees)}")
+    avertissements = ([desaccord] if desaccord else []) \
+        + ([f"clauses attendues sans jugement : {', '.join(e.manquants)}"] if e.manquants else []) \
+        + [f"jugement écarté — {d}" for d in e.defauts[:5]]
+    questions = [j.question for j in e.a_verifier if j.question]
+    regles = r_regles.verdict.decision if r_regles else None
+    # Pas une probabilité : l'accord des deux lectures du contrat (les clauses et les règles), affiché comme tel.
+    confiance = 1.0 if regles == e.decision else 0.5
+    justification = e.motif[:1].upper() + e.motif[1:] + "."
+    if decision != e.decision:
+        justification += f" Réponse ramenée à « {decision.value} » : {desaccord}."
+    verdict = Verdict(decision=decision, justification=justification, citations=citations,
+                      informations_manquantes=questions, confiance=confiance, mode="clauses",
+                      decision_initiale=e.decision, avertissements=avertissements, raisonnement=raisonnement)
+    faits = r_regles.faits if r_regles else Faits()      # pour le journal seulement : la réponse n'en montre pas
+    r = Resultat(sinistre=sinistre, contrat_id=contrat_id, methode="clauses", faits=faits, clauses_consultees=[],
+                 verdict=verdict, durees_ms=temps)
+    sortie = {
+        "contrat_id": contrat_id, "decision": decision.value, "justification": justification, "confiance": confiance,
+        "a_preciser": [], "questions": questions,
+        "citations": [c.model_dump(mode="json") for c in citations],
+        "limites": [{"clause_id": j.clause_id, "extrait": j.extrait_contrat, "montant": j.motif or j.extrait_contrat}
+                    for j in e.limitent],
+        "faits": {}, "faits_affiches": [], "sinistres": [], "avertissements": avertissements,
+        "raisonnement": raisonnement, "mode": "clauses", "durees_ms": temps,
+    }
+    return r, sortie

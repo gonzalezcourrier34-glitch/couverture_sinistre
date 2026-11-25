@@ -25,6 +25,7 @@ import {
     Contrat,
     Decision,
     Etape,
+    EtapeSuivi,
     Sante
 } from './couverture.model';
 
@@ -64,7 +65,7 @@ const EXEMPLES: readonly { titre: string; texte: string }[] = [
 ];
 
 /** Les étapes d'une analyse, dans l'ordre où l'API les annonce (`POST /analyses/suivi`). */
-const ETAPES_SUIVI: readonly { cle: string; titre: string }[] = [
+const ETAPES_SUIVI: readonly EtapeSuivi[] = [
     { cle: 'socle', titre: 'Lire ce qui s’est passé, ce qui est touché, et où' },
     { cle: 'details', titre: 'Lire les détails qui comptent pour cet événement' },
     { cle: 'verification', titre: 'Vérifier que chaque fait est dans la déclaration' },
@@ -134,7 +135,11 @@ export class AppComponent implements OnInit {
 
     readonly maxPuces = MAX_PUCES;
 
-    readonly etapesSuivi = ETAPES_SUIVI;
+    /** Les étapes affichées pendant l'analyse : celles de la chaîne de règles, sauf si l'API en annonce d'autres. */
+    readonly etapesSuivi = signal<readonly EtapeSuivi[]>(ETAPES_SUIVI);
+
+    /** Ce que l'API dit avant l'attente (la lecture clause par clause prend deux à trois minutes). */
+    readonly annonceSuivi = signal<string | null>(null);
 
     readonly libelles = LIBELLES;
 
@@ -322,13 +327,18 @@ export class AppComponent implements OnInit {
         }
         this.lancer('Le modèle lit la déclaration, le moteur décide…');
         this.suivi.set({});
+        this.etapesSuivi.set(ETAPES_SUIVI);
+        this.annonceSuivi.set(null);
         this.suiviOuvert.set(true);
         const souscription = Object.fromEntries(Object.entries(this.souscription()).filter(([, v]) => !!v));
         this.service.analyserAvecSuivi(contratId, sinistre, souscription)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: (message) => {
-                    if (message.etape === 'fin' && message.reponse) {
+                    if (message.etapes) {
+                        this.etapesSuivi.set(message.etapes);
+                        this.annonceSuivi.set(message.annonce ?? null);
+                    } else if (message.etape === 'fin' && message.reponse) {
                         const reponse = message.reponse;
                         setTimeout(() => {
                             this.suiviOuvert.set(false);
@@ -338,10 +348,11 @@ export class AppComponent implements OnInit {
                         this.suiviOuvert.set(false);
                         this.erreur.set(message.detail ?? 'L’analyse a échoué.');
                         this.chargement.set(false);
-                    } else {
+                    } else if (message.etape) {
+                        const cle = message.etape;
                         this.suivi.update((s) => ({
                             ...s,
-                            [message.etape]: message.detail === undefined
+                            [cle]: message.detail === undefined
                                 ? { etat: 'encours' }
                                 : { etat: 'fait', detail: message.detail }
                         }));

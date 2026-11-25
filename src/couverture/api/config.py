@@ -10,6 +10,9 @@ la racine du projet (jamais versionné) ou de l'environnement, qui l'emporte.
   de la clé, et il ferme la consultation libre du texte des contrats.
 - `COUVERTURE_LIMITE_JOUR` : en ligne, le nombre d'analyses acceptées par jour (défaut 300 ; 0 : sans limite).
 - `COUVERTURE_FRONT` : le dossier de l'écran construit (`npm run build`), que l'API sert alors à la racine.
+- `COUVERTURE_METHODE` : la méthode d'analyse par défaut, `regles` (la chaîne de règles, défaut) ou `clauses`
+  (la lecture clause par clause, contresignée par les règles, 7.201). Une requête peut la choisir (`methode`).
+- `COUVERTURE_MODELE_CLAUSES` : le modèle de la lecture des clauses (défaut `mistral-large-latest`, 7.200).
 """
 
 from __future__ import annotations
@@ -25,4 +28,6 @@ BASE = os.getenv("COUVERTURE_BASE", "data/base.sqlite")
 CODE_ACCES = os.getenv("COUVERTURE_CODE_ACCES", "")
 LIMITE_JOUR = int(os.getenv("COUVERTURE_LIMITE_JOUR", "300") or 0)
 FRONT = os.getenv("COUVERTURE_FRONT", "")
+METHODE = os.getenv("COUVERTURE_METHODE", "regles").strip() or "regles"
+MODELE_CLAUSES = os.getenv("COUVERTURE_MODELE_CLAUSES", "mistral-large-latest").strip() or "mistral-large-latest"
 VERSION = "1.0.0"

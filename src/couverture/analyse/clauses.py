@@ -13,6 +13,7 @@ clauses une à une. La réponse est calculée.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 
 from ..llm import LLM, completer_avec_schema, extraire_json
@@ -44,7 +45,7 @@ Pour chaque clause à juger, un effet parmi :
 - "couvre" : la clause accorde une garantie pour ce qui est arrivé (l'événement ET le bien ou la personne déclarés entrent dans ce qu'elle assure). Une clause qui dit seulement quels biens ou quelles personnes sont assurés, sans garantir un événement, ne "couvre" pas : "sans_effet" si le bien déclaré en fait partie, "exclut" s'il en est écarté ;
 - "exclut" : la clause refuse ce sinistre : une exclusion dont la déclaration établit le fait, un bien que le contrat n'assure pas, une condition ou une obligation que la déclaration montre non remplie ;
 - "a_verifier" : la déclaration évoque la situation que vise la clause, mais ne dit pas le fait précis qui tranche (une durée, un montant, une serrure, une formule souscrite) ; donne alors la question à poser à l'assuré ;
-- "limite" : la clause ne refuse pas le sinistre mais réduit ce qui sera payé, et la déclaration établit qu'elle joue : une obligation dont la sanction écrite est une indemnité réduite, ou un plafond que le montant déclaré dépasse. La franchise ordinaire, qui vaut pour tout sinistre, est "sans_effet". Lis la sanction que la clause prévoit : « l'indemnité sera réduite » n'est pas « n'est pas garanti ». Une obligation dont la clause ne dit pas la sanction, ou dont la sanction est la perte de la garantie, reste "exclut" quand elle est violée.
+- "limite" : la clause ne refuse pas le sinistre mais réduit ce qui sera payé, et la déclaration établit qu'elle joue. Trois cas : une obligation dont la sanction écrite est une indemnité réduite (« l'indemnité sera réduite » n'est pas « n'est pas garanti ») ; un plafond que le montant déclaré dépasse ; une exclusion qui n'écarte qu'un poste du dommage quand le reste demeure garanti (les frais de réparation de la pièce à l'origine de la fuite, alors que les dégâts causés par l'eau sont couverts). La franchise ordinaire, qui vaut pour tout sinistre, est "sans_effet". Reste "exclut" : l'exclusion qui écarte tout ce que la déclaration réclame, et l'obligation violée dont la clause ne dit pas la sanction ou dont la sanction est la perte de la garantie.
 - "sans_effet" : la clause ne concerne pas ce sinistre, ou la déclaration écarte ce qu'elle vise.
 
 Règles de lecture :
@@ -55,7 +56,8 @@ Règles de lecture :
 - Une phrase du type « applicable si les conditions particulières mentionnent la garantie » est "sans_effet" : savoir si une garantie est souscrite n'est pas ton affaire. En revanche, une garantie réservée à une formule nommée (« en formule Confort ») est "a_verifier", portée "garantie", avec la question, mais seulement si c'est la garantie de l'événement déclaré : pour une fuite d'eau, la formule qu'exige la garantie des dommages électriques est "sans_effet".
 - L'exclusion ou la condition propre à une garantie ne se juge "exclut" que si cette garantie joue pour ce sinistre ; si la garantie ne le concerne pas, ses exclusions sont "sans_effet".
 - Un bien ou un dommage que le contrat n'assure que par une option, un pack ou une formule (« sauf si l'option … est souscrite ») : "a_verifier", portée "tout", avec la question sur cette option.
-- Les définitions sont données pour fixer le sens des mots : applique-les, sans les juger.
+- Les définitions (clauses « à lire, sans jugement ») fixent le sens des mots et l'emportent sur le sens courant : avant de juger une clause, cherche la définition des termes qu'elle emploie. Si la clause exclut « les vols simples » ou excepte « le mobilier de jardin », c'est la définition du contrat qui dit si le fait déclaré en est un.
+- Juge chaque clause sous l'identifiant écrit entre crochets, même si son texte numérote des alinéas.
 
 "portee" : "garantie" quand le refus ou le doute ne vaut que pour la garantie de cette clause (une autre garantie pourrait couvrir) ; "tout" quand il vaut pour tout le contrat (un bien que le contrat n'assure nulle part, une obligation générale, une exclusion commune à toutes les garanties).
 
@@ -133,20 +135,25 @@ def garanties_touchees(garanties: list[attendu.Garantie], clauses: list[Clause],
     return touchees
 
 
-def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | None = None,
-         llm_designation: LLM | None = None, garder: bool = False) -> Lecture:
+def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | Callable | None = None,
+         llm_designation: LLM | None = None, garder: bool = False, suivi: Callable | None = None) -> Lecture:
     """L'analyse d'une déclaration par la lecture des clauses. `regles` : la décision de la chaîne de règles sur
-    la même déclaration, pour la contresignature (rien : la lecture tient seule)."""
+    la même déclaration, pour la contresignature (rien : la lecture tient seule) ; ou une fonction qui la rend,
+    appelée au moment de contresigner, pour que la chaîne tourne pendant la lecture. `suivi(etape, detail=None)` :
+    le fil de l'analyse, comme pour la chaîne de règles (7.201)."""
+    suivre = suivi or (lambda etape, detail=None: None)
     clauses = base.clauses(contrat_id)
     garanties = attendu.garanties(base, contrat_id)
     if not garanties:
         attendu.enregistrer(base, contrat_id)
         garanties = attendu.garanties(base, contrat_id)
+    suivre("designation")
     reponse = extraire_json(completer_avec_schema(llm_designation or llm, SYSTEME_DESIGNATION,
                                                   message_designation(clauses, declaration), SCHEMA_DESIGNATION))
     designes = [str(r).strip().strip("[]") for r in reponse.get("chapitres") or []]
     touchees = garanties_touchees(garanties, clauses, designes)
     if not touchees:                                   # rien de désigné : ni refus ni couverture, on le dit
+        suivre("designation", "aucun chapitre du contrat ne correspond")
         etat = jugement.Etat(Decision.INCERTAIN, motif="aucun chapitre du contrat n'a été désigné : à examiner")
         return Lecture(etat, designes, [], [], Decision.INCERTAIN, "")
     attendues = [a for g in touchees for a in attendu.attendues(base, contrat_id, g)]
@@ -157,6 +164,9 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | N
     pieces = [c for c in clauses if c.id in ids or c.id in lexique]
     a_juger = {a.clause_id for a in attendues if a.bloque}
     generales = {a.clause_id for a in attendues if a.role == "exclusion_generale"}
+    suivre("designation", f"{len(touchees)} garantie{'s' * (len(touchees) > 1)} à examiner, "
+                          f"{len(pieces)} clauses au dossier")
+    suivre("jugement")
     rendus = jugement.depuis_reponse(extraire_json(completer_avec_schema(
         llm, SYSTEME_JUGEMENT, message_jugement(pieces, a_juger, declaration, generales), SCHEMA_JUGEMENT)))
     gardes, defauts = jugement.controler(rendus, pieces, declaration)
@@ -175,10 +185,19 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | N
         rattrapees = {j.clause_id for j in repris}
         defauts = [d for d in defauts if d.split(" ")[0] not in rattrapees] + defauts_repris
         gardes += repris
+    effets = [j.effet for j in gardes]
+    compte = ", ".join(f"{effets.count(e)} {nom}" for e, nom in (("couvre", "couvrent"), ("exclut", "excluent"),
+                       ("limite", "limitent"), ("a_verifier", "à vérifier")) if effets.count(e))
+    suivre("jugement", f"{len(gardes)} clauses jugées" + (f" : {compte}" if compte else "")
+           + (f" ; {len(relancees)} redemandée{'s' * (len(relancees) > 1)}" if relancees else ""))
     lignes, non_attendus = jugement.joindre(base, contrat_id, touchees, gardes)
     etat = jugement.decider(lignes, {g.repere for g in garanties if g.optionnelle}, non_attendus, defauts,
                             {g.repere: g.chemin for g in garanties})
+    suivre("decision")
+    if callable(regles):
+        regles = regles()
     decision, desaccord = jugement.arbitrer(etat, regles)
+    suivre("decision", etat.motif + (f" ; {desaccord}" if desaccord else ""))
     if garder:                                         # les jugements en table, pour relire l'analyse après coup
         jugement.garder(base, contrat_id, declaration, gardes, etat, decision)
     return Lecture(etat, designes, touchees, pieces, decision, desaccord, relancees)

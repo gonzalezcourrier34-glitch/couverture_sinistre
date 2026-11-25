@@ -196,3 +196,13 @@ def test_une_limite_mal_citee_compte_pour_lue_sans_etre_retenue(base):
     etat = juger(base, [repere(base, "3.1.2 Tempête et grêle")], mal)
     assert etat.decision == Decision.COUVERT and not etat.limitent and not etat.manquants and "limite" in etat.defauts[0]
 
+
+
+def test_un_alinea_juge_a_part_revient_a_sa_clause(base):
+    """Le modèle juge « 3.1.2.2.1 » et « 3.1.2.2.3 », alinéas de la clause 3.1.2.2 : le plus lourd fait le
+    jugement de la clause, sans défaut signalé, et sa citation se vérifie dans la clause."""
+    alineas = [j for j in tempete() if j.clause_id != "3.1.2.2"] + [
+        Jugement("3.1.2.2.1", "sans_effet"), Jugement("3.1.2.2.3", "exclut", "Les objets non fixés", "Rien n'était fixé")]
+    etat = juger(base, [repere(base, "3.1.2 Tempête et grêle")], alineas)
+    assert etat.decision == Decision.NON_COUVERT and [j.clause_id for j in etat.excluent] == ["3.1.2.2"]
+    assert not etat.defauts and not etat.manquants

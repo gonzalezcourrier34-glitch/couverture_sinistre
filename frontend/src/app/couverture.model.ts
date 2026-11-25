@@ -106,8 +106,17 @@ export interface Etape {
 
 /** Un message du suivi d'une analyse : une étape qui commence (sans détail), qui finit (avec), la fin, ou une erreur. */
 export interface Suivi {
-    etape: string;
+    etape?: string;
     detail?: string;
     reponse?: Decision;
     code?: number;
+    /** En premier, avec la lecture clause par clause : ses étapes, et ce qu'il faut savoir avant d'attendre. */
+    etapes?: EtapeSuivi[];
+    annonce?: string;
+}
+
+/** Une étape annoncée de l'analyse : sa clé dans le suivi, et ce qu'on en dit à l'écran. */
+export interface EtapeSuivi {
+    cle: string;
+    titre: string;
 }

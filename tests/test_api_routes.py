@@ -236,3 +236,34 @@ def test_en_ligne_les_analyses_sont_comptees(client, monkeypatch):
     monkeypatch.setattr(config, "CODE_ACCES", "")
     monkeypatch.setitem(acces._compte, "jour", "")
     assert client.post("/api/v1/analyses", json=corps, headers=CLE).status_code == 200, "hors ligne, pas de limite"
+
+
+def test_la_methode_clauses_se_choisit_par_requete(client, monkeypatch):
+    """7.201 : `methode: clauses` passe par la lecture des clauses ; le suivi annonce d'abord ses étapes. Sans
+    `methode`, c'est la chaîne de règles, comme avant (le réglage du serveur est éteint par défaut)."""
+    import json
+
+    from couverture.api import service
+    from couverture.api.routes import analyse, analyse_suivie
+
+    appels = []
+
+    def lecture(base, chaine, contrat_id, sinistre, llm, suivi=None, souscription=None):
+        appels.append(contrat_id)
+        (suivi or (lambda e, d=None: None))("designation", "1 garantie à examiner, 5 clauses au dossier")
+        r, sortie = service.analyser(chaine, sinistre)
+        r.methode = "clauses"
+        return r, sortie | {"mode": "clauses"}
+
+    monkeypatch.setattr(service, "analyser_clauses", lecture)
+    for module in (analyse, analyse_suivie):
+        monkeypatch.setattr(module, "modele_des_clauses", lambda: None)
+    demande = {"contrat_id": CONTRAT, "sinistre": "En faisant du vélo, j'ai renversé un piéton qui s'est cassé le poignet."}
+    assert client.post("/api/v1/analyses", headers=CLE, json=demande).json()["mode"] != "clauses" and not appels
+    assert client.post("/api/v1/analyses", headers=CLE, json=demande | {"methode": "clauses"}).json()["mode"] == "clauses"
+    lignes = [json.loads(l) for l in client.post("/api/v1/analyses/suivi", headers=CLE,
+                                                 json=demande | {"methode": "clauses"}).text.splitlines() if l.strip()]
+    assert [e["cle"] for e in lignes[0]["etapes"]] == ["designation", "jugement", "regles", "decision"]
+    assert "minutes" in lignes[0]["annonce"]
+    assert lignes[1]["etape"] == "designation" and lignes[-1]["etape"] == "fin" and len(appels) == 2
+    assert client.post("/api/v1/analyses", headers=CLE, json=demande | {"methode": "autre"}).status_code == 422
