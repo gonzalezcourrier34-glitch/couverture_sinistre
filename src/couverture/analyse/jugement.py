@@ -316,6 +316,11 @@ def arbitrer(etat: Etat, regles: Decision | None) -> tuple[Decision, str]:
     if etat.decision == Decision.COUVERT and regles is not None and regles != Decision.COUVERT:
         return Decision.INCERTAIN, ("la lecture des clauses conclut « couvert », les règles traduites répondent "
                                     f"« {regles.value} » : à examiner")
+    if etat.decision == Decision.NON_COUVERT and not etat.excluent and regles == Decision.COUVERT:
+        # « Aucune garantie examinée ne couvre » ne cite aucune clause : c'est une absence, pas un refus. Elle ne
+        # l'emporte pas sur les règles qui couvrent ; une garantie a pu manquer au dossier (7.205).
+        return Decision.INCERTAIN, ("aucune garantie examinée ne couvre, mais les règles traduites répondent « COUVERT » : "
+                                    "une garantie a pu échapper à la lecture, à examiner")
     if regles is not None and regles != etat.decision:
         return etat.decision, (f"les règles traduites répondaient « {regles.value} » ; la lecture des clauses "
                                "l'emporte, avec la clause citée")

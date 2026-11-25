@@ -51,6 +51,7 @@ Pour chaque clause à juger, un effet parmi :
 Règles de lecture :
 - Une exclusion que rien dans la déclaration n'évoque est "sans_effet", pas "a_verifier" : on ne demande pas à l'assuré s'il a fait exprès, s'il y avait une guerre ou si son bâtiment était délabré quand rien ne le suggère.
 - Ce que la déclaration ne dit pas reste inconnu : ne le suppose pas. Mais si elle permet de trancher, tranche.
+- Une clause qui énumère les biens assurés par une garantie n'exclut pas un bien qu'elle ne nomme pas : si ce bien relève d'une autre garantie du dossier, elle est "sans_effet".
 - Une clause qui contient plusieurs cas (une liste d'exclusions) se juge sur le cas qui joue : "exclut" si l'un d'eux s'applique, "a_verifier" si l'un d'eux est évoqué sans être établi, sinon "sans_effet".
 - Une clause qui garantit et exclut à la fois (« nous couvrons… sauf… ») : "exclut" si l'exception joue, sinon "couvre" si elle garantit ce sinistre.
 - Une phrase du type « applicable si les conditions particulières mentionnent la garantie » est "sans_effet" : savoir si une garantie est souscrite n'est pas ton affaire. En revanche, une garantie réservée à une formule nommée (« en formule Confort ») est "a_verifier", portée "garantie", avec la question, mais seulement si c'est la garantie de l'événement déclaré : pour une fuite d'eau, la formule qu'exige la garantie des dommages électriques est "sans_effet".

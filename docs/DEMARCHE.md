@@ -5828,6 +5828,48 @@ minutes. Les tests tournaient chez moi sans ce `.env` : je ne pouvais pas le voi
 aucun test ne peut ouvrir une connexion vers un fournisseur ; s'il essaie, il échoue tout de suite avec un message
 qui le dit. Les tests qui simulent le fournisseur le font eux-mêmes, après la garde. Suite : 289 tests passés.
 
+### 7.205 Le jeu « neuf » entier avec Mistral Large : le critère de l'étape 4 est atteint
+
+**Le fait.** Les 60 cas du jeu « neuf », déjà vus, avec Mistral Large et la contresignature des règles (25 nov.,
+de 21 h 35 à 22 h 20 ; environ 1,9 million de tokens envoyés et 870 000 reçus, de l'ordre de 6 $ ; 85 à 360 s par
+cas, quatre à la fois). En regard, la chaîne de règles seule sur le même jeu (7.186).
+
+| Contrat | Chaîne de règles : justes | couverts à tort | Lecture des clauses : justes | couverts à tort | refus à tort |
+|---|---|---|---|---|---|
+| A | 12 sur 20 | 4 | 14 sur 20 | 1 | 0 |
+| B | 10 sur 20 | 2 | 17 sur 20 | 0 | 1 |
+| D | 16 sur 20 | 1 | 17 sur 20 | 0 | 0 |
+| Ensemble | 38 sur 60 | 7 | 48 sur 60 | 1 | 1 |
+
+Le critère de l'étape 4 (plus de réponses justes, pas plus de couverts à tort) est atteint. Ce sont des cas vus :
+la mesure reste à faire sur le jeu « quatre ».
+
+**Les douze écarts, lus dans les réponses brutes.**
+
+- *Quatre « à préciser » par la contresignature* (n-a08, n-a15, n-b13, n-d16) : la lecture couvre, à raison ; les
+  règles hésitent ou refusent. C'est le prix voulu de la garde.
+- *Deux couverts à tort évités par la contresignature* (n-a16 : l'assuré avait trop bu ; n-a17 : la pension de
+  furets, que l'assistance limite aux chiens et chats) : la lecture couvrait, les règles non. Sans la garde, ce
+  seraient deux couverts à tort de plus.
+- *Un couvert à tort* (n-a04, une fenêtre de toit arrachée par le vent, la pluie entrée) : la lecture et les règles
+  couvrent toutes deux ; le cas attendait « à préciser ». Rien ne l'arrête aujourd'hui.
+- *Un refus à tort* (n-b06, le vol avec les clés perdues) : Large aussi applique « vols simples » sans la définition
+  du lexique, comme le modèle moyen en 7.198.
+- *Une citation trop abrégée* (n-a20) : le modèle saute une ligne entière d'une liste en citant ; le contrôle la
+  refuse, la clause reste sans jugement. Le contrôle a raison ; on ne l'assouplit pas.
+- *Une portée* (n-b09) : une clause qui énumère les biens assurés par une garantie est jugée « exclut » pour un bien
+  qu'elle ne nomme pas. Une phrase de consigne de plus, à vérifier à la mesure.
+- *Le délai de déclaration de D* (n-d07, n-d11) : rangé sous un titre coupé par le découpage, « DÉCLARATION ? » ;
+  les titres du règlement du sinistre comprennent maintenant « déclaration » seule et « déclaration du sinistre ».
+
+**Une règle de contresignature de plus.** Ce dernier changement a fait passer n-d07 de « à préciser » à « non
+couvert » : la désignation avait manqué la garantie vol, et rien ne couvrait. « Aucune garantie examinée ne
+couvre » ne cite aucune clause : c'est une absence, pas un refus. Elle ne l'emporte plus sur des règles qui
+couvrent ; la réponse est « à préciser ». Un refus qui cite son exclusion tient toujours seul. Un test.
+
+**Rejoué sans frais** sur ce code (les réponses du modèle sont les mêmes) : jeu « neuf » 49 sur 60, un couvert à
+tort, un refus à tort ; les trente cas de 7.200, 26 sur 30, aucun. Suite : 290 tests passés.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le ferais.
@@ -6077,3 +6119,4 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 211. Lancer les cas en parallèle raccourcit un passage, pas une analyse : le temps qu'attend l'utilisateur devant l'écran ne se règle qu'en changeant ce que fait le modèle.
 212. Quand un modèle n'obéit pas à une consigne, chercher dans le contrat ce qui distingue les cas : ici, les titres des chapitres disaient déjà quelles clauses ne décident pas de la couverture.
 213. Les tests ne doivent dépendre ni du `.env` du poste ni du réseau : une garde qui refuse tout appel au fournisseur coûte trois lignes, un réglage qui fuit coûte des appels payés.
+214. Une absence de couverture n'est pas un refus : seul un refus qui cite sa clause peut l'emporter sur une autre lecture qui couvre.

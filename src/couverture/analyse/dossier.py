@@ -35,7 +35,7 @@ LEXIQUE = re.compile(r"lexique|definitions")
 REGLEMENT = re.compile(r"^(titre [ivx]+ - |article [\d.]+ |[\d.]+ ?)?(en cas de )?sinistres? ?:?$|en cas de sinistre ?[:?]?$"
                        r"|(evaluation|estimation|fixation) (des|de l.?) ?(dommages|indemnite|biens)|limites? d.?indemnisation"
                        r"|indemnisation des dommages|reglement des (sinistres|indemnites)|^[\d.]+ ?franchises?$"
-                       r"|paiement des indemnites")
+                       r"|paiement des indemnites|^(apres votre )?declaration ?\??$|declaration (du|de votre) sinistre")
 
 
 @dataclass

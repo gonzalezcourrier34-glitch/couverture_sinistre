@@ -75,8 +75,9 @@ def test_les_clauses_du_reglement_du_sinistre_se_reconnaissent_a_leur_titre():
     oui = [("7 Sinistres", "7.1 Vos obligations"), ("TITRE X - EN CAS DE SINISTRE", "Article 36.1 Déclaration"),
            ("2 Communes", "2.11 Obligations et formalités à respecter en cas de sinistre"),
            ("2 Communes", "2.5 Estimation des biens", "2.5.2.1 Mobilier"), ("5 RC", "5.9 Limites d’indemnisation"),
-           ("Que devez-vous faire en cas de sinistre ?",), ("7 Sinistres", "7.7 Franchise")]
+           ("Que devez-vous faire en cas de sinistre ?",), ("7 Sinistres", "7.7 Franchise"), ("DÉCLARATION ?",)]
     non = [("Article 30 EN CAS DE SINISTRE AFFECTANT", "Article 30.1 Retour prématuré"), ("3.1.9.8 Frais d’expertise",),
-           ("1 Lexique", "1.40 Sinistre"), ("3 Garanties", "3.1.4 Dégâts des eaux")]
+           ("1 Lexique", "1.40 Sinistre"), ("3 Garanties", "3.1.4 Dégâts des eaux"),
+           ("2 Communes", "2.8 Déclaration du risque")]
     assert all(est_reglement(clause("x", ch, "texte")) for ch in oui)
     assert not any(est_reglement(clause("x", ch, "texte")) for ch in non)

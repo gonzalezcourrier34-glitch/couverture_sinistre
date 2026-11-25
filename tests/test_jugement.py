@@ -106,7 +106,8 @@ def test_rien_ne_couvre_non_couvert_et_un_jugement_hors_dossier_est_signale(base
 
 
 def test_la_contresignature_des_regles():
-    couvert, refus = jugement.Etat(Decision.COUVERT), jugement.Etat(Decision.NON_COUVERT)
+    couvert = jugement.Etat(Decision.COUVERT)
+    refus = jugement.Etat(Decision.NON_COUVERT, excluent=[Jugement("3.1.2.2", "exclut", "Les objets non fixés")])
     assert jugement.arbitrer(couvert, Decision.COUVERT) == (Decision.COUVERT, "")
     decision, desaccord = jugement.arbitrer(couvert, Decision.NON_COUVERT)
     assert decision == Decision.INCERTAIN and "NON_COUVERT" in desaccord
@@ -206,3 +207,13 @@ def test_un_alinea_juge_a_part_revient_a_sa_clause(base):
     etat = juger(base, [repere(base, "3.1.2 Tempête et grêle")], alineas)
     assert etat.decision == Decision.NON_COUVERT and [j.clause_id for j in etat.excluent] == ["3.1.2.2"]
     assert not etat.defauts and not etat.manquants
+
+
+def test_un_refus_sans_clause_citee_ne_l_emporte_pas_sur_des_regles_qui_couvrent():
+    """7.205 : « aucune garantie examinée ne couvre » n'est pas un refus fondé sur une clause : face à des règles qui
+    couvrent, la réponse est à préciser. Un refus qui cite son exclusion, lui, tient seul."""
+    absence = jugement.Etat(Decision.NON_COUVERT, motif="aucune garantie examinée ne couvre ce sinistre")
+    assert jugement.arbitrer(absence, Decision.COUVERT)[0] == Decision.INCERTAIN
+    refus = jugement.Etat(Decision.NON_COUVERT, excluent=[Jugement("3.1.2.2", "exclut", "Les objets non fixés")])
+    assert jugement.arbitrer(refus, Decision.COUVERT)[0] == Decision.NON_COUVERT
+    assert jugement.arbitrer(absence, Decision.INCERTAIN)[0] == Decision.NON_COUVERT
