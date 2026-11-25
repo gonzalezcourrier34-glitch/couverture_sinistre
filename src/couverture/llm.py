@@ -201,6 +201,7 @@ class OpenAICompatibleLLM:
             donnees = _poster(f"{self.url}/chat/completions", corps, entetes, self.timeout,
                               relances_lentes=self.relances_lentes)
         choix = donnees["choices"][0]
+        self.dernier_usage = donnees.get("usage") or {}  # tokens envoyés et reçus du dernier appel
         self.derniere_reflexion = len(reflexion_du_message(choix["message"].get("content")))
         if choix.get("finish_reason") == "length":
             contenu = choix["message"].get("content")

@@ -75,11 +75,11 @@ def test_une_citation_fausse_ecarte_le_jugement_qui_devient_manquant(base):
     faux[1] = Jugement("3.1.2.1", "couvre", "La Compagnie couvre tout", "La tempête de samedi")
     etat = juger(base, [repere(base, "3.1.2 Tempête et grêle")], faux)
     assert etat.decision == Decision.INCERTAIN and etat.manquants == ["3.1.2.1"]
-    assert etat.defauts == ["3.1.2.1 : la phrase citée n'est pas dans la clause"]
+    assert etat.defauts == ["3.1.2.1 (couvre) : la phrase citée n'est pas dans la clause : « La Compagnie couvre tout »"]
     invente = tempete()
     invente[2] = Jugement("3.1.2.2", "exclut", "Les objets non fixés", "Les chaises étaient posées sur la pelouse")
     etat = juger(base, [repere(base, "3.1.2 Tempête et grêle")], invente)
-    assert etat.defauts == ["3.1.2.2 : la phrase citée n'est pas dans la déclaration"] and etat.decision == Decision.INCERTAIN
+    assert etat.defauts[0].startswith("3.1.2.2 (exclut) : la phrase citée n'est pas dans la déclaration") and etat.decision == Decision.INCERTAIN
 
 
 def test_deux_garanties_en_concurrence_l_exclusion_de_l_une_ne_tue_pas_l_autre(base):
@@ -147,3 +147,52 @@ def test_une_clause_ne_couvre_que_dans_sa_propre_garantie(base):
     js[4] = Jugement("2.11", "couvre", "Déclarer le sinistre", "La tempête de samedi")
     etat = juger(base, [repere(base, "3.1.2 Tempête et grêle")], js)
     assert etat.decision == Decision.NON_COUVERT and etat.couvrent == []
+
+
+def test_les_clauses_sans_effet_se_rendent_en_liste():
+    """La réponse courte : le détail pour ce qui couvre, exclut ou reste à vérifier, une liste d'identifiants pour
+    le reste. Une clause détaillée et aussi listée garde son détail."""
+    rendus = jugement.depuis_reponse({"jugements": [{"clause": "3.1.2.1", "effet": "couvre", "extrait_contrat": "x"}],
+                                      "sans_effet": ["3.1.2.2", "2.10", "3.1.2.1"]})
+    assert [(j.clause_id, j.effet) for j in rendus] == [("3.1.2.1", "couvre"), ("3.1.2.2", "sans_effet"), ("2.10", "sans_effet")]
+
+
+def test_une_clause_qui_reduit_l_indemnite_ne_refuse_pas(base):
+    """« L'indemnité sera réduite de 50 % » n'est pas un refus : la garantie couvre, et la limite s'affiche."""
+    etat = juger(base, [repere(base, "3.1.2 Tempête et grêle")], tempete(effet_exclusion="limite"))
+    assert etat.decision == Decision.COUVERT and [j.clause_id for j in etat.limitent] == ["3.1.2.2"]
+
+
+def test_une_citation_abregee_de_la_declaration_est_admise_si_chaque_morceau_y_est(base):
+    """Le modèle abrège par « … » : admis si chaque morceau est dans la déclaration ; une phrase réécrite, non."""
+    abregee = tempete(effet_exclusion="exclut")
+    abregee[2] = Jugement("3.1.2.2", "exclut", "Les objets non fixés", "La tempête de samedi [...] Rien n'était fixé")
+    assert juger(base, [repere(base, "3.1.2 Tempête et grêle")], abregee).decision == Decision.NON_COUVERT
+    abregee[2] = Jugement("3.1.2.2", "exclut", "Les objets non fixés", "Les chaises n'étaient pas attachées")
+    etat = juger(base, [repere(base, "3.1.2 Tempête et grêle")], abregee)
+    assert etat.decision == Decision.INCERTAIN and "« Les chaises n'étaient pas attachées »" in etat.defauts[0]
+
+
+def test_un_identifiant_ecrit_sans_son_signe_de_tete_est_retabli(base):
+    """« 25 » pour « S25 », « 3.1.2 » pour « §3.1.2 » : rétabli s'il n'y a qu'une candidate dans le dossier."""
+    from test_dossier import clause
+    dossier = [clause("S25", ("Exclusions",), "Sont toujours exclus les dommages intentionnels"), clause("2.4", ("Eau",), "x")]
+    gardes, defauts = jugement.controler([Jugement("25", "sans_effet"), Jugement("[2.4]", "sans_effet"),
+                                          Jugement("26", "sans_effet")], dossier, DECLARATION)
+    assert [j.clause_id for j in gardes] == ["S25", "2.4"] and defauts == ["26 (sans_effet) : clause hors du dossier"]
+
+
+def test_une_citation_du_contrat_qui_saute_des_mots_devient_le_passage_exact(base):
+    """« La Compagnie assure la tempête » pour « La Compagnie assure contre la tempête » : le passage exact remplace."""
+    sautee = tempete()
+    sautee[1] = Jugement("3.1.2.1", "couvre", "La Compagnie assure la tempête", "La tempête de samedi")
+    etat = juger(base, [repere(base, "3.1.2 Tempête et grêle")], sautee)
+    assert etat.decision == Decision.COUVERT and etat.couvrent[0].extrait_contrat == "La Compagnie assure contre la tempête"
+
+
+def test_une_limite_mal_citee_compte_pour_lue_sans_etre_retenue(base):
+    mal = tempete()
+    mal[2] = Jugement("3.1.2.2", "limite", "L'indemnité sera réduite de moitié")
+    etat = juger(base, [repere(base, "3.1.2 Tempête et grêle")], mal)
+    assert etat.decision == Decision.COUVERT and not etat.limitent and not etat.manquants and "limite" in etat.defauts[0]
+

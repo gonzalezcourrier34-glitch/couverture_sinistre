@@ -44,6 +44,7 @@ Pour chaque clause à juger, un effet parmi :
 - "couvre" : la clause accorde une garantie pour ce qui est arrivé (l'événement ET le bien ou la personne déclarés entrent dans ce qu'elle assure). Une clause qui dit seulement quels biens ou quelles personnes sont assurés, sans garantir un événement, ne "couvre" pas : "sans_effet" si le bien déclaré en fait partie, "exclut" s'il en est écarté ;
 - "exclut" : la clause refuse ce sinistre : une exclusion dont la déclaration établit le fait, un bien que le contrat n'assure pas, une condition ou une obligation que la déclaration montre non remplie ;
 - "a_verifier" : la déclaration évoque la situation que vise la clause, mais ne dit pas le fait précis qui tranche (une durée, un montant, une serrure, une formule souscrite) ; donne alors la question à poser à l'assuré ;
+- "limite" : la clause ne refuse pas le sinistre mais réduit ce qui sera payé, et la déclaration établit qu'elle joue : une obligation dont la sanction écrite est une indemnité réduite, ou un plafond que le montant déclaré dépasse. La franchise ordinaire, qui vaut pour tout sinistre, est "sans_effet". Lis la sanction que la clause prévoit : « l'indemnité sera réduite » n'est pas « n'est pas garanti ». Une obligation dont la clause ne dit pas la sanction, ou dont la sanction est la perte de la garantie, reste "exclut" quand elle est violée.
 - "sans_effet" : la clause ne concerne pas ce sinistre, ou la déclaration écarte ce qu'elle vise.
 
 Règles de lecture :
@@ -51,23 +52,26 @@ Règles de lecture :
 - Ce que la déclaration ne dit pas reste inconnu : ne le suppose pas. Mais si elle permet de trancher, tranche.
 - Une clause qui contient plusieurs cas (une liste d'exclusions) se juge sur le cas qui joue : "exclut" si l'un d'eux s'applique, "a_verifier" si l'un d'eux est évoqué sans être établi, sinon "sans_effet".
 - Une clause qui garantit et exclut à la fois (« nous couvrons… sauf… ») : "exclut" si l'exception joue, sinon "couvre" si elle garantit ce sinistre.
-- Une phrase du type « applicable si les conditions particulières mentionnent la garantie » est "sans_effet" : savoir si une garantie est souscrite n'est pas ton affaire. En revanche, une garantie réservée à une formule nommée (« en formule Confort ») est "a_verifier", avec la question.
+- Une phrase du type « applicable si les conditions particulières mentionnent la garantie » est "sans_effet" : savoir si une garantie est souscrite n'est pas ton affaire. En revanche, une garantie réservée à une formule nommée (« en formule Confort ») est "a_verifier", portée "garantie", avec la question, mais seulement si c'est la garantie de l'événement déclaré : pour une fuite d'eau, la formule qu'exige la garantie des dommages électriques est "sans_effet".
 - L'exclusion ou la condition propre à une garantie ne se juge "exclut" que si cette garantie joue pour ce sinistre ; si la garantie ne le concerne pas, ses exclusions sont "sans_effet".
 - Un bien ou un dommage que le contrat n'assure que par une option, un pack ou une formule (« sauf si l'option … est souscrite ») : "a_verifier", portée "tout", avec la question sur cette option.
 - Les définitions sont données pour fixer le sens des mots : applique-les, sans les juger.
 
 "portee" : "garantie" quand le refus ou le doute ne vaut que pour la garantie de cette clause (une autre garantie pourrait couvrir) ; "tout" quand il vaut pour tout le contrat (un bien que le contrat n'assure nulle part, une obligation générale, une exclusion commune à toutes les garanties).
 
-Pour "couvre", "exclut" et "a_verifier" : "extrait_contrat" est la phrase de la clause qui fonde le jugement, recopiée mot pour mot (au plus 40 mots). Pour "couvre" et "exclut" : "extrait_declaration" est le passage de la déclaration qui l'établit, recopié mot pour mot. Pour "sans_effet", la clause et l'effet suffisent.
+Pour "couvre", "exclut", "limite" et "a_verifier" : "extrait_contrat" est la phrase de la clause qui fonde le jugement, recopiée mot pour mot (au plus 40 mots). Pour "couvre" et "exclut" : "extrait_declaration" est le passage de la déclaration qui l'établit, recopié mot pour mot et d'un seul tenant (un seul passage, sans le résumer).
 
-Réponds uniquement par un objet JSON, avec un élément par clause à juger, dans l'ordre :
-{"jugements": [{"clause": "2.7", "effet": "couvre", "portee": "garantie", "extrait_contrat": "…", "extrait_declaration": "…", "question": "", "motif": "une phrase"}, {"clause": "2.7-b", "effet": "sans_effet"}]}"""
+Réponds uniquement par un objet JSON. "jugements" : un élément pour chaque clause dont l'effet est "couvre", "exclut", "limite" ou "a_verifier", et pour elles seulement. "sans_effet" : la liste des identifiants de toutes les autres clauses à juger, sans rien d'autre. Chaque clause à juger figure une fois, dans l'une ou dans l'autre :
+{"jugements": [{"clause": "2.7", "effet": "couvre", "portee": "garantie", "extrait_contrat": "…", "extrait_declaration": "…", "question": "", "motif": "une phrase courte"}], "sans_effet": ["2.7-b", "2.8"]}"""
+
+RELANCE = ("Ces clauses n'ont pas reçu de jugement exploitable à la première lecture : oubliées, ou citées de façon "
+           "inexacte. Juge chacune d'elles, et recopie les citations mot pour mot, sans sauter de mots.\n\n")
 
 SCHEMA_JUGEMENT = {
     "type": "object", "additionalProperties": False, "required": ["jugements"],
-    "properties": {"jugements": {"type": "array", "items": {
+    "properties": {"sans_effet": {"type": "array", "items": {"type": "string"}}, "jugements": {"type": "array", "items": {
         "type": "object", "required": ["clause", "effet"],
-        "properties": {"clause": {"type": "string"}, "effet": {"type": "string", "enum": list(jugement.EFFETS)},
+        "properties": {"clause": {"type": "string"}, "effet": {"type": "string", "enum": [e for e in jugement.EFFETS if e != "sans_effet"]},
                        "portee": {"type": "string", "enum": list(jugement.PORTEES)},
                        "extrait_contrat": {"type": "string"}, "extrait_declaration": {"type": "string"},
                        "question": {"type": "string"}, "motif": {"type": "string"}}}}}}
@@ -83,6 +87,7 @@ class Lecture:
     dossier: list[Clause] = field(default_factory=list)
     decision: Decision = Decision.INCERTAIN                 # après la contresignature des règles
     desaccord: str = ""
+    relancees: list[str] = field(default_factory=list)      # les clauses redemandées au modèle, faute de jugement
 
 
 def message_designation(clauses: list[Clause], declaration: str) -> str:
@@ -91,11 +96,18 @@ def message_designation(clauses: list[Clause], declaration: str) -> str:
     return f"## Table des matières\n{dossier.table_des_matieres(clauses)}\n\n## Déclaration\n{declaration}"
 
 
-def message_jugement(pieces: list[Clause], a_juger: set[str], declaration: str) -> str:
+def message_jugement(pieces: list[Clause], a_juger: set[str], declaration: str,
+                     d_abord: frozenset[str] | set[str] = frozenset()) -> str:
     """Le message du second appel : chaque clause du dossier avec son identifiant, son chemin, et la mention
-    « à juger » ou « définition, à lire » ; la déclaration à la fin."""
+    « à juger » ou « à lire, sans jugement » ; la déclaration à la fin.
+
+    L'ordre sert le cache du fournisseur, qui reprend à moindre prix le début d'un envoi déjà vu : d'abord ce
+    qui revient à chaque sinistre du même contrat (`d_abord`, les exclusions générales), puis les garanties
+    désignées, puis les définitions que les mots de la déclaration appellent, et la déclaration (7.196)."""
+    rang = {c.id: (0 if c.id in d_abord else 2 if dossier.est_definition(c) and c.id not in a_juger else 1)
+            for c in pieces}
     blocs = []
-    for c in pieces:
+    for c in sorted(pieces, key=lambda c: rang[c.id]):          # tri stable : l'ordre du contrat dans chaque rang
         mention = "à juger" if c.id in a_juger else "à lire, sans jugement"
         blocs.append(f"[{c.id}] ({mention}) {' > '.join(c.chemin)}\n{c.texte}")
     return "## Clauses\n" + "\n\n".join(blocs) + f"\n\n## Déclaration\n{declaration}"
@@ -122,7 +134,7 @@ def garanties_touchees(garanties: list[attendu.Garantie], clauses: list[Clause],
 
 
 def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | None = None,
-         llm_designation: LLM | None = None) -> Lecture:
+         llm_designation: LLM | None = None, garder: bool = False) -> Lecture:
     """L'analyse d'une déclaration par la lecture des clauses. `regles` : la décision de la chaîne de règles sur
     la même déclaration, pour la contresignature (rien : la lecture tient seule)."""
     clauses = base.clauses(contrat_id)
@@ -144,11 +156,29 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | N
     lexique = {c.id for c in dossier.composer(clauses, designes, declaration) if dossier.est_definition(c)}
     pieces = [c for c in clauses if c.id in ids or c.id in lexique]
     a_juger = {a.clause_id for a in attendues if a.bloque}
+    generales = {a.clause_id for a in attendues if a.role == "exclusion_generale"}
     rendus = jugement.depuis_reponse(extraire_json(completer_avec_schema(
-        llm, SYSTEME_JUGEMENT, message_jugement(pieces, a_juger, declaration), SCHEMA_JUGEMENT)))
+        llm, SYSTEME_JUGEMENT, message_jugement(pieces, a_juger, declaration, generales), SCHEMA_JUGEMENT)))
     gardes, defauts = jugement.controler(rendus, pieces, declaration)
+    # La jointure dit ce qui manque ; on le redemande une fois, pour ces clauses seulement (7.194) : un oubli parmi
+    # quatre-vingts clauses, ou une citation inexacte, ne doit pas coûter la réponse entière.
+    oubliees = a_juger - {j.clause_id for j in gardes}
+    relancees: list[str] = []
+    if oubliees:
+        relancees = sorted(oubliees)
+        seconde = [c for c in pieces if c.id in oubliees or c.id in lexique]
+        rendus = jugement.depuis_reponse(extraire_json(completer_avec_schema(
+            llm, SYSTEME_JUGEMENT, RELANCE + message_jugement(seconde, oubliees, declaration), SCHEMA_JUGEMENT)))
+        repris, defauts_repris = jugement.controler(rendus, seconde,
+                                                    declaration)
+        repris = [j for j in repris if j.clause_id in oubliees]
+        rattrapees = {j.clause_id for j in repris}
+        defauts = [d for d in defauts if d.split(" ")[0] not in rattrapees] + defauts_repris
+        gardes += repris
     lignes, non_attendus = jugement.joindre(base, contrat_id, touchees, gardes)
     etat = jugement.decider(lignes, {g.repere for g in garanties if g.optionnelle}, non_attendus, defauts,
                             {g.repere: g.chemin for g in garanties})
     decision, desaccord = jugement.arbitrer(etat, regles)
-    return Lecture(etat, designes, touchees, pieces, decision, desaccord)
+    if garder:                                         # les jugements en table, pour relire l'analyse après coup
+        jugement.garder(base, contrat_id, declaration, gardes, etat, decision)
+    return Lecture(etat, designes, touchees, pieces, decision, desaccord, relancees)

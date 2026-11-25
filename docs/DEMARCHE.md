@@ -5474,6 +5474,147 @@ attendues sans jugement et les jugements écartés. Deux appels à Mistral Large
 16 000 mots : c'est une commande payante, lancée seulement aux moments annoncés. La chaîne de règles n'y est
 appelée qu'avec `--regles`. Suite : 273 tests passés.
 
+### 7.191 Le premier appel payant : une réponse coupée à 8 000 tokens
+
+**Le fait.** Premier essai chez Mistral Large (25 nov., 16 h 07), contrat D, premier cas : la désignation passe,
+le jugement échoue, « réponse coupée à 8 000 tokens ». La consigne demandait un élément par clause à juger, et
+une garantie de D en attend une centaine : cent lignes, chacune avec son motif, ne tiennent pas dans la limite.
+L'autre lecteur, aux essais gratuits, n'avait pas cette limite : l'essai gratuit ne pouvait pas le voir.
+
+**La correction.** La réponse détaille seulement ce qui couvre, exclut ou reste à vérifier ; tout le reste tient
+dans une liste d'identifiants, `"sans_effet": ["2.7-b", "2.8"]`. La jointure ne change pas : chaque clause
+attendue doit toujours figurer, dans l'une ou dans l'autre. La réponse est plus courte, donc moins chère et plus
+rapide. La limite passe à 16 000 tokens pour cette commande, et un cas qui échoue n'arrête plus les suivants.
+Un test de plus ; suite : 274 passés.
+
+### 7.192 Le premier cas lu par Mistral : une indemnité réduite n'est pas un refus
+
+**Le fait.** La réponse courte passe (25 nov., 16 h 21, av-d07, l'eau non coupée pendant trois semaines) :
+75 clauses au dossier, la venue d'eau jugée « couvre » avec ses deux citations. Mais la réponse est « à
+préciser » pour un « couvert » attendu : le jugement sur la clause 4.2 (fermer l'eau au-delà de quinze jours)
+est écarté, sa citation de la déclaration n'y étant pas mot pour mot, et la clause reste sans jugement. Le
+contrôle a fait son travail : sans lui, on ne sait pas ce que ce jugement aurait fait de la réponse. Durée :
+148 secondes, Mistral Large réfléchissant avant de répondre ; c'est trop pour un écran, à mesurer avec les
+tokens.
+
+**Ce que le texte dit.** La clause 4.2 ne refuse rien : « l'indemnité sera réduite de 50 % ». Les quatre effets
+ne savaient pas le dire : entre « exclut » et « sans effet », aucun n'était juste. Un cinquième effet,
+`limite` : la clause réduit ce qui sera payé (indemnité réduite, franchise, plafond) sans refuser le sinistre.
+Elle ne pèse pas sur la décision et s'affiche avec elle. La consigne demande de lire la sanction écrite ; une
+obligation sans sanction écrite, ou dont la sanction est la perte de la garantie, reste « exclut ».
+
+**Deux réglages du contrôle.** Une citation de la déclaration abrégée par « … » ou « [...] » est admise si
+chacun de ses morceaux (trois mots au moins) y figure : le modèle abrège, il n'invente pas ; une phrase
+réécrite reste écartée. Et un jugement écarté affiche maintenant l'effet et la phrase citée, pour qu'on voie ce
+qui a été refusé. La commande affiche aussi les tokens envoyés et reçus. Suite : 276 tests passés.
+
+### 7.193 Le second passage : la limite est lue, un identifiant est mal recopié, et c'est lent
+
+**Le fait.** Même cas (25 nov., 16 h 42). La clause 4.2 est jugée « limite », avec la phrase du contrat et celle
+de la déclaration : l'effet ajouté dit ce que le texte dit. La réponse reste « à préciser » pour une autre
+raison : le modèle a écrit « 25 » pour la clause « S25 » (les exclusions générales, un titre sans numéro que
+le découpage a nommé ainsi). Le jugement est écarté comme « hors du dossier », la clause reste sans jugement,
+pas de réponse franche. Une vérification sans frais avait précédé cet appel (120 cas avec un modèle factice,
+aucun plantage, aucune clause attendue cachée au modèle) : elle ne pouvait pas voir une faute de recopie.
+
+**La règle.** Un identifiant rendu qui n'est pas au dossier est rétabli quand une seule clause du dossier lui
+correspond au signe de tête près (« S », « § », crochets) ; à deux candidates, on ne devine pas et le jugement
+reste écarté. Un test.
+
+**Le temps et le prix.** 17 941 tokens envoyés, 7 695 reçus, 210 secondes : le modèle réfléchit longuement avant
+d'écrire une réponse courte. C'est trop lent pour un écran et la réflexion coûte plus que la lecture. À essayer
+au prochain moment payant : le même cas avec le modèle moyen (`--modele`), et comparer justesse, durée et
+tokens. La commande affiche maintenant la longueur de la réflexion. Suite : 277 tests passés.
+
+### 7.194 Le modèle moyen : dix fois plus rapide, moins soigneux, et ce que le code rattrape
+
+**Le fait.** Même cas avec `mistral-medium-2604` (25 nov., 17 h 15) : 22 secondes au lieu de 210, aucune
+réflexion, 18 022 tokens envoyés et 4 192 reçus. Un premier essai avait rendu un JSON illisible, et la réponse
+n'avait pas été gardée ; la commande écrit maintenant les réponses brutes dans `data/debug/`, et c'est ce
+fichier qui a été lu ici. La réponse reste « à préciser », pour quatre raisons que le fichier montre :
+
+- la citation du contrat pour la fuite d'eau saute des mots sans le dire (« des conduites non enterrées, des
+  appareils à effet d'eau », la clause intercale « des piscines, de tous ») : jugement écarté ;
+- la clause qui renvoie aux mesures de sécurité est jugée « limite » avec la phrase de l'article 4.2, qui n'est
+  pas la sienne : jugement écarté ;
+- le chapeau du titre n'est jugé nulle part : oubli ;
+- la garantie des dommages électriques, réservée à deux formules, est jugée « à vérifier pour tout le contrat »
+  pour une fuite d'eau.
+
+S'y ajoute un « couvre » donné à la clause qui liste les biens assurés, que la consigne interdit. Et chaque
+clause sans effet est écrite deux fois, en détail puis en liste.
+
+**Ce que le code rattrape désormais.**
+
+- *Une citation qui saute des mots* devient le passage exact de la clause, quand tous ses mots y sont, dans
+  l'ordre et à peu d'écart (`validation.passage_exact`, déjà employé par la chaîne de règles). Ce qui s'affiche
+  est toujours le texte du contrat.
+- *Une limite mal citée* ne coûte plus la réponse : une limite ne pèse pas sur la décision, la clause compte
+  pour lue et la limite n'est pas affichée. Un refus ou une couverture mal cités restent écartés.
+- *Ce qui manque est redemandé une fois* : la jointure dit quelles clauses n'ont pas de jugement, un second
+  appel les soumet seules (avec les définitions et la déclaration). C'est la logique des tables : on ne
+  redemande pas tout, on redemande le trou. Si le trou reste, pas de réponse franche, comme avant.
+- *La consigne* : la formule qu'exige une garantie n'est à vérifier que si cette garantie est celle de
+  l'événement déclaré ; le schéma n'admet plus « sans effet » dans la liste détaillée.
+
+Rejouée sans frais sur ces règles, la réponse du modèle moyen n'a plus qu'un oubli à redemander et retrouve la
+citation exacte de la fuite d'eau ; il lui reste la question hors sujet sur la formule, que seule la consigne
+peut corriger : à voir au prochain appel.
+
+**Ce que je n'ai pas fait, et pourquoi.** J'avais écrit une règle qui ramenait à sa garantie la portée « tout »
+d'une clause voisine de celle qui couvre. Elle aurait fait passer ce cas, et elle contredisait un test existant
+(un bien que le contrat n'assure pas, dit dans une garantie voisine) : elle pouvait donner un couvert à tort.
+Retirée. Entre un « à préciser » de trop et un couvert à tort, la règle choisit le premier.
+
+**Ce qui reste ouvert.** Le « couvre » sur la clause des biens assurés : aucune règle de structure ne le
+distingue aujourd'hui (le type que le découpage donne aux clauses est trop peu sûr), et c'est la
+contresignature des règles qui l'arrête. Et le choix du modèle : Large juge mieux et met trois minutes et
+demie ; le moyen répond en vingt secondes et demande plus de rattrapage. Il se décidera sur plusieurs cas, pas
+sur un seul.
+
+**Les jugements en table.** `jugement.garder` écrit chaque analyse (`analyses_clauses`) et ses jugements
+(`jugements`, une ligne par clause avec ses deux citations) ; la commande `juger` le fait à chaque passage.
+
+**La commande devient l'outil de mesure de la nouvelle méthode.** `juger --jeu …` compte en fin de passage les
+réponses justes et sépare les deux erreurs qui ne se valent pas (couvert à tort, refus à tort) des « à
+préciser » donnés à la place d'une réponse ; elle additionne les tokens de tous les appels et le temps, et garde
+ce bilan en fichier. `--echantillon N` limite le passage aux N premiers cas : un essai se paie à sa taille. Et
+`--jeu quatre` s'arrête avant tout appel, et avant même d'ouvrir les fichiers, sans `--mesure-finale` : le jeu
+jamais regardé ne se lance pas par mégarde. Suite : 282 tests passés.
+
+### 7.195 Le tarif vérifié : le modèle moyen n'est pas le moins cher
+
+**Le fait.** Depuis le début des essais, les coûts étaient estimés sur un tarif supposé (2 € par million de
+tokens envoyés) et sur l'idée que le modèle moyen coûtait moins que le grand. La page des tarifs de Mistral
+(docs.mistral.ai, lue le 25 nov. 2026) dit autre chose, par million de tokens : Mistral Large 4, 1,36 $ envoyés
+(0,14 $ repris du cache) et 4,18 $ reçus ; Mistral Medium 3.5, 1,50 $ envoyés et 7,50 $ reçus ; Mistral Small 4,
+0,15 $ et 0,60 $.
+
+**Ce que cela donne sur le cas essayé.** Avec Large : environ 24 000 tokens envoyés sur les deux appels et
+7 700 reçus, soit 6 à 7 centimes de dollar. Avec le moyen : autant d'envoyés, 4 200 reçus, soit 6 à 7 centimes
+aussi. Le moyen est dix fois plus rapide, pas moins cher : ce qu'il écrit coûte presque le double, et il en
+écrit trop. Le choix entre les deux se fera sur la justesse et sur le temps, pas sur le prix. Le cache, lui,
+divise par dix le prix des tokens envoyés : mettre en tête de l'appel ce qui ne change pas reste à faire.
+
+### 7.196 Le cache : ce qu'il peut rendre, mesuré avant de l'annoncer
+
+**Le fait.** Mistral reprend à 10 % du prix le début d'un envoi qu'il a déjà vu (documentation « prompt
+caching », lue le 25 nov. 2026 : le cache est automatique, il porte sur le préfixe, et la réponse dit combien
+de tokens en viennent, `usage.prompt_tokens_details.cached_tokens`). Encore faut-il que deux sinistres du même
+contrat commencent pareil.
+
+**Ce qui est fait.** La désignation commençait déjà par la table des matières, la déclaration à la fin. Le
+jugement est réordonné : d'abord les exclusions générales, qui reviennent à chaque sinistre d'un contrat, puis
+les garanties désignées, puis les définitions appelées par les mots de la déclaration, puis la déclaration.
+L'ordre du contrat est gardé à l'intérieur de chaque groupe. La commande affiche les tokens repris du cache.
+
+**Ce que cela peut rendre, mesuré sans frais** sur les 120 cas déjà vus (début commun entre deux envois
+successifs du même contrat) : 98 à 99 % de la désignation ; 13 à 27 % du jugement, puisque les garanties
+désignées changent d'un sinistre à l'autre. Sur l'ensemble des tokens envoyés, 30 à 43 % selon le contrat, soit
+12 à 18 % de la facture d'un cas si le cache répond à chaque fois, ce que Mistral ne garantit pas. C'est une
+économie réelle et modeste : l'essentiel du prix est dans ce que le modèle écrit, pas dans ce qu'il lit.
+Suite : 283 tests passés.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le ferais.
@@ -5711,3 +5852,9 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 199. Une date qu'on s'est fixée soi-même ne justifie pas de livrer ce qu'on sait insuffisant : on la déplace, on le dit, et on garde livrable ce qui marche.
 200. On ne constate un manque que si l'on a écrit d'avance ce qui devait être là : une liste de ce qui est attendu, puis une jointure, valent mieux qu'un lecteur à qui l'on demande de ne rien oublier.
 201. Un essai gratuit sur des cas déjà vus ne mesure rien, mais il trouve les défauts de construction avant qu'on paie pour les voir : trois ici, dont un qui empêchait toute réponse « couvert ».
+202. La taille de la réponse se compte avant d'appeler : cent clauses à une ligne chacune dépassent la limite du modèle. On ne fait écrire en détail que ce qui décide, et le reste en liste.
+203. Quand le modèle hésite entre deux cases, regarder si la bonne case existe : « l'indemnité sera réduite de moitié » n'était ni une exclusion ni rien, et la liste des effets n'avait pas de mot pour le dire.
+204. Un modèle recopie mal un identifiant qu'on a fabriqué (« 25 » pour « S25 ») : le contrôle doit le rétablir quand il n'y a qu'une lecture possible, et refuser quand il y en a deux.
+205. Garder la réponse brute du modèle avant de la lire : une réponse illisible qu'on n'a pas gardée se paie une seconde fois pour être comprise.
+206. Une règle qui fait passer le cas du jour mais contredit un test écrit pour éviter un couvert à tort se retire : le test disait déjà pourquoi.
+207. Un coût annoncé sur un tarif supposé se vérifie à la source avant de servir à choisir : le modèle « moyen » facturait ses réponses presque deux fois plus cher que le « grand ».
