@@ -90,6 +90,7 @@ class Lecture:
     decision: Decision = Decision.INCERTAIN                 # après la contresignature des règles
     desaccord: str = ""
     relancees: list[str] = field(default_factory=list)      # les clauses redemandées au modèle, faute de jugement
+    rappels: list[jugement.Jugement] = field(default_factory=list)   # questions du règlement, sans effet sur la décision
 
 
 def message_designation(clauses: list[Clause], declaration: str) -> str:
@@ -185,6 +186,13 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | C
         rattrapees = {j.clause_id for j in repris}
         defauts = [d for d in defauts if d.split(" ")[0] not in rattrapees] + defauts_repris
         gardes += repris
+    # Une question posée par une clause du règlement du sinistre (le délai de déclaration, un plafond, l'âge du bien
+    # pour la vétusté) ne dit pas si le sinistre est couvert : elle devient un rappel, affiché avec la réponse, et
+    # la clause compte pour lue (7.203). La consigne le demande déjà ; Large la pose quand même (7.200).
+    par_id = {c.id: c for c in pieces}
+    rappels = [j for j in gardes if j.effet == "a_verifier" and j.clause_id in par_id
+               and dossier.est_reglement(par_id[j.clause_id])]
+    gardes = [jugement.Jugement(j.clause_id, "sans_effet") if j in rappels else j for j in gardes]
     effets = [j.effet for j in gardes]
     compte = ", ".join(f"{effets.count(e)} {nom}" for e, nom in (("couvre", "couvrent"), ("exclut", "excluent"),
                        ("limite", "limitent"), ("a_verifier", "à vérifier")) if effets.count(e))
@@ -193,11 +201,11 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | C
     lignes, non_attendus = jugement.joindre(base, contrat_id, touchees, gardes)
     etat = jugement.decider(lignes, {g.repere for g in garanties if g.optionnelle}, non_attendus, defauts,
                             {g.repere: g.chemin for g in garanties})
-    suivre("decision")
-    if callable(regles):
+    if callable(regles):                               # avant « décider » : le suivi reste dans l'ordre (7.202)
         regles = regles()
+    suivre("decision")
     decision, desaccord = jugement.arbitrer(etat, regles)
     suivre("decision", etat.motif + (f" ; {desaccord}" if desaccord else ""))
     if garder:                                         # les jugements en table, pour relire l'analyse après coup
         jugement.garder(base, contrat_id, declaration, gardes, etat, decision)
-    return Lecture(etat, designes, touchees, pieces, decision, desaccord, relancees)
+    return Lecture(etat, designes, touchees, pieces, decision, desaccord, relancees, rappels)

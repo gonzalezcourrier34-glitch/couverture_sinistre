@@ -5780,6 +5780,54 @@ couvre à tort (choix du 25 nov., 20 h 48).
 **Ce qui reste à vérifier.** Une requête de trois à cinq minutes sur le site en ligne : la limite de durée d'une
 requête chez l'hébergeur est à vérifier avant d'y activer la méthode (étape 7). Suite : 287 tests passés.
 
+### 7.202 Le suivi dans l'ordre
+
+**Le fait.** Premier essai à l'écran (25 nov., 21 h) : « faire contresigner » se cochait avant « trouver les
+chapitres ». La chaîne de règles tourne pendant la lecture et finissait la première ; l'écran racontait donc
+l'analyse dans le désordre.
+
+**La correction.** La chaîne tourne toujours en même temps, sans rallonger l'attente, mais en silence : son
+étape ne s'ouvre et ne se ferme qu'au moment de contresigner, après le jugement des clauses et avant la décision.
+L'écran suit l'ordre annoncé : chapitres, jugement, contresignature, décision. Un test vérifie cet ordre.
+
+### 7.203 Les questions du règlement du sinistre ne retiennent plus la réponse
+
+**Le fait.** Premier résultat à l'écran (25 nov., 21 h 03) : le piéton renversé à vélo, contrat A. La garantie de
+responsabilité civile couvre, citée ; la réponse est pourtant « à préciser », pour une seule question : « avez-vous
+déclaré ce sinistre dans les huit jours ? ». C'est le défaut le plus fréquent des trente cas de 7.200 : trois des
+sept écarts (le délai de déclaration, un plafond, l'âge d'un appareil pour la vétusté). La consigne écarte ces
+questions ; Mistral Large les pose quand même.
+
+**Ce que dit le texte.** Ces clauses sont rangées, dans les quatre contrats, sous des titres qui disent ce
+qu'elles sont : « Sinistres », « En cas de sinistre », « Obligations et formalités à respecter en cas de
+sinistre », « Estimation des biens », « Fixation de l'indemnité », « Limites d'indemnisation », « Franchise ».
+Elles disent ce qui sera payé et comment, une fois la couverture acquise ; pas si le sinistre est couvert.
+
+**La règle.** Une clause rangée sous un tel titre (hors lexique) est une clause du règlement du sinistre
+(`dossier.est_reglement`). Une question qu'elle pose devient un rappel : la clause compte pour lue, la question
+s'affiche avec la réponse (« sous réserve · ce que l'assureur pourra vérifier »), et ne fait plus de la réponse un
+« à préciser ». Un refus venu d'une telle clause, lui, compte toujours. Les titres ont été relus dans les quatre
+contrats : une garantie d'assistance « en cas de sinistre affectant le domicile » et des « frais d'expertise »
+assurés n'y sont pas pris, et un test le vérifie.
+
+**Rejouées sans frais.** Les réponses de Mistral Large aux trente cas de 7.200, gardées, ont été rejouées sur ce
+code : 26 justes sur 30 au lieu de 23, toujours aucun couvert à tort ni refus à tort. Le rejeu est exact (les
+réponses du modèle sont les mêmes, seul le code qui les lit a changé) ; ce sont des cas vus, ce n'est pas une
+mesure. Restent : une réponse coupée, une citation sans rapport, un couvert que les règles ne contresignent pas,
+une prudence sur des moisissures. Suite : 289 tests passés.
+
+### 7.204 Un réglage du poste qui fuyait dans les tests, et des appels payés pour rien
+
+**Le fait.** Le 25 nov. vers 21 h 15, la suite de tests a échoué sur trois tests de l'API, puis s'est bloquée
+(arrêtée à la main). Cause : `COUVERTURE_METHODE=clauses`, ajouté au `.env` pour essayer l'écran, est lu par la
+configuration de l'API, et les tests ne fixaient pas la méthode. Leurs analyses sont donc parties vers la lecture
+des clauses, avec le vrai Mistral Large : quelques appels payés pour rien, et des tests qui attendaient des
+minutes. Les tests tournaient chez moi sans ce `.env` : je ne pouvais pas le voir.
+
+**Deux corrections.** Les tests de l'API fixent leur méthode (`regles`). Et une garde commune à tous les tests :
+aucun test ne peut ouvrir une connexion vers un fournisseur ; s'il essaie, il échoue tout de suite avec un message
+qui le dit. Les tests qui simulent le fournisseur le font eux-mêmes, après la garde. Suite : 289 tests passés.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le ferais.
@@ -6027,3 +6075,5 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 209. Deux citations exactes ne font pas un jugement juste : le contrôle prouve que les phrases existent, pas qu'elles ont un rapport. Ce que le code ne peut pas vérifier se mesure, sur des cas.
 210. Avant de corriger une méthode qui échoue, changer seulement le lecteur sur les mêmes cas : si un meilleur modèle réussit avec le même dossier et la même consigne, le défaut n'était pas dans la méthode.
 211. Lancer les cas en parallèle raccourcit un passage, pas une analyse : le temps qu'attend l'utilisateur devant l'écran ne se règle qu'en changeant ce que fait le modèle.
+212. Quand un modèle n'obéit pas à une consigne, chercher dans le contrat ce qui distingue les cas : ici, les titres des chapitres disaient déjà quelles clauses ne décident pas de la couverture.
+213. Les tests ne doivent dépendre ni du `.env` du poste ni du réseau : une garde qui refuse tout appel au fournisseur coûte trois lignes, un réglage qui fuit coûte des appels payés.

@@ -30,6 +30,12 @@ MOTS_DU_DEBUT = 30          # les premiers mots d'une garantie, montrés dans la
 GENERALES = re.compile(r"exclusions? (generales?|communes?)")
 COMMUNES = re.compile(r"communes? a toutes")
 LEXIQUE = re.compile(r"lexique|definitions")
+# Ce qui se passe après le sinistre, une fois la couverture acquise : la déclaration et ses délais, l'estimation des
+# dommages, le calcul de l'indemnité, la franchise (7.203). Des titres, pas des types de clause, qui sont peu sûrs.
+REGLEMENT = re.compile(r"^(titre [ivx]+ - |article [\d.]+ |[\d.]+ ?)?(en cas de )?sinistres? ?:?$|en cas de sinistre ?[:?]?$"
+                       r"|(evaluation|estimation|fixation) (des|de l.?) ?(dommages|indemnite|biens)|limites? d.?indemnisation"
+                       r"|indemnisation des dommages|reglement des (sinistres|indemnites)|^[\d.]+ ?franchises?$"
+                       r"|paiement des indemnites")
 
 
 @dataclass
@@ -61,6 +67,12 @@ def est_definition(c: Clause) -> bool:
     """Une entrée du lexique : une clause rangée sous un titre de lexique ou de définitions, quel que soit le type
     que le découpage lui a donné (les « objets personnels » de B y sont classés « garantie »)."""
     return any(LEXIQUE.search(normaliser(t)) for t in c.chemin[:-1])
+
+
+def est_reglement(c: Clause) -> bool:
+    """Une clause du règlement du sinistre (que faire, dans quels délais, comment l'indemnité se calcule), rangée sous
+    un tel titre : elle dit ce qui sera payé et comment, pas si le sinistre est couvert (7.203)."""
+    return not est_definition(c) and any(REGLEMENT.search(normaliser(t).strip()) for t in c.chemin)
 
 
 def terme(c: Clause) -> list[str]:

@@ -178,8 +178,9 @@ def test_l_api_rend_une_lecture_des_clauses_au_format_de_ses_reponses(base):
     assert sortie["decision"] == "COUVERT" and sortie["mode"] == "clauses" and r.methode == "clauses"
     assert [c["clause_id"] for c in sortie["citations"]] == ["3.1.2.1"] and sortie["citations"][0]["role"] == "garantie"
     assert any("« La tempête de samedi »" in ligne for ligne in sortie["raisonnement"])
-    vus = [e for e, d in etapes if d is not None]
-    assert {"designation", "jugement", "regles", "decision"} <= set(vus) and sortie["confiance"] == 1.0
+    assert [e for e, d in etapes] == ["designation", "designation", "jugement", "jugement", "regles", "regles",
+                                     "decision", "decision"], "dans l'ordre de l'écran, chaque étape ouverte puis close"
+    assert sortie["confiance"] == 1.0
 
 
 def test_un_couvert_que_les_regles_ne_peuvent_contresigner_reste_a_examiner(base):
@@ -197,3 +198,20 @@ def test_les_conditions_particulieres_s_ajoutent_a_la_declaration_en_mots(base):
     assert service.avec_souscription("Ma cave a été inondée.", "c1", {}) == "Ma cave a été inondée."
     lu = service.avec_souscription("Ma cave a été inondée.", "c1", {"formule": "confort"})
     assert lu.startswith("Ma cave a été inondée.\n\nConditions particulières du client : ") and lu.endswith(".")
+
+
+def test_une_question_du_reglement_du_sinistre_devient_un_rappel(base, monkeypatch):
+    """Le délai de déclaration ne dit pas si le sinistre est couvert : la garantie couvre, la question reste
+    affichée comme un rappel, sans faire de la réponse un « à préciser »."""
+    from couverture.api import service
+
+    monkeypatch.setattr(dossier, "est_reglement", lambda c: c.id == "2.11")
+    rendus = jugements(**{"3_1_2_1": "couvre"})
+    for j in rendus["jugements"]:
+        if j["clause"] == "2.11":
+            j.update(effet="a_verifier", extrait_contrat="Déclarer le sinistre", question="Déclaré dans les 8 jours ?")
+    modele = Modele({"chapitres": ["3.1.2"], "motif": ""}, rendus)
+    lu = clauses.lire(base, "c1", modele, DECLARATION)
+    assert lu.decision == Decision.COUVERT and [j.clause_id for j in lu.rappels] == ["2.11"]
+    _, sortie = service.resultat_clauses(base, "c1", DECLARATION, lu, lu.decision, "", None, {})
+    assert sortie["a_preciser"][0]["nature"] == "reserve" and "8 jours" in sortie["a_preciser"][0]["question"]

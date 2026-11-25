@@ -57,6 +57,9 @@ class FauxJournal:
 @pytest.fixture
 def client(base, oracle, monkeypatch):  # noqa: F811
     monkeypatch.setattr(config, "API_KEY", "secret")
+    # La méthode du serveur vient du .env du poste (COUVERTURE_METHODE) : les tests fixent la leur, sans quoi un
+    # .env réglé sur « clauses » envoyait les analyses des tests au vrai modèle (7.204).
+    monkeypatch.setattr(config, "METHODE", "regles")
     journal = FauxJournal()
     app.dependency_overrides[dependances.get_base] = lambda: base
     app.dependency_overrides[dependances.get_pipelines] = lambda: FaussesChaines(base, oracle)

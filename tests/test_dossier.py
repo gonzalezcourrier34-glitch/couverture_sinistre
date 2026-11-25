@@ -66,3 +66,17 @@ def test_la_table_des_matieres_ne_liste_pas_le_lexique_et_donne_un_repere_par_ch
     assert len(set(reperes)) == len(reperes), "deux chapitres ne portent jamais le même repère"
     vol = next(r for r, l in zip(reperes, lignes) if l.endswith("3.1.6 Vol (9 mots)"))
     assert vol.startswith("§") and ids([vol]) == ["1.52", "1.52.1", "1.30", "2.10", "3.1.6.1", "3.1.6.2"]
+
+
+def test_les_clauses_du_reglement_du_sinistre_se_reconnaissent_a_leur_titre():
+    """7.203 : la déclaration et ses délais, l'estimation, l'indemnité, la franchise ; pas une garantie qui parle
+    d'un sinistre, ni une entrée du lexique."""
+    from couverture.analyse.dossier import est_reglement
+    oui = [("7 Sinistres", "7.1 Vos obligations"), ("TITRE X - EN CAS DE SINISTRE", "Article 36.1 Déclaration"),
+           ("2 Communes", "2.11 Obligations et formalités à respecter en cas de sinistre"),
+           ("2 Communes", "2.5 Estimation des biens", "2.5.2.1 Mobilier"), ("5 RC", "5.9 Limites d’indemnisation"),
+           ("Que devez-vous faire en cas de sinistre ?",), ("7 Sinistres", "7.7 Franchise")]
+    non = [("Article 30 EN CAS DE SINISTRE AFFECTANT", "Article 30.1 Retour prématuré"), ("3.1.9.8 Frais d’expertise",),
+           ("1 Lexique", "1.40 Sinistre"), ("3 Garanties", "3.1.4 Dégâts des eaux")]
+    assert all(est_reglement(clause("x", ch, "texte")) for ch in oui)
+    assert not any(est_reglement(clause("x", ch, "texte")) for ch in non)

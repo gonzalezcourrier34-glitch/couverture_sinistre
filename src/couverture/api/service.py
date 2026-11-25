@@ -255,23 +255,28 @@ def analyser_clauses(base: Base, pipeline, contrat_id: str, sinistre: str, llm, 
     debut = time.perf_counter()
     temps: dict[str, int] = {}
 
-    def regles() -> Resultat | None:
-        suivre("regles")
+    def regles() -> tuple[Resultat | None, str]:
+        """La chaîne de règles, en silence : elle tourne pendant la lecture, et son étape ne s'affiche qu'au moment de
+        contresigner, pour que l'écran raconte l'analyse dans l'ordre (7.202)."""
         t0 = time.perf_counter()
         try:
             r = pipeline.analyser(sinistre, **({"souscription": souscription} if souscription else {}))
         except Exception as e:  # noqa: BLE001 - la contresignature manque, on le dit plus bas
-            suivre("regles", f"les règles n'ont pas répondu ({str(e)[:80]})")
-            return None
+            return None, f"les règles n'ont pas répondu ({str(e)[:80]})"
         temps["regles"] = int((time.perf_counter() - t0) * 1000)
-        suivre("regles", f"les règles traduites répondent « {r.verdict.decision.value} »")
-        return r
+        return r, f"les règles traduites répondent « {r.verdict.decision.value} »"
+
+    def contresigner(en_cours):
+        suivre("regles")
+        r, detail = en_cours.result()
+        suivre("regles", detail)
+        return r.verdict.decision if r else None
 
     with ThreadPoolExecutor(max_workers=1) as fil:
         en_cours = fil.submit(regles)
         lu = lecture_des_clauses.lire(base, contrat_id, llm, declaration, suivi=suivre,
-                                      regles=lambda: (r.verdict.decision if (r := en_cours.result()) else None))
-        r_regles = en_cours.result()
+                                      regles=lambda: contresigner(en_cours))
+        r_regles = en_cours.result()[0]
     temps["lecture"] = int((time.perf_counter() - debut) * 1000)
     decision, desaccord = lu.decision, lu.desaccord
     if r_regles is None and decision == D.COUVERT:
@@ -317,7 +322,11 @@ def resultat_clauses(base: Base, contrat_id: str, sinistre: str, lu, decision, d
                  verdict=verdict, durees_ms=temps)
     sortie = {
         "contrat_id": contrat_id, "decision": decision.value, "justification": justification, "confiance": confiance,
-        "a_preciser": [], "questions": questions,
+        # Les rappels du règlement (délai de déclaration, plafond) : des réserves, qui n'empêchent pas de répondre.
+        "a_preciser": [{"variable": f"rappel_{j.clause_id}", "nature": "reserve",
+                        "question": f"{j.question or j.extrait_contrat} (art. {j.clause_id})", "valeurs": [],
+                        "libelles": {}, "aide": {}} for j in lu.rappels],
+        "questions": questions,
         "citations": [c.model_dump(mode="json") for c in citations],
         "limites": [{"clause_id": j.clause_id, "extrait": j.extrait_contrat, "montant": j.motif or j.extrait_contrat}
                     for j in e.limitent],
