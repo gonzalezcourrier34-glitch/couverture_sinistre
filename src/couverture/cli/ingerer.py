@@ -4,12 +4,13 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from ..base import Base
-from ..ingestion import fichiers_contrats, ingerer_dossier
+from ..contrat.base import Base
+from ..contrat.ingestion import fichiers_contrats, ingerer_dossier
 from ..progression import Barre
 
 
 def ajouter(sous) -> None:
+    """Déclare la commande « ingerer » et ses options."""
     p = sous.add_parser("ingerer", help="Lire les contrats de <donnees>/contrats et remplir la base")
     p.add_argument("--forcer", action="store_true", help="Relire même les fichiers inchangés")
     p.set_defaults(executer=executer)

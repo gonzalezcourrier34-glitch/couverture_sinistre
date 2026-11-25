@@ -15,6 +15,7 @@ import time
 
 
 def duree(secondes: float) -> str:
+    """Une durée lisible : « 45 s », « 1 min 52 s »."""
     secondes = int(secondes)
     if secondes < 60:
         return f"{secondes} s"
@@ -22,6 +23,9 @@ def duree(secondes: float) -> str:
 
 
 class Barre:
+    """Une barre de progression sur la sortie d'erreur, dessinée seulement dans un terminal ; utilisable depuis
+    plusieurs fils d'exécution."""
+
     def __init__(self, total: int, libelle: str, largeur: int = 20, flux=None):
         self.total, self.libelle, self.largeur = max(total, 0), libelle, largeur
         self.flux = flux or sys.stderr
@@ -53,6 +57,7 @@ class Barre:
             self.flux.flush()
 
     def avancer(self, detail: str = "") -> None:
+        """Un élément de plus est fait ; `detail` (le cas en cours) s'affiche en fin de ligne."""
         with self.verrou:
             self.fait += 1
             self.dernier = detail
@@ -68,6 +73,7 @@ class Barre:
             self._dessiner()
 
     def terminer(self) -> None:
+        """Dessine l'état final et passe à la ligne."""
         with self.verrou:
             if self.actif:
                 self._dessiner()

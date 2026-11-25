@@ -10,8 +10,8 @@ import threading
 from functools import lru_cache
 
 from couverture.api import config
-from couverture.base import Base
-from couverture.journal import Journal
+from couverture.contrat.base import Base
+from couverture.analyse.journal import Journal
 
 
 @lru_cache(maxsize=1)
@@ -50,7 +50,7 @@ class Pipelines:
         with self._verrou:
             if contrat_id not in self._chaines:
                 from couverture.llm import configurer
-                from couverture.chaine import PipelineRegles
+                from couverture.analyse.chaine import PipelineRegles
 
                 self.base.contrat(contrat_id)
                 llm = configurer()
@@ -62,4 +62,5 @@ class Pipelines:
 
 @lru_cache(maxsize=1)
 def get_pipelines() -> Pipelines:
+    """Dépendance FastAPI : l'accès aux chaînes d'analyse (une par contrat, construite à la demande), sur la base de l'API."""
     return Pipelines(get_base())

@@ -30,7 +30,7 @@ import re
 from datetime import date
 from pathlib import Path
 
-from .. import prolog
+from ..analyse import prolog
 from ..llm import appeler_json as _appeler, pour_travail_long as pour_compiler
 from ..models import Clause
 from .consigne import (PROPOSITIONS, SYSTEME_REDACTION, VERSION, ErreurProposition, clauses_article,
@@ -54,6 +54,7 @@ __all__ = ["ACCESSOIRE", "A_RELIRE", "BLOQUANT", "EXTENSION", "INFO", "JAMAIS", 
 # --- Les commandes ------------------------------------------------------------------------------------------
 
 def chemins(contrat_id: str, article: str, dossier: Path | None = None) -> tuple[Path, Path]:
+    """Les deux fichiers d'une proposition : le JSON (la source) et le `.pl` (les règles)."""
     base = (dossier or PROPOSITIONS) / contrat_id
     return base / f"{article}.json", base / f"{article}.pl"
 
@@ -115,6 +116,7 @@ def rediger(contrat_id: str, article: str, clauses: list[Clause], llm, dossier: 
 
 
 def sauver(contrat_id: str, article: str, doc: dict, dossier: Path | None = None) -> None:
+    """Enregistre le JSON d'une proposition."""
     js, _ = chemins(contrat_id, article, dossier)
     js.parent.mkdir(parents=True, exist_ok=True)
     js.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -151,6 +153,7 @@ def recontroler(contrat_id: str, article: str, clauses: list[Clause], dossier: P
 
 
 def articles_proposes(contrat_id: str, dossier: Path | None = None) -> list[str]:
+    """Les articles qui ont une proposition enregistrée pour ce contrat."""
     base = (dossier or PROPOSITIONS) / contrat_id
     return sorted(p.stem for p in base.glob("*.json")) if base.exists() else []
 
@@ -181,6 +184,8 @@ def retirer_article(contrat_pl: str, article: str) -> str:
 
 
 def resumer(doc: dict) -> str:
+    """Le compte rendu d'une proposition : ce qu'elle contient, le vocabulaire proposé, puis chaque contrôle avec sa
+    gravité."""
     prop, ctl = doc["proposition"], doc.get("controles", [])
     g = prop.get("garanties", [])
     n = lambda cle: sum(len(x.get(cle, [])) for x in g) + (len(prop.get("exclusions_communes") or [])  # noqa: E731

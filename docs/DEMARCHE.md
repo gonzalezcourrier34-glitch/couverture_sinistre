@@ -2878,7 +2878,7 @@ donné une meilleure référence.
    d'assistance ou de protection juridique (non traduites : le système doit dire « incertain »). Chaque réponse
    avec l'article et une citation mot pour mot, vérifiée.
 2. *Second annotateur* : Mistral Large, les mêmes déclarations et le texte entier du contrat, sans la première
-   réponse (`python -m couverture.ferme annoter`).
+   réponse (`python -m couverture.mesure.ferme annoter`).
 3. *Accords et arbitrage* : une réponse identique, ou acceptée par l'autre, entre dans le jeu ; un désaccord va
    dans `arbitrage.csv`, avec les deux citations, pour un arbitrage sur le texte (`comparer`, `exporter`).
 4. *Banc* : `couverture banc --jeu ferme`, chaîne complète seule (pas de faits idéaux, qui remettraient le
@@ -5130,9 +5130,54 @@ Le 24 nov., 23 h 40 à minuit.
 
 **Mesuré avant de déposer, avec le moteur de référence.** L'ordinateur tombé : « à préciser » (l'option est-elle souscrite ?), « couvert » si elle l'est, « non couvert » si elle ne l'est pas. Les 15 cas à faits exacts de B et 700 jeux de faits au hasard : aucune décision ne change. 700 jeux ciblés (bris, accident, vol ou heurt, auteur connu) : 74 décisions changent, toutes sur un bris ou un accident, vers « couvert » ou « à préciser » ; aucune sur un vol. Cela ajoute des « couvert » : un bris accidentel causé par l'assuré ou un proche, option souscrite. C'est ce que dit l'article (« tout bris ou destruction accidentel résultant d'une chute, d'un choc ») ; le banc de B dira si l'un d'eux est à tort.
 
-**Mesuré à 23 h 53, avec SWI-Prolog et le modèle.** L'article sans contrôle bloquant ; 261 tests passés, un ignoré. L'ordinateur tombé de la table : « à préciser », une seule question, « vos conditions particulières mentionnent-elles la garantie matériel multimédia ? », et plus aucune citation sur le vol. La lecture donne toujours « causé par l'assuré » : elle ne refuse plus rien. Jeu fermé de B : 92 % (93 % dix minutes plus tôt, le même cas instable faisant l'écart), aucun couvert ni refus à tort, portes passées. Aucun des « couvert » ajoutés n'est sorti à tort sur ce banc, qui ne contient qu'un cas de matériel multimédia.
+**Mesuré à 23 h 53, avec SWI-Prolog et le modèle.** L'article sans contrôle bloquant ; 261 tests passés, un ignoré. L'ordinateur tombé de la table : « à préciser », une seule question, « vos conditions particulières mentionnent-elles la garantie matériel multimédia ? », et plus aucune citation sur le vol. La lecture donne toujours « causé par l'assuré » : elle ne refuse plus rien. Jeu fermé de B : 92 % (93 % dix minutes plus tôt, le même cas instable faisant l'écart), aucun couvert ni refus à tort, portes passées. Aucun « couvert » à tort n'est apparu ; mais ce banc mesure peu le matériel multimédia (je n'y connais qu'un cas, `f-b18`, un vol) : la limite de 7.176 vaut ici aussi.
 
 **Ce qui n'est pas corrigé.** La lecture qui nomme un auteur que la déclaration ne nomme pas, et la question sur les vitrages. La seconde ne change pas la décision ; la première se mesurerait sur toute la lecture, pas la veille du gel.
+
+### 7.183 Le code rangé par métier, et une description pour chaque fonction
+
+La nuit du 24 au 25 nov.
+
+**La demande.** Un code clair, commenté, et des fichiers rangés de façon logique, avant le gel. Quatre étapes, dans cet ordre : nettoyer, décrire, ranger, nettoyer encore.
+
+**Nettoyer.** Peu à retirer : aucun import inutile, aucun code en commentaire, aucune note « à faire ». Deux membres morts depuis le retrait des anciennes méthodes sont supprimés (`Base.maj_rapport`, `Clause.reference`).
+
+**Décrire.** 137 fonctions, classes et méthodes publiques n'avaient pas de description : chacune en a une, en une ou deux phrases, qui dit ce qu'elle rend et dans quel cas elle échoue. Une quinzaine de commentaires là où le code ne s'explique pas seul (la gouttière d'une page en deux colonnes, l'élagage de l'arbre de preuve, l'ordre des questions et des réserves). Vérifié par le code, pas à l'œil : l'arbre syntaxique de chaque fichier, descriptions retirées, est identique avant et après. Aucune ligne exécutée n'a changé.
+
+**Ranger.** Vingt-cinq fichiers à plat dans un seul dossier faisaient quatre métiers. Ils sont en quatre sous-dossiers : `contrat/` (lire un contrat), `analyse/` (analyser un sinistre), `redaction/` (rédiger les règles, déjà rangé), `mesure/` (les jeux de cas et les bancs). Restent à la racine ce que tous partagent : les modèles de données, le client du modèle, les consignes, la configuration. Les contrôles du découpage s'appelaient `controles.py`, comme ceux de la rédaction : ils deviennent `controle_decoupage.py`. Chaque sous-dossier s'ouvre sur une page qui dit ce qu'il contient.
+
+**Ce que le rangement a changé dans le code exécuté**, et rien d'autre : les imports ; un chemin (le moteur cherchait `regles/` deux dossiers au-dessus de lui, il est un dossier plus bas) ; le nom du module des consignes de lecture, donc le manifeste des versions (les empreintes des consignes, elles, n'ont pas bougé : aucun texte envoyé au modèle n'a changé) ; le nom de la commande du jeu fermé (`python -m couverture.mesure.ferme`). Vérifié de trois façons : l'arbre syntaxique de chaque fichier déplacé, imports mis à part, est identique ; les 267 imports du projet sont résolus un par un (le module existe, le nom y est défini) ; les tests.
+
+**Ce que je n'ai pas pu vérifier sur ma machine.** Les tests de l'API (FastAPI n'y est pas installé) et ceux qui appellent SWI-Prolog : 241 tests passent ici, 8 sont ignorés. Ils tournent sur le poste et en intégration continue ; c'est là que le rangement est jugé, avec un banc.
+
+**Ce que je n'ai pas fait.** Supprimer des fichiers de données ou d'anciennes propositions : la liste est donnée, la décision n'est pas la mienne. J'avais aussi écrit ici que je ne découperais pas les fonctions de plus de 80 lignes, parce que ce serait réécrire du code mesuré : c'est fait en 7.184, avec la mesure qui manquait à mon refus.
+
+### 7.184 Les huit longues fonctions, découpées et comparées à elles-mêmes
+
+La nuit du 24 au 25 nov., vers 2 h.
+
+**La demande.** Les fonctions de plus de 80 lignes, réécrites pour qu'elles se lisent. J'en annonçais sept ; avec leurs descriptions, elles sont huit : le contrôle d'une proposition (240 lignes), l'acceptation du vocabulaire (134), le découpage d'un contrat en clauses (131), la commande `regles` (119), la réponse (114), la fiche PDF (112), le rapport du banc (98), le rejeu d'un jeu de cas (83).
+
+**La méthode.** Sept d'entre elles sont une suite d'étapes : chaque étape devient une fonction nommée, avec sa description, et la fonction d'origine n'est plus que leur enchaînement. Les lignes sont déplacées telles quelles, par un script qui les coupe et les recolle, pas retapées. La huitième, le découpage en clauses, était une boucle qui partageait six variables avec deux fonctions internes : elle devient un petit objet (`_Decoupage`) qui porte cet état, avec une méthode par cas (une ligne ordinaire, un titre numéroté, un titre sans numéro). Plus aucune fonction du code ne dépasse 80 lignes.
+
+**La preuve, fonction par fonction.** L'arbre syntaxique ne suffit plus : le code a changé de forme. Chaque fonction est donc comparée à sa version d'avant, sur beaucoup d'entrées, et la sortie doit être identique.
+
+| Fonction | Comparée sur | Résultat |
+|---|---|---|
+| Contrôle d'une proposition | les 81 propositions des quatre contrats, trois variantes chacune : 1 376 problèmes relevés | identique |
+| Acceptation du vocabulaire | les mêmes 81 propositions, sur un vocabulaire appauvri : 502 lignes d'ajout, et les fichiers écrits | identique |
+| Réponse (`verdict`) | 9 246 décisions du moteur de référence (cas à faits exacts, faits au hasard, événements non traduits, contrat complet ou non) | identique |
+| Découpage en clauses | le texte des cinq contrats de la base et le PDF de test, sous quatre profils : 24 découpages, 3 102 clauses | identique |
+| Rapport du banc | les 332 rapports de `data/bancs`, seuls puis comparés au précédent : 1,9 million de caractères | identique |
+| Fiche PDF | 14 réponses de formes différentes : texte, position de chaque mot, tracés | identique |
+| Rejeu d'un jeu de cas | 4 jeux simulés (pannes du fournisseur comprises), un cas à la fois puis quatre | identique |
+| Commande `regles` | 25 appels (cinq contrats, cinq jeux, un cas seul, le bilan, un refus), SWI-Prolog simulé | identique |
+
+**Ce que la comparaison a montré en passant.** Deux passages de l'ancien contrôle sur la même proposition ne rendaient pas toujours les problèmes dans le même ordre : une boucle parcourait un ensemble. Les comparaisons sont donc faites à graine fixe. L'ordre ne change aucune gravité ; je ne l'ai pas corrigé, pour ne rien changer d'autre que la forme.
+
+**Ce qui n'est pas prouvé.** La commande `regles` n'a tourné qu'avec un SWI-Prolog simulé, et les tests de l'API ne tournent pas sur ma machine. 241 tests passent ici, comme avant ; les 261 du poste, puis un banc, jugent le reste.
+
+**Ce que j'avais mal estimé.** J'avais refusé ce découpage deux fois, comme « du code mesuré qu'on ne réécrit pas la veille du gel ». L'objection était juste tant qu'il n'y avait pas de mesure ; elle tombait dès qu'on pouvait comparer chaque fonction à elle-même. Je n'avais pas pensé à le faire.
 
 ## 8. Ce qui reste à faire
 
@@ -5360,3 +5405,5 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 188. Ce qu'un test a rattrapé une fois et qu'on a réparé à la main reviendra au prochain ajout : la réparation va dans le code qui fait l'ajout.
 189. Avant d'écrire « ces cas décident pareil », les convertir et comparer : la comparaison a trouvé celui qui manquait à la liste, et il décidait autrement.
 190. Essayer une phrase qu'aucun jeu de cas ne contient, et lire la preuve citée, pas seulement la décision : un refus juste en apparence citait une exclusion du vol pour un objet tombé.
+191. Un rangement se prouve comme un calcul : même arbre syntaxique hors imports, chaque import résolu, puis les tests ; « ça a l'air pareil » n'est pas une preuve.
+192. « On ne réécrit pas du code mesuré » vaut tant qu'on ne peut pas comparer l'ancien et le nouveau ; quand on le peut, le refus n'est plus de la prudence, c'est une mesure qu'on n'a pas faite.

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 
-from .. import prolog
+from ..analyse import prolog
 from ..models import Clause, TypeClause
 from ..texte import normaliser
 
@@ -64,8 +64,6 @@ class ErreurProposition(ValueError):
     """Une proposition dont la structure ne permet pas d'écrire des règles."""
 
 
-
-
 # --- Le contexte donné au modèle ------------------------------------------------------------------------
 
 def clauses_article(clauses: list[Clause], article: str) -> list[Clause]:
@@ -102,6 +100,8 @@ def valeurs_du_contrat(d: dict, contrat_id: str | None) -> list[str] | None:
 
 
 def ligne_vocabulaire(v: str, d: dict, contrat_id: str | None = None) -> str:
+    """Une ligne du vocabulaire donné au modèle : la variable et ses valeurs (celles du contrat, quand chaque contrat
+    a les siennes)."""
     propres = valeurs_du_contrat(d, contrat_id)
     if propres is None:
         valeurs = ", ".join(d["valeurs"])
@@ -116,6 +116,8 @@ def ligne_vocabulaire(v: str, d: dict, contrat_id: str | None = None) -> str:
 
 def message_redaction(article: str, textes: list[Clause], definitions: list[Clause], contrat_pl: str,
                       contrat_id: str | None = None) -> str:
+    """Le message envoyé au modèle : le vocabulaire, les concepts déjà définis, l'article à traduire et les définitions
+    du contrat."""
     voc = prolog.vocabulaire()
     vocab = "\n".join(ligne_vocabulaire(v, d, contrat_id) for v, d in voc.items())
     concepts = "\n".join(f"- {n} : « {t} »" for n, t in concepts_existants(contrat_pl).items()) or "(aucun)"

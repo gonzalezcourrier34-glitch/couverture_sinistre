@@ -33,7 +33,7 @@ Ce qui manque en ligne : un tableau de bord sur ces lignes (aucune requête n'es
 | Couche | Ce qu'on y voit | Où |
 |---|---|---|
 | **Banc** | Le golden set ou le jeu fermé rejoué : règles, lecture, chaîne, portes ; un rapport par passage | `couverture banc`, `data/bancs/`, `docs/METRIQUES.md` |
-| **Journal** | Une ligne par analyse : décision (avant contrôle et finale), confiance, faits, questions, durée, versions des consignes. Jamais le texte du sinistre | table `analyses`, `src/couverture/journal.py` |
+| **Journal** | Une ligne par analyse : décision (avant contrôle et finale), confiance, faits, questions, durée, versions des consignes. Jamais le texte du sinistre | table `analyses`, `src/couverture/analyse/journal.py` |
 | **Grafana** | Deux tableaux, lus directement dans la base SQLite | `monitoring/grafana/` |
 | **Consignes** | La version et l'empreinte de chaque consigne envoyée au modèle | `config/versions_consignes.json`, `src/couverture/consignes.py` |
 

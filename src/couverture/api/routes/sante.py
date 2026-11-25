@@ -13,7 +13,7 @@ from fastapi import APIRouter, Depends
 from couverture.api import config
 from couverture.api.dependances import get_base
 from couverture.api.service import a_des_regles
-from couverture.base import Base
+from couverture.contrat.base import Base
 
 router = APIRouter(prefix="/api/v1", tags=["supervision"])
 
@@ -28,7 +28,7 @@ def sante(base: Base = Depends(get_base)) -> dict[str, Any]:  # noqa: B008
         `statut` vaut `ok` si au moins un contrat a des règles et que SWI-Prolog est installé, `degrade` sinon.
     """
     from couverture.llm import configurer
-    from couverture.prolog import swipl
+    from couverture.analyse.prolog import swipl
 
     decidables = [c.id for c in base.contrats() if a_des_regles(c.id)]
     llm = configurer()

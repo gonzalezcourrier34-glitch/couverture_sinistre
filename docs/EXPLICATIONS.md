@@ -6,7 +6,7 @@
 >
 > **En ligne (23 nov. 2026).** La démonstration tourne sur Azure, derrière un code d'accès (7.161, 7.162). Le document a été relu en entier le 24 nov., contre le code. Les chiffres de mesure, qui bougent, sont tenus à jour dans le README (section 4) : en cas d'écart, il fait foi.
 
-Ce document explique **ce que fait chaque partie du projet, et pourquoi elle est faite ainsi**. Il sert à préparer l'entretien : pour chaque choix, il donne la raison et ce qui a été écarté.
+Pour une première lecture, sans vocabulaire technique : [le projet raconté](COMPRENDRE.md). Ce document-ci explique **ce que fait chaque partie du projet, et pourquoi elle est faite ainsi**. Il sert à préparer l'entretien : pour chaque choix, il donne la raison et ce qui a été écarté.
 
 Sommaire :
 1. [Lexique](#1-lexique)
@@ -137,8 +137,8 @@ Sommaire :
 ### A. Une fois par contrat
 
 ```
-PDF ─► chargement.py ─► segmentation.py ─► anonymisation.py ─► controles.py ─► base.py (SQLite)
-       pages, nettoyage   clauses typées     noms masqués        OK / A_VERIFIER   contrats, clauses, renvois
+PDF ─► chargement.py ─► segmentation.py ─► anonymisation.py ─► controle_decoupage.py ─► base.py (SQLite)
+       pages, nettoyage   clauses typées     noms masqués        OK / A_VERIFIER            contrats, clauses, renvois
                           (+ profil d'assureur)
 
 garanties ─► règles Prolog (regles/<contrat>.pl) : à la main, ou `couverture rediger` (Mistral Large)
@@ -164,6 +164,22 @@ Exemple : « Mon vélo a été volé dans ma cave, fermée par un cadenas. »
 
 L'ordre suit le parcours des données.
 
+Le code est rangé par métier (25 novembre 2026) : quatre sous-dossiers, et à la racine ce que tous partagent.
+
+```
+src/couverture/
+  contrat/     lire un contrat : chargement, segmentation, profils, anonymisation, controle_decoupage, ingestion,
+               tableaux (les formules), base (SQLite)
+  analyse/     analyser un sinistre : lecture, exemples, prolog (le moteur), chaine, validation, journal, fiche (le PDF)
+  redaction/   rédiger les règles d'un contrat : consigne, controles, ecriture, vocabulaire
+  mesure/      mesurer : evaluation (les jeux de cas), banc, ferme (le jeu fermé)
+  cli/  api/   une commande, une route par fichier
+  models.py  texte.py  config.py  llm.py  consignes.py  progression.py     ce que tous partagent
+```
+
+Le sens des dépendances : `contrat` ne connaît personne ; `analyse` lit `contrat` ; `redaction` et `mesure` lisent
+`analyse` ; `cli` et `api` appellent le tout. Chaque sous-dossier s'ouvre sur un `__init__.py` qui dit ce qu'il contient.
+
 ### `src/couverture/models.py` — les structures de données
 
 **Rôle** : définir la forme de tout ce qui circule entre les étapes, avec Pydantic.
@@ -188,7 +204,7 @@ L'ordre suit le parcours des données.
 
 **Pourquoi** : « Garantie » et « garantie », « dégât » et « degat » doivent se rejoindre quand le code compare une citation au contrat, un intertitre à un profil, ou une phrase à une règle.
 
-### `src/couverture/chargement.py` — lire et nettoyer le PDF
+### `src/couverture/contrat/chargement.py` — lire et nettoyer le PDF
 
 **Rôle** : obtenir des lignes de texte propres, chacune avec son numéro de page.
 - `lire_pages` : PDF via pdfplumber (ou pypdf en secours), Word via python-docx, Markdown et texte directement.
@@ -202,7 +218,7 @@ L'ordre suit le parcours des données.
 
 **Pourquoi** : sur un vrai contrat, ce bruit casse le découpage. Le sommaire du contrat Assureur A créait des clauses fantômes (« 10.2 Non-paiement 38 ») avant cette correction. Garder la page de chaque ligne permet de citer « art. 2.10-a, p. 12 ».
 
-### `src/couverture/segmentation.py` — découper en clauses typées
+### `src/couverture/contrat/segmentation.py` — découper en clauses typées
 
 **Rôle** : c'est le cœur de l'ingestion. Il transforme les lignes en clauses, avec leurs titres, leur type, leur groupe et leurs renvois.
 
@@ -229,7 +245,7 @@ L'ordre suit le parcours des données.
 
 **Pourquoi** : une citation précise exige une clause entière et typée. Le type permet ensuite à la recherche de ramener les exclusions et au contrôle de vérifier qu'un « couvert » s'appuie sur une garantie. Les règles ont été ajustées sur un PDF de test mis en page comme un vrai contrat, puis sur le vrai contrat Assureur A.
 
-### `src/couverture/controles.py` — repérer les contrats mal lus
+### `src/couverture/contrat/controle_decoupage.py` — repérer les contrats mal lus
 
 **Rôle** : `controler` produit un rapport et un statut, `OK` ou `A_VERIFIER`. Alertes :
 - moins de 15 clauses (le découpage a probablement échoué) ;
@@ -242,7 +258,7 @@ Le rapport liste aussi les garanties sans exclusion voisine et les clauses très
 
 **Pourquoi** : avec des centaines de contrats, personne ne relit chaque découpage. Un contrat mal lu doit être signalé, pas servi en silence. Exemple : « un contrat sans exclusion n'existe pas » ; si on n'en trouve aucune, c'est la lecture qui a échoué.
 
-### `src/couverture/profils.py` — les règles propres à un assureur
+### `src/couverture/contrat/profils.py` — les règles propres à un assureur
 
 **Rôle** : un profil est un fichier JSON dans `data/profils/<nom>.json`, désigné dans le catalogue (`"profil": "assureur-a"`). Il contient :
 - `intertitres` : des titres propres à l'assureur et leur type (« Les situations hors contrat » → exclusion). La segmentation les reconnaît comme intertitres, et `classer` leur donne ce type en priorité ;
@@ -253,7 +269,7 @@ Le rapport liste aussi les garanties sans exclusion voisine et les clauses très
 
 **Pourquoi** : les règles générales couvrent la plupart des contrats. Quand un assureur rédige autrement, on n'ajoute pas un cas particulier dans le code : on écrit un profil, réutilisé pour toutes les versions de ses contrats. C'est ce qui rend l'approche tenable sur des centaines de contrats, comme `sources.yaml` dans SortirIA pour les agendas.
 
-### `src/couverture/base.py` — le stockage multi-contrats
+### `src/couverture/contrat/base.py` — le stockage multi-contrats
 
 **Rôle** : une base SQLite avec trois tables.
 - `contrats` : identifiant, assureur, produit, version, fichier, empreinte, statut, rapport des contrôles, texte brut, date d'ingestion.
@@ -264,7 +280,7 @@ Méthodes : `enregistrer` (remplace entièrement un contrat), `contrats`, `contr
 
 **Pourquoi** : chaque contrat est lu une fois, et chaque question ne charge **que les clauses du contrat concerné**. On ne mélange jamais deux contrats. SQLite suffit pour des centaines de contrats et ne demande aucun serveur. En production, ce serait PostgreSQL, avec le même schéma.
 
-### `src/couverture/ingestion.py` — de fichier à base
+### `src/couverture/contrat/ingestion.py` — de fichier à base
 
 **Rôle** :
 - `ingerer_fichier` : calcule l'empreinte du fichier ; s'il n'a pas changé depuis la dernière fois, ne fait rien (idempotence) ; sinon lit, découpe, contrôle et enregistre.
@@ -273,7 +289,7 @@ Méthodes : `enregistrer` (remplace entièrement un contrat), `contrats`, `contr
 
 **Pourquoi** : ajouter un contrat se résume à déposer un fichier et relancer `couverture ingerer`. La version du contrat compte : un client garde les CG en vigueur au moment de sa souscription.
 
-### `src/couverture/anonymisation.py` — masquer les noms dans le texte
+### `src/couverture/contrat/anonymisation.py` — masquer les noms dans le texte
 
 **Rôle** : après le découpage, remplacer dans chaque clause et dans le texte brut le nom de l'assureur (« Assureur A »), de son assisteur, ses adresses, ses numéros. Les courriels, les sites et les téléphones sont masqués pour tout contrat ; le reste vient d'une liste propre à chaque contrat, `data/contrats/noms.prive.json`, qui n'est pas versionnée (la versionner publierait les noms). `ingerer` affiche le nombre de remplacements.
 
@@ -311,7 +327,7 @@ COUVERTURE_MODELE_CONTRAT=mistral-large-4-0           # rédige les règles, une
 
 Trois rôles, trois modèles, désignés par leur version datée : celui qui lit le mieux n'est pas celui qui vérifie le mieux (DEMARCHE 7.136), et un nom en « latest » change sans prévenir (7.145). Sans ces variables, le code prend `mistral-large-latest`. En déploiement, les mêmes variables sont passées au conteneur (`docker run --env-file .env`).
 
-### `regles/`, `prolog.py`, `lecture.py` et `chaine.py` — le contrat en règles Prolog
+### `regles/` et `src/couverture/analyse/` (`prolog.py`, `lecture.py`, `chaine.py`) — le contrat en règles Prolog
 
 **Rôle** : le contrat est écrit en **règles**, un moteur logique décide, et le modèle ne fait que lire les faits de la déclaration.
 - `regles/vocabulaire/` : `commun.json` (événement, bien, lieu, et les variables que plusieurs contrats emploient : effraction, auteur, cause de l'eau…) et un fichier par contrat pour les variables que lui seul emploie ; pour chacune, ses valeurs permises et la question à poser quand elle manque. `couverture regles --contrat … --ranger` remet chaque variable dans son fichier (7.119) ;
@@ -334,13 +350,13 @@ Trois rôles, trois modèles, désignés par leur version datée : celui qui lit
 
 **Le moteur chargé une fois** (`MoteurPermanent`) : un SWI-Prolog par contrat reste ouvert ; Python lui envoie les faits sur une ligne, il répond une ligne JSON (`servir` dans `moteur.pl`). Il est relancé s'il s'arrête ou si les règles changent sur le disque. `COUVERTURE_PROLOG_PERMANENT=non` revient à un processus par décision (DEMARCHE 7.46).
 
-### `src/couverture/banc.py` et `data/golden/` — le banc d'essai
+### `src/couverture/mesure/banc.py` et `data/golden/` — le banc d'essai
 
 **Rôle** : rejouer tout le système sur un jeu de référence figé (le *golden set* : 112 cas sur deux contrats, étiquetés par garantie, thème, origine et auteur), en trois couches : les **règles** seules sur les faits idéaux, la **lecture** des faits par le modèle comparée aux faits idéaux, la **chaîne** complète sur plusieurs exécutions. Des **portes** (`data/golden/seuils.json`) disent si c'est présentable ; la commande `couverture banc` sort en erreur si une porte échoue. Chaque passage est gardé dans `data/bancs/` et comparé au précédent. `--figer` versionne le golden set ; `--fiche` écrit la fiche de validation des réponses attendues.
 
 **Pourquoi** : un score unique dit qu'il y a une erreur ; trois couches disent si elle vient des règles, de la lecture ou de leur combinaison. Et une référence qui change sans le dire ne mesure plus rien.
 
-### `src/couverture/journal.py` — le journal des analyses
+### `src/couverture/analyse/journal.py` — le journal des analyses
 
 **Rôle** : chaque analyse faite par l'interface ou par `couverture analyser` est notée dans la table `analyses` : date, contrat, méthode, décision (avant contrôle et finale), confiance, faits repérés (événement, bien, lieu), citations rejetées, questions à poser, durée, versions des consignes. Les erreurs du modèle sont notées aussi. Les colonnes `decision_avant_relecture`, `conditions_ecartees` et `contestations` viennent des méthodes retirées ; elles restent dans le schéma pour les bases existantes et les tableaux Grafana.
 
@@ -379,7 +395,7 @@ Les requêtes utilisent les macros de période du plugin (`$__unixEpochFrom()`, 
 
 Le détail est dans `monitoring/README.md`.
 
-### `src/couverture/validation.py` — aucune décision sans preuve
+### `src/couverture/analyse/validation.py` — aucune décision sans preuve
 
 **Rôle** :
 - `extrait_present` : vérifie qu'un extrait figure dans une clause, à la ponctuation, aux accents et à la casse près. Les coupures « … » sont acceptées : chaque morceau doit être présent.
@@ -393,7 +409,7 @@ Le détail est dans `monitoring/README.md`.
 
 **Pourquoi** : c'est le garde-fou contre les hallucinations, fait par du code, donc fiable. En gardant la décision d'origine, on peut mesurer combien de fois le contrôle a rattrapé le modèle.
 
-### `src/couverture/evaluation.py` — les jeux de cas
+### `src/couverture/mesure/evaluation.py` — les jeux de cas
 
 **Rôle** : `charger_cas` croise les sinistres et les réponses attendues ; `evaluer` rejoue une chaîne sur un jeu (le banc s'en sert pour sa couche « chaîne »). Une clause attendue « 4.4 » est considérée comme citée si la clause 4.4 ou l'un de ses morceaux l'est.
 

@@ -11,7 +11,7 @@ import json
 
 import pytest
 
-from couverture import chaine, prolog
+from couverture.analyse import chaine, prolog
 from couverture.api import service
 from moteur_reference import Contrat, Explorateur
 

@@ -1,7 +1,7 @@
 """Réglages communs aux tests."""
 import pytest
 
-from couverture import prolog
+from couverture.analyse import prolog
 
 
 @pytest.fixture(autouse=True)

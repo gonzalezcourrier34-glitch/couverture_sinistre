@@ -10,12 +10,12 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from couverture import prolog
+from couverture.analyse import prolog
 from couverture.api import config
 from couverture.api.dependances import get_base
 from couverture.api.securite import require_api_key
 from couverture.api.service import clause_publique
-from couverture.base import Base
+from couverture.contrat.base import Base
 
 router = APIRouter(prefix="/api/v1", tags=["contrats"], dependencies=[Depends(require_api_key)])
 

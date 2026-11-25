@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from couverture import chaine, lecture, prolog
+from couverture.analyse import chaine, lecture, prolog
 from couverture.models import Decision
 from moteur_reference import Explorateur, Contrat, Moteur, Terme
 
@@ -41,7 +41,7 @@ def cas():
 
 @pytest.fixture(scope="module")
 def cas_validation():
-    from couverture.evaluation import fichiers_jeu
+    from couverture.mesure.evaluation import fichiers_jeu
 
     _, annotations = fichiers_jeu(RACINE / "data", CONTRAT, "validation")
     attendus = {a["sinistre_id"]: a for a in lire(annotations)}
@@ -257,7 +257,7 @@ def test_faits_des_cas_dans_le_vocabulaire(cas):
 def test_jeu_de_validation_coherent(cas, cas_validation):
     """Le jeu de validation est complet et distinct de la mise au point. Son score n'est PAS un test :
     c'est une mesure (docs/DEMARCHE.md), et corriger les règles pour la faire monter la viderait de son sens."""
-    from couverture.evaluation import charger_cas, fichiers_jeu
+    from couverture.mesure.evaluation import charger_cas, fichiers_jeu
 
     sinistres = charger_cas(*fichiers_jeu(RACINE / "data", CONTRAT, "validation"))
     assert len(sinistres) >= 15 and {s["id"] for s in sinistres} == {i for i, _, _ in cas_validation}

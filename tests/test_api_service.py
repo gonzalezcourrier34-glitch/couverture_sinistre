@@ -6,10 +6,10 @@ from __future__ import annotations
 import pytest
 
 from couverture.api import service
-from couverture.base import Base, Contrat
+from couverture.contrat.base import Base, Contrat
 from couverture.models import Clause, Faits, TypeClause
 from moteur_reference import Contrat as Regles, Explorateur
-from couverture import chaine, prolog
+from couverture.analyse import chaine, prolog
 
 CONTRAT = "assureur-a-habitation-2025"
 
@@ -106,7 +106,7 @@ def test_traduction_des_conditions_declaree():
     """7.169. Chaque jeu de conditions dit s'il est traduit en entier ; sans déclaration, il ne l'est pas."""
     import json
 
-    from couverture import prolog
+    from couverture.analyse import prolog
 
     declare = json.loads((prolog.DOSSIER / "traduction.json").read_text(encoding="utf-8"))
     for contrat_id, d in declare.items():

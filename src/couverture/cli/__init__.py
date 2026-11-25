@@ -20,14 +20,15 @@ import argparse
 import sys
 from pathlib import Path
 
-from ..base import Base
 from ..config import charger_env
+from ..contrat.base import Base
 from . import analyser, api, banc, clauses, contrats, exemples, formules, ingerer, modele, rediger, regles, versions
 
 COMMANDES = (ingerer, contrats, clauses, regles, formules, rediger, analyser, banc, exemples, api, versions, modele)
 
 
 def main(argv: list[str] | None = None) -> int:
+    """Lit la ligne de commande, charge `.env`, ouvre la base et lance la commande demandée ; rend son code de sortie."""
     p = argparse.ArgumentParser(prog="couverture", description="Le sinistre est-il couvert par les conditions générales ?")
     p.add_argument("--donnees", default="data", help="Dossier des données (défaut : data)")
     p.add_argument("--base", default=None, help="Base SQLite (défaut : <donnees>/base.sqlite)")

@@ -5,10 +5,11 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from ..base import Base
+from ..contrat.base import Base
 
 
 def ajouter(sous) -> None:
+    """Déclare la commande « api » et ses options."""
     p = sous.add_parser("api", help="Lancer l'API FastAPI (documentation sur /docs)")
     p.add_argument("--hote", default="127.0.0.1")
     p.add_argument("--port", type=int, default=8001)
@@ -16,6 +17,7 @@ def ajouter(sous) -> None:
 
 
 def executer(a, base: Base, donnees: Path) -> int:
+    """Lance l'API avec uvicorn, sur la base de la ligne de commande."""
     import uvicorn
 
     # L'API lit sa base dans COUVERTURE_BASE : celle de la ligne de commande.

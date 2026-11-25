@@ -15,10 +15,10 @@ Convention : les garanties de base sont souscrites ; les options et formules son
 réponse en dépend).
 
 ```
-uv run python -m couverture.ferme annoter      # second avis (Mistral Large ; reprend s'il est interrompu)
-uv run python -m couverture.ferme comparer     # accords ; désaccords dans arbitrage.csv
+uv run python -m couverture.mesure.ferme annoter      # second avis (Mistral Large ; reprend s'il est interrompu)
+uv run python -m couverture.mesure.ferme comparer     # accords ; désaccords dans arbitrage.csv
 # remplir la colonne « choix » d'arbitrage.csv, d'après les deux citations
-uv run python -m couverture.ferme exporter
+uv run python -m couverture.mesure.ferme exporter
 uv run couverture banc --contrat assureur-a-habitation-2025 --jeu ferme
 uv run couverture banc --contrat assureur-b-habitation-2017 --jeu ferme
 ```

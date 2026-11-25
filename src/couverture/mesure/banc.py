@@ -1,0 +1,767 @@
+"""Le banc d'essai : le golden set, rejoué couche par couche, avec des portes à franchir.
+
+    data/golden/sinistres.jsonl, annotations/<contrat>.jsonl   les cas, étiquetés (garantie, thèmes, origine, auteur)
+    regles/cas/golden/<contrat>.jsonl                           les faits « idéaux » de chaque cas
+    data/golden/version.json                                    version et empreinte : le banc est figé
+    data/golden/seuils.json                                     les portes (seuils à franchir)
+    data/bancs/<date>-<contrat>-<méthode>.{json,md}             chaque passage, pour comparer dans le temps
+
+Trois couches, pour savoir **où** une erreur naît :
+  1. règles : les faits idéaux passent dans le moteur Prolog, sans modèle. Une erreur ici est une erreur
+     des règles (ou du vocabulaire) ;
+  2. lecture : les faits lus par le modèle comparés aux faits idéaux, fait par fait. Une contradiction
+     sur un fait décisif est la source d'erreur la plus dangereuse ;
+  3. chaîne : la méthode complète, plusieurs exécutions (la variance compte autant que la moyenne).
+
+Les erreurs coûteuses sont comptées à part : « couvert à tort » (une promesse au client) et « refus à
+tort ». Les portes (seuils.json) disent si le système est présentable ; la commande sort en erreur
+quand une porte échoue, ce qui permet de la brancher sur la CI.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import re
+import time
+from collections import Counter, defaultdict
+from datetime import datetime
+from pathlib import Path
+
+from ..analyse import lecture, prolog
+from .evaluation import charger_cas, fichiers_jeu, lire_jsonl
+
+JEU = "golden"
+ABREGE = {"COUVERT": "C", "NON_COUVERT": "NC", "INCERTAIN": "?"}
+
+
+# --- Le golden set ---------------------------------------------------------------------------------------
+
+def fichiers(donnees: Path, contrat_id: str) -> list[Path]:
+    """Les trois fichiers du golden set d'un contrat : déclarations, annotations, faits idéaux."""
+    sinistres, annotations = fichiers_jeu(donnees, contrat_id, JEU)
+    return [sinistres, annotations, prolog.DOSSIER / "cas" / JEU / f"{contrat_id}.jsonl"]
+
+
+def empreinte(donnees: Path, contrat_id: str) -> str:
+    """L'empreinte des cas d'un contrat : ses annotations, ses faits idéaux, et ses seules lignes du fichier de
+    sinistres, commun à tous les contrats. Ajouter les cas d'Assureur B ne « modifie » pas le golden set d'Assureur A (7.58)."""
+    sinistres, annotations, faits = fichiers(donnees, contrat_id)
+    ids = {d["sinistre_id"] for d in lire_jsonl(annotations)}
+    h = hashlib.sha256()
+    for ligne in sinistres.read_bytes().replace(b"\r\n", b"\n").splitlines(keepends=True):
+        if ligne.strip() and json.loads(ligne)["id"] in ids:
+            h.update(ligne)
+    for f in (annotations, faits):
+        h.update(f.read_bytes().replace(b"\r\n", b"\n"))
+    return h.hexdigest()[:16]
+
+
+def version(donnees: Path) -> dict:
+    """La version figée du golden set (`version.json`) ; vide s'il n'a jamais été figé."""
+    f = Path(donnees) / JEU / "version.json"
+    return json.loads(f.read_text(encoding="utf-8")) if f.exists() else {}
+
+
+def figer(donnees: Path, contrat_id: str, note: str = "") -> dict:
+    """Enregistre l'empreinte du golden set ; une nouvelle version si le contenu a changé."""
+    v = version(donnees)
+    e = empreinte(donnees, contrat_id)
+    if v.get("empreintes", {}).get(contrat_id) == e:
+        return v
+    n = int(v.get("version", 0)) + 1
+    v = {"version": n, "date": datetime.now().strftime("%Y-%m-%d"),
+         "empreintes": {**v.get("empreintes", {}), contrat_id: e},
+         "historique": v.get("historique", []) + [f"v{n} ({datetime.now():%Y-%m-%d}) : {note or 'mise à jour'}"]}
+    (Path(donnees) / JEU / "version.json").write_text(json.dumps(v, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return v
+
+
+def charger(donnees: Path, contrat_id: str, jeu: str = JEU) -> tuple[list[dict], dict]:
+    """Les cas avec leurs faits idéaux, et l'état du banc (version, empreinte, cohérence). Le jeu fermé n'a pas
+    de faits idéaux (ils mettraient le vocabulaire des règles dans le jeu, 7.79) : la chaîne seule."""
+    if jeu != JEU:
+        cas = charger_cas(*fichiers_jeu(donnees, contrat_id, jeu))
+        h = hashlib.sha256(json.dumps([[c["id"], c["sinistre"], c["attendu"], c.get("acceptables", [])] for c in cas],
+                                      ensure_ascii=False).encode("utf-8")).hexdigest()[:16]
+        return cas, {"jeu": jeu, "version": None, "empreinte": h, "fige": True, "n": len(cas), "valides": 0,
+                     "auteurs": dict(Counter(c.get("auteur", "?") for c in cas))}
+    cas = charger_cas(*fichiers_jeu(donnees, contrat_id, JEU))
+    faits = {d["sinistre_id"]: d["faits"] for d in lire_jsonl(fichiers(donnees, contrat_id)[2])}
+    for c in cas:
+        c["faits"] = faits.get(c["id"])
+    v = version(donnees)
+    e = empreinte(donnees, contrat_id)
+    etat = {"version": v.get("version"), "empreinte": e, "fige": v.get("empreintes", {}).get(contrat_id) == e,
+            "n": len(cas), "valides": sum("validé" in c.get("statut", "") and "à valider" not in c.get("statut", "") for c in cas),
+            "auteurs": dict(Counter(c.get("auteur", "?") for c in cas))}
+    return cas, etat
+
+
+def seuils(donnees: Path) -> dict:
+    """Les portes du banc (`seuils.json`) : les seuils à franchir, par couche."""
+    f = Path(donnees) / JEU / "seuils.json"
+    return json.loads(f.read_text(encoding="utf-8")) if f.exists() else {}
+
+
+# --- Indicateurs ------------------------------------------------------------------------------------------
+
+def ligne(c: dict, obtenu: str) -> dict:
+    """Le résultat d'un cas : attendu, obtenu, juste (réponse attendue ou tolérée par l'annotation) et exact."""
+    return {"id": c["id"], "attendu": c["attendu"], "obtenu": obtenu,
+            "ok": obtenu == c["attendu"] or obtenu in c.get("acceptables", []),
+            "exact": obtenu == c["attendu"]}
+
+
+def metriques(lignes: list[dict]) -> dict:
+    """Les chiffres d'un passage : taux de justes et d'exactes, couverts à tort, refus à tort, taux d'« incertain »."""
+    n = len(lignes) or 1
+    return {"n": len(lignes),
+            "exactitude": round(sum(l["ok"] for l in lignes) / n, 3),
+            "exactitude_stricte": round(sum(l["exact"] for l in lignes) / n, 3),
+            # Une réponse tolérée par l'annotation (« acceptables ») n'est pas une erreur, même « couvert ».
+            "faux_couverts": sum(l["obtenu"] == "COUVERT" and not l["ok"] for l in lignes),
+            "faux_refus": sum(l["obtenu"] == "NON_COUVERT" and l["attendu"] == "COUVERT" and not l["ok"] for l in lignes),
+            "taux_incertain": round(sum(l["obtenu"] == "INCERTAIN" for l in lignes) / n, 3)}
+
+
+def par_groupe(lignes: list[dict], cas: list[dict]) -> dict:
+    """Indicateurs par thème et par garantie : où le système est faible."""
+    index = {c["id"]: c for c in cas}
+    groupes: dict[str, list] = defaultdict(list)
+    for l in lignes:
+        c = index[l["id"]]
+        for t in c.get("themes", []):
+            groupes[f"thème : {t}"].append(l)
+        groupes[f"garantie : {c.get('garantie', '?')}"].append(l)
+        groupes[f"auteur : {c.get('auteur', '?')}"].append(l)
+    return {k: metriques(v) for k, v in sorted(groupes.items())}
+
+
+def rappel(attendus: list, obtenus) -> float | None:
+    """La part des éléments attendus qui ont été obtenus ; rien à mesurer si rien n'était attendu."""
+    return round(sum(a in obtenus for a in attendus) / len(attendus), 3) if attendus else None
+
+
+# --- Couche 1 : les règles seules ---------------------------------------------------------------------------
+
+def questions_decision(d: dict) -> list[str]:
+    """Les variables demandées par le moteur (comme PipelineRegles.verdict) : sans les questions que le
+    raisonnement par hypothèses a jugées inutiles."""
+    vs = [v for r in d.get("retenues", []) for v in r.get("questions", []) + r.get("reserves", [])]
+    if d.get("decision") == "NON_COUVERT":
+        vs += [v for r in d.get("possibles", []) for v in r.get("questions", [])]
+    inutiles = {q["variable"] for q in (d.get("exploration") or {}).get("questions", []) if q["effet"] == "inutile"}
+    return [v for v in dict.fromkeys(vs) if v not in inutiles]
+
+
+def couche_regles(cas: list[dict], decideur) -> dict:
+    """`decideur(faits) -> dict` : SWI-Prolog (prolog.decider) ou l'oracle dans les tests."""
+    lignes = []
+    for c in cas:
+        if c.get("faits") is None:
+            continue
+        d = decideur(c["faits"])
+        l = ligne(c, d["decision"])
+        q = questions_decision(d)
+        articles = {p.get("article") for r in d.get("retenues", []) for p in r.get("preuves", [])}
+        ex = d.get("exploration") or {}
+        l.update(tranchable=bool(ex.get("ensemble")),
+                 inutiles=sum(x["effet"] == "inutile" for x in ex.get("questions", [])))
+        l.update(questions=q, rappel_questions=rappel(c.get("questions_attendues", []), q),
+                 rappel_clauses=rappel(c.get("clauses_attendues", []), articles) if articles else None,
+                 non_traduits=d.get("non_traduits", []))
+        lignes.append(l)
+    m = metriques(lignes)
+    rq = [l["rappel_questions"] for l in lignes if l["rappel_questions"] is not None]
+    m["rappel_questions"] = round(sum(rq) / len(rq), 3) if rq else None
+    # Un gestionnaire qui reçoit six questions pour un vélo volé n'en lit aucune : on compte.
+    nq = [len(l["questions"]) for l in lignes if l["obtenu"] == "INCERTAIN"]
+    m["questions_par_incertain"] = round(sum(nq) / len(nq), 1) if nq else None
+    # Le raisonnement par hypothèses (Prolog) : combien d'incertains une ou deux questions tranchent,
+    # et combien de questions inutiles ne sont plus posées.
+    inc = [l for l in lignes if l["obtenu"] == "INCERTAIN"]
+    m["incertains_tranchables"] = round(sum(l["tranchable"] for l in inc) / len(inc), 3) if inc else None
+    m["questions_inutiles_retirees"] = sum(l["inutiles"] for l in lignes)
+    return {"metriques": m, "groupes": par_groupe(lignes, cas), "cas": lignes}
+
+
+# --- Couche 2 : la lecture des faits -------------------------------------------------------------------------
+
+def paires_lues(faits_lus: dict) -> dict[str, set]:
+    """Les faits lus par le modèle, remis sous la forme variable → valeurs, pour les comparer aux faits idéaux."""
+    lus: dict[str, set] = defaultdict(set)
+    for cle, v in (("evenements", "evenement"), ("biens", "bien"), ("lieux", "lieu")):
+        for x in faits_lus.get(cle, []) or []:
+            lus[v].add(str(x))
+    for c in faits_lus.get("circonstances", []) or []:
+        if "=" in c:
+            v, x = c.split("=", 1)
+            lus[v.strip()].add(x.strip())
+    return lus
+
+
+def ancetres(voc: dict, v: str, x: str) -> set:
+    """Toutes les valeurs plus générales qu'une valeur, d'après les `parents` du vocabulaire (parents, grands-parents…)."""
+    parents = voc.get(v, {}).get("parents", {})
+    vus, pile = set(), list(parents.get(x, []))
+    while pile:
+        a = pile.pop()
+        if a not in vus:
+            vus.add(a)
+            pile += parents.get(a, [])
+    return vus
+
+
+def comparer_faits(ideaux: dict, faits_lus: dict, voc: dict | None = None) -> dict:
+    """Rappel des faits idéaux ; contradictions ; faits « vagues » ; faits en trop.
+
+    Avec la hiérarchie du vocabulaire, lire « vitre » pour « élément du bâtiment » est exact (plus
+    précis), et lire « électronique » pour « appareil audiovisuel » est *vague*, pas faux : le moteur
+    répond alors « inconnu » et pose la question. Seule une valeur sans lien est une contradiction."""
+    voc = voc if voc is not None else prolog.vocabulaire()
+    lus = paires_lues(faits_lus)
+    ideal = {v: set(x if isinstance(x, list) else [x]) for v, x in ideaux.items()}
+    total = sum(len(x) for x in ideal.values())
+    trouves, contradictions, vagues = 0, [], []
+    for v, xs in ideal.items():
+        lv = lus.get(v, set())
+        for x in xs:
+            if x in lv or any(x in ancetres(voc, v, r) for r in lv):
+                trouves += 1
+            elif any(r in ancetres(voc, v, x) for r in lv):
+                vagues.append(f"{v} : {x} lu {'/'.join(sorted(lv))}")
+        if lv and not any(x in lv or any(x in ancetres(voc, v, r) or r in ancetres(voc, v, x) for r in lv) for x in xs):
+            contradictions.append(f"{v} : {'/'.join(sorted(xs))} lu {'/'.join(sorted(lv))}")
+    manques = sorted(f"{v} = {'/'.join(sorted(x))}" for v, x in ideal.items() if v not in lus and x)
+    en_trop = sorted(f"{v} = {'/'.join(sorted(x))}" for v, x in lus.items() if v not in ideal)
+    return {"rappel": round(trouves / total, 3) if total else 1.0, "contradictions": sorted(contradictions),
+            "vagues": sorted(vagues), "manques": manques, "en_trop": en_trop}
+
+
+def faits_depuis_lecture(faits_lus: dict) -> dict:
+    """Les faits lus (forme Faits) remis dans la forme du moteur."""
+    voc = prolog.vocabulaire()
+    sortie = {}
+    for v, xs in paires_lues(faits_lus).items():
+        if v not in voc:
+            continue
+        valeurs = sorted(xs)
+        sortie[v] = valeurs if voc[v].get("plusieurs") else valeurs[0]
+    return sortie
+
+
+def couche_lecture(cas: list[dict], rapports: list[dict], decideur=None) -> dict:
+    """La lecture comparée aux faits idéaux, et surtout : **la lecture change-t-elle la décision ?**
+    Avec `decideur`, on passe les faits lus dans les règles et on compare à la décision sur les faits
+    idéaux : c'est la part des erreurs de la chaîne qui vient de la lecture, et rien d'autre."""
+    index = {c["id"]: c for c in cas}
+    voc = prolog.vocabulaire()
+    par_cas = []
+    for i, l0 in enumerate(rapports[0]["cas"] if rapports else []):
+        c = index[l0["id"]]
+        if not c.get("faits"):
+            continue
+        # Le même cas dans chaque exécution : ce que le modèle a lu, et les faits qu'il a fallu lui retirer.
+        lus = [r["cas"][i].get("faits_lus") or {} for r in rapports]
+        sans_appui = sorted({w.split(" : ")[0] for r in rapports for w in r["cas"][i].get("avertissements", [])
+                             if "sans appui" in w or "non dit" in w})
+        comps = [comparer_faits(c["faits"], f, voc) for f in lus]
+        x = {"id": c["id"], "rappel": round(sum(y["rappel"] for y in comps) / len(comps), 3),
+             **{k: sorted({z for y in comps for z in y[k]}) for k in ("contradictions", "vagues", "manques", "en_trop")},
+             "sans_appui": sans_appui}
+        if decideur is not None:
+            ideal = decideur(c["faits"])["decision"]
+            obtenues = [decideur(faits_depuis_lecture(f))["decision"] for f in lus]
+            x["decision_ideale"], x["decisions_lues"] = ideal, obtenues
+            # « change » : la part des exécutions où les faits lus donnent une autre décision que les faits idéaux ;
+            # « grave » : au moins une fois vers un « couvert » que les faits idéaux ne donnent pas.
+            x["change"] = sum(o != ideal for o in obtenues) / len(obtenues)
+            x["grave"] = any(o == "COUVERT" and ideal != "COUVERT" for o in obtenues)
+        par_cas.append(x)
+    n = len(par_cas) or 1
+    m = {"rappel_faits": round(sum(x["rappel"] for x in par_cas) / n, 3),
+         "cas_avec_contradiction": sum(bool(x["contradictions"]) for x in par_cas),
+         "cas_avec_fait_vague": sum(bool(x["vagues"]) for x in par_cas),
+         "cas_avec_fait_en_trop": sum(bool(x["en_trop"]) for x in par_cas),
+         "cas_avec_fait_sans_appui": sum(bool(x["sans_appui"]) for x in par_cas)}
+    if decideur is not None:
+        m["decisions_changees"] = round(sum(x["change"] for x in par_cas), 2)
+        m["decisions_changees_vers_couvert"] = sum(x["grave"] for x in par_cas)
+    return {"metriques": m, "cas": par_cas}
+
+
+# --- Couche 3 : la chaîne complète ---------------------------------------------------------------------------
+
+def centile(valeurs: list[float], q: float) -> float | None:
+    """Le centile `q` (entre 0 et 1) d'une liste de mesures, par rang arrondi ; rien si la liste est vide."""
+    if not valeurs:
+        return None
+    v = sorted(valeurs)
+    return v[min(len(v) - 1, int(round(q * (len(v) - 1))))]
+
+
+def latences(durees: list[dict]) -> dict:
+    """Le temps d'un cas (médiane et 95e centile, en secondes), et ce que prennent la lecture et la décision.
+    Mesuré dans le banc, avec plusieurs cas à la fois : un cas seul est plus rapide (DEMARCHE 7.46)."""
+    sortie = {}
+    for etape, nom in (("total", "latence"), ("lecture", "latence_lecture"), ("decision", "latence_decision")):
+        vals = [d[etape] / 1000 for d in durees if d.get(etape) is not None]
+        if vals:
+            sortie[f"{nom}_mediane_s"] = round(centile(vals, 0.5), 2)
+            sortie[f"{nom}_p95_s"] = round(centile(vals, 0.95), 2)
+    return sortie
+
+
+def par_reponse(par_execution: list[list[dict]]) -> dict:
+    """Pour chaque réponse donnée (couvert, non couvert, à préciser) : combien de justes et de fausses, en moyenne
+    par exécution. Un taux de réponses justes ne dit pas d'où il vient : d'une chaîne qui tranche bien, ou d'une
+    chaîne qui répond « à préciser » partout (7.121)."""
+    n = max(1, len(par_execution))
+    return {d: {"justes": round(sum(l["obtenu"] == d and l["ok"] for ls in par_execution for l in ls) / n, 2),
+                "fausses": round(sum(l["obtenu"] == d and not l["ok"] for ls in par_execution for l in ls) / n, 2)}
+            for d in ("COUVERT", "NON_COUVERT", "INCERTAIN")}
+
+
+LIBELLES_REPONSES = {"COUVERT": "couvert", "NON_COUVERT": "non couvert", "INCERTAIN": "à préciser"}
+
+
+def couche_chaine(cas: list[dict], rapports: list[dict], durees: list[float]) -> dict:
+    """Couche 3 : la chaîne complète, sur plusieurs exécutions. Moyenne, minimum et maximum de chaque chiffre, cas
+    instables (réponse qui change d'une exécution à l'autre), rappel des clauses et des questions, temps de réponse."""
+    index = {c["id"]: c for c in cas}
+    par_execution = []
+    variables = prolog.vocabulaire()
+    for r in rapports:
+        lignes = [ligne(index[l["id"]], l["obtenu"]) | {"questions": l.get("questions", []),
+                                                         "rappel_clauses": l.get("rappel_clauses"),
+                                                         "erreur": l.get("erreur", False),
+                                                         "durees_ms": l.get("durees_ms") or {},
+                                                         # Ce que le modèle a lu, et pourquoi la réponse a été
+                                                         # suspendue : sans eux, une erreur de la chaîne ne se
+                                                         # diagnostique qu'en rejouant le cas (7.93).
+                                                         "faits_lus": l.get("faits_lus") or {},
+                                                         "avertissements": l.get("avertissements") or []}
+                  for l in r["cas"]]
+        for l in lignes:
+            # Les questions de la chaîne sont des phrases : la variable attendue est trouvée si sa question est posée.
+            # Le jeu fermé écrit la question attendue en phrase, sans variable : elle n'est pas mesurable ici, et la
+            # compter faisait échouer la porte à 0 % sur chaque banc (7.106).
+            attendues = [v for v in index[l["id"]].get("questions_attendues", []) if v in variables]
+            l["rappel_questions"] = rappel(attendues, {v for v in attendues
+                                                      if any(q.startswith(lecture.question(v)) for q in l["questions"])})
+        par_execution.append(lignes)
+
+    def moyenne(cle, filtre=lambda x: x is not None):
+        vals = []
+        for lignes in par_execution:
+            v = [l[cle] for l in lignes if filtre(l[cle])]
+            vals.append(sum(v) / len(v) if v else None)
+        vals = [v for v in vals if v is not None]
+        return round(sum(vals) / len(vals), 3) if vals else None
+
+    mets = [metriques(l) for l in par_execution]
+    agreg = {}
+    for k in ("exactitude", "exactitude_stricte", "faux_couverts", "faux_refus", "taux_incertain"):
+        v = [m[k] for m in mets]
+        agreg[k] = {"moyenne": round(sum(v) / len(v), 3), "min": min(v), "max": max(v)}
+    reponses = {l["id"]: [lignes[i]["obtenu"] for lignes in par_execution]
+                for i, l in enumerate(par_execution[0])} if par_execution else {}
+    instables = sorted(i for i, rs in reponses.items() if len(set(rs)) > 1)
+    agreg["par_reponse"] = par_reponse(par_execution)
+    agreg.update(n=len(reponses), executions=len(rapports), instables=len(instables),
+                 rappel_clauses=moyenne("rappel_clauses"), rappel_questions=moyenne("rappel_questions"),
+                 erreurs_fournisseur=sum(l["erreur"] for lignes in par_execution for l in lignes),
+                 duree_moyenne_s=round(sum(durees) / len(durees), 1) if durees else None,
+                 **latences([l["durees_ms"] for lignes in par_execution for l in lignes]))
+    # Les groupes sur la première exécution suffisent à situer les faiblesses ; les écarts entre
+    # exécutions sont dans « instables ».
+    return {"metriques": agreg, "groupes": par_groupe(par_execution[0], cas) if par_execution else {},
+            "reponses": reponses, "instables": instables, "executions": par_execution}
+
+
+# --- Portes ---------------------------------------------------------------------------------------------------
+
+def valeur(resultat: dict, couche: str, cle: str):
+    """La valeur d'un critère dans un résultat de banc ; pour un chiffre mesuré sur plusieurs exécutions, sa moyenne."""
+    m = resultat.get("couches", {}).get(couche, {}).get("metriques", {})
+    v = m.get(cle)
+    return v["moyenne"] if isinstance(v, dict) else v
+
+
+def portes(resultat: dict, s: dict) -> list[dict]:
+    """Chaque seuil : « *_max » (ne pas dépasser) ou « *_min » (atteindre). Une couche absente n'est pas jugée."""
+    sortie = []
+    for couche, regles in s.items():
+        if couche.startswith("_") or couche not in resultat.get("couches", {}):
+            continue
+        for nom, seuil in regles.items():
+            cle, sens = nom.rsplit("_", 1)
+            v = valeur(resultat, couche, cle)
+            if v is None:
+                continue
+            ok = v <= seuil if sens == "max" else v >= seuil
+            sortie.append({"couche": couche, "critere": cle, "sens": sens, "seuil": seuil, "valeur": v, "ok": ok})
+    return sortie
+
+
+# --- Le passage complet ---------------------------------------------------------------------------------------
+
+CAS_LATENCE = 10
+
+
+def mesurer_latence(pipeline, cas: list[dict], n: int = CAS_LATENCE) -> dict:
+    """Le temps que vit un gestionnaire : **un cas à la fois**, sans les attentes dues aux limites de débit de
+    l'API quand le banc fait tourner plusieurs cas ensemble (DEMARCHE 7.47, 7.48). `n` cas répartis sur le
+    golden set (toujours les mêmes), analysés l'un après l'autre."""
+    pas = max(1, len(cas) // n)
+    choisis = cas[::pas][:n]
+    durees = []
+    for c in choisis:
+        debut = time.perf_counter()
+        try:
+            r = pipeline.analyser(c["sinistre"])
+        except Exception:  # noqa: BLE001  (une panne compte comme un cas long, pas comme une mesure perdue)
+            r = None
+        total = int((time.perf_counter() - debut) * 1000)
+        durees.append({"total": total, **({k: v for k, v in r.durees_ms.items() if k != "total"} if r else {})})
+    sortie = {k.replace("latence", "latence_seule", 1): v for k, v in latences(durees).items()}
+    sortie["latence_seule_nb"] = len(choisis)
+    return sortie
+
+
+def passer(donnees: Path, contrat_id: str, methode: str, couches: list[str], repetitions: int = 3,
+           paralleles: int = 4, pipeline_fabrique=None, decideur=None, evaluer_fn=None, jeu: str = JEU,
+           partie: str = "tout") -> dict:
+    """Rejoue le golden set. `pipeline_fabrique()` donne une méthode neuve par exécution ; `decideur`
+    remplace SWI-Prolog dans les tests ; `evaluer_fn` remplace evaluation.evaluer. `partie` : les seuls cas de mise
+    au point, ou de test (data/lecture/partage.json, 7.107) ; « tout » par défaut."""
+    from .evaluation import evaluer
+    from ..analyse.exemples import filtrer
+
+    cas, etat = charger(donnees, contrat_id, jeu)
+    if jeu == JEU and partie != "tout":
+        cas = filtrer(cas, donnees, partie)
+        etat = etat | {"n": len(cas)}
+    resultat = {"date": datetime.now().isoformat(timespec="seconds"), "contrat": contrat_id, "methode": methode,
+                "jeu": jeu, "golden": etat, "couches": {}, "avertissements": []}
+    if jeu == JEU and partie != "tout":
+        resultat["partie"] = partie
+    if jeu != JEU:
+        couches = [c for c in couches if c == "chaine"]
+        resultat["avertissements"].append(f"jeu « {jeu} » : sans faits idéaux, la chaîne complète seule")
+    if not etat["fige"]:
+        resultat["avertissements"].append("golden set modifié depuis sa dernière version : `couverture banc --figer`")
+    if "regles" in couches:
+        if decideur is None and prolog.swipl() is None:
+            resultat["avertissements"].append("couche règles sautée : SWI-Prolog absent")
+        else:
+            resultat["couches"]["regles"] = couche_regles(cas, decideur or (lambda f: prolog.decider(contrat_id, f)))
+    if "chaine" in couches and pipeline_fabrique is not None:
+        rapports, durees = [], []
+        for _ in range(max(1, repetitions)):
+            debut = time.perf_counter()
+            pipeline = pipeline_fabrique()
+            resultat["modele"] = getattr(getattr(pipeline, "llm", None), "nom", None) or resultat.get("modele")
+            if resultat["methode"] == "regles":
+                socle = getattr(getattr(pipeline, "llm_socle", None), "modele", None)
+                verif = getattr(getattr(pipeline, "llm_verification", None), "modele", None)
+                resultat["lecture"] = ("verifiee" + (", exemples" if getattr(pipeline, "exemples", None) else "")
+                                       + (f", socle {socle}" if socle else "")
+                                       + (f", verification {verif.removesuffix('-latest')}" if verif else ""))
+            rapports.append((evaluer_fn or evaluer)(pipeline, cas, paralleles=paralleles))
+            durees.append(time.perf_counter() - debut)
+        resultat["couches"]["chaine"] = couche_chaine(cas, rapports, durees)
+        if evaluer_fn is None:  # pas dans les tests qui simulent l'évaluation
+            print(f"Latence : {min(CAS_LATENCE, len(cas))} cas, un à la fois…", flush=True)
+            resultat["couches"]["chaine"]["metriques"].update(mesurer_latence(pipeline_fabrique(), cas))
+        if methode == "regles" and jeu == JEU:
+            lecteur = None
+            if "regles" in resultat["couches"]:
+                lecteur = decideur or (lambda f: prolog.decider(contrat_id, f))
+            resultat["couches"]["lecture"] = couche_lecture(cas, rapports, lecteur)
+    resultat["portes"] = portes(resultat, seuils(donnees))
+    resultat["passe"] = all(p["ok"] for p in resultat["portes"])
+    resultat["_cas"] = cas
+    return resultat
+
+
+def enregistrer(donnees: Path, resultat: dict, dossier: Path | None = None) -> tuple[Path, Path]:
+    """Écrit le passage dans `data/bancs` : le JSON complet et le rapport Markdown. Le nom porte la date, le contrat,
+    le modèle, le jeu et la partie ; le rapport se compare au dernier passage de même configuration."""
+    dossier = dossier or Path(donnees) / "bancs"
+    dossier.mkdir(parents=True, exist_ok=True)
+    modele = (resultat.get("modele") or "").split(":")[-1].replace("-latest", "")
+    nom = f"{datetime.now():%Y%m%d-%H%M%S}-{resultat['contrat']}-{resultat['methode']}" + (f"-{modele}" if modele else "") \
+        + (f"-{resultat['jeu']}" if resultat.get("jeu", JEU) != JEU else "") \
+        + (f"-{resultat['partie']}" if resultat.get("partie") else "") \
+        + (f"-{re.sub(r'[^a-z0-9-]+', '-', resultat['lecture'])}" if resultat.get("lecture") not in (None, "verifiee") else "")
+    js, md = dossier / f"{nom}.json", dossier / f"{nom}.md"
+    precedent = dernier(dossier, resultat["contrat"], resultat["methode"], resultat.get("modele"), resultat.get("lecture"),
+                        resultat.get("jeu", JEU), resultat.get("partie"))
+    texte = markdown(resultat, precedent)
+    sans_cas = {k: v for k, v in resultat.items() if k != "_cas"}
+    js.write_text(json.dumps(sans_cas, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    md.write_text(texte, encoding="utf-8")
+    return js, md
+
+
+def dernier(dossier: Path, contrat_id: str, methode: str, modele: str | None = None,
+            lecture: str | None = None, jeu: str = JEU, partie: str | None = None) -> dict | None:
+    """Le dernier banc de même configuration (modèle et mode de lecture) : comparé à un banc avec confirmation
+    par Mistral Large, un banc sans confirmation semblait perdre neuf points sans qu'aucune décision ait changé
+    (7.74)."""
+    for f in sorted(Path(dossier).glob(f"*-{contrat_id}-{methode}*.json"), reverse=True):
+        r = json.loads(f.read_text(encoding="utf-8"))
+        if (r.get("modele") == modele and r.get("lecture") == lecture and r.get("jeu", JEU) == jeu
+                and r.get("partie") == partie):
+            return r
+    return None
+
+
+# --- Le rapport -------------------------------------------------------------------------------------------------
+
+def pct(x) -> str:
+    """Un taux en pourcentage ; « — » s'il manque."""
+    return "—" if x is None else f"{x:.0%}"
+
+
+def fmt(v) -> str:
+    """Un chiffre, ou « moyenne (min – max) » pour un chiffre mesuré sur plusieurs exécutions."""
+    if isinstance(v, dict):
+        return f"{v['moyenne']:g} ({v['min']:g} – {v['max']:g})"
+    return "—" if v is None else f"{v:g}"
+
+
+def tableau_metriques(m: dict) -> list[str]:
+    """Le tableau Markdown des cinq chiffres d'une couche."""
+    def x(k, p=False):
+        v = m.get(k)
+        if isinstance(v, dict):
+            return f"{pct(v['moyenne'])} ({pct(v['min'])} – {pct(v['max'])})" if p else fmt(v)
+        return pct(v) if p else fmt(v)
+    return ["| Justes ou acceptables | Exactes | Couverts à tort | Refus à tort | Incertains |",
+            "|---|---|---|---|---|",
+            f"| {x('exactitude', True)} | {x('exactitude_stricte', True)} | **{x('faux_couverts')}** | "
+            f"**{x('faux_refus')}** | {x('taux_incertain', True)} |"]
+
+
+def tableau_groupes(g: dict) -> list[str]:
+    """Le tableau Markdown par groupe de cas (garantie, thème, auteur), avec une alerte sur les couverts à tort."""
+    lignes = ["| Groupe | Cas | Justes ou acceptables | Couverts à tort | Refus à tort |", "|---|---|---|---|---|"]
+    for k, m in g.items():
+        alerte = " ⚠" if m["faux_couverts"] else ""
+        lignes.append(f"| {k} | {m['n']} | {pct(m['exactitude'])} | {m['faux_couverts']}{alerte} | {m['faux_refus']} |")
+    return lignes
+
+
+def _md_entete(r: dict) -> list[str]:
+    """Le titre, le jeu rejoué, les avertissements et le tableau des portes."""
+    g = r["golden"]
+    L = [f"# Banc d'essai — {r['contrat']}, méthode `{r['methode']}`"
+         + (f", lecture par `{r['modele']}`" if r.get("modele") else "")
+         + (f" ({r['lecture']})" if r.get("lecture") else ""), "",
+         f"{r['date']} · " + (f"jeu {r['jeu']}" if r.get("jeu", JEU) != JEU else f"golden set v{g.get('version') or '?'}")
+         + (f", partie « {r['partie']} »" if r.get("partie") else "")
+         + f" ({g['n']} cas, empreinte `{g['empreinte']}`"
+         f"{'' if g['fige'] else ', **modifié depuis sa version**'}) · cas validés par l'auteur : {g['valides']} sur {g['n']}",
+         ""]
+    for a in r.get("avertissements", []):
+        L.append(f"> ⚠ {a}")
+    L += ["", f"## Portes : {'**PASSE**' if r['passe'] else '**ÉCHOUE**'}", "",
+          "| Couche | Critère | Seuil | Valeur | |", "|---|---|---|---|---|"]
+    for p in r.get("portes", []):
+        L.append(f"| {p['couche']} | {p['critere']} | {'≤' if p['sens'] == 'max' else '≥'} {p['seuil']:g} | "
+                 f"{p['valeur']:g} | {'✓' if p['ok'] else '✗'} |")
+    return L
+
+
+def _md_ecarts(r: dict, precedent: dict) -> list[str]:
+    """Ce qui a changé depuis le passage précédent de même configuration."""
+    L: list[str] = []
+    config = " · ".join(str(x) for x in (precedent.get("modele"), precedent.get("lecture")) if x)
+    L += ["", f"## Depuis le banc précédent de même configuration ({precedent.get('date', '?')}"
+          + (f", {config}" if config else "") + ")", ""]
+    for couche in ("regles", "lecture", "chaine"):
+        for k in ("exactitude", "exactitude_stricte", "faux_couverts", "faux_refus", "rappel_faits"):
+            a, b = valeur(precedent, couche, k), valeur(r, couche, k)
+            if a is not None and b is not None and a != b:
+                L.append(f"- {couche} · {k} : {a:g} → {b:g}")
+    return L
+
+
+def _md_regles(reg: dict, cas: dict) -> list[str]:
+    """Couche 1 : les règles seules, sur les faits idéaux."""
+    L: list[str] = []
+    L += ["", "## Couche 1 — règles seules (faits idéaux, sans modèle)", "", *tableau_metriques(reg["metriques"]),
+          "", f"Rappel des questions attendues : {pct(reg['metriques'].get('rappel_questions'))} · "
+          f"questions posées par réponse « incertain » : {fmt(reg['metriques'].get('questions_par_incertain'))}", "",
+          f"Raisonnement par hypothèses : incertains tranchés par une ou deux questions : "
+          f"{pct(reg['metriques'].get('incertains_tranchables'))} · questions inutiles retirées : "
+          f"{reg['metriques'].get('questions_inutiles_retirees', 0)}", "",
+          *tableau_groupes(reg["groupes"]), "", "### Erreurs des règles", ""]
+    L += erreurs(reg["cas"], cas) or ["Aucune."]
+    return L
+
+
+def _md_lecture(lec: dict) -> list[str]:
+    """Couche 2 : ce que le modèle a lu, et les cas où sa lecture change la décision."""
+    L: list[str] = []
+    m = lec["metriques"]
+    L += ["", "## Couche 2 — lecture des faits par le modèle", ""]
+    if "decisions_changees" in m:
+        L += [f"**Décisions changées par la lecture** (faits lus ou idéaux dans les mêmes règles) : "
+              f"**{m['decisions_changees']:g}** par exécution, dont **{m['decisions_changees_vers_couvert']}** cas "
+              f"vers un couvert à tort.", ""]
+    L += [f"Rappel des faits idéaux : {pct(m['rappel_faits'])} (les faits négatifs non dits, comme « pas de "
+          f"violence », comptent comme manquants : la consigne interdit de les inventer) · contradictions : "
+          f"{m['cas_avec_contradiction']} cas · faits vagues : {m['cas_avec_fait_vague']} cas · faits en trop : "
+          f"{m['cas_avec_fait_en_trop']} cas · faits retirés (sans appui ou non dits) : {m.get('cas_avec_fait_sans_appui', 0)} cas", ""]
+    changes = [x for x in lec["cas"] if x.get("change")]
+    if changes:
+        L += ["### La lecture change la décision", ""]
+        for x in sorted(changes, key=lambda y: not y.get("grave")):
+            L.append(f"- {'**⚠ vers couvert** ' if x.get('grave') else ''}`{x['id']}` idéal "
+                     f"{ABREGE[x['decision_ideale']]}, lu {' '.join(ABREGE[o] for o in x['decisions_lues'])}"
+                     + (f" · **contredit** : {'; '.join(x['contradictions'])}" if x["contradictions"] else "")
+                     + (f" · vague : {'; '.join(x['vagues'])}" if x["vagues"] else "")
+                     + (f" · manque : {'; '.join(x['manques'])}" if x["manques"] else "")
+                     + (f" · en trop : {'; '.join(x['en_trop'])}" if x["en_trop"] else "")
+                     + (f" · retiré sans appui : {'; '.join(x['sans_appui'])}" if x.get("sans_appui") else ""))
+        L.append("")
+    autres = [x for x in lec["cas"] if not x.get("change") and x["contradictions"]]
+    if autres:
+        L += ["### Contradictions sans effet sur la décision", ""]
+        L += [f"- `{x['id']}` : {'; '.join(x['contradictions'])}" for x in autres]
+    return L
+
+
+def _md_chaine(ch: dict, cas: dict) -> list[str]:
+    """Couche 3 : la chaîne complète, ses temps, ses erreurs et ses réponses instables."""
+    L: list[str] = []
+    m = ch["metriques"]
+    L += ["", f"## Couche 3 — chaîne complète ({m['executions']} exécutions)", "", *tableau_metriques(m), "",
+          *(["Par réponse donnée (moyenne par exécution) :", "", "| Réponse | Justes | Fausses |", "|---|---|---|",
+             *[f"| {LIBELLES_REPONSES[d].capitalize()} | {x['justes']:g} | {x['fausses']:g} |"
+               for d, x in m["par_reponse"].items()], ""] if m.get("par_reponse") else []),
+          f"Instables : **{m['instables']}** sur {m['n']} · rappel des clauses : {pct(m['rappel_clauses'])} · "
+          f"rappel des questions : {pct(m['rappel_questions'])} · erreurs du fournisseur : {m['erreurs_fournisseur']}"
+          f" · durée moyenne d'une exécution : {m['duree_moyenne_s']} s"
+          + (f" · par cas, un à la fois ({m.get('latence_seule_nb')} cas) : médiane {m['latence_seule_mediane_s']} s, "
+             f"95e centile {m['latence_seule_p95_s']} s (lecture {m.get('latence_seule_lecture_mediane_s')} s, "
+             f"décision {m.get('latence_seule_decision_mediane_s')} s)" if m.get("latence_seule_mediane_s") is not None else "")
+          + (f" · en masse (quatre à la fois) : médiane {m['latence_mediane_s']} s, 95e centile {m['latence_p95_s']} s"
+             if m.get("latence_mediane_s") is not None else ""), "", *tableau_groupes(ch["groupes"]), "",
+          "### Erreurs et instabilités", ""]
+    lignes = []
+    for i, rs in ch["reponses"].items():
+        c = cas.get(i, {})
+        bons = [o == c.get("attendu") or o in c.get("acceptables", []) for o in rs]
+        if all(bons) and len(set(rs)) == 1:
+            continue
+        grave = any(o == "COUVERT" and c.get("attendu") != "COUVERT" and o not in c.get("acceptables", []) for o in rs)
+        lignes.append(f"- {'**⚠ couvert à tort** ' if grave else ''}`{i}` attendu {ABREGE.get(c.get('attendu'), '?')}, "
+                      f"obtenu {' '.join(ABREGE.get(o, o) for o in rs)} — {c.get('sinistre', '')[:110]}"
+                      f"{'…' if len(c.get('sinistre', '')) > 110 else ''} *({c.get('note', '')[:120]})*")
+    L += sorted(lignes, key=lambda x: not x.startswith("- **⚠")) or ["Aucune."]
+    return L
+
+
+def markdown(r: dict, precedent: dict | None = None) -> str:
+    """Le rapport d'un passage, en Markdown : les portes, les écarts depuis le passage précédent, puis chaque couche
+    avec ses erreurs."""
+    cas = {c["id"]: c for c in r.get("_cas", [])}
+    L = _md_entete(r)
+    if precedent:
+        L += _md_ecarts(r, precedent)
+    couches = r["couches"]
+    if couches.get("regles"):
+        L += _md_regles(couches["regles"], cas)
+    if couches.get("lecture"):
+        L += _md_lecture(couches["lecture"])
+    if couches.get("chaine"):
+        L += _md_chaine(couches["chaine"], cas)
+    return "\n".join(L) + "\n"
+
+
+def erreurs(lignes: list[dict], cas: dict) -> list[str]:
+    """Une ligne par cas faux, les couverts à tort signalés, avec le début de la déclaration et la note de l'annotation."""
+    sortie = []
+    for l in lignes:
+        if l["ok"]:
+            continue
+        c = cas.get(l["id"], {})
+        grave = l["obtenu"] == "COUVERT"
+        sortie.append(f"- {'**⚠ couvert à tort** ' if grave else ''}`{l['id']}` attendu {ABREGE[l['attendu']]}, "
+                      f"obtenu {ABREGE[l['obtenu']]} — {c.get('sinistre', '')[:110]}"
+                      f"{'…' if len(c.get('sinistre', '')) > 110 else ''} *({c.get('note', '')[:120]})*")
+    return sorted(sortie, key=lambda x: not x.startswith("- **⚠"))
+
+
+def resume_console(r: dict, md: Path | None = None) -> str:
+    """Le résumé affiché à la fin de la commande : une ligne par couche, les réponses par type, les temps, les portes."""
+    L = [f"Banc {r['contrat']} · {r['methode']} · "
+         + (f"jeu {r['jeu']}" if r.get("jeu", JEU) != JEU else f"golden v{r['golden'].get('version') or '?'}")
+         + f" ({r['golden']['n']} cas)"
+         + (f" · lecture : {r['modele']}" if r.get("modele") else "")
+         + (f" ({r['lecture']})" if r.get("lecture") else "")]
+    for a in r.get("avertissements", []):
+        L.append(f"! {a}")
+    for nom, titre in (("regles", "Règles seules "), ("lecture", "Lecture       "), ("chaine", "Chaîne        ")):
+        c = r["couches"].get(nom)
+        if not c:
+            continue
+        m = c["metriques"]
+        if nom == "lecture":
+            L.append(f"{titre}" + (f"décisions changées par la lecture {m['decisions_changees']:g} par exécution "
+                                   f"({m['decisions_changees_vers_couvert']} vers un couvert à tort) · "
+                                   if "decisions_changees" in m else "")
+                     + f"rappel des faits {pct(m['rappel_faits'])}, {m['cas_avec_contradiction']} cas avec contradiction")
+            continue
+        v = lambda k: m[k]["moyenne"] if isinstance(m[k], dict) else m[k]  # noqa: E731
+        L.append(f"{titre}{pct(v('exactitude'))} justes · {pct(v('exactitude_stricte'))} exactes · "
+                 f"couverts à tort {v('faux_couverts'):g} · refus à tort {v('faux_refus'):g}"
+                 + (f" · instables {m['instables']}" if nom == "chaine" else ""))
+        if nom == "chaine" and m.get("par_reponse"):
+            L.append("Par réponse    " + " · ".join(f"{LIBELLES_REPONSES[d]} : {x['justes']:g} justes, {x['fausses']:g} faux"
+                                                    for d, x in m["par_reponse"].items()))
+        if nom == "chaine" and m.get("latence_seule_mediane_s") is not None:
+            L.append(f"Temps par cas  un à la fois : médiane {m['latence_seule_mediane_s']:g} s · 95e centile "
+                     f"{m['latence_seule_p95_s']:g} s (lecture {m.get('latence_seule_lecture_mediane_s', 0):g} s, "
+                     f"décision {m.get('latence_seule_decision_mediane_s', 0):g} s)"
+                     + (f" · en masse ({m['latence_mediane_s']:g} s médiane, {m['latence_p95_s']:g} s au 95e centile)"
+                        if m.get("latence_mediane_s") is not None else ""))
+        elif nom == "chaine" and m.get("latence_mediane_s") is not None:
+            L.append(f"Temps par cas  médiane {m['latence_mediane_s']:g} s · 95e centile {m['latence_p95_s']:g} s · "
+                     f"lecture {m.get('latence_lecture_mediane_s', 0):g} s · décision {m.get('latence_decision_mediane_s', 0):g} s")
+    echecs = [p for p in r.get("portes", []) if not p["ok"]]
+    L.append("Portes : PASSE" if not echecs else
+             "Portes : ÉCHOUE — " + " ; ".join(f"{p['couche']} {p['critere']} {p['valeur']:g} "
+                                               f"({'≤' if p['sens'] == 'max' else '≥'} {p['seuil']:g})" for p in echecs))
+    if md:
+        L.append(f"Rapport : {md}")
+    return "\n".join(L)
+
+
+def fiche_validation(donnees: Path, contrat_id: str) -> str:
+    """Les cas à relire, par garantie : la déclaration, la réponse attendue et la phrase du contrat qui la fonde.
+    Pour valider : corriger « attendu » si besoin, et mettre « statut » à « validé par <nom> » dans
+    data/golden/annotations/<contrat>.jsonl, puis `couverture banc --figer "validation"`."""
+    cas, etat = charger(donnees, contrat_id)
+    L = [f"# Golden set — fiche de validation ({contrat_id}, v{etat.get('version') or '?'}, {etat['n']} cas)", "",
+         "Pour chaque cas : la réponse attendue est-elle celle d'un gestionnaire qui lit les conditions générales ? "
+         "C = couvert, NC = non couvert, ? = incertain (il manque une information, ou la garantie n'est pas traduite).",
+         "Une réponse « acceptable » est tolérée sans être exacte.", "",
+         "Pour valider ou corriger : `data/golden/annotations/" + contrat_id + ".jsonl` (champs `attendu`, `acceptables`, "
+         "`statut` → « validé par … »), puis `uv run couverture banc --contrat " + contrat_id + " --figer \"validation\"`.", ""]
+    par_garantie: dict[str, list] = defaultdict(list)
+    for c in cas:
+        par_garantie[c.get("garantie", "?")].append(c)
+    for g in sorted(par_garantie, key=lambda x: (x == "aucune", [int(p) if p.isdigit() else p for p in x.split(".")])):
+        L += [f"## Garantie {g}", "", "| Cas | Déclaration | Attendu | Acceptable | Fondement | Validé |", "|---|---|---|---|---|---|"]
+        for c in par_garantie[g]:
+            valide = "✓" if "validé" in c.get("statut", "") and "à valider" not in c.get("statut", "") else ""
+            L.append(f"| `{c['id']}` | {c['sinistre'].replace('|', '/')} | **{ABREGE[c['attendu']]}** | "
+                     f"{' '.join(ABREGE[a] for a in c.get('acceptables', []))} | {c.get('note', '').replace('|', '/')} | {valide} |")
+        L.append("")
+    return "\n".join(L)

@@ -4,11 +4,12 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from ..base import Base
+from ..contrat.base import Base
 from ..llm import ErreurLLM, configurer, modele_de_verification, noms_du_modele
 
 
 def ajouter(sous) -> None:
+    """Déclare la commande « modele »."""
     sous.add_parser("modele", help="Afficher le modèle configuré et tester la connexion").set_defaults(executer=executer)
 
 

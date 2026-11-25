@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from couverture import exemples, lecture
+from couverture.analyse import exemples, lecture
 
 DONNEES = Path(__file__).resolve().parents[1] / "data"
 
@@ -139,8 +139,8 @@ def test_une_declaration_n_est_jamais_son_propre_exemple():
 def test_les_exemples_sont_la_lecture_par_defaut(monkeypatch, tmp_path):
     """7.112 : les exemples sont actifs sans rien régler ; COUVERTURE_EXEMPLES=non les coupe. Sans clé ou sans
     banque indexée, la chaîne lit sans exemples, sans erreur."""
-    from couverture import chaine, prolog
-    from couverture.base import Base
+    from couverture.analyse import chaine, prolog
+    from couverture.contrat.base import Base
 
     monkeypatch.setattr(prolog, "swipl", lambda: "swipl")
     monkeypatch.delenv("COUVERTURE_EXEMPLES", raising=False)

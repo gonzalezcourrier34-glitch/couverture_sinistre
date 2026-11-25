@@ -21,9 +21,14 @@ from typing import Protocol
 
 
 class LLM(Protocol):
+    """Ce que la chaîne attend d'un modèle : un nom, et `completer(systeme, message)` qui rend le texte de la réponse.
+    Les tests branchent des modèles factices."""
+
     nom: str
 
-    def completer(self, systeme: str, message: str) -> str: ...
+    def completer(self, systeme: str, message: str) -> str:
+        """Rend le texte de la réponse du modèle à ce message, sous cette consigne."""
+        ...
 
 
 class ErreurLLM(RuntimeError):
@@ -160,6 +165,9 @@ class OpenAICompatibleLLM:
     accepte_schema = True
 
     def completer(self, systeme: str, message: str, schema: dict | None = None) -> str:
+        """Envoie la consigne et le message, rend le texte de la réponse ; avec `schema`, demande une réponse JSON de
+        cette forme. Un serveur qui refuse le schéma ou le réglage de réflexion est rappelé sans ; une réponse
+        coupée lève `ReponseTronquee`."""
         corps = {
             "model": self.modele,
             "max_tokens": self.max_tokens,

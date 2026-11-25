@@ -31,10 +31,10 @@ from pathlib import Path
 # juge de qualité le 18 nov. 2026 ; lecture en un temps, document brut et LegalBench le 20 nov.) restent archivées
 # dans docs/consignes/ : c'est leur histoire.
 CONSIGNES: dict[str, tuple[str, str, str]] = {
-    "couverture-lecture-socle": ("couverture.lecture", "SYSTEME_LECTURE_SOCLE", "v2"),
-    "couverture-lecture-details": ("couverture.lecture", "SYSTEME_LECTURE_DETAILS", "v3"),
-    "couverture-verification-faits": ("couverture.lecture", "SYSTEME_VERIFICATION", "v3"),
-    "couverture-decoupage-sinistres": ("couverture.lecture", "SYSTEME_DECOUPAGE", "v1"),
+    "couverture-lecture-socle": ("couverture.analyse.lecture", "SYSTEME_LECTURE_SOCLE", "v2"),
+    "couverture-lecture-details": ("couverture.analyse.lecture", "SYSTEME_LECTURE_DETAILS", "v3"),
+    "couverture-verification-faits": ("couverture.analyse.lecture", "SYSTEME_VERIFICATION", "v3"),
+    "couverture-decoupage-sinistres": ("couverture.analyse.lecture", "SYSTEME_DECOUPAGE", "v1"),
     "couverture-redaction-regles": ("couverture.redaction", "SYSTEME_REDACTION", "v13"),
 }
 
@@ -44,15 +44,18 @@ ARCHIVE = RACINE / "docs" / "consignes"
 
 
 def texte(nom: str) -> str:
+    """Le texte d'une consigne, pris dans le module qui la porte."""
     module, variable, _ = CONSIGNES[nom]
     return getattr(importlib.import_module(module), variable)
 
 
 def empreinte(t: str) -> str:
+    """L'empreinte courte d'un texte (16 caractères de SHA-256)."""
     return hashlib.sha256(t.encode("utf-8")).hexdigest()[:16]
 
 
 def etat_actuel() -> dict[str, dict]:
+    """Pour chaque consigne : sa version déclarée, l'empreinte de son texte actuel et l'endroit du code qui le porte."""
     return {
         nom: {"version": version, "empreinte": empreinte(texte(nom)), "source": f"{module}.{variable}"}
         for nom, (module, variable, version) in sorted(CONSIGNES.items())
@@ -60,10 +63,12 @@ def etat_actuel() -> dict[str, dict]:
 
 
 def lire_manifeste(chemin: Path = MANIFESTE) -> dict:
+    """Le manifeste enregistré ; vide s'il n'existe pas."""
     return json.loads(chemin.read_text(encoding="utf-8")) if chemin.exists() else {}
 
 
 def archive(nom: str, version: str, dossier: Path = ARCHIVE) -> Path:
+    """Le fichier d'archive d'une version d'une consigne (`<nom>/<version>.txt`)."""
     return dossier / nom.removeprefix("couverture-") / f"{version}.txt"
 
 
@@ -81,6 +86,7 @@ def archiver(dossier: Path = ARCHIVE) -> list[str]:
 
 
 def ecrire_manifeste(chemin: Path = MANIFESTE) -> dict:
+    """Archive les textes actuels, puis réécrit le manifeste ; rend l'état écrit."""
     archiver()
     etat = etat_actuel()
     chemin.parent.mkdir(parents=True, exist_ok=True)

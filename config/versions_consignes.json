@@ -2,17 +2,17 @@
   "couverture-decoupage-sinistres": {
     "version": "v1",
     "empreinte": "f5556291b81006b0",
-    "source": "couverture.lecture.SYSTEME_DECOUPAGE"
+    "source": "couverture.analyse.lecture.SYSTEME_DECOUPAGE"
   },
   "couverture-lecture-details": {
     "version": "v3",
     "empreinte": "b3a1d14cea1d66af",
-    "source": "couverture.lecture.SYSTEME_LECTURE_DETAILS"
+    "source": "couverture.analyse.lecture.SYSTEME_LECTURE_DETAILS"
   },
   "couverture-lecture-socle": {
     "version": "v2",
     "empreinte": "d18cace97edf3616",
-    "source": "couverture.lecture.SYSTEME_LECTURE_SOCLE"
+    "source": "couverture.analyse.lecture.SYSTEME_LECTURE_SOCLE"
   },
   "couverture-redaction-regles": {
     "version": "v13",
@@ -22,6 +22,6 @@
   "couverture-verification-faits": {
     "version": "v3",
     "empreinte": "3f4c6fd4d53ecc13",
-    "source": "couverture.lecture.SYSTEME_VERIFICATION"
+    "source": "couverture.analyse.lecture.SYSTEME_VERIFICATION"
   }
 }

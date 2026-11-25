@@ -5,13 +5,14 @@ from __future__ import annotations
 import time
 from pathlib import Path
 
-from ..base import Base
-from ..journal import Journal
+from ..analyse.journal import Journal
+from ..contrat.base import Base
 from .affichage import afficher, afficher_court
 from .commun import chaine
 
 
 def ajouter(sous) -> None:
+    """Déclare la commande « analyser » et ses options."""
     p = sous.add_parser("analyser", help="Analyser un sinistre sur un contrat")
     p.add_argument("--contrat", required=True)
     p.add_argument("sinistre")
@@ -21,6 +22,7 @@ def ajouter(sous) -> None:
 
 
 def executer(a, base: Base, donnees: Path) -> int:
+    """Analyse la déclaration, note l'analyse au journal et affiche la réponse (courte, détaillée ou en JSON)."""
     debut = time.perf_counter()
     r = chaine(base, a.contrat).analyser(a.sinistre)
     Journal(base.chemin).noter(r, duree_ms=int((time.perf_counter() - debut) * 1000))

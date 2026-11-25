@@ -8,6 +8,8 @@ from pydantic import BaseModel, Field
 
 
 class TypeClause(str, Enum):
+    """Le rôle d'une clause dans le contrat."""
+
     DEFINITION = "definition"
     GARANTIE = "garantie"
     EXCLUSION = "exclusion"
@@ -30,10 +32,6 @@ class Clause(BaseModel):
     pages: list[int] = Field(default_factory=list)
     renvois: list[str] = Field(default_factory=list)
 
-    @property
-    def reference(self) -> str:
-        return f"Art. {self.id}"
-
 
 class ClauseRetenue(BaseModel):
     """Clause sélectionnée par la recherche, avec la raison de sa sélection."""
@@ -53,12 +51,16 @@ class Faits(BaseModel):
 
 
 class Decision(str, Enum):
+    """Les trois réponses possibles."""
+
     COUVERT = "COUVERT"
     NON_COUVERT = "NON_COUVERT"
     INCERTAIN = "INCERTAIN"
 
 
 class Citation(BaseModel):
+    """Un extrait de clause cité par la réponse ; `valide` passe à faux si l'extrait n'est pas retrouvé dans la clause."""
+
     clause_id: str
     extrait: str
     role: str = "autre"
@@ -67,6 +69,8 @@ class Citation(BaseModel):
 
 
 class EtatCondition(str, Enum):
+    """L'état d'une condition au vu des faits : remplie, non remplie, ou inconnue."""
+
     REMPLIE = "REMPLIE"
     NON_REMPLIE = "NON_REMPLIE"
     INCONNUE = "INCONNUE"
@@ -95,6 +99,9 @@ class Condition(BaseModel):
 
 
 class Verdict(BaseModel):
+    """La réponse à une déclaration : décision, justification, citations, conditions examinées, points à préciser,
+    confiance."""
+
     decision: Decision
     justification: str
     citations: list[Citation] = Field(default_factory=list)

@@ -18,8 +18,8 @@ import json
 
 from typing import Any
 
-from couverture import chaine, lecture, prolog
-from couverture.base import Base, Contrat
+from couverture.analyse import chaine, lecture, prolog
+from couverture.contrat.base import Base, Contrat
 from couverture.models import Clause, Faits, Resultat
 
 
@@ -29,6 +29,7 @@ class SansModele:
     nom = "aucun"
 
     def completer(self, systeme: str, message: str) -> str:  # pragma: no cover - jamais appelé
+        """Jamais appelée : une décision sur des faits déjà établis n'a rien à faire lire."""
         raise RuntimeError("Une décision sur faits n'appelle pas de modèle.")
 
 
@@ -63,6 +64,7 @@ def souscription_publique(contrat_id: str) -> list[dict[str, Any]]:
 
 
 def clause_publique(c: Clause) -> dict[str, Any]:
+    """Une clause telle que l'API la renvoie."""
     return {"id": c.id, "article": c.article, "titre": c.titre, "chemin": c.chemin, "type": c.type.value,
             "texte": c.texte, "pages": c.pages, "renvois": c.renvois}
 

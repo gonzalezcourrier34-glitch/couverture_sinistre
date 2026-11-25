@@ -6,11 +6,12 @@ import os
 import sys
 from pathlib import Path
 
-from .. import exemples
-from ..base import Base
+from ..analyse import exemples
+from ..contrat.base import Base
 
 
 def ajouter(sous) -> None:
+    """Déclare la commande « exemples » et ses options."""
     p = sous.add_parser("exemples", help="La banque d'exemples de lecture et le partage mise au point / test")
     p.add_argument("--partager", action="store_true", help="Figer le partage des cas (les cas déjà partagés ne bougent pas)")
     p.add_argument("--indexer", action="store_true", help="Calculer les vecteurs des exemples (mistral-embed), dans la base")

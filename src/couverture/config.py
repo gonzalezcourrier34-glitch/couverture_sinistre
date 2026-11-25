@@ -12,6 +12,8 @@ from pathlib import Path
 
 
 def lire_env(chemin: str | Path) -> dict[str, str]:
+    """Lit un fichier `.env` : une `CLE=valeur` par ligne. Les lignes vides et les commentaires sont ignorés, `export`
+    est accepté, les guillemets et un commentaire en fin de ligne sont retirés."""
     valeurs: dict[str, str] = {}
     chemin = Path(chemin)
     if not chemin.exists():

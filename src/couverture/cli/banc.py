@@ -5,12 +5,13 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from .. import banc
-from ..base import Base
+from ..contrat.base import Base
+from ..mesure import banc
 from .commun import chaine
 
 
 def ajouter(sous) -> None:
+    """Déclare la commande « banc » et ses options."""
     p = sous.add_parser("banc", help="Banc d'essai : le golden set rejoué (règles, lecture, chaîne), avec des portes")
     p.add_argument("--contrat", required=True)
     p.add_argument("--couches", default="regles,chaine",

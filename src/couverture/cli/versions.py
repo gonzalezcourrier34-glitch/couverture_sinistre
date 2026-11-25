@@ -5,16 +5,19 @@ from __future__ import annotations
 from pathlib import Path
 
 from .. import consignes
-from ..base import Base
+from ..contrat.base import Base
 
 
 def ajouter(sous) -> None:
+    """Déclare la commande « versions » et ses options."""
     p = sous.add_parser("versions", help="Versions des consignes : vérifier, ou réécrire le manifeste")
     p.add_argument("--manifeste", action="store_true", help="Réécrire config/versions_consignes.json")
     p.set_defaults(executer=executer)
 
 
 def executer(a, base: Base, donnees: Path) -> int:
+    """Affiche la version et l'empreinte de chaque consigne et signale les écarts avec le manifeste ; `--manifeste`
+    le réécrit."""
     if a.manifeste:
         for nom, info in consignes.ecrire_manifeste().items():
             print(f"{nom:<32} {info['version']:<8} {info['empreinte']}")

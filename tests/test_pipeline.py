@@ -3,15 +3,15 @@ from pathlib import Path
 
 import pytest
 
-from couverture.base import Base
-from couverture.chargement import charger_lignes
-from couverture.controles import controler
-from couverture.evaluation import charger_cas
-from couverture.ingestion import ingerer_dossier, ingerer_fichier
+from couverture.contrat.base import Base
+from couverture.contrat.chargement import charger_lignes
+from couverture.contrat.controle_decoupage import controler
+from couverture.mesure.evaluation import charger_cas
+from couverture.contrat.ingestion import ingerer_dossier, ingerer_fichier
 from couverture.llm import extraire_json
 from couverture.models import Decision, TypeClause
-from couverture.segmentation import segmenter_lignes
-from couverture.validation import extrait_present
+from couverture.contrat.segmentation import segmenter_lignes
+from couverture.analyse.validation import extrait_present
 
 RACINE = Path(__file__).parent.parent
 DONNEES = RACINE / "data"
@@ -104,7 +104,7 @@ def test_extrait_tolere_accents_ponctuation_et_coupures():
 def controle(clauses, reponse: dict):
     """Un verdict fixé d'avance, passé au contrôle des citations seul (toutes les clauses fournies)."""
     from couverture.models import ClauseRetenue, Verdict
-    from couverture.validation import valider
+    from couverture.analyse.validation import valider
 
     retenues = [ClauseRetenue(clause=c, score=0.0, raison="test") for c in clauses]
     return valider(Verdict.model_validate({**reponse, "mode": "fixe"}), retenues)
@@ -248,8 +248,8 @@ def test_cle_refusee_message_clair(env_vide, monkeypatch):
 
 # --- Profils d'assureur ----------------------------------------------------------------
 
-from couverture.chargement import Ligne  # noqa: E402
-from couverture.profils import ProfilInvalide, valider_profil  # noqa: E402
+from couverture.contrat.chargement import Ligne  # noqa: E402
+from couverture.contrat.profils import ProfilInvalide, valider_profil  # noqa: E402
 
 
 def contrat_maison():
@@ -276,7 +276,7 @@ def test_profil_change_le_typage():
 
 
 def test_nous_vous_assurons_est_une_garantie():
-    from couverture.segmentation import classer
+    from couverture.contrat.segmentation import classer
     from couverture.models import TypeClause
     chemin = ["5 La responsabilité civile vie privée", "5.1 Les dispositions générales et votre responsabilité civile"]
     assert classer(chemin, "Nous vous assurons dans le monde entier lorsque votre responsabilité est mise en cause") \
@@ -295,7 +295,7 @@ def test_profil_invalide():
 
 from datetime import datetime, timedelta, timezone  # noqa: E402
 
-from couverture.journal import Journal  # noqa: E402
+from couverture.analyse.journal import Journal  # noqa: E402
 from couverture.models import Citation, Faits, Resultat, Verdict  # noqa: E402
 
 MAINTENANT = datetime(2026, 11, 17, 8, 0, tzinfo=timezone.utc)
@@ -475,7 +475,7 @@ def test_ingestion_ignore_la_documentation_et_retire_les_contrats_disparus(tmp_p
 
 def test_profil_reconnait_un_titre_numerote():
     """« 3.1.6.1 Etendue de la garantie » (Assureur B) : le profil parle du titre sans son numéro."""
-    from couverture.segmentation import type_du_profil
+    from couverture.contrat.segmentation import type_du_profil
 
     assert type_du_profil("3.1.6.1 Etendue de la garantie", {"etendue de la garantie": "garantie"}).value == "garantie"
     assert type_du_profil("Etendue de la garantie", {"etendue de la garantie": "garantie"}).value == "garantie"
@@ -484,7 +484,7 @@ def test_profil_reconnait_un_titre_numerote():
 
 def test_renvoi_vers_un_sous_point_enumere():
     """« 3.1.7.2.9 les pertes… » est énuméré dans le texte de la clause 3.1.7.2 : le renvoi y mène."""
-    from couverture.segmentation import resoudre
+    from couverture.contrat.segmentation import resoudre
 
     ids = ["3.1.7", "3.1.7.1", "3.1.7.2", "4.1"]
     assert resoudre("3.1.7.2.9", ids) == ["3.1.7.2"]
@@ -496,7 +496,7 @@ def test_renvoi_vers_un_sous_point_enumere():
 
 # --- 7.87 : un contrat en deux colonnes (assureur D) -------------------------------------------------------------
 
-from couverture.chargement import _deux_colonnes  # noqa: E402
+from couverture.contrat.chargement import _deux_colonnes  # noqa: E402
 
 
 class _PageFactice:
@@ -575,7 +575,8 @@ def test_un_autre_modele_pour_le_temps_1(monkeypatch):
     et la vérification restent au modèle de l'analyse. Sans la variable, rien ne change."""
     import json
 
-    from couverture import lecture, llm
+    from couverture.analyse import lecture
+    from couverture import llm
 
     class Modele:
         accepte_schema = True
@@ -620,7 +621,7 @@ def test_le_suivi_dit_chaque_etape_au_debut_puis_a_la_fin():
     """7.134 : `suivi` est appelé au début de chaque étape de la lecture, puis à sa fin avec ce qu'elle a donné."""
     import json
 
-    from couverture import lecture
+    from couverture.analyse import lecture
 
     class Modele:
         nom, accepte_schema = "suivi", True
@@ -645,7 +646,8 @@ def test_un_autre_modele_pour_verifier(monkeypatch):
     """7.136 : COUVERTURE_MODELE_VERIFICATION donne la vérification des faits à un autre modèle que celui qui lit."""
     import json
 
-    from couverture import lecture, llm
+    from couverture.analyse import lecture
+    from couverture import llm
 
     class Modele:
         accepte_schema = True
@@ -677,7 +679,7 @@ def test_role_de_la_regle_pour_une_garantie_dans_une_clause_typee_exclusion(clau
     d'une garantie, elle porte un « couvert » ; une définition seule ne le porte pas, et la justification ne dit
     alors plus « Couvert. »."""
     from couverture.models import ClauseRetenue, Verdict
-    from couverture.validation import RETROGRADE, valider
+    from couverture.analyse.validation import RETROGRADE, valider
 
     retenues = [ClauseRetenue(clause=c, score=0.0, raison="test") for c in clauses]
     extrait = "les vols commis dans les parties communes de l'immeuble, y compris dans un local à vélos collectif"
@@ -749,7 +751,7 @@ Frais de remplacement."""
 
 
 def test_contrat_sans_numeros_decoupe_par_les_titres_du_profil():
-    from couverture.profils import valider_profil
+    from couverture.contrat.profils import valider_profil
 
     profil = valider_profil({"nom": "sans-numeros", "lexique": "puce", "titres_numerotes": "articles",
                              "intertitres": {"ce qui exclu": "exclusion", "mesures de protection": "condition"},
@@ -773,7 +775,7 @@ def test_profil_sans_titres_inchange():
     """Sans « titres », le découpage est celui d'avant : une ligne en capitales ouvre un chapitre."""
     lignes = [Ligne(1, t) for t in ["GARANTIE VOL", "Nous garantissons le vol.", "MESURES DE PROTECTION", "Fermez à clé."]]
     assert [c.id for c in segmenter_lignes(lignes)] == ["S1", "S2"]
-    from couverture.profils import ProfilInvalide, valider_profil
+    from couverture.contrat.profils import ProfilInvalide, valider_profil
     assert "titres" not in valider_profil({"nom": "x"})
     with pytest.raises(ProfilInvalide):
         valider_profil({"nom": "x", "titres": ["A"]})
@@ -782,7 +784,7 @@ def test_profil_sans_titres_inchange():
 def test_les_noms_sont_masques_a_l_ingestion(tmp_path, monkeypatch):
     """7.160 : le texte des conditions générales nomme l'assureur, son assisteur, son adresse ; l'écran et la fiche
     le citent. Une liste privée, hors du dépôt, dit quoi remplacer ; sans elle, rien ne change."""
-    from couverture import anonymisation
+    from couverture.contrat import anonymisation
     monkeypatch.delenv("COUVERTURE_NOMS", raising=False)
     dossier = tmp_path / "contrats"
     dossier.mkdir()

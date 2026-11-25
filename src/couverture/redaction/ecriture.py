@@ -10,11 +10,13 @@ from .consigne import IDENT, ErreurProposition
 # --- JSON → Prolog -----------------------------------------------------------------------------------------
 
 def atome(x) -> str:
+    """Un atome Prolog : tel quel s'il est simple, entre apostrophes sinon."""
     x = str(x)
     return x if IDENT.match(x) else "'" + x.replace("\\", "\\\\").replace("'", "\\'") + "'"
 
 
 def chaine(s) -> str:
+    """Une chaîne Prolog entre guillemets, sur une seule ligne."""
     return '"' + str(s).replace("\\", "\\\\").replace('"', '\\"').replace("\n", " ") + '"'
 
 
@@ -39,6 +41,7 @@ def terme(c) -> str:
 
 
 def portee(p) -> str:
+    """La portée d'une exclusion, en Prolog : `tout`, ou `bien(x)` quand elle ne retire qu'un bien."""
     if p in (None, "tout"):
         return "tout"
     if isinstance(p, dict) and set(p) == {"bien"}:
@@ -47,6 +50,7 @@ def portee(p) -> str:
 
 
 def oui_non(b) -> str:
+    """Un booléen en `oui` ou `non`."""
     return "oui" if b else "non"
 
 
@@ -100,4 +104,5 @@ def exclusions(prop: dict) -> list[dict]:
 
 
 def fusionner(contrat_pl: str, *propositions_pl: str) -> str:
+    """Les règles du contrat, suivies de celles des propositions."""
     return contrat_pl.rstrip("\n") + "\n\n" + "\n".join(propositions_pl)

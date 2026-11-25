@@ -4,12 +4,14 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from .. import prolog, tableaux
-from ..base import Base
-from ..ingestion import charger_catalogue
+from ..analyse import prolog
+from ..contrat import tableaux
+from ..contrat.base import Base
+from ..contrat.ingestion import charger_catalogue
 
 
 def ajouter(sous) -> None:
+    """Déclare la commande « formules » et ses options."""
     p = sous.add_parser("formules", help="Lire le tableau des garanties par formule d'un contrat (une page du PDF)")
     p.add_argument("--contrat", required=True)
     p.add_argument("--page", type=int, required=True, help="Page du tableau, numérotée à partir de 1")

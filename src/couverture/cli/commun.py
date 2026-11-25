@@ -4,13 +4,13 @@ from __future__ import annotations
 
 import sys
 
-from ..base import Base
+from ..contrat.base import Base
 from ..llm import configurer
 
 
 def chaine(base: Base, contrat_id: str):
     """La chaîne d'analyse du contrat : le modèle lit les faits, Prolog décide. Quitte si rien n'est configuré."""
-    from ..chaine import PipelineRegles
+    from ..analyse.chaine import PipelineRegles
 
     llm = configurer()
     if llm is None:

@@ -7,6 +7,7 @@ import unicodedata
 
 
 def sans_accents(texte: str) -> str:
+    """Le texte sans ses accents."""
     decompose = unicodedata.normalize("NFKD", texte)
     return "".join(c for c in decompose if not unicodedata.combining(c))
 

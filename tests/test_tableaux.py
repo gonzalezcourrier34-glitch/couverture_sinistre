@@ -1,7 +1,7 @@
 """Le tableau des garanties par formule, lu par la position des mots (DEMARCHE 7.92)."""
 import json
 
-from couverture import tableaux
+from couverture.contrat import tableaux
 
 
 def mot(texte, x0, top):

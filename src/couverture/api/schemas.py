@@ -52,6 +52,8 @@ class DecisionRequest(BaseModel):
 
 
 class APreciser(BaseModel):
+    """Un point que la réponse laisse ouvert : une question à poser à l'assuré, ou une réserve à vérifier."""
+
     variable: str
     nature: Literal["question", "reserve"]
     question: str
@@ -69,6 +71,8 @@ class FaitAffiche(BaseModel):
 
 
 class Citation(BaseModel):
+    """Un extrait de clause cité à l'appui de la réponse ; `valide` dit s'il a été retrouvé mot pour mot dans la clause."""
+
     clause_id: str
     extrait: str
     role: str
@@ -77,6 +81,8 @@ class Citation(BaseModel):
 
 
 class Limite(BaseModel):
+    """Un plafond ou une franchise de la garantie retenue, avec la clause qui le dit."""
+
     clause_id: str
     extrait: str
     montant: str

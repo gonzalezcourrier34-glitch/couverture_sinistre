@@ -13,7 +13,7 @@ from couverture.api import service
 from couverture.api.dependances import get_base
 from couverture.api.schemas import Decision, DecisionRequest
 from couverture.api.securite import require_api_key
-from couverture.base import Base
+from couverture.contrat.base import Base
 
 router = APIRouter(prefix="/api/v1", tags=["décisions"], dependencies=[Depends(require_api_key)])
 

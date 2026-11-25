@@ -7,10 +7,10 @@ import re
 import tempfile
 from pathlib import Path
 
-from .. import lecture, prolog
+from ..analyse import lecture, prolog
+from ..analyse.validation import _compact, extrait_present, passage_exact
 from ..models import Clause, TypeClause
 from ..texte import normaliser
-from ..validation import _compact, extrait_present, passage_exact
 from .consigne import (IDENT, ErreurProposition, clauses_article, concepts_existants, definitions_utiles,
                        valeurs_du_contrat)
 from .ecriture import en_prolog, exclusions, fusionner, portee, terme
@@ -309,6 +309,7 @@ def exclusions_hors_perimetre(prop: dict, voc: dict) -> list[str]:
 
 
 def feuilles(c) -> list[tuple[str, str]]:
+    """Les couples (variable, valeur) d'une condition, quelle que soit sa forme (et, ou, si, non)."""
     if not isinstance(c, dict) or len(c) != 1:
         return []
     (cle, v), = c.items()
@@ -361,6 +362,7 @@ def cycle_de_concepts(contrat_pl: str, prop: dict) -> list[str]:
 
 
 def concepts_employes(c) -> list[str]:
+    """Les concepts nommés dans une condition."""
     if not isinstance(c, dict) or len(c) != 1:
         return []
     (cle, v), = c.items()
@@ -390,6 +392,8 @@ def elements_cites(prop: dict):
 
 
 def conditions(prop: dict):
+    """Toutes les conditions d'une proposition : définitions, extensions, périmètres, circonstances, obligations (et
+    leurs exceptions), exclusions."""
     for d in prop.get("definitions", []):
         yield d.get("condition")
     for d in prop.get("extensions") or []:
@@ -414,18 +418,14 @@ def items_exclusion(texte: str) -> list[str]:
 
 
 def couvert_par(item: str, textes: list[str]) -> bool:
+    """Un item de la clause est-il porté par l'un des textes cités (l'un contient l'autre, à la mise en forme près) ?"""
     ci = _compact(item)
     return any((ct := _compact(t)) and (ct in ci or ci in ct) for t in textes)
 
 
-def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str,
-              contrat_id: str | None = None) -> list[dict]:
-    """Les problèmes d'une proposition. Répare en place les citations dont les mots sont dans l'ordre."""
-    problemes: list[dict] = []
-
-    def noter(gravite, controle, message):
-        problemes.append({"gravite": gravite, "controle": controle, "message": message})
-
+def _controler_structure(prop: dict, article: str, noter) -> bool:
+    """1. La structure : le schéma, puis l'écriture en Prolog. Rend vrai si elle est fautive : la suite des contrôles
+    n'aurait alors pas de sens."""
     # 1. Structure. Un « non_traduit » en simple phrase est mis en forme (sans article) : il reste bloquant
     # plus bas, et une seconde rédaction de plusieurs minutes pour une question de forme serait du gaspillage.
     if isinstance(prop, dict) and prop.get("non_traduit"):
@@ -448,11 +448,12 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str,
             schema = [str(e)]
     for e in schema:
         noter(BLOQUANT, "structure", e)
-    if schema:
-        return problemes
+    return bool(schema)
 
-    # 2. Vocabulaire
-    voc = prolog.vocabulaire()
+
+def _controler_vocabulaire(prop: dict, voc: dict, article: str, contrat_id: str | None, noter) -> None:
+    """2. Le vocabulaire : chaque fait employé existe, ou le modèle l'a déclaré ; un fait nouveau arrive avec ce
+    qu'il faut pour être lu (aide, libellé, parent)."""
     declares = {(m.get("variable"), v) for m in prop.get("vocabulaire_manquant", []) for v in m.get("valeurs", [])}
     vus = set()
     for c in conditions(prop):
@@ -493,8 +494,9 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str,
         if e not in voc["evenement"]["valeurs"] and ("evenement", e) not in declares:
             noter(BLOQUANT, "vocabulaire", f"evenement = {e} : hors vocabulaire, et non déclaré")
 
-    # 3. Citations
-    index = {c.id: c for c in clauses}
+
+def _controler_obligations_qui_reduisent(prop: dict, index: dict, noter) -> None:
+    """2 bis. Une réduction n'est pas un refus : un devoir dont la sanction réduit l'indemnité est une limite."""
     # 2 bis. Une réduction n'est pas un refus (7.81) : le gel sans vidange chez l'assureur B réduit l'indemnité de
     # moitié, et la règle refusait ; le jeu fermé l'a montré (f-b02).
     # Seule compte la sanction qui suit le devoir (3.1.1.2 de B, une longue clause, parle ailleurs d'une réduction).
@@ -515,6 +517,11 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str,
             elif re.search(r"\br[ée]dui|proportionnel", fenetre):
                 noter(A_RELIRE, "couverture", f"garantie {g.get('id')} : l'obligation « {str(o.get('texte'))[:60]} » : "
                       f"sa clause ({o.get('article')}) parle d'une réduction ; vérifier que ce devoir-ci refuse")
+
+
+def _controler_citations(prop: dict, clauses: list[Clause], index: dict, noter) -> None:
+    """3. Les citations : chaque phrase figure dans sa clause. Une citation rattachée à la mauvaise clause est
+    rattachée à la bonne, une citation aux mots dans l'ordre est réparée ; les autres bloquent."""
     for role, x in elements_cites(prop):
         art, texte = x.get("article"), x.get("texte", "")
         clause = index.get(art)
@@ -541,6 +548,10 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str,
             else:
                 noter(BLOQUANT, "citation", f"{role} ({art}) : « {texte[:80]} » ne figure pas dans la clause")
 
+
+def _controler_portees_et_reserves(prop: dict, clauses: list[Clause], article: str, noter) -> None:
+    """3 bis et 3 ter. La portée des exclusions, celles de l'article mises en commun, les réserves du texte que la
+    condition ne reprend pas, les limites qui posent une condition."""
     # 3 bis. Une exclusion qui ne vise qu'un bien n'exclut que ce bien (le reste du sinistre reste couvert).
     for x in exclusions(prop):
         fs = feuilles(x.get("condition"))
@@ -569,7 +580,10 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str,
                 noter(A_RELIRE, "limite", f"limite « {str(lim.get('texte'))[:60]} » ({g.get('id')}) : elle pose une "
                       f"condition ; circonstance ou garantie à part ?")
 
-    # 4. Couverture des listes d'exclusions
+
+def _controler_couverture(prop: dict, clauses: list[Clause], article: str, noter) -> None:
+    """4. La couverture : chaque exclusion du contrat est traduite, classée hors décision, ou déclarée non
+    traduite."""
     textes = [x.get("texte", "") for x in exclusions(prop)]
     textes += [n.get("texte", "") for n in non_traduits(prop)]
     textes += [n.get("texte", "") for n in prop.get("hors_decision") or []]
@@ -601,7 +615,10 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str,
               f"déclaré non traduit ({n.get('article')}) : « {str(n.get('texte'))[:100]} » — {n.get('pourquoi', '')}"
               + (" (garanties accessoires : sans effet sur la décision)" if seulement_accessoires else ""))
 
-    # 4 bis. La définition de l'événement couvert (« tempête ») est une condition de la garantie.
+
+def _controler_definition_de_l_evenement(prop: dict, clauses: list[Clause], article: str, contrat_pl: str, noter) -> None:
+    """4 bis. La définition de l'événement couvert (« tempête ») est une condition de la garantie : elle est
+    employée, ou déclarée non traduite."""
     titres = normaliser(" ".join(c.chemin[-1] for c in clauses_article(clauses, article) if c.chemin))
     employes = {x.get("article") for _, x in elements_cites(prop)} | {n.get("article") for n in non_traduits(prop)}
     # Une définition classée « hors décision » par le relecteur, citée, compte aussi : le contenu assuré (12/contenu)
@@ -621,10 +638,9 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str,
             noter(BLOQUANT, "couverture", f"la définition {d.id} de l'événement couvert n'est pas traduite "
                   f"(elle restreint la garantie) : l'employer ou la déclarer non traduite")
 
-    for note in exclusions_hors_perimetre(prop, voc):
-        noter(A_RELIRE, "portée", note)
 
-    # 5. Concepts et identifiants
+def _controler_concepts_et_identifiants(prop: dict, contrat_pl: str, noter) -> None:
+    """5. Les concepts (connus, définis une fois, sans cycle) et les identifiants des garanties."""
     existants = set(concepts_existants(contrat_pl))
     nouveaux = {d.get("concept") for d in prop.get("definitions", [])}
     for n in nouveaux & existants:
@@ -658,6 +674,30 @@ def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str,
             noter(BLOQUANT, "identifiant", f"la garantie {i} existe déjà dans les règles du contrat")
     if len(ids) != len(set(ids)):
         noter(BLOQUANT, "identifiant", "deux garanties portent le même identifiant")
+
+
+def controler(prop: dict, clauses: list[Clause], contrat_pl: str, article: str,
+              contrat_id: str | None = None) -> list[dict]:
+    """Les problèmes d'une proposition, dans l'ordre des contrôles. Répare en place les citations dont les mots sont
+    dans l'ordre."""
+    problemes: list[dict] = []
+
+    def noter(gravite, controle, message):
+        problemes.append({"gravite": gravite, "controle": controle, "message": message})
+
+    if _controler_structure(prop, article, noter):
+        return problemes
+    voc = prolog.vocabulaire()
+    index = {c.id: c for c in clauses}
+    _controler_vocabulaire(prop, voc, article, contrat_id, noter)
+    _controler_obligations_qui_reduisent(prop, index, noter)
+    _controler_citations(prop, clauses, index, noter)
+    _controler_portees_et_reserves(prop, clauses, article, noter)
+    _controler_couverture(prop, clauses, article, noter)
+    _controler_definition_de_l_evenement(prop, clauses, article, contrat_pl, noter)
+    for note in exclusions_hors_perimetre(prop, voc):
+        noter(A_RELIRE, "portée", note)
+    _controler_concepts_et_identifiants(prop, contrat_pl, noter)
     return problemes
 
 

@@ -11,7 +11,8 @@ from pathlib import Path
 
 import pytest
 
-from couverture import banc, lecture, prolog
+from couverture.mesure import banc
+from couverture.analyse import lecture, prolog
 from couverture.models import Decision, Faits, Resultat, Verdict
 from moteur_reference import Contrat, Moteur
 
@@ -238,7 +239,7 @@ def test_le_banc_note_le_modele_de_lecture(golden, oracle, tmp_path):
 
 
 def test_latences_par_cas():
-    from couverture import banc
+    from couverture.mesure import banc
 
     d = [{"total": t, "lecture": t - 100, "decision": 50} for t in (1000, 2000, 3000, 4000, 20000)]
     m = banc.latences(d)
@@ -251,7 +252,7 @@ def test_latences_par_cas():
 
 def test_latence_un_cas_a_la_fois():
     """Le temps d'un gestionnaire : des cas analysés l'un après l'autre, toujours les mêmes."""
-    from couverture import banc
+    from couverture.mesure import banc
     from couverture.models import Faits, Resultat, Verdict
 
     vus = []
@@ -272,7 +273,7 @@ def test_latence_un_cas_a_la_fois():
 def test_banc_precedent_de_meme_configuration(tmp_path):
     """7.74 : le rapport se compare au dernier banc de même modèle et même lecture, pas au dernier tout court."""
     import json as _json
-    from couverture import banc as _banc
+    from couverture.mesure import banc as _banc
     base = {"contrat": "c", "methode": "regles", "modele": "mistral:small"}
     for nom, mode in (("20260101-000000", "verifiee"), ("20260102-000000", "verifiee, exemples")):
         (tmp_path / f"{nom}-c-regles-small.json").write_text(_json.dumps({**base, "lecture": mode, "date": nom}),

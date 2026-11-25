@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 from io import BytesIO
 
-from couverture import fiche
+from couverture.analyse import fiche
 
 REPONSE = {
     "contrat_id": "assureur-a-habitation-2025", "decision": "INCERTAIN", "confiance": 0.4,

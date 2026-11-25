@@ -52,6 +52,8 @@ def afficher_court(r: Resultat) -> str:
 
 
 def afficher(r: Resultat) -> str:
+    """Le détail d'une analyse (`--detail`) : décision, justification, conditions examinées, clauses citées, points
+    à préciser, clauses consultées."""
     v = r.verdict
     lignes = [
         f"Contrat : {r.contrat_id}   Méthode : {r.methode}",

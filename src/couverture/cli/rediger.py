@@ -8,14 +8,16 @@ import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-from .. import prolog, redaction
-from ..base import Base
-from ..evaluation import lire_jsonl
+from .. import redaction
+from ..analyse import prolog
+from ..contrat.base import Base
 from ..llm import ErreurLLM, configurer
+from ..mesure.evaluation import lire_jsonl
 from ..progression import Barre
 
 
 def ajouter(sous) -> None:
+    """Déclare la commande « rediger » et ses options."""
     p = sous.add_parser("rediger", help="Faire rédiger par le modèle les règles Prolog d'une garantie, puis les contrôler")
     p.add_argument("--contrat", required=True)
     p.add_argument("--article", action="append", help="Article à traduire (répétable), ex. --article 2.2 --article 2.9")

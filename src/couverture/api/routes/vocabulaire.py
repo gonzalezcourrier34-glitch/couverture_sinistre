@@ -21,7 +21,7 @@ def vocabulaire(evenement: str | None = Query(default=None, description="Ne gard
     """Les variables : question, valeurs, sens des valeurs, événements auxquels elles s'appliquent.
 
     Avec `evenement`, seules les variables qui s'y appliquent (et celles qui s'appliquent à tout)."""
-    from couverture.prolog import vocabulaire as voc
+    from couverture.analyse.prolog import vocabulaire as voc
 
     garder = ("libelle", "question", "valeurs", "libelles", "aide", "pour", "plusieurs")
     return {v: {k: d[k] for k in garder if k in d} for v, d in voc().items()

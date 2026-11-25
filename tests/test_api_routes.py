@@ -200,7 +200,7 @@ def test_en_ligne_le_code_d_acces_remplace_la_cle(client, monkeypatch):
 def test_en_ligne_le_contrat_ne_se_telecharge_pas(client, monkeypatch):
     """Hors ligne, une clause se lit seule ou avec les autres. En ligne : pas la liste, et une à une seulement
     les clauses que les règles citent, celles qu'une réponse peut montrer."""
-    from couverture import prolog
+    from couverture.analyse import prolog
     citees = sorted(prolog.clauses_citees(CONTRAT))
     toutes = client.get(f"/api/v1/contrats/{CONTRAT}/clauses", headers=CLE).json()
     presentes = {c["id"] for c in toutes}

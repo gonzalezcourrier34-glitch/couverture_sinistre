@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from .. import lecture, prolog
+from ..analyse import lecture, prolog
 from .consigne import IDENT
 from .controles import feuilles, feuilles_positives
 from .ecriture import exclusions
@@ -159,105 +159,101 @@ def mal_rangees(dossier: Path | None = None) -> list[str]:
             for v in variables if ou[v] != nom]
 
 
-def accepter_vocabulaire(prop: dict, dossier: Path | None = None, contrat_id: str | None = None) -> list[str]:
-    """Ajoute au vocabulaire les faits déclarés par le modèle, puis le range. Décision humaine : c'est la commande
-    qu'on lance après avoir lu les questions proposées."""
-    dossier = dossier or prolog.VOCABULAIRE
-    voc, ajouts = prolog.vocabulaire(dossier), []
-    nouvelles_variables = {m.get("variable") for m in prop.get("vocabulaire_manquant", []) if m.get("variable") not in voc}
-    lieux = lieux_par_variable(prop)
-    for m in prop.get("vocabulaire_manquant", []):
-        v, valeurs = m.get("variable"), [str(x) for x in m.get("valeurs", [])]
-        if not (v and IDENT.match(v) and valeurs and all(IDENT.match(x) for x in valeurs)):
-            # Refusée en clair : en silence, elle restait « à accepter » à chaque contrôle (6.1, « 22h_7h »).
-            ajouts.append(f"! {v} refusée : nom ou valeur hors des identifiants permis (minuscule d'abord) : "
-                          f"{', '.join(x for x in [v, *valeurs] if not (x and IDENT.match(x)))} — à renommer dans la proposition")
-            continue
-        if v in voc:
-            nouvelles = [x for x in valeurs if x not in voc[v]["valeurs"]]
-            if v == "evenement" and nouvelles:
-                # 7.180 : un fait lu pour tous les événements (« avez-vous signalé votre déménagement ? ») vaut
-                # pour tous les sinistres, et sa réserve n'est jamais montrée. Avec un événement de plus, il ne
-                # valait plus « pour tous » : la réserve serait revenue sur chaque réponse couverte. Un test l'a
-                # rattrapé le jour où « voyage » est entré ; l'acceptation l'étend désormais elle-même.
-                tous = set(voc[v]["valeurs"])
-                for w, dw in voc.items():
-                    pour = dw.get("pour") or []
-                    if pour and tous <= set(pour):
-                        dw["pour"] = pour + [x for x in nouvelles if x not in pour]
-                        ajouts.append(f"{w} : vaut pour tous les sinistres, lue aussi pour {', '.join(nouvelles)}")
-            voc[v]["valeurs"] += nouvelles
-            # Une variable dont chaque contrat a ses noms (la formule) : les noms déclarés deviennent ceux de ce
-            # contrat, y compris un nom qu'un autre porte déjà (« confort » chez C et chez D, 7.150).
-            if contrat_id and voc[v].get("par_contrat") is not None:
-                siens = voc[v]["par_contrat"].setdefault(contrat_id, [])
-                ajouts += [f"{v} = {x} : nom de ce contrat" for x in valeurs if x not in siens and x not in nouvelles]
-                siens += [x for x in valeurs if x not in siens]
-            avant = list(voc[v].get("pour") or [])
-            evs = evenements_par_variable(prop).get(v) or list(prop.get("evenements") or [])
-            evs = [e for e in evs if e not in PSEUDO_EVENEMENTS]
-            # « jamais » (7.90) : une option des conditions particulières, réserve d'exclusion partout ; qu'une garantie
-            # l'emploie ne la rend pas lisible dans une déclaration (le Pack Jardin pour la tempête, 2.3 de D).
-            if avant == [JAMAIS]:
-                evs = []
-            if avant and evs:
-                voc[v]["pour"] = avant + [e for e in evs if e not in avant]
-                ajouts += [f"{v} : lue aussi pour {e}" for e in evs if e not in avant]
-            for x in nouvelles:
-                if (m.get("libelles") or {}).get(x):
-                    voc[v].setdefault("libelles", {})[x] = str(m["libelles"][x])
-                if (m.get("aide") or {}).get(x):
-                    voc[v].setdefault("aide", {})[x] = str(m["aide"][x])
-                # Une valeur plus fine qu'une valeur existante doit y être rattachée : sans cela, un ordinateur lu
-                # `appareil_informatique` n'est plus de l'« electronique » pour les règles déjà écrites (7.64).
-                parent = (m.get("parent") or {}).get(x) if isinstance(m.get("parent"), dict) else m.get("parent")
-                if parent and parent in voc[v]["valeurs"] and parent != x and voc[v].get("par_contrat") is None:
-                    voc[v].setdefault("parents", {})[x] = [parent]
-            ajouts += [f"{v} = {x}" for x in nouvelles]
-        else:
-            # Le libellé (7.146) : le nom à montrer, proposé avec la variable ; sans lui, l'écran montrerait
-            # l'identifiant, et le test des libellés du vocabulaire échoue : il reste à l'écrire à la main.
-            libelle = str(m.get("libelle") or "").strip()
-            voc[v] = ({"libelle": libelle} if libelle else {}) | {"valeurs": valeurs,
-                                                                 "question": m.get("question") or f"Préciser : {v}"}
-            libelles = {str(k): str(x) for k, x in (m.get("libelles") or {}).items() if str(k) in valeurs and str(x).strip()}
-            if libelles:
-                voc[v]["libelles"] = libelles
-            if not libelle:
-                ajouts.append(f"! {v} : sans libellé ; à écrire dans le vocabulaire (« libelle »)")
-            # Une variable nouvelle doit apprendre à être lue : sans aide, le premier banc Assureur B a lu « hôte »
-            # comme « hôtel » (7.59). La rédaction propose l'aide, le relecteur l'accepte avec la variable.
-            aide = {str(k): str(x) for k, x in (m.get("aide") or {}).items() if str(k) in valeurs}
-            if aide:
-                voc[v]["aide"] = aide
-            # Sans « pour », la variable serait lue pour tous les sinistres (un dégât des eaux se verrait demander
-            # la formule « Privilège ») : elle vaut pour les événements de la garantie qui l'a fait naître (7.56).
-            evs = evenements_par_variable(prop).get(v) or list(prop.get("evenements") or [])
-            if evs:
-                voc[v]["pour"] = evs
-            elif not prop.get("garanties") and v in reserve_seulement(prop):
-                # Un article sans garantie (les biens assurés, les exclusions générales) n'a pas d'événement : sa
-                # variable aurait été lue pour chaque sinistre. Quand elle ne sert qu'à des exclusions jamais
-                # demandées (une option, un pack, une rixe), elle n'est pas lue : la réserve suffit (7.90).
-                voc[v]["pour"] = [JAMAIS]
-                ajouts.append(f"{v} : jamais lue (réserve d'une exclusion que l'assureur prouve)")
-                ajouts.append(f"{v} ({', '.join(valeurs)}) : « {voc[v]['question']} »")
-                continue
-            if lieux.get(v):
-                voc[v]["seulement_si"] = {"lieu": lieux[v]}
-            # 7.177 : ce que le relecteur a écrit dans la proposition est recopié. Un fait des conditions
-            # particulières (« source ») n'est pas cherché dans la déclaration comme un autre ; une restriction de
-            # lecture (« seulement_si ») écrite à la main l'emporte sur celle que le code déduit des lieux. Les deux
-            # se rajoutaient dans le vocabulaire après chaque acceptation, et un oubli coûtait un essai.
-            if m.get("source") == prolog.CONDITIONS_PARTICULIERES:
-                voc[v]["source"] = prolog.CONDITIONS_PARTICULIERES
-            restriction = m.get("seulement_si")
-            if isinstance(restriction, dict) and restriction and all(
-                    k in voc and isinstance(x, list) and set(map(str, x)) <= set(voc[k]["valeurs"])
-                    for k, x in restriction.items()):
-                voc[v]["seulement_si"] = {k: [str(i) for i in x] for k, x in restriction.items()}
-            ajouts.append(f"{v} ({', '.join(valeurs)}) : « {voc[v]['question']} »")
-    ajouts += etendre_pour(prop, voc)
+def _completer_variable(m: dict, v: str, valeurs: list[str], voc: dict, prop: dict, contrat_id: str | None,
+                        ajouts: list[str]) -> None:
+    """Une variable déjà connue reçoit ses valeurs nouvelles, avec leurs libellés, leur aide et leur parent, et les
+    événements pour lesquels elle est désormais lue."""
+    nouvelles = [x for x in valeurs if x not in voc[v]["valeurs"]]
+    if v == "evenement" and nouvelles:
+        # 7.180 : un fait lu pour tous les événements (« avez-vous signalé votre déménagement ? ») vaut
+        # pour tous les sinistres, et sa réserve n'est jamais montrée. Avec un événement de plus, il ne
+        # valait plus « pour tous » : la réserve serait revenue sur chaque réponse couverte. Un test l'a
+        # rattrapé le jour où « voyage » est entré ; l'acceptation l'étend désormais elle-même.
+        tous = set(voc[v]["valeurs"])
+        for w, dw in voc.items():
+            pour = dw.get("pour") or []
+            if pour and tous <= set(pour):
+                dw["pour"] = pour + [x for x in nouvelles if x not in pour]
+                ajouts.append(f"{w} : vaut pour tous les sinistres, lue aussi pour {', '.join(nouvelles)}")
+    voc[v]["valeurs"] += nouvelles
+    # Une variable dont chaque contrat a ses noms (la formule) : les noms déclarés deviennent ceux de ce
+    # contrat, y compris un nom qu'un autre porte déjà (« confort » chez C et chez D, 7.150).
+    if contrat_id and voc[v].get("par_contrat") is not None:
+        siens = voc[v]["par_contrat"].setdefault(contrat_id, [])
+        ajouts += [f"{v} = {x} : nom de ce contrat" for x in valeurs if x not in siens and x not in nouvelles]
+        siens += [x for x in valeurs if x not in siens]
+    avant = list(voc[v].get("pour") or [])
+    evs = evenements_par_variable(prop).get(v) or list(prop.get("evenements") or [])
+    evs = [e for e in evs if e not in PSEUDO_EVENEMENTS]
+    # « jamais » (7.90) : une option des conditions particulières, réserve d'exclusion partout ; qu'une garantie
+    # l'emploie ne la rend pas lisible dans une déclaration (le Pack Jardin pour la tempête, 2.3 de D).
+    if avant == [JAMAIS]:
+        evs = []
+    if avant and evs:
+        voc[v]["pour"] = avant + [e for e in evs if e not in avant]
+        ajouts += [f"{v} : lue aussi pour {e}" for e in evs if e not in avant]
+    for x in nouvelles:
+        if (m.get("libelles") or {}).get(x):
+            voc[v].setdefault("libelles", {})[x] = str(m["libelles"][x])
+        if (m.get("aide") or {}).get(x):
+            voc[v].setdefault("aide", {})[x] = str(m["aide"][x])
+        # Une valeur plus fine qu'une valeur existante doit y être rattachée : sans cela, un ordinateur lu
+        # `appareil_informatique` n'est plus de l'« electronique » pour les règles déjà écrites (7.64).
+        parent = (m.get("parent") or {}).get(x) if isinstance(m.get("parent"), dict) else m.get("parent")
+        if parent and parent in voc[v]["valeurs"] and parent != x and voc[v].get("par_contrat") is None:
+            voc[v].setdefault("parents", {})[x] = [parent]
+    ajouts += [f"{v} = {x}" for x in nouvelles]
+
+
+def _creer_variable(m: dict, v: str, valeurs: list[str], voc: dict, prop: dict, lieux: dict, ajouts: list[str]) -> None:
+    """Une variable nouvelle entre au vocabulaire avec sa question, son libellé, son aide, et les événements (ou
+    les lieux) où elle est lue."""
+    # Le libellé (7.146) : le nom à montrer, proposé avec la variable ; sans lui, l'écran montrerait
+    # l'identifiant, et le test des libellés du vocabulaire échoue : il reste à l'écrire à la main.
+    libelle = str(m.get("libelle") or "").strip()
+    voc[v] = ({"libelle": libelle} if libelle else {}) | {"valeurs": valeurs,
+                                                         "question": m.get("question") or f"Préciser : {v}"}
+    libelles = {str(k): str(x) for k, x in (m.get("libelles") or {}).items() if str(k) in valeurs and str(x).strip()}
+    if libelles:
+        voc[v]["libelles"] = libelles
+    if not libelle:
+        ajouts.append(f"! {v} : sans libellé ; à écrire dans le vocabulaire (« libelle »)")
+    # Une variable nouvelle doit apprendre à être lue : sans aide, le premier banc Assureur B a lu « hôte »
+    # comme « hôtel » (7.59). La rédaction propose l'aide, le relecteur l'accepte avec la variable.
+    aide = {str(k): str(x) for k, x in (m.get("aide") or {}).items() if str(k) in valeurs}
+    if aide:
+        voc[v]["aide"] = aide
+    # Sans « pour », la variable serait lue pour tous les sinistres (un dégât des eaux se verrait demander
+    # la formule « Privilège ») : elle vaut pour les événements de la garantie qui l'a fait naître (7.56).
+    evs = evenements_par_variable(prop).get(v) or list(prop.get("evenements") or [])
+    if evs:
+        voc[v]["pour"] = evs
+    elif not prop.get("garanties") and v in reserve_seulement(prop):
+        # Un article sans garantie (les biens assurés, les exclusions générales) n'a pas d'événement : sa
+        # variable aurait été lue pour chaque sinistre. Quand elle ne sert qu'à des exclusions jamais
+        # demandées (une option, un pack, une rixe), elle n'est pas lue : la réserve suffit (7.90).
+        voc[v]["pour"] = [JAMAIS]
+        ajouts.append(f"{v} : jamais lue (réserve d'une exclusion que l'assureur prouve)")
+        ajouts.append(f"{v} ({', '.join(valeurs)}) : « {voc[v]['question']} »")
+        return
+    if lieux.get(v):
+        voc[v]["seulement_si"] = {"lieu": lieux[v]}
+    # 7.177 : ce que le relecteur a écrit dans la proposition est recopié. Un fait des conditions
+    # particulières (« source ») n'est pas cherché dans la déclaration comme un autre ; une restriction de
+    # lecture (« seulement_si ») écrite à la main l'emporte sur celle que le code déduit des lieux. Les deux
+    # se rajoutaient dans le vocabulaire après chaque acceptation, et un oubli coûtait un essai.
+    if m.get("source") == prolog.CONDITIONS_PARTICULIERES:
+        voc[v]["source"] = prolog.CONDITIONS_PARTICULIERES
+    restriction = m.get("seulement_si")
+    if isinstance(restriction, dict) and restriction and all(
+            k in voc and isinstance(x, list) and set(map(str, x)) <= set(voc[k]["valeurs"])
+            for k, x in restriction.items()):
+        voc[v]["seulement_si"] = {k: [str(i) for i in x] for k, x in restriction.items()}
+    ajouts.append(f"{v} ({', '.join(valeurs)}) : « {voc[v]['question']} »")
+
+
+def _lire_dans_les_extensions(prop: dict, voc: dict, nouvelles_variables: set, ajouts: list[str]) -> None:
+    """Une variable d'extension n'est lue que quand la déclaration entame l'extension."""
     # Une variable d'extension (le séjour temporaire élargit le bâtiment) vaut pour toutes les garanties qui
     # emploient le concept, mais seulement quand la déclaration l'entame : elle est lue si le temps 1 a lu le
     # lieu que l'extension demande (« si »), pas pour chaque sinistre (7.70 : lue partout, elle allongeait la
@@ -290,6 +286,28 @@ def accepter_vocabulaire(prop: dict, dossier: Path | None = None, contrat_id: st
                 voc[v]["pour"] = [EXTENSION]
             ajouts.append(f"{v} : lue aussi si " + " ; ".join(f"{var} = {'/'.join(vals)}" for var, vals in declencheurs.items())
                           + f" (extension de « {x.get('concept')} »)")
+
+
+def accepter_vocabulaire(prop: dict, dossier: Path | None = None, contrat_id: str | None = None) -> list[str]:
+    """Ajoute au vocabulaire les faits déclarés par le modèle, puis le range. Décision humaine : c'est la commande
+    qu'on lance après avoir lu les questions proposées. Rend une ligne par ajout (« ! » : un fait refusé)."""
+    dossier = dossier or prolog.VOCABULAIRE
+    voc, ajouts = prolog.vocabulaire(dossier), []
+    nouvelles_variables = {m.get("variable") for m in prop.get("vocabulaire_manquant", []) if m.get("variable") not in voc}
+    lieux = lieux_par_variable(prop)
+    for m in prop.get("vocabulaire_manquant", []):
+        v, valeurs = m.get("variable"), [str(x) for x in m.get("valeurs", [])]
+        if not (v and IDENT.match(v) and valeurs and all(IDENT.match(x) for x in valeurs)):
+            # Refusée en clair : en silence, elle restait « à accepter » à chaque contrôle (6.1, « 22h_7h »).
+            ajouts.append(f"! {v} refusée : nom ou valeur hors des identifiants permis (minuscule d'abord) : "
+                          f"{', '.join(x for x in [v, *valeurs] if not (x and IDENT.match(x)))} — à renommer dans la proposition")
+            continue
+        if v in voc:
+            _completer_variable(m, v, valeurs, voc, prop, contrat_id, ajouts)
+        else:
+            _creer_variable(m, v, valeurs, voc, prop, lieux, ajouts)
+    ajouts += etendre_pour(prop, voc)
+    _lire_dans_les_extensions(prop, voc, nouvelles_variables, ajouts)
     ajouts = list(dict.fromkeys(ajouts))  # une ligne par fait, pas une par extension qui l'emploie
     if ajouts:
         ranger(voc, dossier)
@@ -364,6 +382,8 @@ def occurrences(c, defs: dict, evs, lieux=None, vus=()):
         return occurrences(defs[v], defs, evs, lieux, vus + (v,)) if v in defs and v not in vus else []
 
     def restreint(conds, evs, lieux):
+        # Ce que les faits frères exigent : « événement = vol » dans le même « et » limite la lecture au vol,
+        # « lieu = cave » la limite à la cave. Sans exigence, événements et lieux restent ceux reçus.
         dits = [x["f"] for x in conds if isinstance(x, dict) and isinstance(x.get("f"), list) and len(x["f"]) == 2]
         e = [x for _, x in (d for d in dits if d[0] == "evenement")]
         l = [x for _, x in (d for d in dits if d[0] == "lieu")]
@@ -376,6 +396,7 @@ def occurrences(c, defs: dict, evs, lieux=None, vus=()):
         evs2, lieux2 = restreint(v, evs, lieux)
         return [o for x in v for o in occurrences(x, defs, evs2, lieux2, vus)]
     if cle == "si":
+        # « si A alors B » : A se lit partout où la règle se lit, B seulement là où A peut être vrai.
         evs2, lieux2 = restreint([v[0]] + (v[0].get("et", []) if isinstance(v[0], dict) else []), evs, lieux)
         return occurrences(v[0], defs, evs, lieux, vus) + occurrences(v[1], defs, evs2, lieux2, vus)
     if cle == "ou":

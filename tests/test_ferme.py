@@ -2,7 +2,7 @@
 
 import json
 
-from couverture import banc, ferme
+from couverture.mesure import banc, ferme
 
 
 def ecrire(chemin, lignes):

@@ -12,7 +12,8 @@ from pathlib import Path
 
 import pytest
 
-from couverture import lecture, prolog, redaction
+from couverture.analyse import lecture, prolog
+from couverture import redaction
 from couverture.models import Clause, TypeClause
 from moteur_reference import Contrat, Moteur
 
@@ -532,7 +533,7 @@ def test_rediger_controler_accepter(tmp_path, monkeypatch, voc_etendu):
 
 
 def test_jeu_redaction_coherent():
-    from couverture.evaluation import charger_cas, fichiers_jeu
+    from couverture.mesure.evaluation import charger_cas, fichiers_jeu
 
     racine = Path(__file__).resolve().parents[1] / "data"
     cas = charger_cas(*fichiers_jeu(racine, CONTRAT, "redaction"))
