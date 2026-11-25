@@ -14,6 +14,7 @@ exemples de lecture. Un cas n'est pas corrigé après avoir vu la réponse du sy
 |---|---|
 | `cas_agent.jsonl` | les 60 déclarations et la réponse du premier annotateur, avec l'article et la citation |
 | `avis_second.jsonl` | la réponse du second annotateur (Mistral Large), sans voir la première |
+| `avis_claude.jsonl` | un troisième avis, indépendant du modèle qui lit dans la nouvelle méthode : Claude (Opus 5.5), le 25 nov. 2026 vers 23 h, sans voir les deux autres ni aucune réponse du système, après le gel du code (DEMARCHE 7.206) |
 | `arbitrage.csv` | les désaccords ; colonne `choix` : `agent`, `second` ou `ecarter` |
 | `sinistres.jsonl`, `annotations/` | le jeu final (accords et arbitrages), au format du banc, sans faits idéaux |
 
@@ -29,3 +30,5 @@ uv run couverture banc --contrat assureur-a-habitation-2025 --jeu quatre
 uv run couverture banc --contrat assureur-b-habitation-2017 --jeu quatre
 uv run couverture banc --contrat assureur-d-habitation-2026 --jeu quatre
 ```
+
+**Accord des annotateurs** : les trois avis donnent la même réponse sur les 60 cas (accord strict, 60 sur 60) ; aucun arbitrage n'a été nécessaire.

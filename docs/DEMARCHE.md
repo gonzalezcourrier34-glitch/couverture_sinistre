@@ -5870,6 +5870,27 @@ couvrent ; la réponse est « à préciser ». Un refus qui cite son exclusion t
 **Rejoué sans frais** sur ce code (les réponses du modèle sont les mêmes) : jeu « neuf » 49 sur 60, un couvert à
 tort, un refus à tort ; les trente cas de 7.200, 26 sur 30, aucun. Suite : 290 tests passés.
 
+### 7.206 Le jeu « quatre » : un troisième avis, et les trois annotateurs d'accord sur les 60 cas
+
+**Pourquoi un troisième avis.** Le second avis du jeu « quatre » venait de Mistral Large, et la nouvelle méthode
+lit avec Mistral Large : un jeu annoté par le même modèle que celui qu'on mesure le favoriserait, s'ils se
+trompaient de la même façon. L'utilisateur a choisi que l'avis indépendant soit le mien (Claude, Opus 5.5).
+
+**Comment.** Après le gel du code, pour que rien de ce que je lisais ne puisse régler le système. Un script ne
+m'a montré que l'identifiant, le contrat et la déclaration de chaque cas, sans la réponse du premier annotateur ni
+celle de Mistral. J'ai lu dans chaque contrat les chapitres en jeu et le lexique, et rendu pour chaque cas la
+réponse, les articles, une citation (vérifiée mot pour mot dans le texte par le code) et la question à poser
+quand la réponse dépend d'une option ou d'un fait non dit. Convention du jeu : garanties de base souscrites,
+options et formules inconnues. Fichier : `data/quatre/avis_claude.jsonl`.
+
+**Le résultat.** Les trois avis (l'agent qui a écrit les cas, Mistral Large, moi) donnent la même réponse sur les
+60 cas. Aucun arbitrage n'est nécessaire : le jeu se compose des 60 cas, tels qu'annotés.
+
+**La limite, dite telle quelle.** Le premier annotateur et moi sommes deux modèles Claude ; Mistral Large est le
+troisième. Aucun n'est un gestionnaire de sinistres. L'accord de trois lectures ne prouve pas qu'elles sont justes,
+il dit que les cas ne sont pas ambigus pour qui lit le contrat. Et j'ai construit le système que ce jeu mesure : je
+l'ai annoté sans voir aucune de ses réponses sur ces cas, mais je connais ses règles.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le ferais.
