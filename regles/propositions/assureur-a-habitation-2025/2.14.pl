@@ -15,4 +15,6 @@ exclusion(recours, f(procedure_etranger_sans_accord, oui), tout, non, '2.14~2',
     "une action ou procédure menée à l’étranger sans notre accord écrit préalable").
 exclusion(recours, f(adversaire_assure, oui), tout, non, '2.14~2',
     "les recours entre assurés").
+exclusion(recours, f(enjeu_moins_250, oui), tout, non, '2.14~2',
+    "ainsi que pour les dommages inférieurs à 250 EUR").
 limite(recours, '2.14~2', "Défense et recours 6.500 EUR", "6500").

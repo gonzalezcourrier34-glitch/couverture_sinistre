@@ -21,7 +21,7 @@ exclusion(rc_vie_privee, f(pratique_chasse, oui), tout, non, '5.5-a',
     "Nous n’indemnisons pas les dommages causés par la pratique de la chasse.").
 exclusion(rc_vie_privee, f(animal_sauvage, gibier_ou_sauvage), tout, non, '5.3-a',
     "causés par le gibier ou les animaux sauvages, domptés ou non, à l’exception des cervidés").
-exclusion(rc_vie_privee, et([ou([f(faute_lourde, ivresse), f(faute_lourde, violence)]), non(f(auteur_mineur, oui))]), tout, non, '5.10',
+exclusion(rc_vie_privee, et([ou([f(faute_lourde, ivresse), f(faute_lourde, violence)]), non(f(auteur_mineur, oui))]), tout, oui, '5.10',
     "la responsabilité civile personnelle de l’assuré qui a atteint l’âge de 18 ans pour les sinistres causés en raison d’une des fautes lourdes suivantes : ivresse ou état analogue résultant de l’utilisation de produits autres que des boissons alcoolisées, actes de violence commis sur les personnes").
 exclusion(rc_vie_privee, f(evenement, attentat), tout, non, '5.10',
     "pour les actes de terrorisme").

@@ -1,6 +1,21 @@
 {
   "_description": "Variables que seules les règles de ce contrat emploient (regles/assureur-d-habitation-2026.pl). Même format que commun.json. Rangé par `couverture regles --ranger` : une variable qu'un autre contrat se met à employer passe dans commun.json.",
   "variables": {
+    "enjeu_moins_300": {
+      "libelle": "Enjeu inférieur à 300 €",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le montant réclamé est-il inférieur à 300 € ?",
+      "aide": {
+        "oui": "la déclaration donne un montant inférieur à 300 €",
+        "non": "300 € ou plus"
+      },
+      "pour": [
+        "litige"
+      ]
+    },
     "option_veranda": {
       "libelle": "Garantie « véranda » souscrite",
       "source": "conditions_particulieres",

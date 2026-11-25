@@ -10,7 +10,8 @@
       "modifications": [
         "l'événement `litige` et `domaine_litige` (vocabulaire de D) : la défense pénale et le recours après un dommage",
         "`tiers_insolvable` : hors décision",
-        "24 nov. : deux exclusions jusque-là non lues deviennent des règles (procédure à l'étranger sans accord, recours entre assurés)"
+        "24 nov. : deux exclusions jusque-là non lues deviennent des règles (procédure à l'étranger sans accord, recours entre assurés)",
+        "25 nov. (7.187) : pas de recours pour un dommage inférieur à 250 EUR ; variable enjeu_moins_250, jamais demandée"
       ]
     }
   },
@@ -108,6 +109,18 @@
             "a_demander": false,
             "article": "2.14~2",
             "texte": "les recours entre assurés"
+          },
+          {
+            "condition": {
+              "f": [
+                "enjeu_moins_250",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "2.14~2",
+            "texte": "ainsi que pour les dommages inférieurs à 250 EUR"
           }
         ],
         "limites": [

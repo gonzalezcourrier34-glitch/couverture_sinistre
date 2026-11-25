@@ -13,7 +13,8 @@
         "zone_geographique (dix valeurs dont des listes) → pays, une valeur par pays ; « n'importe où dans le monde » : aucune condition",
         "sépultures « au Luxembourg ou à 50 km des frontières » : Luxembourg seulement (prudent : au-delà, la réponse ne sera pas « couvert »)",
         "garages à une autre adresse : hors décision (déjà un lieu du bâtiment désigné)",
-        "valeurs de lieu nouvelles rattachées à autre_batiment ; « occasion = fête privée » retirée (le lieu le dit)"
+        "valeurs de lieu nouvelles rattachées à autre_batiment ; « occasion = fête privée » retirée (le lieu le dit)",
+        "25 nov. (7.187) : les extensions valent « pour l'ensemble des périls souscrits à l'exception du vol, du tremblement de terre et de la garantie pluies & inondations » : cette exception manquait, et un vol en location de vacances passait par la garantie vol du bâtiment désigné au lieu de la garantie vol en séjour (objets personnels, 1.30)"
       ]
     }
   },
@@ -182,6 +183,24 @@
                 "pays",
                 "luxembourg"
               ]
+            },
+            {
+              "non": {
+                "ou": [
+                  {
+                    "f": [
+                      "evenement",
+                      "vol"
+                    ]
+                  },
+                  {
+                    "f": [
+                      "evenement",
+                      "catastrophe_naturelle"
+                    ]
+                  }
+                ]
+              }
             }
           ]
         },
@@ -203,6 +222,24 @@
                 "lieu",
                 "autre_batiment"
               ]
+            },
+            {
+              "non": {
+                "ou": [
+                  {
+                    "f": [
+                      "evenement",
+                      "vol"
+                    ]
+                  },
+                  {
+                    "f": [
+                      "evenement",
+                      "catastrophe_naturelle"
+                    ]
+                  }
+                ]
+              }
             }
           ]
         },
@@ -264,6 +301,24 @@
                   ]
                 }
               ]
+            },
+            {
+              "non": {
+                "ou": [
+                  {
+                    "f": [
+                      "evenement",
+                      "vol"
+                    ]
+                  },
+                  {
+                    "f": [
+                      "evenement",
+                      "catastrophe_naturelle"
+                    ]
+                  }
+                ]
+              }
             }
           ]
         },
@@ -273,9 +328,31 @@
       {
         "concept": "batiment_designe",
         "condition": {
-          "f": [
-            "lieu",
-            "maison_repos"
+          "et": [
+            {
+              "f": [
+                "lieu",
+                "maison_repos"
+              ]
+            },
+            {
+              "non": {
+                "ou": [
+                  {
+                    "f": [
+                      "evenement",
+                      "vol"
+                    ]
+                  },
+                  {
+                    "f": [
+                      "evenement",
+                      "catastrophe_naturelle"
+                    ]
+                  }
+                ]
+              }
+            }
           ]
         },
         "article": "3.1.8.5",
@@ -296,6 +373,24 @@
                 "pays",
                 "luxembourg"
               ]
+            },
+            {
+              "non": {
+                "ou": [
+                  {
+                    "f": [
+                      "evenement",
+                      "vol"
+                    ]
+                  },
+                  {
+                    "f": [
+                      "evenement",
+                      "catastrophe_naturelle"
+                    ]
+                  }
+                ]
+              }
             }
           ]
         },
@@ -323,6 +418,24 @@
                 "duree_demenagement",
                 "moins_90_jours"
               ]
+            },
+            {
+              "non": {
+                "ou": [
+                  {
+                    "f": [
+                      "evenement",
+                      "vol"
+                    ]
+                  },
+                  {
+                    "f": [
+                      "evenement",
+                      "catastrophe_naturelle"
+                    ]
+                  }
+                ]
+              }
             }
           ]
         },

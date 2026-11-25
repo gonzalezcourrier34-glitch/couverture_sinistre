@@ -351,7 +351,7 @@
         ]
       },
       "aide": {
-        "electronique": "téléphone, ordinateur, tablette, électroménager, box",
+        "electronique": "téléphone, ordinateur, tablette, appareil photo, caméra, console de jeux, électroménager, box",
         "appareil_audiovisuel": "télévision, écran, chaîne hi-fi",
         "objet_verre_non_vitre": "vase, verre, bibelot en verre",
         "mobilier_jardin": "table, chaises, fauteuils, salon de jardin, parasol, tonnelle, barbecue, chauffage de terrasse, jeux d'extérieur des enfants (trampoline, balançoire, toboggan, maisonnette), même posés sur une terrasse",

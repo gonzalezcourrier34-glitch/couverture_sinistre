@@ -1,6 +1,21 @@
 {
   "_description": "Variables que seules les règles de ce contrat emploient (regles/assureur-a-habitation-2025.pl). Même format que commun.json. Rangé par `couverture regles --ranger` : une variable qu'un autre contrat se met à employer passe dans commun.json.",
   "variables": {
+    "enjeu_moins_250": {
+      "libelle": "Enjeu inférieur à 250 €",
+      "valeurs": [
+        "oui",
+        "non"
+      ],
+      "question": "Le montant réclamé est-il inférieur à 250 € ?",
+      "aide": {
+        "oui": "la déclaration donne un montant inférieur à 250 €",
+        "non": "250 € ou plus"
+      },
+      "pour": [
+        "litige"
+      ]
+    },
     "procedure_etranger_sans_accord": {
       "libelle": "Procédure à l'étranger sans accord",
       "valeurs": [

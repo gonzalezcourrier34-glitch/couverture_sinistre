@@ -7,8 +7,9 @@ agents Claude neufs, un par contrat, qui n'ont lu que le texte des conditions g�
 pour le second jeu, avec une demande de plus : éviter les situations rebattues (celles du second jeu leur ont
 été nommées, pour qu'ils n'y retombent pas).
 
-**Règle : ce jeu ne sert qu'à mesurer.** Aucun de ses cas ne sert à régler le vocabulaire, les règles ou les
-exemples de lecture. Un cas n'est pas corrigé après avoir vu la réponse du système.
+**Ce jeu a mesuré une fois, à l'aveugle, le 25 novembre à 12 h 37** (chiffres ci-dessous). Ensuite ses erreurs ont
+été lues et six corrections en ont été tirées (DEMARCHE 7.187) : depuis, ses 60 cas sont des cas **vus**. Le jeu
+jamais regardé est `data/quatre`.
 
 | Fichier | Contenu |
 |---|---|

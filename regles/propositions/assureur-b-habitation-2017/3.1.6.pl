@@ -44,6 +44,14 @@ perimetre(vol_monde_sejour, f(sejour_temporaire, oui)).
 perimetre(vol_monde_sejour, f(proprietaire, assure)).
 circonstance(vol_monde_sejour, f(plainte_deposee, oui), '3.1.6.1',
     "pour autant qu’une plainte ait été déposée auprès des autorités judiciaires ou de police compétentes").
+exclusion(vol_monde_sejour, f(bien, bijoux), bien(bijoux), non, '1.30',
+    "des bijoux, billets de banque, titres de toute nature, objets ou métaux rares ou précieux").
+exclusion(vol_monde_sejour, f(bien, valeurs), bien(valeurs), non, '1.30',
+    "des bijoux, billets de banque, titres de toute nature, objets ou métaux rares ou précieux").
+exclusion(vol_monde_sejour, f(bien, instrument_musique), bien(instrument_musique), non, '1.30',
+    "des instruments de musique").
+exclusion(vol_monde_sejour, f(bien, materiel_sport), bien(materiel_sport), non, '1.30',
+    "des matériels utilisés dans le cadre de la pratique de sports, de la chasse ou de la pêche").
 limite(vol_monde_sejour, '3.1.6.1', "avec un maximum de 2.500 € par sinistre.", "2500").
 garantie(vol_privilege_concierge, "Vol Privilège concierge", '3.1.6.1',
     "au vol survenu au domicile des concierges ou de toute autre personne faisant fonction et désignée par l'assemblée des co-propriétaires- de biens qui leur ont été confiés par l'Assuré ou à l'attention de l'Assuré. Cette intervention se fait sans application de la règle proportionnelle à concurrence de 2.500 € par sinistre").

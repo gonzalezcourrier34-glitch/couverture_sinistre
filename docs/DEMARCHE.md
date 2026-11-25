@@ -5305,6 +5305,105 @@ retiens : A n'était pas « bon à 95 % », il l'était sur vingt situations cou
 une semaine sur des jeux que je voyais ne répond juste, sur l'inconnu, qu'une fois sur deux à quatre fois sur
 cinq. Les chiffres vont tels quels dans le README, enregistrés avant que j'ouvre ces cas.
 
+### 7.187 Un second tour, sur les couverts à tort du troisième jeu
+
+*25 novembre, 12 h 45.* « Encore un tour de corrections », en commençant par les couverts à tort, et une mesure
+sur un quatrième jeu. Le commit de 7.186 fixe les chiffres du troisième ; ses 60 cas deviennent des cas vus.
+
+Rejoués sans modèle, les faits lus au banc redonnent 60 %, 50 % et 90 % (A, B, D) : les règles expliquent
+presque tout pour A et B ; pour D, la différence avec les 80 % du banc tient à l'étape qui confirme les faits
+décisifs.
+
+| Défaut | Cas | Correction |
+|---|---|---|
+| A : la faute lourde d'un majeur (ivresse) n'excluait que si la lecture disait l'âge | un téléviseur cassé après un pot de départ, couvert | l'exclusion se demande : la faute dite, on demande si l'auteur est mineur ; sans faute dite, aucune question de plus |
+| A et D : pas de seuil pour les recours | un manteau déchiré (140 €), des lunettes (180 €), couverts | le seuil du contrat (250 EUR, 300 €) en exclusion jamais demandée, avec une variable par contrat |
+| B : un vol en location de vacances passait par la garantie vol du bâtiment désigné | des clubs de golf volés au Portugal, couverts | l'extension 3.1.8 vaut « à l'exception du vol » : la condition manquait |
+| B : tout bien volé en séjour était un « objet personnel » | les mêmes clubs | le lexique (1.30) retire les bijoux, les valeurs, les instruments de musique et le matériel de sport |
+| Vocabulaire : un appareil photo n'avait pas de mot | « à préciser » pour un appareil tombé en randonnée | nommé dans l'aide de l'électronique |
+
+**Laissés tels quels**, parce que je n'ai pas de règle générale sûre en deux heures : une coupure de courant
+dont le contrat A dit à la fois « soudaine » et « six heures » ; un coup de vent suivi de pluie, que la garantie
+dégâts des eaux couvre avant que la tempête ait posé sa question ; une maison où l'on ne séjourne plus que de
+temps en temps (B) ; un bateau loué dont la puissance décide (A) ; un chat confié (A). Ce sont des erreurs qui
+restent dans le produit livré.
+
+**Sur les faits lus à 12 h 37, sans relire** : les passages couverts à tort tombent de 12 à 9 pour A et de 9 à 6
+pour B ; D ne bouge pas (ses corrections attendent que la lecture produise le fait du seuil). Les 112 cas à faits
+exacts des trois contrats ne changent pas de décision.
+
+**Le quatrième jeu** (`data/quatre`) : 60 déclarations écrites par trois agents neufs, mêmes consignes que le
+troisième. C'est lui qui dira si ce tour a servi.
+
+### 7.188 Le défaut est de fond : on refond la décision, et on livre lundi
+
+*25 novembre, 13 h 30.* Les commandes du second tour n'étaient pas lancées quand la question est venue :
+« au vu des scores, peut-il y avoir un problème de logique de fond ? » Oui.
+
+**Le défaut.** La chaîne couvre par défaut et ne refuse que pour les raisons qu'on lui a apprises. Dès qu'un
+sinistre entre dans le périmètre d'une garantie, la réponse est « couvert », sauf si une exclusion traduite
+s'applique *et* si la lecture a produit le fait qui la déclenche. Or un contrat d'assurance est fait surtout
+d'exclusions, de seuils et de définitions. Une clause non traduite (les exclusions communes de B), un mot
+absent du vocabulaire (la trottinette électrique), un fait non lu (l'ivresse sans l'âge) : tout ce qui manque
+joue dans le même sens, vers un couvert à tort. Les quinze corrections des deux tours sont toutes de cette
+famille, et il en reste autant que de situations auxquelles je n'ai pas pensé. Le moteur n'est pas en cause :
+sur des faits exacts il applique les règles sans erreur. Ce qui n'était pas vérifié, c'est que les règles
+disent tout le contrat ; je le vérifiais sur des cas que j'avais sous les yeux.
+
+**L'indice.** Le second annotateur des jeux fermés, Mistral Large avec le texte entier du contrat et aucune
+règle, s'accorde avec le premier sur 57 à 59 cas sur 60. J'ai simulé, sur les deux jeux mesurés, une réponse
+qui serait la sienne, avec « couvert » seulement si la chaîne le dit aussi :
+
+| Jeu | Contrat | Chaîne seule | Lecture directe, « couvert » si la chaîne aussi |
+|---|---|---|---|
+| aveugle | A | 95 % (0 couvert à tort) | 95 % (0) |
+| aveugle | B | 58 % (1,3) | 75 % (0) |
+| aveugle | D | 78 % (2) | 97 % (0) |
+| neuf | A | 60 % (4) | 85 % (1) |
+| neuf | B | 50 % (2) | 92 % (0) |
+| neuf | D | 80 % (1) | 90 % (0) |
+
+Ces chiffres sont flatteurs : la bonne réponse de ces jeux a été établie en partie avec l'avis du même modèle,
+qui se juge donc un peu lui-même. C'est une simulation encourageante, pas une mesure.
+
+**Ce qui a été discuté, et écarté.**
+- *Faire refuser le moteur par défaut* tant que chaque exclusion n'est pas écartée : une question par
+  exclusion, presque tout deviendrait « à préciser ».
+- *Tout miser sur le modèle* : on perdrait ce que les règles donnent et que lui n'a pas (la même réponse à
+  chaque fois sur des faits donnés, des questions précises, une preuve rejouable, une relecture humaine faite
+  une fois).
+- *La lecture du contrat entier à chaque analyse*, faisable en une après-midi : c'est la variante la plus
+  chère (40 000 à 100 000 tokens par analyse, quelques centimes de plus, dix à trente secondes d'attente), et
+  elle rend un avis global dont on ne sait pas quelles clauses il a regardées. Une étape possible, pas la cible.
+
+**Ce qui est retenu.** Le modèle juge chaque clause, la logique additionne, les règles contresignent, le code
+vérifie :
+1. choisir les chapitres : les garanties qui peuvent jouer, largement, puis le code ajoute toutes leurs
+   exclusions, les exclusions générales et le lexique ;
+2. un jugement par clause (« s'applique », « ne s'applique pas », « la déclaration ne le dit pas »), avec la
+   phrase de la déclaration qui le fonde ;
+3. la décision par une logique fixe, en code ;
+4. les contrôles : citations mot pour mot, aucune exclusion du dossier sans jugement ;
+5. « couvert » seulement si la chaîne de règles le dit aussi ; chaque désaccord enregistré, comme la liste des
+   règles et des mots qui manquent.
+
+Rien de ce qui existe n'est jeté : le découpage, la base, le vocabulaire, les règles, le moteur, la validation
+des citations, les bancs et les jeux servent tous. Ce qui change est le rôle des règles (elles contresignent,
+elles ne décident plus seules) et la phrase du projet.
+
+**Le calendrier.** Aucune date n'avait été imposée : celle du 26 était la mienne. Je ne livre pas une méthode
+dont je viens de mesurer qu'elle répond juste une fois sur deux à quatre fois sur cinq, quand je sais comment
+faire mieux. Livraison lundi 30 novembre, le week-end compris, en avançant le plus loin possible à chaque
+séance. Le gel de 18 h est levé. La chaîne actuelle reste en place et en ligne : elle est livrable à tout
+moment, avec ses chiffres. Le quatrième jeu (`data/quatre`), jamais ouvert, est gardé pour la mesure de la
+nouvelle méthode : aucun banc n'est lancé dessus avant.
+
+**Les frais.** Les appels au modèle ne se font plus qu'à des moments annoncés, avec leur coût estimé : un
+essai de fumée de cinq à dix cas après chaque étape, un point d'étape d'un contrat et d'un passage, une mesure
+finale. Le banc recevra une option d'échantillon et affichera les tokens envoyés, repris du cache et reçus.
+
+Le plan détaillé, étape par étape avec son critère, est dans `perso/FEUILLE_DE_ROUTE.md`.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le ferais.
@@ -5538,3 +5637,5 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 195. Quand un banc garde les faits lus, les rejouer sur les règles sans modèle sépare en une seconde ce qui vient des règles de ce qui vient de la lecture, et dit ce qu'une correction change avant de payer un passage.
 196. Corriger d'après un jeu neuf le brûle : la mesure d'après se fait sur un autre, écrit de la même façon, sinon on a seulement appris les réponses.
 197. Neuf corrections tirées d'un jeu n'ont pas fait monter le suivant : ce qu'on corrige d'après vingt cas vaut pour ces vingt cas. Le chiffre honnête d'un système est celui du dernier jeu qu'il n'a pas vu, et il faut l'écrire même quand il baisse.
+198. Quand deux tours de corrections ne font pas monter le chiffre d'un jeu neuf, ce n'est plus une liste de défauts, c'est la méthode : s'arrêter de corriger, nommer le défaut de fond, et changer ce qui décide.
+199. Une date qu'on s'est fixée soi-même ne justifie pas de livrer ce qu'on sait insuffisant : on la déplace, on le dit, et on garde livrable ce qui marche.

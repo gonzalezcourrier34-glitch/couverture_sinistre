@@ -12,7 +12,8 @@
         "les exclusions : le tiers, la profession, le contrat, les biens gardés, les véhicules à moteur, le feu parti du bâtiment assuré, l'intention ; le reste hors décision, cité",
         "les seize variables proposées (âge, faute lourde, nombre d'enfants gardés…) : aucune retenue",
         "24 nov. : six exclusions jusque-là classées « rares » deviennent des règles (chasse, gibier, ivresse et violence de l'assuré majeur, terrorisme, nucléaire, pollution graduelle) ; elles ne s'appliquent que si la déclaration le dit",
-        "24 nov. : les dernières exclusions classées « rares » deviennent des règles (actes collectifs de violence, jet-skis et engins aériens, plus de cinq chevaux) ; ce qui reste hors décision est une extension ou un recours, pas un refus"
+        "24 nov. : les dernières exclusions classées « rares » deviennent des règles (actes collectifs de violence, jet-skis et engins aériens, plus de cinq chevaux) ; ce qui reste hors décision est une extension ou un recours, pas un refus",
+        "25 nov. (7.187) : la faute lourde d'un assuré majeur (ivresse, violence) se demande : jamais demandée, l'exclusion ne jouait que si la lecture disait l'âge, et un dégât causé en état d'ivresse était couvert. Elle ne pose de question que si la faute est dite"
       ]
     }
   },
@@ -212,7 +213,7 @@
               ]
             },
             "portee": "tout",
-            "a_demander": false,
+            "a_demander": true,
             "article": "5.10",
             "texte": "la responsabilité civile personnelle de l’assuré qui a atteint l’âge de 18 ans pour les sinistres causés en raison d’une des fautes lourdes suivantes : ivresse ou état analogue résultant de l’utilisation de produits autres que des boissons alcoolisées, actes de violence commis sur les personnes"
           },

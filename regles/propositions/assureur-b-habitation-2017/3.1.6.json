@@ -936,7 +936,8 @@
         "3.1.6.2.9 inchangé : avec la règle « exclusion entamée » du moteur (7.58), travaux établis et lien causal inconnu font poser la question ; travaux non évoqués restent une réserve (b-v15)",
         "3.1.6.2.5 : « le vol de véhicules… » vise le bien, pas le sinistre ; scindé en deux exclusions de portée bien (véhicule, remorque hors du bâtiment) ; a_demander false : le bien est connu (b-v10 : vélos volés avec une tondeuse)",
         "personnel au service de l'Assuré : exclu pendant les heures de service, et en dehors sauf effraction ou violence (variable heures_service) ; 7.75",
-        "3.1.6.4 : la sanction réduit l'indemnité, elle ne refuse pas ; obligation remplacée par une limite (7.81)"
+        "3.1.6.4 : la sanction réduit l'indemnité, elle ne refuse pas ; obligation remplacée par une limite (7.81)",
+        "25 nov. (7.187) : le vol en séjour ne vise que les « objets personnels », dont le lexique (1.30) retire les bijoux, les valeurs, les instruments de musique et le matériel de sport : exclusions par bien"
       ],
       "question_metier": "le vol simple (ni effraction ni violence) est exclu pour toutes les garanties : il vide l'extension « mobilier de jardin » (Privilège) de presque tout son sens. Lecture à confirmer par un souscripteur.",
       "seconde_passe": "après les 15 cas de test Assureur B (regles/cas/golden/assureur-b-habitation-2017.jsonl)",
@@ -1225,7 +1226,64 @@
           }
         ],
         "obligations": [],
-        "exclusions": [],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "bien",
+                "bijoux"
+              ]
+            },
+            "portee": {
+              "bien": "bijoux"
+            },
+            "a_demander": false,
+            "article": "1.30",
+            "texte": "des bijoux, billets de banque, titres de toute nature, objets ou métaux rares ou précieux"
+          },
+          {
+            "condition": {
+              "f": [
+                "bien",
+                "valeurs"
+              ]
+            },
+            "portee": {
+              "bien": "valeurs"
+            },
+            "a_demander": false,
+            "article": "1.30",
+            "texte": "des bijoux, billets de banque, titres de toute nature, objets ou métaux rares ou précieux"
+          },
+          {
+            "condition": {
+              "f": [
+                "bien",
+                "instrument_musique"
+              ]
+            },
+            "portee": {
+              "bien": "instrument_musique"
+            },
+            "a_demander": false,
+            "article": "1.30",
+            "texte": "des instruments de musique"
+          },
+          {
+            "condition": {
+              "f": [
+                "bien",
+                "materiel_sport"
+              ]
+            },
+            "portee": {
+              "bien": "materiel_sport"
+            },
+            "a_demander": false,
+            "article": "1.30",
+            "texte": "des matériels utilisés dans le cadre de la pratique de sports, de la chasse ou de la pêche"
+          }
+        ],
         "limites": [
           {
             "article": "3.1.6.1",

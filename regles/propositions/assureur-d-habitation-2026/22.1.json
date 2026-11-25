@@ -8,7 +8,8 @@
       "par": "auteur + Claude",
       "date": "2026-11-20",
       "modifications": [
-        "l'événement `litige` (nouveau) et `domaine_litige` : recours après un accident, défense pénale ; incluses dans les formules"
+        "l'événement `litige` (nouveau) et `domaine_litige` : recours après un accident, défense pénale ; incluses dans les formules",
+        "25 nov. (7.187) : le seuil d'intervention de 300 € (art. 27) ; variable enjeu_moins_300, jamais demandée"
       ]
     }
   },
@@ -48,7 +49,20 @@
         ],
         "circonstances": [],
         "obligations": [],
-        "exclusions": [],
+        "exclusions": [
+          {
+            "condition": {
+              "f": [
+                "enjeu_moins_300",
+                "oui"
+              ]
+            },
+            "portee": "tout",
+            "a_demander": false,
+            "article": "27",
+            "texte": "enjeu financier du litige en principal en dessous duquel nous n’intervenons pas et dont le montant est fixé à 300 €"
+          }
+        ],
         "limites": []
       },
       {

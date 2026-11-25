@@ -1154,6 +1154,36 @@ def test_chez_d_les_bijoux_voles_attendent_l_option_et_la_trottinette_electrique
             assert prolog.decider(cid, f)["decision"] == attendu, f
 
 
+def test_ce_que_le_troisieme_jeu_a_montre():
+    """7.187. Quatre règles tirées du jeu « neuf » (25 nov.) : la faute lourde d'un majeur se demande (A) ; pas de
+    recours sous le seuil du contrat (A : 250 EUR, D : 300 €) ; chez B, un vol en location de vacances ne passe pas
+    par la garantie vol du bâtiment désigné (l'extension 3.1.8 vaut « à l'exception du vol »), et le matériel de
+    sport n'est pas un « objet personnel » (1.30)."""
+    a = Contrat(prolog.fichier_regles("assureur-a-habitation-2025"))
+    d = Contrat(prolog.fichier_regles("assureur-d-habitation-2026"))
+    b = Contrat(prolog.fichier_regles("assureur-b-habitation-2017"))
+    rc = {"evenement": ["responsabilite"], "bien": ["appareil_audiovisuel"], "lieu": ["autre_batiment"],
+          "auteur": "assure", "victime": "tiers", "origine_rc": "personne"}
+    recours = {"evenement": ["litige"], "domaine_litige": "recours_dommage"}
+    golf = {"evenement": ["vol"], "bien": ["materiel_sport"], "lieu": ["autre_batiment"], "effraction": "oui",
+            "proprietaire": "assure", "plainte_deposee": "oui", "sejour_temporaire": "oui"}
+    attendus = [(a, rc, "COUVERT"), (a, rc | {"faute_lourde": "ivresse"}, "INCERTAIN"),
+                (a, rc | {"faute_lourde": "ivresse", "auteur_mineur": "non"}, "NON_COUVERT"),
+                (a, rc | {"faute_lourde": "ivresse", "auteur_mineur": "oui"}, "COUVERT"),
+                (a, recours, "COUVERT"), (a, recours | {"enjeu_moins_250": "oui"}, "NON_COUVERT"),
+                (d, recours, "COUVERT"), (d, recours | {"enjeu_moins_300": "oui"}, "NON_COUVERT"),
+                (b, golf, "INCERTAIN"), (b, golf | {"bien": ["vetement_accessoire"]}, "COUVERT")]
+    for contrat, f, attendu in attendus:
+        assert Moteur(contrat, f).decider()["decision"] == attendu, f
+    assert next(r for r in Moteur(a, rc | {"faute_lourde": "ivresse"}).decider()["garanties"]
+                if r["id"] == "rc_vie_privee")["questions"] == ["auteur_mineur"]
+    if prolog.swipl() is not None:
+        for cid, f, attendu in (("assureur-a-habitation-2025", rc | {"faute_lourde": "ivresse"}, "INCERTAIN"),
+                                ("assureur-d-habitation-2026", recours | {"enjeu_moins_300": "oui"}, "NON_COUVERT"),
+                                ("assureur-b-habitation-2017", golf, "INCERTAIN")):
+            assert prolog.decider(cid, f)["decision"] == attendu, f
+
+
 def test_une_option_qui_ouvre_une_garantie_ne_se_declare_plus_en_tete():
     """7.181. Chez A et B, plus aucune option n'est déclarée en tête du fichier de règles : chacune est une
     circonstance de son article. Chez D, les quatre déclarations restent : ces options-là lèvent une exclusion pour

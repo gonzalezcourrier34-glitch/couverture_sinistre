@@ -467,25 +467,29 @@ exclusion(rc_immeuble, f(terrain_plus_5_hectares, oui), tout, non, '2.5',
     "du terrain attenant au bâtiment, sans dépasser au total 5 hectares").
 limite(rc_immeuble, '2.5', "18.425.000 EUR pour l’indemnisation des dommages résultant de lésions corporelles", "18425000").
 limite(rc_immeuble, '2.5', "3.685.000 EUR pour l’indemnisation des dommages résultant de dégâts matériels", "3685000").
-
-% --- Art. 2.14 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-20 ---
-evenement_traduit(litige).
-garantie(defense_penale, "Défense pénale", '2.14~1',
-    "que vous et toutes les personnes assurées auront exposés pour leur défense devant une juridiction pénale où ils sont cités à la suite d’un événement garanti par la présente assurance").
-perimetre(defense_penale, f(evenement, litige)).
-perimetre(defense_penale, f(domaine_litige, defense_penale)).
-exclusion(defense_penale, f(procedure_etranger_sans_accord, oui), tout, non, '2.14~2',
-    "une action ou procédure menée à l’étranger sans notre accord écrit préalable").
-limite(defense_penale, '2.14~2', "Défense et recours 6.500 EUR", "6500").
-garantie(recours, "Recours contre les tiers responsables", '2.14~1',
-    "que les assurés, à l’exception du personnel même occasionnel à leur service privé auront exposés pour l’exercice de recours contre les tiers responsables de dommages").
-perimetre(recours, f(evenement, litige)).
-perimetre(recours, f(domaine_litige, recours_dommage)).
-exclusion(recours, f(procedure_etranger_sans_accord, oui), tout, non, '2.14~2',
-    "une action ou procédure menée à l’étranger sans notre accord écrit préalable").
-exclusion(recours, f(adversaire_assure, oui), tout, non, '2.14~2',
-    "les recours entre assurés").
-limite(recours, '2.14~2', "Défense et recours 6.500 EUR", "6500").
+% --- Art. 6.1 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
+evenement_traduit(heurt).
+evenement_traduit(bris).
+evenement_traduit(vol).
+definition(materiel_informatique, f(bien, appareil_informatique), '12/materiel-informatique',
+    "Les ordinateurs de bureau et périphériques, laptops, notebook et tout appareil dont la taille de l’écran est supérieure à 7’’.").
+garantie(pack_multimedia, "Pack multimédia", '6.1',
+    "Pour autant que vos conditions particulières en fassent mention, vos garanties sont étendues au matériel informatique. Dans ce cadre, nous prenons en charge les dommages causés par : • la chute, le heurt et l’introduction d’un corps étrangers • le vol survenu à l’extérieur du bâtiment assuré, pour autant qu’une plainte soit déposée auprès des autorités judiciaires ou de polices compétentes. Il faut noter que ces couvertures sont acquises dans le monde entier.").
+perimetre(pack_multimedia, concept(materiel_informatique)).
+perimetre(pack_multimedia, ou([f(evenement, heurt), f(evenement, bris), f(evenement, vol)])).
+circonstance(pack_multimedia, si(f(evenement, vol), et([non(concept(batiment)), f(plainte_deposee, oui)])), '6.1',
+    "le vol survenu à l’extérieur du bâtiment assuré, pour autant qu’une plainte soit déposée auprès des autorités judiciaires ou de polices compétentes").
+circonstance(pack_multimedia, f(option_materiel_multimedia, oui), '6.1',
+    "Pour autant que vos conditions particulières en fassent mention, vos garanties sont étendues au matériel informatique. Dans ce cadre, nous prenons en charge les dommages causés par : • la chute, le heurt et l’introduction d’un corps étrangers • le vol survenu à l’extérieur du bâtiment assuré, pour autant qu’une plainte soit déposée auprès des autorités judiciaires ou de polices compétentes. Il faut noter que ces couvertures sont acquises dans le monde entier.").
+exclusion(pack_multimedia, et([f(evenement, vol), f(laisse_sans_surveillance, oui)]), tout, oui, '6.1',
+    "le vol d’objets ayant été laissé sans surveillance dans un lieu public").
+exclusion(pack_multimedia, et([f(evenement, vol), f(lieu, vehicule), f(vehicule_voie_publique, oui), f(periode_horaire, nuit_22h_7h)]), tout, oui, '6.1',
+    "le vol d’objets laissés dans un véhicule en stationnement sur la voie publique entre 22 heures et 7 heures").
+exclusion(pack_multimedia, et([f(evenement, vol), f(lieu, vehicule), f(vehicule_voie_publique, oui), f(periode_horaire, jour_7h_22h), ou([f(materiel_laisse_en_vue, oui), f(vehicule_ferme_cle, non), f(habitacle_ferme, non)])]), tout, oui, '6.1',
+    "le vol d’objets laissés dans un véhicule en stationnement sur la voie publique entre 7 heures et 22 heures et que les objets étaient visibles de l’extérieur ou que le véhicule n’était pas fermé à clé ou encore que l’habitacle n’était pas entièrement fermé").
+exclusion(pack_multimedia, et([f(evenement, vol), f(simple_disparition, oui)]), tout, oui, '6.1',
+    "la simple perte, disparition ou l’oubli d’un objet dans un lieu public").
+limite(pack_multimedia, '6.1-a', "Limite par sinistre (à l’indice ABEX 775) 5.750 EUR", "5750 EUR à l'indice ABEX 775").
 
 % --- Art. 5 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-20 ---
 evenement_traduit(responsabilite).
@@ -510,7 +514,7 @@ exclusion(rc_vie_privee, f(pratique_chasse, oui), tout, non, '5.5-a',
     "Nous n’indemnisons pas les dommages causés par la pratique de la chasse.").
 exclusion(rc_vie_privee, f(animal_sauvage, gibier_ou_sauvage), tout, non, '5.3-a',
     "causés par le gibier ou les animaux sauvages, domptés ou non, à l’exception des cervidés").
-exclusion(rc_vie_privee, et([ou([f(faute_lourde, ivresse), f(faute_lourde, violence)]), non(f(auteur_mineur, oui))]), tout, non, '5.10',
+exclusion(rc_vie_privee, et([ou([f(faute_lourde, ivresse), f(faute_lourde, violence)]), non(f(auteur_mineur, oui))]), tout, oui, '5.10',
     "la responsabilité civile personnelle de l’assuré qui a atteint l’âge de 18 ans pour les sinistres causés en raison d’une des fautes lourdes suivantes : ivresse ou état analogue résultant de l’utilisation de produits autres que des boissons alcoolisées, actes de violence commis sur les personnes").
 exclusion(rc_vie_privee, f(evenement, attentat), tout, non, '5.10',
     "pour les actes de terrorisme").
@@ -528,26 +532,23 @@ limite(rc_vie_privee, '5.1', "les dommages résultant de lésions corporelles à
 limite(rc_vie_privee, '5.1', "les dommages matériels à concurrence de 7.131.995,99 EUR", "7131995.99").
 limite(rc_vie_privee, '5.1', "Une franchise de 258,70 EUR est d’application pour les dommages matériels", "franchise 258.70").
 
-% --- Art. 6.1 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-19 ---
-evenement_traduit(heurt).
-evenement_traduit(bris).
-evenement_traduit(vol).
-definition(materiel_informatique, f(bien, appareil_informatique), '12/materiel-informatique',
-    "Les ordinateurs de bureau et périphériques, laptops, notebook et tout appareil dont la taille de l’écran est supérieure à 7’’.").
-garantie(pack_multimedia, "Pack multimédia", '6.1',
-    "Pour autant que vos conditions particulières en fassent mention, vos garanties sont étendues au matériel informatique. Dans ce cadre, nous prenons en charge les dommages causés par : • la chute, le heurt et l’introduction d’un corps étrangers • le vol survenu à l’extérieur du bâtiment assuré, pour autant qu’une plainte soit déposée auprès des autorités judiciaires ou de polices compétentes. Il faut noter que ces couvertures sont acquises dans le monde entier.").
-perimetre(pack_multimedia, concept(materiel_informatique)).
-perimetre(pack_multimedia, ou([f(evenement, heurt), f(evenement, bris), f(evenement, vol)])).
-circonstance(pack_multimedia, si(f(evenement, vol), et([non(concept(batiment)), f(plainte_deposee, oui)])), '6.1',
-    "le vol survenu à l’extérieur du bâtiment assuré, pour autant qu’une plainte soit déposée auprès des autorités judiciaires ou de polices compétentes").
-circonstance(pack_multimedia, f(option_materiel_multimedia, oui), '6.1',
-    "Pour autant que vos conditions particulières en fassent mention, vos garanties sont étendues au matériel informatique. Dans ce cadre, nous prenons en charge les dommages causés par : • la chute, le heurt et l’introduction d’un corps étrangers • le vol survenu à l’extérieur du bâtiment assuré, pour autant qu’une plainte soit déposée auprès des autorités judiciaires ou de polices compétentes. Il faut noter que ces couvertures sont acquises dans le monde entier.").
-exclusion(pack_multimedia, et([f(evenement, vol), f(laisse_sans_surveillance, oui)]), tout, oui, '6.1',
-    "le vol d’objets ayant été laissé sans surveillance dans un lieu public").
-exclusion(pack_multimedia, et([f(evenement, vol), f(lieu, vehicule), f(vehicule_voie_publique, oui), f(periode_horaire, nuit_22h_7h)]), tout, oui, '6.1',
-    "le vol d’objets laissés dans un véhicule en stationnement sur la voie publique entre 22 heures et 7 heures").
-exclusion(pack_multimedia, et([f(evenement, vol), f(lieu, vehicule), f(vehicule_voie_publique, oui), f(periode_horaire, jour_7h_22h), ou([f(materiel_laisse_en_vue, oui), f(vehicule_ferme_cle, non), f(habitacle_ferme, non)])]), tout, oui, '6.1',
-    "le vol d’objets laissés dans un véhicule en stationnement sur la voie publique entre 7 heures et 22 heures et que les objets étaient visibles de l’extérieur ou que le véhicule n’était pas fermé à clé ou encore que l’habitacle n’était pas entièrement fermé").
-exclusion(pack_multimedia, et([f(evenement, vol), f(simple_disparition, oui)]), tout, oui, '6.1',
-    "la simple perte, disparition ou l’oubli d’un objet dans un lieu public").
-limite(pack_multimedia, '6.1-a', "Limite par sinistre (à l’indice ABEX 775) 5.750 EUR", "5750 EUR à l'indice ABEX 775").
+% --- Art. 2.14 : proposition rédigée par le modèle — mistral:mistral-large-latest, 2026-11-20 ---
+evenement_traduit(litige).
+garantie(defense_penale, "Défense pénale", '2.14~1',
+    "que vous et toutes les personnes assurées auront exposés pour leur défense devant une juridiction pénale où ils sont cités à la suite d’un événement garanti par la présente assurance").
+perimetre(defense_penale, f(evenement, litige)).
+perimetre(defense_penale, f(domaine_litige, defense_penale)).
+exclusion(defense_penale, f(procedure_etranger_sans_accord, oui), tout, non, '2.14~2',
+    "une action ou procédure menée à l’étranger sans notre accord écrit préalable").
+limite(defense_penale, '2.14~2', "Défense et recours 6.500 EUR", "6500").
+garantie(recours, "Recours contre les tiers responsables", '2.14~1',
+    "que les assurés, à l’exception du personnel même occasionnel à leur service privé auront exposés pour l’exercice de recours contre les tiers responsables de dommages").
+perimetre(recours, f(evenement, litige)).
+perimetre(recours, f(domaine_litige, recours_dommage)).
+exclusion(recours, f(procedure_etranger_sans_accord, oui), tout, non, '2.14~2',
+    "une action ou procédure menée à l’étranger sans notre accord écrit préalable").
+exclusion(recours, f(adversaire_assure, oui), tout, non, '2.14~2',
+    "les recours entre assurés").
+exclusion(recours, f(enjeu_moins_250, oui), tout, non, '2.14~2',
+    "ainsi que pour les dommages inférieurs à 250 EUR").
+limite(recours, '2.14~2', "Défense et recours 6.500 EUR", "6500").
