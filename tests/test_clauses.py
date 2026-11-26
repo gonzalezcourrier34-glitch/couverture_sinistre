@@ -128,17 +128,40 @@ def test_les_jugements_d_une_analyse_sont_gardes_en_table(base):
         assert cx.execute("SELECT count(*) FROM jugements").fetchone() == (5,)
 
 
-def test_le_jeu_jamais_regarde_ne_se_lance_pas_par_megarde(base, tmp_path):
-    """`juger --jeu cinq` s'arrête avant tout appel, sauf avec --mesure-finale."""
+def test_le_jeu_jamais_regarde_ne_se_lance_pas_par_megarde(base, tmp_path, monkeypatch):
+    """Un jeu jamais regardé (ici « cinq », comme avant sa mesure) s'arrête avant tout appel, sauf avec
+    --mesure-finale."""
     import argparse
 
     from couverture.cli import juger
 
+    monkeypatch.setattr(juger, "JEUX_JAMAIS_VUS", ("cinq",))
     a = argparse.Namespace(contrat="c1", sinistre=None, jeu="cinq", cas=[], modele="m", regles=False, detail=False,
                            echantillon=0, mesure_finale=False, paralleles=1, rejouer=False)
     with pytest.raises(SystemExit) as arret:
         juger.executer(a, base, tmp_path)
     assert "mesure finale" in str(arret.value)
+
+
+def test_la_stabilite_compare_les_passes_d_un_jeu(tmp_path):
+    """7.220 : les bilans de trois passes ; un cas change de décision, un autre garde sa décision sur d'autres clauses."""
+    from couverture.cli import juger
+
+    def bilan(nom, cas):
+        (tmp_path / nom).write_text(json.dumps({"cas": [
+            {"id": i, "obtenu": o, "juste": j, "clauses": cl} for i, o, j, cl in cas]}), encoding="utf-8")
+
+    (tmp_path / "juger_bilan_c1_cinq_m.json").write_text(json.dumps({"cas": [     # la passe 1 : sans les clauses
+        {"id": "a", "obtenu": "COUVERT", "juste": True}, {"id": "b", "obtenu": "NON_COUVERT", "juste": True}]}),
+        encoding="utf-8")
+    bilan("juger_bilan_c1_cinq_m_p2.json", [("a", "COUVERT", True, ["1"]), ("b", "INCERTAIN", False, ["2"])])
+    bilan("juger_bilan_c1_cinq_m_p3.json", [("a", "COUVERT", True, ["1", "3"]), ("b", "NON_COUVERT", True, ["2"])])
+    bilan("juger_bilan_c1_cinq_m_rejeu.json", [("a", "NON_COUVERT", False, [])])     # un rejeu n'est pas une passe
+    sortie = juger.stabilite(tmp_path, "cinq", "m")
+    assert "3 passes (1, 2, 3) · 2 cas communs" in sortie
+    assert "instables : 1 sur 2 — b NON_COUVERT → INCERTAIN → NON_COUVERT" in sortie
+    assert "justes : 2, 1, 2" in sortie and "même décision, autres clauses : 1 sur 1 — a" in sortie
+    assert "Aucun bilan" in juger.stabilite(tmp_path, "quatre", "m")
 
 
 def test_le_message_met_en_tete_ce_qui_revient_a_chaque_sinistre(base):

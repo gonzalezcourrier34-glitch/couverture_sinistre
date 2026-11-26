@@ -496,6 +496,9 @@ def resultat_clauses(base: Base, contrat_id: str, sinistre: str, lu, decision, d
                      for j in [*e.couvrent, *e.excluent, *e.limitent, *e.a_verifier]]
     if lu.relancees:
         raisonnement.append(f"Clauses redemandées au modèle, faute de jugement : {', '.join(lu.relancees)}")
+    if e.questions_retirees:
+        raisonnement.append("Questions non posées, leur réponse ne changerait pas la décision : art. "
+                            + ", ".join(e.questions_retirees))
     raisonnement += [f"Relecture ciblée — {ligne}" for ligne in lu.arbitrage]
     avertissements = ([desaccord] if desaccord else []) \
         + ([f"clauses attendues sans jugement : {', '.join(e.manquants)}"] if e.manquants else []) \

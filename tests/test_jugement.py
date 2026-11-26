@@ -238,3 +238,26 @@ def test_un_doute_qui_ne_peut_pas_faire_couvrir_ne_retient_pas_la_reponse():
     assert etat.decision == Decision.NON_COUVERT and "exclues" in etat.motif and not etat.questions
     assert jugement.decider(garantie + [renvoi]).decision == Decision.NON_COUVERT
     assert jugement.decider(garantie + [qui]).decision == Decision.INCERTAIN, "un chapeau d'options garde son doute"
+
+
+def test_une_question_dont_la_reponse_ne_change_rien_n_est_pas_posee():
+    """7.220 : deux doutes. Celui de la garantie qui couvre décide (sa réponse fait couvrir ou refuser) ; celui d'une
+    garantie qui ne couvre rien ne change la décision dans aucune combinaison : il n'est pas posé. Un seul doute, ou
+    aucun d'utile : toutes les questions restent."""
+    from couverture.analyse.jugement import Ligne
+
+    def lignes():
+        return [Ligne("G", "G.1", "garantie", True, Jugement("G.1", "couvre", "La tempête", "la tempête")),
+                Ligne("G", "G.2", "exclusion", True, Jugement("G.2", "a_verifier", "les objets non fixés", "le store",
+                                                              question="Le store était-il fixé ?")),
+                Ligne("H", "H.1", "exclusion", True, Jugement("H.1", "a_verifier", "les caves inondées", "la cave",
+                                                              question="La cave était-elle inondée ?"))]
+
+    etat = jugement.decider(lignes())
+    assert etat.decision == Decision.INCERTAIN and len(etat.questions) == 2
+    etat = jugement.questions_utiles(lignes(), etat)
+    assert etat.decision == Decision.INCERTAIN, "la décision ne change pas"
+    assert etat.questions == ["Le store était-il fixé ?"] and etat.questions_retirees == ["H.1"]
+    seul = lignes()[:2]
+    etat = jugement.questions_utiles(seul, jugement.decider(seul))
+    assert etat.questions == ["Le store était-il fixé ?"] and not etat.questions_retirees

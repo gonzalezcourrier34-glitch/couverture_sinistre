@@ -77,6 +77,7 @@ class Etat:
     non_attendus: list[str] = field(default_factory=list)       # jugements sur une clause hors du dossier attendu
     defauts: list[str] = field(default_factory=list)            # jugements écartés par les contrôles, et pourquoi
     motif: str = ""
+    questions_retirees: list[str] = field(default_factory=list)  # clauses dont la réponse ne changerait rien (7.220)
 
 
 def depuis_reponse(reponse: dict) -> list[Jugement]:
@@ -322,6 +323,52 @@ def decider(lignes: list[Ligne], optionnelles: set[str] = frozenset(), non_atten
     for j in etat.a_verifier:                         # chaque question une fois, même posée par deux clauses
         if j.question and j.question not in etat.questions:
             etat.questions.append(j.question)
+    return etat
+
+
+# Au-delà, on ne cherche pas : 3 réponses possibles par doute, et chaque combinaison est une décision à calculer.
+MAX_DOUTES = 6
+
+
+def questions_utiles(lignes: list[Ligne], etat: Etat, **options) -> Etat:
+    """Ne pose que les questions dont la réponse peut changer la décision (7.220), comme la chaîne de règles, qui ne
+    garde que les questions qui départagent ses hypothèses.
+
+    Chaque clause « à vérifier » peut, une fois la réponse connue, ne rien faire (`sans_effet`) ou refuser (`exclut`) ;
+    une clause d'une garantie peut aussi couvrir. Toutes les combinaisons de réponses passent par la même décision
+    (`decider`, avec les mêmes `options`). Une question est utile s'il existe deux combinaisons qui ne diffèrent que
+    par sa réponse et ne donnent pas la même décision. Les autres sont retirées et nommées. Prudence : si aucune ne
+    l'est, ou s'il y a trop de doutes, toutes restent ; une seule question reste toujours. La décision ne change pas."""
+    from dataclasses import replace
+    from itertools import product
+
+    if etat.decision != Decision.INCERTAIN:
+        return etat
+    doutes = list(dict.fromkeys(j.clause_id for j in etat.a_verifier))
+    if not 2 <= len(doutes) <= MAX_DOUTES:
+        return etat
+    garanties = {l.clause_id for l in lignes if l.role == "garantie"}
+    reponses = [("couvre", "sans_effet", "exclut") if c in garanties else ("sans_effet", "exclut") for c in doutes]
+
+    def avec(choix: dict[str, str]) -> Decision:
+        copie = [Ligne(l.garantie, l.clause_id, l.role, l.bloque,
+                       None if l.jugement is None else replace(l.jugement, effet=choix.get(l.clause_id, l.jugement.effet)))
+                 for l in lignes]
+        return decider(copie, **options).decision
+
+    decisions = {combo: avec(dict(zip(doutes, combo))) for combo in product(*reponses)}
+    utiles = {c for i, c in enumerate(doutes)
+              if any(decisions[combo[:i] + (h,) + combo[i + 1:]] != d
+                     for combo, d in decisions.items() for h in reponses[i])}
+    if not utiles or utiles == set(doutes):
+        return etat
+    retirees = [c for c in doutes if c not in utiles]
+    gardees = [j for j in etat.a_verifier if j.clause_id in utiles]
+    posees = {j.question for j in gardees if j.question}
+    sans_effet = {j.question for j in etat.a_verifier if j.clause_id in retirees and j.question} - posees
+    etat.a_verifier = gardees
+    etat.questions = [q for q in etat.questions if q not in sans_effet]
+    etat.questions_retirees = retirees
     return etat
 
 

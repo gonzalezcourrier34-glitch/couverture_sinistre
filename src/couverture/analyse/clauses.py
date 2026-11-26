@@ -285,9 +285,12 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | C
     suivre("jugement", f"{len(gardes)} clauses jugées" + (f" : {compte}" if compte else "")
            + (f" ; {len(relancees)} redemandée{'s' * (len(relancees) > 1)}" if relancees else ""))
     lignes, non_attendus = jugement.joindre(base, contrat_id, touchees, gardes)
-    etat = jugement.decider(lignes, {g.repere for g in garanties if g.optionnelle}, non_attendus, defauts,
-                            {g.repere: g.chemin for g in garanties},
-                            {g.repere for g in garanties if not g.porte_garantie and not g.optionnelle})
+    options = {"optionnelles": {g.repere for g in garanties if g.optionnelle}, "non_attendus": non_attendus,
+               "defauts": defauts, "chemins": {g.repere: g.chemin for g in garanties},
+               "sans_couverture": {g.repere for g in garanties if not g.porte_garantie and not g.optionnelle}}
+    etat = jugement.decider(lignes, **options)
+    # Les questions dont aucune réponse ne changerait la décision ne sont pas posées (7.220).
+    etat = jugement.questions_utiles(lignes, etat, **options)
     if callable(regles):                               # avant « décider » : le suivi reste dans l'ordre (7.202)
         regles = regles()
     resultat_regles = regles if hasattr(regles, "verdict") else None

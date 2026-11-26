@@ -6,6 +6,9 @@ choisis. La chaîne de règles n'est pas appelée ici (`--regles` pour la contre
 
   couverture juger --contrat assureur-a-habitation-2025 "De l'eau a coulé du plafond…"
   couverture juger --contrat assureur-b-habitation-2017 --jeu aveugle --cas av-b05 --cas av-b13
+
+La stabilité (7.220) : repasser un jeu avec `--passage 2`, `--passage 3` (chaque passe garde son bilan et ses réponses
+brutes à part), puis `couverture juger --stabilite --jeu cinq --contrat tous` compare les passes, sans appel au modèle.
 """
 
 from __future__ import annotations
@@ -35,6 +38,12 @@ def ajouter(sous) -> None:
     p.add_argument("--paralleles", type=int, default=4, metavar="N",
                    help="N cas à la fois (4 par défaut, comme le banc) : le temps d'un passage, pas celui d'un cas")
     p.add_argument("--detail", action="store_true", help="Afficher chaque jugement qui n'est pas « sans effet »")
+    p.add_argument("--passage", type=int, default=1, metavar="N",
+                   help="Le numéro de la passe, pour mesurer la stabilité (7.220) : à partir de 2, le bilan et les réponses "
+                        "brutes sont gardés à part (suffixe _pN) ; la passe 1 est celle sans suffixe")
+    p.add_argument("--stabilite", action="store_true",
+                   help="Comparer les passes déjà faites d'un jeu (`--contrat tous` pour tous les contrats) : cas dont la "
+                        "réponse change, justesse moyenne, minimale, maximale. Aucun appel au modèle")
     p.add_argument("--rejouer", action="store_true",
                    help="Reprendre les réponses gardées d'un passage précédent (data/debug/juger_<cas>.txt) ; seul ce "
                         "qui est nouveau (la relecture ciblée, 7.211) est demandé au modèle. Presque gratuit.")
@@ -98,6 +107,12 @@ def executer(a, base: Base, donnees: Path) -> int:
     from ..analyse import clauses
     from ..llm import CleRefusee, ErreurLLM, MistralLLM
 
+    if getattr(a, "stabilite", False):
+        if not a.jeu:
+            sys.exit("--stabilite demande --jeu.")
+        print(stabilite(donnees / "debug", a.jeu, a.modele, None if a.contrat == "tous" else a.contrat))
+        return 0
+    passe = f"_p{a.passage}" if getattr(a, "passage", 1) > 1 else ""
     if a.jeu:
         if a.jeu in JEUX_JAMAIS_VUS and not a.mesure_finale and not a.rejouer:
             sys.exit(f"Le jeu « {a.jeu} » n'a jamais été regardé : il ne se passe qu'une fois, pour la mesure finale, "
@@ -129,7 +144,7 @@ def executer(a, base: Base, donnees: Path) -> int:
                     "envoyes": 0, "cache": 0, "recus": 0}
             rejouees = gardees.read_text(encoding="utf-8").split("\n\n=== réponse suivante ===\n\n")
         llm = _Temoin(modele, rejouees)
-        suffixe = "_rejeu" if a.rejouer else ""
+        suffixe = ("_rejeu" if a.rejouer else "") + passe
         attendu = c.get("attendu")
         try:
             # Le résultat entier des règles, pas seulement leur décision : la relecture ciblée part de leurs
@@ -158,7 +173,11 @@ def executer(a, base: Base, donnees: Path) -> int:
         return texte, {"id": c["id"], "attendu": attendu, "obtenu": obtenu, "juste": juste,
                        "motif": lecture.etat.motif, "secondes": round(time.perf_counter() - debut, 1),
                        "envoyes": llm.envoyes, "cache": llm.cache, "recus": llm.recus, "appels": len(llm.reponses),
-                       "relancees": lecture.relancees}
+                       "relancees": lecture.relancees,
+                       # Les clauses qui fondent la réponse : pour voir, d'une passe à l'autre, si la même décision
+                       # s'appuie sur les mêmes clauses (7.220).
+                       "clauses": sorted({j.clause_id for j in [*lecture.etat.couvrent, *lecture.etat.excluent,
+                                                                *lecture.etat.a_verifier]})}
 
     depart = time.perf_counter()
     par_id: dict[str, dict] = {}
@@ -171,7 +190,7 @@ def executer(a, base: Base, donnees: Path) -> int:
     envoyes, recus = sum(l["envoyes"] for l in lignes), sum(l["recus"] for l in lignes)
     if a.jeu:
         print(_bilan(lignes, envoyes, recus, time.perf_counter() - depart))
-        fichier = donnees / "debug" / f"juger_bilan_{a.contrat}_{a.jeu}_{a.modele}{'_rejeu' if a.rejouer else ''}.json"
+        fichier = donnees / "debug" / f"juger_bilan_{a.contrat}_{a.jeu}_{a.modele}{'_rejeu' if a.rejouer else ''}{passe}.json"
         fichier.write_text(json.dumps({"contrat": a.contrat, "jeu": a.jeu, "modele": a.modele, "regles": a.regles,
                                        "envoyes": envoyes, "recus": recus, "cas": lignes}, ensure_ascii=False, indent=1),
                            encoding="utf-8")
@@ -190,3 +209,53 @@ def _bilan(lignes: list[dict], envoyes: int, recus: int, secondes: float) -> str
             f"{len(refus)} {refus or ''} ; « à préciser » ou erreur à la place d'une réponse : {len(prudents)} "
             f"{prudents or ''}\nTokens : {envoyes} envoyés, {recus} reçus ; {secondes:.0f} s en tout"
             + (f", {secondes / n:.0f} s par cas." if n else "."))
+
+
+def stabilite(dossier: Path, jeu: str, modele: str, contrat: str | None = None) -> str:
+    """La stabilité de la lecture des clauses sur un jeu (7.220), d'après les bilans de ses passes : la passe 1
+    (`juger_bilan_<contrat>_<jeu>_<modele>.json`), puis `_p2`, `_p3`… Sur les cas présents dans toutes les passes
+    d'un contrat : les cas dont la décision change, ceux dont la décision tient mais pas les clauses qui la fondent,
+    et la justesse de chaque passe. Comme pour le banc de la chaîne de règles, qui passe chaque jeu trois fois."""
+    import re
+
+    motif = re.compile(rf"juger_bilan_(.+)_{re.escape(jeu)}_{re.escape(modele)}(?:_p(\d+))?\.json$")
+    passes: dict[str, dict[int, dict]] = {}
+    for f in sorted(dossier.glob(f"juger_bilan_*_{jeu}_{modele}*.json")):
+        m = motif.match(f.name)
+        if not m or (contrat and m.group(1) != contrat):
+            continue
+        passes.setdefault(m.group(1), {})[int(m.group(2) or 1)] = json.loads(f.read_text(encoding="utf-8"))
+    if not passes:
+        return f"Aucun bilan pour le jeu « {jeu} » ({modele}) dans {dossier}."
+    lignes, total = [], {"cas": 0, "instables": 0, "clauses": 0, "comparables": 0}
+    for c, par_passe in sorted(passes.items()):
+        numeros = sorted(par_passe)
+        cas = [{l["id"]: l for l in par_passe[n]["cas"]} for n in numeros]
+        communs = [i for i in cas[0] if all(i in x for x in cas[1:])]
+        instables = [i for i in communs if len({x[i]["obtenu"] for x in cas}) > 1]
+        # Les clauses ne sont gardées au bilan que depuis 7.220 : on compare les passes qui les ont, s'il y en a deux.
+        avec_clauses = lambda i: [x[i]["clauses"] for x in cas if "clauses" in x[i]]  # noqa: E731
+        comparables = [i for i in communs if i not in instables and len(avec_clauses(i)) >= 2]
+        autres_clauses = [i for i in comparables if len({tuple(c) for c in avec_clauses(i)}) > 1]
+        justes = [sum(x[i]["juste"] for i in communs) for x in cas]
+        a_tort = [sum(x[i]["obtenu"] == "COUVERT" and not x[i]["juste"] for i in communs) for x in cas]
+        refus = [sum(x[i]["obtenu"] == "NON_COUVERT" and not x[i]["juste"] for i in communs) for x in cas]
+        lignes.append(f"{c} · {len(numeros)} passe{'s' * (len(numeros) > 1)} ({', '.join(map(str, numeros))}) · "
+                      f"{len(communs)} cas communs")
+        lignes.append(f"  justes : {', '.join(map(str, justes))} (moyenne {sum(justes) / len(justes):.1f}) · "
+                      f"couverts à tort : {', '.join(map(str, a_tort))} · refus à tort : {', '.join(map(str, refus))}")
+        lignes.append(f"  instables : {len(instables)} sur {len(communs)}"
+                      + (" — " + " ; ".join(f"{i} {' → '.join(x[i]['obtenu'] for x in cas)}" for i in instables)
+                         if instables else ""))
+        if comparables:
+            lignes.append(f"  même décision, autres clauses : {len(autres_clauses)} sur {len(comparables)}"
+                          + (f" — {', '.join(autres_clauses)}" if autres_clauses else ""))
+        total["cas"] += len(communs)
+        total["instables"] += len(instables)
+        total["clauses"] += len(autres_clauses)
+        total["comparables"] += len(comparables)
+    if len(passes) > 1:
+        lignes.append(f"Ensemble : {total['instables']} cas instables sur {total['cas']}"
+                      + (f" ; même décision, autres clauses : {total['clauses']} sur {total['comparables']}"
+                         if total["comparables"] else ""))
+    return "\n".join(lignes)

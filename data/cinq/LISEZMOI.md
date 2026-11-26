@@ -37,4 +37,6 @@ uv run couverture juger --contrat assureur-d-habitation-2026 --jeu cinq --regles
 **Mesuré une fois, le 26 novembre 2026 vers 13 h 30 à 14 h 30 (DEMARCHE 7.215), code figé au commit `de9ed60`** :
 chaîne de règles 40,3 sur 60 (A 15,7, B 14,3, D 10,3), 4,7 couverts à tort, 6 refus à tort ; lecture des clauses
 53 sur 60 (A 20, B 19, D 14), aucun couvert à tort, 1 refus à tort (`c-b08`), 6 « à préciser » au lieu de « couvert »,
-tous chez D, par la contresignature. Le jeu est maintenant « vu » : il ne sert plus à mesurer une correction.
+tous chez D, par la contresignature. Le jeu est maintenant « vu » : il ne sert plus à mesurer une correction. Il sert à mesurer la stabilité de la lecture
+des clauses (7.220) : sa passe du 26 novembre est la passe 1 ; `juger --passage 2`, `--passage 3`, puis
+`juger --stabilite --jeu cinq --contrat tous`.

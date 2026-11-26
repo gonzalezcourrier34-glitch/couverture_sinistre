@@ -110,6 +110,10 @@ fait jeu par jeu avec la chaîne de règles, passée sur les mêmes cas.
 `juger --rejouer` rejoue les réponses gardées d'une passe précédente : il sert à vérifier une règle de décision sur un
 jeu vu, presque sans frais, jamais à mesurer.
 
+**La stabilité** (7.220), comme les trois passages du banc : `juger --passage 2`, `--passage 3` repassent un jeu en
+gardant chaque passe à part ; `juger --stabilite --jeu … --contrat tous` compte, sur les cas communs aux passes, ceux
+dont la décision change, ceux dont la décision tient sur d'autres clauses, et la justesse de chaque passe.
+
 ### Passage à l'échelle (règles rédigées par le modèle, `couverture rediger`)
 
 | Métrique | Définition |

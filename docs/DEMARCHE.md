@@ -123,7 +123,7 @@ Neuf parties, dans l'ordre. Chaque étape garde son numéro, cité ailleurs dans
 | VI | 7.148 à 7.159 | Un quatrième contrat ajouté à froid : ce qui est général, ce qui ne l'est pas |
 | VII | 7.160 à 7.167 | Mettre en ligne, puis tout rejouer la veille de la livraison |
 | VIII | 7.168 à 7.189 | Finir A et B, puis des jeux jamais vus qui montrent un défaut de fond |
-| IX | 7.190 à 7.219 | La lecture des clauses : une seconde méthode, mesurée contre la première |
+| IX | 7.190 à 7.220 | La lecture des clauses : une seconde méthode, mesurée contre la première |
 
 ---
 
@@ -6321,6 +6321,35 @@ comptée : ses modèles sont petits, et ses appels passent par d'autres clients.
 Trois tests (le compte et le coût d'une lecture, et les clauses retenues ; le journal sur une base d'avant ; une
 clause citée par la lecture s'ouvre en ligne, et elle seule). Les points 3 et 4 de l'inventaire restent ouverts.
 
+### 7.220 Les deux derniers points : de quoi mesurer la stabilité, et seulement les questions utiles
+
+*26 novembre, 15 h 40.* « Vas-y, et fais le 4 aussi directement : comme ça tout est fait. »
+
+**3. La stabilité de la lecture des clauses.** La chaîne de règles passe chaque jeu trois fois et compte les cas dont
+la réponse change ; la lecture des clauses n'a été passée qu'une fois par jeu, à cinq dollars la passe. De quoi la
+mesurer, sans frais :
+- `juger --passage N` garde chaque passe à part (le bilan et les réponses brutes portent le suffixe `_pN`) ; la passe
+  1 est celle d'aujourd'hui sur le jeu « cinq » : le cœur de la lecture n'a pas changé depuis, ce qui s'est ajouté
+  (plusieurs sinistres, relecture, coût) est dans le service, que `juger` n'utilise pas ;
+- le bilan garde, par cas, les clauses qui fondent la réponse ;
+- `juger --stabilite --jeu cinq --contrat tous` compare les passes, sans appel : par contrat puis pour l'ensemble, les
+  cas dont la décision change (avec leur suite de décisions), ceux dont la décision tient sur d'autres clauses, et la
+  justesse, les couverts et les refus à tort de chaque passe, sur les cas communs à toutes les passes ;
+- « cinq », mesuré (7.215), n'est plus un jeu jamais regardé : il ne demande plus `--mesure-finale`
+  (`JEUX_JAMAIS_VUS` est vide jusqu'au prochain jeu neuf).
+La mesure elle-même coûte : deux passes de plus sur dix cas par contrat, environ 5 à 6 $ (décidée à part).
+
+**4. Seulement les questions utiles.** La chaîne de règles ne pose que les questions qui départagent ses hypothèses.
+La lecture des clauses posait toutes celles de ses clauses « à vérifier ». La règle (`jugement.questions_utiles`) :
+chaque doute peut, une fois la réponse connue, ne rien faire ou refuser, et une clause d'une garantie peut aussi
+couvrir ; toutes les combinaisons de réponses passent par la même décision (`decider`). Une question est utile s'il
+existe deux combinaisons qui ne diffèrent que par sa réponse et ne donnent pas la même décision ; les autres ne sont
+pas posées, et le raisonnement les nomme. Prudences : la décision ne change jamais ; si aucune question n'est utile,
+toutes restent (une réponse « à préciser » sans question n'aiderait personne) ; une seule question reste toujours ;
+au-delà de six doutes (729 combinaisons), on ne cherche pas. Les mesures ne bougent pas : elles comptent des décisions.
+
+Deux tests (trois passes comparées ; une question sans effet retirée, une seule question gardée).
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 26 nov. 2026, après la mesure du jeu « cinq ». Dans l'ordre où je le ferais.
@@ -6338,8 +6367,8 @@ demande un jeu neuf.
 - *Ce que la chaîne de règles a, et que la lecture des clauses n'a pas encore* (relevé le 26 nov., 7.218) :
   - ~~en ligne, l'article entier et la fiche ne servent que des clauses que les règles citent~~ : fait (7.219) ;
   - ~~le journal ne relève ni les tokens ni le coût, Grafana ne sépare pas les méthodes~~ : fait (7.219) ;
-  - la stabilité n'est pas mesurée (la chaîne passe chaque jeu trois fois et compte ses cas instables) ;
-  - les questions ne sont pas triées par leur effet : la chaîne ne pose que celles dont la réponse change la décision.
+  - la stabilité n'est pas mesurée : de quoi la mesurer est construit (7.220), la mesure reste à lancer ;
+  - ~~les questions ne sont pas triées par leur effet~~ : fait (7.220).
 - *Fait depuis 7.207* : une absence de couverture face à des règles qui hésitent (7.210), un doute qui ne peut pas
   faire couvrir (7.210), la relecture ciblée des obstacles des règles (7.211), la méthode au choix à l'écran (7.216),
   plusieurs sinistres et les réponses du client (7.218).

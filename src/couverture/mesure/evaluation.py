@@ -31,8 +31,10 @@ def lire_jsonl(chemin: str | Path) -> list[dict]:
 # « quatre » est le quatrième (7.187), après les corrections tirées du troisième ; « cinq », le cinquième (7.215),
 # écrit après la mesure du quatrième et les corrections de justesse.
 JEUX_FERMES = ("ferme", "aveugle", "neuf", "quatre", "cinq")
-# Les jeux jamais regardés : ils ne se passent qu'une fois, pour la mesure finale (`juger --mesure-finale`).
-JEUX_JAMAIS_VUS = ("cinq",)
+# Les jeux jamais regardés : ils ne se passent qu'une fois, pour la mesure finale (`juger --mesure-finale`). « cinq »
+# a été mesuré le 26 nov. (7.215) : il est vu, et se repasse librement (la stabilité, 7.220). Le prochain jeu neuf
+# viendra ici.
+JEUX_JAMAIS_VUS: tuple[str, ...] = ()
 JEUX = ("mise_au_point", "validation", "redaction", "golden", *JEUX_FERMES)
 
 
