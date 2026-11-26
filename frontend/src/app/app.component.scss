@@ -201,9 +201,17 @@ $rayon: 12px;
     border-color: #e8890c;
 }
 
+.etiquette-ligne {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 4px 12px;
+}
+
 .legende-conditions {
-    margin: 6px 0 0;
-    font-size: 12px;
+    margin: 0;
+    font-size: 11px;
     color: var(--plume-fonce);
 }
 
