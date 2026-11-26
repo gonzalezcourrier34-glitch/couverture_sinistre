@@ -4,7 +4,7 @@ Dit si un sinistre est couvert par un contrat d'assurance habitation, **pourquoi
 
 > Une réponse assurée sans justification vaut moins qu'un « je ne sais pas » étayé.
 
-**Un projet mené comme une expérience, en deux hypothèses.** J'ai d'abord traduit chaque contrat en règles (Prolog) et laissé un moteur décider, en quelques secondes ; mesurée sur des cas que je n'avais jamais vus, cette méthode couvrait parfois à tort, parce qu'une règle peut mal traduire le contrat. J'ai alors fait lire par Mistral Large les clauses mêmes du contrat, une à une, vérifié chaque citation mot pour mot, calculé la décision dans le code et fait contresigner chaque « couvert » par la première méthode. J'ai comparé les deux une première fois, code figé, sur 60 déclarations jamais vues : autant de réponses justes (45 contre 42), **un seul sinistre couvert à tort au lieu de 4,3**, mais deux refus à tort de plus et deux à trois minutes par analyse. Après un dernier tour de corrections, une seconde mesure, sur 60 autres déclarations jamais vues : **53 réponses justes contre 40, aucun couvert à tort contre 4,7, un refus à tort contre 6**. La seconde est la méthode par défaut depuis le 26 novembre 2026. [Les chiffres](#4-ce-que-cela-donne) ; [l'expérience racontée sans jargon](docs/COMPRENDRE.md).
+**L'histoire en bref.** Ce projet est une petite recherche, menée comme une expérience. Ma question : un système peut-il dire si un sinistre est couvert, en le prouvant par le contrat lui-même, sans jamais promettre à tort ? Ma première hypothèse a été de traduire chaque contrat en règles (Prolog) et de laisser un moteur décider, en quelques secondes. Elle marchait très bien sur les cas qui m'avaient servi à la régler, et beaucoup moins bien sur des cas que je n'avais jamais vus : il lui arrivait de couvrir à tort, parce qu'une règle peut mal traduire le contrat. Cette découverte m'a conduit à une seconde hypothèse : faire juger par Mistral Large les clauses mêmes du contrat, une à une, vérifier chaque citation mot pour mot, calculer la décision dans le code, et faire contresigner chaque « couvert » par la première méthode. Je les ai comparées deux fois, code figé, sur des déclarations écrites par d'autres que moi et jamais vues. À la dernière mesure, **la seconde répond juste 53 fois sur 60 contre 40, et ne couvre jamais à tort, contre 4,7 fois** ; elle demande en échange deux à trois minutes par analyse. Elle est la méthode par défaut depuis le 26 novembre 2026, et les deux restent au choix à l'écran. [Les chiffres](#5-ce-que-cela-donne) ; [l'enquête racontée sans jargon](docs/COMPRENDRE.md).
 
 ![La lecture des clauses sur un vol dans un vestiaire de club de tennis : non couvert, l'exclusion du contrat citée mot pour mot](docs/images/demo-3-clauses.png)
 
@@ -19,10 +19,10 @@ Dit si un sinistre est couvert par un contrat d'assurance habitation, **pourquoi
 **Comment ce projet a été fait.** Avec un assistant de code (Claude) : sa part est visible dans chaque commit. Le cadrage, les arbitrages et les décisions sont les miens ; [la démarche](docs/DEMARCHE.md) les garde dans l'ordre, y compris les fois où une mesure m'a donné tort.
 
 - [Ce que j'ai déjà mis en production](#ce-que-jai-déjà-mis-en-production-et-ce-que-ça-a-donné) : SortirIA, et ce que j'en ai repris ici
-- [Note de conception](#note-de-conception) : le besoin, le choix, les résultats, ce qui a été essayé, les limites
+- [Note de conception](#note-de-conception) : la question, les deux hypothèses, la méthode d'évaluation, les résultats, ce qui a été essayé, les limites
 - [Démonstration en 5 minutes](#démonstration-en-5-minutes)
 - [Installation](#installation) et [utilisation](#utilisation)
-- **Pour comprendre sans rien connaître au sujet** : [le projet raconté](docs/COMPRENDRE.md) (l'objectif, la comparaison avec SortirIA, puis les deux méthodes du projet comparées : ce que chacune prépare, comment chacune analyse un sinistre, leurs chiffres sur des cas jamais vus, leurs forces et leurs faiblesses)
+- **Pour comprendre sans rien connaître au sujet** : [l'enquête racontée](docs/COMPRENDRE.md) : la question et ses enjeux, ce qui la rend difficile, ma méthode d'évaluation, les deux hypothèses (leur structure, leurs forces, leurs faiblesses), ce que les mesures ont révélé, les difficultés et leurs solutions, ce que j'en ai appris
 - Pour aller plus loin : [la démarche](docs/DEMARCHE.md) (le raisonnement en onze tournants, puis chaque essai et sa mesure, échecs compris), [les explications](docs/EXPLICATIONS.md) (chaque fichier, un lexique), [les mesures](docs/METRIQUES.md), [les consignes versionnées](docs/consignes/README.md), [le suivi](monitoring/README.md)
 
 ## Ce que j'ai déjà mis en production, et ce que ça a donné
@@ -50,19 +50,21 @@ Ce qui me manque encore : tenir une charge réelle, et travailler en équipe sur
 
 ## Note de conception
 
-### 1. La question, et le critère fixé avant de mesurer
+### 1. La question, ses enjeux, et le critère fixé avant de mesurer
 
-Un gestionnaire reçoit une déclaration en langage courant et doit dire si le contrat la couvre. Ma question : un système peut-il faire ce travail avec lui, de façon vérifiable ? Avant de construire quoi que ce soit, j'ai fixé ce qui compterait pour le juger, dans cet ordre :
+Un gestionnaire reçoit une déclaration en langage courant (« on m'a volé mon vélo dans le local commun ») et doit dire si le contrat la couvre. Pour cela, il relit cinquante à cent pages de conditions générales : la garantie, ses conditions, ses exclusions, le lexique, les exceptions aux exclusions. Une erreur coûte dans les deux sens : un « couvert » à tort est un paiement que le contrat ne prévoit pas, un refus à tort est un client lésé, et une réponse qu'on ne peut pas justifier ne vaut rien, même juste. L'énoncé posait deux questions : que faire à la place du contrat collé dans un assistant conversationnel, et comment tenir des centaines de contrats.
+
+Ma question de recherche : **un système peut-il faire ce travail avec le gestionnaire, de façon vérifiable ?** Avant de construire quoi que ce soit, j'ai fixé ce qui compterait pour le juger, dans cet ordre :
 
 1. **ne pas couvrir à tort** : c'est l'erreur qui coûte ;
-2. **pouvoir vérifier** : chaque réponse renvoie à la phrase du contrat, qu'il relit en un clic ;
+2. **pouvoir vérifier** : chaque réponse renvoie à la phrase du contrat, qu'on relit en un clic ;
 3. **savoir quoi demander** quand la déclaration ne suffit pas, plutôt qu'une réponse devinée.
 
-Et la question de l'énoncé : que faire à la place du contrat collé dans un chatbot, et comment tenir des centaines de contrats.
+Le premier essai, donner le contrat et la déclaration à un modèle et lui demander la réponse, échoue précisément là. L'exclusion qui décide ne ressemble pas à la question (un vélo volé dans le hall relève des « parties communes du bâtiment ») ; le sens des mots est au lexique du contrat (un cadenas n'est pas une « serrure de sûreté ») ; et le raisonnement du modèle ne se vérifie pas. Sur un banc public de cas d'assurance, il tranchait 90 % des cas que des lecteurs humains jugent ambigus. J'en ai tiré trois garde-fous, communs à mes deux hypothèses : **pas de réponse sans preuve** (chaque citation est retrouvée mot pour mot par le code), **un doute ne fait jamais couvrir**, et **le code tranche, pas le modèle**.
 
-### 2. Le choix : le modèle lit, la logique décide, le code vérifie (et, depuis, le modèle juge chaque clause)
+### 2. Deux hypothèses, l'une née de l'échec de l'autre
 
-Coller le contrat dans un chatbot échoue pour trois raisons : l'exclusion qui décide ne ressemble pas à la question, le sens des mots est au lexique du contrat, et rien n'est vérifiable. Le modèle n'a donc ici qu'un rôle : **lire**.
+**Ma première hypothèse : le modèle lit, la logique décide.** Si je traduis chaque contrat, une fois pour toutes, en règles qu'un programme sait appliquer, le modèle n'a plus qu'à transformer la déclaration en faits, et la décision devient un calcul, reproductible et traçable.
 
 ```
 Une fois par contrat
@@ -80,20 +82,45 @@ Une fois par contrat
              ─► réponse, clauses citées, arbre de preuve
 ```
 
-**Ma seconde hypothèse, méthode par défaut depuis le 26 novembre : la lecture des clauses.** Les jeux jamais vus m'ont montré que la chaîne ci-dessus se trompait surtout à la traduction. Je fais donc lire au modèle (Mistral Large) les clauses du contrat qui concernent le sinistre ; il rend, clause par clause, un jugement cité ; une logique fixe tranche à partir de ces jugements, et la chaîne contresigne : un « couvert » n'est rendu que si elle le dit aussi. Chaque citation est toujours retrouvée mot pour mot par le code. Je l'ai choisie sur la mesure du jeu « quatre » (section 4) : autant de réponses justes, quatre fois moins de couverts à tort, mais deux à trois minutes par analyse ; le jeu « cinq », après un dernier tour de corrections, l'a confirmée (53 réponses justes sur 60 contre 40, aucun couvert à tort). La chaîne de règles reste disponible : à l'écran, une liste « Méthode » sur la ligne de la déclaration (lecture des clauses par défaut, ou chaîne de règles) ; côté serveur, `COUVERTURE_METHODE=regles` en fait la méthode par défaut. [Les deux méthodes comparées](docs/COMPRENDRE.md).
+Le moteur reprend le raisonnement d'un gestionnaire : un périmètre contraire écarte la garantie ; une exclusion ne retire qu'une garantie qui s'applique ; une obligation de prévention non respectée ne fait refuser que s'il y a un lien causal ; l'assuré établit la garantie, l'assureur l'exclusion.
+
+**Ce que la mesure m'a appris.** Sur les cas qui m'avaient servi à régler les règles : 90 à 100 % de réponses justes. Sur des cas écrits par d'autres, d'après le seul texte des contrats : 58 % chez B, puis, après corrections, 38 réponses justes sur 60 et 7 couverts à tort sur un troisième jeu. Le système ne répondait jamais sans preuve, mais la preuve était celle de la règle, et une règle peut mal traduire le contrat. Deux tours de corrections qui ne font pas monter un jeu neuf désignent la méthode, pas une liste de défauts.
+
+**Ma seconde hypothèse : le modèle juge chaque clause, la logique tranche, les règles contresignent.** Si le modèle lit le texte même du contrat, une clause que la traduction a manquée peut encore être vue. Pour ne pas retomber dans le premier piège, je ne lui demande jamais « est-ce couvert ? » : il juge les clauses une à une, je vérifie chaque citation, et je calcule la décision. Un article sur les dossiers de sinistre m'a donné la pièce qui manquait : une absence ne se trouve pas par une recherche, seulement si l'on a écrit d'avance ce qui était attendu. J'ai donc écrit, pour chaque garantie, les clauses qu'un gestionnaire doit relire, et le code vérifie que chacune a été jugée.
 
 ```
 À chaque sinistre, lecture des clauses (2 à 3 minutes)
   déclaration ─► Mistral Large désigne les chapitres en jeu ; le code compose le dossier
-                (ces chapitres, plus les exclusions générales, les obligations, les définitions)
-             ─► Mistral Large juge chaque clause : couvre, exclut, limite, à vérifier (avec la question), sans effet
-             ─► le code vérifie chaque citation, puis tranche selon une logique fixe
-             ─► la chaîne de règles contresigne : « couvert » seulement si elle dit « couvert » aussi
+                (ces chapitres, plus les exclusions générales, les obligations, les définitions,
+                 et la liste des clauses attendues)
+             ─► Mistral Large juge chaque clause : couvre, exclut, limite, à vérifier (avec la question), sans effet,
+                avec une phrase du contrat et une phrase de la déclaration
+             ─► le code vérifie chaque citation et redemande une clause attendue restée sans jugement
+             ─► une logique fixe tranche : une exclusion citée l'emporte, un doute donne « à préciser »
+             ─► la chaîne de règles contresigne : « couvert » seulement si elle le dit aussi, ou si chacun
+                de ses obstacles est écarté par une citation de la déclaration
 ```
 
-Le moteur reprend le raisonnement d'un gestionnaire : un périmètre contraire écarte la garantie ; une exclusion ne retire qu'une garantie qui s'applique ; une obligation de prévention non respectée ne fait refuser que s'il y a un lien causal ; l'assuré établit la garantie, l'assureur l'exclusion. Deux garde-fous tiennent partout : **un doute ne fait jamais couvrir**, et **chaque citation est retrouvée mot pour mot dans le contrat** par le code.
+| | Première méthode (règles) | Seconde méthode (clauses) |
+|---|---|---|
+| Ses forces | Quelques secondes, presque rien par analyse ; reproductible ; un arbre de preuve condition par condition | Lit le texte même : une clause oubliée par la traduction est encore vue ; aucun couvert à tort sur le dernier jeu neuf |
+| Ses faiblesses | Ne vaut que ce que vaut sa traduction ; le vocabulaire est un goulot ; chaque contrat demande traduction et relecture | Deux à trois minutes et 8 à 10 centimes ; moins stable ; une citation exacte peut être hors de propos ; dépend encore des règles pour couvrir |
 
-### 3. Les deux questions de l'énoncé
+Les deux restent dans le produit : à l'écran, une liste « Méthode » sur la ligne de la déclaration (lecture des clauses par défaut, ou chaîne de règles) ; côté serveur, `COUVERTURE_METHODE=regles` fait de la chaîne la méthode par défaut. [Les deux méthodes racontées, avec leurs schémas](docs/COMPRENDRE.md).
+
+### 3. Comment j'évalue
+
+La méthode d'évaluation est la partie qui a le plus changé mes conclusions. Elle tient en trois idées.
+
+**Les erreurs ne se valent pas.** Je ne lis pas un score unique, mais, dans cet ordre : les **couverts à tort** (visés à zéro), les **refus à tort**, les **réponses justes** (la réponse attendue, ou une seconde réponse jugée défendable par les annotateurs) et les **exactes** (sans tolérance), les **« à préciser » au lieu d'une réponse** (l'erreur la moins chère, mais un système qui ne répond jamais n'erre jamais et ne sert à rien), les **cas instables** d'un passage à l'autre, la **durée** (médiane et 95e centile) et le **coût**. Chaque banc a des portes fixées à l'avance (aucun couvert à tort, au plus un refus à tort, au moins 85 % de justes) et échoue si l'une ne passe pas. Pour la première méthode, la lecture se mesure à part, avec des faits idéaux écrits à la main : on sait ainsi si une erreur vient des règles ou de la lecture.
+
+**Des cas jamais regardés.** Un jeu qui a servi à corriger flatte ce qu'on a corrigé. Au-delà du jeu de mise au point, j'ai donc fait écrire cinq jeux de soixante déclarations (vingt par contrat) par des annotateurs qui n'avaient lu que le texte des contrats, jamais mes règles : des agents Claude plutôt que moi, parce que je connais les règles. Un second avis indépendant répond sans voir le premier ; un désaccord est arbitré sur le texte. Au dernier jeu, le second avis n'est plus Mistral Large, qui lit dans la méthode mesurée.
+
+**Une mesure, une seule fois.** Le code est figé avant ; le jeu est passé une fois (trois pour la chaîne de règles, rapide et un peu variable) ; les chiffres s'écrivent tels quels ; le jeu devient alors « vu », et un nouveau tour de corrections en demande un neuf. Et pour chaque règle que j'essaie, le critère qui la fera garder ou retirer est écrit avant de la mesurer.
+
+Ce que cette méthode ne garantit pas : les réponses attendues viennent d'annotateurs automatiques qui s'accordent, pas d'un juriste ; et vingt cas par contrat ne distinguent pas un écart de deux ou trois réponses. Détail des métriques et des seuils : [la fiche métriques](docs/METRIQUES.md) ; le raisonnement : [COMPRENDRE, section 3](docs/COMPRENDRE.md#3-comment-je-juge--la-méthode-et-les-métriques-dévaluation).
+
+### 4. Les deux questions de l'énoncé
 
 Posées aux quatre contrats, sur la démonstration en ligne, le 24 novembre :
 
@@ -106,11 +133,11 @@ Posées aux quatre contrats, sur la démonstration en ligne, le 24 novembre :
 
 **Le vélo** est refusé chez A, C et D, pour des raisons que chaque contrat écrit à sa façon : une exclusion des parties communes chez A et C, une condition d'effraction chez D. C'est ce que le système doit savoir faire. Chez B, la réponse a changé le 24 novembre, quand l'option « dommages aux biens » a été traduite : elle couvre le vol d'un vélo sous la surveillance directe de l'assuré, où qu'il soit. Une déclaration qui dit seulement « volé dans le hall » ne permet plus de refuser : la réponse est « à préciser », et c'est la lecture exacte du contrat, pas un recul. Chez C, deux raisons valent en même temps, et la réponse n'en montre qu'une : le matin du 24 novembre l'exclusion, deux heures plus tard la condition, parce que la lecture avait retenu en plus « pas de violences ». La décision ne change pas ; la phrase citée, si.
 
-**La bougie** est le cas difficile, et la réponse est moins bonne. La déclaration est lue comme un dommage accidentel. Chez A, aucune garantie ne porte sur ce dommage : « non couvert », ce qui est la bonne décision, mais sans la phrase du lexique qui l'expliquerait le mieux (un excès de chaleur « sans qu'il y ait embrasement » n'est pas un incendie). Chez C et D, le dommage accidentel relève de garanties qui ne sont pas traduites en règles : le système le dit et passe la main, plutôt que de répondre. Chez B, l'accident est traduit depuis le 24 novembre : la réponse est « à préciser », avec une question sur le bris de vitrages. Rien dans la déclaration ne parle de vitrage : la question est de trop, et un refus aurait été la réponse attendue. Voir [les limites](#7-limites).
+**La bougie** est le cas difficile, et la réponse est moins bonne. La déclaration est lue comme un dommage accidentel. Chez A, aucune garantie ne porte sur ce dommage : « non couvert », ce qui est la bonne décision, mais sans la phrase du lexique qui l'expliquerait le mieux (un excès de chaleur « sans qu'il y ait embrasement » n'est pas un incendie). Chez C et D, le dommage accidentel relève de garanties qui ne sont pas traduites en règles : le système le dit et passe la main, plutôt que de répondre. Chez B, l'accident est traduit depuis le 24 novembre : la réponse est « à préciser », avec une question sur le bris de vitrages. Rien dans la déclaration ne parle de vitrage : la question est de trop, et un refus aurait été la réponse attendue. Voir [les limites](#8-limites).
 
 Les réponses attendues ont été établies d'après le texte des conditions générales, avec l'aide de Claude ; elles sont à relire par un juriste.
 
-### 4. Ce que cela donne
+### 5. Ce que cela donne
 
 **La mesure finale : le jeu « cinq », après le dernier tour de corrections (26 novembre).** Soixante déclarations neuves, vingt par contrat (A, B, D), écrites par trois annotateurs qui n'avaient lu que le texte des contrats, et jugées à l'aveugle par trois autres (Claude, pas Mistral Large : c'est lui qui lit dans la seconde méthode). 59 accords sur 60, un désaccord arbitré sur le texte. Code figé avant (commit `de9ed60`), jeu passé une seule fois, rien corrigé ensuite (démarche 7.215).
 
@@ -214,9 +241,9 @@ Les réponses attendues ont été établies d'après le texte des conditions gé
 
 </details>
 
-### 5. Ce que j'ai essayé, et ce que la mesure m'a dit
+### 6. Ce que j'ai essayé, et ce que la mesure m'a dit
 
-J'ai mesuré chaque essai avant de le garder ; mes échecs sont dans [la démarche](docs/DEMARCHE.md), avec leurs chiffres. Ce tableau porte sur la première méthode ; la seconde est elle-même l'essai le plus important, mesuré en section 4.
+J'ai mesuré chaque essai avant de le garder ; mes échecs sont dans [la démarche](docs/DEMARCHE.md), avec leurs chiffres. Ce tableau porte sur la première méthode ; la seconde est elle-même l'essai le plus important, mesuré en section 5.
 
 | Essai | Ce que la mesure a dit | Décision |
 |---|---|---|
@@ -234,7 +261,7 @@ J'ai mesuré chaque essai avant de le garder ; mes échecs sont dans [la démarc
 
 Ce que cela apprend : un modèle sait dire si un fait est **écrit** ; il ne se corrige pas lui-même sur le choix d'une **catégorie** ; et un bon lecteur n'est pas forcément un bon vérificateur. Les rôles se mesurent un par un, et se confient au modèle qui les tient le mieux.
 
-### 6. Tenir des centaines de contrats
+### 7. Tenir des centaines de contrats
 
 **Avec la seconde méthode, la question change, sans être tranchée.** Pour juger, la lecture des clauses n'a besoin que du contrat découpé : ni règles, ni vocabulaire. Si cela se confirme, le coût d'un contrat de plus tombe au découpage. Mais j'ai fait toutes mes mesures avec la contresignature des règles traduites ; sur un contrat sans elles, je n'ai rien mesuré. C'est ma prochaine expérience. Ce qui suit vaut pour la première méthode, et pour la contresignature.
 
@@ -266,14 +293,14 @@ La relecture est le poste qui ne se réduit pas. Ici, c'est l'assistant qui a é
 
 Pour des centaines de contrats, il faut donc une équipe de relecteurs du métier, un outil de relecture, et un jeu de mesure par contrat : pas un bouton.
 
-### 7. Limites
+### 8. Limites
 
-- **La lecture des clauses, méthode par défaut, a ses propres limites** (démarche 7.207, 7.208). Deux à trois minutes et 8 à 10 centimes par analyse (en ligne : 50 analyses par jour au plus). Plus de refus à tort que la chaîne de règles (4 contre 2 sur 60 cas jamais vus) : un refus fondé sur une clause citée n'est pas contresigné, et le code vérifie qu'une citation existe, pas qu'elle a un rapport avec le sinistre. Une même déclaration ne reçoit pas toujours deux fois la même réponse. Et elle n'a jamais été mesurée sans la contresignature des règles traduites : qu'elle s'applique telle quelle à un contrat nouveau reste à démontrer.
+- **La lecture des clauses, méthode par défaut, a ses propres limites** (démarche 7.207, 7.208). Deux à trois minutes et 8 à 10 centimes par analyse (en ligne : 50 analyses par jour au plus). Des refus à tort fondés sur une citation exacte mais hors de propos (4 au jeu « quatre », 1 au jeu « cinq ») : un refus n'est pas contresigné, et le code vérifie qu'une citation existe, pas qu'elle a un rapport avec le sinistre ; deux façons de relire les refus ont été essayées et retirées (démarche 7.212, 7.214). Des « couvert » justes retenus par la contresignature quand les règles du contrat sont incomplètes (6 chez D au jeu « cinq »). Une même déclaration ne reçoit pas toujours deux fois la même réponse. Et elle n'a jamais été mesurée sans la contresignature des règles traduites : qu'elle s'applique telle quelle à un contrat nouveau reste à démontrer.
 - **Deux des quatre conditions générales ne sont traduites qu'en partie, par choix** (C a servi à mesurer le temps d'intégration d'un contrat, D est un complément). L'écran le dit : chaque carte a un contour vert (traduites en entier) ou orange (en partie), et la phrase au survol dit ce qui reste. Au 24 novembre au soir : A et B en vert, C et D en orange. A : toutes les garanties ont leurs règles et toutes les exclusions qu'une déclaration peut énoncer sont lues ; un point faible connu, la garde d'enfants rémunérée, que le contrat couvre et qui peut être lue comme une activité professionnelle. B : tous les articles ont leurs règles, voyage compris, avec leurs exclusions ; les limites connues : la gravité d'une maladie n'est pas jugée (c'est le certificat qui l'établit), et les garanties de voyage et de protection numérique n'ont aucun cas dans le banc de B : elles sont vérifiées par seize essais de règles sur des faits exacts, où la lecture n'intervient pas. C : le vol et le bris de glaces. D : les garanties des biens et la responsabilité civile, pas les options ni les assistances. L'état est déclaré à la main dans `regles/traduction.json`. Devant un événement dont la garantie n'est pas traduite, la réponse est « à examiner par un gestionnaire », jamais un refus. Pour un contrat en vert, la règle est autre : il n'a aucune garantie pour cet événement, et la réponse est « non couvert » (un voyage annulé déclaré chez A).
 - **Rédiger une garantie ne se fait pas d'une commande.** Essai du 24 novembre : les neuf articles restants de B donnés au modèle d'un coup. Un échec (réponse coupée) et huit propositions arrêtées par les contrôles, avec 6 à 43 points bloquants chacune : articles cités qui n'existent pas, exclusions oubliées, une centaine de faits nouveaux. Pour l'assistance de A, la proposition aurait fait passer une soixantaine de cas de test à « couvert ». Les deux assistances entrées ce jour-là ont été écrites à la main, à partir du texte. Ces propositions ont été remplacées une à une, le même jour, par des articles écrits à la main.
 
 **Ce qui n'est pas validé**
-- Les **règles n'ont pas été relues par un juriste ni par un gestionnaire de sinistres**. Je ne viens pas de l'assurance ; la relecture a été faite par l'assistant qui a écrit le code, et elle s'est trompée au moins une fois (section 6).
+- Les **règles n'ont pas été relues par un juriste ni par un gestionnaire de sinistres**. Je ne viens pas de l'assurance ; la relecture a été faite par l'assistant qui a écrit le code, et elle s'est trompée au moins une fois (section 7).
 - Les réponses attendues des jeux de référence ont été proposées par des modèles, puis arbitrées sur citations ; elles n'ont pas été validées par un juriste.
 - La **loi applicable** n'est pas traitée : le contrat A se dit régi par la loi belge du 4 avril 2014, d'autres relèvent de la loi luxembourgeoise du 27 juillet 1997 ou du code des assurances français. Ces textes s'imposent aux conditions générales ; le système ne lit que le contrat.
 
@@ -312,10 +339,10 @@ La déclaration, chez l'assureur A :
 | 1:00 | **Lecture des clauses (2-3 min)**, sur la même déclaration ; l'écran suit les étapes | Pendant l'attente : trouver les chapitres, juger chaque clause citation à l'appui, faire contresigner par les règles, décider |
 | 3:00 | La réponse : **non couvert**, art. 2.10-a, « le vol du contenu entreposé dans un casier d'une association sportive ou d'agrément » | La clause est lue dans le texte, citée mot pour mot ; un clic ouvre l'article. « Les règles ne concordent pas » : le désaccord est affiché, pas caché |
 | 3:30 | « Raisonnement clause par clause et contrôles », puis « Télécharger la fiche (PDF) » | Chaque jugement et ses deux citations ; une page à verser au dossier |
-| 4:00 | Le tableau du jeu « cinq » (section 4) | 53 réponses justes sur 60 contre 40, aucun couvert à tort contre 4,7 ; la limite : la contresignature par des règles incomplètes (D) |
-| 4:30 | Les limites (section 7) | Ce que le système ne sait pas faire ; les bonnes réponses ne sont pas validées par un juriste |
+| 4:00 | Le tableau du jeu « cinq » (section 5) | 53 réponses justes sur 60 contre 40, aucun couvert à tort contre 4,7 ; la limite : la contresignature par des règles incomplètes (D) |
+| 4:30 | Les limites (section 8) | Ce que le système ne sait pas faire ; les bonnes réponses ne sont pas validées par un juriste |
 
-Les deux questions de l'énoncé (section 3) se montrent en cinq secondes chacune avec la chaîne de règles, si le temps le permet.
+Les deux questions de l'énoncé (section 4) se montrent en cinq secondes chacune avec la chaîne de règles, si le temps le permet.
 
 | 1. L'accueil | 2. Chaîne de règles, 5 s | 3. Lecture des clauses, 2-3 min |
 |---|---|---|
@@ -429,4 +456,11 @@ uv run couverture banc --contrat assureur-a-habitation-2025 --partie test   # le
 uv run couverture banc --contrat assureur-b-habitation-2017 --jeu ferme     # les cas écrits sans voir les règles
 ```
 
-Chaque banc fait trois passages, écrit son rapport dans `data/bancs/` et se compare au précédent de même configuration. Il affiche les réponses justes et fausses par type de réponse, les cas instables et le temps par cas. Lancer les bancs l'un après l'autre : en parallèle, ils se ralentissent et faussent les temps. Détail : [docs/METRIQUES.md](docs/METRIQUES.md).
+La lecture des clauses se mesure avec `juger`, une passe par jeu (elle coûte 8 à 10 centimes par cas) :
+
+```bash
+uv run couverture juger --contrat assureur-a-habitation-2025 --jeu quatre --regles   # contresignée par les règles
+uv run couverture juger --contrat assureur-a-habitation-2025 --jeu quatre --rejouer  # rejoue les réponses gardées : seuls les appels nouveaux sont payés
+```
+
+Un jeu jamais regardé (« cinq » jusqu'à sa mesure) demande `--mesure-finale`. Chaque banc fait trois passages, écrit son rapport dans `data/bancs/` et se compare au précédent de même configuration. Il affiche les réponses justes et fausses par type de réponse, les cas instables et le temps par cas. Lancer les bancs l'un après l'autre : en parallèle, ils se ralentissent et faussent les temps. Détail : [docs/METRIQUES.md](docs/METRIQUES.md).

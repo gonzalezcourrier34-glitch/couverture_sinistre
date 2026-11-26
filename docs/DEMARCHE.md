@@ -123,7 +123,7 @@ Neuf parties, dans l'ordre. Chaque étape garde son numéro, cité ailleurs dans
 | VI | 7.148 à 7.159 | Un quatrième contrat ajouté à froid : ce qui est général, ce qui ne l'est pas |
 | VII | 7.160 à 7.167 | Mettre en ligne, puis tout rejouer la veille de la livraison |
 | VIII | 7.168 à 7.189 | Finir A et B, puis des jeux jamais vus qui montrent un défaut de fond |
-| IX | 7.190 à 7.216 | La lecture des clauses : une seconde méthode, mesurée contre la première |
+| IX | 7.190 à 7.217 | La lecture des clauses : une seconde méthode, mesurée contre la première |
 
 ---
 
@@ -6233,6 +6233,22 @@ sous-titre, l'état de l'en-tête, l'accueil, le message d'attente. Chaque répo
 méthode elle a été rendue. `GET /sante` annonce maintenant le modèle des clauses même quand ce n'est pas la méthode
 par défaut, pour l'en-tête. La limite d'analyses par jour compte les deux méthodes. C'est aussi ce qui rend la
 comparaison visible à qui essaie le site : la même déclaration, en cinq secondes puis en trois minutes.
+
+### 7.217 La documentation réécrite comme une enquête
+
+*26 novembre, 15 h.* « Il reste toute la doc sur les deux méthodes, leurs structures, leurs avantages, leurs
+inconvénients, ainsi que le portfolio, l'expérience acquise, les enjeux… le ton première personne, l'intérêt de
+recherche et de découverte, la façon pédagogique ; un peu comme une histoire » ; puis : « une méthode et des
+métriques d'évaluation ». `COMPRENDRE.md` est réécrit en enquête : la question et ses enjeux, ce qui la rend
+difficile, la méthode et les métriques d'évaluation (avant les résultats, parce que ce sont elles qui ont changé mes
+conclusions), la première hypothèse avec son schéma, ses forces et ses faiblesses, la découverte (un jeu qui a
+servi ment), la seconde hypothèse avec son schéma et d'où vient sa forme (l'article sur les dossiers de sinistre,
+7.189), les difficultés rencontrées et leurs solutions, les deux comparaisons et le dernier tour (gardé, retiré),
+ce que j'ai appris, ce qui reste ouvert. Le README suit le même fil : l'histoire en bref en tête, la question et ses
+enjeux, les deux hypothèses l'une née de l'autre avec un tableau de leurs forces et faiblesses, et une partie
+nouvelle, « Comment j'évalue ». La fiche du projet dans le portfolio passe à la seconde méthode, aux chiffres du jeu
+« cinq » et à une conduite de la recherche en cinq temps ; la section « Ce que j'ai appris » du portfolio gagne une
+leçon de ce projet. Aucun chiffre nouveau : tous viennent des mesures déjà écrites ici.
 
 ## 8. Ce qui reste à faire
 
