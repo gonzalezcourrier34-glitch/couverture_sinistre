@@ -229,7 +229,8 @@ def joindre(base, contrat_id: str, designees: list[str], jugements: list[Jugemen
 
 
 def decider(lignes: list[Ligne], optionnelles: set[str] = frozenset(), non_attendus: list[str] = (),
-            defauts: list[str] = (), chemins: dict[str, tuple[str, ...]] | None = None) -> Etat:
+            defauts: list[str] = (), chemins: dict[str, tuple[str, ...]] | None = None,
+            sans_couverture: set[str] = frozenset()) -> Etat:
     """La décision, d'après la jointure. Une logique fixe :
 
     1. une clause attendue qui bloque et n'a pas de jugement : pas de réponse franche (à préciser, et on le dit) ;
@@ -243,7 +244,12 @@ def decider(lignes: list[Ligne], optionnelles: set[str] = frozenset(), non_atten
        Deux garanties voisines (rangées sous le même titre : le bris de vitrages et le matériel multimédia) se
        font concurrence, et le refus de l'une laisse l'autre couvrir. Un refus venu d'un autre endroit du contrat
        (les biens assurés, une option, les obligations) peut valoir pour tout : le modèle a pu mal en dire la
-       portée, on ne promet pas. `chemins` : le chemin de chaque garantie dans le contrat (sans lui, pas de 5)."""
+       portée, on ne promet pas. `chemins` : le chemin de chaque garantie dans le contrat (sans lui, pas de 5).
+    6. un doute ne retient la réponse que s'il peut faire couvrir (7.210). Un chapitre qui ne porte pas de garantie
+       (`sans_couverture` : des dispositions communes, la liste des biens assurés ; pas un chapeau d'options, qui
+       peut en ouvrir une) ne tient pas la réponse en suspens ; une garantie non plus, quand son seul doute est emprunté (une clause citée par renvoi ou en
+       chapeau) et qu'elle ne couvre rien par elle-même. Si toutes les garanties qui pouvaient couvrir sont
+       exclues, la réponse suit les exclusions, quelles que soient les questions restées ailleurs."""
     etat = Etat(Decision.INCERTAIN, non_attendus=list(non_attendus), defauts=list(defauts))
     vus: set[str] = set()
 
@@ -282,7 +288,11 @@ def decider(lignes: list[Ligne], optionnelles: set[str] = frozenset(), non_atten
                                          and etat.garanties[l.garantie] == "a_verifier"])
     couvrent = [g for g, s in etat.garanties.items() if s == "couvre"]
     franches = [g for g in couvrent if g not in optionnelles]
-    en_suspens = [g for g, s in etat.garanties.items() if s == "a_verifier"]
+    # Un doute qui ne peut pas faire couvrir ne retient pas la réponse (6) : ni celui d'un chapitre sans garantie,
+    # ni celui qu'une garantie ne fait qu'emprunter sans rien couvrir elle-même.
+    propres = {l.garantie for l in juges if l.role not in EMPRUNTS and l.jugement.effet in ("a_verifier", "couvre")}
+    en_suspens = [g for g, s in etat.garanties.items()
+                  if s == "a_verifier" and g not in sans_couverture and g in propres]
     exclues = [g for g, s in etat.garanties.items() if s == "exclue"]
     ailleurs = [e for e in exclues if chemins and not any(
         chemins.get(e, ())[:-1] == chemins.get(g, (None,))[:-1] for g in franches)]
@@ -303,6 +313,9 @@ def decider(lignes: list[Ligne], optionnelles: set[str] = frozenset(), non_atten
         etat.motif = "seule une garantie optionnelle couvre : on ne sait pas si elle est souscrite"
         etat.questions += [f"Vos conditions particulières mentionnent-elles la garantie optionnelle de l'article {g} ?"
                            for g in couvrent]
+    elif exclues and etat.excluent:
+        etat.decision, etat.motif = Decision.NON_COUVERT, "les garanties qui pouvaient couvrir sont exclues"
+        etat.a_verifier = []
     else:
         etat.decision, etat.motif = Decision.NON_COUVERT, "aucune garantie examinée ne couvre ce sinistre"
         etat.a_verifier = []
@@ -319,11 +332,12 @@ def arbitrer(etat: Etat, regles: Decision | None) -> tuple[Decision, str]:
     if etat.decision == Decision.COUVERT and regles is not None and regles != Decision.COUVERT:
         return Decision.INCERTAIN, ("la lecture des clauses conclut « couvert », les règles traduites répondent "
                                     f"« {regles.value} » : à examiner")
-    if etat.decision == Decision.NON_COUVERT and not etat.excluent and regles == Decision.COUVERT:
+    if etat.decision == Decision.NON_COUVERT and not etat.excluent and regles in (Decision.COUVERT, Decision.INCERTAIN):
         # « Aucune garantie examinée ne couvre » ne cite aucune clause : c'est une absence, pas un refus. Elle ne
-        # l'emporte pas sur les règles qui couvrent ; une garantie a pu manquer au dossier (7.205).
-        return Decision.INCERTAIN, ("aucune garantie examinée ne couvre, mais les règles traduites répondent « COUVERT » : "
-                                    "une garantie a pu échapper à la lecture, à examiner")
+        # l'emporte pas sur des règles qui couvrent (7.205) ni sur des règles qui hésitent (7.210) ; une garantie a
+        # pu manquer au dossier.
+        return Decision.INCERTAIN, ("aucune garantie examinée ne couvre, mais les règles traduites répondent "
+                                    f"« {regles.value} » : une garantie a pu échapper à la lecture, à examiner")
     if regles is not None and regles != etat.decision:
         return etat.decision, (f"les règles traduites répondaient « {regles.value} » ; la lecture des clauses "
                                "l'emporte, avec la clause citée")

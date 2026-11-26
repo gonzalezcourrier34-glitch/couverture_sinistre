@@ -216,4 +216,25 @@ def test_un_refus_sans_clause_citee_ne_l_emporte_pas_sur_des_regles_qui_couvrent
     assert jugement.arbitrer(absence, Decision.COUVERT)[0] == Decision.INCERTAIN
     refus = jugement.Etat(Decision.NON_COUVERT, excluent=[Jugement("3.1.2.2", "exclut", "Les objets non fixés")])
     assert jugement.arbitrer(refus, Decision.COUVERT)[0] == Decision.NON_COUVERT
-    assert jugement.arbitrer(absence, Decision.INCERTAIN)[0] == Decision.NON_COUVERT
+    # 7.210 : ni sur des règles qui hésitent.
+    assert jugement.arbitrer(absence, Decision.INCERTAIN)[0] == Decision.INCERTAIN
+    assert jugement.arbitrer(absence, Decision.NON_COUVERT) == (Decision.NON_COUVERT, "")
+
+
+def test_un_doute_qui_ne_peut_pas_faire_couvrir_ne_retient_pas_la_reponse():
+    """7.210 : la seule garantie qui pouvait couvrir est exclue, clause citée. Une question posée dans un chapitre
+    qui ne porte pas de garantie (qui est propriétaire ?), ou empruntée par renvoi à la garantie exclue (quelle
+    formule ?), ne change rien : la réponse suit l'exclusion. Un chapeau d'options, lui, peut ouvrir une garantie :
+    son doute reste."""
+    from couverture.analyse.jugement import Ligne
+
+    garantie = [Ligne("G", "G.1", "garantie", True, Jugement("G.1", "couvre", "La tempête", "la tempête")),
+                Ligne("G", "G.2", "exclusion", True, Jugement("G.2", "exclut", "les objets extérieurs", "le store"))]
+    qui = Ligne("D", "D.1", "exclusion", True, Jugement("D.1", "a_verifier", "Si vous êtes propriétaire",
+                                                         question="Propriétaire ou locataire ?"))
+    renvoi = Ligne("P", "G.1", "renvoi", True, Jugement("G.1", "a_verifier", "Selon la formule",
+                                                       question="Quelle formule ?"))
+    etat = jugement.decider(garantie + [qui], sans_couverture={"D"})
+    assert etat.decision == Decision.NON_COUVERT and "exclues" in etat.motif and not etat.questions
+    assert jugement.decider(garantie + [renvoi]).decision == Decision.NON_COUVERT
+    assert jugement.decider(garantie + [qui]).decision == Decision.INCERTAIN, "un chapeau d'options garde son doute"

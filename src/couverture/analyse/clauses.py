@@ -201,7 +201,8 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | C
            + (f" ; {len(relancees)} redemandée{'s' * (len(relancees) > 1)}" if relancees else ""))
     lignes, non_attendus = jugement.joindre(base, contrat_id, touchees, gardes)
     etat = jugement.decider(lignes, {g.repere for g in garanties if g.optionnelle}, non_attendus, defauts,
-                            {g.repere: g.chemin for g in garanties})
+                            {g.repere: g.chemin for g in garanties},
+                            {g.repere for g in garanties if not g.porte_garantie and not g.optionnelle})
     if callable(regles):                               # avant « décider » : le suivi reste dans l'ordre (7.202)
         regles = regles()
     suivre("decision")

@@ -123,7 +123,7 @@ Neuf parties, dans l'ordre. Chaque étape garde son numéro, cité ailleurs dans
 | VI | 7.148 à 7.159 | Un quatrième contrat ajouté à froid : ce qui est général, ce qui ne l'est pas |
 | VII | 7.160 à 7.167 | Mettre en ligne, puis tout rejouer la veille de la livraison |
 | VIII | 7.168 à 7.189 | Finir A et B, puis des jeux jamais vus qui montrent un défaut de fond |
-| IX | 7.190 à 7.209 | La lecture des clauses : une seconde méthode, mesurée contre la première |
+| IX | 7.190 à 7.210 | La lecture des clauses : une seconde méthode, mesurée contre la première |
 
 ---
 
@@ -6000,6 +6000,42 @@ Et la page d'accueil décrivait encore la première méthode (« Lire : un modè
 
 **Puis la place de la saisie**, à la demande de l'utilisateur : la zone de la déclaration faisait 240 pixels sur un écran de 850. Trois gains, sans rien retirer de l'écran (ce qui sort de la vue passe dans les infobulles) : des cartes de contrat sur deux lignes (l'assureur ; le produit et la date, coupés si besoin), le reste au survol ; les exemples et le bouton « Analyser » sur une seule ligne, le compteur de caractères dans le coin de la zone de saisie ; des marges un peu plus serrées. La zone prend toute la hauteur qui reste.
 
+### 7.210 Un dernier tour sur la justesse : deux règles générales, rejouées sur les jeux vus
+
+**Le cadre.** L'utilisateur décide un dernier tour sur la justesse de la lecture des clauses, à condition que chaque
+correction soit une règle générale, puis un cinquième jeu pour le mesurer. Je pars des quinze écarts du jeu
+« quatre » (7.207), rangés en cinq familles. Ce jeu est vu désormais : le rejouer ne mesure rien, il vérifie qu'une
+règle fait ce qu'elle dit. Les réponses brutes du modèle étant gardées, les rejeux ne coûtent rien.
+
+**Deux règles, les plus sûres.**
+
+- *Un doute qui ne peut pas faire couvrir ne retient pas la réponse.* Un store banne arraché par la tempête : la
+  garantie tempête est exclue (les objets extérieurs, clause citée), mais une question restait sur la qualité
+  d'occupant, posée dans un chapitre qui ne porte aucune garantie ; la réponse était « à préciser ». De même, une
+  question de formule empruntée par renvoi à une garantie déjà exclue. La règle : un chapitre qui ne porte ni
+  garantie ni option, ou une garantie dont le seul doute est emprunté et qui ne couvre rien elle-même, ne tient pas
+  la réponse en suspens ; si toutes les garanties qui pouvaient couvrir sont exclues, la réponse suit les
+  exclusions. Un premier essai, qui écartait aussi les chapitres d'options sans garantie propre, faisait refuser un
+  vol à la terrasse d'un café que seule une option pouvait couvrir : le chapeau des options garde son doute.
+- *Une absence de couverture ne l'emporte pas sur des règles qui hésitent.* La garde de 7.205 (une absence, sans
+  clause citée, face à des règles qui couvrent : « à préciser ») vaut aussi face à des règles qui répondent « à
+  préciser ».
+
+**Rejoué** (sans frais, sur les réponses gardées ; ces jeux sont tous vus) :
+
+| Jeu | Avant | Après | Ce qui change |
+|---|---|---|---|
+| « quatre » | 45 sur 60 | 49 sur 60 | deux refus à tort deviennent « à préciser » (justes) ; deux « à préciser » deviennent « non couvert » (justes) |
+| « neuf » | 49 sur 60 | 48 sur 60 | un refus juste devient « à préciser » (n-b17) ; aucun couvert à tort de plus |
+| « aveugle », 30 cas | 26 sur 30 | 27 sur 30 | un « à préciser » devient « non couvert » (juste) |
+
+Le prix de la seconde règle se voit sur « neuf » : une absence qui avait raison devient une question. C'est le sens
+d'erreur le moins coûteux, et il est voulu. Aucun couvert à tort n'est ajouté nulle part. Deux tests.
+
+**Restent**, inscrits à la feuille de route : l'arbitrage ciblé quand la contresignature tire vers le doute (le plus
+gros poste, six écarts, qui demande un appel de plus au modèle) ; les refus cités hors de propos ; trois petits
+restes. Puis le jeu « cinq ».
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 26 nov. 2026. Dans l'ordre où je le ferais.
@@ -6263,3 +6299,4 @@ chaque point demande un jeu neuf.
 216. Une garde qui contresigne hérite des erreurs de celui qui contresigne : six des quinze écarts de la nouvelle méthode viennent des règles de l'ancienne.
 217. Un outil de mesure ne s'arrête pas sur la panne d'un cas : une erreur du fournisseur se compte comme une erreur de ce cas, et le passage continue.
 218. Une réponse longue derrière un proxy se protège par le flux : une ligne vide régulière coûte trois lignes de code, une requête coupée coûte l'analyse.
+219. Un doute n'a de poids que s'il peut changer la réponse : une question qui ne peut ouvrir aucune garantie ne doit pas retenir un refus fondé sur une clause citée.
