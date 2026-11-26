@@ -5996,6 +5996,7 @@ s'appliquait aussi à l'état du service. Elle s'appelle maintenant `.repere-cou
 
 **Puis la place de l'état du service.** Une fois la pastille rendue à sa taille, la ligne d'état, plus longue, est passée sous le titre : l'en-tête a grandi, et la zone de la déclaration a rétréci d'autant. Le titre cède maintenant la place (il peut passer à la ligne), l'état reste à droite sur une ligne, en plus court (« clauses : … · règles : … ») ; le détail complet est dans l'infobulle.
 La légende des cadres de couleur (conditions traduites en entier, en partie) passe aussi sur la ligne du titre « Les conditions générales », à droite et en plus petit : une ligne de moins au-dessus de la déclaration.
+Et la page d'accueil décrivait encore la première méthode (« Lire : un modèle traduit la déclaration en faits d'un vocabulaire fermé », « ses réponses donnent la décision tout de suite ») : elle décrit maintenant celle qui répond (juger, trancher, vérifier ; deux à trois minutes).
 
 ## 8. Ce qui reste à faire
 

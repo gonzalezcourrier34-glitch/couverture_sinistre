@@ -282,7 +282,7 @@
                     </div>
 
                     <details class="details">
-                        <summary>Raisonnement du moteur et contrôles</summary>
+                        <summary>{{ etape.reponse.mode === 'clauses' ? 'Raisonnement clause par clause et contrôles' : 'Raisonnement du moteur et contrôles' }}</summary>
                         @if (etape.reponse.avertissements.length) {
                             <div class="bloc-titre">Contrôles de la lecture</div>
                             <ul class="avertissements">
@@ -304,14 +304,25 @@
             } @empty {
                 <div class="vide">
                     <div class="vide-titre">Choisissez un contrat, collez la déclaration, analysez.</div>
-                    <p class="muted">La réponse dit <strong>couvert</strong>, <strong>non couvert</strong> ou <strong>à préciser</strong>,
-                        avec les clauses du contrat qui la fondent. Quand il manque une information, elle dit quoi demander au client :
-                        ses réponses donnent la décision tout de suite.</p>
-                    <ol class="principe">
-                        <li><strong>Lire</strong> Un modèle de langue traduit la déclaration en faits d’un vocabulaire fermé.</li>
-                        <li><strong>Décider</strong> Un moteur logique applique les règles tirées des conditions générales.</li>
-                        <li><strong>Vérifier</strong> Chaque citation est retrouvée mot pour mot dans le contrat ; un fait douteux suspend la réponse.</li>
-                    </ol>
+                    @if (sante()?.methode === 'clauses') {
+                        <p class="muted">La réponse dit <strong>couvert</strong>, <strong>non couvert</strong> ou <strong>à préciser</strong>,
+                            avec les clauses du contrat qui la fondent. Quand il manque une information, elle dit quoi demander au client.
+                            Comptez deux à trois minutes : chaque clause qui peut jouer est relue.</p>
+                        <ol class="principe">
+                            <li><strong>Juger</strong> Un modèle de langue trouve les chapitres en jeu, puis juge chaque clause, citation à l’appui.</li>
+                            <li><strong>Trancher</strong> Une logique fixe, écrite à l’avance, décide à partir des jugements ; les règles traduites contresignent chaque « couvert ».</li>
+                            <li><strong>Vérifier</strong> Chaque citation est retrouvée mot pour mot, dans le contrat et dans la déclaration ; un jugement mal cité est écarté.</li>
+                        </ol>
+                    } @else {
+                        <p class="muted">La réponse dit <strong>couvert</strong>, <strong>non couvert</strong> ou <strong>à préciser</strong>,
+                            avec les clauses du contrat qui la fondent. Quand il manque une information, elle dit quoi demander au client :
+                            ses réponses donnent la décision tout de suite.</p>
+                        <ol class="principe">
+                            <li><strong>Lire</strong> Un modèle de langue traduit la déclaration en faits d’un vocabulaire fermé.</li>
+                            <li><strong>Décider</strong> Un moteur logique applique les règles tirées des conditions générales.</li>
+                            <li><strong>Vérifier</strong> Chaque citation est retrouvée mot pour mot dans le contrat ; un fait douteux suspend la réponse.</li>
+                        </ol>
+                    }
                     <div class="legende">
                         <span class="verdict ton-succes"><span class="verdict-libelle">Couvert</span></span>
                         <span class="verdict ton-danger"><span class="verdict-libelle">Non couvert</span></span>

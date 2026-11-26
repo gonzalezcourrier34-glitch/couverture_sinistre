@@ -325,7 +325,9 @@ export class AppComponent implements OnInit {
         if (!contratId || !this.peutAnalyser()) {
             return;
         }
-        this.lancer('Le modèle lit la déclaration, le moteur décide…');
+        this.lancer(this.sante()?.methode === 'clauses'
+            ? 'Le modèle juge chaque clause, la logique tranche…'
+            : 'Le modèle lit la déclaration, le moteur décide…');
         this.suivi.set({});
         this.etapesSuivi.set(ETAPES_SUIVI);
         this.annonceSuivi.set(null);
