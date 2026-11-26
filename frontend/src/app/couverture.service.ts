@@ -84,7 +84,8 @@ export class CouvertureService {
         contratId: string,
         sinistre: string,
         souscription: Record<string, string> = {},
-        methode?: Methode
+        methode?: Methode,
+        chapitres?: string[]
     ): Observable<Suivi> {
         return new Observable<Suivi>((abonne) => {
             const arret = new AbortController();
@@ -92,7 +93,10 @@ export class CouvertureService {
                 const reponse = await fetch(`${API}/analyses/suivi`, {
                     method: 'POST',
                     headers: { 'content-type': 'application/json' },
-                    body: JSON.stringify({ contrat_id: contratId, sinistre, souscription, ...(methode ? { methode } : {}) }),
+                    body: JSON.stringify({
+                        contrat_id: contratId, sinistre, souscription,
+                        ...(methode ? { methode } : {}), ...(chapitres?.length ? { chapitres } : {})
+                    }),
                     signal: arret.signal
                 });
                 if (!reponse.ok || !reponse.body) {

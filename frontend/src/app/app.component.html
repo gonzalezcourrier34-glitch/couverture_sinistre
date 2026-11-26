@@ -228,17 +228,38 @@
                         </div>
                     }
 
-                    <!-- ### Lecture clause par clause : les questions, en phrases (pas de boutons : rien à renvoyer au moteur) -->
+                    <!-- ### Lecture clause par clause : les questions, et les réponses du client en mots (7.218).
+                         Elles s'ajoutent à la déclaration, que la lecture des clauses relit : ses citations peuvent
+                         alors s'appuyer sur les réponses, vérifiées mot pour mot comme le reste. -->
 
                     @if (last && etape.reponse.mode === 'clauses' && etape.reponse.questions.length) {
                         <div class="bloc a-preciser">
                             <div class="bloc-titre">À demander au client</div>
-                            <ul class="limites">
-                                @for (q of etape.reponse.questions; track $index) {
-                                    <li>{{ q }}</li>
+                            @for (q of etape.reponse.questions; track $index; let qi = $index) {
+                                <div class="question">
+                                    <div class="question-texte">{{ q }}</div>
+                                    <div class="valeurs reponse-libre">
+                                        <button type="button" class="chip" [class.chip-on]="reponsesLibres()[qi] === 'Oui.'"
+                                            (click)="repondreLibrement(qi, reponsesLibres()[qi] === 'Oui.' ? '' : 'Oui.')">Oui</button>
+                                        <button type="button" class="chip" [class.chip-on]="reponsesLibres()[qi] === 'Non.'"
+                                            (click)="repondreLibrement(qi, reponsesLibres()[qi] === 'Non.' ? '' : 'Non.')">Non</button>
+                                        <input type="text" class="champ-reponse" [attr.aria-label]="'Réponse du client : ' + q"
+                                            placeholder="ou la réponse du client, en mots"
+                                            [value]="reponsesLibres()[qi] ?? ''" (input)="saisirReponse(qi, $event)">
+                                    </div>
+                                </div>
+                            }
+                            <div class="actions">
+                                @if (reponsesTropLongues()) {
+                                    <span class="small">La déclaration et les réponses dépassent {{ longueurMax }} caractères : raccourcissez une réponse.</span>
+                                } @else {
+                                    <span class="small">Nouvelle lecture des clauses, la déclaration complétée par ces réponses : deux à trois minutes.</span>
                                 }
-                            </ul>
-                            <div class="small">Ajoutez ses réponses à la déclaration, puis relancez l’analyse.</div>
+                                <button type="button" class="bouton bouton-primaire"
+                                    [disabled]="!nbReponsesLibres() || reponsesTropLongues() || chargement()" (click)="relireAvecReponses()">
+                                    Relire avec {{ nbReponsesLibres() }} réponse{{ nbReponsesLibres() > 1 ? 's' : '' }}
+                                </button>
+                            </div>
                         </div>
                     }
 

@@ -185,6 +185,12 @@ export class AppComponent implements OnInit {
     /** Réponses du client aux points à préciser de la dernière étape. */
     readonly reponses = signal<Record<string, string>>({});
 
+    /** Lecture des clauses : les réponses du client aux questions de la dernière étape, en mots, par question (7.218). */
+    readonly reponsesLibres = signal<Record<number, string>>({});
+
+    /** La déclaration telle qu'elle a été envoyée en dernier : la base d'une nouvelle lecture après les réponses. */
+    private readonly declarationEnvoyee = signal('');
+
     /** Clauses du contrat choisi, chargées au premier article ouvert. */
     private readonly clausesParContrat = signal<Record<string, Record<string, Clause>>>({});
 
@@ -245,6 +251,22 @@ export class AppComponent implements OnInit {
     readonly nbReponses = computed(
         () => Object.values(this.reponses()).filter((v) => !!v).length
     );
+
+    readonly nbReponsesLibres = computed(
+        () => Object.values(this.reponsesLibres()).filter((v) => !!v.trim()).length
+    );
+
+    /** La déclaration suivie des réponses du client : ce que relira la lecture des clauses. */
+    readonly declarationAvecReponses = computed(() => {
+        const questions = this.derniere()?.reponse.questions ?? [];
+        const lignes = questions
+            .map((q, i) => ({ q, r: (this.reponsesLibres()[i] ?? '').trim() }))
+            .filter((x) => !!x.r)
+            .map((x) => `- ${x.q} ${x.r}`);
+        return lignes.length ? `${this.declarationEnvoyee()}\n\nPrécisions du client :\n${lignes.join('\n')}` : '';
+    });
+
+    readonly reponsesTropLongues = computed(() => this.declarationAvecReponses().length > LONGUEUR_MAX);
 
 
     // # Démarrage
@@ -332,12 +354,26 @@ export class AppComponent implements OnInit {
     // # Analyse d'une déclaration (le modèle lit, le moteur décide)
 
     analyser(): void {
-        const contratId = this.contratId();
-        const sinistre = this.sinistre().trim();
-        if (!contratId || !this.peutAnalyser()) {
+        if (!this.peutAnalyser()) {
             return;
         }
-        const methode = this.methode();
+        this.analyserTexte(this.sinistre().trim(), this.methode(), null);
+    }
+
+    /**
+     * Une analyse de `sinistre` par `methode`. `apresReponses` : le résumé des réponses du client quand c'est une
+     * nouvelle lecture après ses réponses (7.218) ; l'étape s'ajoute alors à l'échange au lieu de le recommencer.
+     */
+    private analyserTexte(
+        sinistre: string,
+        methode: Methode,
+        apresReponses: string | null,
+        chapitres?: string[]
+    ): void {
+        const contratId = this.contratId();
+        if (!contratId || this.chargement()) {
+            return;
+        }
         this.lancer(methode === 'clauses'
             ? 'Le modèle juge chaque clause, la logique tranche…'
             : 'Le modèle lit la déclaration, le moteur décide…');
@@ -346,7 +382,7 @@ export class AppComponent implements OnInit {
         this.annonceSuivi.set(null);
         this.suiviOuvert.set(true);
         const souscription = Object.fromEntries(Object.entries(this.souscription()).filter(([, v]) => !!v));
-        this.service.analyserAvecSuivi(contratId, sinistre, souscription, methode)
+        this.service.analyserAvecSuivi(contratId, sinistre, souscription, methode, chapitres)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: (message) => {
@@ -357,7 +393,10 @@ export class AppComponent implements OnInit {
                         const reponse = message.reponse;
                         setTimeout(() => {
                             this.suiviOuvert.set(false);
-                            this.ajouter({ origine: 'analyse', texte: sinistre, reponse }, true);
+                            this.declarationEnvoyee.set(sinistre);
+                            this.ajouter(apresReponses === null
+                                ? { origine: 'analyse', texte: sinistre, reponse }
+                                : { origine: 'reponses', texte: apresReponses, reponse }, apresReponses === null);
                         }, PAUSE_FIN_SUIVI);
                     } else if (message.etape === 'erreur') {
                         this.suiviOuvert.set(false);
@@ -378,6 +417,39 @@ export class AppComponent implements OnInit {
                     this.echec(e);
                 }
             });
+    }
+
+
+    // # Réponses du client, lecture des clauses : une nouvelle lecture, la déclaration complétée (7.218)
+
+    repondreLibrement(
+        index: number,
+        valeur: string
+    ): void {
+        this.reponsesLibres.update((r) => ({ ...r, [index]: valeur }));
+    }
+
+    /** Le texte saisi dans le champ de réponse d'une question. */
+    saisirReponse(
+        index: number,
+        evenement: Event
+    ): void {
+        this.repondreLibrement(index, (evenement.target as HTMLInputElement).value);
+    }
+
+    relireAvecReponses(): void {
+        const texte = this.declarationAvecReponses();
+        const questions = this.derniere()?.reponse.questions ?? [];
+        if (!texte || this.reponsesTropLongues() || this.chargement()) {
+            return;
+        }
+        const resume = questions
+            .map((q, i) => ({ q, r: (this.reponsesLibres()[i] ?? '').trim() }))
+            .filter((x) => !!x.r)
+            .map((x) => `${x.q} ${x.r}`)
+            .join(' ; ');
+        // Les chapitres de la lecture précédente : la désignation n'est pas redemandée, le dossier est le même (7.218).
+        this.analyserTexte(texte, 'clauses', resume, this.derniere()?.reponse.chapitres);
     }
 
 
@@ -510,6 +582,7 @@ export class AppComponent implements OnInit {
     ): void {
         this.etapes.update((etapes) => (nouvelle ? [etape] : [...etapes, etape]));
         this.reponses.set({});
+        this.reponsesLibres.set({});
         this.chargement.set(false);
     }
 

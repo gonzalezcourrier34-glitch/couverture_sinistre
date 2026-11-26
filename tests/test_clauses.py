@@ -184,6 +184,91 @@ def test_l_api_rend_une_lecture_des_clauses_au_format_de_ses_reponses(base):
     assert sortie["confiance"] == 1.0
 
 
+def test_plusieurs_sinistres_sont_juges_chacun_a_part(base):
+    """7.218 : une déclaration qui raconte deux sinistres (le découpage de 7.168, par le modèle de lecture des faits)
+    reçoit une ligne par sinistre ; chacun est jugé et contresigné à part, et l'écran suit les étapes une seule fois."""
+    import threading
+
+    from couverture.analyse import clauses
+    from couverture.api import service
+    from couverture.api.schemas import Decision as Reponse
+
+    chaises = "La tempête de samedi a emporté mes chaises de jardin."
+    vitre = "La tempête de samedi a cassé la vitre de la véranda."
+
+    class Decoupage:
+        def completer(self, systeme, message):
+            return json.dumps({"sinistres": [{"titre": "Les chaises", "phrases": [chaises]},
+                                             {"titre": "La vitre", "phrases": [vitre]}]}, ensure_ascii=False)
+
+    class Juge:
+        """Répond selon la consigne, quel que soit l'ordre des appels : les deux sinistres sont jugés en même temps."""
+
+        def __init__(self):
+            self.recus, self.verrou = [], threading.Lock()
+
+        def completer(self, systeme, message):
+            with self.verrou:
+                self.recus.append(message)
+            if systeme == clauses.SYSTEME_DESIGNATION:
+                return json.dumps({"chapitres": ["3.1.2"], "motif": ""})
+            return json.dumps(jugements(**{"3_1_2_1": "couvre"}), ensure_ascii=False)
+
+    regles = Regles(Decision.COUVERT)
+    regles.llm = Decoupage()
+    etapes, juge = [], Juge()
+    r, sortie = service.analyser_clauses(base, regles, "c1", chaises + " " + vitre, juge,
+                                         suivi=lambda e, d=None: etapes.append((e, d)))
+    Reponse(**sortie)
+    assert sortie["decision"] == "COUVERT" and len(r.parties) == 2
+    assert [x["titre"] for x in sortie["sinistres"]] == ["Les chaises", "La vitre"]
+    assert sortie["justification"].startswith("2 sinistres dans cette déclaration")
+    assert {x["declaration"] for x in sortie["sinistres"]} == {chaises, vitre}
+    assert sum(chaises in m for m in juge.recus) >= 2 and sum(vitre in m for m in juge.recus) >= 2, "chacun jugé à part"
+    for e in ("designation", "jugement", "regles", "decision"):     # les deux lectures avancent chacune à son pas
+        ouvertes = [i for i, (x, d) in enumerate(etapes) if x == e and d is None]
+        closes = [i for i, (x, d) in enumerate(etapes) if x == e and d is not None]
+        assert len(ouvertes) == 1 and len(closes) == 1 and ouvertes[0] < closes[0], "ouverte puis close, une seule fois"
+    assert next(d for e, d in etapes if e == "designation" and d).startswith("2 sinistres dans la déclaration, chacun")
+
+
+def test_la_relecture_apres_les_reponses_ne_redemande_pas_les_chapitres(base):
+    """7.218 : relue avec les réponses du client, la déclaration garde les chapitres de la première lecture : un seul
+    appel (le jugement), le même dossier, et la réponse rend ses chapitres pour la relecture suivante."""
+    from couverture.api import service
+
+    premier = Modele({"chapitres": ["3.1.2"], "motif": ""}, jugements(**{"3_1_2_1": "couvre"}))
+    _, sortie = service.analyser_clauses(base, Regles(Decision.COUVERT), "c1", DECLARATION, premier)
+    assert sortie["chapitres"] == ["3.1.2"]
+    relu = Modele(jugements(**{"3_1_2_1": "couvre"}))
+    complete = DECLARATION + "\n\nPrécisions du client :\n- Les chaises étaient-elles attachées ? Non."
+    _, apres = service.analyser_clauses(base, Regles(Decision.COUVERT), "c1", complete, relu,
+                                        chapitres=sortie["chapitres"])
+    assert len(relu.recus) == 1 and relu.recus[0][0] == clauses.SYSTEME_JUGEMENT, "pas de désignation redemandée"
+    assert relu.recus[0][1].endswith(complete) and apres["decision"] == "COUVERT"
+    assert premier.recus[1][1].split("## Déclaration")[0] == relu.recus[0][1].split("## Déclaration")[0], \
+        "le même dossier, dans le même ordre : le cache du fournisseur le reprend"
+
+
+def test_une_decision_differente_par_sinistre_laisse_l_ensemble_a_preciser():
+    """Deux sinistres, deux décisions : pas de réponse pour le tout ; les questions portent le titre du sinistre."""
+    from couverture.api import service
+    from couverture.models import Faits, Resultat, Verdict
+
+    def lu(decision, questions):
+        r = Resultat(sinistre="s", contrat_id="c1", methode="clauses", faits=Faits(), clauses_consultees=[],
+                     verdict=Verdict(decision=decision, justification="."))
+        return r, {"decision": decision.value, "justification": "Motif.", "confiance": 1.0, "a_preciser": [],
+                   "questions": questions, "citations": [], "limites": [], "raisonnement": [], "avertissements": [],
+                   "durees_ms": {"lecture": 10}}
+
+    _, sortie = service.plusieurs_lectures("c1", "s", [("Le vol", *lu(Decision.COUVERT, [])),
+                                                       ("La fuite", *lu(Decision.INCERTAIN, ["Était-ce le gel ?"]))])
+    assert sortie["decision"] == "INCERTAIN"
+    assert sortie["questions"] == ["La fuite — Était-ce le gel ?"]
+    assert "1. Le vol : Couvert. Motif." in sortie["justification"]
+
+
 def test_un_couvert_que_les_regles_ne_peuvent_contresigner_reste_a_examiner(base):
     """La chaîne de règles en panne : la lecture couvre, mais un couvert non contresigné devient « incertain »."""
     from couverture.api import service

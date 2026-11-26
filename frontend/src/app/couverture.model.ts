@@ -101,6 +101,8 @@ export interface Decision {
     raisonnement: string[];
     mode: string;
     durees_ms: Record<string, number>;
+    /** Lecture des clauses : les chapitres relus, renvoyés pour relire après les réponses du client (7.218). */
+    chapitres?: string[];
 }
 
 /** Une étape de l'échange : une analyse de déclaration, ou une décision après les réponses du client. */

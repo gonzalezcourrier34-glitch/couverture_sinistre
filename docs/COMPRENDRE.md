@@ -253,7 +253,10 @@ flowchart TD
 ```
 
 Pour un sinistre, l'analyse prend deux à trois minutes, et l'écran en suit chaque étape. Le dossier compte de 70 à
-près de 300 clauses selon le contrat et le sinistre.
+près de 300 clauses selon le contrat et le sinistre. Une déclaration qui raconte plusieurs sinistres (un vol, et par
+ailleurs une fuite) est d'abord découpée, et chaque sinistre est jugé à part. Quand il manque une information, la
+question est une phrase ; le client y répond en mots, et la déclaration complétée est relue entière : c'est plus lent
+qu'avec la première méthode, où la réponse du client donne la décision sans nouvel appel au modèle.
 
 **Ce que cette hypothèse change, et que je dois assumer.** Dans la première, le modèle ne voyait que la déclaration
 et ne décidait de rien. Dans la seconde, il voit le contrat et porte un jugement sur chaque clause. C'est plus de

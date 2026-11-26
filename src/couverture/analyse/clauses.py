@@ -215,13 +215,16 @@ def garanties_touchees(garanties: list[attendu.Garantie], clauses: list[Clause],
 
 
 def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | Callable | None = None,
-         llm_designation: LLM | None = None, garder: bool = False, suivi: Callable | None = None) -> Lecture:
+         llm_designation: LLM | None = None, garder: bool = False, suivi: Callable | None = None,
+         chapitres: list[str] | None = None) -> Lecture:
     """L'analyse d'une déclaration par la lecture des clauses. `regles` : la réponse de la chaîne de règles sur
     la même déclaration, pour la contresignature (rien : la lecture tient seule) ; ou une fonction qui la rend,
     appelée au moment de contresigner, pour que la chaîne tourne pendant la lecture. Une simple décision suffit à
     contresigner ; le résultat entier de la chaîne (avec son verdict) permet en plus la relecture ciblée de ses
     obstacles quand elle ne couvre pas (7.211). `suivi(etape, detail=None)` :
-    le fil de l'analyse, comme pour la chaîne de règles (7.201)."""
+    le fil de l'analyse, comme pour la chaîne de règles (7.201). `chapitres` : ceux d'une lecture précédente du même
+    sinistre (la relecture après les réponses du client, 7.218) ; la désignation n'est pas redemandée, et le dossier,
+    le même, profite du cache du fournisseur."""
     suivre = suivi or (lambda etape, detail=None: None)
     clauses = base.clauses(contrat_id)
     garanties = attendu.garanties(base, contrat_id)
@@ -229,9 +232,12 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | C
         attendu.enregistrer(base, contrat_id)
         garanties = attendu.garanties(base, contrat_id)
     suivre("designation")
-    reponse = extraire_json(completer_avec_schema(llm_designation or llm, SYSTEME_DESIGNATION,
-                                                  message_designation(clauses, declaration), SCHEMA_DESIGNATION))
-    designes = [str(r).strip().strip("[]") for r in reponse.get("chapitres") or []]
+    if chapitres:
+        designes = list(chapitres)
+    else:
+        reponse = extraire_json(completer_avec_schema(llm_designation or llm, SYSTEME_DESIGNATION,
+                                                      message_designation(clauses, declaration), SCHEMA_DESIGNATION))
+        designes = [str(r).strip().strip("[]") for r in reponse.get("chapitres") or []]
     touchees = garanties_touchees(garanties, clauses, designes)
     if not touchees:                                   # rien de désigné : ni refus ni couverture, on le dit
         suivre("designation", "aucun chapitre du contrat ne correspond")
@@ -246,7 +252,7 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | C
     a_juger = {a.clause_id for a in attendues if a.bloque}
     generales = {a.clause_id for a in attendues if a.role == "exclusion_generale"}
     suivre("designation", f"{len(touchees)} garantie{'s' * (len(touchees) > 1)} à examiner, "
-                          f"{len(pieces)} clauses au dossier")
+                          f"{len(pieces)} clauses au dossier" + (" (chapitres de la première lecture)" if chapitres else ""))
     suivre("jugement")
     rendus = jugement.depuis_reponse(extraire_json(completer_avec_schema(
         llm, SYSTEME_JUGEMENT, message_jugement(pieces, a_juger, declaration, generales), SCHEMA_JUGEMENT)))

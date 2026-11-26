@@ -420,6 +420,26 @@ textarea {
     }
 }
 
+// Lecture des clauses : une réponse du client en mots, à côté de Oui et Non (7.218).
+.reponse-libre {
+    align-items: center;
+}
+
+.champ-reponse {
+    flex: 1 1 220px;
+    min-width: 0;
+    padding: 4px 10px;
+    border: 1px solid var(--plume);
+    border-radius: 10px;
+    font: inherit;
+    font-size: 14px;
+
+    &:focus {
+        border-color: var(--primaire);
+        outline: 3px solid var(--primaire-pale);
+    }
+}
+
 // Le choix de la méthode, sur la ligne du titre de la déclaration, à droite (7.216).
 .choix-methode {
     display: inline-flex;

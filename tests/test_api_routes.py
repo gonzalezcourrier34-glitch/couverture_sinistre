@@ -253,7 +253,7 @@ def test_la_methode_clauses_se_choisit_par_requete(client, monkeypatch):
 
     appels = []
 
-    def lecture(base, chaine, contrat_id, sinistre, llm, suivi=None, souscription=None):
+    def lecture(base, chaine, contrat_id, sinistre, llm, suivi=None, souscription=None, chapitres=None):
         appels.append(contrat_id)
         (suivi or (lambda e, d=None: None))("designation", "1 garantie à examiner, 5 clauses au dossier")
         r, sortie = service.analyser(chaine, sinistre)
@@ -282,7 +282,7 @@ def test_le_suivi_bat_pendant_une_longue_attente(client, monkeypatch):
 
     from couverture.api.routes import analyse_suivie
 
-    def lecture(base, chaine, contrat_id, sinistre, llm, suivi=None, souscription=None):
+    def lecture(base, chaine, contrat_id, sinistre, llm, suivi=None, souscription=None, chapitres=None):
         time.sleep(0.35)
         r, sortie = service.analyser(chaine, sinistre)
         return r, sortie | {"mode": "clauses"}

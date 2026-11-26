@@ -77,7 +77,8 @@ def analyser_avec_suivi(demande: AnalyseRequest, pipelines: Pipelines = Depends(
             if par_clauses:
                 resultat, reponse = service.analyser_clauses(pipelines.base, chaine, demande.contrat_id, sinistre,
                                                              modele_des_clauses(), suivi=suivre,
-                                                             souscription=demande.souscription)
+                                                             souscription=demande.souscription,
+                                                             chapitres=demande.chapitres)
             else:
                 resultat, reponse = service.analyser(chaine, sinistre, suivi=suivre, souscription=demande.souscription)
             journal.noter(resultat, duree_ms=int((time.perf_counter() - debut) * 1000))

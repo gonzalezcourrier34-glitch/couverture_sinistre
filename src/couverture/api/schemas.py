@@ -28,6 +28,9 @@ class AnalyseRequest(BaseModel):
         Facultatif : `regles` (la chaîne de règles, quelques secondes) ou `clauses` (chaque clause jugée par le
         modèle, contresignée par les règles : deux à trois minutes). Sans valeur : celle du serveur
         (`COUVERTURE_METHODE`).
+    chapitres : list[str] | None
+        Facultatif, lecture des clauses seulement : les `chapitres` d'une analyse précédente du même sinistre, quand on
+        le relit complété par les réponses du client. La désignation n'est pas redemandée (7.218).
     """
 
     contrat_id: str = Field(min_length=1, examples=["assureur-a-habitation-2025"])
@@ -35,6 +38,8 @@ class AnalyseRequest(BaseModel):
         "En faisant du vélo dans le parc, j'ai renversé un piéton. Il s'est cassé le poignet."])
     souscription: dict[str, str] = Field(default_factory=dict, examples=[{"formule": "privilege"}])
     methode: Literal["regles", "clauses"] | None = None
+    # Lecture des clauses, relue après les réponses du client : les chapitres de la lecture précédente (7.218).
+    chapitres: list[str] | None = Field(default=None, max_length=60)
 
 
 class DecisionRequest(BaseModel):
@@ -129,6 +134,7 @@ class Decision(BaseModel):
     mode: str
     durees_ms: dict[str, int]
     sinistres: list[dict[str, Any]] = Field(default_factory=list)
+    chapitres: list[str] = Field(default_factory=list)
 
 
 class FicheRequest(BaseModel):

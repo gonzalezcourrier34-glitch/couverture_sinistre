@@ -123,7 +123,7 @@ Neuf parties, dans l'ordre. Chaque étape garde son numéro, cité ailleurs dans
 | VI | 7.148 à 7.159 | Un quatrième contrat ajouté à froid : ce qui est général, ce qui ne l'est pas |
 | VII | 7.160 à 7.167 | Mettre en ligne, puis tout rejouer la veille de la livraison |
 | VIII | 7.168 à 7.189 | Finir A et B, puis des jeux jamais vus qui montrent un défaut de fond |
-| IX | 7.190 à 7.217 | La lecture des clauses : une seconde méthode, mesurée contre la première |
+| IX | 7.190 à 7.218 | La lecture des clauses : une seconde méthode, mesurée contre la première |
 
 ---
 
@@ -6257,6 +6257,44 @@ juger, relire un obstacle) n'étaient pas versionnées, alors que le projet vers
 dans `docs/consignes/`, et le garde-fou de la CI les couvre désormais. Aucun chiffre nouveau : tous viennent des
 mesures déjà écrites ici.
 
+### 7.218 Plusieurs sinistres, et les réponses du client, dans la lecture des clauses
+
+*26 novembre, 15 h 10, trouvé à l'usage.* Sur le site, « mon garage ouvert, la porte fracturée, mon vélo volé ; au
+même moment, mon congélateur fuyait » reçoit une seule réponse, « à préciser », les règles ne concordant pas, avec
+des questions mêlées (la plainte pour le vol, le délai de huit jours pour l'eau). « Je croyais qu'on traitait ça comme
+des sinistres, et donc des réponses. » C'était vrai pour la chaîne de règles (7.168) ; la lecture des clauses, écrite
+le lendemain, ne passait pas par le découpage. Aucun jeu ne l'avait montré : leurs déclarations ne racontent qu'un
+sinistre. Une limite que je n'avais pas écrite.
+
+**La règle.** Avant la lecture, la même étape de découpage (le modèle de lecture des faits, chaque phrase retrouvée
+mot pour mot dans la déclaration, « dans le doute, un seul sinistre »). À deux sinistres ou plus, chacun est jugé à
+part, en même temps, avec sa propre contresignature ; la réponse a une ligne par sinistre, et la décision d'ensemble
+n'est ferme que si tous reçoivent la même (comme `chaine.plusieurs_sinistres`). Les questions et les réserves portent
+le titre de leur sinistre. L'écran suit les étapes une seule fois : une étape est commencée à la première lecture qui
+y entre, finie quand toutes l'ont finie. L'attente ne change pas ; le coût est multiplié par le nombre de sinistres.
+`juger` ne découpe pas : les mesures restent comparables.
+
+**Et les réponses du client.** « Les questions avec les réponses dans le chat, comme pour les règles, c'est plus
+possible ? » Avec la chaîne de règles, une question porte sur un fait du vocabulaire, et la réponse du client va au
+moteur, sans modèle, en un instant. Avec la lecture des clauses, la question est une phrase : il n'y a pas de fait à
+renvoyer au moteur. L'écran propose donc, sous chaque question, « Oui », « Non » ou une réponse en mots ; elles
+s'ajoutent à la déclaration (« Précisions du client : - question réponse »), qui est relue entière par la lecture des
+clauses, en deux à trois minutes. Les citations de la déclaration peuvent alors s'appuyer sur les réponses, et se
+vérifient mot pour mot comme le reste. La déclaration complétée garde la limite de 2 000 caractères.
+
+**Moins de tokens pour cette relecture.** « On peut aussi envoyer moins de tokens à Mistral ? » Oui, sans rien
+risquer : les réponses précisent le même sinistre, elles ne le changent pas de chapitre. La réponse rend donc ses
+`chapitres`, et la relecture les renvoie ; la désignation n'est pas redemandée (un appel de moins, avec sa
+réflexion), et le dossier, identique et dans le même ordre (les clauses d'abord, la déclaration à la fin), est repris
+par le cache du fournisseur, facturé environ dix fois moins cher à l'envoi. À plusieurs sinistres, chacun reçoit tous
+les chapitres de la lecture précédente : un chapitre de trop coûte des tokens, un chapitre de moins une exclusion
+oubliée. Ce que je n'ai pas fait : ne rejuger que les clauses « à vérifier ». Une réponse peut faire jouer une
+exclusion jugée sans effet la première fois (« non, la porte n'était pas fermée à clé ») ; tout le dossier est rejugé.
+Le jugement, et sa réflexion, restent donc l'essentiel de la facture ; l'économie n'est pas mesurée.
+
+Trois tests (deux sinistres jugés chacun à part, suivi compris ; deux décisions différentes laissent l'ensemble « à
+préciser » ; la relecture ne redemande pas les chapitres et envoie le même dossier). Rien n'est mesuré sur un jeu : il en faudrait un fait de déclarations à plusieurs sinistres.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 26 nov. 2026, après la mesure du jeu « cinq ». Dans l'ordre où je le ferais.
@@ -6271,8 +6309,16 @@ demande un jeu neuf.
   essayées et retirées (7.212, 7.214) ; une autre voie reste à trouver.
 - Une exclusion citée face à un point « à vérifier » : laquelle doit l'emporter.
 - Le temps d'attente : deux à trois minutes, surtout la réflexion de Mistral Large.
+- *Ce que la chaîne de règles a, et que la lecture des clauses n'a pas encore* (relevé le 26 nov., 7.218) :
+  - en ligne, l'article entier et la fiche PDF ne servent que des clauses que les **règles** citent (la garde de 7.161
+    contre le téléchargement du contrat) : une clause citée par la seule lecture des clauses peut être refusée à
+    l'ouverture et manquer à la fiche ;
+  - le journal ne relève ni les tokens ni le coût d'une analyse, et les tableaux Grafana ne séparent pas les méthodes ;
+  - la stabilité n'est pas mesurée (la chaîne passe chaque jeu trois fois et compte ses cas instables) ;
+  - les questions ne sont pas triées par leur effet : la chaîne ne pose que celles dont la réponse change la décision.
 - *Fait depuis 7.207* : une absence de couverture face à des règles qui hésitent (7.210), un doute qui ne peut pas
-  faire couvrir (7.210), la relecture ciblée des obstacles des règles (7.211), la méthode au choix à l'écran (7.216).
+  faire couvrir (7.210), la relecture ciblée des obstacles des règles (7.211), la méthode au choix à l'écran (7.216),
+  plusieurs sinistres et les réponses du client (7.218).
 
 **1. La validation par le métier.** C'est la première limite du projet.
 - Faire relire les règles d'un contrat par un juriste ou un gestionnaire de sinistres, et mesurer sur ses propres cas.
