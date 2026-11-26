@@ -17,7 +17,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 from ..contrat.base import Base
-from ..mesure.evaluation import JEUX_FERMES, charger_cas, fichiers_jeu
+from ..mesure.evaluation import JEUX_FERMES, JEUX_JAMAIS_VUS, charger_cas, fichiers_jeu
 
 
 def ajouter(sous) -> None:
@@ -31,7 +31,7 @@ def ajouter(sous) -> None:
     p.add_argument("--regles", action="store_true", help="Demander aussi la chaîne de règles, pour la contresignature")
     p.add_argument("--echantillon", type=int, default=0, metavar="N", help="Les N premiers cas du jeu seulement")
     p.add_argument("--mesure-finale", action="store_true",
-                   help="Exigé pour le jeu « quatre », qui ne se passe qu'une fois et ne sert pas à régler")
+                   help="Exigé pour un jeu jamais regardé (« cinq »), qui ne se passe qu'une fois et ne sert pas à régler")
     p.add_argument("--paralleles", type=int, default=4, metavar="N",
                    help="N cas à la fois (4 par défaut, comme le banc) : le temps d'un passage, pas celui d'un cas")
     p.add_argument("--detail", action="store_true", help="Afficher chaque jugement qui n'est pas « sans effet »")
@@ -99,8 +99,8 @@ def executer(a, base: Base, donnees: Path) -> int:
     from ..llm import CleRefusee, ErreurLLM, MistralLLM
 
     if a.jeu:
-        if a.jeu == "quatre" and not a.mesure_finale and not a.rejouer:
-            sys.exit("Le jeu « quatre » n'a jamais été regardé : il ne se passe qu'une fois, pour la mesure finale, "
+        if a.jeu in JEUX_JAMAIS_VUS and not a.mesure_finale and not a.rejouer:
+            sys.exit(f"Le jeu « {a.jeu} » n'a jamais été regardé : il ne se passe qu'une fois, pour la mesure finale, "
                      "et ne sert pas à régler. Ajouter --mesure-finale pour le lancer en connaissance de cause.")
         cas = charger_cas(*fichiers_jeu(donnees, a.contrat, a.jeu))
         cas = [c for c in cas if not a.cas or c["id"] in a.cas]

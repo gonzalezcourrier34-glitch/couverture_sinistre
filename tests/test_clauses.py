@@ -129,12 +129,12 @@ def test_les_jugements_d_une_analyse_sont_gardes_en_table(base):
 
 
 def test_le_jeu_jamais_regarde_ne_se_lance_pas_par_megarde(base, tmp_path):
-    """`juger --jeu quatre` s'arrête avant tout appel, sauf avec --mesure-finale."""
+    """`juger --jeu cinq` s'arrête avant tout appel, sauf avec --mesure-finale."""
     import argparse
 
     from couverture.cli import juger
 
-    a = argparse.Namespace(contrat="c1", sinistre=None, jeu="quatre", cas=[], modele="m", regles=False, detail=False,
+    a = argparse.Namespace(contrat="c1", sinistre=None, jeu="cinq", cas=[], modele="m", regles=False, detail=False,
                            echantillon=0, mesure_finale=False, paralleles=1, rejouer=False)
     with pytest.raises(SystemExit) as arret:
         juger.executer(a, base, tmp_path)

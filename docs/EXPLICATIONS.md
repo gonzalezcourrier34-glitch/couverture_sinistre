@@ -461,7 +461,7 @@ Une commande par module (`cli/regles.py`, `cli/banc.py`…), comme une route par
 | `couverture formules --contrat ID --page N` | Lit le tableau des garanties par formule d'un contrat. |
 | `couverture rediger --contrat ID --article 2.2` | Mistral Large rédige les règles d'une garantie ; le code les contrôle ; `--accepter` les ajoute. |
 | `couverture analyser --contrat ID "…" [--detail] [--json]` | Analyse un sinistre : décision, motif, preuves, questions, arbre de preuve. |
-| `couverture juger --contrat ID "…" \| --jeu J [--cas …] [--regles] [--paralleles 4]` | La lecture des clauses sur une déclaration ou sur les cas d'un jeu : décision, clauses jugées, tokens et cache ; un bilan par jeu dans `data/debug/`. Le jeu « quatre » demande `--mesure-finale`. |
+| `couverture juger --contrat ID "…" \| --jeu J [--cas …] [--regles] [--paralleles 4]` | La lecture des clauses sur une déclaration ou sur les cas d'un jeu : décision, clauses jugées, tokens et cache ; un bilan par jeu dans `data/debug/`. Un jeu jamais regardé (« cinq ») demande `--mesure-finale`. |
 | `couverture banc --contrat ID [--jeu ferme] [--partie test] [--couches …]` | Le golden set ou le jeu fermé rejoué : règles, lecture, chaîne ; portes ; rapport dans `data/bancs/`. |
 | `couverture exemples [--partager] [--indexer] [--proches "…"]` | La banque d'exemples de lecture et le partage mise au point / test. |
 | `couverture api [--port 8001]` | Lance l'API FastAPI (documentation sur `/docs`). |

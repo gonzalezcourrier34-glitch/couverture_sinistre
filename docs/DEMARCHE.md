@@ -123,7 +123,7 @@ Neuf parties, dans l'ordre. Chaque étape garde son numéro, cité ailleurs dans
 | VI | 7.148 à 7.159 | Un quatrième contrat ajouté à froid : ce qui est général, ce qui ne l'est pas |
 | VII | 7.160 à 7.167 | Mettre en ligne, puis tout rejouer la veille de la livraison |
 | VIII | 7.168 à 7.189 | Finir A et B, puis des jeux jamais vus qui montrent un défaut de fond |
-| IX | 7.190 à 7.214 | La lecture des clauses : une seconde méthode, mesurée contre la première |
+| IX | 7.190 à 7.215 | La lecture des clauses : une seconde méthode, mesurée contre la première |
 
 ---
 
@@ -6157,6 +6157,31 @@ Mieux que la relecture seule (un contre sept), pas assez : deux contre cinq. **C
 retirée** ; le code revient à celui de 7.213. Ce que j'en retiens : relire un refus en demandant « la clause
 s'applique-t-elle ? » fait douter le modèle de refus justes plus souvent qu'il ne corrige de refus à tort, avec ou
 sans le dossier. Les deux refus à tort restent une limite, affichée à l'écran par le désaccord avec les règles.
+
+### 7.215 Le jeu « cinq » : écrit, annoté, figé avant la mesure
+
+*26 novembre, 13 h 15.* Le tour de justesse est fini (7.210 à 7.214) ; ses rejeux sur les jeux vus sont des
+contrôles, pas des mesures. Il faut un jeu neuf, monté comme les précédents (7.79, 7.185, 7.187).
+
+**L'écriture.** Trois agents Claude neufs, un par contrat, n'ont reçu que le texte des conditions générales et la
+liste des déclarations des quatre jeux précédents, pour ne pas y retomber ; ni les règles, ni le code, ni les
+consignes de lecture. 20 déclarations chacun, 7 couverts, 7 non couverts, 6 incertains, des situations peu
+courantes (un bang supersonique, un fauteuil roulant renversé, une tombe saccagée, un chien électrocuté…). Je ne
+les ai pas écrites : je connais les règles. Chaque citation a été retrouvée mot pour mot dans le texte.
+
+**Le second avis.** Jusqu'ici c'était Mistral Large. Or c'est lui qui lit dans la méthode mesurée : un second avis
+du même modèle aurait pu partager ses erreurs de lecture. Trois autres agents Claude neufs ont donc répondu aux
+mêmes déclarations sans voir la première réponse. Résultat : 56 accords stricts, 3 souples, 1 désaccord (`c-a20`,
+un locataire qui perce un tuyau encastré). Un agent arbitre, neuf lui aussi, a retenu « couvert » : chez A, la
+responsabilité locative est l'une des deux couvertures de base, pas une option. Aucun cas écarté.
+
+**Dans le code, peu de chose** : `cinq` rejoint `JEUX_FERMES`, et le garde-fou de `juger` vaut désormais pour les
+jeux jamais regardés (`JEUX_JAMAIS_VUS = ("cinq",)`) : sans `--mesure-finale`, rien ne part. Le jeu « quatre », vu,
+se rejoue librement.
+
+**La mesure, une seule fois, code figé avant** : la chaîne de règles par le banc (trois passages par contrat), la
+lecture des clauses par `juger --regles --mesure-finale` (un passage, environ 5 $). Les chiffres s'écriront tels
+quels, ci-dessous et dans le README, qu'ils soient bons ou non.
 
 ## 8. Ce qui reste à faire
 
