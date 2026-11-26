@@ -50,9 +50,9 @@ Ce qui me manque encore : tenir une charge réelle, et travailler en équipe sur
 
 ## Note de conception
 
-### 1. Le besoin
+### 1. La question, et le critère fixé avant de mesurer
 
-Un gestionnaire reçoit une déclaration en langage courant et doit dire si le contrat la couvre. Trois choses comptent pour lui, dans cet ordre :
+Un gestionnaire reçoit une déclaration en langage courant et doit dire si le contrat la couvre. Ma question : un système peut-il faire ce travail avec lui, de façon vérifiable ? Avant de construire quoi que ce soit, j'ai fixé ce qui compterait pour le juger, dans cet ordre :
 
 1. **ne pas couvrir à tort** : c'est l'erreur qui coûte ;
 2. **pouvoir vérifier** : chaque réponse renvoie à la phrase du contrat, qu'il relit en un clic ;
@@ -130,7 +130,7 @@ Les réponses attendues ont été établies d'après le texte des conditions gé
 - **Plus de refus à tort** (quatre au lieu de deux), et une attente de deux à trois minutes. Six des quinze écarts de la lecture des clauses viennent de la contresignature : la lecture couvre à raison, les règles se trompent, la réponse devient « à préciser ».
 - **Ce qui n'est pas mesuré** : la lecture des clauses sans la contresignature des règles, c'est-à-dire sur un contrat qu'on n'aurait pas traduit. C'est la condition pour dire qu'elle s'étend à un nouveau contrat sans travail de traduction.
 
-**L'histoire de la première méthode, jeu par jeu.** Trois contrats de trois assureurs (anonymisés A, B, D), sur le même moteur. Mistral Medium 3.5 lit (`mistral-medium-2604`), Mistral Small 4 vérifie (`mistral-small-2603`). Mesures du 22 novembre 2026, trois séries dans la journée (13 h 30, 16 h 20, 17 h 25), trois passages par banc ; la fourchette donne les trois séries :
+**Ma première hypothèse, mesurée jeu par jeu : comment je suis arrivé à la seconde.** Trois contrats de trois assureurs (anonymisés A, B, D), sur le même moteur. Mistral Medium 3.5 lit (`mistral-medium-2604`), Mistral Small 4 vérifie (`mistral-small-2603`). Mesures du 22 novembre 2026, trois séries dans la journée (13 h 30, 16 h 20, 17 h 25), trois passages par banc ; la fourchette donne les trois séries :
 
 | Banc | Réponses justes | Couverts à tort | Refus à tort |
 |---|---|---|---|
@@ -169,6 +169,9 @@ Les réponses attendues ont été établies d'après le texte des conditions gé
 - **Un cas de D ressemble à un exemple de lecture** écrit avant lui (des tags sur un mur, `av-d13` et `ex-d14`) : l'annotateur ne l'avait pas vu, c'est un hasard, mais ce cas a pu être aidé. Il reste dans le jeu, la ressemblance est déclarée dans `data/lecture/proches_declares.json` ; sans lui, D resterait à 77 %.
 - Ce que cela dit : la méthode empêche de répondre sans preuve, pas de mal traduire un contrat. Les jeux qui ont servi pendant les réglages flattent le système ; la relecture par un juriste et un jeu neuf à chaque contrat restent nécessaires.
 
+<details>
+<summary><b>Le journal de mes mesures de la première méthode, jour par jour (22 au 25 novembre)</b> : chaque lot de règles, et ce que les bancs en ont dit</summary>
+
 - **Sur ces cinq bancs, toutes les erreurs viennent de la lecture**, pas des règles : avec des faits exacts, le moteur ne se trompe pas.
 - **Une erreur se répète à chaque passage** : chez D, une crue avec arrêté de catastrophe naturelle est refusée. Chez B, un vol dans une voiture a été couvert à tort à chaque passage jusqu'au 24 novembre au soir, puis corrigé en regardant ce cas (voir la dernière ligne ci-dessous). Les autres sont des « à préciser » de trop : une question au lieu d'une réponse.
 - **Un couvert à tort est apparu dans la journée, sans que rien ne change dans la lecture** : un fer à repasser qui brûle une housse, lu « accident » six fois de suite, puis « dégât électrique » deux fois sur trois, puis trois fois sur trois, et alors couvert. La consigne et le vocabulaire envoyés au modèle sont identiques entre ces séries, et la version du modèle aussi (`mistral-medium-2604`, vérifié auprès de Mistral) : à température 0 et graine fixe, le même modèle ne lit pas toujours le même texte de la même façon. C'est l'erreur qui coûte, et la lecture ne la garantit pas à zéro.
@@ -190,9 +193,11 @@ Les réponses attendues ont été établies d'après le texte des conditions gé
 - **Le 25 au matin, après le rangement**, les quatre bancs redonnent les mêmes chiffres : A 94 % (partie test) et 100 % (jeu fermé), B 90 %, D 96 %, aucun couvert à tort. Et parce que trois cas des jeux fermés ont fini par servir à corriger une règle, **un second jeu écrit sans voir les règles** est monté dans `data/aveugle` (7.185) : 60 déclarations, 20 par contrat pour A, B et D, écrites par des annotateurs qui n'ont lu que le texte des conditions générales. Il ne sert qu'à mesurer, et ses chiffres sont plus bas : A 95 %, B 58 %, D 78 % (tableau ci-dessus).
 - La **« confiance »** affichée à l'écran (85 % pour un couvert ou un refus, 40 % pour un « à préciser », moins quand une réserve subsiste) est une valeur fixe par type de réponse, pas une probabilité mesurée.
 
-### 5. Ce qui a été essayé, et ce que la mesure a dit
+</details>
 
-Chaque essai est mesuré avant d'être gardé ; les échecs sont dans [la démarche](docs/DEMARCHE.md), avec leurs chiffres.
+### 5. Ce que j'ai essayé, et ce que la mesure m'a dit
+
+J'ai mesuré chaque essai avant de le garder ; mes échecs sont dans [la démarche](docs/DEMARCHE.md), avec leurs chiffres. Ce tableau porte sur la première méthode ; la seconde est elle-même l'essai le plus important, mesuré en section 4.
 
 | Essai | Ce que la mesure a dit | Décision |
 |---|---|---|
@@ -212,7 +217,9 @@ Ce que cela apprend : un modèle sait dire si un fait est **écrit** ; il ne se 
 
 ### 6. Tenir des centaines de contrats
 
-**Ce qui est général.** Vérifié en ajoutant un quatrième contrat (C) le 22 novembre, sans l'avoir préparé :
+**Avec la seconde méthode, la question change, sans être tranchée.** Pour juger, la lecture des clauses n'a besoin que du contrat découpé : ni règles, ni vocabulaire. Si cela se confirme, le coût d'un contrat de plus tombe au découpage. Mais j'ai fait toutes mes mesures avec la contresignature des règles traduites ; sur un contrat sans elles, je n'ai rien mesuré. C'est ma prochaine expérience. Ce qui suit vaut pour la première méthode, et pour la contresignature.
+
+**Ce qui est général.** Je l'ai vérifié en ajoutant un quatrième contrat (C) le 22 novembre, sans l'avoir préparé :
 - **le moteur, la validation des citations, l'API, l'écran et la fiche** n'ont pas changé d'une ligne pour lui ; aucun identifiant de contrat, numéro d'article ou valeur métier n'est écrit dans la logique du code ;
 - ce qui est propre à un contrat tient dans **quatre fichiers de données** : son profil de découpage, ses règles, ses variables propres, sa ligne au catalogue ;
 - **un vocabulaire à deux étages** : 56 questions communes (l'événement, le bien, le lieu, l'effraction, l'auteur…) et les questions propres à chaque contrat, rangées par le code. Le vol et le bris de glaces de C ont demandé 22 faits : 15 existaient déjà ;
@@ -229,7 +236,7 @@ Ce que cela apprend : un modèle sait dire si un fait est **écrit** ; il ne se 
 | Relecture | une vingtaine de règles relues, six réécrites, sept variables créées | Les « objets de valeur » réduits aux bijoux dans les deux rédactions : une définition plus étroite que le texte est une règle bien formée, aucun contrôle ne la voit |
 | Défauts du code révélés | cinq, corrigés par une règle générale chacun | Dont les formules d'un autre contrat proposées au modèle, à la rédaction puis à la lecture |
 
-La relecture est le poste qui ne se réduit pas. Elle a été faite ici par l'assistant qui a écrit le code ; le temps d'un relecteur du métier n'a pas été mesuré, et c'est lui qu'il faudrait. Et cette relecture s'est trompée une fois : pour qu'une exclusion soit citée, deux biens exclus déclarés ensemble sont devenus « couverts », pendant une heure, sur un contrat qui n'a pas de jeu de mesure. C'est une comparaison des décisions avant et après, sur des faits tirés au hasard, qui l'a montré. Un contrat ajouté sans jeu de mesure n'est pas vérifié.
+La relecture est le poste qui ne se réduit pas. Ici, c'est l'assistant qui a écrit le code avec moi qui l'a faite ; je n'ai pas mesuré le temps d'un relecteur du métier, et c'est lui qu'il faudrait. Et cette relecture s'est trompée une fois : pour qu'une exclusion soit citée, deux biens exclus déclarés ensemble sont devenus « couverts », pendant une heure, sur un contrat qui n'a pas de jeu de mesure. C'est une comparaison des décisions avant et après, sur des faits tirés au hasard, qui l'a montré. Un contrat ajouté sans jeu de mesure n'est pas vérifié.
 
 **Ce qui n'est pas général.**
 - Les consignes de rédaction et de lecture sont écrites pour l'**assurance habitation**, et le socle de la lecture (événement, bien, lieu) convient aux dommages aux biens. Aucun contrat d'une autre branche n'a été essayé.
