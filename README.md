@@ -6,9 +6,9 @@ Dit si un sinistre est couvert par un contrat d'assurance habitation, **pourquoi
 
 **Un projet mené comme une expérience, en deux hypothèses.** J'ai d'abord traduit chaque contrat en règles (Prolog) et laissé un moteur décider, en quelques secondes ; mesurée sur des cas que je n'avais jamais vus, cette méthode couvrait parfois à tort, parce qu'une règle peut mal traduire le contrat. J'ai alors fait lire par Mistral Large les clauses mêmes du contrat, une à une, vérifié chaque citation mot pour mot, calculé la décision dans le code et fait contresigner chaque « couvert » par la première méthode. J'ai comparé les deux une première fois, code figé, sur 60 déclarations jamais vues : autant de réponses justes (45 contre 42), **un seul sinistre couvert à tort au lieu de 4,3**, mais deux refus à tort de plus et deux à trois minutes par analyse. Après un dernier tour de corrections, une seconde mesure, sur 60 autres déclarations jamais vues : **53 réponses justes contre 40, aucun couvert à tort contre 4,7, un refus à tort contre 6**. La seconde est la méthode par défaut depuis le 26 novembre 2026. [Les chiffres](#4-ce-que-cela-donne) ; [l'expérience racontée sans jargon](docs/COMPRENDRE.md).
 
-![La réponse à une déclaration : la décision, les faits retenus, la clause citée, les limites](docs/images/ecran-reponse.png)
+![La lecture des clauses sur un vol dans un vestiaire de club de tennis : non couvert, l'exclusion du contrat citée mot pour mot](docs/images/demo-3-clauses.png)
 
-*Un piéton renversé à vélo, chez l'assureur A : la décision, les faits que le modèle a lus dans la déclaration, la phrase du contrat qui fonde la réponse (un clic ouvre l'article entier), les plafonds et la franchise. La même réponse se télécharge en [fiche PDF](docs/exemple-fiche.pdf), articles cités joints en entier.*
+*Un vestiaire forcé au club de tennis, chez l'assureur A, sur la démonstration en ligne (26 novembre) : la lecture des clauses trouve l'exclusion des casiers d'association sportive et la cite mot pour mot (un clic sur l'article ouvre le texte entier) ; les règles traduites répondaient « à préciser », et l'écran le dit (« les règles ne concordent pas »). La même déclaration par la chaîne de règles est [plus bas](#démonstration-en-5-minutes). Toute réponse se télécharge en [fiche PDF](docs/exemple-fiche.pdf), articles cités joints en entier.*
 
 ![L'analyse suivie étape par étape](docs/images/ecran-suivi.png)
 
@@ -299,19 +299,27 @@ Pour des centaines de contrats, il faut donc une équipe de relecteurs du métie
 
 ## Démonstration en 5 minutes
 
-À répéter avant : `uv run couverture api` dans un terminal, `npm start` dans `frontend`, puis http://localhost:4220 ; ou la démonstration en ligne, avec son code d'accès (le premier chargement réveille le service : l'ouvrir avant de commencer). La lecture varie d'un appel à l'autre : rejouer chaque étape une fois avant de la montrer.
+Rejouée sur la démonstration en ligne le 26 novembre 2026 (image v16) : une même déclaration, les deux méthodes. Avant de commencer, ouvrir le site (le premier chargement réveille le service) ; en local : `uv run couverture api`, `npm start` dans `frontend`, puis http://localhost:4220. La lecture varie d'un appel à l'autre : rejouer chaque étape une fois avant de la montrer.
+
+La déclaration, chez l'assureur A :
+
+> Pendant mon match au club de tennis, quelqu'un a forcé le cadenas de mon vestiaire individuel et a pris ma montre, mon téléphone et mon sac de sport.
 
 | Temps | Ce qu'on montre | Ce qu'on dit |
 |---|---|---|
-| 0:00 | L'écran d'accueil | Le modèle lit, la logique décide, le code vérifie |
-| 0:30 | Assureur A, la question 1 de l'énoncé : le vélo volé dans le local commun | Non couvert ; l'article est cité ; un clic sur son numéro ouvre le texte entier, le passage surligné |
-| 1:30 | La question 2 : la bougie sur la table du jardin | Non couvert : aucune garantie ne s'applique ; sur C et D, « à examiner par un gestionnaire » ; sur B, « à préciser » |
-| 2:15 | Une déclaration incomplète (un vol sans dire comment le local était fermé) | « À préciser » : la question à poser, les réponses possibles ; la réponse du client donne la décision tout de suite, sans nouvel appel au modèle |
-| 3:00 | « Télécharger la fiche (PDF) » | Une page à verser au dossier : la décision, les articles cités, ce qu'il reste à demander |
-| 3:15 | La même déclaration sur Assureur B ou D | Autre contrat, autres règles, même moteur |
-| 3:45 | `uv run couverture regles --contrat assureur-a-habitation-2025` | Les règles se vérifient sans modèle : vocabulaire, 173 citations retrouvées mot pour mot |
-| 4:15 | Le tableau des essais (section 5) | Ce qui a marché, ce qui a été retiré, et pourquoi |
-| 4:45 | Les limites (section 7) | Ce que le système ne sait pas faire |
+| 0:00 | L'accueil, la liste « Méthode » à droite de la déclaration | Deux hypothèses, toutes deux en service : la lecture des clauses par défaut, la chaîne de règles au choix |
+| 0:30 | **Chaîne de règles (5 s)** | Cinq secondes : « à préciser », confiance 40 %. Les faits lus sont justes (vol, casier, effraction, cadenas), mais la chaîne n'en tire pas l'exclusion des casiers d'association sportive : elle cherche une autre garantie (le pack multimédia) et pose des questions. C'est ce genre d'écart entre le contrat et ses règles qui m'a fait changer d'hypothèse |
+| 1:00 | **Lecture des clauses (2-3 min)**, sur la même déclaration ; l'écran suit les étapes | Pendant l'attente : trouver les chapitres, juger chaque clause citation à l'appui, faire contresigner par les règles, décider |
+| 3:00 | La réponse : **non couvert**, art. 2.10-a, « le vol du contenu entreposé dans un casier d'une association sportive ou d'agrément » | La clause est lue dans le texte, citée mot pour mot ; un clic ouvre l'article. « Les règles ne concordent pas » : le désaccord est affiché, pas caché |
+| 3:30 | « Raisonnement clause par clause et contrôles », puis « Télécharger la fiche (PDF) » | Chaque jugement et ses deux citations ; une page à verser au dossier |
+| 4:00 | Le tableau du jeu « cinq » (section 4) | 53 réponses justes sur 60 contre 40, aucun couvert à tort contre 4,7 ; la limite : la contresignature par des règles incomplètes (D) |
+| 4:30 | Les limites (section 7) | Ce que le système ne sait pas faire ; les bonnes réponses ne sont pas validées par un juriste |
+
+Les deux questions de l'énoncé (section 3) se montrent en cinq secondes chacune avec la chaîne de règles, si le temps le permet.
+
+| 1. L'accueil | 2. Chaîne de règles, 5 s | 3. Lecture des clauses, 2-3 min |
+|---|---|---|
+| ![L'accueil et le choix de la méthode](docs/images/demo-1-accueil.png) | ![La chaîne de règles : à préciser](docs/images/demo-2-regles.png) | ![La lecture des clauses : non couvert, la clause citée](docs/images/demo-3-clauses.png) |
 
 ## Installation
 
