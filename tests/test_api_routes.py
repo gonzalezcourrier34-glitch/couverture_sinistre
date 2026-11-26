@@ -270,3 +270,28 @@ def test_la_methode_clauses_se_choisit_par_requete(client, monkeypatch):
     assert "minutes" in lignes[0]["annonce"]
     assert lignes[1]["etape"] == "designation" and lignes[-1]["etape"] == "fin" and len(appels) == 2
     assert client.post("/api/v1/analyses", headers=CLE, json=demande | {"methode": "autre"}).status_code == 422
+
+
+def test_le_suivi_bat_pendant_une_longue_attente(client, monkeypatch):
+    """7.208 : une étape longue (un appel au modèle de plusieurs minutes) n'est pas un silence : le flux envoie des
+    lignes vides en attendant, que l'écran ignore, pour que l'hébergeur ne coupe pas la requête."""
+    import json
+    import time
+
+    from couverture.api.routes import analyse_suivie
+
+    def lecture(base, chaine, contrat_id, sinistre, llm, suivi=None, souscription=None):
+        time.sleep(0.35)
+        r, sortie = service.analyser(chaine, sinistre)
+        return r, sortie | {"mode": "clauses"}
+
+    monkeypatch.setattr(service, "analyser_clauses", lecture)
+    monkeypatch.setattr(analyse_suivie, "modele_des_clauses", lambda: None)
+    monkeypatch.setattr(analyse_suivie, "BATTEMENT_S", 0.05)
+    demande = {"contrat_id": CONTRAT, "methode": "clauses",
+               "sinistre": "En faisant du vélo, j'ai renversé un piéton qui s'est cassé le poignet."}
+    texte = client.post("/api/v1/analyses/suivi", headers=CLE, json=demande).text
+    lignes = texte.split("\n")
+    assert sum(1 for l in lignes if not l.strip()) >= 3, "des battements pendant l'attente"
+    pleines = [json.loads(l) for l in lignes if l.strip()]
+    assert "etapes" in pleines[0] and pleines[-1]["etape"] == "fin" and pleines[-1]["reponse"]["mode"] == "clauses"

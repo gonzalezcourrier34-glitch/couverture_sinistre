@@ -9,7 +9,10 @@ un flux de lignes JSON (`application/x-ndjson`), une par événement :
 - `{"etape": "fin", "reponse": {...}}` : la décision, la même que celle de `/analyses` ;
 - `{"etape": "erreur", "code": 502, "detail": "..."}` : le modèle n'a pas répondu.
 
-L'analyse tourne dans un fil ; ses étapes passent par une file, que le flux vide au fur et à mesure.
+L'analyse tourne dans un fil ; ses étapes passent par une file, que le flux vide au fur et à mesure. Tant
+qu'aucune étape n'arrive, une ligne vide part toutes les `BATTEMENT_S` secondes : la lecture des clauses peut
+rester plus de deux minutes sur un seul appel au modèle, et l'hébergeur (Azure Container Apps) coupe une requête
+restée muette quatre minutes (7.208). L'écran ignore les lignes vides.
 """
 
 from __future__ import annotations
@@ -30,6 +33,8 @@ from couverture.api.schemas import AnalyseRequest
 from couverture.api.securite import require_api_key
 from couverture.analyse.journal import Journal
 from couverture.llm import ErreurLLM
+
+BATTEMENT_S = 15.0
 
 router = APIRouter(prefix="/api/v1", tags=["décisions"], dependencies=[Depends(require_api_key)])
 
@@ -87,7 +92,14 @@ def analyser_avec_suivi(demande: AnalyseRequest, pipelines: Pipelines = Depends(
 
     def lignes() -> Iterator[str]:
         threading.Thread(target=travailler, daemon=True).start()
-        while (message := file.get()) is not None:
+        while True:
+            try:
+                message = file.get(timeout=BATTEMENT_S)
+            except queue.Empty:
+                yield "\n"  # rien de neuf : un battement, pour que la connexion ne soit pas coupée
+                continue
+            if message is None:
+                return
             yield json.dumps(message, ensure_ascii=False) + "\n"
 
     return StreamingResponse(lignes(), media_type="application/x-ndjson",

@@ -123,7 +123,7 @@ Neuf parties, dans l'ordre. Chaque étape garde son numéro, cité ailleurs dans
 | VI | 7.148 à 7.159 | Un quatrième contrat ajouté à froid : ce qui est général, ce qui ne l'est pas |
 | VII | 7.160 à 7.167 | Mettre en ligne, puis tout rejouer la veille de la livraison |
 | VIII | 7.168 à 7.189 | Finir A et B, puis des jeux jamais vus qui montrent un défaut de fond |
-| IX | 7.190 à 7.207 | La lecture des clauses : une seconde méthode, mesurée contre la première |
+| IX | 7.190 à 7.208 | La lecture des clauses : une seconde méthode, mesurée contre la première |
 
 ---
 
@@ -5955,6 +5955,22 @@ toutes les mesures de la lecture des clauses ont été faites avec la contresign
 traduites, celui d'un contrat nouveau, n'est pas mesuré. `docs/COMPRENDRE.md` est réécrit en comparaison des deux
 méthodes.
 
+### 7.208 Deux à trois minutes derrière l'hébergeur : un battement dans le suivi
+
+**La question.** Avant de mettre la lecture des clauses en ligne : l'hébergeur laisse-t-il une requête durer deux à
+trois minutes, et jusqu'à 260 secondes au jeu « quatre » ? Azure Container Apps passe les requêtes par un proxy
+(Envoy) dont le délai par défaut est de 240 secondes ; la documentation de Microsoft le décrit comme un délai
+d'inactivité (« idle request timeout », 4 minutes), que seul le mode d'entrée « premium » permet d'allonger.
+
+**Ce qui est fait.** Le suivi (`/analyses/suivi`, celui qu'emploie l'écran) envoie déjà une ligne à chaque étape,
+mais un seul appel au modèle peut rester muet plus de deux minutes. Il envoie maintenant une ligne vide toutes les
+15 secondes tant qu'aucune étape n'arrive ; l'écran ignorait déjà les lignes vides. Un test. L'analyse en un seul
+appel (`/analyses`, sans suivi) n'en profite pas : elle reste exposée au délai.
+
+**Ce qui reste à vérifier, en ligne.** Que la requête tienne vraiment au-delà de quatre minutes de durée totale :
+une analyse par la lecture des clauses sur le cas le plus long du jeu « quatre », sur la nouvelle image, avant de
+changer la méthode par défaut en ligne.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 26 nov. 2026. Dans l'ordre où je le ferais.
@@ -6217,3 +6233,4 @@ chaque point demande un jeu neuf.
 215. Sur un jeu jamais vu, l'écart d'un jeu vu fond : 48 contre 38 sur « neuf », 45 contre 42 sur « quatre ». Ce qui tient est souvent le sens des erreurs, pas leur nombre.
 216. Une garde qui contresigne hérite des erreurs de celui qui contresigne : six des quinze écarts de la nouvelle méthode viennent des règles de l'ancienne.
 217. Un outil de mesure ne s'arrête pas sur la panne d'un cas : une erreur du fournisseur se compte comme une erreur de ce cas, et le passage continue.
+218. Une réponse longue derrière un proxy se protège par le flux : une ligne vide régulière coûte trois lignes de code, une requête coupée coûte l'analyse.
