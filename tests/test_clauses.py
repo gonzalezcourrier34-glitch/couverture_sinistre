@@ -215,3 +215,18 @@ def test_une_question_du_reglement_du_sinistre_devient_un_rappel(base, monkeypat
     assert lu.decision == Decision.COUVERT and [j.clause_id for j in lu.rappels] == ["2.11"]
     _, sortie = service.resultat_clauses(base, "c1", DECLARATION, lu, lu.decision, "", None, {})
     assert sortie["a_preciser"][0]["nature"] == "reserve" and "8 jours" in sortie["a_preciser"][0]["question"]
+
+
+def test_une_question_posee_par_deux_clauses_ne_s_affiche_qu_une_fois(base):
+    """7.208 : en ligne, la même question est arrivée deux fois dans une réponse ; la réponse reprend les
+    questions de la décision, chacune une fois."""
+    from couverture.api import service
+
+    rendus = jugements(**{"3_1_2_1": "a_verifier", "3_1_2_2": "a_verifier"})
+    for j in rendus["jugements"]:
+        if j["effet"] == "a_verifier":
+            j["question"] = "Les chaises étaient-elles fixées ?"
+    lu = clauses.lire(base, "c1", Modele({"chapitres": ["3.1.2"], "motif": ""}, rendus), DECLARATION)
+    assert lu.decision == Decision.INCERTAIN
+    _, sortie = service.resultat_clauses(base, "c1", DECLARATION, lu, lu.decision, "", None, {})
+    assert sortie["questions"] == ["Les chaises étaient-elles fixées ?"]

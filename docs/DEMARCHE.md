@@ -5967,9 +5967,18 @@ mais un seul appel au modèle peut rester muet plus de deux minutes. Il envoie m
 15 secondes tant qu'aucune étape n'arrive ; l'écran ignorait déjà les lignes vides. Un test. L'analyse en un seul
 appel (`/analyses`, sans suivi) n'en profite pas : elle reste exposée au délai.
 
-**Ce qui reste à vérifier, en ligne.** Que la requête tienne vraiment au-delà de quatre minutes de durée totale :
-une analyse par la lecture des clauses sur le cas le plus long du jeu « quatre », sur la nouvelle image, avant de
-changer la méthode par défaut en ligne.
+**Vérifié en ligne** (26 nov., image v10, méthode `regles` gardée pour les visiteurs, `methode: clauses` demandée
+par la requête). Les lignes vides arrivent au fil de l'eau : le proxy ne les retient pas. Un premier cas (q-b17) a fini
+en 95 s, sous la limite : il ne prouvait rien. Un second (q-b08, 290 clauses au dossier, 213 jugées) a fini en
+**279 s**, la décision reçue en entier : la requête dépasse les 240 s sans être coupée. La méthode par défaut passe
+à `clauses` en ligne. Deux défauts vus au passage, pour les finitions : une question posée deux fois dans la même
+réponse ; une garantie optionnelle qui ne donne lieu à aucune question. **Corrigés** le même jour : la réponse reprend
+les questions de la décision, chacune une fois (la liste les comparait à elle-même avant d'être remplie, et la même
+question pouvait y entrer deux fois) ; une option qui couvre seule fait demander si elle est souscrite, avec son
+article. Deux tests.
+
+**Le coût en ligne.** Une analyse coûte maintenant 8 à 10 centimes au lieu de moins d'un ; la limite de 300 analyses
+par jour, pensée pour l'ancienne méthode, est à baisser.
 
 ## 8. Ce qui reste à faire
 

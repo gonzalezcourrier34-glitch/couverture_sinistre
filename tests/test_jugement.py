@@ -96,7 +96,7 @@ def test_deux_garanties_en_concurrence_l_exclusion_de_l_une_ne_tue_pas_l_autre(b
 def test_une_option_qui_couvre_seule_reste_a_preciser(base):
     t = repere(base, "3.1.2 Tempête et grêle")
     etat = juger(base, [t], tempete(), optionnelles={t})
-    assert etat.decision == Decision.INCERTAIN and "optionnelle" in etat.questions[0]
+    assert etat.decision == Decision.INCERTAIN and "optionnelle" in etat.questions[0] and t in etat.questions[0]
 
 
 def test_rien_ne_couvre_non_couvert_et_un_jugement_hors_dossier_est_signale(base):

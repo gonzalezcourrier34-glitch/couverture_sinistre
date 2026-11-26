@@ -4,13 +4,15 @@ Dit si un sinistre est couvert par un contrat d'assurance habitation, **pourquoi
 
 > Une réponse assurée sans justification vaut moins qu'un « je ne sais pas » étayé.
 
+**Un projet mené comme une expérience, en deux hypothèses.** J'ai d'abord traduit chaque contrat en règles (Prolog) et laissé un moteur décider, en quelques secondes ; mesurée sur des cas que je n'avais jamais vus, cette méthode couvrait parfois à tort, parce qu'une règle peut mal traduire le contrat. J'ai alors fait lire par Mistral Large les clauses mêmes du contrat, une à une, vérifié chaque citation mot pour mot, calculé la décision dans le code et fait contresigner chaque « couvert » par la première méthode. J'ai comparé les deux une seule fois, code figé, sur 60 déclarations jamais vues : autant de réponses justes (45 contre 42, un écart que ce jeu ne permet pas d'affirmer), **un seul sinistre couvert à tort au lieu de 4,3**, mais deux refus à tort de plus et deux à trois minutes par analyse. La seconde est la méthode par défaut depuis le 26 novembre 2026. [Les chiffres](#4-ce-que-cela-donne) ; [l'expérience racontée sans jargon](docs/COMPRENDRE.md).
+
 ![La réponse à une déclaration : la décision, les faits retenus, la clause citée, les limites](docs/images/ecran-reponse.png)
 
 *Un piéton renversé à vélo, chez l'assureur A : la décision, les faits que le modèle a lus dans la déclaration, la phrase du contrat qui fonde la réponse (un clic ouvre l'article entier), les plafonds et la franchise. La même réponse se télécharge en [fiche PDF](docs/exemple-fiche.pdf), articles cités joints en entier.*
 
 ![L'analyse suivie étape par étape](docs/images/ecran-suivi.png)
 
-*Pendant les 4 à 5 secondes de l'analyse, l'écran dit ce qui se fait : lire, vérifier chaque fait, appliquer les règles, confirmer.*
+*L'analyse suivie étape par étape, ici par la chaîne de règles (4 à 5 secondes : lire, vérifier chaque fait, appliquer les règles, confirmer). Par la lecture des clauses, l'écran annonce deux à trois minutes et suit quatre étapes : trouver les chapitres, juger chaque clause, faire contresigner par les règles, décider.*
 
 **Démonstration en ligne** depuis le 23 novembre 2026, sur Azure, derrière un code d'accès donné sur demande. Quatre contrats d'assureurs différents, anonymisés.
 
@@ -58,7 +60,7 @@ Un gestionnaire reçoit une déclaration en langage courant et doit dire si le c
 
 Et la question de l'énoncé : que faire à la place du contrat collé dans un chatbot, et comment tenir des centaines de contrats.
 
-### 2. Le choix : le modèle lit, la logique décide, le code vérifie
+### 2. Le choix : le modèle lit, la logique décide, le code vérifie (et, depuis, le modèle juge chaque clause)
 
 Coller le contrat dans un chatbot échoue pour trois raisons : l'exclusion qui décide ne ressemble pas à la question, le sens des mots est au lexique du contrat, et rien n'est vérifiable. Le modèle n'a donc ici qu'un rôle : **lire**.
 
@@ -78,7 +80,7 @@ Une fois par contrat
              ─► réponse, clauses citées, arbre de preuve
 ```
 
-**Depuis le 26 novembre, une seconde méthode est la méthode par défaut : la lecture des clauses.** Le modèle (Mistral Large) lit lui-même les clauses du contrat qui concernent le sinistre et rend, clause par clause, un jugement cité ; une logique fixe tranche à partir de ces jugements, et la chaîne ci-dessus contresigne : un « couvert » n'est rendu que si elle le dit aussi. Chaque citation est toujours retrouvée mot pour mot par le code. Elle a été choisie sur la mesure du jeu « quatre » (section 4) : autant de réponses justes, quatre fois moins de couverts à tort, mais deux à trois minutes par analyse. La chaîne de règles reste disponible (`COUVERTURE_METHODE=regles`). [Les deux méthodes comparées](docs/COMPRENDRE.md).
+**Ma seconde hypothèse, méthode par défaut depuis le 26 novembre : la lecture des clauses.** Les jeux jamais vus m'ont montré que la chaîne ci-dessus se trompait surtout à la traduction. Je fais donc lire au modèle (Mistral Large) les clauses du contrat qui concernent le sinistre ; il rend, clause par clause, un jugement cité ; une logique fixe tranche à partir de ces jugements, et la chaîne contresigne : un « couvert » n'est rendu que si elle le dit aussi. Chaque citation est toujours retrouvée mot pour mot par le code. Je l'ai choisie sur la mesure du jeu « quatre » (section 4) : autant de réponses justes, quatre fois moins de couverts à tort, mais deux à trois minutes par analyse. La chaîne de règles reste disponible (`COUVERTURE_METHODE=regles`). [Les deux méthodes comparées](docs/COMPRENDRE.md).
 
 ```
 À chaque sinistre, lecture des clauses (2 à 3 minutes)
@@ -110,7 +112,7 @@ Les réponses attendues ont été établies d'après le texte des conditions gé
 
 ### 4. Ce que cela donne
 
-**La mesure qui compte : le jeu « quatre », les deux méthodes comparées (25 novembre au soir).** Soixante déclarations, vingt par contrat (A, B, D), écrites d'après le seul texte des contrats et jugées à l'aveugle par deux autres annotateurs (Mistral Large et Claude) : les trois avis concordent sur les soixante cas. Le code a été figé avant, le jeu passé une seule fois, et rien n'a été corrigé ensuite (démarche 7.207).
+**La mesure qui compte : le jeu « quatre », les deux méthodes comparées (25 novembre au soir).** Soixante déclarations, vingt par contrat (A, B, D), écrites d'après le seul texte des contrats et jugées à l'aveugle par deux autres annotateurs (Mistral Large et Claude) : les trois avis concordent sur les soixante cas. J'ai figé le code avant, passé le jeu une seule fois, et je n'ai rien corrigé ensuite (démarche 7.207).
 
 | Jeu « quatre », 60 cas jamais vus | Chaîne de règles (3 passages) | Lecture des clauses (1 passage) |
 |---|---|---|
@@ -124,7 +126,7 @@ Les réponses attendues ont été établies d'après le texte des conditions gé
 | Durée d'une analyse | 3,6 s (médiane) | 100 à 260 s |
 
 - **Autant de réponses justes** : trois de plus sur soixante, ce que ce jeu ne permet pas d'affirmer. L'écart mesuré sur le jeu « neuf » (48 contre 38) tenait en partie aux réglages faits sur lui.
-- **Beaucoup moins de couverts à tort**, l'erreur qui coûte : un au lieu de plus de quatre. C'est ce qui a décidé du choix.
+- **Beaucoup moins de couverts à tort**, l'erreur qui coûte : un au lieu de plus de quatre. C'est ce qui a décidé mon choix.
 - **Plus de refus à tort** (quatre au lieu de deux), et une attente de deux à trois minutes. Six des quinze écarts de la lecture des clauses viennent de la contresignature : la lecture couvre à raison, les règles se trompent, la réponse devient « à préciser ».
 - **Ce qui n'est pas mesuré** : la lecture des clauses sans la contresignature des règles, c'est-à-dire sur un contrat qu'on n'aurait pas traduit. C'est la condition pour dire qu'elle s'étend à un nouveau contrat sans travail de traduction.
 
@@ -240,6 +242,7 @@ Pour des centaines de contrats, il faut donc une équipe de relecteurs du métie
 
 ### 7. Limites
 
+- **La lecture des clauses, méthode par défaut, a ses propres limites** (démarche 7.207, 7.208). Deux à trois minutes et 8 à 10 centimes par analyse (en ligne : 50 analyses par jour au plus). Plus de refus à tort que la chaîne de règles (4 contre 2 sur 60 cas jamais vus) : un refus fondé sur une clause citée n'est pas contresigné, et le code vérifie qu'une citation existe, pas qu'elle a un rapport avec le sinistre. Une même déclaration ne reçoit pas toujours deux fois la même réponse. Et elle n'a jamais été mesurée sans la contresignature des règles traduites : qu'elle s'applique telle quelle à un contrat nouveau reste à démontrer.
 - **Deux des quatre conditions générales ne sont traduites qu'en partie, par choix** (C a servi à mesurer le temps d'intégration d'un contrat, D est un complément). L'écran le dit : chaque carte a un contour vert (traduites en entier) ou orange (en partie), et la phrase au survol dit ce qui reste. Au 24 novembre au soir : A et B en vert, C et D en orange. A : toutes les garanties ont leurs règles et toutes les exclusions qu'une déclaration peut énoncer sont lues ; un point faible connu, la garde d'enfants rémunérée, que le contrat couvre et qui peut être lue comme une activité professionnelle. B : tous les articles ont leurs règles, voyage compris, avec leurs exclusions ; les limites connues : la gravité d'une maladie n'est pas jugée (c'est le certificat qui l'établit), et les garanties de voyage et de protection numérique n'ont aucun cas dans le banc de B : elles sont vérifiées par seize essais de règles sur des faits exacts, où la lecture n'intervient pas. C : le vol et le bris de glaces. D : les garanties des biens et la responsabilité civile, pas les options ni les assistances. L'état est déclaré à la main dans `regles/traduction.json`. Devant un événement dont la garantie n'est pas traduite, la réponse est « à examiner par un gestionnaire », jamais un refus. Pour un contrat en vert, la règle est autre : il n'a aucune garantie pour cet événement, et la réponse est « non couvert » (un voyage annulé déclaré chez A).
 - **Rédiger une garantie ne se fait pas d'une commande.** Essai du 24 novembre : les neuf articles restants de B donnés au modèle d'un coup. Un échec (réponse coupée) et huit propositions arrêtées par les contrôles, avec 6 à 43 points bloquants chacune : articles cités qui n'existent pas, exclusions oubliées, une centaine de faits nouveaux. Pour l'assistance de A, la proposition aurait fait passer une soixantaine de cas de test à « couvert ». Les deux assistances entrées ce jour-là ont été écrites à la main, à partir du texte. Ces propositions ont été remplacées une à une, le même jour, par des articles écrits à la main.
 

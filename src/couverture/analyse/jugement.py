@@ -301,11 +301,14 @@ def decider(lignes: list[Ligne], optionnelles: set[str] = frozenset(), non_atten
         etat.motif = "un point reste à vérifier"
     elif couvrent:
         etat.motif = "seule une garantie optionnelle couvre : on ne sait pas si elle est souscrite"
-        etat.questions.append("Vos conditions particulières mentionnent-elles cette garantie optionnelle ?")
+        etat.questions += [f"Vos conditions particulières mentionnent-elles la garantie optionnelle de l'article {g} ?"
+                           for g in couvrent]
     else:
         etat.decision, etat.motif = Decision.NON_COUVERT, "aucune garantie examinée ne couvre ce sinistre"
         etat.a_verifier = []
-    etat.questions += [j.question for j in etat.a_verifier if j.question and j.question not in etat.questions]
+    for j in etat.a_verifier:                         # chaque question une fois, même posée par deux clauses
+        if j.question and j.question not in etat.questions:
+            etat.questions.append(j.question)
     return etat
 
 

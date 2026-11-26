@@ -1,10 +1,12 @@
 # Comprendre le projet, fichier par fichier
 
-> **Une seule méthode depuis le 18 nov. 2026.** Les premières méthodes (grille remplie par le modèle et relue, recherche hybride, fiches compilées, juge de qualité, agent de réparation, dérive et bilan) ont été retirées : les règles Prolog les ont remplacées. Pourquoi, et ce qu'elles ont appris : [DEMARCHE.md](DEMARCHE.md), 7.36. Leurs consignes restent archivées dans `docs/consignes/`, et leur code dans l'historique git (tag `avant-simplification`). Ce document décrit le projet tel qu'il est.
+> **Deux méthodes depuis le 25 nov. 2026, la seconde par défaut depuis le 26.** La **chaîne de règles** (le contrat traduit en règles Prolog, le modèle ne fait que lire la déclaration) et la **lecture des clauses** (le modèle lit et juge chaque clause du contrat, la logique tranche, les règles contresignent). Elles sont comparées, chiffres à l'appui, dans [COMPRENDRE.md](COMPRENDRE.md) ; ce document décrit les deux, fichier par fichier. La seconde est choisie par `COUVERTURE_METHODE` (défaut `clauses`) ou par requête (`methode`).
+>
+> **Avant le 18 nov. 2026.** Les premières méthodes (grille remplie par le modèle et relue, recherche hybride, fiches compilées, juge de qualité, agent de réparation, dérive et bilan) ont été retirées : les règles Prolog les ont remplacées. Pourquoi, et ce qu'elles ont appris : [DEMARCHE.md](DEMARCHE.md), 7.36. Leurs consignes restent archivées dans `docs/consignes/`, et leur code dans l'historique git (tag `avant-simplification`). Ce document décrit le projet tel qu'il est.
 >
 > **Noms anonymisés (19 nov. 2026).** Les assureurs s'appellent ici Assureur A, B, C et D (DEMARCHE 7.70). Depuis le 23 nov., leurs noms sont aussi masqués dans le texte des clauses, à l'ingestion (7.160).
 >
-> **En ligne (23 nov. 2026).** La démonstration tourne sur Azure, derrière un code d'accès (7.161, 7.162). Le document a été relu en entier le 24 nov., contre le code. Les chiffres de mesure, qui bougent, sont tenus à jour dans le README (section 4) : en cas d'écart, il fait foi.
+> **En ligne (23 nov. 2026).** La démonstration tourne sur Azure, derrière un code d'accès (7.161, 7.162). Le document a été relu en entier le 24 nov., contre le code, et complété le 26 pour la lecture des clauses. Les chiffres de mesure, qui bougent, sont tenus à jour dans le README (section 4) : en cas d'écart, il fait foi.
 
 Pour une première lecture, sans vocabulaire technique : [le projet raconté](COMPRENDRE.md). Ce document-ci explique **ce que fait chaque partie du projet, et pourquoi elle est faite ainsi**. Il sert à préparer l'entretien : pour chaque choix, il donne la raison et ce qui a été écarté.
 
@@ -110,6 +112,13 @@ Sommaire :
 | **Manifeste des consignes** | `config/versions_consignes.json` : la version et l'empreinte de chaque consigne. Sert de garde-fou en CI. |
 | **Grafana** | Un outil de tableaux de bord qui lit une base et affiche des graphiques. Ici, il lit la base SQLite du projet. |
 | **CI** (intégration continue) | Les tests lancés automatiquement à chaque envoi du code (GitHub Actions). |
+| **Lecture des clauses** | La seconde méthode, par défaut depuis le 26 nov. : le modèle (Mistral Large) lit les clauses du contrat qui concernent le sinistre et juge chacune ; une logique fixe tranche ; les règles contresignent. |
+| **Désignation** | Première étape de la lecture des clauses : dans la table des matières du contrat, le modèle désigne les chapitres à relire. |
+| **Dossier** | Les clauses qu'on fait juger pour un sinistre : les chapitres désignés en entier, leurs chapeaux, les exclusions générales, les articles cités, les définitions employées. Le code le compose, pas le modèle. |
+| **Clauses attendues** | Pour chaque garantie, la liste, écrite avant tout sinistre, des clauses qu'un gestionnaire doit relire avant de répondre (tables `garanties` et `clauses_attendues`). Une clause attendue sans jugement empêche une réponse franche. |
+| **Jugement** | L'effet d'une clause sur la déclaration, rendu par le modèle avec deux citations (le contrat, la déclaration) : `couvre`, `exclut`, `limite` (réduit l'indemnité sans refuser), `a_verifier` (avec la question), `sans_effet`. |
+| **Contresignature** | Un « couvert » de la lecture des clauses n'est rendu que si la chaîne de règles dit « couvert » aussi ; sinon, « à préciser ». Un refus fondé sur une clause citée tient seul. |
+| **Rappel** | Une question du règlement du sinistre (délai de déclaration, preuves, plafond) : elle ne dit pas si c'est couvert ; elle s'affiche comme une réserve, sans retenir la réponse. |
 | **Statut OK / A_VERIFIER** | Le résultat des contrôles d'ingestion : un contrat `A_VERIFIER` a probablement été mal lu. |
 
 ---
@@ -129,6 +138,8 @@ Sommaire :
 2. **À chaque sinistre** : le modèle ne fait que **lire** la déclaration et la traduire en faits d'un vocabulaire commun.
 3. **Prolog décide**, en logique à trois valeurs (oui, non, inconnu) : couvert, non couvert, ou incertain avec la question qui tranche.
 4. **Chaque réponse se rattache à une phrase du contrat**, et l'arbre de preuve montre la déduction jusqu'aux faits déclarés.
+
+**Ma seconde hypothèse (25 nov.)**, née d'une mesure : sur des cas jamais vus, la chaîne de règles se trompait surtout parce qu'un contrat était mal ou incomplètement traduit, et elle couvrait alors à tort (7 fois sur 60 au jeu « neuf »). La **lecture des clauses** repart du texte même : le modèle juge chaque clause en jeu, citations à l'appui ; le code vérifie les citations et décide selon une logique fixe ; la chaîne de règles contresigne les « couvert ». Je l'ai mesurée une seule fois contre la première, sur un jeu jamais vu (« quatre ») : autant de réponses justes (45 sur 60 contre 42), un couvert à tort au lieu de 4,3, mais quatre refus à tort au lieu de deux, et deux à trois minutes par analyse au lieu de quelques secondes (DEMARCHE 7.207).
 
 ---
 
@@ -158,6 +169,18 @@ Exemple : « Mon vélo a été volé dans ma cave, fermée par un cadenas. »
 5. **Vérification** : chaque citation est recherchée dans la clause du contrat.
 6. **Journal** : l'analyse est notée (décision, faits, questions), sans le texte du sinistre. En ligne, la même ligne part aussi sur la sortie standard.
 
+### C. À chaque sinistre, par la lecture des clauses (la méthode par défaut)
+
+Même déclaration, même contrat. Deux à trois minutes ; l'écran affiche chaque étape.
+
+1. **Désigner** (`clauses.py`) : Mistral Large reçoit la table des matières du contrat et la déclaration, et désigne les chapitres à relire (ici, la garantie vol).
+2. **Composer le dossier** (`dossier.py`, `attendu.py`) : le code ajoute à ces chapitres leurs chapeaux, les exclusions générales, les articles qu'ils citent et les définitions employées (« serrure de sûreté »). Il sait d'avance quelles clauses doivent recevoir un jugement.
+3. **Juger** (`clauses.py`) : Mistral Large rend un jugement par clause, avec la phrase du contrat et celle de la déclaration. Ce qui ne joue pas tient dans une simple liste (`sans_effet`), pour garder la réponse courte. Une clause attendue restée sans jugement est redemandée une fois.
+4. **Contrôler** (`jugement.py`) : chaque citation est retrouvée mot pour mot (un mot sauté se répare sur le passage exact) ; un identifiant mal recopié est rétabli ; un jugement mal cité est écarté.
+5. **Décider** (`jugement.py`) : une exclusion qui vaut pour tout le contrat refuse ; sinon garantie par garantie, une exclusion l'emporte, un point à vérifier donne « à préciser », une garantie qui couvre sans exclusion donne « couvert » ; une option qui couvre seule donne « à préciser », avec la question de sa souscription.
+6. **Contresigner** (`jugement.arbitrer`) : la chaîne de règles a tourné en parallèle ; un « couvert » qu'elle ne confirme pas devient « à préciser », et le désaccord est affiché.
+7. **Garder** : les jugements de l'analyse vont dans les tables `analyses_clauses` et `jugements`.
+
 ---
 
 ## 4. Les fichiers, un par un
@@ -170,7 +193,8 @@ Le code est rangé par métier (25 novembre 2026) : quatre sous-dossiers, et à 
 src/couverture/
   contrat/     lire un contrat : chargement, segmentation, profils, anonymisation, controle_decoupage, ingestion,
                tableaux (les formules), base (SQLite)
-  analyse/     analyser un sinistre : lecture, exemples, prolog (le moteur), chaine, validation, journal, fiche (le PDF)
+  analyse/     analyser un sinistre : lecture, exemples, prolog (le moteur), chaine, validation, journal, fiche (le PDF) ;
+               et la lecture des clauses : attendu, dossier, jugement, clauses
   redaction/   rédiger les règles d'un contrat : consigne, controles, ecriture, vocabulaire
   mesure/      mesurer : evaluation (les jeux de cas), banc, ferme (le jeu fermé)
   cli/  api/   une commande, une route par fichier
@@ -351,6 +375,17 @@ Trois rôles, trois modèles, désignés par leur version datée : celui qui lit
 
 **Le moteur chargé une fois** (`MoteurPermanent`) : un SWI-Prolog par contrat reste ouvert ; Python lui envoie les faits sur une ligne, il répond une ligne JSON (`servir` dans `moteur.pl`). Il est relancé s'il s'arrête ou si les règles changent sur le disque. `COUVERTURE_PROLOG_PERMANENT=non` revient à un processus par décision (DEMARCHE 7.46).
 
+### `src/couverture/analyse/attendu.py`, `dossier.py`, `jugement.py`, `clauses.py` — la lecture des clauses
+
+La seconde méthode, en quatre fichiers, du plus mécanique au seul qui appelle le modèle.
+
+- **`attendu.py`** calcule, du seul découpage et une fois par contrat, les tables `garanties` (repère, titre, chemin, optionnelle ou non) et `clauses_attendues` (pour chaque garantie, chaque clause à relire, son rôle, et si elle peut bloquer). *Pourquoi* : on ne constate un manque que si l'on a écrit d'avance ce qui devait être là ; la complétude d'une analyse devient une jointure SQL.
+- **`dossier.py`** compose le dossier d'un sinistre à partir des chapitres désignés, sans laisser de choix au modèle ; dans le doute, il élargit (une clause de trop coûte des tokens, une exclusion oubliée coûte un couvert à tort). Il reconnaît aussi, à leur titre, les clauses du règlement du sinistre (délai, estimation, franchise) : leurs questions deviennent des rappels.
+- **`jugement.py`** : les contrôles d'un jugement (clause au dossier, citations exactes, question présente), les rattrapages en code (identifiant rétabli, alinéa ramené à sa clause, citation de la déclaration abrégée par « … » acceptée quand chaque morceau y figure), la jointure, la décision (`decider`), la contresignature (`arbitrer`), et l'enregistrement des jugements. Rien n'y appelle le modèle.
+- **`clauses.py`** : les deux consignes (désigner, juger), les deux appels à Mistral Large, la relance des clauses oubliées, et l'analyse de bout en bout (`lire`), qui annonce ses étapes au suivi de l'écran. L'ordre de l'envoi est choisi pour le cache du fournisseur : ce qui ne change pas d'un sinistre à l'autre d'abord, la déclaration à la fin.
+
+*Ce qui a été écarté* : demander au modèle « ce sinistre est-il couvert ? ». Il ne voit jamais cette question : il désigne des chapitres, puis juge des clauses une à une ; la réponse est calculée.
+
 ### `src/couverture/mesure/banc.py` et `data/golden/` — le banc d'essai
 
 **Rôle** : rejouer tout le système sur un jeu de référence figé (le *golden set* : 112 cas sur deux contrats, étiquetés par garantie, thème, origine et auteur), en trois couches : les **règles** seules sur les faits idéaux, la **lecture** des faits par le modèle comparée aux faits idéaux, la **chaîne** complète sur plusieurs exécutions. Des **portes** (`data/golden/seuils.json`) disent si c'est présentable ; la commande `couverture banc` sort en erreur si une porte échoue. Chaque passage est gardé dans `data/bancs/` et comparé au précédent. `--figer` versionne le golden set ; `--fiche` écrit la fiche de validation des réponses attendues.
@@ -426,6 +461,7 @@ Une commande par module (`cli/regles.py`, `cli/banc.py`…), comme une route par
 | `couverture formules --contrat ID --page N` | Lit le tableau des garanties par formule d'un contrat. |
 | `couverture rediger --contrat ID --article 2.2` | Mistral Large rédige les règles d'une garantie ; le code les contrôle ; `--accepter` les ajoute. |
 | `couverture analyser --contrat ID "…" [--detail] [--json]` | Analyse un sinistre : décision, motif, preuves, questions, arbre de preuve. |
+| `couverture juger --contrat ID "…" \| --jeu J [--cas …] [--regles] [--paralleles 4]` | La lecture des clauses sur une déclaration ou sur les cas d'un jeu : décision, clauses jugées, tokens et cache ; un bilan par jeu dans `data/debug/`. Le jeu « quatre » demande `--mesure-finale`. |
 | `couverture banc --contrat ID [--jeu ferme] [--partie test] [--couches …]` | Le golden set ou le jeu fermé rejoué : règles, lecture, chaîne ; portes ; rapport dans `data/bancs/`. |
 | `couverture exemples [--partager] [--indexer] [--proches "…"]` | La banque d'exemples de lecture et le partage mise au point / test. |
 | `couverture api [--port 8001]` | Lance l'API FastAPI (documentation sur `/docs`). |
@@ -435,6 +471,8 @@ Une commande par module (`cli/regles.py`, `cli/banc.py`…), comme une route par
 ### L'API (`src/couverture/api/`) et l'interface (`frontend/`)
 
 L'API FastAPI (une route par fichier, la logique dans `service.py`, la clé dans l'en-tête `x-api-key`) et l'interface Angular aux couleurs du système de design de foyer.lu : voir `README.md`.
+
+**La méthode** se choisit par `COUVERTURE_METHODE` (défaut `clauses`) ou par requête (`methode`). Avec `clauses`, `service.analyser_clauses` fait tourner la chaîne de règles en parallèle pour la contresignature, et `resultat_clauses` met la réponse au format de l'API : citations, limites, questions, rappels, raisonnement clause par clause. Le **suivi** (`routes/analyse_suivie.py`, un flux de lignes JSON) annonce d'abord les étapes de la méthode ; pendant une étape longue, il envoie une ligne vide toutes les 15 secondes, pour que l'hébergeur ne coupe pas une requête de plusieurs minutes (7.208 : 279 s tenues en ligne).
 
 **En ligne** (`api/acces.py`, actif quand `COUVERTURE_CODE_ACCES` est défini) : le navigateur demande un code d'accès, qui tient lieu de clé (en local, c'est le proxy de développement qui ajoute la clé ; en ligne il n'y a pas de proxy) ; les analyses sont comptées par jour ; la liste des clauses est fermée et `routes/clause.py` ne sert une clause que si les règles la citent ; l'API sert l'écran construit (`COUVERTURE_FRONT`). Pourquoi : une page ouverte dépenserait le crédit du modèle pour n'importe qui, et donnerait à télécharger le texte de quatre assureurs. L'ancienne page (`web.py`, HTML sans framework) a été retirée le 20 nov. 2026.
 
@@ -479,13 +517,14 @@ Expose `Resultat`, `Verdict`, `Decision` pour un usage en Python, et la version 
 
 ## 6. Les tests
 
-`uv run pytest` lance 262 tests (24 nov. 2026, dont un ignoré sous Windows ; le nombre entre parenthèses compte les fonctions de test, dont certaines jouent plusieurs cas), sans appel réel à un modèle (les réponses sont préparées ou la connexion simulée) :
+`uv run pytest` lance 312 tests (26 nov. 2026, dont un ignoré sous Windows ; le nombre entre parenthèses compte les fonctions de test, dont certaines jouent plusieurs cas), sans appel réel à un modèle : les réponses sont préparées, et une garde commune (`tests/conftest.py`) fait échouer tout appel réseau au fournisseur, pour qu'un réglage du poste ne déclenche jamais d'appel payé (7.204) :
 - **`test_pipeline.py` (47)** — lecture et découpage d'un PDF (sommaire, en-têtes, mots coupés, intertitres, lexique éclaté, renvois), contrôles d'ingestion, base, contrôle des citations (une citation inventée fait passer COUVERT à INCERTAIN), configuration du modèle (`.env`, nouvelles tentatives, clé refusée, réponses coupées), profils, journal sans le texte du sinistre, versions des consignes, tableaux Grafana exécutés sur une vraie base ; le contrat réel A si son PDF est présent.
-- **`test_prolog.py` (71)** — le moteur : trois valeurs et questions, exclusions partielles, extensions de définition, garanties accessoires, événement non traduit jamais refusé, obligations, questions décisives et paires, arbre de preuve, faits sans injection possible ; la lecture (vocabulaire, deux temps, vérification, un doute ne fait jamais couvrir, confirmation) ; le moteur permanent ; et, si SWI-Prolog est installé, **Prolog et l'oracle Python concordent** sur tous les cas.
-- **`test_redaction.py` (52)** — la rédaction : Prolog généré et évalué par l'oracle, chaque contrôle (vocabulaire déclaré, fait inventé, citation réparée ou refusée, exclusion oubliée, réserves, conditions des conditions particulières mises en réserve, accessoires, extensions…), la reprise unique sur un écart au schéma, l'acceptation, la hiérarchie des valeurs.
+- **`test_prolog.py` (83)** — le moteur : trois valeurs et questions, exclusions partielles, extensions de définition, garanties accessoires, événement non traduit jamais refusé, obligations, questions décisives et paires, arbre de preuve, faits sans injection possible ; la lecture (vocabulaire, deux temps, vérification, un doute ne fait jamais couvrir, confirmation) ; le moteur permanent ; et, si SWI-Prolog est installé, **Prolog et l'oracle Python concordent** sur tous les cas.
+- **`test_redaction.py` (57)** — la rédaction : Prolog généré et évalué par l'oracle, chaque contrôle (vocabulaire déclaré, fait inventé, citation réparée ou refusée, exclusion oubliée, réserves, conditions des conditions particulières mises en réserve, accessoires, extensions…), la reprise unique sur un écart au schéma, l'acceptation, la hiérarchie des valeurs.
+- **`test_jugement.py` (21)**, **`test_clauses.py` (15)**, **`test_dossier.py` (5)**, **`test_attendu.py` (4)** — la lecture des clauses, avec un modèle factice : les clauses attendues, la composition du dossier, les contrôles et rattrapages d'un jugement, la décision et la contresignature, la relance, les rappels du règlement, une question une seule fois, l'analyse de bout en bout.
 - **`test_banc.py` (18)** — le golden set (complet, cohérent, figé), les règles seules justes pour chaque contrat, les trois couches, les portes, la latence, la fiche de validation.
-- **`test_api_routes.py` (14)** et **`test_api_service.py` (7)** — les routes par HTTP, dépendances remplacées ; une route par fichier ; et le mode en ligne : le code d'accès remplace la clé, le contrat ne se télécharge pas, les analyses sont comptées.
-- **`test_exemples.py` (12)**, **`test_fiche.py`**, **`test_tableaux.py`**, **`test_questions.py`**, **`test_ferme.py`** — la banque d'exemples, la fiche PDF, les tableaux Grafana exécutés, les questions posées, le jeu fermé.
+- **`test_api_routes.py` (16)** et **`test_api_service.py` (8)** — les routes par HTTP, dépendances remplacées ; une route par fichier ; le mode en ligne : le code d'accès remplace la clé, le contrat ne se télécharge pas, les analyses sont comptées ; la méthode choisie par requête ; le suivi qui bat pendant une longue étape.
+- **`test_exemples.py` (13)**, **`test_fiche.py`**, **`test_tableaux.py`**, **`test_questions.py`**, **`test_ferme.py`** — la banque d'exemples, la fiche PDF, les tableaux Grafana exécutés, les questions posées, le jeu fermé.
 
 ---
 
@@ -503,7 +542,9 @@ Le banc (`couverture banc`) mesure trois couches sur le golden set, avec des por
 
 **Deux jeux, deux usages.** Le golden set a été écrit en connaissant les règles : il dit que le moteur applique les règles, pas que les règles disent le contrat. Le **jeu fermé** (`data/ferme/`, `couverture banc --jeu ferme`) a été écrit sans les voir : c'est lui qui mesure la fidélité au contrat. À sa première mesure, A est tombé de 90 à 70 % et B de 76 à 57 % (DEMARCHE 7.81). Ses cas ne servent jamais à corriger le vocabulaire, les règles ou les exemples.
 
-**Où on en est** (24 nov. 2026 ; détail dans le README, section 4) : avec des faits exacts, les règles sont justes à 100 %. La chaîne complète donne 94 % de réponses justes sur la partie test de A, 98 à 100 % sur son jeu fermé, 85 % sur celui de B, 96 % sur celui de D. Un couvert à tort se répète chez B, un refus à tort chez D, et un cas de A est couvert à tort une fois sur trois certains jours. Toutes ces erreurs viennent de la lecture.
+**La lecture des clauses se mesure autrement** : `couverture juger --jeu …` rejoue un jeu une fois (le modèle coûte 8 à 10 centimes par cas), et compte justes, couverts à tort, refus à tort et « à préciser » au lieu d'une réponse. **La comparaison qui compte** est celle du jeu « quatre », jamais vu, passé une seule fois par les deux méthodes après le gel du code (26 nov., DEMARCHE 7.207) : chaîne de règles 42 sur 60, 4,3 couverts à tort, 2 refus à tort ; lecture des clauses 45 sur 60, 1 couvert à tort, 4 refus à tort.
+
+**La chaîne de règles, sur ses anciens jeux** (24 nov. 2026 ; détail dans le README, section 4) : avec des faits exacts, les règles sont justes à 100 %. La chaîne complète donne 94 % de réponses justes sur la partie test de A, 98 à 100 % sur son jeu fermé, 85 % sur celui de B, 96 % sur celui de D. Un couvert à tort se répète chez B, un refus à tort chez D, et un cas de A est couvert à tort une fois sur trois certains jours. Toutes ces erreurs viennent de la lecture.
 
 ---
 
@@ -533,6 +574,9 @@ Le banc (`couverture banc`) mesure trois couches sur le golden set, avec des por
 | Pas de LangGraph | La chaîne est linéaire | Un graphe par habitude |
 | Mistral seul, derrière une interface `LLM` | Fournisseur européen ; un autre modèle se branche en une classe | Garder des fournisseurs qu'on ne teste pas |
 | En ligne : un code d'accès, le contrat non téléchargeable | Une page ouverte dépenserait le crédit du modèle et publierait le texte de quatre assureurs | Une démonstration publique |
+| Lire les clauses du contrat plutôt que seulement ses règles, et faire contresigner par les règles | Une clause que la traduction a manquée peut encore être vue ; sur un jeu jamais vu, quatre fois moins de couverts à tort, à justesse comparable | La chaîne de règles seule (gardée, choisissable) ; laisser le modèle décider du sinistre |
+| La décision de la lecture des clauses calculée par le code | Le modèle juge une clause à la fois ; la réponse se recalcule à partir des jugements gardés | Demander au modèle sa conclusion |
+| Une mesure unique sur un jeu jamais vu, code figé avant | Un jeu qui a servi à corriger flatte la méthode : l'écart de 48 contre 38 sur « neuf » est devenu 45 contre 42 sur « quatre » | Comparer sur les jeux de mise au point |
 | API FastAPI et interface Angular | Restitution claire, sur le modèle de SortirIA ; Streamlit déconseillé par le recruteur | Streamlit |
 
 ---
@@ -560,6 +604,15 @@ C'est la principale source d'erreurs restantes, et elle est mesurée à part (co
 **Comment comparez-vous deux versions d'une consigne, ou deux modèles ?**
 Chaque banc écrit un rapport qui porte le modèle, le mode de lecture et l'empreinte du jeu de cas, et se compare au précédent de même configuration ; le journal note les versions des consignes. Deux bancs avec la même empreinte se comparent directement, sur les couverts à tort d'abord. Une consigne ne peut pas changer sans nouvelle version : la CI échoue.
 
+**Pourquoi deux méthodes, et pourquoi la seconde par défaut ?**
+J'ai mené le projet comme une expérience. Ma première hypothèse traduisait chaque contrat en règles : rapide, transparente, mais fausse dès que la traduction l'était, et sur des cas jamais vus elle couvrait parfois à tort. La seconde fait lire au modèle les clauses mêmes, une à une ; je vérifie chaque citation, je calcule la décision et je fais contresigner les « couvert » par la première. Je les ai comparées une seule fois, code figé, sur soixante cas jamais vus : 45 réponses justes contre 42 (un écart que soixante cas ne permettent pas d'affirmer), un couvert à tort contre 4,3. Mon choix tient à l'erreur qui coûte le plus. Ce qu'il coûte, je le dis aussi : deux refus à tort de plus, deux à trois minutes et 8 à 10 centimes par analyse.
+
+**La seconde méthode généralise-t-elle à un nouveau contrat ?**
+En principe : elle n'a besoin, pour juger, que du contrat découpé. Mais j'ai fait toutes mes mesures avec la contresignature des règles traduites ; sans elles, sur un contrat nouveau, je n'ai rien mesuré. C'est ma prochaine expérience, pas un résultat que j'annonce.
+
+**Le modèle ne décide-t-il pas, finalement, dans la seconde méthode ?**
+Il porte un jugement par clause, oui : c'est plus de pouvoir qu'une simple lecture des faits. Je l'encadre de trois façons : chaque jugement cite deux phrases retrouvées mot pour mot ; la décision se calcule à partir des jugements par une logique fixe ; un « couvert » doit être contresigné. Ce que mon code ne vérifie pas, c'est que la clause citée a un rapport avec le sinistre : deux refus à tort du jeu « quatre » en viennent, et je ne l'avais pas anticipé.
+
 **Pourquoi INCERTAIN est-il une bonne réponse ?**
 Parce que c'est la consigne : un « je ne sais pas » étayé vaut mieux qu'une réponse assurée sans justification. Et ici, INCERTAIN dit précisément quoi demander à l'assuré.
 
@@ -573,7 +626,8 @@ Pour écrire le code plus vite, comme le recruteur l'encourage, et dans le syst�
 
 ## 10. Limites et suites
 
-**Limites actuelles** (23 nov. 2026 ; la liste complète et tenue à jour est dans le README, section 7)
+**Limites actuelles** (23 nov. 2026, complétées le 26 ; la liste complète et tenue à jour est dans le README, section 7)
+- La lecture des clauses : deux à trois minutes et 8 à 10 centimes par analyse ; plus de refus à tort que la chaîne de règles ; une même déclaration ne reçoit pas toujours deux fois la même réponse ; jamais mesurée sans la contresignature des règles (DEMARCHE 7.207, 7.208).
 - Les règles n'ont pas été relues par un juriste ou un gestionnaire de sinistres, et les jeux de cas viennent de ceux qui ont écrit ou relu les règles.
 - La lecture des déclarations reste la principale source d'erreurs, et elle varie d'un appel à l'autre ; les chiffres du jour sont dans le README, section 4.
 - Chaque nouveau contrat demande une rédaction, non reproductible d'un essai à l'autre, puis une relecture humaine (README, section 6).
@@ -584,6 +638,7 @@ Pour écrire le code plus vite, comme le recruteur l'encourage, et dans le syst�
 - En ligne : pas d'utilisateurs réels, un compteur d'analyses qui repart de zéro à chaque réveil, et un journal lisible dans les journaux de l'hébergeur, sans tableau de bord.
 
 **Suites, dans l'ordre**
+0. Mesurer la lecture des clauses sans contresignature, sur un contrat sans règles traduites, avec un jeu neuf ; puis réduire ses refus à tort et son temps.
 1. Faire relire les règles d'un contrat par quelqu'un du métier, et mesurer sur ses propres cas.
 2. Un jeu de cas écrit sans voir les règles, pour chaque contrat ; un jeu de mesure pour C.
 3. La lecture : les erreurs restantes, une par une, comme pour les règles.

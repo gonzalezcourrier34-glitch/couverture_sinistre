@@ -307,7 +307,9 @@ def resultat_clauses(base: Base, contrat_id: str, sinistre: str, lu, decision, d
     avertissements = ([desaccord] if desaccord else []) \
         + ([f"clauses attendues sans jugement : {', '.join(e.manquants)}"] if e.manquants else []) \
         + [f"jugement écarté — {d}" for d in e.defauts[:5]]
-    questions = [j.question for j in e.a_verifier if j.question]
+    # Celles de la décision : une fois chacune (deux clauses peuvent poser la même), et celle d'une option qui
+    # couvre seule, qu'aucune clause ne pose (7.208).
+    questions = list(e.questions)
     regles = r_regles.verdict.decision if r_regles else None
     # Pas une probabilité : l'accord des deux lectures du contrat (les clauses et les règles), affiché comme tel.
     confiance = 1.0 if regles == e.decision else 0.5
