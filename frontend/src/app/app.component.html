@@ -62,13 +62,12 @@
                         [class.contrat-on]="c.id === contratId()"
                         [class.contrat-complet]="c.complet"
                         [class.contrat-partiel]="!c.complet"
-                        [attr.title]="c.traduction || null"
+                        [attr.title]="c.produit + ' · ' + c.version + ' · ' + (c.nb_clauses ?? '?') + ' clauses' + (c.traduction ? ' — ' + c.traduction : '')"
                         [attr.aria-checked]="c.id === contratId()"
                         (click)="choisirContrat(c.id)">
+                        <!-- Deux lignes par carte : le reste (produit en entier, date, clauses, état de la traduction) au survol. -->
                         <span class="contrat-assureur">{{ c.assureur }}</span>
-                        <span class="contrat-produit">{{ c.produit }}</span>
-                        <span class="contrat-version">{{ c.version }}</span>
-                        <span class="contrat-version">{{ c.nb_clauses ?? '?' }} clauses</span>
+                        <span class="contrat-produit">{{ c.produit }} · {{ c.version }}</span>
                     </button>
                 } @empty {
                     <p class="muted">Aucun contrat décidable : vérifiez que l’API tourne et que la base est remplie.</p>
@@ -108,10 +107,16 @@
 
             <form class="saisie" (submit)="$event.preventDefault(); analyser()">
                 <label class="etiquette" for="sinistre">2. La déclaration du client</label>
-                <textarea id="sinistre" rows="4" [attr.maxlength]="longueurMax"
-                    placeholder="Décrivez le sinistre comme le client l’écrirait : ce qui s’est passé, où, ce qui est abîmé…"
-                    [value]="sinistre()" (input)="saisir($event)"></textarea>
+                <!-- La zone de saisie prend toute la hauteur qui reste ; le compteur est dans son coin. -->
+                <div class="zone-saisie">
+                    <textarea id="sinistre" rows="4" [attr.maxlength]="longueurMax"
+                        placeholder="Décrivez le sinistre comme le client l’écrirait : ce qui s’est passé, où, ce qui est abîmé…"
+                        [value]="sinistre()" (input)="saisir($event)"></textarea>
+                    <span class="compteur" aria-hidden="true">{{ sinistre().length }} / {{ longueurMax }}</span>
+                </div>
 
+                <!-- Les exemples à gauche, les boutons à droite : une seule ligne sous la saisie. -->
+                <div class="pied-saisie">
                 <div class="exemples">
                     <span class="small">Exemples :</span>
                     @for (e of exemples; track e.titre) {
@@ -120,13 +125,13 @@
                 </div>
 
                 <div class="actions">
-                    <span class="compteur">{{ sinistre().length }} / {{ longueurMax }}</span>
                     @if (etapes().length) {
                         <button type="button" class="bouton bouton-secondaire" (click)="nouvelleDeclaration()">Nouvelle déclaration</button>
                     }
                     <button type="submit" class="bouton bouton-primaire" [disabled]="!peutAnalyser()">
                         {{ chargement() ? 'Analyse en cours…' : 'Analyser' }}
                     </button>
+                </div>
                 </div>
             </form>
         </section>

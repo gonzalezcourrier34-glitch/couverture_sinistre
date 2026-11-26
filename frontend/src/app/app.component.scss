@@ -13,7 +13,7 @@ $rayon: 12px;
 .page {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     height: 100vh;
     height: 100dvh;
     overflow: hidden;
@@ -39,7 +39,7 @@ $rayon: 12px;
     justify-content: space-between;
     align-items: center;
     gap: 8px 20px;
-    padding: 10px 18px;
+    padding: 8px 16px;
     background: var(--blanc);
     border-radius: $rayon;
     box-shadow: var(--ombre);
@@ -133,13 +133,13 @@ $rayon: 12px;
     background: var(--blanc);
     border-radius: $rayon;
     box-shadow: var(--ombre);
-    padding: 18px 22px;
+    padding: 14px 18px;
 }
 
 .declaration {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
 .etiquette {
@@ -173,7 +173,8 @@ $rayon: 12px;
     flex-direction: column;
     align-items: flex-start;
     gap: 0;
-    padding: 8px 10px;
+    padding: 6px 10px;
+    min-width: 0;
     text-align: left;
     background: var(--plume-pale);
     border: 2px solid var(--plume-clair);
@@ -240,21 +241,19 @@ $rayon: 12px;
 }
 
 .contrat-assureur {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
     color: var(--primaire-nuit);
 }
 
 .contrat-produit {
-    font-size: 14px;
-    color: var(--texte-doux);
-}
-
-// La date et le nombre de clauses, chacun sur sa ligne, sans coupure au milieu.
-.contrat-version {
-    font-size: 12px;
-    color: var(--plume-fonce);
+    // Une seule ligne, coupée par des points de suspension si la carte est étroite : le texte entier est au survol.
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
+    font-size: 12px;
+    color: var(--texte-doux);
 }
 
 
@@ -307,7 +306,14 @@ $rayon: 12px;
 .saisie {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.zone-saisie {
+    position: relative;
+    display: flex;
     flex: 1 1 auto;
     min-height: 0;
 }
@@ -316,7 +322,7 @@ textarea {
     width: 100%;
     resize: none;
     min-height: 96px;
-    padding: 10px 12px;
+    padding: 10px 12px 24px; // en bas, la place du compteur
     border: 1px solid var(--plume);
     border-radius: 10px;
     background: var(--blanc);
@@ -330,12 +336,24 @@ textarea {
 }
 
 .compteur {
-    font-size: 13px;
+    position: absolute;
+    right: 12px;
+    bottom: 6px;
+    font-size: 11px;
     color: var(--plume-fonce);
-    margin-right: auto;
+    pointer-events: none;
+}
+
+.pied-saisie {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px 12px;
 }
 
 .exemples {
+    flex: 1 1 auto;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -348,7 +366,7 @@ textarea {
     justify-content: flex-end;
     align-items: center;
     gap: 10px;
-    margin-top: 2px;
+    margin-left: auto;
 }
 
 

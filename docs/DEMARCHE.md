@@ -5998,6 +5998,8 @@ s'appliquait aussi à l'état du service. Elle s'appelle maintenant `.repere-cou
 La légende des cadres de couleur (conditions traduites en entier, en partie) passe aussi sur la ligne du titre « Les conditions générales », à droite et en plus petit : une ligne de moins au-dessus de la déclaration.
 Et la page d'accueil décrivait encore la première méthode (« Lire : un modèle traduit la déclaration en faits d'un vocabulaire fermé », « ses réponses donnent la décision tout de suite ») : elle décrit maintenant celle qui répond (juger, trancher, vérifier ; deux à trois minutes).
 
+**Puis la place de la saisie**, à la demande de l'utilisateur : la zone de la déclaration faisait 240 pixels sur un écran de 850. Trois gains, sans rien retirer de l'écran (ce qui sort de la vue passe dans les infobulles) : des cartes de contrat sur deux lignes (l'assureur ; le produit et la date, coupés si besoin), le reste au survol ; les exemples et le bouton « Analyser » sur une seule ligne, le compteur de caractères dans le coin de la zone de saisie ; des marges un peu plus serrées. La zone prend toute la hauteur qui reste.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 26 nov. 2026. Dans l'ordre où je le ferais.
