@@ -20,7 +20,8 @@ router = APIRouter(prefix="/api/v1", tags=["supervision"])
 
 @router.get("/sante")
 def sante(base: Base = Depends(get_base)) -> dict[str, Any]:  # noqa: B008
-    """État du service : version, contrats décidables, moteur Prolog, modèle configuré, clé API configurée.
+    """État du service : version, contrats décidables, moteur Prolog, modèle configuré, clé API configurée ; la
+    méthode par défaut et, pour la lecture des clauses, son modèle (l'écran les affiche en tête, 7.209).
 
     Returns
     -------
@@ -35,4 +36,5 @@ def sante(base: Base = Depends(get_base)) -> dict[str, Any]:  # noqa: B008
     prolog_ok = swipl() is not None
     return {"statut": "ok" if decidables and prolog_ok else "degrade", "version": config.VERSION,
             "contrats_decidables": decidables, "prolog": prolog_ok, "modele": llm.nom if llm else None,
-            "cle_api_configuree": bool(config.API_KEY)}
+            "cle_api_configuree": bool(config.API_KEY), "methode": config.METHODE,
+            "modele_clauses": config.MODELE_CLAUSES if config.METHODE == "clauses" else None}

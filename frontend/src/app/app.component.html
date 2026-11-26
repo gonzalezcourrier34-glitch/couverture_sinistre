@@ -10,7 +10,13 @@
             </svg>
             <div>
                 <h1>Couverture des sinistres</h1>
-                <p class="header-subtitle">Le modèle lit la déclaration, la logique décide, le code vérifie chaque citation.</p>
+                <p class="header-subtitle">
+                    @if (sante()?.methode === 'clauses') {
+                        Le modèle juge chaque clause du contrat, la logique tranche, les règles contresignent, le code vérifie chaque citation.
+                    } @else {
+                        Le modèle lit la déclaration, la logique décide, le code vérifie chaque citation.
+                    }
+                </p>
             </div>
         </div>
 
@@ -19,7 +25,11 @@
                 <span class="pastille" [class.pastille-ok]="s.statut === 'ok'" [class.pastille-ko]="s.statut !== 'ok'">
                     {{ s.statut === 'ok' ? 'Service disponible' : 'Service dégradé' }}
                 </span>
-                <span class="etat-detail">Moteur {{ s.prolog ? 'chargé' : 'absent' }} · modèle {{ s.modele ?? 'non configuré' }} · v{{ s.version }}</span>
+                @if (s.methode === 'clauses') {
+                    <span class="etat-detail">Lecture des clauses · {{ s.modele_clauses }} · contresignature : moteur {{ s.prolog ? 'chargé' : 'absent' }}, {{ s.modele ?? 'modèle non configuré' }} · v{{ s.version }}</span>
+                } @else {
+                    <span class="etat-detail">Moteur {{ s.prolog ? 'chargé' : 'absent' }} · modèle {{ s.modele ?? 'non configuré' }} · v{{ s.version }}</span>
+                }
             } @else if (santeErreur()) {
                 <span class="pastille pastille-ko">API injoignable</span>
             } @else {
@@ -57,8 +67,8 @@
                 }
             </div>
             <p class="legende-conditions">
-                <span class="pastille pastille-complet"></span> conditions traduites en entier
-                <span class="pastille pastille-partiel"></span> traduites en partie
+                <span class="repere-couleur repere-complet"></span> conditions traduites en entier
+                <span class="repere-couleur repere-partiel"></span> traduites en partie
             </p>
 
             <!-- ### Conditions particulières : ce que le contrat du client dit, et que la déclaration ne dit pas -->
@@ -323,7 +333,7 @@
                 <header class="fenetre-tete">
                     <div>
                         <div class="fenetre-titre">Analyse en cours</div>
-                        <div class="small">Le modèle lit, la logique décide, le code vérifie.</div>
+                        <div class="small">{{ annonceSuivi() ? 'Le modèle juge chaque clause, la logique tranche, le code vérifie.' : 'Le modèle lit, la logique décide, le code vérifie.' }}</div>
                         @if (annonceSuivi(); as annonce) {
                             <div class="small">{{ annonce }}</div>
                         }

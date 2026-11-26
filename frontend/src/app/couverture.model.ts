@@ -11,6 +11,9 @@ export interface Sante {
     prolog: boolean;
     modele: string | null;
     cle_api_configuree: boolean;
+    /** La méthode par défaut du serveur, et le modèle de la lecture des clauses quand c'est elle (7.209). */
+    methode?: 'regles' | 'clauses';
+    modele_clauses?: string | null;
 }
 
 export interface Contrat {

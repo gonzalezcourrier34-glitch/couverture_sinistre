@@ -202,7 +202,9 @@ $rayon: 12px;
     color: var(--plume-fonce);
 }
 
-.pastille {
+.repere-couleur {
+    // Un nom à part : sous `.pastille`, ces règles (largeur et hauteur de 10 px) s'appliquaient aussi à l'état du
+    // service en tête, dont le texte débordait sur la page (7.209).
     display: inline-block;
     width: 10px;
     height: 10px;
@@ -216,11 +218,11 @@ $rayon: 12px;
     }
 }
 
-.pastille-complet {
+.repere-complet {
     border-color: var(--succes);
 }
 
-.pastille-partiel {
+.repere-partiel {
     border-color: #e8890c;
 }
 

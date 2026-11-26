@@ -123,7 +123,7 @@ Neuf parties, dans l'ordre. Chaque étape garde son numéro, cité ailleurs dans
 | VI | 7.148 à 7.159 | Un quatrième contrat ajouté à froid : ce qui est général, ce qui ne l'est pas |
 | VII | 7.160 à 7.167 | Mettre en ligne, puis tout rejouer la veille de la livraison |
 | VIII | 7.168 à 7.189 | Finir A et B, puis des jeux jamais vus qui montrent un défaut de fond |
-| IX | 7.190 à 7.208 | La lecture des clauses : une seconde méthode, mesurée contre la première |
+| IX | 7.190 à 7.209 | La lecture des clauses : une seconde méthode, mesurée contre la première |
 
 ---
 
@@ -5979,6 +5979,20 @@ article. Deux tests.
 
 **Le coût en ligne.** Une analyse coûte maintenant 8 à 10 centimes au lieu de moins d'un ; la limite de 300 analyses
 par jour, pensée pour l'ancienne méthode, est à baisser.
+
+### 7.209 L'en-tête de l'écran dit la méthode qui répond, et l'état du service ne déborde plus
+
+**Ce que j'ai vu à l'écran**, le 26 au matin, sur la première analyse en ligne par la lecture des clauses (un piéton
+renversé à vélo, assureur A : « couvert », les règles concordent, trois articles de responsabilité civile cités). La
+réponse était juste, mais l'en-tête disait encore « le modèle lit la déclaration, la logique décide » et nommait
+Mistral Medium, alors que la réponse venait de Mistral Large, clause par clause. Et la pastille « Service
+disponible » débordait sur la page.
+
+**Les deux causes.** L'en-tête ne connaissait pas la méthode du serveur : `/api/v1/sante` donne maintenant la méthode
+par défaut et, pour la lecture des clauses, son modèle ; l'en-tête et la fenêtre de suivi en tirent leur phrase, et
+l'état du service nomme les deux modèles (la lecture, et la contresignature). Le débordement venait d'un nom de classe
+employé deux fois : la petite case de couleur de la légende des conditions (`.pastille`, 10 pixels de côté)
+s'appliquait aussi à l'état du service. Elle s'appelle maintenant `.repere-couleur`. Un test pour la santé.
 
 ## 8. Ce qui reste à faire
 
