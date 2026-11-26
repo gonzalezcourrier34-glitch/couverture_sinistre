@@ -6141,6 +6141,23 @@ plus, de la taille du jugement (le dossier entier), dans ces cas seulement. Deux
 **Le critère, fixé avant le rejeu** : la garder seulement si elle corrige plus de refus à tort qu'elle ne fait
 perdre de refus justes, sans aucun couvert à tort, sur les trois jeux vus.
 
+**Rejoué (26 nov., environ 2 $), et une erreur de ma part d'abord.** La sortie donnait « inconnu » pour presque
+toutes les relectures, même pour le casier du club de tennis. Les réponses brutes montraient pourquoi : le modèle
+recopiait comme identifiant toute la ligne d'en-tête de la clause (« [2.10-a] (à relire) 2 Les garanties… »), et
+mon code ne la reconnaissait pas. Corrigé (l'identifiant entre crochets), puis recompté sans nouvel appel, sur les
+réponses gardées des vingt cas relus :
+
+- Gagné : deux cas. Le dégât des eaux après le gel (q-a04, les deux clauses « inconnu » : « à préciser », juste) ;
+  le vol avec les clés perdues (n-b06, l'exclusion des vols simples « ne joue pas » : le refus à tort devient
+  « à préciser »).
+- Perdu : cinq refus justes devenus « à préciser » (n-b04, n-b18, q-a18, q-b18, q-d20).
+- Le tremblement de terre (q-d03) n'est pas corrigé : relue dans son dossier, l'exclusion « joue » encore.
+
+Mieux que la relecture seule (un contre sept), pas assez : deux contre cinq. **Critère non atteint, la règle est
+retirée** ; le code revient à celui de 7.213. Ce que j'en retiens : relire un refus en demandant « la clause
+s'applique-t-elle ? » fait douter le modèle de refus justes plus souvent qu'il ne corrige de refus à tort, avec ou
+sans le dossier. Les deux refus à tort restent une limite, affichée à l'écran par le désaccord avec les règles.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 26 nov. 2026. Dans l'ordre où je le ferais.
@@ -6407,3 +6424,4 @@ chaque point demande un jeu neuf.
 219. Un doute n'a de poids que s'il peut changer la réponse : une question qui ne peut ouvrir aucune garantie ne doit pas retenir un refus fondé sur une clause citée.
 220. Une garde gagne à savoir pourquoi elle bloque : relire le seul obstacle que les règles nomment garde la prudence et rend les réponses justes que le simple désaccord sacrifiait.
 221. Relire une clause seule, hors de son dossier, n'est pas la relire mieux : sans la définition et la garantie voisine, une exclusion juste paraît hors de propos. Une règle symétrique d'une règle qui marche n'est pas une règle qui marche : elle se mesure.
+222. Quand une sortie est uniforme (« inconnu » partout), lire les réponses brutes avant de conclure : c'était mon code qui ne reconnaissait pas l'identifiant recopié par le modèle.

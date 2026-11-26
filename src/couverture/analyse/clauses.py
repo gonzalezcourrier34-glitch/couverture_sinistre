@@ -156,59 +156,6 @@ def arbitrage_cible(llm: LLM, obstacles: list[Condition], par_id: dict[str, Clau
     return tient, lignes
 
 
-# La relecture d'un refus, dans son dossier (7.214). Un premier essai relisait la clause qui refuse seule : sans la
-# définition ni la garantie voisine, des exclusions justes y paraissaient hors de propos (7.212, retiré). Ici la
-# clause est relue au milieu de tout le dossier ; la relecture ne peut que confirmer le refus ou le ramener à
-# « à préciser » : jamais faire couvrir.
-SYSTEME_RELECTURE_REFUS = """Tu es gestionnaire de sinistres. On te donne les clauses des conditions générales d'un contrat d'assurance habitation qui concernent un sinistre, puis la déclaration de l'assuré. Une première lecture refuse ce sinistre en s'appuyant sur les clauses marquées « à relire ». Une seconde lecture, faite par des règles traduites du contrat, ne le refuse pas. Relis chaque clause marquée « à relire », en tenant compte de tout le dossier (définitions, garanties, exceptions aux exclusions).
-
-Pour chaque clause à relire, dis si elle s'applique à CE sinistre :
-- « joue » : la clause vise bien ce sinistre et la déclaration dit en toutes lettres le fait qui la déclenche. Recopie mot pour mot, dans « extrait_declaration », la phrase de la déclaration qui le dit.
-- « ne_joue_pas » : la clause vise autre chose (un autre événement, un autre bien, une autre situation), ou le dossier montre qu'elle ne s'applique pas.
-- « inconnu » : la déclaration ne permet pas de le dire.
-
-Une clause d'obligations ne refuse que si la déclaration dit que l'obligation n'a pas été respectée et que ce manquement a causé ou aggravé le sinistre. Le sens des mots est celui du contrat."""
-
-SCHEMA_RELECTURE_REFUS = {
-    "type": "object", "additionalProperties": False, "required": ["clauses"],
-    "properties": {"clauses": {"type": "array", "items": {
-        "type": "object", "required": ["clause", "avis"],
-        "properties": {"clause": {"type": "string"}, "avis": {"type": "string", "enum": ["joue", "ne_joue_pas", "inconnu"]},
-                       "extrait_declaration": {"type": "string"}, "motif": {"type": "string"}}}}}}
-
-
-def message_relecture(pieces: list[Clause], a_relire: list[str], decision_regles: Decision, declaration: str,
-                      d_abord: frozenset[str] | set[str] = frozenset()) -> str:
-    """Le dossier entier, dans l'ordre de l'envoi du jugement, les clauses qui refusent marquées « à relire »."""
-    rang = {c.id: (0 if c.id in d_abord else 2 if dossier.est_definition(c) else 1) for c in pieces}
-    blocs = [f"[{c.id}] ({'à relire' if c.id in a_relire else 'pour mémoire'}) {' > '.join(c.chemin)}\n{c.texte}"
-             for c in sorted(pieces, key=lambda c: rang[c.id])]
-    return ("## Clauses\n" + "\n\n".join(blocs) + f"\n\n## Réponse des règles traduites\n{decision_regles.value}"
-            + f"\n\n## Déclaration\n{declaration}")
-
-
-def relecture_du_refus(llm: LLM, excluent: list[jugement.Jugement], pieces: list[Clause], decision_regles: Decision,
-                       declaration: str, d_abord: frozenset[str] | set[str] = frozenset()) -> tuple[bool, list[str]]:
-    """Relit, dans leur dossier, les clauses qui refusent : le refus tient si l'une d'elles « joue », le fait
-    déclencheur cité mot pour mot dans la déclaration. Rend ce verdict et une ligne par clause."""
-    ids = [j.clause_id for j in excluent]
-    reponse = extraire_json(completer_avec_schema(
-        llm, SYSTEME_RELECTURE_REFUS, message_relecture(pieces, ids, decision_regles, declaration, d_abord),
-        SCHEMA_RELECTURE_REFUS))
-    avis = {jugement._nu(str(a.get("clause") or "")): a for a in reponse.get("clauses") or [] if isinstance(a, dict)}
-    declaration_n = normaliser(declaration)
-    tient, lignes = False, []
-    for i in ids:
-        a = avis.get(jugement._nu(i)) or {}
-        extrait = str(a.get("extrait_declaration") or "")
-        joue = a.get("avis") == "joue" and bool(extrait) and jugement._dans_la_declaration(extrait, declaration_n)
-        tient = tient or joue
-        etat = ("joue" if joue else "joue, sans citation exacte : non retenu" if a.get("avis") == "joue"
-                else "ne joue pas" if a.get("avis") == "ne_joue_pas" else "inconnu")
-        lignes.append(f"refus relu dans son dossier, art. {i} : {etat}" + (f" ← « {extrait} »" if joue else ""))
-    return tient, lignes
-
-
 @dataclass
 class Lecture:
     """Ce qu'une lecture des clauses a produit, de la désignation à la décision."""
@@ -353,19 +300,6 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | C
             decision = Decision.COUVERT
             desaccord = (f"les règles traduites répondaient « {regles.value} » ; relus un à un, leurs obstacles sont "
                          "écartés par la déclaration")
-    elif (decision == Decision.NON_COUVERT and etat.excluent and regles in (Decision.COUVERT, Decision.INCERTAIN)
-          and len(etat.excluent) <= MAX_OBSTACLES):
-        # La lecture refuse en citant ses exclusions, les règles non : on relit ces clauses dans tout leur dossier
-        # (7.214). Le refus tient si l'une d'elles joue, fait déclencheur cité ; sinon « à préciser ». Jamais
-        # « couvert ». Une clause qui refuse hors du dossier (une exclusion générale citée seule) y est ajoutée.
-        par_tout = {c.id: c for c in clauses}
-        dossier_relu = pieces + [par_tout[j.clause_id] for j in etat.excluent
-                                 if j.clause_id in par_tout and j.clause_id not in {c.id for c in pieces}]
-        tient, revue = relecture_du_refus(llm, etat.excluent, dossier_relu, regles, declaration, generales)
-        if not tient:
-            decision = Decision.INCERTAIN
-            desaccord = (f"la lecture des clauses refuse, les règles traduites répondent « {regles.value} » ; relue "
-                         "dans son dossier, aucune clause qui refuse n'est établie par la déclaration : à examiner")
     suivre("decision")
     suivre("decision", etat.motif + (f" ; {desaccord}" if desaccord else ""))
     if garder:                                         # les jugements en table, pour relire l'analyse après coup
