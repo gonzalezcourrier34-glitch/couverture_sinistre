@@ -109,9 +109,9 @@ en aurait fait perdre.
 - Réponses **coupées** à la limite de longueur → erreur explicite (`ReponseTronquee`) au lieu
   de « aucun objet JSON ».
 
-## 7. Le journal, du 17 au 25 novembre
+## 7. Le journal, du 17 au 26 novembre
 
-Sept parties, dans l'ordre. Chaque étape garde son numéro, cité ailleurs dans le projet.
+Neuf parties, dans l'ordre. Chaque étape garde son numéro, cité ailleurs dans le projet.
 
 | Partie | Étapes | La question du moment |
 |---|---|---|
@@ -122,6 +122,8 @@ Sept parties, dans l'ordre. Chaque étape garde son numéro, cité ailleurs dans
 | V | 7.102 à 7.147 | Le produit : une API, un écran, des déclarations écrites comme les gens écrivent ; « pas de rustine » |
 | VI | 7.148 à 7.159 | Un quatrième contrat ajouté à froid : ce qui est général, ce qui ne l'est pas |
 | VII | 7.160 à 7.167 | Mettre en ligne, puis tout rejouer la veille de la livraison |
+| VIII | 7.168 à 7.189 | Finir A et B, puis des jeux jamais vus qui montrent un défaut de fond |
+| IX | 7.190 à 7.207 | La lecture des clauses : une seconde méthode, mesurée contre la première |
 
 ---
 
@@ -4846,6 +4848,8 @@ Toujours le 24 nov., toujours sans toucher à une décision.
 
 Avec 7.164 et 7.165, c'est la même idée sous quatre formes : la réponse ne parle que de ce qui a un rapport avec le sinistre.
 
+**Partie VIII — Finir, puis des cas jamais vus (24 et 25 novembre).** Les contrats A et B sont traduits en entier ; des jeux écrits sans voir les règles disent ce que vaut la méthode sur des cas neufs, et le défaut qu'ils montrent n'est pas un défaut de règle.
+
 ### 7.168 Quatre sinistres, quatre lignes
 
 Le 24 nov., en fin de matinée. Un essai sur une déclaration longue (un retour de vacances : garage forcé, vélo et tondeuse disparus, congélateur débranché, parquet gondolé, vitre fêlée) rend « couvert, confiance 70 % », au titre des dégâts des eaux. Rien sur le vol, rien sur la vitre.
@@ -5443,6 +5447,8 @@ dossier de sinistre (formulaire, devis, factures, rapports), est une évolution 
 (nos « à préciser » en sont l'amorce : la plainte, l'arrêté de catastrophe naturelle sont des pièces
 attendues), mais il n'y a ni dossiers ni jeu de référence pour le mesurer aujourd'hui.
 
+**Partie IX — La lecture des clauses (25 et 26 novembre).** Le modèle lit les clauses mêmes du contrat et juge chacune ; la logique tranche, les règles contresignent. Une mesure unique, sur un jeu jamais vu, la compare à la première méthode.
+
 ### 7.190 Deux essais sans frais, trois défauts trouvés, et une commande pour le premier essai payant
 
 **Le fait.** Avant de payer un seul appel, le jugement clause par clause a été essayé deux fois sur des cas déjà
@@ -5891,9 +5897,76 @@ troisième. Aucun n'est un gestionnaire de sinistres. L'accord de trois lectures
 il dit que les cas ne sont pas ambigus pour qui lit le contrat. Et j'ai construit le système que ce jeu mesure : je
 l'ai annoté sans voir aucune de ses réponses sur ces cas, mais je connais ses règles.
 
+### 7.207 La mesure unique sur le jeu « quatre » : autant de réponses justes, quatre fois moins de couverts à tort
+
+**Le déroulé.** Le code est figé et poussé (commit `4410d43`), puis le jeu est fermé et exporté : 60 cas, 20 par
+contrat. Un faux pas avant : le fichier du second avis avait été renommé, et `ferme` ne trouvait plus rien (0 cas) ;
+il a repris son nom, sans toucher au code. Le soir du 25 novembre : la chaîne de règles seule passe trois fois sur
+chaque contrat (`banc`, Mistral Medium et Small, de 22 h 44 à 22 h 50) ; puis la lecture des clauses une fois
+(`juger --mesure-finale --regles`, Mistral Large, contresignature des règles, de 22 h 50 à 23 h 28, environ 2 millions
+de tokens envoyés dont la moitié repris du cache, 830 000 reçus, de l'ordre de 5 $).
+
+**Un incident.** Sur A, Mistral a répondu par une erreur 520 (son serveur) au cas q-a20. `juger` rattrapait une
+réponse coupée, pas une panne du fournisseur : tout le passage de A s'est arrêté, sans bilan, q-a19 fini sans être
+affiché, q-a20 jamais traité. Ces deux cas ont été passés le lendemain matin, avec le même code, et personne n'avait vu
+de réponse pour eux auparavant. Le défaut est corrigé après la mesure : une panne du fournisseur compte comme une
+erreur du cas, et le passage continue ; une clé refusée arrête toujours tout.
+
+**Les chiffres, tels quels.**
+
+| Jeu « quatre » | Chaîne de règles (moyenne de 3 passages) | Lecture des clauses (1 passage) |
+|---|---|---|
+| A | 12,3 sur 20 | 16 sur 20 |
+| B | 16,7 sur 20 | 16 sur 20 |
+| D | 13 sur 20 | 13 sur 20 |
+| **Ensemble** | **42 sur 60** | **45 sur 60** |
+| Couverts à tort | 4,3 (A 0,7 ; B 1,3 ; D 2,3) | **1** (q-b15) |
+| Refus à tort | 2 | 4 (q-a04, q-b17, q-d03, q-d13) |
+| « À préciser » au lieu d'une réponse | 8,7 | 10 |
+| Durée d'une analyse | 3,6 s (médiane) | 100 à 260 s |
+
+Trois réponses justes de plus sur soixante : ce jeu ne permet pas de l'affirmer. L'écart du jeu « neuf » (48 contre
+38, 7.205) tenait en partie au réglage. Ce qui tient, c'est le sens des erreurs : un couvert à tort au lieu de plus de
+quatre, au prix de deux refus à tort de plus et d'une attente de deux à trois minutes.
+
+**Les quinze écarts de la lecture des clauses, lus dans la sortie.** Rien n'en est corrigé : ce jeu a servi, il ne
+sert plus à mesurer.
+
+- *La contresignature hérite des erreurs des règles* (six cas : q-a02, q-a17, q-b04, q-d01, q-d04, q-d19). La lecture
+  couvre, à raison ; les règles refusent ou hésitent ; la réponse devient « à préciser ». C'est le prix voulu de la garde,
+  et le plus gros poste.
+- *Une absence l'emporte sur des règles qui hésitent* (q-b17, q-d13 : deux refus à tort). « Aucune garantie examinée
+  ne couvre » ne cite rien ; la règle de 7.205 ne la retient que contre des règles qui couvrent, pas contre des règles
+  qui disent « à préciser ».
+- *Un refus qui cite une clause hors de propos* (q-a04 : une clause d'obligations, pour un dégât des eaux après le gel ;
+  q-d03 : l'exclusion des cataclysmes naturels). Un refus cité n'est pas contresigné : il tient seul.
+- *Une question à côté d'une exclusion trouvée* (q-a05 : propriétaire ou locataire ; q-d05 : la formule souscrite).
+  L'exclusion est lue et citée, mais un point « à vérifier » l'emporte sur elle.
+- *Une question de règlement passée au travers* (q-d10 : réunir les preuves du vol). Le titre de la clause n'est pas
+  parmi ceux du règlement du sinistre (7.203).
+- *Une garantie optionnelle* (q-b07 : les bagages) : l'option n'est pas dans la déclaration ; on attendait « couvert ».
+- *Le couvert à tort* (q-b15, un dégât des eaux) : la lecture et les règles couvrent. La clause des exclusions du
+  dégât des eaux (3.1.4.2), oubliée au premier appel puis redemandée au modèle, n'a pas été retenue.
+
+**Le choix.** L'utilisateur fait de la lecture des clauses la méthode par défaut : à justesse comparable, elle promet
+moins souvent à tort, et elle lit le texte du contrat au lieu d'une traduction. `COUVERTURE_METHODE` vaut maintenant
+`clauses` par défaut ; la chaîne de règles reste disponible (`methode: "regles"`). Une limite est écrite avec le choix :
+toutes les mesures de la lecture des clauses ont été faites avec la contresignature des règles ; le mode sans règles
+traduites, celui d'un contrat nouveau, n'est pas mesuré. `docs/COMPRENDRE.md` est réécrit en comparaison des deux
+méthodes.
+
 ## 8. Ce qui reste à faire
 
-Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le ferais.
+Tenu à jour le 26 nov. 2026. Dans l'ordre où je le ferais.
+
+**0. La lecture des clauses, après sa mesure (7.207).** Rien de ceci n'est mesurable sur le jeu « quatre », qui a servi :
+chaque point demande un jeu neuf.
+- Mesurer le mode sans contresignature, sur un contrat sans règles traduites : la condition pour dire qu'elle s'étend à
+  un contrat nouveau.
+- Une absence de couverture face à des règles qui disent « à préciser » : la même garde qu'en 7.205.
+- Une exclusion citée face à un point « à vérifier » : laquelle doit l'emporter.
+- Les refus cités hors de propos : les soumettre aux règles quand elles répondent « à préciser ».
+- Le temps d'attente : deux à trois minutes, surtout la réflexion de Mistral Large.
 
 **1. La validation par le métier.** C'est la première limite du projet.
 - Faire relire les règles d'un contrat par un juriste ou un gestionnaire de sinistres, et mesurer sur ses propres cas.
@@ -6141,3 +6214,6 @@ Tenu à jour le 24 nov. 2026, veille de la livraison. Dans l'ordre où je le fer
 212. Quand un modèle n'obéit pas à une consigne, chercher dans le contrat ce qui distingue les cas : ici, les titres des chapitres disaient déjà quelles clauses ne décident pas de la couverture.
 213. Les tests ne doivent dépendre ni du `.env` du poste ni du réseau : une garde qui refuse tout appel au fournisseur coûte trois lignes, un réglage qui fuit coûte des appels payés.
 214. Une absence de couverture n'est pas un refus : seul un refus qui cite sa clause peut l'emporter sur une autre lecture qui couvre.
+215. Sur un jeu jamais vu, l'écart d'un jeu vu fond : 48 contre 38 sur « neuf », 45 contre 42 sur « quatre ». Ce qui tient est souvent le sens des erreurs, pas leur nombre.
+216. Une garde qui contresigne hérite des erreurs de celui qui contresigne : six des quinze écarts de la nouvelle méthode viennent des règles de l'ancienne.
+217. Un outil de mesure ne s'arrête pas sur la panne d'un cas : une erreur du fournisseur se compte comme une erreur de ce cas, et le passage continue.

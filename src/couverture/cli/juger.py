@@ -88,7 +88,7 @@ def _afficher(lecture, detail: bool) -> list[str]:
 def executer(a, base: Base, donnees: Path) -> int:
     """Juge une déclaration, ou des cas d'un jeu (avec la réponse attendue en regard)."""
     from ..analyse import clauses
-    from ..llm import MistralLLM
+    from ..llm import CleRefusee, ErreurLLM, MistralLLM
 
     if a.jeu:
         if a.jeu == "quatre" and not a.mesure_finale:
@@ -117,7 +117,10 @@ def executer(a, base: Base, donnees: Path) -> int:
         try:
             regles = chaine.analyser(c["sinistre"]).verdict.decision if chaine else None
             lecture = clauses.lire(base, a.contrat, llm, c["sinistre"], regles=regles, garder=True)
-        except ValueError as e:  # réponse coupée ou illisible : on le dit et on passe au cas suivant
+        except (ValueError, ErreurLLM) as e:  # réponse coupée ou illisible, ou panne du fournisseur (une erreur 520
+            # a arrêté tout un passage du jeu « quatre », 7.207) : on le dit et on passe au cas suivant
+            if isinstance(e, CleRefusee):  # une clé refusée vaut pour tous les cas : on s'arrête
+                raise
             duree = f"[{time.perf_counter() - debut:.0f} s]"
             texte = [f"{c['id']} : pas de réponse exploitable — {str(e).splitlines()[0]}  {duree}",
                      f"  réponses brutes gardées dans {llm.garder(donnees / 'debug', c['id'])}"]

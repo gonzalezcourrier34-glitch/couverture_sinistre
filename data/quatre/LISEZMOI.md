@@ -32,3 +32,7 @@ uv run couverture banc --contrat assureur-d-habitation-2026 --jeu quatre
 ```
 
 **Accord des annotateurs** : les trois avis donnent la même réponse sur les 60 cas (accord strict, 60 sur 60) ; aucun arbitrage n'a été nécessaire.
+
+**Mesuré une fois, le 25 novembre 2026 au soir (DEMARCHE 7.207)** : chaîne de règles 42 sur 60, 4,3 couverts à tort,
+2 refus à tort ; lecture des clauses 45 sur 60, 1 couvert à tort, 4 refus à tort. Le jeu est maintenant « vu » : il ne
+sert plus à mesurer une correction.

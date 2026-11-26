@@ -1,20 +1,22 @@
-# Comprendre le projet, sans rien connaître à l'assurance ni à l'intelligence artificielle
+# Comprendre le projet : deux façons de lire un contrat, comparées
 
-Ce texte raconte le projet du début à la fin, dans l'ordre où les questions se posent. Il ne demande aucune connaissance préalable. Les détails techniques sont ailleurs : [les explications](EXPLICATIONS.md) décrivent chaque fichier, [la démarche](DEMARCHE.md) garde chaque essai et sa mesure.
+Ce texte raconte le projet sans demander aucune connaissance préalable, ni en assurance ni en intelligence artificielle. Le projet a connu deux méthodes. La première traduit chaque contrat en règles et laisse un programme décider. La seconde fait lire au modèle les clauses mêmes du contrat, une par une. Ce texte les compare, chiffres à l'appui, et dit pourquoi la seconde est devenue la méthode par défaut et ce qu'elle ne règle pas. Les détails techniques sont ailleurs : [les explications](EXPLICATIONS.md) décrivent chaque fichier, [la démarche](DEMARCHE.md) garde chaque essai et sa mesure.
 
 ## 1. L'objectif
 
 Quelqu'un rentre chez lui et trouve sa cave forcée, son vélo disparu. Il écrit à son assureur : « Mon vélo a été volé dans ma cave. » De l'autre côté, un gestionnaire doit répondre à une seule question : **le contrat couvre-t-il ce sinistre ?**
 
-Pour répondre, il ouvre les « conditions générales », un document de 50 à 100 pages. Il y cherche la garantie vol, lit ce qu'elle couvre, puis la liste de ce qu'elle exclut, puis le lexique, parce que le contrat donne aux mots un sens précis (une « serrure de sûreté » n'est pas un cadenas). C'est long, et une erreur coûte cher dans les deux sens : promettre un remboursement que le contrat ne prévoit pas, ou refuser à tort.
+Pour répondre, il ouvre les « conditions générales », un document de 50 à 100 pages. Il y cherche la garantie vol, lit ce qu'elle couvre, puis ce qu'elle exclut, puis le lexique, parce que le contrat donne aux mots un sens précis (une « serrure de sûreté » n'est pas un cadenas). C'est long, et une erreur coûte cher dans les deux sens : promettre un remboursement que le contrat ne prévoit pas, ou refuser à tort.
 
 Le projet fait ce travail avec lui. On lui donne une déclaration écrite comme on parle, il rend trois choses :
 
 - **la réponse** : couvert, non couvert, ou « à préciser » ;
-- **la preuve** : la phrase exacte du contrat sur laquelle la réponse s'appuie, avec son numéro d'article et sa page ;
+- **la preuve** : la phrase exacte du contrat sur laquelle la réponse s'appuie, avec son numéro d'article ;
 - **la question à poser**, quand la déclaration ne dit pas tout ce qu'il faut savoir.
 
 La troisième réponse est aussi importante que les deux autres. Un outil qui répond toujours quelque chose est dangereux ; un outil qui sait dire « je ne peux pas trancher, demandez-lui si la cave était fermée à clé » est utile.
+
+Les erreurs ne se valent pas. **« Couvert » à tort** est la plus grave : c'est une promesse faite au client, et un paiement que le contrat ne prévoit pas. **Le refus à tort** est grave aussi. **« À préciser » à la place d'une réponse** est l'erreur la moins chère : elle coûte une question de plus. Toute la comparaison qui suit se lit avec ce classement en tête.
 
 ## 2. Pourquoi c'est plus difficile que SortirIA
 
@@ -33,96 +35,123 @@ Trois difficultés n'existaient pas dans SortirIA.
 
 **Un contrat est fait d'exceptions d'exceptions.** Une garantie couvre le vol ; une exclusion retire le vol sans effraction ; une option rachète cette exclusion pour certains biens ; une obligation (fermer à clé) peut faire tout perdre. Il faut appliquer ces règles dans le bon ordre, sans en oublier une.
 
-**« Je ne sais pas » doit rester « je ne sais pas ».** Si la déclaration ne dit pas comment la cave était fermée, on ne peut ni couvrir ni refuser. Dans SortirIA, une information manquante peut être laissée de côté sans dommage. Ici, deviner est interdit.
+**« Je ne sais pas » doit rester « je ne sais pas ».** Si la déclaration ne dit pas comment la cave était fermée, on ne peut ni couvrir ni refuser. Deviner est interdit.
 
-## 3. La décision : qui fait quoi
+## 3. Deux réponses au même problème
 
-La solution la plus simple serait de donner le contrat et la déclaration à un modèle de langage (ChatGPT, Mistral, Claude) et de lui demander la réponse. Je l'ai essayé au début. Le modèle répond avec assurance, souvent juste, et parfois faux sans que rien ne le signale. Surtout, on ne peut pas vérifier son raisonnement : il ne le montre pas, il le raconte après coup.
+La solution la plus simple serait de donner le contrat et la déclaration à un modèle de langage et de lui demander la réponse. Je l'ai essayé au début. Le modèle répond avec assurance, souvent juste, et parfois faux sans que rien ne le signale. Surtout, on ne peut pas vérifier son raisonnement : il ne le montre pas, il le raconte après coup. Les deux méthodes du projet sont deux manières d'éviter ce piège.
 
-Le projet repose donc sur un partage des rôles, qui tient en une phrase : **le modèle lit, la logique décide, le code vérifie.**
+**Première méthode : « le modèle lit, la logique décide ».** Chaque contrat est traduit à l'avance en règles, dans un langage fait pour le raisonnement (Prolog). Pour un sinistre, le modèle ne fait que transformer la déclaration en faits (« vol », « vélo », « cave », « cadenas ») ; un programme applique les règles à ces faits. Le modèle ne voit jamais le contrat, et il ne décide de rien.
 
-- **Le modèle lit.** C'est ce qu'il fait bien : comprendre que « on m'a piqué mon vélo » veut dire un vol, et que « le local à vélos de la résidence » est une partie commune. Il ne fait que cela.
-- **La logique décide.** Les règles du contrat sont écrites une fois, à l'avance, dans un langage fait pour le raisonnement (Prolog). Un programme les applique. Avec les mêmes faits, il rend toujours la même réponse, et il montre chaque étape.
-- **Le code vérifie.** Chaque phrase citée est recherchée mot pour mot dans le contrat. Si elle n'y est pas, la réponse ne sort pas.
+**Seconde méthode : « le modèle juge chaque clause, la logique tranche, les règles contresignent ».** Pour un sinistre, le modèle lit les clauses du contrat qui le concernent et rend, clause par clause, un jugement cité : cette garantie couvre, cette exclusion exclut, cette clause demande une précision. Un programme tranche à partir de ces jugements, selon une logique fixe. Puis la première méthode, qui tourne en parallèle, contresigne : un « couvert » n'est rendu que si elle dit « couvert » aussi.
 
-Deux garde-fous valent partout :
+Ce qui change au fond tient en une phrase : **dans la première méthode, le modèle ne voit que la déclaration ; dans la seconde, il voit aussi le texte du contrat, et il porte un jugement sur chaque clause.** C'est plus de pouvoir donné au modèle. Il est encadré par trois garde-fous, communs aux deux méthodes :
 
-1. **Un doute ne fait jamais couvrir.** Tant qu'un fait décisif manque, la réponse est « à préciser », avec la question.
-2. **Pas de réponse sans preuve.** Une décision qui ne peut pas citer le contrat est rétrogradée.
+1. **Pas de réponse sans preuve.** Chaque phrase citée est recherchée mot pour mot par le code. Une citation qui n'existe pas fait écarter ce qu'elle devait prouver.
+2. **Un doute ne fait jamais couvrir.** Tant qu'un fait décisif manque, la réponse est « à préciser », avec la question.
+3. **Le code tranche, pas le modèle.** Dans les deux méthodes, la décision finale sort d'une logique écrite à l'avance, qui donne toujours la même réponse aux mêmes entrées.
 
-## 4. Préparer un contrat (une fois pour toutes)
+## 4. Ce qu'il faut préparer pour un contrat
 
-Avant de pouvoir répondre sur un contrat, il faut le préparer. Cela se fait une seule fois par contrat, et c'est la partie la plus longue du travail.
+**Commun aux deux : découper.** Le programme lit le PDF, retire ce qui gêne (en-têtes, numéros de page, sommaire) et découpe le texte en clauses : une garantie, une exclusion, une définition du lexique. Chaque clause garde son numéro d'article. Pour le premier contrat, 48 pages deviennent 147 clauses. Un contrôle signale un découpage raté au lieu de continuer sur une base fausse.
 
-**Première étape : découper.** Le programme lit le PDF, retire ce qui gêne (en-têtes, numéros de page, sommaire), et découpe le texte en clauses : une garantie, une exclusion, une définition du lexique. Chaque clause garde son numéro d'article et sa page. Pour le premier contrat, 48 pages deviennent 147 clauses. Un contrôle signale un découpage raté (trop peu de clauses, aucune exclusion trouvée) au lieu de continuer sur une base fausse.
+**Propre à la première méthode : traduire en règles, et un vocabulaire.** Chaque garantie est réécrite sous une forme que le programme peut appliquer : son périmètre, ses conditions, ses obligations, ses exclusions, ses limites. Chaque règle porte la phrase du contrat qu'elle traduit. Un modèle (Mistral Large) propose la traduction, article par article ; le code la contrôle ; ce qui passe est relu par un humain. Il faut aussi une langue commune entre les règles et les déclarations : une liste fermée d'environ 250 faits possibles (l'événement, le bien, le lieu, la façon dont le local était fermé…), chacun avec la question à poser s'il manque. C'est la partie la plus longue du projet, et c'est là que la première méthode se trompe le plus : une règle mal traduite, ou un fait absent du vocabulaire, mène tout droit à une mauvaise décision.
 
-**Deuxième étape : traduire en règles.** Chaque garantie est réécrite sous une forme que le programme peut appliquer :
+**Propre à la seconde méthode : rien de plus, en principe.** Le modèle lit les clauses découpées ; il n'a besoin ni de règles ni de vocabulaire pour juger. **Mais dans toutes les mesures de ce projet, les règles de la première méthode ont servi de contresignature.** Sur un contrat sans règles traduites, la seconde méthode fonctionne (un « couvert » n'est alors plus contresigné), mais ce mode-là n'a jamais été mesuré. La promesse « un nouveau contrat sans travail de traduction » est donc réelle dans la conception, et pas encore prouvée.
 
-- son **périmètre** : de quoi elle parle (un vol, dans le bâtiment, d'un bien qui vous appartient) ;
-- ses **conditions** : « si ces locaux sont fermés avec une serrure de sûreté » ;
-- ses **obligations** : ce que l'assuré devait faire (fermer la voiture à clé) ;
-- ses **exclusions** : « le vol dans les parties communes du bâtiment » ;
-- ses **limites** : plafonds et franchises.
+Quatre contrats de quatre assureurs sont préparés, rendus anonymes (A, B, C, D). A et B sont traduits en entier, D en grande partie, C seulement en partie : ils ont servi à mesurer le travail que demande un contrat de plus.
 
-Chaque règle porte la phrase du contrat qu'elle traduit. C'est cette phrase qui sera citée dans la réponse.
+## 5. Un sinistre, vu par les deux méthodes
 
-Ce n'est pas moi qui écris ces règles à la main, ou rarement. Un modèle de langage (Mistral Large) propose une traduction, article par article. Puis le code la contrôle : chaque phrase citée existe-t-elle dans le contrat ? Chaque exclusion du texte est-elle traduite ? Chaque mot employé est-il connu ? Une proposition qui échoue à un contrôle est bloquée. Ce qui passe est relu par un humain avant d'être accepté. Le modèle rédige, il ne valide pas.
+**La première méthode, sur le vélo.** L'assuré écrit : *« Mon vélo a été volé dans ma cave, fermée par un cadenas. »* L'analyse prend quelques secondes.
 
-**Troisième étape : le vocabulaire.** Pour que les règles et les déclarations se rencontrent, il faut une langue commune. C'est une liste fermée de faits possibles : l'événement (vol, incendie, dégât des eaux…), le bien (vélo, bijoux, ordinateur…), le lieu (cave, jardin, parties communes…), et les précisions qui comptent pour un contrat (y a-t-il eu effraction ? le local était-il fermé, et comment ?) : environ 250 faits en tout. Chaque fait a sa question en français, celle qu'on posera à l'assuré s'il manque. Une partie du vocabulaire est commune à tous les contrats, le reste est propre à chacun.
+1. **Lire.** Un modèle (Mistral Medium) traduit la phrase en faits : événement = vol, bien = vélo, lieu = cave, fermeture = cadenas.
+2. **Vérifier chaque fait.** Un second modèle, plus petit (Mistral Small), relit la déclaration et retire ce qu'elle ne dit pas.
+3. **Décider.** Le moteur applique les règles du contrat A. La garantie « vol du contenu dans le bâtiment » pose une condition : « si ces locaux sont fermés avec une serrure de sûreté ». Un cadenas n'en est pas une, d'après le lexique. La réponse est **non couvert**.
+4. **Confirmer, rédiger, vérifier.** Le fait décisif est confirmé une dernière fois ; le code rédige la réponse et vérifie chaque citation. À côté, l'écran montre l'« arbre de preuve » : chaque condition examinée, sa phrase du contrat, et le fait qui l'a rendue vraie, fausse ou inconnue.
 
-Quatre contrats de quatre assureurs sont préparés, rendus anonymes (A, B, C, D). A et B sont traduits en entier. C et D ne le sont qu'en partie, et c'est voulu : ils ont servi à mesurer le temps et le travail que demande un contrat de plus, pas à tout couvrir. L'écran le montre par une couleur, et un sinistre dont la garantie n'est pas encore traduite y reçoit « à examiner par un gestionnaire » plutôt qu'une réponse devinée.
+Sans les mots « fermée par un cadenas », le moteur ne sait pas comment la cave était fermée : **à préciser**, avec la question « Comment le local était-il fermé ? ».
 
-## 5. Les pièces de la machine
+**La seconde méthode.** L'analyse prend 2 à 3 minutes ; l'écran affiche chaque étape pendant qu'elle se fait.
 
-Une fois le contrat préparé, le système tient en cinq pièces.
+1. **Désigner.** Mistral Large lit la table des chapitres et désigne ceux qui concernent le sinistre.
+2. **Composer le dossier.** Le code y ajoute ce qui vaut pour tout le contrat : exclusions générales, obligations, définitions. De 70 à près de 300 clauses selon le contrat et le sinistre.
+3. **Juger chaque clause.** Mistral Large rend pour chacune un effet (couvre, exclut, limite, à vérifier, sans effet), avec la phrase du contrat et celle de la déclaration. Une clause oubliée lui est redemandée une fois.
+4. **Vérifier.** Le code retrouve chaque citation mot pour mot ; un jugement mal cité est écarté.
+5. **Trancher.** Une exclusion citée l'emporte ; un point à vérifier donne « à préciser » ; une garantie qui couvre, sans exclusion, donne « couvert ».
+6. **Contresigner.** Si la lecture conclut « couvert » et que les règles ne le disent pas, la réponse devient « à préciser ».
 
-```
-le vocabulaire      la liste fermée des faits, avec leurs questions
-les règles          un fichier par contrat : garanties, conditions, exclusions, chacune avec sa phrase
-le moteur           le programme qui applique les règles aux faits ; le même pour tous les contrats
-la lecture          le modèle qui traduit une déclaration en faits du vocabulaire
-les bancs d'essai   des déclarations dont on connaît la bonne réponse, rejouées à chaque changement
-```
+**Quatre cas réels du jeu de mesure final**, pour voir où les deux méthodes divergent (contrat A ; la première méthode a été passée trois fois, la seconde une fois) :
 
-**Le moteur** raisonne avec trois valeurs : oui, non, inconnu. C'est ce qui lui permet de ne pas confondre « la cave n'était pas fermée » avec « on ne sait pas si elle l'était ». Il suit le raisonnement d'un gestionnaire : une garantie dont le périmètre ne correspond pas est écartée ; une exclusion ne retire qu'une garantie qui s'appliquait ; c'est à l'assuré d'établir la garantie, à l'assureur d'établir l'exclusion. Quand il ne peut pas trancher, il essaie chaque réponse possible aux faits manquants et retient la question qui change la décision.
+- *Le casier du club de tennis forcé* (on attendait « non couvert »). La première méthode répond « à préciser » les trois fois. La seconde trouve l'exclusion et la cite : « le vol du contenu entreposé dans un casier d'une association sportive ou d'agrément ». **Non couvert, juste.**
+- *Le store banne arraché par la tempête* (on attendait « non couvert »). La première méthode le déclare couvert deux fois sur trois : c'est l'erreur grave. La seconde trouve l'exclusion des objets situés à l'extérieur, mais pose aussi une question (propriétaire ou locataire ?) et répond « à préciser ». **Pas juste, mais l'erreur grave est évitée.**
+- *L'eau d'une gouttière voisine entrée par une fenêtre* (on attendait « couvert »). La première méthode refuse les trois fois. La seconde trouve la garantie dégâts des eaux, mais la contresignature voit le refus des règles et rend « à préciser ». **La garde a son prix : l'erreur de la première méthode tire la seconde vers le doute.**
+- *Un dégât des eaux après le gel* (on attendait « à préciser »). La première méthode répond juste, « à préciser ». La seconde cite une clause d'obligations et refuse. **Ici, c'est la seconde qui se trompe, et dans un sens grave** : un refus fondé sur une clause citée n'est pas contresigné, il tient seul.
 
-**Les bancs d'essai** sont ce qui permet de croire les chiffres. Une partie des cas sert à mettre au point ; une autre, jamais regardée pendant le réglage, sert à mesurer. Un troisième jeu, dit « fermé », a été écrit sans voir les règles. Chaque banc a des seuils fixés à l'avance.
+## 6. La mesure
 
-## 6. Ce qui se passe quand on analyse un sinistre
+Un chiffre ne vaut que si les cas n'ont pas servi à régler le système. Le projet a eu plusieurs jeux de test, et il faut les lire dans l'ordre.
 
-Reprenons le vélo. L'assuré écrit : *« Mon vélo a été volé dans ma cave, fermée par un cadenas. »* L'analyse prend 4 à 5 secondes et passe par six étapes ; l'écran affiche les principales pendant qu'elles se font.
+**Les jeux qui ont servi à régler.** Sur ses premiers jeux, la première méthode atteignait 90 à 100 % de réponses justes, sans couvert à tort. Un jeu écrit sans voir les règles a fait tomber ces chiffres (95 % sur A, 58 % sur B, 78 % sur D, avec des couverts à tort). Après corrections, un troisième jeu, « neuf », a donné 38 justes sur 60 et **7 couverts à tort**. Autrement dit, la première méthode empêchait de répondre sans preuve, mais pas de mal traduire un contrat. C'est ce constat qui a fait naître la seconde. Sur ce même jeu « neuf », la seconde méthode a donné 48 justes sur 60, 1 couvert à tort et 1 refus à tort. Mais ce jeu a servi à la mettre au point : ce n'est pas une mesure.
 
-1. **Lire.** Un premier modèle (Mistral Medium) traduit la phrase en faits du vocabulaire : événement = vol, bien = vélo, lieu = cave, fermeture = cadenas.
-2. **Vérifier chaque fait.** Un second modèle (Mistral Small), plus petit, relit la déclaration et contrôle chaque fait : est-il vraiment écrit ? Ce que la déclaration ne dit pas est retiré. Le premier modèle a tendance à compléter ; le second est là pour l'en empêcher.
-3. **Décider.** Le moteur applique les règles du contrat A. La garantie « vol du contenu dans le bâtiment » concerne bien ce sinistre. Mais elle pose une condition : « si ces locaux sont fermés avec une serrure de sûreté ». Un cadenas n'en est pas une, d'après le lexique du contrat. La réponse est **non couvert**.
-4. **Confirmer.** Une réponse ferme doit reposer sur des faits sûrs. Le fait qui a tout décidé (le cadenas) est confirmé une dernière fois dans le texte. S'il ne l'était pas, la réponse redeviendrait « à préciser ».
-5. **Rédiger.** Le code, pas le modèle, écrit la réponse : la décision, la garantie en cause, la phrase du contrat.
-6. **Vérifier les citations.** Chaque phrase citée est retrouvée mot pour mot dans la clause. Puis l'analyse est notée dans un journal, sans le texte de la déclaration.
+**Le jeu « quatre » : la seule comparaison honnête.** Soixante déclarations, vingt par contrat (A, B, D), écrites par un premier annotateur qui n'a lu que les contrats, puis jugées sans voir sa réponse par deux autres : Mistral Large, et Claude, le modèle qui m'a aidé à construire le projet. Les trois avis concordent sur les soixante cas. Le code des deux méthodes a été figé avant, et le jeu a été passé une seule fois, sans rien corriger ensuite.
 
-Maintenant, retirons trois mots. L'assuré écrit seulement : *« Mon vélo a été volé dans ma cave. »* Le moteur trouve la même garantie et la même condition, mais il ne sait pas comment la cave était fermée. Il ne couvre pas, il ne refuse pas. La réponse est **à préciser**, avec la question : « Comment le local était-il fermé ? »
+| Jeu « quatre », 60 cas jamais vus | Première méthode (règles) | Seconde méthode (clauses) |
+|---|---|---|
+| Réponses justes | 42 sur 60 (moyenne de trois passages) | 45 sur 60 (un passage) |
+| — contrat A | 12,3 sur 20 | 16 sur 20 |
+| — contrat B | 16,7 sur 20 | 16 sur 20 |
+| — contrat D | 13 sur 20 | 13 sur 20 |
+| **Couverts à tort** | **4,3** | **1** |
+| Refus à tort | 2 | 4 |
+| « À préciser » au lieu d'une réponse | 8,7 | 10 |
+| Durée d'une analyse | 3 à 6 secondes | 2 à 3 minutes |
+| Coût d'une analyse | bien moindre (petits modèles, peu de texte envoyé) | 8 à 10 centimes de dollar |
 
-Et si le vélo était dans le hall de l'immeuble : une exclusion s'applique (« le vol ou le vandalisme dans les parties communes du bâtiment »), la réponse est **non couvert**, et c'est cette phrase qui est citée.
+Trois choses à en retenir :
 
-À côté de la réponse, l'écran montre l'« arbre de preuve » : chaque condition examinée, la phrase du contrat correspondante, et le fait de la déclaration qui l'a rendue vraie, fausse ou inconnue. Le gestionnaire peut refaire le raisonnement lui-même.
+- **Sur des cas jamais vus, les deux méthodes ont à peu près autant de réponses justes** : 45 contre 42, un écart de trois réponses que soixante cas ne permettent pas d'affirmer. L'écart du jeu « neuf » (48 contre 38) était gonflé par le réglage. Il faut le dire : la seconde méthode n'est pas nettement « plus juste ».
+- **Elle se trompe beaucoup moins dans le sens qui coûte le plus.** Un couvert à tort au lieu de plus de quatre.
+- **Elle refuse plus souvent à tort.** Quatre fois au lieu de deux : un refus qui cite son exclusion n'est pas contresigné, et le modèle cite parfois une clause qui ne s'applique pas.
 
-## 7. Les points forts
+## 7. Les deux méthodes face à face
 
-- **Sur les cas qui ont servi à le régler, le système ne promet pas à tort.** Sur les derniers passages de ces bancs (24 et 25 novembre 2026), aucun sinistre n'a été déclaré couvert à tort, sur les trois contrats mesurés. Les réponses sont justes à 94 % et 100 % pour A, 90 à 92 % pour B, 96 % pour D. Sur des cas tout neufs, c'est moins bon pour B et D : voir les points faibles.
-- **Chaque réponse se vérifie.** La phrase citée existe dans le contrat, le code le garantit. Le raisonnement est affiché, pas raconté.
-- **Il sait ne pas savoir.** Les erreurs qui restent sont presque toutes des questions de trop : il demande une précision qu'il aurait pu lire. C'est le sens d'erreur le moins coûteux.
-- **Les erreurs ont une adresse.** Avec des faits exacts, le moteur donne la bonne réponse sur tous les cas de test du contrat A. Les erreurs viennent de la lecture, c'est-à-dire de l'étape confiée au modèle. On sait donc où chercher.
-- **Un nouveau contrat n'abîme pas les autres.** Le moteur est le même pour tous ; ajouter le quatrième contrat n'a pas fait baisser les trois premiers.
-- **Tout est mesuré, y compris les échecs.** La démarche garde les essais qui n'ont pas marché et les fois où une mesure m'a donné tort.
+| | Première méthode (règles) | Seconde méthode (clauses) |
+|---|---|---|
+| Ce que voit le modèle | La déclaration seule | La déclaration et les clauses du contrat |
+| Qui décide | Un moteur, sur des règles traduites | Une logique fixe, sur des jugements cités, contresignée par les règles |
+| Travail par contrat | Découpage, traduction, vocabulaire, relecture humaine | Découpage ; les règles restent utiles pour la contresignature |
+| Où elle se trompe | À la traduction : une règle fausse, un fait absent du vocabulaire | À la lecture : une clause mal jugée, une définition du lexique oubliée |
+| La preuve | La phrase attachée à la règle | La phrase citée par le modèle, vérifiée mot pour mot |
+| La question à poser | Tirée du vocabulaire | Rédigée par le modèle sur la clause en doute |
+| Le raisonnement montré | Un arbre de preuve, condition par condition | Le jugement de chaque clause, avec ses deux citations |
+| Même réponse deux fois ? | Presque : 2 à 3 cas sur 20 changent d'un passage à l'autre | Pas mesuré ; le modèle juge, et peut juger autrement |
+| Durée, coût | Quelques secondes, très peu | 2 à 3 minutes, 8 à 10 centimes |
+| Couverts à tort (jeu « quatre ») | 4,3 sur 60 | 1 sur 60 |
 
-## 8. Les points faibles, et ce qui est prévu
+**Ce que la première méthode fait mieux.** Elle est rapide, peu coûteuse, et son raisonnement se refait à la main : chaque condition, chaque fait, chaque phrase. Elle refuse moins souvent à tort. Ses erreurs ont une adresse : la lecture de la déclaration ou la traduction du contrat.
 
-- **La lecture reste fragile.** Le modèle lit parfois plus que ce qui est écrit, ou lit différemment le même texte d'un passage à l'autre. Les garde-fous transforment ces erreurs en questions, pas en mauvaises décisions, mais ils ne les suppriment pas.
-- **Préparer un contrat demande du travail humain.** Le modèle propose les règles, le code les contrôle, mais quelqu'un relit, et c'est la partie la plus longue du projet. Pour des centaines de contrats, cette relecture serait le coût principal.
-- **Les jeux de test sont petits.** Vingt à trente cas par contrat : un écart de trois ou quatre points entre deux passages ne veut rien dire. Certaines parties (les voyages, la protection numérique du contrat B) sont vérifiées par des essais de règles, pas par un banc. Et trois cas des jeux « fermés » ont fini par servir à corriger une règle : ils sont signalés à côté des chiffres, et ne comptent plus comme des cas jamais vus. **Ce qui a été fait le dernier jour** : un nouveau jeu de soixante déclarations (vingt par contrat pour A, B et D), écrit par des annotateurs qui n'ont lu que le texte des contrats, et mesuré une seule fois sans rien régler ensuite. Le résultat est moins flatteur, et c'est lui qu'il faut croire : 95 % de réponses justes sur A sans aucune erreur grave, mais 58 % sur B et 78 % sur D, avec chaque fois un ou deux sinistres annoncés couverts alors qu'ils ne le sont pas. J'ai alors corrigé neuf défauts que ce jeu montrait, puis fait écrire un troisième jeu, avec des situations moins courantes, pour vérifier : 60 % sur A, 50 % sur B, 80 % sur D, et encore des sinistres couverts à tort. Autrement dit : la méthode empêche de répondre sans preuve, elle n'empêche pas de mal traduire un contrat. Sur des cas jamais vus, le système d'aujourd'hui se trompe entre une fois sur cinq et une fois sur deux, et les bons chiffres des jeux anciens tenaient en partie à ce que je les avais sous les yeux en réglant. Chaque contrat demande son propre jeu de test jamais vu, renouvelé après chaque série de corrections.
-- **Les bonnes réponses n'ont pas encore été relues par un juriste.** Elles ont été établies d'après le texte des contrats, et un professionnel pourrait en contester certaines. Cette relecture est à faire : c'est la prochaine étape avant tout usage réel.
-- **Ce n'est pas encore un service en production.** Il n'a pas d'utilisateurs réels. Mon expérience d'un service en ligne vient de SortirIA, pas d'ici.
+**Ce que la seconde fait mieux.** Elle lit le contrat lui-même : une clause que la traduction avait manquée peut encore être vue (le casier du club de tennis). Elle se trompe beaucoup moins souvent dans le sens grave. Et, en principe, elle peut s'appliquer à un nouveau contrat sans le travail de traduction.
+
+**Ce que la seconde fait moins bien.** Deux à trois minutes par analyse, et un modèle plus cher. Elle refuse plus souvent à tort. Elle confie davantage au modèle : ses jugements sont vérifiés dans leurs citations, pas dans leur bon sens, et une citation exacte peut être hors sujet. Elle applique encore mal certaines définitions du lexique. Et sa meilleure garde, la contresignature, dépend des règles de la première méthode : quand celles-ci se trompent, elle tire vers le doute une bonne réponse.
+
+## 8. Le choix, et ce qui reste à faire
+
+**La seconde méthode est la méthode par défaut.** Le choix tient au classement des erreurs du §1 : à justesse comparable, on préfère le système qui promet le moins souvent à tort, et qui peut s'étendre à d'autres contrats. Les deux méthodes restent dans le code, et l'écran dit laquelle a répondu.
+
+**Ce qui reste vrai pour les deux.**
+
+- **Les bonnes réponses n'ont pas été relues par un juriste.** Elles ont été établies d'après le texte des contrats par trois annotateurs automatiques qui concordent. Leur accord dit que les cas ne sont pas ambigus pour qui lit le contrat, pas qu'un professionnel les validerait tous. C'est la prochaine étape avant tout usage réel.
+- **Les jeux de test sont petits.** Vingt cas par contrat : un écart de deux ou trois réponses ne veut rien dire. Chaque contrat demande son propre jeu jamais vu, renouvelé après chaque série de corrections.
+- **Ce n'est pas un service en production.** Il n'a pas d'utilisateurs réels. Mon expérience d'un service en ligne vient de SortirIA.
 - **Il ne dit rien du montant.** Il répond à « est-ce couvert ? », pas à « combien ? ». Les plafonds et franchises sont cités, pas calculés.
+
+**Ce qui reste à faire pour la seconde.**
+
+- Mesurer le mode sans contresignature, sur un contrat sans règles traduites : c'est la condition pour dire qu'elle généralise.
+- Faire baisser les refus à tort, par exemple en soumettant aussi un refus au regard des règles quand elles répondent « à préciser ».
+- Réduire l'attente, en profitant davantage du cache du fournisseur.
 
 ## 9. En une phrase
 
-Un modèle de langage est très bon pour comprendre ce qu'une personne a voulu dire, et peu fiable pour appliquer cent règles sans en oublier une. Ce projet lui confie la première tâche, confie la seconde à un programme qui montre son raisonnement, et fait vérifier le tout par du code. Ce qu'il ne sait pas, il le demande.
+La première méthode traduit le contrat une fois pour toutes et laisse un programme décider : elle est rapide et transparente, mais elle se trompe dès que la traduction est fausse. La seconde fait lire au modèle les clauses mêmes du contrat, vérifie chacune de ses citations et fait contresigner ses « couvert » par la première : elle est lente, mais sur des cas jamais vus, elle promet à tort quatre fois moins souvent, pour autant de réponses justes.

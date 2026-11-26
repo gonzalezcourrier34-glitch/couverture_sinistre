@@ -20,7 +20,7 @@ Dit si un sinistre est couvert par un contrat d'assurance habitation, **pourquoi
 - [Note de conception](#note-de-conception) : le besoin, le choix, les résultats, ce qui a été essayé, les limites
 - [Démonstration en 5 minutes](#démonstration-en-5-minutes)
 - [Installation](#installation) et [utilisation](#utilisation)
-- **Pour comprendre sans rien connaître au sujet** : [le projet raconté](docs/COMPRENDRE.md) (l'objectif, la comparaison avec SortirIA, qui décide quoi, la préparation d'un contrat, l'analyse d'un sinistre pas à pas, les points forts et les points faibles)
+- **Pour comprendre sans rien connaître au sujet** : [le projet raconté](docs/COMPRENDRE.md) (l'objectif, la comparaison avec SortirIA, puis les deux méthodes du projet comparées : ce que chacune prépare, comment chacune analyse un sinistre, leurs chiffres sur des cas jamais vus, leurs forces et leurs faiblesses)
 - Pour aller plus loin : [la démarche](docs/DEMARCHE.md) (le raisonnement en onze tournants, puis chaque essai et sa mesure, échecs compris), [les explications](docs/EXPLICATIONS.md) (chaque fichier, un lexique), [les mesures](docs/METRIQUES.md), [les consignes versionnées](docs/consignes/README.md), [le suivi](monitoring/README.md)
 
 ## Ce que j'ai déjà mis en production, et ce que ça a donné
@@ -78,6 +78,17 @@ Une fois par contrat
              ─► réponse, clauses citées, arbre de preuve
 ```
 
+**Depuis le 26 novembre, une seconde méthode est la méthode par défaut : la lecture des clauses.** Le modèle (Mistral Large) lit lui-même les clauses du contrat qui concernent le sinistre et rend, clause par clause, un jugement cité ; une logique fixe tranche à partir de ces jugements, et la chaîne ci-dessus contresigne : un « couvert » n'est rendu que si elle le dit aussi. Chaque citation est toujours retrouvée mot pour mot par le code. Elle a été choisie sur la mesure du jeu « quatre » (section 4) : autant de réponses justes, quatre fois moins de couverts à tort, mais deux à trois minutes par analyse. La chaîne de règles reste disponible (`COUVERTURE_METHODE=regles`). [Les deux méthodes comparées](docs/COMPRENDRE.md).
+
+```
+À chaque sinistre, lecture des clauses (2 à 3 minutes)
+  déclaration ─► Mistral Large désigne les chapitres en jeu ; le code compose le dossier
+                (ces chapitres, plus les exclusions générales, les obligations, les définitions)
+             ─► Mistral Large juge chaque clause : couvre, exclut, limite, à vérifier (avec la question), sans effet
+             ─► le code vérifie chaque citation, puis tranche selon une logique fixe
+             ─► la chaîne de règles contresigne : « couvert » seulement si elle dit « couvert » aussi
+```
+
 Le moteur reprend le raisonnement d'un gestionnaire : un périmètre contraire écarte la garantie ; une exclusion ne retire qu'une garantie qui s'applique ; une obligation de prévention non respectée ne fait refuser que s'il y a un lien causal ; l'assuré établit la garantie, l'assureur l'exclusion. Deux garde-fous tiennent partout : **un doute ne fait jamais couvrir**, et **chaque citation est retrouvée mot pour mot dans le contrat** par le code.
 
 ### 3. Les deux questions de l'énoncé
@@ -99,7 +110,25 @@ Les réponses attendues ont été établies d'après le texte des conditions gé
 
 ### 4. Ce que cela donne
 
-Trois contrats de trois assureurs (anonymisés A, B, D), sur le même moteur. Mistral Medium 3.5 lit (`mistral-medium-2604`), Mistral Small 4 vérifie (`mistral-small-2603`). Mesures du 22 novembre 2026, trois séries dans la journée (13 h 30, 16 h 20, 17 h 25), trois passages par banc ; la fourchette donne les trois séries :
+**La mesure qui compte : le jeu « quatre », les deux méthodes comparées (25 novembre au soir).** Soixante déclarations, vingt par contrat (A, B, D), écrites d'après le seul texte des contrats et jugées à l'aveugle par deux autres annotateurs (Mistral Large et Claude) : les trois avis concordent sur les soixante cas. Le code a été figé avant, le jeu passé une seule fois, et rien n'a été corrigé ensuite (démarche 7.207).
+
+| Jeu « quatre », 60 cas jamais vus | Chaîne de règles (3 passages) | Lecture des clauses (1 passage) |
+|---|---|---|
+| A | 12,3 sur 20 | 16 sur 20 |
+| B | 16,7 sur 20 | 16 sur 20 |
+| D | 13 sur 20 | 13 sur 20 |
+| **Réponses justes** | **42 sur 60** | **45 sur 60** |
+| **Couverts à tort** | **4,3** | **1** |
+| Refus à tort | 2 | 4 |
+| « À préciser » au lieu d'une réponse | 8,7 | 10 |
+| Durée d'une analyse | 3,6 s (médiane) | 100 à 260 s |
+
+- **Autant de réponses justes** : trois de plus sur soixante, ce que ce jeu ne permet pas d'affirmer. L'écart mesuré sur le jeu « neuf » (48 contre 38) tenait en partie aux réglages faits sur lui.
+- **Beaucoup moins de couverts à tort**, l'erreur qui coûte : un au lieu de plus de quatre. C'est ce qui a décidé du choix.
+- **Plus de refus à tort** (quatre au lieu de deux), et une attente de deux à trois minutes. Six des quinze écarts de la lecture des clauses viennent de la contresignature : la lecture couvre à raison, les règles se trompent, la réponse devient « à préciser ».
+- **Ce qui n'est pas mesuré** : la lecture des clauses sans la contresignature des règles, c'est-à-dire sur un contrat qu'on n'aurait pas traduit. C'est la condition pour dire qu'elle s'étend à un nouveau contrat sans travail de traduction.
+
+**L'histoire de la première méthode, jeu par jeu.** Trois contrats de trois assureurs (anonymisés A, B, D), sur le même moteur. Mistral Medium 3.5 lit (`mistral-medium-2604`), Mistral Small 4 vérifie (`mistral-small-2603`). Mesures du 22 novembre 2026, trois séries dans la journée (13 h 30, 16 h 20, 17 h 25), trois passages par banc ; la fourchette donne les trois séries :
 
 | Banc | Réponses justes | Couverts à tort | Refus à tort |
 |---|---|---|---|
@@ -133,7 +162,7 @@ Trois contrats de trois assureurs (anonymisés A, B, D), sur le même moteur. Mi
 
 - **Les corrections du midi n'ont pas suffi** : sur des situations moins courantes, B ne fait pas mieux (50 %), et A, qui tenait à 95 % sur le second jeu, tombe à 60 % avec quatre sinistres couverts à tort. Seul D se maintient (80 %).
 - **Les deux jeux ne sont pas de même difficulté** (le troisième cherche l'inhabituel), donc l'écart ne mesure pas seulement les corrections. Mais la conclusion ne dépend pas de cette nuance : **sur des cas que je n'ai jamais regardés, le système répond juste une fois sur deux à quatre fois sur cinq, et il lui arrive de couvrir à tort.** Les 94 à 100 % du premier tableau sont ceux de jeux qui ont accompagné les réglages.
-- **Un second tour de corrections** a suivi, limité aux sinistres couverts à tort (démarche 7.187) ; le troisième jeu est donc « vu » à son tour. Ce tour n'a pas été mesuré : deux tours de corrections qui ne font pas monter un jeu neuf désignent la méthode, pas une liste de défauts. La décision est en cours de refonte (démarche 7.188), et le quatrième jeu, `data/quatre`, écrit et jamais ouvert, est gardé pour mesurer la nouvelle méthode.
+- **Un second tour de corrections** a suivi, limité aux sinistres couverts à tort (démarche 7.187) ; le troisième jeu est donc « vu » à son tour. Ce tour n'a pas été mesuré : deux tours de corrections qui ne font pas monter un jeu neuf désignent la méthode, pas une liste de défauts. La décision est en cours de refonte (démarche 7.188), et le quatrième jeu, `data/quatre`, écrit et jamais ouvert, a été gardé pour mesurer la nouvelle méthode : c'est le tableau en tête de cette section.
 - Ce que le système garde de solide dans les trois jeux : chaque réponse cite la clause qui la fonde, et le moteur, sur des faits exacts, applique les règles sans erreur. Ce qui manque est en amont : des clauses pas encore traduites ou traduites trop large, et un vocabulaire de lecture qui ne connaît pas encore assez de situations.
 - **Un cas de D ressemble à un exemple de lecture** écrit avant lui (des tags sur un mur, `av-d13` et `ex-d14`) : l'annotateur ne l'avait pas vu, c'est un hasard, mais ce cas a pu être aidé. Il reste dans le jeu, la ressemblance est déclarée dans `data/lecture/proches_declares.json` ; sans lui, D resterait à 77 %.
 - Ce que cela dit : la méthode empêche de répondre sans preuve, pas de mal traduire un contrat. Les jeux qui ont servi pendant les réglages flattent le système ; la relecture par un juriste et un jeu neuf à chaque contrat restent nécessaires.
