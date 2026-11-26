@@ -123,7 +123,7 @@ Neuf parties, dans l'ordre. Chaque étape garde son numéro, cité ailleurs dans
 | VI | 7.148 à 7.159 | Un quatrième contrat ajouté à froid : ce qui est général, ce qui ne l'est pas |
 | VII | 7.160 à 7.167 | Mettre en ligne, puis tout rejouer la veille de la livraison |
 | VIII | 7.168 à 7.189 | Finir A et B, puis des jeux jamais vus qui montrent un défaut de fond |
-| IX | 7.190 à 7.212 | La lecture des clauses : une seconde méthode, mesurée contre la première |
+| IX | 7.190 à 7.214 | La lecture des clauses : une seconde méthode, mesurée contre la première |
 
 ---
 
@@ -6080,23 +6080,66 @@ relecture sont payées, quelques centimes ; ce n'est pas une mesure). Onze relec
 vérifie que la citation existe, pas qu'elle dit précisément ce qui écarte l'obstacle. C'est la même limite que pour
 les jugements (leçon 209), et elle reste.
 
-### 7.212 La relecture d'un refus que les règles ne suivent pas
+### 7.212 La relecture d'un refus : essayée, mesurée, retirée
 
 **Le constat.** Deux refus à tort du jeu « quatre » viennent d'une clause citée mot pour mot mais hors de propos :
-une clause d'obligations pour un dégât des eaux après le gel (q-a04), l'exclusion des cataclysmes naturels pour un
-sinistre qui n'en est pas un (q-d03). Un refus fondé sur une clause citée n'était pas contresigné : il tenait seul.
+une clause d'obligations pour un dégât des eaux après le gel (q-a04), l'exclusion des tremblements de terre pour un
+séisme dont le contrat discute la nature (q-d03). Un refus fondé sur une clause citée n'est pas contresigné.
 
-**La règle, symétrique de 7.211 et plus prudente.** Quand la lecture refuse en citant ses exclusions (six au plus) et
-que les règles ne refusent pas, on relit ces seules clauses, une à une : chacune « joue » (le fait déclencheur cité
-mot pour mot dans la déclaration), « ne joue pas » ou « inconnu ». La consigne rappelle qu'une clause d'obligations
-ne refuse que si la déclaration dit le manquement et son lien avec le sinistre. Le refus tient si l'une des clauses
-joue ainsi ; sinon la réponse devient « à préciser ». **Elle ne devient jamais « couvert »** : cette relecture ne peut
-que confirmer un refus ou en faire une question, et ne touche pas à la garde contre les couverts à tort. Quand les
-règles refusent aussi, rien n'est relu. Deux tests.
+**La règle essayée**, symétrique de 7.211 et plus prudente : quand la lecture refuse en citant ses exclusions et
+que les règles ne refusent pas, relire ces seules clauses ; le refus tient si l'une « joue », fait déclencheur cité
+mot pour mot ; sinon « à préciser », jamais « couvert ».
 
-**Le prix attendu** : les refus justes que les règles ne suivaient pas (une dizaine par jeu, la lecture des clauses
-y ayant raison contre des règles incomplètes) passent par cette relecture ; si le modèle répond « inconnu » trop
-souvent, des refus justes deviendront des questions. À vérifier par le même rejeu, avant de garder la règle.
+**Rejoué sur les trois jeux vus (26 nov., quelques centimes) : elle coûte plus qu'elle ne rapporte.**
+
+- Gagné : un seul cas, q-a04 (les deux clauses relues « inconnu », la réponse devient « à préciser », juste). q-d03
+  n'est pas corrigé : relue, l'exclusion des tremblements de terre « joue ».
+- Perdu : sept refus justes devenus « à préciser » (n-b04, n-b10, n-b18, n-d15, q-a18, q-b18, av-b04). Relue seule,
+  sans le reste du dossier, une exclusion juste est souvent jugée « ne joue pas » : le modèle perd le contexte qui la
+  rendait évidente (la définition, la garantie voisine).
+- Vu au passage : la relecture ciblée de 7.211 n'est pas stable non plus. La tonnelle (q-b04), « écarté » au premier
+  rejeu, est « confirmé » au second ; la chaîne de règles, elle aussi, varie d'un passage à l'autre (q-a14, q-d19
+  changent de réponse sans que rien d'autre ne change).
+
+**Décision : retirée.** Un refus juste devenu question coûte moins qu'un refus à tort, mais sept contre un, ce n'est
+pas un échange. Les deux refus à tort restent une limite écrite : un refus cité n'est relu par personne, et la
+citation exacte ne garantit pas la pertinence (leçon 209). Le test d'origine est rétabli, avec la mention qu'aucun
+refus cité n'est relu.
+
+### 7.213 Les petits restes : pas de règle générale, une limite écrite
+
+Trois écarts restent du jeu « quatre ». Je n'ai pas trouvé de règle générale pour eux, et je n'en écris pas de
+particulière :
+
+- *Une question de preuve prise pour une condition* (q-d10, « avez-vous réuni les preuves du vol ? »). La phrase
+  sur la charge de la preuve est dans la clause même de la garantie vol de D : faire de toute la clause une clause de
+  règlement ferait aussi taire ses vraies questions (l'effraction). Un repérage par mots (« moyens de preuve »,
+  « justificatifs ») attrape, sur les quatre contrats, des clauses d'obligations et d'assistance qui décident de la
+  couverture.
+- *Une garantie optionnelle mal comprise* (q-b07, les bagages) et *le couvert à tort restant* (q-b15, un dégât des
+  eaux dont l'exclusion, redemandée, n'a pas été retenue) : des jugements du modèle, que rien dans le code ne
+  peut redresser sans le savoir d'avance.
+
+**Bilan du dernier tour (7.210 à 7.213)**, rejoué sur les jeux vus, donc indicatif : trois règles gardées (une
+absence ne l'emporte pas sur des règles qui hésitent ; un doute qui ne peut pas faire couvrir ne retient pas la
+réponse ; la relecture ciblée des obstacles des règles), une retirée. Aucun couvert à tort ajouté. La mesure qui
+dira ce qu'elles valent sur l'inconnu est le jeu « cinq ».
+
+### 7.214 La relecture d'un refus, cette fois dans son dossier
+
+**L'idée.** La relecture de 7.212 a échoué pour une raison visible : la clause qui refuse était relue seule, sans
+la définition ni la garantie voisine, et des exclusions justes y paraissaient hors de propos. L'utilisateur
+choisit de tenter la variante avant le jeu « cinq » : relire les clauses qui refusent **au milieu de tout leur
+dossier** (les mêmes clauses que le jugement, dans le même ordre, celles qui refusent marquées « à relire », les
+autres « pour mémoire »).
+
+**La règle**, inchangée sur le fond : quand la lecture refuse en citant ses exclusions (six au plus) et que les
+règles ne refusent pas, chaque clause à relire « joue » (fait déclencheur cité mot pour mot), « ne joue pas » ou
+« inconnu » ; le refus tient si l'une joue ainsi, sinon « à préciser ». Jamais « couvert ». Le prix : un appel de
+plus, de la taille du jugement (le dossier entier), dans ces cas seulement. Deux tests.
+
+**Le critère, fixé avant le rejeu** : la garder seulement si elle corrige plus de refus à tort qu'elle ne fait
+perdre de refus justes, sans aucun couvert à tort, sur les trois jeux vus.
 
 ## 8. Ce qui reste à faire
 
@@ -6363,3 +6406,4 @@ chaque point demande un jeu neuf.
 218. Une réponse longue derrière un proxy se protège par le flux : une ligne vide régulière coûte trois lignes de code, une requête coupée coûte l'analyse.
 219. Un doute n'a de poids que s'il peut changer la réponse : une question qui ne peut ouvrir aucune garantie ne doit pas retenir un refus fondé sur une clause citée.
 220. Une garde gagne à savoir pourquoi elle bloque : relire le seul obstacle que les règles nomment garde la prudence et rend les réponses justes que le simple désaccord sacrifiait.
+221. Relire une clause seule, hors de son dossier, n'est pas la relire mieux : sans la définition et la garantie voisine, une exclusion juste paraît hors de propos. Une règle symétrique d'une règle qui marche n'est pas une règle qui marche : elle se mesure.
