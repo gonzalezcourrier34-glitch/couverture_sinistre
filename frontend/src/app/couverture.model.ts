@@ -4,6 +4,9 @@ export type DecisionValeur = 'COUVERT' | 'NON_COUVERT' | 'INCERTAIN';
 
 export type Faits = Record<string, string | string[]>;
 
+/** Les deux méthodes d'analyse : la chaîne de règles, ou la lecture des clauses contresignée par les règles. */
+export type Methode = 'regles' | 'clauses';
+
 export interface Sante {
     statut: 'ok' | 'degrade';
     version: string;
@@ -11,8 +14,8 @@ export interface Sante {
     prolog: boolean;
     modele: string | null;
     cle_api_configuree: boolean;
-    /** La méthode par défaut du serveur, et le modèle de la lecture des clauses quand c'est elle (7.209). */
-    methode?: 'regles' | 'clauses';
+    /** La méthode par défaut du serveur (7.209) ; l'écran laisse en choisir une autre, par analyse (7.216). */
+    methode?: Methode;
     modele_clauses?: string | null;
 }
 

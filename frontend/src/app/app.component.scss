@@ -420,6 +420,20 @@ textarea {
     }
 }
 
+// Le choix de la méthode, sur la ligne du titre de la déclaration, à droite (7.216).
+.choix-methode {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--plume-fonce);
+}
+
+.liste-methode {
+    padding: 3px 8px;
+    font-size: 13px;
+}
+
 .chip-on {
     background: var(--primaire);
     border-color: var(--primaire);

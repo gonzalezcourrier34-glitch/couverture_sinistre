@@ -74,7 +74,8 @@ def client(base, oracle, monkeypatch):  # noqa: F811
 def test_sante_et_health_publiques(client):
     assert client.get("/health").json() == {"status": "ok"}
     s = client.get("/api/v1/sante").json()
-    assert s["methode"] == "regles" and s["modele_clauses"] is None, "la méthode du serveur, pour l'en-tête"
+    assert s["methode"] == "regles", "la méthode du serveur, choisie par défaut à l'écran"
+    assert s["modele_clauses"] == config.MODELE_CLAUSES, "annoncé même hors défaut : l'écran laisse choisir les clauses (7.216)"
     assert CONTRAT in s["contrats_decidables"] and s["cle_api_configuree"] is True
 
 

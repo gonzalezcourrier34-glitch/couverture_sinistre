@@ -17,6 +17,7 @@ import {
     Contrat,
     Decision,
     Faits,
+    Methode,
     Sante,
     Suivi
 } from './couverture.model';
@@ -65,11 +66,12 @@ export class CouvertureService {
     analyser(
         contratId: string,
         sinistre: string,
-        souscription: Record<string, string> = {}
+        souscription: Record<string, string> = {},
+        methode?: Methode
     ): Observable<Decision> {
         return this.http.post<Decision>(
             `${API}/analyses`,
-            { contrat_id: contratId, sinistre, souscription }
+            { contrat_id: contratId, sinistre, souscription, ...(methode ? { methode } : {}) }
         );
     }
 
@@ -81,7 +83,8 @@ export class CouvertureService {
     analyserAvecSuivi(
         contratId: string,
         sinistre: string,
-        souscription: Record<string, string> = {}
+        souscription: Record<string, string> = {},
+        methode?: Methode
     ): Observable<Suivi> {
         return new Observable<Suivi>((abonne) => {
             const arret = new AbortController();
@@ -89,7 +92,7 @@ export class CouvertureService {
                 const reponse = await fetch(`${API}/analyses/suivi`, {
                     method: 'POST',
                     headers: { 'content-type': 'application/json' },
-                    body: JSON.stringify({ contrat_id: contratId, sinistre, souscription }),
+                    body: JSON.stringify({ contrat_id: contratId, sinistre, souscription, ...(methode ? { methode } : {}) }),
                     signal: arret.signal
                 });
                 if (!reponse.ok || !reponse.body) {

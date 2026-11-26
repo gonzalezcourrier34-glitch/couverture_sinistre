@@ -37,4 +37,4 @@ def sante(base: Base = Depends(get_base)) -> dict[str, Any]:  # noqa: B008
     return {"statut": "ok" if decidables and prolog_ok else "degrade", "version": config.VERSION,
             "contrats_decidables": decidables, "prolog": prolog_ok, "modele": llm.nom if llm else None,
             "cle_api_configuree": bool(config.API_KEY), "methode": config.METHODE,
-            "modele_clauses": config.MODELE_CLAUSES if config.METHODE == "clauses" else None}
+            "modele_clauses": config.MODELE_CLAUSES}

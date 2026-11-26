@@ -123,7 +123,7 @@ Neuf parties, dans l'ordre. Chaque étape garde son numéro, cité ailleurs dans
 | VI | 7.148 à 7.159 | Un quatrième contrat ajouté à froid : ce qui est général, ce qui ne l'est pas |
 | VII | 7.160 à 7.167 | Mettre en ligne, puis tout rejouer la veille de la livraison |
 | VIII | 7.168 à 7.189 | Finir A et B, puis des jeux jamais vus qui montrent un défaut de fond |
-| IX | 7.190 à 7.215 | La lecture des clauses : une seconde méthode, mesurée contre la première |
+| IX | 7.190 à 7.216 | La lecture des clauses : une seconde méthode, mesurée contre la première |
 
 ---
 
@@ -6221,6 +6221,18 @@ penser que le tour de justesse a servi. Le défaut qui reste est connu et locali
 règles incomplètes. Sans elle, la lecture des clauses aurait répondu juste sur ces six cas ; je ne la retire pas
 pour autant, puisque cette décision, prise sur ce jeu, serait un réglage sur le jeu de mesure. Elle se mesurera
 sur un jeu neuf.
+
+### 7.216 Les deux méthodes au choix, à l'écran
+
+*26 novembre, 14 h 40.* « Je voudrais aussi un choix possible pour clauses et l'autre dans la page Angular. » L'API
+le permettait depuis 7.201 (`methode` dans la requête) ; l'écran envoyait toujours la méthode du serveur. Un choix à
+deux options d'abord, à gauche du bouton « Analyser » ; puis, à la demande, une liste « Méthode » sur la ligne du titre
+de la déclaration, à droite : « Lecture des clauses (2-3 min) », par défaut, et « Chaîne de règles (5 s) », avec au
+survol ce que fait chacune. Elle se fige pendant une analyse, et tout ce qui dépend de la méthode suit le choix : le
+sous-titre, l'état de l'en-tête, l'accueil, le message d'attente. Chaque réponse disait déjà par quelle
+méthode elle a été rendue. `GET /sante` annonce maintenant le modèle des clauses même quand ce n'est pas la méthode
+par défaut, pour l'en-tête. La limite d'analyses par jour compte les deux méthodes. C'est aussi ce qui rend la
+comparaison visible à qui essaie le site : la même déclaration, en cinq secondes puis en trois minutes.
 
 ## 8. Ce qui reste à faire
 

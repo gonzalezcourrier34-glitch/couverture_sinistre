@@ -11,7 +11,7 @@
             <div>
                 <h1>Couverture des sinistres</h1>
                 <p class="header-subtitle">
-                    @if (sante()?.methode === 'clauses') {
+                    @if (methode() === 'clauses') {
                         Le modèle juge chaque clause, la logique tranche, le code vérifie chaque citation.
                     } @else {
                         Le modèle lit la déclaration, la logique décide, le code vérifie chaque citation.
@@ -25,7 +25,7 @@
                 <span class="pastille" [class.pastille-ok]="s.statut === 'ok'" [class.pastille-ko]="s.statut !== 'ok'">
                     {{ s.statut === 'ok' ? 'Service disponible' : 'Service dégradé' }}
                 </span>
-                @if (s.methode === 'clauses') {
+                @if (methode() === 'clauses') {
                     <span class="etat-detail"
                           [title]="'Lecture des clauses par ' + s.modele_clauses + ' ; contresignature par les règles traduites (moteur ' + (s.prolog ? 'chargé' : 'absent') + ', lecture des faits par ' + (s.modele ?? 'aucun modèle') + ')'">clauses : {{ s.modele_clauses }} · règles : {{ s.modele ?? 'non configuré' }} · v{{ s.version }}</span>
                 } @else {
@@ -106,7 +106,18 @@
             }
 
             <form class="saisie" (submit)="$event.preventDefault(); analyser()">
-                <label class="etiquette" for="sinistre">2. La déclaration du client</label>
+                <!-- Le choix de la méthode sur la ligne du titre, à droite (7.216) : la lecture des clauses par défaut. -->
+                <div class="etiquette-ligne">
+                    <label class="etiquette" for="sinistre">2. La déclaration du client</label>
+                    <label class="choix-methode"
+                           title="Lecture des clauses : chaque clause en jeu jugée par le modèle, citations vérifiées, « couvert » contresigné par les règles. Chaîne de règles : la déclaration lue en faits, les règles traduites du contrat décident.">
+                        <span>Méthode</span>
+                        <select class="liste liste-methode" [disabled]="chargement()" (change)="choisirMethode($event)">
+                            <option value="clauses" [selected]="methode() === 'clauses'">Lecture des clauses (2-3 min)</option>
+                            <option value="regles" [selected]="methode() === 'regles'">Chaîne de règles (5 s)</option>
+                        </select>
+                    </label>
+                </div>
                 <!-- La zone de saisie prend toute la hauteur qui reste ; le compteur est dans son coin. -->
                 <div class="zone-saisie">
                     <textarea id="sinistre" rows="4" [attr.maxlength]="longueurMax"
@@ -309,7 +320,7 @@
             } @empty {
                 <div class="vide">
                     <div class="vide-titre">Choisissez un contrat, collez la déclaration, analysez.</div>
-                    @if (sante()?.methode === 'clauses') {
+                    @if (methode() === 'clauses') {
                         <p class="muted">La réponse dit <strong>couvert</strong>, <strong>non couvert</strong> ou <strong>à préciser</strong>,
                             avec les clauses du contrat qui la fondent. Quand il manque une information, elle dit quoi demander au client.
                             Comptez deux à trois minutes : chaque clause qui peut jouer est relue.</p>

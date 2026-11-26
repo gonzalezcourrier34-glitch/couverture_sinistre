@@ -26,6 +26,7 @@ import {
     Decision,
     Etape,
     EtapeSuivi,
+    Methode,
     Sante
 } from './couverture.model';
 
@@ -161,6 +162,9 @@ export class AppComponent implements OnInit {
     readonly sante = signal<Sante | null>(null);
 
     readonly santeErreur = signal<string | null>(null);
+
+    /** La méthode de la prochaine analyse, choisie à l'écran : la lecture des clauses par défaut (7.216). */
+    readonly methode = signal<Methode>('clauses');
 
     readonly contrats = signal<Contrat[]>([]);
 
@@ -317,6 +321,14 @@ export class AppComponent implements OnInit {
     }
 
 
+    // # Le choix de la méthode
+
+    choisirMethode(event: Event): void {
+        const valeur = (event.target as HTMLSelectElement).value;
+        this.methode.set(valeur === 'regles' ? 'regles' : 'clauses');
+    }
+
+
     // # Analyse d'une déclaration (le modèle lit, le moteur décide)
 
     analyser(): void {
@@ -325,7 +337,8 @@ export class AppComponent implements OnInit {
         if (!contratId || !this.peutAnalyser()) {
             return;
         }
-        this.lancer(this.sante()?.methode === 'clauses'
+        const methode = this.methode();
+        this.lancer(methode === 'clauses'
             ? 'Le modèle juge chaque clause, la logique tranche…'
             : 'Le modèle lit la déclaration, le moteur décide…');
         this.suivi.set({});
@@ -333,7 +346,7 @@ export class AppComponent implements OnInit {
         this.annonceSuivi.set(null);
         this.suiviOuvert.set(true);
         const souscription = Object.fromEntries(Object.entries(this.souscription()).filter(([, v]) => !!v));
-        this.service.analyserAvecSuivi(contratId, sinistre, souscription)
+        this.service.analyserAvecSuivi(contratId, sinistre, souscription, methode)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: (message) => {
