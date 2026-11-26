@@ -49,6 +49,10 @@ $rayon: 12px;
     display: flex;
     align-items: center;
     gap: 12px;
+    // Le titre cède la place, pas l'état du service : sans cela, une ligne d'état un peu longue passe sous le
+    // titre, l'en-tête grandit, et la zone de la déclaration rétrécit d'autant (7.209).
+    flex: 1 1 0;
+    min-width: 0;
 
     h1 {
         margin: 0;
@@ -81,6 +85,7 @@ $rayon: 12px;
 }
 
 .etat {
+    flex: 0 0 auto;
     display: flex;
     flex-wrap: wrap;
     align-items: center;

@@ -5994,6 +5994,8 @@ l'état du service nomme les deux modèles (la lecture, et la contresignature). 
 employé deux fois : la petite case de couleur de la légende des conditions (`.pastille`, 10 pixels de côté)
 s'appliquait aussi à l'état du service. Elle s'appelle maintenant `.repere-couleur`. Un test pour la santé.
 
+**Puis la place de l'état du service.** Une fois la pastille rendue à sa taille, la ligne d'état, plus longue, est passée sous le titre : l'en-tête a grandi, et la zone de la déclaration a rétréci d'autant. Le titre cède maintenant la place (il peut passer à la ligne), l'état reste à droite sur une ligne, en plus court (« clauses : … · règles : … ») ; le détail complet est dans l'infobulle.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 26 nov. 2026. Dans l'ordre où je le ferais.

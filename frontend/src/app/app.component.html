@@ -12,7 +12,7 @@
                 <h1>Couverture des sinistres</h1>
                 <p class="header-subtitle">
                     @if (sante()?.methode === 'clauses') {
-                        Le modèle juge chaque clause du contrat, la logique tranche, les règles contresignent, le code vérifie chaque citation.
+                        Le modèle juge chaque clause, la logique tranche, le code vérifie chaque citation.
                     } @else {
                         Le modèle lit la déclaration, la logique décide, le code vérifie chaque citation.
                     }
@@ -26,7 +26,8 @@
                     {{ s.statut === 'ok' ? 'Service disponible' : 'Service dégradé' }}
                 </span>
                 @if (s.methode === 'clauses') {
-                    <span class="etat-detail">Lecture des clauses · {{ s.modele_clauses }} · contresignature : moteur {{ s.prolog ? 'chargé' : 'absent' }}, {{ s.modele ?? 'modèle non configuré' }} · v{{ s.version }}</span>
+                    <span class="etat-detail"
+                          [title]="'Lecture des clauses par ' + s.modele_clauses + ' ; contresignature par les règles traduites (moteur ' + (s.prolog ? 'chargé' : 'absent') + ', lecture des faits par ' + (s.modele ?? 'aucun modèle') + ')'">clauses : {{ s.modele_clauses }} · règles : {{ s.modele ?? 'non configuré' }} · v{{ s.version }}</span>
                 } @else {
                     <span class="etat-detail">Moteur {{ s.prolog ? 'chargé' : 'absent' }} · modèle {{ s.modele ?? 'non configuré' }} · v{{ s.version }}</span>
                 }
