@@ -123,7 +123,7 @@ Neuf parties, dans l'ordre. Chaque étape garde son numéro, cité ailleurs dans
 | VI | 7.148 à 7.159 | Un quatrième contrat ajouté à froid : ce qui est général, ce qui ne l'est pas |
 | VII | 7.160 à 7.167 | Mettre en ligne, puis tout rejouer la veille de la livraison |
 | VIII | 7.168 à 7.189 | Finir A et B, puis des jeux jamais vus qui montrent un défaut de fond |
-| IX | 7.190 à 7.211 | La lecture des clauses : une seconde méthode, mesurée contre la première |
+| IX | 7.190 à 7.212 | La lecture des clauses : une seconde méthode, mesurée contre la première |
 
 ---
 
@@ -6057,9 +6057,46 @@ coûte presque rien) est demandé. Le rejeu s'écrit à part (`juger_<cas>_rejeu
 tests : le couvert qui tient ; la garde qui ne s'affaiblit pas (citation inexacte, obstacle confirmé, inconnu) ;
 aucune relecture sans obstacle ; le rejeu sans appel.
 
-**Le risque, à vérifier en premier** : que la relecture écarte un obstacle réel. Les deux couverts à tort que la
-contresignature avait arrêtés au jeu « neuf » (n-a16, l'assuré avait trop bu ; n-a17, la pension de furets) sont les
-cas à regarder d'abord.
+**Rejoué chez Mistral** (26 nov., `juger --rejouer` sur les trois jeux vus : seules la chaîne de règles et la
+relecture sont payées, quelques centimes ; ce n'est pas une mesure). Onze relectures en tout :
+
+- *La garde tient* : n-a16 (l'assuré avait trop bu), l'obstacle est « confirmé » et la réponse reste « à
+  préciser » ; n-a17 (les furets) ne déclenche pas de relecture, les règles n'y nomment pas d'obstacle. Aucun couvert
+  à tort n'apparaît, sur aucun jeu.
+- *Trois « couvert » justes retrouvés* au jeu « quatre » : la gouttière voisine (q-a02, l'exclusion des infiltrations
+  par les fenêtres écartée : l'eau venait d'un tuyau rompu), la tonnelle et les chaises de jardin (q-b04), le drone
+  sur la fenêtre de toit (q-d01).
+- *La prudence ailleurs* : cinq obstacles « confirmés » ou « inconnus » (n-a08, n-a15 deux fois, q-a13, q-d04,
+  av-d04) laissent la réponse à préciser, à raison pour q-a13, à tort pour les autres. Le modèle ne lâche un
+  obstacle que sur une phrase de la déclaration, ce qui est voulu.
+
+| Jeu (vu) | Avant 7.211 | Après |
+|---|---|---|
+| « quatre » | 49 sur 60 | 51 sur 60 |
+| « neuf » | 48 sur 60 | 48 sur 60 |
+| « aveugle », 30 cas | 27 sur 30 | 27 sur 30 |
+
+**Une limite vue en relisant** : pour le drone (q-d01), le modèle a cité la déclaration entière comme preuve. Le code
+vérifie que la citation existe, pas qu'elle dit précisément ce qui écarte l'obstacle. C'est la même limite que pour
+les jugements (leçon 209), et elle reste.
+
+### 7.212 La relecture d'un refus que les règles ne suivent pas
+
+**Le constat.** Deux refus à tort du jeu « quatre » viennent d'une clause citée mot pour mot mais hors de propos :
+une clause d'obligations pour un dégât des eaux après le gel (q-a04), l'exclusion des cataclysmes naturels pour un
+sinistre qui n'en est pas un (q-d03). Un refus fondé sur une clause citée n'était pas contresigné : il tenait seul.
+
+**La règle, symétrique de 7.211 et plus prudente.** Quand la lecture refuse en citant ses exclusions (six au plus) et
+que les règles ne refusent pas, on relit ces seules clauses, une à une : chacune « joue » (le fait déclencheur cité
+mot pour mot dans la déclaration), « ne joue pas » ou « inconnu ». La consigne rappelle qu'une clause d'obligations
+ne refuse que si la déclaration dit le manquement et son lien avec le sinistre. Le refus tient si l'une des clauses
+joue ainsi ; sinon la réponse devient « à préciser ». **Elle ne devient jamais « couvert »** : cette relecture ne peut
+que confirmer un refus ou en faire une question, et ne touche pas à la garde contre les couverts à tort. Quand les
+règles refusent aussi, rien n'est relu. Deux tests.
+
+**Le prix attendu** : les refus justes que les règles ne suivaient pas (une dizaine par jeu, la lecture des clauses
+y ayant raison contre des règles incomplètes) passent par cette relecture ; si le modèle répond « inconnu » trop
+souvent, des refus justes deviendront des questions. À vérifier par le même rejeu, avant de garder la règle.
 
 ## 8. Ce qui reste à faire
 
@@ -6325,3 +6362,4 @@ chaque point demande un jeu neuf.
 217. Un outil de mesure ne s'arrête pas sur la panne d'un cas : une erreur du fournisseur se compte comme une erreur de ce cas, et le passage continue.
 218. Une réponse longue derrière un proxy se protège par le flux : une ligne vide régulière coûte trois lignes de code, une requête coupée coûte l'analyse.
 219. Un doute n'a de poids que s'il peut changer la réponse : une question qui ne peut ouvrir aucune garantie ne doit pas retenir un refus fondé sur une clause citée.
+220. Une garde gagne à savoir pourquoi elle bloque : relire le seul obstacle que les règles nomment garde la prudence et rend les réponses justes que le simple désaccord sacrifiait.

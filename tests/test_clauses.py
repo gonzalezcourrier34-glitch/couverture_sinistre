@@ -55,10 +55,26 @@ def test_de_la_declaration_a_la_decision(base):
 def test_l_exclusion_que_les_regles_ignoraient_refuse_et_le_desaccord_est_dit(base):
     """Les règles disaient « couvert » ; la clause lue exclut, avec ses deux citations : non couvert, et le
     désaccord est affiché. C'est le cas qui manquait aux trois jeux écrits à l'aveugle."""
-    modele = Modele({"chapitres": ["3.1.2"], "motif": ""}, jugements(**{"3_1_2_1": "couvre", "3_1_2_2": "exclut"}))
+    relue = {"clauses": [{"numero": 1, "avis": "joue", "extrait_declaration": "Rien n'était fixé"}]}
+    modele = Modele({"chapitres": ["3.1.2"], "motif": ""}, jugements(**{"3_1_2_1": "couvre", "3_1_2_2": "exclut"}), relue)
     lecture = clauses.lire(base, "c1", modele, DECLARATION, regles=Decision.COUVERT)
     assert lecture.decision == Decision.NON_COUVERT and "l'emporte" in lecture.desaccord
     assert [j.clause_id for j in lecture.etat.excluent] == ["3.1.2.2"]
+    assert "Clause 1 : [3.1.2.2]" in modele.recus[2][1] and lecture.arbitrage[0].startswith("refus, art. 3.1.2.2 : joue")
+
+
+def test_un_refus_que_les_regles_ne_suivent_pas_est_relu_et_ne_fait_jamais_couvrir(base):
+    """7.212 : relue seule, la clause qui refuse ne joue pas (ou on ne sait pas, ou sa citation est inexacte) : le
+    refus devient « à préciser », jamais « couvert ». Si les règles refusent aussi, rien n'est relu."""
+    for avis in ({"numero": 1, "avis": "ne_joue_pas"}, {"numero": 1, "avis": "inconnu"},
+                 {"numero": 1, "avis": "joue", "extrait_declaration": "Les chaises étaient vissées"}):
+        modele = Modele({"chapitres": ["3.1.2"], "motif": ""},
+                        jugements(**{"3_1_2_1": "couvre", "3_1_2_2": "exclut"}), {"clauses": [avis]})
+        lecture = clauses.lire(base, "c1", modele, DECLARATION, regles=Decision.INCERTAIN)
+        assert lecture.decision == Decision.INCERTAIN and "aucune clause qui refuse" in lecture.desaccord, avis
+    modele = Modele({"chapitres": ["3.1.2"], "motif": ""}, jugements(**{"3_1_2_1": "couvre", "3_1_2_2": "exclut"}))
+    assert clauses.lire(base, "c1", modele, DECLARATION, regles=Decision.NON_COUVERT).decision == Decision.NON_COUVERT
+    assert len(modele.recus) == 2
 
 
 def test_couvert_sans_la_contresignature_des_regles_devient_a_preciser(base):

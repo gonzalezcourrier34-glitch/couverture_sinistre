@@ -156,6 +156,48 @@ def arbitrage_cible(llm: LLM, obstacles: list[Condition], par_id: dict[str, Clau
     return tient, lignes
 
 
+# La relecture d'un refus (7.212) : la lecture refuse en citant une exclusion, les règles ne refusent pas. Le refus
+# n'est pas contresigné ; on relit la seule clause qui refuse. Elle ne peut que confirmer le refus ou le ramener à
+# « à préciser » : jamais faire couvrir.
+SYSTEME_RELECTURE_REFUS = """Tu es gestionnaire de sinistres. Une première lecture des conditions générales refuse le sinistre déclaré, en s'appuyant sur les clauses ci-dessous. Une seconde lecture, faite par des règles traduites du contrat, ne le refuse pas. Relis chaque clause, seule, face à la déclaration.
+
+Pour chaque clause, dis si elle s'applique à CE sinistre :
+- « joue » : la clause vise bien ce sinistre et la déclaration dit en toutes lettres le fait qui la déclenche. Recopie mot pour mot, dans « extrait_declaration », la phrase de la déclaration qui le dit.
+- « ne_joue_pas » : la clause vise autre chose (un autre événement, un autre bien, une autre situation), ou la déclaration montre qu'elle ne s'applique pas.
+- « inconnu » : la déclaration ne permet pas de le dire.
+
+Une clause d'obligations ne refuse que si la déclaration dit que l'obligation n'a pas été respectée et que ce manquement a causé ou aggravé le sinistre. Le sens des mots est celui du contrat. Dans le doute, réponds « inconnu »."""
+
+SCHEMA_RELECTURE_REFUS = {
+    "type": "object", "additionalProperties": False, "required": ["clauses"],
+    "properties": {"clauses": {"type": "array", "items": {
+        "type": "object", "required": ["numero", "avis"],
+        "properties": {"numero": {"type": "integer"}, "avis": {"type": "string", "enum": ["joue", "ne_joue_pas", "inconnu"]},
+                       "extrait_declaration": {"type": "string"}, "motif": {"type": "string"}}}}}}
+
+
+def relecture_du_refus(llm: LLM, excluent: list[jugement.Jugement], par_id: dict[str, Clause],
+                       decision_regles: Decision, declaration: str) -> tuple[bool, list[str]]:
+    """Relit les clauses qui refusent : le refus tient si l'une d'elles « joue », le fait déclencheur cité mot pour
+    mot dans la déclaration. Rend ce verdict et une ligne par clause, pour le raisonnement."""
+    blocs = [f"### Clause {n} : [{j.clause_id}]\n{par_id[j.clause_id].texte if j.clause_id in par_id else j.extrait_contrat}"
+             for n, j in enumerate(excluent, 1)]
+    message = f"Réponse des règles : {decision_regles.value}\n\n" + "\n\n".join(blocs) + f"\n\n## Déclaration\n{declaration}"
+    reponse = extraire_json(completer_avec_schema(llm, SYSTEME_RELECTURE_REFUS, message, SCHEMA_RELECTURE_REFUS))
+    avis = {a.get("numero"): a for a in reponse.get("clauses") or [] if isinstance(a, dict)}
+    declaration_n = normaliser(declaration)
+    tient, lignes = False, []
+    for n, j in enumerate(excluent, 1):
+        a = avis.get(n) or {}
+        extrait = str(a.get("extrait_declaration") or "")
+        joue = a.get("avis") == "joue" and bool(extrait) and jugement._dans_la_declaration(extrait, declaration_n)
+        tient = tient or joue
+        etat = ("joue" if joue else "joue, sans citation exacte : non retenu" if a.get("avis") == "joue"
+                else "ne joue pas" if a.get("avis") == "ne_joue_pas" else "inconnu")
+        lignes.append(f"refus, art. {j.clause_id} : {etat}" + (f" ← « {extrait} »" if joue else ""))
+    return tient, lignes
+
+
 @dataclass
 class Lecture:
     """Ce qu'une lecture des clauses a produit, de la désignation à la décision."""
@@ -168,7 +210,7 @@ class Lecture:
     desaccord: str = ""
     relancees: list[str] = field(default_factory=list)      # les clauses redemandées au modèle, faute de jugement
     rappels: list[jugement.Jugement] = field(default_factory=list)   # questions du règlement, sans effet sur la décision
-    arbitrage: list[str] = field(default_factory=list)  # la relecture ciblée des obstacles des règles, s'il y en a eu
+    arbitrage: list[str] = field(default_factory=list)  # la relecture ciblée (obstacles des règles, ou refus), s'il y en a eu
 
 
 def message_designation(clauses: list[Clause], declaration: str) -> str:
@@ -300,6 +342,16 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | C
             decision = Decision.COUVERT
             desaccord = (f"les règles traduites répondaient « {regles.value} » ; relus un à un, leurs obstacles sont "
                          "écartés par la déclaration")
+    elif (decision == Decision.NON_COUVERT and etat.excluent and regles in (Decision.COUVERT, Decision.INCERTAIN)
+          and len(etat.excluent) <= MAX_OBSTACLES):
+        # La lecture refuse en citant une exclusion, les règles non : on relit ces seules clauses (7.212). Le refus
+        # tient si l'une d'elles joue, fait déclencheur cité ; sinon « à préciser ». Jamais « couvert ».
+        par_tout = {c.id: c for c in clauses}
+        tient, revue = relecture_du_refus(llm, etat.excluent, par_tout, regles, declaration)
+        if not tient:
+            decision = Decision.INCERTAIN
+            desaccord = (f"la lecture des clauses refuse, les règles traduites répondent « {regles.value} » ; relue "
+                         "seule, aucune clause qui refuse n'est établie par la déclaration : à examiner")
     suivre("decision")
     suivre("decision", etat.motif + (f" ; {desaccord}" if desaccord else ""))
     if garder:                                         # les jugements en table, pour relire l'analyse après coup
