@@ -6183,6 +6183,45 @@ se rejoue librement.
 lecture des clauses par `juger --regles --mesure-finale` (un passage, environ 5 $). Les chiffres s'écriront tels
 quels, ci-dessous et dans le README, qu'ils soient bons ou non.
 
+**La mesure (26 nov., de 13 h 33 à 14 h 25), code figé au commit `de9ed60`.** La chaîne de règles par le banc
+(Mistral Medium et Small, trois passages par contrat), puis la lecture des clauses (`juger --regles --mesure-finale`,
+Mistral Large, un passage ; 1,87 million de tokens envoyés, 0,88 million reçus). Aucun incident.
+
+| Jeu « cinq » | Chaîne de règles (moyenne de 3 passages) | Lecture des clauses (1 passage) |
+|---|---|---|
+| A | 15,7 sur 20 | 20 sur 20 |
+| B | 14,3 sur 20 | 19 sur 20 |
+| D | 10,3 sur 20 | 14 sur 20 |
+| **Ensemble** | **40,3 sur 60** | **53 sur 60** |
+| Couverts à tort | 4,7 (A 2 ; B 1,7 ; D 1) | **0** |
+| Refus à tort | 6 (A 1 ; B 2 ; D 3) | 1 (c-b08) |
+| « À préciser » au lieu d'une réponse | 9 | 6 (tous chez D) |
+| Durée d'une analyse | 3,5 à 5,2 s (médiane) | 177 s (médiane ; 71 à 366 s) |
+
+**Ce que je lis dans la sortie, sans rien en corriger** (le jeu a servi) :
+
+- *Le refus à tort* (c-b08) : des clés volées dans un sac au café ; l'assuré demande le changement des serrures.
+  La lecture applique l'exclusion des vols à la tire hors du bâtiment, qui vise le vol, pas la serrure. C'est la
+  famille déjà vue au jeu « quatre » : une clause citée exactement, mais hors de propos.
+- *Les six « à préciser » de D* (c-d01, d06, d09, d12, d15, d18) : chaque fois, la lecture conclut « couvert », avec
+  la garantie citée, et la réponse attendue est « couvert » ; la chaîne de règles de D répond « à préciser » ou
+  « non couvert », et la contresignature rend « à préciser ». La relecture ciblée (7.211) n'a servi qu'une fois
+  (c-d09, obstacle confirmé) : les règles de D, traduites en partie, ne donnent souvent pas d'obstacle à relire,
+  seulement l'absence d'une garantie.
+- *Deux jugements écartés* parce que la citation n'était pas mot pour mot (c-b15, une faute d'accord recopiée ;
+  c-d13) : la réponse reste « à préciser », admise dans les deux cas. Le contrôle des citations tient.
+- *La relecture ciblée* a sauvé un « couvert » juste chez A (c-a07, l'ivresse d'un mineur écartée par la
+  déclaration elle-même).
+
+**Ce que j'en conclus.** Sur le même jeu, l'écart entre les méthodes est net : treize réponses justes de plus, dans
+le même sens sur les trois contrats, aucun couvert à tort contre 4,7, un refus à tort contre six. Entre les deux
+jeux, la lecture des clauses passe de 45 à 53 et la chaîne de règles de 42 à 40 : deux jeux ne se comparent pas au
+point près, mais la chaîne, à peu près inchangée entre-temps, ne trouve pas celui-ci plus facile, ce qui laisse
+penser que le tour de justesse a servi. Le défaut qui reste est connu et localisé : la contresignature par des
+règles incomplètes. Sans elle, la lecture des clauses aurait répondu juste sur ces six cas ; je ne la retire pas
+pour autant, puisque cette décision, prise sur ce jeu, serait un réglage sur le jeu de mesure. Elle se mesurera
+sur un jeu neuf.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 26 nov. 2026. Dans l'ordre où je le ferais.
@@ -6450,3 +6489,4 @@ chaque point demande un jeu neuf.
 220. Une garde gagne à savoir pourquoi elle bloque : relire le seul obstacle que les règles nomment garde la prudence et rend les réponses justes que le simple désaccord sacrifiait.
 221. Relire une clause seule, hors de son dossier, n'est pas la relire mieux : sans la définition et la garantie voisine, une exclusion juste paraît hors de propos. Une règle symétrique d'une règle qui marche n'est pas une règle qui marche : elle se mesure.
 222. Quand une sortie est uniforme (« inconnu » partout), lire les réponses brutes avant de conclure : c'était mon code qui ne reconnaissait pas l'identifiant recopié par le modèle.
+223. Un contre-pouvoir vaut ce que vaut ce qui contresigne : des règles traduites en partie retiennent des réponses justes plus souvent qu'elles n'arrêtent une erreur. Le voir sur le jeu de mesure ne permet pas de le corriger sur ce jeu.

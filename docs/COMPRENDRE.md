@@ -86,9 +86,28 @@ Les règles du protocole, fixées avant la mesure :
 - le jeu est passé une seule fois, la première méthode trois fois (elle est rapide, et sa lecture varie un peu), la seconde une fois (elle coûte environ 8 centimes par cas) ;
 - les chiffres sont écrits tels quels, et rien n'est corrigé ensuite : un tour de corrections demanderait un cinquième jeu.
 
-Un incident : pendant la mesure, Mistral a répondu par une panne sur un cas, et mon outil de mesure s'est arrêté au lieu de passer au cas suivant. J'ai passé les deux cas restants le lendemain matin, avec le même code, sans avoir vu de réponse pour eux. Je l'ai noté, et corrigé l'outil après la mesure.
+**Un cinquième jeu, pour le dernier tour.** Après cette mesure, j'ai fait un tour de corrections de la seconde méthode, en règles générales seulement, contrôlées sur les jeux déjà vus. Ces contrôles flattent forcément ce qu'on vient de corriger : il fallait un jeu neuf. Le jeu « cinq » a été monté de la même façon, soixante déclarations jamais vues, avec une différence : le second avis vient de trois autres instances de Claude, et plus du tout de Mistral Large. Les deux avis concordent sur cinquante-neuf cas ; le soixantième a été arbitré sur le texte par une septième instance. Code figé, une seule passe, chiffres tels quels.
+
+Un incident, au jeu « quatre » : pendant la mesure, Mistral a répondu par une panne sur un cas, et mon outil de mesure s'est arrêté au lieu de passer au cas suivant. J'ai passé les deux cas restants le lendemain matin, avec le même code, sans avoir vu de réponse pour eux. Je l'ai noté, et corrigé l'outil après la mesure.
 
 ## 6. Les résultats
+
+**La mesure finale, sur le jeu « cinq »** (26 novembre, après le dernier tour de corrections) :
+
+| Jeu « cinq », 60 cas jamais vus | Première méthode (règles, 3 passages) | Seconde méthode (clauses, 1 passage) |
+|---|---|---|
+| A | 15,7 sur 20 | 20 sur 20 |
+| B | 14,3 sur 20 | 19 sur 20 |
+| D | 10,3 sur 20 | 14 sur 20 |
+| **Réponses justes** | **40,3 sur 60** | **53 sur 60** |
+| **Couverts à tort** | **4,7** | **0** |
+| Refus à tort | 6 | 1 |
+| « À préciser » au lieu d'une réponse | 9 | 6 |
+| Durée d'une analyse | 3,5 à 5,2 s (médiane) | 177 s (médiane ; 71 à 366 s) |
+
+Le seul refus à tort : des clés volées dans un sac au café ; on demandait le changement des serrures, la seconde méthode a appliqué l'exclusion des vols à la tire hors du domicile. Les six « à préciser » sont tous chez D : la lecture couvre à raison, les règles de D (traduites en partie) ne suivent pas, et la contresignature tire la réponse vers le doute.
+
+**La première mesure, sur le jeu « quatre »** (25 novembre au soir) :
 
 | Jeu « quatre », 60 cas jamais vus | Première méthode (règles) | Seconde méthode (clauses) |
 |---|---|---|
@@ -111,11 +130,13 @@ Un incident : pendant la mesure, Mistral a répondu par une panne sur un cas, et
 
 ## 7. Discussion : ce que je retiens, ce que je ne peux pas affirmer
 
-**Je ne peux pas affirmer que la seconde méthode est plus juste.** Trois réponses de plus sur soixante, c'est un écart que ce jeu ne permet pas de distinguer du hasard. Sur le jeu « neuf », l'écart était de 48 contre 38 ; mais ce jeu m'avait servi à mettre la seconde méthode au point, et l'écart a fondu sur des cas neufs. C'est la leçon de méthode que je retiens le plus : un jeu qui a servi à corriger flatte toujours ce qu'on a corrigé.
+**Sur le jeu « quatre », je ne pouvais pas affirmer que la seconde méthode était plus juste.** Trois réponses de plus sur soixante, c'est un écart que ce jeu ne permet pas de distinguer du hasard. Sur le jeu « neuf », l'écart était de 48 contre 38 ; mais ce jeu m'avait servi à mettre la seconde méthode au point, et l'écart a fondu sur des cas neufs. C'est la leçon de méthode que je retiens le plus : un jeu qui a servi à corriger flatte toujours ce qu'on a corrigé.
 
-**Je peux affirmer qu'elle se trompe moins gravement.** Un couvert à tort au lieu de plus de quatre, dans le sens qui coûte le plus. C'est cohérent avec l'hypothèse : la plupart des couverts à tort de la première méthode venaient d'une traduction incomplète, et la seconde lit le texte.
+**Sur le jeu « cinq », l'écart est net** : treize réponses justes de plus (53 contre 40), dans le même sens sur les trois contrats. Soixante cas restent peu, et deux jeux différents ne se comparent pas au point près ; mais la première méthode, à peu près inchangée entre les deux jeux, ne trouve pas celui-ci plus facile (40 contre 42). J'en conclus, avec cette prudence, que le dernier tour de corrections a servi.
 
-**Je dois reconnaître ce qu'elle coûte.** Deux refus à tort de plus, deux à trois minutes d'attente, un coût nettement plus élevé. Et en relisant les quinze écarts de la seconde méthode, j'ai trouvé que six venaient de la contresignature elle-même : la lecture couvrait à raison, les règles se trompaient. Mon contre-pouvoir hérite des défauts de ce qu'il contresigne.
+**Je peux affirmer qu'elle se trompe moins gravement.** Un couvert à tort au lieu de plus de quatre au jeu « quatre », aucun au lieu de 4,7 au jeu « cinq », dans le sens qui coûte le plus. C'est cohérent avec l'hypothèse : la plupart des couverts à tort de la première méthode venaient d'une traduction incomplète, et la seconde lit le texte.
+
+**Je dois reconnaître ce qu'elle coûte.** Deux à trois minutes d'attente et un coût nettement plus élevé. Au jeu « quatre », deux refus à tort de plus ; au jeu « cinq », un seul refus à tort, contre six pour la première méthode. Et dans les deux jeux, six écarts viennent de la contresignature elle-même : la lecture couvrait à raison, les règles se trompaient. Mon contre-pouvoir hérite des défauts de ce qu'il contresigne, surtout chez D, dont les règles ne sont traduites qu'en partie.
 
 | | Première méthode (règles) | Seconde méthode (clauses) |
 |---|---|---|
@@ -140,12 +161,12 @@ Un incident : pendant la mesure, Mistral a répondu par une panne sur un cas, et
 
 **Les prochaines expériences, dans l'ordre.**
 
-1. Mesurer la seconde méthode sans contresignature, sur un contrat sans règles traduites, avec un jeu neuf : c'est la condition pour dire qu'elle s'étend à un contrat nouveau.
-2. Faire baisser ses refus à tort, par exemple en soumettant aussi un refus au regard des règles quand elles répondent « à préciser ».
+1. Mesurer la seconde méthode sans contresignature, sur un contrat sans règles traduites, avec un jeu neuf : c'est la condition pour dire qu'elle s'étend à un contrat nouveau. Le jeu « cinq » le suggère sans le prouver : chez D, les six réponses retenues par la contresignature étaient justes.
+2. Faire contresigner seulement par des règles complètes : un contrat traduit en partie retient des « couvert » justes plus souvent qu'il n'arrête une erreur.
 3. Réduire l'attente, en profitant davantage du cache du fournisseur.
 
-Chacune demandera un jeu de cas neuf : celui-ci a servi.
+J'ai essayé, puis retiré, de faire relire les refus par le modèle : il doutait de refus justes plus souvent qu'il ne corrigeait de refus à tort. Chacune de ces pistes demandera un jeu de cas neuf : « cinq » a servi.
 
 ## 9. En une phrase
 
-J'ai d'abord traduit les contrats en règles et laissé un programme décider : c'était rapide et transparent, mais faux dès que la traduction l'était. J'ai alors fait lire au modèle les clauses mêmes, vérifié chacune de ses citations et fait contresigner ses « couvert » par la première méthode : sur des cas jamais vus, il promet à tort quatre fois moins souvent, pour autant de réponses justes, et au prix de l'attente et de quelques refus de plus.
+J'ai d'abord traduit les contrats en règles et laissé un programme décider : c'était rapide et transparent, mais faux dès que la traduction l'était. J'ai alors fait lire au modèle les clauses mêmes, vérifié chacune de ses citations et fait contresigner ses « couvert » par la première méthode : sur des cas jamais vus, il promet à tort beaucoup moins souvent (aucune fois au dernier jeu), répond juste plus souvent après un dernier tour de corrections (53 sur 60 contre 40), au prix de deux à trois minutes d'attente.

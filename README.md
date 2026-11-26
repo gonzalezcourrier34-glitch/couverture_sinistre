@@ -4,7 +4,7 @@ Dit si un sinistre est couvert par un contrat d'assurance habitation, **pourquoi
 
 > Une réponse assurée sans justification vaut moins qu'un « je ne sais pas » étayé.
 
-**Un projet mené comme une expérience, en deux hypothèses.** J'ai d'abord traduit chaque contrat en règles (Prolog) et laissé un moteur décider, en quelques secondes ; mesurée sur des cas que je n'avais jamais vus, cette méthode couvrait parfois à tort, parce qu'une règle peut mal traduire le contrat. J'ai alors fait lire par Mistral Large les clauses mêmes du contrat, une à une, vérifié chaque citation mot pour mot, calculé la décision dans le code et fait contresigner chaque « couvert » par la première méthode. J'ai comparé les deux une seule fois, code figé, sur 60 déclarations jamais vues : autant de réponses justes (45 contre 42, un écart que ce jeu ne permet pas d'affirmer), **un seul sinistre couvert à tort au lieu de 4,3**, mais deux refus à tort de plus et deux à trois minutes par analyse. La seconde est la méthode par défaut depuis le 26 novembre 2026. [Les chiffres](#4-ce-que-cela-donne) ; [l'expérience racontée sans jargon](docs/COMPRENDRE.md).
+**Un projet mené comme une expérience, en deux hypothèses.** J'ai d'abord traduit chaque contrat en règles (Prolog) et laissé un moteur décider, en quelques secondes ; mesurée sur des cas que je n'avais jamais vus, cette méthode couvrait parfois à tort, parce qu'une règle peut mal traduire le contrat. J'ai alors fait lire par Mistral Large les clauses mêmes du contrat, une à une, vérifié chaque citation mot pour mot, calculé la décision dans le code et fait contresigner chaque « couvert » par la première méthode. J'ai comparé les deux une première fois, code figé, sur 60 déclarations jamais vues : autant de réponses justes (45 contre 42), **un seul sinistre couvert à tort au lieu de 4,3**, mais deux refus à tort de plus et deux à trois minutes par analyse. Après un dernier tour de corrections, une seconde mesure, sur 60 autres déclarations jamais vues : **53 réponses justes contre 40, aucun couvert à tort contre 4,7, un refus à tort contre 6**. La seconde est la méthode par défaut depuis le 26 novembre 2026. [Les chiffres](#4-ce-que-cela-donne) ; [l'expérience racontée sans jargon](docs/COMPRENDRE.md).
 
 ![La réponse à une déclaration : la décision, les faits retenus, la clause citée, les limites](docs/images/ecran-reponse.png)
 
@@ -80,7 +80,7 @@ Une fois par contrat
              ─► réponse, clauses citées, arbre de preuve
 ```
 
-**Ma seconde hypothèse, méthode par défaut depuis le 26 novembre : la lecture des clauses.** Les jeux jamais vus m'ont montré que la chaîne ci-dessus se trompait surtout à la traduction. Je fais donc lire au modèle (Mistral Large) les clauses du contrat qui concernent le sinistre ; il rend, clause par clause, un jugement cité ; une logique fixe tranche à partir de ces jugements, et la chaîne contresigne : un « couvert » n'est rendu que si elle le dit aussi. Chaque citation est toujours retrouvée mot pour mot par le code. Je l'ai choisie sur la mesure du jeu « quatre » (section 4) : autant de réponses justes, quatre fois moins de couverts à tort, mais deux à trois minutes par analyse. La chaîne de règles reste disponible (`COUVERTURE_METHODE=regles`). [Les deux méthodes comparées](docs/COMPRENDRE.md).
+**Ma seconde hypothèse, méthode par défaut depuis le 26 novembre : la lecture des clauses.** Les jeux jamais vus m'ont montré que la chaîne ci-dessus se trompait surtout à la traduction. Je fais donc lire au modèle (Mistral Large) les clauses du contrat qui concernent le sinistre ; il rend, clause par clause, un jugement cité ; une logique fixe tranche à partir de ces jugements, et la chaîne contresigne : un « couvert » n'est rendu que si elle le dit aussi. Chaque citation est toujours retrouvée mot pour mot par le code. Je l'ai choisie sur la mesure du jeu « quatre » (section 4) : autant de réponses justes, quatre fois moins de couverts à tort, mais deux à trois minutes par analyse ; le jeu « cinq », après un dernier tour de corrections, l'a confirmée (53 réponses justes sur 60 contre 40, aucun couvert à tort). La chaîne de règles reste disponible (`COUVERTURE_METHODE=regles`). [Les deux méthodes comparées](docs/COMPRENDRE.md).
 
 ```
 À chaque sinistre, lecture des clauses (2 à 3 minutes)
@@ -112,7 +112,26 @@ Les réponses attendues ont été établies d'après le texte des conditions gé
 
 ### 4. Ce que cela donne
 
-**La mesure qui compte : le jeu « quatre », les deux méthodes comparées (25 novembre au soir).** Soixante déclarations, vingt par contrat (A, B, D), écrites d'après le seul texte des contrats et jugées à l'aveugle par deux autres annotateurs (Mistral Large et Claude) : les trois avis concordent sur les soixante cas. J'ai figé le code avant, passé le jeu une seule fois, et je n'ai rien corrigé ensuite (démarche 7.207).
+**La mesure finale : le jeu « cinq », après le dernier tour de corrections (26 novembre).** Soixante déclarations neuves, vingt par contrat (A, B, D), écrites par trois annotateurs qui n'avaient lu que le texte des contrats, et jugées à l'aveugle par trois autres (Claude, pas Mistral Large : c'est lui qui lit dans la seconde méthode). 59 accords sur 60, un désaccord arbitré sur le texte. Code figé avant (commit `de9ed60`), jeu passé une seule fois, rien corrigé ensuite (démarche 7.215).
+
+| Jeu « cinq », 60 cas jamais vus | Chaîne de règles (3 passages) | Lecture des clauses (1 passage) |
+|---|---|---|
+| A | 15,7 sur 20 | 20 sur 20 |
+| B | 14,3 sur 20 | 19 sur 20 |
+| D | 10,3 sur 20 | 14 sur 20 |
+| **Réponses justes** | **40,3 sur 60** | **53 sur 60** |
+| **Couverts à tort** | **4,7** | **0** |
+| Refus à tort | 6 | 1 |
+| « À préciser » au lieu d'une réponse | 9 | 6 |
+| Durée d'une analyse | 3,5 à 5,2 s (médiane) | 177 s (médiane ; 71 à 366 s) |
+
+- **Treize réponses justes de plus, sur le même jeu.** Sur « quatre », l'écart (trois) ne se distinguait pas du hasard ; celui-ci est quatre fois plus grand, et il va dans le même sens sur les trois contrats.
+- **Aucun couvert à tort.** La chaîne de règles en fait 4,7 sur les mêmes cas.
+- **Un seul refus à tort** (`c-b08`) : des clés volées dans un sac, au café ; on demandait le changement des serrures, et la lecture a appliqué l'exclusion des vols à la tire hors du bâtiment.
+- **Les six « à préciser » sont tous chez D, et tous du même type** : la lecture conclut « couvert » à raison, la chaîne de règles de D, traduite en partie, ne suit pas, et la contresignature rend « à préciser ». C'est le prix connu de ce contre-pouvoir (déjà six écarts sur quinze au jeu « quatre »). Je ne le change pas : je l'ai décidé avant la mesure, et le changer maintenant reviendrait à régler sur le jeu qui mesure.
+- **Entre les deux jeux**, la lecture des clauses passe de 45 à 53, la chaîne de règles de 42 à 40. Deux jeux différents ne se comparent pas au point près ; mais la chaîne, à peu près inchangée entre-temps, ne trouve pas ce jeu-ci plus facile, ce qui laisse penser que le gain vient du dernier tour de corrections (démarche 7.210 à 7.214).
+
+**La première mesure : le jeu « quatre », les deux méthodes comparées (25 novembre au soir).** Soixante déclarations, vingt par contrat (A, B, D), écrites d'après le seul texte des contrats et jugées à l'aveugle par deux autres annotateurs (Mistral Large et Claude) : les trois avis concordent sur les soixante cas. J'ai figé le code avant, passé le jeu une seule fois, et je n'ai rien corrigé ensuite (démarche 7.207).
 
 | Jeu « quatre », 60 cas jamais vus | Chaîne de règles (3 passages) | Lecture des clauses (1 passage) |
 |---|---|---|
