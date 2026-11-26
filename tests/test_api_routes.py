@@ -226,6 +226,11 @@ def test_en_ligne_le_contrat_ne_se_telecharge_pas(client, monkeypatch):
     assert client.get(f"/api/v1/contrats/{CONTRAT}/clauses/{citee}", headers=code).status_code == 200
     if autre:
         assert client.get(f"/api/v1/contrats/{CONTRAT}/clauses/{autre}", headers=code).status_code == 403
+        # 7.219 : une clause que la lecture des clauses a citée dans une réponse s'ouvre aussi, et elle seule.
+        from couverture.api import service
+        monkeypatch.setattr(service, "_CITEES_PAR_LA_LECTURE", {})
+        service.noter_citees(CONTRAT, [autre])
+        assert client.get(f"/api/v1/contrats/{CONTRAT}/clauses/{autre}", headers=code).status_code == 200
 
 
 def test_en_ligne_les_analyses_sont_comptees(client, monkeypatch):

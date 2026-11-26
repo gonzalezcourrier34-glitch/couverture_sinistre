@@ -245,7 +245,7 @@
                                             (click)="repondreLibrement(qi, reponsesLibres()[qi] === 'Non.' ? '' : 'Non.')">Non</button>
                                         <input type="text" class="champ-reponse" [attr.aria-label]="'Réponse du client : ' + q"
                                             placeholder="ou la réponse du client, en mots"
-                                            [value]="reponsesLibres()[qi] ?? ''" (input)="saisirReponse(qi, $event)">
+                                            [value]="reponsesLibres()[qi] || ''" (input)="saisirReponse(qi, $event)">
                                     </div>
                                 </div>
                             }

@@ -32,13 +32,18 @@ CREATE TABLE IF NOT EXISTS analyses (
     evenement TEXT, bien TEXT, lieu TEXT,
     citations_rejetees INTEGER, conditions_ecartees INTEGER, contestations INTEGER,
     questions TEXT, duree_ms INTEGER, erreur TEXT,
-    consignes TEXT
+    consignes TEXT,
+    tokens_envoyes INTEGER, tokens_recus INTEGER, tokens_cache INTEGER, cout_usd REAL
 );
 CREATE INDEX IF NOT EXISTS idx_analyses_date ON analyses(date);
 """
 COLONNES = ("date", "contrat_id", "methode", "juge", "decision", "decision_initiale", "decision_avant_relecture",
             "confiance", "longueur", "evenement", "bien", "lieu", "citations_rejetees", "conditions_ecartees",
-            "contestations", "questions", "duree_ms", "erreur", "consignes")
+            "contestations", "questions", "duree_ms", "erreur", "consignes",
+            "tokens_envoyes", "tokens_recus", "tokens_cache", "cout_usd")
+# Colonnes ajoutées après la création du journal : complétées à l'ouverture d'une base existante.
+AJOUTEES = {"consignes": "TEXT", "tokens_envoyes": "INTEGER", "tokens_recus": "INTEGER", "tokens_cache": "INTEGER",
+            "cout_usd": "REAL"}
 
 
 def sortie(ligne: dict) -> None:
@@ -55,8 +60,9 @@ class Journal:
         with sqlite3.connect(self.chemin) as cx:
             cx.executescript(SCHEMA_JOURNAL)
             colonnes = {r[1] for r in cx.execute("PRAGMA table_info(analyses)")}
-            if "consignes" not in colonnes:  # journal créé avant le versionnage des consignes
-                cx.execute("ALTER TABLE analyses ADD COLUMN consignes TEXT")
+            for nom, genre in AJOUTEES.items():   # journal créé avant ces colonnes (les consignes, puis les tokens : 7.219)
+                if nom not in colonnes:
+                    cx.execute(f"ALTER TABLE analyses ADD COLUMN {nom} {genre}")
 
     def noter(self, r: Resultat, duree_ms: int = 0, date: datetime | None = None) -> None:
         """Note une analyse : décision, confiance, faits repérés, points à préciser, durée, versions des consignes. Le texte
@@ -75,9 +81,11 @@ class Journal:
             sum(c.relecture == "contestee" for c in v.conditions),
             json.dumps(v.informations_manquantes, ensure_ascii=False), duree_ms, None,
             versions_courtes(),  # versions des consignes en service : quelle consigne a produit cette réponse
+            # Les tokens et le coût estimé du modèle de la lecture des clauses (7.219) ; vides pour la chaîne de règles.
+            r.tokens.get("envoyes"), r.tokens.get("recus"), r.tokens.get("cache"), r.cout_usd,
         )
         with sqlite3.connect(self.chemin) as cx:
-            cx.execute(f"INSERT INTO analyses VALUES ({','.join('?' * 19)})", ligne)
+            cx.execute(f"INSERT INTO analyses ({','.join(COLONNES)}) VALUES ({','.join('?' * len(COLONNES))})", ligne)
         sortie(dict(zip(COLONNES, ligne, strict=True)))
 
     def noter_erreur(self, contrat_id: str, methode: str, erreur: str, date: datetime | None = None) -> None:

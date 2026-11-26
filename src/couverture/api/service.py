@@ -132,6 +132,7 @@ def reponse(r: Resultat, d: dict | None = None) -> dict[str, Any]:
         "faits": faits_depuis(r.faits),
         "faits_affiches": prolog.faits_affiches(faits_depuis(r.faits)),
         "sinistres": [],
+        "chapitres": [],                         # la lecture des clauses seulement (7.218) : même forme partout
         "avertissements": v.avertissements,
         "raisonnement": v.raisonnement,
         "mode": v.mode,
@@ -255,6 +256,66 @@ def sinistres_distincts(pipeline, sinistre: str) -> list[dict]:
         return []
 
 
+# # Les clauses consultables en ligne (7.219)
+#
+# En ligne, l'article entier et la fiche ne servent que des clauses qu'une réponse peut citer, pour que le contrat ne
+# se télécharge pas clause par clause (7.161). Pour la chaîne de règles, ce sont celles que ses règles citent, connues
+# d'avance. La lecture des clauses peut citer n'importe quelle clause du dossier : on retient celles qu'elle a
+# effectivement citées dans une réponse rendue. En mémoire : un redémarrage les oublie, et une ancienne réponse se
+# relit alors par une nouvelle analyse.
+
+_CITEES_PAR_LA_LECTURE: dict[str, set[str]] = {}
+
+
+def noter_citees(contrat_id: str, ids) -> None:
+    """Retient les clauses qu'une réponse de la lecture des clauses vient de citer."""
+    _CITEES_PAR_LA_LECTURE.setdefault(contrat_id, set()).update(i for i in ids if i)
+
+
+def clauses_consultables(contrat_id: str) -> set[str]:
+    """Les clauses qu'une réponse cite ou a citées : celles des règles, et celles des lectures des clauses rendues."""
+    return prolog.clauses_citees(contrat_id) | _CITEES_PAR_LA_LECTURE.get(contrat_id, set())
+
+
+# # Les tokens de la lecture des clauses (7.219)
+
+# Tarif vérifié le 25 nov. 2026 (docs.mistral.ai), en dollars par million de tokens : envoyés, repris du cache, reçus.
+TARIFS = {"mistral-large": (1.36, 0.14, 4.18), "mistral-medium": (1.50, 0.15, 7.50), "mistral-small": (0.15, 0.015, 0.60)}
+
+
+def cout(modele: str, tokens: dict[str, int]) -> float | None:
+    """Le coût estimé d'une analyse, en dollars, d'après le tarif du modèle ; None pour un modèle sans tarif connu."""
+    tarif = next((t for nom, t in TARIFS.items() if nom in (modele or "")), None)
+    if tarif is None or not tokens:
+        return None
+    envoyes, cache, recus = tokens.get("envoyes", 0), tokens.get("cache", 0), tokens.get("recus", 0)
+    return round(((envoyes - cache) * tarif[0] + cache * tarif[1] + recus * tarif[2]) / 1e6, 5)
+
+
+class Compteur:
+    """Le modèle de la lecture des clauses, plus le compte de ses tokens. Une copie du client par compteur : à
+    plusieurs sinistres, les lectures vont en même temps, et chaque client garde l'usage de son dernier appel."""
+
+    def __init__(self, llm) -> None:
+        import copy
+
+        self.llm = copy.copy(llm)
+        self.accepte_schema = getattr(llm, "accepte_schema", False)
+        self.modele = getattr(llm, "modele", "")
+        self.envoyes = self.recus = self.cache = 0
+
+    def completer(self, systeme: str, message: str, **options) -> str:
+        texte = self.llm.completer(systeme, message, **options)
+        usage = getattr(self.llm, "dernier_usage", None) or {}
+        self.envoyes += usage.get("prompt_tokens") or 0
+        self.recus += usage.get("completion_tokens") or 0
+        self.cache += (usage.get("prompt_tokens_details") or {}).get("cached_tokens") or 0
+        return texte
+
+    def totaux(self) -> dict[str, int]:
+        return {"envoyes": self.envoyes, "recus": self.recus, "cache": self.cache}
+
+
 class SuiviCommun:
     """Le suivi de plusieurs lectures menées en même temps : une étape s'affiche commencée à la première qui y entre,
     finie quand toutes l'ont finie (le détail est celui de la dernière, précédé du nombre de sinistres)."""
@@ -345,8 +406,11 @@ def plusieurs_lectures(contrat_id: str, sinistre: str, lus: list[tuple[str, Resu
     verdict = Verdict(decision=decision, justification=justification, citations=citations,
                       informations_manquantes=questions, confiance=confiance, mode="clauses",
                       decision_initiale=decision, avertissements=avertissements, raisonnement=raisonnement)
+    tokens = {k: sum(r.tokens.get(k, 0) for _, r, _ in lus) for k in ("envoyes", "recus", "cache")}
     r = Resultat(sinistre=sinistre, contrat_id=contrat_id, methode="clauses", faits=lus[0][1].faits,
-                 clauses_consultees=[], verdict=verdict, durees_ms=durees, parties=[r for _, r, _ in lus])
+                 clauses_consultees=[], verdict=verdict, durees_ms=durees, parties=[r for _, r, _ in lus],
+                 tokens=tokens, cout_usd=round(sum(r.cout_usd or 0 for _, r, _ in lus), 5)
+                 if any(r.cout_usd is not None for _, r, _ in lus) else None)
     sortie = {
         "contrat_id": contrat_id, "decision": decision.value, "justification": justification, "confiance": confiance,
         "a_preciser": a_preciser, "questions": questions,
@@ -396,16 +460,20 @@ def analyser_clauses_un(base: Base, pipeline, contrat_id: str, sinistre: str, ll
         suivre("regles", detail)
         return r      # le résultat entier : sa décision, et ses obstacles pour la relecture ciblée (7.211)
 
+    compteur = Compteur(llm)
     with ThreadPoolExecutor(max_workers=1) as fil:
         en_cours = fil.submit(regles)
-        lu = lecture_des_clauses.lire(base, contrat_id, llm, declaration, suivi=suivre,
+        lu = lecture_des_clauses.lire(base, contrat_id, compteur, declaration, suivi=suivre,
                                       regles=lambda: contresigner(en_cours), chapitres=chapitres)
         r_regles = en_cours.result()[0]
     temps["lecture"] = int((time.perf_counter() - debut) * 1000)
     decision, desaccord = lu.decision, lu.desaccord
     if r_regles is None and decision == D.COUVERT:
         decision, desaccord = D.INCERTAIN, "les règles traduites n'ont pas répondu : un « couvert » non contresigné reste à examiner"
-    return resultat_clauses(base, contrat_id, sinistre, lu, decision, desaccord, r_regles, temps)
+    r, sortie = resultat_clauses(base, contrat_id, sinistre, lu, decision, desaccord, r_regles, temps)
+    r.tokens, r.cout_usd = compteur.totaux(), cout(compteur.modele, compteur.totaux())
+    noter_citees(contrat_id, [c["clause_id"] for c in sortie["citations"]] + [x["clause_id"] for x in sortie["limites"]])
+    return r, sortie
 
 
 def resultat_clauses(base: Base, contrat_id: str, sinistre: str, lu, decision, desaccord: str,

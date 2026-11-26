@@ -103,6 +103,38 @@ GROUP BY date(date) ORDER BY time""", empile=True),
         panneau("Part d'INCERTAIN par jour",
                 f"SELECT {JOUR} AS time, AVG(decision = 'INCERTAIN') AS incertain FROM analyses WHERE {OK} AND {PERIODE} "
                 f"GROUP BY date(date) ORDER BY time", unite="percentunit"),
+        titre_section("Les deux méthodes : volume, attente, coût (7.219)"),
+        panneau("Coût estimé de la lecture des clauses",
+                f"SELECT ROUND(SUM(cout_usd), 2) AS dollars FROM analyses WHERE {OK} AND {PERIODE}", "stat", 6, 4,
+                "D'après les tokens relevés à chaque analyse et le tarif du modèle (`service.TARIFS`). La chaîne de règles "
+                "n'est pas comptée.", "currencyUSD"),
+        panneau("Coût moyen d'une analyse par les clauses",
+                f"SELECT ROUND(AVG(cout_usd), 3) AS dollars FROM analyses WHERE {OK} AND {PERIODE} AND methode = 'clauses'",
+                "stat", 6, 4, unite="currencyUSD"),
+        panneau("Part des tokens envoyés repris du cache",
+                f"SELECT ROUND(1.0 * SUM(tokens_cache) / NULLIF(SUM(tokens_envoyes), 0), 2) AS cache FROM analyses "
+                f"WHERE {OK} AND {PERIODE} AND methode = 'clauses'", "stat", 6, 4,
+                "Repris du cache, un token envoyé coûte environ dix fois moins.", "percentunit"),
+        panneau("Analyses par les clauses", f"SELECT COUNT(*) AS analyses FROM analyses WHERE {OK} AND {PERIODE} AND methode = 'clauses'",
+                "stat", 6, 4),
+        panneau("Analyses par jour, par méthode",
+                f"""SELECT {JOUR} AS time,
+       SUM(methode = 'clauses') AS clauses,
+       SUM(methode != 'clauses') AS regles
+FROM analyses WHERE {OK} AND {PERIODE}
+GROUP BY date(date) ORDER BY time""", empile=True),
+        panneau("Coût estimé par jour",
+                f"SELECT {JOUR} AS time, ROUND(SUM(cout_usd), 3) AS dollars FROM analyses WHERE {OK} AND {PERIODE} "
+                f"GROUP BY date(date) ORDER BY time", unite="currencyUSD"),
+        panneau("Les deux méthodes, côte à côte",
+                f"""SELECT methode, COUNT(*) AS analyses,
+       ROUND(AVG(decision = 'INCERTAIN'), 2) AS part_incertain,
+       CAST(AVG(duree_ms) AS INTEGER) AS duree_moyenne_ms,
+       CAST(AVG(tokens_envoyes) AS INTEGER) AS tokens_envoyes_moyens,
+       CAST(AVG(tokens_recus) AS INTEGER) AS tokens_recus_moyens,
+       ROUND(AVG(cout_usd), 3) AS cout_moyen_usd
+FROM analyses WHERE {OK} AND {PERIODE}
+GROUP BY methode ORDER BY analyses DESC""", "table", 24, 6),
         titre_section("Fiabilité : ce que les contrôles rattrapent"),
         panneau("Rattrapages par jour",
                 f"""SELECT {JOUR} AS time,

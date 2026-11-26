@@ -33,8 +33,8 @@ Ce qui manque en ligne : un tableau de bord sur ces lignes (aucune requête n'es
 | Couche | Ce qu'on y voit | Où |
 |---|---|---|
 | **Banc** | Le golden set ou le jeu fermé rejoué : règles, lecture, chaîne, portes ; un rapport par passage | `couverture banc`, `data/bancs/`, `docs/METRIQUES.md` |
-| **Journal** | Une ligne par analyse : décision (avant contrôle et finale), confiance, faits, questions, durée, versions des consignes. Jamais le texte du sinistre | table `analyses`, `src/couverture/analyse/journal.py` |
-| **Grafana** | Deux tableaux, lus directement dans la base SQLite | `monitoring/grafana/` |
+| **Journal** | Une ligne par analyse : méthode, décision (avant contrôle et finale), confiance, faits, questions, durée, versions des consignes ; pour la lecture des clauses, les tokens envoyés, reçus et repris du cache, et le coût estimé (7.219). Jamais le texte du sinistre | table `analyses`, `src/couverture/analyse/journal.py` |
+| **Grafana** | Deux tableaux, lus directement dans la base SQLite ; le premier compare les deux méthodes (volume, attente, tokens, coût estimé) | `monitoring/grafana/` |
 | **Consignes** | La version et l'empreinte de chaque consigne envoyée au modèle | `config/versions_consignes.json`, `src/couverture/consignes.py` |
 
 **Garde-fou** : `config/versions_consignes.json` garde la version et l'empreinte de chaque consigne. Si un texte change sans que sa version change dans `src/couverture/consignes.py`, `couverture versions` et la CI échouent. Chaque version garde son texte dans `docs/consignes/`.

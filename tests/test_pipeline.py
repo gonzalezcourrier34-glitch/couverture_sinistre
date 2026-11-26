@@ -337,6 +337,26 @@ def test_en_ligne_le_journal_sort_aussi_sur_la_sortie_standard(tmp_path, monkeyp
     assert len(j.lignes(MAINTENANT - timedelta(days=1), MAINTENANT + timedelta(days=1))) == 3, "la base reçoit toujours tout"
 
 
+def test_le_journal_garde_les_tokens_et_le_cout_et_complete_une_ancienne_base(tmp_path):
+    """7.219 : les tokens et le coût estimé d'une lecture des clauses ; une base d'avant reçoit les colonnes."""
+    import sqlite3
+
+    chemin = str(tmp_path / "b.sqlite")
+    with sqlite3.connect(chemin) as cx:                  # un journal d'avant : sans les consignes ni les tokens
+        cx.execute("CREATE TABLE analyses (date TEXT, contrat_id TEXT, methode TEXT, juge TEXT, decision TEXT, "
+                   "decision_initiale TEXT, decision_avant_relecture TEXT, confiance REAL, longueur INTEGER, "
+                   "evenement TEXT, bien TEXT, lieu TEXT, citations_rejetees INTEGER, conditions_ecartees INTEGER, "
+                   "contestations INTEGER, questions TEXT, duree_ms INTEGER, erreur TEXT)")
+    j = Journal(chemin)
+    r = resultat()
+    r.tokens, r.cout_usd = {"envoyes": 20000, "recus": 10000, "cache": 5000}, 0.0617
+    j.noter(r, date=MAINTENANT)
+    j.noter(resultat(), date=MAINTENANT)
+    avec, sans = j.lignes(MAINTENANT - timedelta(days=1), MAINTENANT + timedelta(days=1))
+    assert (avec["tokens_envoyes"], avec["tokens_recus"], avec["tokens_cache"], avec["cout_usd"]) == (20000, 10000, 5000, 0.0617)
+    assert sans["tokens_envoyes"] is None and sans["cout_usd"] is None and avec["consignes"]
+
+
 # --- Versionnage des consignes (garde-fou de la CI) -----------------------------------------------
 
 from couverture import consignes  # noqa: E402

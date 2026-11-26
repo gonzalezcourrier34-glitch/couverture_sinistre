@@ -250,6 +250,29 @@ def test_la_relecture_apres_les_reponses_ne_redemande_pas_les_chapitres(base):
         "le même dossier, dans le même ordre : le cache du fournisseur le reprend"
 
 
+def test_la_lecture_compte_ses_tokens_et_retient_ses_clauses_citees(base, monkeypatch):
+    """7.219 : les tokens du modèle des clauses et leur coût estimé, pour le journal ; et les clauses citées, que l'on
+    pourra ouvrir en ligne (comme celles que les règles citent)."""
+    from couverture.api import service
+
+    class Large(Modele):
+        modele = "mistral-large-latest"
+
+        def completer(self, systeme, message):
+            self.dernier_usage = {"prompt_tokens": 10000, "completion_tokens": 4000,
+                                  "prompt_tokens_details": {"cached_tokens": 6000}}
+            return super().completer(systeme, message)
+
+    monkeypatch.setattr(service, "_CITEES_PAR_LA_LECTURE", {})
+    monkeypatch.setattr(service.prolog, "clauses_citees", lambda c: {"9.9"})
+    r, _ = service.analyser_clauses(base, Regles(Decision.COUVERT), "c1", DECLARATION,
+                                    Large({"chapitres": ["3.1.2"], "motif": ""}, jugements(**{"3_1_2_1": "couvre"})))
+    assert r.tokens == {"envoyes": 20000, "recus": 8000, "cache": 12000}, "deux appels : désigner, juger"
+    assert r.cout_usd == round((8000 * 1.36 + 12000 * 0.14 + 8000 * 4.18) / 1e6, 5)
+    assert service.clauses_consultables("c1") == {"9.9", "3.1.2.1"}
+    assert service.cout("un-modele-inconnu", r.tokens) is None
+
+
 def test_une_decision_differente_par_sinistre_laisse_l_ensemble_a_preciser():
     """Deux sinistres, deux décisions : pas de réponse pour le tout ; les questions portent le titre du sinistre."""
     from couverture.api import service

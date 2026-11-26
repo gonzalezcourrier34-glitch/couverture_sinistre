@@ -123,7 +123,7 @@ Neuf parties, dans l'ordre. Chaque étape garde son numéro, cité ailleurs dans
 | VI | 7.148 à 7.159 | Un quatrième contrat ajouté à froid : ce qui est général, ce qui ne l'est pas |
 | VII | 7.160 à 7.167 | Mettre en ligne, puis tout rejouer la veille de la livraison |
 | VIII | 7.168 à 7.189 | Finir A et B, puis des jeux jamais vus qui montrent un défaut de fond |
-| IX | 7.190 à 7.218 | La lecture des clauses : une seconde méthode, mesurée contre la première |
+| IX | 7.190 à 7.219 | La lecture des clauses : une seconde méthode, mesurée contre la première |
 
 ---
 
@@ -6295,6 +6295,32 @@ Le jugement, et sa réflexion, restent donc l'essentiel de la facture ; l'écono
 Trois tests (deux sinistres jugés chacun à part, suivi compris ; deux décisions différentes laissent l'ensemble « à
 préciser » ; la relecture ne redemande pas les chapitres et envoie le même dossier). Rien n'est mesuré sur un jeu : il en faudrait un fait de déclarations à plusieurs sinistres.
 
+### 7.219 Ce que la chaîne de règles avait, donné à la lecture des clauses : la consultation en ligne et le coût
+
+*26 novembre, 15 h 30.* « Ensuite enchaîne par 1 et 2 », les deux premiers points de l'inventaire de 7.218.
+
+**1. Les clauses citées s'ouvrent en ligne.** La garde de 7.161 ne servait, en ligne, que les clauses que les règles
+citent : un contrat ne doit pas se télécharger clause par clause. Mais la lecture des clauses peut citer toute clause
+de son dossier ; cliquée, une telle clause était refusée (403), et la fiche PDF l'omettait. La règle devient : une
+clause qu'une réponse cite. Pour la chaîne, celles de ses règles, connues d'avance ; pour la lecture des clauses,
+celles qu'elle a effectivement citées dans une réponse rendue (citations et limites), retenues en mémoire par contrat
+(`service.noter_citees`, `clauses_consultables`). L'article et la fiche passent par la même fonction. Un redémarrage
+du service les oublie : une ancienne réponse se relit alors par une nouvelle analyse. La garde reste entière pour
+toute clause qu'aucune réponse n'a montrée.
+
+**2. Le coût de chaque analyse, et les deux méthodes côte à côte.** Le modèle de la lecture des clauses passe par un
+compteur (`service.Compteur`, une copie du client par lecture : à plusieurs sinistres, elles vont en même temps) ;
+les tokens envoyés, reçus et repris du cache vont au résultat, avec un coût estimé d'après le tarif vérifié le
+25 novembre (`service.TARIFS`). Le journal gagne quatre colonnes (`tokens_envoyes`, `tokens_recus`, `tokens_cache`,
+`cout_usd`), ajoutées à une base existante à l'ouverture ; elles partent aussi sur la sortie standard en ligne, avec
+la ligne du journal. Le premier tableau Grafana gagne une section : le coût estimé sur la période, le coût moyen d'une
+analyse par les clauses, la part des tokens repris du cache, les analyses par jour et par méthode, le coût par jour,
+et les deux méthodes côte à côte (volume, part d'« à préciser », attente, tokens, coût). La chaîne de règles n'est pas
+comptée : ses modèles sont petits, et ses appels passent par d'autres clients.
+
+Trois tests (le compte et le coût d'une lecture, et les clauses retenues ; le journal sur une base d'avant ; une
+clause citée par la lecture s'ouvre en ligne, et elle seule). Les points 3 et 4 de l'inventaire restent ouverts.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 26 nov. 2026, après la mesure du jeu « cinq ». Dans l'ordre où je le ferais.
@@ -6310,10 +6336,8 @@ demande un jeu neuf.
 - Une exclusion citée face à un point « à vérifier » : laquelle doit l'emporter.
 - Le temps d'attente : deux à trois minutes, surtout la réflexion de Mistral Large.
 - *Ce que la chaîne de règles a, et que la lecture des clauses n'a pas encore* (relevé le 26 nov., 7.218) :
-  - en ligne, l'article entier et la fiche PDF ne servent que des clauses que les **règles** citent (la garde de 7.161
-    contre le téléchargement du contrat) : une clause citée par la seule lecture des clauses peut être refusée à
-    l'ouverture et manquer à la fiche ;
-  - le journal ne relève ni les tokens ni le coût d'une analyse, et les tableaux Grafana ne séparent pas les méthodes ;
+  - ~~en ligne, l'article entier et la fiche ne servent que des clauses que les règles citent~~ : fait (7.219) ;
+  - ~~le journal ne relève ni les tokens ni le coût, Grafana ne sépare pas les méthodes~~ : fait (7.219) ;
   - la stabilité n'est pas mesurée (la chaîne passe chaque jeu trois fois et compte ses cas instables) ;
   - les questions ne sont pas triées par leur effet : la chaîne ne pose que celles dont la réponse change la décision.
 - *Fait depuis 7.207* : une absence de couverture face à des règles qui hésitent (7.210), un doute qui ne peut pas
@@ -6340,7 +6364,7 @@ demande un jeu neuf.
 
 **4. En ligne.**
 - Un tableau de bord et une alerte sur le journal, qui part aujourd'hui dans les journaux de l'hébergeur (7.163).
-- Le coût par analyse : les tokens ne sont pas relevés.
+- Le coût par analyse : relevé pour la lecture des clauses depuis 7.219 ; pas pour la chaîne de règles.
 - Le temps du premier chargement quand le service dort.
 
 **5. Le reste.**
