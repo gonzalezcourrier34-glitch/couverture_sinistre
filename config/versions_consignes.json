@@ -1,4 +1,19 @@
 {
+  "couverture-clauses-arbitrage": {
+    "version": "v1",
+    "empreinte": "6af79d9abf388483",
+    "source": "couverture.analyse.clauses.SYSTEME_ARBITRAGE"
+  },
+  "couverture-clauses-designation": {
+    "version": "v1",
+    "empreinte": "31b391bf9478f6dd",
+    "source": "couverture.analyse.clauses.SYSTEME_DESIGNATION"
+  },
+  "couverture-clauses-jugement": {
+    "version": "v1",
+    "empreinte": "fe95644e6e8e7a71",
+    "source": "couverture.analyse.clauses.SYSTEME_JUGEMENT"
+  },
   "couverture-decoupage-sinistres": {
     "version": "v1",
     "empreinte": "f5556291b81006b0",

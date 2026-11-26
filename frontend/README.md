@@ -15,7 +15,7 @@ La clé de l'API n'entre jamais dans le navigateur : `proxy.conf.mjs` la lit dan
 
 | Fichier | Rôle |
 |---|---|
-| `src/app/app.component.*` | l'écran : contrat, déclaration, décision, questions au client, clauses citées |
+| `src/app/app.component.*` | l'écran : contrat, déclaration, choix de la méthode (lecture des clauses par défaut, ou chaîne de règles), décision, questions au client, clauses citées |
 | `src/app/couverture.service.ts` | appels à l'API `/api/v1` |
 | `src/app/couverture.model.ts` | types échangés avec l'API |
 | `src/app/presentation.ts` | libellés, couleurs, faits et réponses (testé) |

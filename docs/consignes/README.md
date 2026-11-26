@@ -10,7 +10,7 @@ version garde ici son **texte intégral**, dans `<consigne>/<version>.txt`.
 
 ## Historique
 
-En service : `lecture-socle` v2, `lecture-details` v3, `verification-faits` v3, `redaction-regles` v13 (voir `config/versions_consignes.json`). Les autres sont celles des méthodes retirées le 18 nov. 2026 (DEMARCHE 7.36) et le 20 nov. 2026 (`faits-regles`, `document-brut`, `legalbench` : 7.110).
+En service : pour la chaîne de règles, `lecture-socle` v2, `lecture-details` v3, `verification-faits` v3, `decoupage-sinistres` v1, `redaction-regles` v13 ; pour la lecture des clauses, `clauses-designation` v1, `clauses-jugement` v1, `clauses-arbitrage` v1 (voir `config/versions_consignes.json`). Les autres sont celles des méthodes retirées le 18 nov. 2026 (DEMARCHE 7.36) et le 20 nov. 2026 (`faits-regles`, `document-brut`, `legalbench` : 7.110).
 
 | Consigne | Version | Date | Pourquoi |
 |---|---|---|---|
@@ -56,3 +56,6 @@ En service : `lecture-socle` v2, `lecture-details` v3, `verification-faits` v3, 
 | `routage` | v1 | 17 nov. 2026 | Choisir les fiches quand l'événement n'est pas reconnu dans la déclaration |
 | `relecture`, `verdict-direct`, `document-brut`, `juge-qualite`, `reparation` | v1 | nov. 2026 | Versions d'origine |
 | `verdict-direct` | — | 17 nov. 2026 | Retirée avec la méthode « direct » ; v1 archivée |
+| `clauses-designation` | v1 | 26 nov. 2026 | Lecture des clauses : désigner les chapitres à relire, d'après la table des matières (7.190 à 7.207). Versionnée le 26 (7.217), en service depuis le 25 : la v1 est le texte mesuré sur le jeu « cinq » |
+| `clauses-jugement` | v1 | 26 nov. 2026 | Lecture des clauses : juger chaque clause (couvre, exclut, limite, à vérifier, sans effet) avec une citation du contrat et une de la déclaration ; même date, même remarque |
+| `clauses-arbitrage` | v1 | 26 nov. 2026 | La relecture ciblée : un obstacle des règles à la fois, écarté seulement par une citation de la déclaration (7.211) |

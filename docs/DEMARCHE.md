@@ -6248,20 +6248,31 @@ ce que j'ai appris, ce qui reste ouvert. Le README suit le même fil : l'histoir
 enjeux, les deux hypothèses l'une née de l'autre avec un tableau de leurs forces et faiblesses, et une partie
 nouvelle, « Comment j'évalue ». La fiche du projet dans le portfolio passe à la seconde méthode, aux chiffres du jeu
 « cinq » et à une conduite de la recherche en cinq temps ; la section « Ce que j'ai appris » du portfolio gagne une
-leçon de ce projet. Aucun chiffre nouveau : tous viennent des mesures déjà écrites ici.
+leçon de ce projet. Puis, à la question « et le reste de la doc est à jour ? » : `METRIQUES.md` (les jeux à l'aveugle,
+les métriques de la lecture des clauses, les mesures « quatre » et « cinq » en tête, le biais d'annotateurs qui lisent
+comme la méthode), `EXPLICATIONS.md` (les règles de 7.210, la relecture ciblée), la partie 8 de cette démarche et
+le README de l'écran. Et un oubli, trouvé en relisant : les trois consignes de la lecture des clauses (désigner,
+juger, relire un obstacle) n'étaient pas versionnées, alors que le projet versionne chaque consigne envoyée au modèle
+(`consignes.py`, avec son garde-fou en CI). Elles entrent dans `CONSIGNES` en v1, le texte mesuré sur le jeu « cinq » ; leur texte est archivé
+dans `docs/consignes/`, et le garde-fou de la CI les couvre désormais. Aucun chiffre nouveau : tous viennent des
+mesures déjà écrites ici.
 
 ## 8. Ce qui reste à faire
 
-Tenu à jour le 26 nov. 2026. Dans l'ordre où je le ferais.
+Tenu à jour le 26 nov. 2026, après la mesure du jeu « cinq ». Dans l'ordre où je le ferais.
 
-**0. La lecture des clauses, après sa mesure (7.207).** Rien de ceci n'est mesurable sur le jeu « quatre », qui a servi :
-chaque point demande un jeu neuf.
+**0. La lecture des clauses, après sa mesure sur le jeu « cinq » (7.215).** Ce jeu a servi lui aussi : chaque point
+demande un jeu neuf.
 - Mesurer le mode sans contresignature, sur un contrat sans règles traduites : la condition pour dire qu'elle s'étend à
-  un contrat nouveau.
-- Une absence de couverture face à des règles qui disent « à préciser » : la même garde qu'en 7.205.
+  un contrat nouveau. Le jeu « cinq » le suggère (chez D, six « couvert » justes retenus par la contresignature).
+- Ne faire contresigner que par des règles complètes : des règles traduites en partie retiennent des réponses justes
+  plus souvent qu'elles n'arrêtent une erreur (leçon 223).
+- Les refus cités hors de propos (une citation exacte, sans rapport avec ce qui est demandé) : deux relectures
+  essayées et retirées (7.212, 7.214) ; une autre voie reste à trouver.
 - Une exclusion citée face à un point « à vérifier » : laquelle doit l'emporter.
-- Les refus cités hors de propos : les soumettre aux règles quand elles répondent « à préciser ».
 - Le temps d'attente : deux à trois minutes, surtout la réflexion de Mistral Large.
+- *Fait depuis 7.207* : une absence de couverture face à des règles qui hésitent (7.210), un doute qui ne peut pas
+  faire couvrir (7.210), la relecture ciblée des obstacles des règles (7.211), la méthode au choix à l'écran (7.216).
 
 **1. La validation par le métier.** C'est la première limite du projet.
 - Faire relire les règles d'un contrat par un juriste ou un gestionnaire de sinistres, et mesurer sur ses propres cas.
@@ -6272,7 +6283,7 @@ chaque point demande un jeu neuf.
 - Les identifiants montrés au modèle sans définition. Celui de « auteur » a été défini, mesuré et retiré (7.166) : la piste est générale, mais elle demande un jour de mesures, pas une matinée.
 - La bougie fondue lue « accident » : la réponse est juste, sans la citation qui l'expliquerait (7.165).
 - Des déclarations nouvelles, validées, pour mesurer les exemples de B et de D (7.144), et un second lot que rien n'a encore corrigé.
-- Les erreurs qui se répètent : le vol dans une voiture chez B, la crue chez D (README, section 4).
+- Les erreurs qui se répètent : le vol dans une voiture chez B, la crue chez D (README, section 5).
 
 **3. Les contrats.**
 - Assureur C : les biens assurés, qui dépendent de la formule et de la qualité d'occupant, et un jeu de mesure (7.159).
@@ -6288,7 +6299,7 @@ chaque point demande un jeu neuf.
 
 **5. Le reste.**
 - Contrôle mécanique à écrire : aucune exclusion commune ne doit rendre une extension impossible (leçon 70).
-- Plusieurs biens déclarés ensemble : « couvert » dès qu'un seul entre dans une garantie (README, section 7).
+- Plusieurs biens déclarés ensemble : « couvert » dès qu'un seul entre dans une garantie (README, section 8).
 - L'alerte de dépendance signalée par GitHub.
 
 **Fait depuis le plan du 22 novembre** : le contrôle des variables sans événements (7.138), le doublon du vocabulaire (7.147), les libellés proposés par la rédaction (7.146), les exemples de B et D (7.144), le quatrième contrat à froid et son coût (7.148 à 7.159), la saisie des conditions particulières (7.141), la mise en ligne (7.160 à 7.163). Écartée : demander la victime pour tout sinistre (7.139).

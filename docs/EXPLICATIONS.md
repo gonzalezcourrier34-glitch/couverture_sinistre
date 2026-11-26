@@ -381,8 +381,8 @@ La seconde méthode, en quatre fichiers, du plus mécanique au seul qui appelle 
 
 - **`attendu.py`** calcule, du seul découpage et une fois par contrat, les tables `garanties` (repère, titre, chemin, optionnelle ou non) et `clauses_attendues` (pour chaque garantie, chaque clause à relire, son rôle, et si elle peut bloquer). *Pourquoi* : on ne constate un manque que si l'on a écrit d'avance ce qui devait être là ; la complétude d'une analyse devient une jointure SQL.
 - **`dossier.py`** compose le dossier d'un sinistre à partir des chapitres désignés, sans laisser de choix au modèle ; dans le doute, il élargit (une clause de trop coûte des tokens, une exclusion oubliée coûte un couvert à tort). Il reconnaît aussi, à leur titre, les clauses du règlement du sinistre (délai, estimation, franchise) : leurs questions deviennent des rappels.
-- **`jugement.py`** : les contrôles d'un jugement (clause au dossier, citations exactes, question présente), les rattrapages en code (identifiant rétabli, alinéa ramené à sa clause, citation de la déclaration abrégée par « … » acceptée quand chaque morceau y figure), la jointure, la décision (`decider`), la contresignature (`arbitrer`), et l'enregistrement des jugements. Rien n'y appelle le modèle.
-- **`clauses.py`** : les deux consignes (désigner, juger), les deux appels à Mistral Large, la relance des clauses oubliées, et l'analyse de bout en bout (`lire`), qui annonce ses étapes au suivi de l'écran. L'ordre de l'envoi est choisi pour le cache du fournisseur : ce qui ne change pas d'un sinistre à l'autre d'abord, la déclaration à la fin.
+- **`jugement.py`** : les contrôles d'un jugement (clause au dossier, citations exactes, question présente), les rattrapages en code (identifiant rétabli, alinéa ramené à sa clause, citation de la déclaration abrégée par « … » acceptée quand chaque morceau y figure), la jointure, la décision (`decider`), la contresignature (`arbitrer`), et l'enregistrement des jugements. Rien n'y appelle le modèle. Deux règles de décision viennent du dernier tour (DEMARCHE 7.210) : un doute qui ne peut pas faire couvrir (un chapitre sans garantie ni option, ou une garantie dont le seul doute est emprunté à une autre) ne tient plus la réponse en suspens ; et une absence de couverture, sans exclusion citée, ne l'emporte pas sur des règles qui disent « couvert » ou « à préciser » : la réponse devient « à préciser ».
+- **`clauses.py`** : les consignes (désigner, juger, relire un obstacle), les appels à Mistral Large, la relance des clauses oubliées, et l'analyse de bout en bout (`lire`), qui annonce ses étapes au suivi de l'écran. **La relecture ciblée** (`arbitrage_cible`, 7.211) : quand la lecture conclut « couvert » et que les règles ne suivent pas, le code tire de leur verdict les obstacles qu'elles opposent (une exclusion remplie ou inconnue, une condition non remplie ou inconnue, six au plus) et repose au modèle une seule question par obstacle ; il ne peut l'écarter qu'en citant la déclaration mot pour mot, et « couvert » n'est rendu que si tous sont écartés. Deux façons de relire les refus ont été essayées et retirées (7.212, 7.214). L'ordre de l'envoi est choisi pour le cache du fournisseur : ce qui ne change pas d'un sinistre à l'autre d'abord, la déclaration à la fin.
 
 *Ce qui a été écarté* : demander au modèle « ce sinistre est-il couvert ? ». Il ne voit jamais cette question : il désigne des chapitres, puis juge des clauses une à une ; la réponse est calculée.
 
@@ -404,7 +404,7 @@ La seconde méthode, en quatre fichiers, du plus mécanique au seul qui appelle 
 
 ### `src/couverture/consignes.py` — le versionnage des consignes
 
-**Rôle** : `CONSIGNES` liste les quatre consignes en service (lecture en deux temps : socle puis détails, vérification des faits, rédaction des règles), le texte qui porte chacune dans le code, et sa version.
+**Rôle** : `CONSIGNES` liste les huit consignes en service : pour la chaîne de règles, la lecture en deux temps (socle puis détails), la vérification des faits, le découpage d'une déclaration en sinistres et la rédaction des règles ; pour la lecture des clauses, la désignation des chapitres, le jugement des clauses et la relecture ciblée (versionnées le 26 nov., 7.217). Pour chacune, le texte qui la porte dans le code, et sa version.
 - **archive** : `ecrire_manifeste` écrit aussi le texte intégral de chaque nouvelle version dans `docs/consignes/<consigne>/<version>.txt`, sans jamais réécrire une version archivée. `verifier` échoue si le texte d'une version en service ne correspond plus à son archive. L'histoire des consignes (rédaction des règles v1 à v9, et celles des méthodes retirées) reste ainsi lisible, avec le pourquoi de chaque changement dans `docs/DEMARCHE.md` ;
 - `etat_actuel` calcule la version et l'empreinte de chaque texte ; `ecrire_manifeste` les écrit dans `config/versions_consignes.json` ;
 - `verifier` compare le code au manifeste et signale un texte modifié **sans nouvelle version**, ou un manifeste pas à jour. Un test l'appelle : la CI échoue ;
@@ -544,7 +544,7 @@ Le banc (`couverture banc`) mesure trois couches sur le golden set, avec des por
 
 **La lecture des clauses se mesure autrement** : `couverture juger --jeu …` rejoue un jeu une fois (le modèle coûte 8 à 10 centimes par cas), et compte justes, couverts à tort, refus à tort et « à préciser » au lieu d'une réponse. **La comparaison qui compte** est celle du jeu « quatre », jamais vu, passé une seule fois par les deux méthodes après le gel du code (26 nov., DEMARCHE 7.207) : chaîne de règles 42 sur 60, 4,3 couverts à tort, 2 refus à tort ; lecture des clauses 45 sur 60, 1 couvert à tort, 4 refus à tort. Puis celle du jeu « cinq », après le dernier tour de corrections (26 nov., DEMARCHE 7.215) : chaîne de règles 40,3 sur 60, 4,7 couverts à tort, 6 refus à tort ; lecture des clauses 53 sur 60, aucun couvert à tort, 1 refus à tort.
 
-**La chaîne de règles, sur ses anciens jeux** (24 nov. 2026 ; détail dans le README, section 4) : avec des faits exacts, les règles sont justes à 100 %. La chaîne complète donne 94 % de réponses justes sur la partie test de A, 98 à 100 % sur son jeu fermé, 85 % sur celui de B, 96 % sur celui de D. Un couvert à tort se répète chez B, un refus à tort chez D, et un cas de A est couvert à tort une fois sur trois certains jours. Toutes ces erreurs viennent de la lecture.
+**La chaîne de règles, sur ses anciens jeux** (24 nov. 2026 ; détail dans le README, section 5) : avec des faits exacts, les règles sont justes à 100 %. La chaîne complète donne 94 % de réponses justes sur la partie test de A, 98 à 100 % sur son jeu fermé, 85 % sur celui de B, 96 % sur celui de D. Un couvert à tort se répète chez B, un refus à tort chez D, et un cas de A est couvert à tort une fois sur trois certains jours. Toutes ces erreurs viennent de la lecture.
 
 ---
 
@@ -574,9 +574,9 @@ Le banc (`couverture banc`) mesure trois couches sur le golden set, avec des por
 | Pas de LangGraph | La chaîne est linéaire | Un graphe par habitude |
 | Mistral seul, derrière une interface `LLM` | Fournisseur européen ; un autre modèle se branche en une classe | Garder des fournisseurs qu'on ne teste pas |
 | En ligne : un code d'accès, le contrat non téléchargeable | Une page ouverte dépenserait le crédit du modèle et publierait le texte de quatre assureurs | Une démonstration publique |
-| Lire les clauses du contrat plutôt que seulement ses règles, et faire contresigner par les règles | Une clause que la traduction a manquée peut encore être vue ; sur un jeu jamais vu, quatre fois moins de couverts à tort, à justesse comparable | La chaîne de règles seule (gardée, choisissable) ; laisser le modèle décider du sinistre |
+| Lire les clauses du contrat plutôt que seulement ses règles, et faire contresigner par les règles | Une clause que la traduction a manquée peut encore être vue ; sur le dernier jeu jamais vu, 53 réponses justes sur 60 contre 40, aucun couvert à tort contre 4,7 | La chaîne de règles seule (gardée, choisissable) ; laisser le modèle décider du sinistre |
 | La décision de la lecture des clauses calculée par le code | Le modèle juge une clause à la fois ; la réponse se recalcule à partir des jugements gardés | Demander au modèle sa conclusion |
-| Une mesure unique sur un jeu jamais vu, code figé avant | Un jeu qui a servi à corriger flatte la méthode : l'écart de 48 contre 38 sur « neuf » est devenu 45 contre 42 sur « quatre » | Comparer sur les jeux de mise au point |
+| Une mesure unique sur un jeu jamais vu, code figé avant ; un jeu neuf à chaque tour de corrections | Un jeu qui a servi à corriger flatte la méthode : l'écart de 48 contre 38 sur « neuf » est devenu 45 contre 42 sur « quatre » ; après le dernier tour, 53 contre 40 sur « cinq » | Comparer sur les jeux de mise au point |
 | API FastAPI et interface Angular | Restitution claire, sur le modèle de SortirIA ; Streamlit déconseillé par le recruteur | Streamlit |
 
 ---
@@ -590,7 +590,7 @@ Parce qu'en assurance, une réponse non vérifiable ne vaut rien. Le modèle fai
 L'exclusion qui décide ne ressemble pas à la question (« vol de vélo » ressemble à « les vélos sont garantis », pas à « vols commis dans les parties communes »). Une recherche par ressemblance la rate. Les règles, elles, rattachent chaque exclusion à sa garantie une fois pour toutes. Une recherche hybride a été essayée, puis retirée (DEMARCHE 7.36).
 
 **Comment tenir des centaines de contrats ?**
-Par une méthode, pas par un bouton. Ce qui est commun ne change pas d'un contrat à l'autre : le moteur, la validation des citations, l'API, l'écran. Ce qui est propre à un contrat tient dans quatre fichiers de données. Ses garanties sont rédigées par Mistral Large, contrôlées par le code, relues, puis acceptées. Le quatrième contrat, ajouté à froid, a donné le coût réel : une heure de découpage, onze minutes de rédaction pour deux garanties, 22 contrôles bloquants, et une relecture qui ne se réduit pas (README, section 6). Pour des centaines de contrats, il faut des relecteurs du métier, un outil de relecture et un jeu de mesure par contrat.
+Par une méthode, pas par un bouton. Ce qui est commun ne change pas d'un contrat à l'autre : le moteur, la validation des citations, l'API, l'écran. Ce qui est propre à un contrat tient dans quatre fichiers de données. Ses garanties sont rédigées par Mistral Large, contrôlées par le code, relues, puis acceptées. Le quatrième contrat, ajouté à froid, a donné le coût réel : une heure de découpage, onze minutes de rédaction pour deux garanties, 22 contrôles bloquants, et une relecture qui ne se réduit pas (README, section 7). Pour des centaines de contrats, il faut des relecteurs du métier, un outil de relecture et un jeu de mesure par contrat.
 
 **Que fait le système quand il ne sait pas ?**
 Il répond INCERTAIN, avec la question qui tranche (« la cave était-elle fermée par une serrure de sûreté ? oui → couvert ; non → non couvert »). Quand seule une option des conditions particulières couvrirait, il répond « à préciser », avec le point à vérifier. Et un événement dont la garantie n'est pas encore traduite n'est jamais refusé : il est envoyé à un gestionnaire.
@@ -626,11 +626,11 @@ J'ai utilisé un assistant (Claude) pour écrire le code plus vite, comme le rec
 
 ## 10. Limites et suites
 
-**Limites actuelles** (23 nov. 2026, complétées le 26 ; la liste complète et tenue à jour est dans le README, section 7)
+**Limites actuelles** (23 nov. 2026, complétées le 26 ; la liste complète et tenue à jour est dans le README, section 8)
 - La lecture des clauses : deux à trois minutes et 8 à 10 centimes par analyse ; plus de refus à tort que la chaîne de règles ; une même déclaration ne reçoit pas toujours deux fois la même réponse ; jamais mesurée sans la contresignature des règles (DEMARCHE 7.207, 7.208).
 - Les règles n'ont pas été relues par un juriste ou un gestionnaire de sinistres, et les jeux de cas viennent de ceux qui ont écrit ou relu les règles.
-- La lecture des déclarations reste la principale source d'erreurs, et elle varie d'un appel à l'autre ; les chiffres du jour sont dans le README, section 4.
-- Chaque nouveau contrat demande une rédaction, non reproductible d'un essai à l'autre, puis une relecture humaine (README, section 6).
+- La lecture des déclarations reste la principale source d'erreurs, et elle varie d'un appel à l'autre ; les chiffres du jour sont dans le README, section 5.
+- Chaque nouveau contrat demande une rédaction, non reproductible d'un essai à l'autre, puis une relecture humaine (README, section 7).
 - Les conditions particulières ne sont pas lues dans le document du client : la formule et les options se saisissent avec la déclaration.
 - Le contrat C est partiel et n'a pas de jeu de mesure.
 - Le découpage repose sur des règles et des profils ; un format très inhabituel dépassera ce qu'un profil peut décrire.

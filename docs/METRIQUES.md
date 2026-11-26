@@ -1,8 +1,11 @@
 # Fiche métriques — comment on évalue le projet
 
 Ce qu'on mesure, sur quels cas, avec quels seuils, et ce que valent les chiffres.
-Commande unique : `uv run couverture banc --contrat assureur-a-habitation-2025` (rapports dans `data/bancs/`).
-Démarche et historique des mesures : [DEMARCHE.md](DEMARCHE.md), parties 7.21 et suivantes. Relu en entier le 24 nov. 2026 ; les chiffres du jour sont en tête de la section 5.
+Deux méthodes, deux commandes : `uv run couverture banc --contrat …` pour la chaîne de règles (trois passages, rapports
+dans `data/bancs/`), `uv run couverture juger --contrat … --jeu … --regles` pour la lecture des clauses (une passe,
+bilan dans `data/debug/`). Le raisonnement qui a conduit à cette méthode d'évaluation est raconté dans
+[COMPRENDRE, section 3](COMPRENDRE.md). Démarche et historique des mesures : [DEMARCHE.md](DEMARCHE.md), parties 7.21 et
+suivantes. Mis à jour le 26 nov. 2026 après la mesure du jeu « cinq » ; les chiffres qui comptent sont en tête de la section 5.
 
 ---
 
@@ -13,6 +16,7 @@ Démarche et historique des mesures : [DEMARCHE.md](DEMARCHE.md), parties 7.21 e
 | **Golden set** (référence) | `data/golden/` (v13, figé par empreinte, par contrat) | 97 (A) + 15 (B) | Rejoué à chaque changement ; toutes les métriques ci-dessous | Écrit par Claude en connaissant les règles, et il a servi à corriger le système : il mesure la **mise au point** |
 | … dont la **partie test** | `data/lecture/partage.json` | 38 sur 112 (31 pour A, 7 pour B) | Mise de côté le 20 nov. (7.107) : ne sert jamais à corriger le vocabulaire, les règles ou les exemples | Tirée du même jeu : même auteur, même biais |
 | **Jeu fermé** | `data/ferme/` | 20 (A) + 20 (B) + 25 (D) | La mesure de la **fidélité au contrat** : écrit à partir du seul texte des conditions générales, sans voir les règles (7.79) ; on ne corrige jamais en le regardant | Écrit par deux annotateurs automatiques et arbitré sur citations, pas par une personne du métier. C n'en a pas |
+| **Jeux écrits à l'aveugle** | `data/aveugle/`, `data/neuf/`, `data/quatre/`, `data/cinq/` | 60 chacun (20 par contrat : A, B, D) | Écrits de la même façon que le jeu fermé, chacun après un tour de corrections ; un second avis indépendant, un arbitrage sur le texte ; **mesurés une seule fois, code figé**, puis « vus » (7.185 à 7.187, 7.207, 7.215). « Quatre » et « cinq » comparent les deux méthodes | Mêmes limites que le jeu fermé. Pour « cinq », le second avis n'est plus Mistral Large, qui lit dans la méthode mesurée |
 | Mise au point d'origine | `data/sinistres.jsonl` | 14 | Les 2 cas du recruteur et 12 variations | Inclus dans le golden set |
 | Ancienne validation | `data/validation/` | 15 | Historique (7.17) | Inclus dans le golden set |
 | Rédaction | `data/redaction/` | 10 | Tempête et bris, écrits avant les règles | Inclus dans le golden set |
@@ -88,6 +92,24 @@ négatifs que la déclaration ne dit pas (« pas de violence »), et la consigne
 | Durée | Par exécution des cas du golden set | suivi |
 | Erreurs du fournisseur | Appels au modèle sans réponse | suivi |
 
+### Lecture des clauses (`couverture juger`)
+
+Une passe par jeu (8 à 10 centimes par cas) ; le bilan est gardé dans `data/debug/`. Pas de portes : la comparaison se
+fait jeu par jeu avec la chaîne de règles, passée sur les mêmes cas.
+
+| Métrique | Définition |
+|---|---|
+| **Justes ou admises** | Réponse égale à l'attendu ou dans `acceptables` |
+| **Couverts à tort**, **refus à tort** | Comme pour la chaîne de règles |
+| « À préciser » ou erreur à la place d'une réponse | Une question, ou une panne du fournisseur, là où le texte suffisait |
+| Désaccords avec les règles | La lecture conclut autrement que la chaîne de règles ; l'écran l'affiche |
+| Clauses attendues sans jugement | Une clause à relire que le modèle n'a pas jugée, même après relance : pas de réponse franche |
+| Jugements écartés | Une citation introuvable dans la clause ou dans la déclaration |
+| Tokens envoyés, repris du cache, reçus ; durée par cas | Le coût et l'attente |
+
+`juger --rejouer` rejoue les réponses gardées d'une passe précédente : il sert à vérifier une règle de décision sur un
+jeu vu, presque sans frais, jamais à mesurer.
+
 ### Passage à l'échelle (règles rédigées par le modèle, `couverture rediger`)
 
 | Métrique | Définition |
@@ -109,7 +131,30 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 
 ## 5. Dernières mesures
 
-Les plus récentes d'abord. Sous la première, l'historique complet depuis le 17 novembre : il n'est pas à lire d'un trait, il sert à retrouver ce qu'une modification a déplacé.
+Les plus récentes d'abord. Les deux premières sont les mesures qui comptent : les deux méthodes, sur des jeux jamais vus,
+code figé, une seule fois. Dessous, l'historique complet de la chaîne de règles depuis le 17 novembre : il n'est pas à
+lire d'un trait, il sert à retrouver ce qu'une modification a déplacé.
+
+**26 nov. 2026, 13 h 33 à 14 h 25, jeu « cinq »** (60 cas jamais vus, code figé au commit `de9ed60`, DEMARCHE 7.215) :
+
+| | Chaîne de règles (3 passages) | Lecture des clauses (1 passe) |
+|---|---|---|
+| Justes, A / B / D | 15,7 / 14,3 / 10,3 sur 20 | 20 / 19 / 14 sur 20 |
+| **Justes** | **40,3 sur 60** | **53 sur 60** |
+| **Couverts à tort** | **4,7** | **0** |
+| Refus à tort | 6 | 1 (`c-b08`) |
+| « À préciser » au lieu d'une réponse | 9 | 6 (tous chez D, par la contresignature) |
+| Durée d'une analyse | 3,5 à 5,2 s (médiane) | 177 s (médiane ; 71 à 366 s) |
+| Tokens (lecture des clauses) | — | 1,87 million envoyés, 0,88 million reçus |
+
+Portes de la chaîne de règles : échouent sur les trois contrats (couverts à tort, exactitude).
+
+**25 nov. 2026, soir, jeu « quatre »** (60 cas jamais vus, code figé, DEMARCHE 7.207) : chaîne de règles 42 sur 60,
+4,3 couverts à tort, 2 refus à tort, 8,7 « à préciser » de trop ; lecture des clauses 45 sur 60, 1 couvert à tort,
+4 refus à tort, 10 « à préciser » de trop.
+
+**25 nov. 2026, jeux « aveugle » et « neuf », chaîne de règles seule** (DEMARCHE 7.185 à 7.187) : « aveugle » A 95 %,
+B 58 %, D 78 % ; « neuf » 38 sur 60 et 7 couverts à tort.
 
 **24 nov. 2026, 10 h 40 à 10 h 47, état livré** (Mistral Medium lit, Mistral Small vérifie ; après quatre retouches de la phrase de réponse, qui ne changent aucune décision, 7.164 à 7.167) : partie test de A **94 %** (0 couvert à tort), jeu fermé de A **100 %** (0), de B **85 %** (1 couvert à tort, `f-b18`), de D **96 %** (0 ; 1 refus à tort). 4 à 4,8 s par cas en médiane, 7 s au plus au 95e centile. 231 tests passés.
 
@@ -359,6 +404,12 @@ poste) : 2 incertains sur 16 tranchables par une ou deux questions, 8 questions 
   déclaration de la même façon. Un cas (`f-a02`) passe de « non couvert » à « couvert » d'une série à l'autre sans
   que rien ne change. Avant d'attribuer un écart à une modification, le banc se rejoue dans les deux états (7.166).
 - **Comparabilité** : chaque rapport note la version du golden set, son empreinte et le modèle de lecture.
+- **Annotateurs et méthode qui lisent de la même façon** : les réponses attendues des jeux à l'aveugle viennent de
+  modèles qui lisent le contrat ; la lecture des clauses aussi. Si un modèle et un juriste comprennent une clause
+  différemment, le jeu favorise la lecture des clauses. D'où, pour « cinq », un second avis qui n'est pas Mistral Large ;
+  la limite reste tant qu'un jeu n'est pas relu par quelqu'un du métier.
+- **Deux jeux ne se comparent pas au point près** : chacun a sa difficulté. La comparaison qui vaut est celle des deux
+  méthodes sur le même jeu.
 
 ---
 
@@ -398,7 +449,7 @@ devient « incertain ». Deux colonnes : la réponse du modèle, et la réponse 
 | Couverts / refus à tort | Comme le banc | Le coût métier |
 | Citations introuvables | Réponses fermes dont la phrase citée n'est pas dans la clause | Ce que le contrôle attrape |
 
-Résultat (18 nov., Mistral Small, 133 cas) : le modèle cite juste, mais tranche 90 % des cas que des lecteurs jugent ambigus (README, section 5). C'est ce que les règles évitent. La commande a été retirée avec la simplification du 20 nov. (7.110) ; les données restent dans `data/externes/legalbench/`, avec leur attribution (CC BY 4.0).
+Résultat (18 nov., Mistral Small, 133 cas) : le modèle cite juste, mais tranche 90 % des cas que des lecteurs jugent ambigus (README, section 6). C'est ce que les règles évitent. La commande a été retirée avec la simplification du 20 nov. (7.110) ; les données restent dans `data/externes/legalbench/`, avec leur attribution (CC BY 4.0).
 
 ---
 
@@ -408,7 +459,8 @@ Résultat (18 nov., Mistral Small, 133 cas) : le modèle cite juste, mais tranch
 2. **Valider le golden set** (`couverture banc --fiche`, puis `--figer "validation"`) : ses réponses sont proposées, pas validées.
 3. Plus de cas dont la bonne réponse est « incertain » dans le golden set.
 4. Assureur B : les faits idéaux sans valeurs par défaut que la déclaration ne dit pas.
-5. Relever les tokens, pour donner un coût par analyse.
+5. Relever les tokens de la chaîne de règles (`juger` les relève pour la lecture des clauses).
 6. Resserrer la porte de latence (10 s ; mesuré à 7 s au plus).
+7. Mesurer la lecture des clauses sans contresignature, sur un contrat jamais traduit, avec un jeu neuf.
 
-Fait depuis la première version de cette liste : le jeu fermé (7.79), le partage mise au point / test (7.107), la lecture par Mistral Large et par Medium mesurées (7.37, 7.118, 7.136), LegalBench passé (7.37).
+Fait depuis la première version de cette liste : les jeux à l'aveugle mesurés une seule fois (7.185 à 7.215), le jeu fermé (7.79), le partage mise au point / test (7.107), la lecture par Mistral Large et par Medium mesurées (7.37, 7.118, 7.136), LegalBench passé (7.37).

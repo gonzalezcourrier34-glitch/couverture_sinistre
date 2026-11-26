@@ -36,6 +36,11 @@ CONSIGNES: dict[str, tuple[str, str, str]] = {
     "couverture-verification-faits": ("couverture.analyse.lecture", "SYSTEME_VERIFICATION", "v3"),
     "couverture-decoupage-sinistres": ("couverture.analyse.lecture", "SYSTEME_DECOUPAGE", "v1"),
     "couverture-redaction-regles": ("couverture.redaction", "SYSTEME_REDACTION", "v13"),
+    # La lecture des clauses (7.190 à 7.211), versionnée le 26 nov. 2026 (7.217) : en service depuis le 25, sans version
+    # jusque-là ; la v1 est le texte mesuré sur le jeu « cinq ».
+    "couverture-clauses-designation": ("couverture.analyse.clauses", "SYSTEME_DESIGNATION", "v1"),
+    "couverture-clauses-jugement": ("couverture.analyse.clauses", "SYSTEME_JUGEMENT", "v1"),
+    "couverture-clauses-arbitrage": ("couverture.analyse.clauses", "SYSTEME_ARBITRAGE", "v1"),
 }
 
 RACINE = Path(__file__).resolve().parents[2]
