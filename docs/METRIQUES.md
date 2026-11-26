@@ -112,7 +112,8 @@ jeu vu, presque sans frais, jamais à mesurer.
 
 **La stabilité** (7.220), comme les trois passages du banc : `juger --passage 2`, `--passage 3` repassent un jeu en
 gardant chaque passe à part ; `juger --stabilite --jeu … --contrat tous` compte, sur les cas communs aux passes, ceux
-dont la décision change, ceux dont la décision tient sur d'autres clauses, et la justesse de chaque passe.
+dont la décision change, ceux dont la décision tient sur d'autres clauses, et la justesse de chaque passe. Mesurée
+le 26 novembre au soir : 7 cas instables sur 30, aucun entre « couvert » et « non couvert » (section 5).
 
 ### Passage à l'échelle (règles rédigées par le modèle, `couverture rediger`)
 
@@ -138,6 +139,23 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 Les plus récentes d'abord. Les deux premières sont les mesures qui comptent : les deux méthodes, sur des jeux jamais vus,
 code figé, une seule fois. Dessous, l'historique complet de la chaîne de règles depuis le 17 novembre : il n'est pas à
 lire d'un trait, il sert à retrouver ce qu'une modification a déplacé.
+
+**26 nov. 2026, soir, stabilité de la lecture des clauses sur le jeu « cinq »** (DEMARCHE 7.221) : passes 2 et 3 sur
+dix cas par contrat (`--echantillon 10`), comparées à la passe 1 sur les mêmes trente cas.
+
+| Contrat | Justes, passes 1 / 2 / 3 | Couverts à tort | Refus à tort | Cas instables | Même décision, autres clauses |
+|---|---|---|---|---|---|
+| A | 10 / 10 / 7 | 0 / 0 / 0 | 0 / 0 / 0 | 3 sur 10 | 1 sur 7 |
+| B | 9 / 8 / 9 | 0 / 0 / 0 | 1 / 0 / 0 | 3 sur 10 | 0 sur 7 |
+| D | 7 / 7 / 7 | 0 / 0 / 0 | 0 / 0 / 0 | 1 sur 10 | 3 sur 9 |
+| **Ensemble** | **26 / 25 / 23 sur 30** (82 % en moyenne) | **0** | **1 sur 90** | **7 sur 30** | 4 sur 23 |
+
+Les sept cas instables passent tous entre une réponse franche et « à préciser » ; aucun entre « couvert » et « non
+couvert ». Causes lues dans les sorties : la contresignature (la lecture conclut « couvert », les règles ne suivent
+pas), une citation jugée inexacte qui laisse une clause attendue sans jugement, une absence de couverture face à des
+règles qui hésitent ; et en amont, des chapitres désignés très différents d'une passe à l'autre (de 92 à 290 clauses
+au dossier pour un même cas). Tokens des passes 2 et 3 : 1,70 million envoyés, 0,84 million reçus, environ 5,8 $
+(moins de 10 centimes par cas). Seuil de la chaîne de règles (≤ 3 instables) : non tenu.
 
 **26 nov. 2026, 13 h 33 à 14 h 25, jeu « cinq »** (60 cas jamais vus, code figé au commit `de9ed60`, DEMARCHE 7.215) :
 

@@ -6350,6 +6350,36 @@ au-delà de six doutes (729 combinaisons), on ne cherche pas. Les mesures ne bou
 
 Deux tests (trois passes comparées ; une question sans effet retirée, une seule question gardée).
 
+### 7.221 La stabilité de la lecture des clauses, mesurée : elle varie, mais vers la prudence
+
+*26 novembre, soir.* Mesure annoncée en 7.220 (option B, environ 5 à 6 $) : passes 2 et 3 du jeu « cinq », dix cas
+par contrat, puis `juger --stabilite`. Le cœur de la lecture n'a pas changé depuis la passe 1 (7.218 à 7.220 sont dans
+le service, ou ne touchent pas la décision).
+
+| Contrat | Justes, passes 1 / 2 / 3 | Couverts à tort | Refus à tort | Instables |
+|---|---|---|---|---|
+| A | 10 / 10 / 7 | 0 | 0 | 3 sur 10 (`c-a02`, `c-a07`, `c-a08`, tous à la passe 3) |
+| B | 9 / 8 / 9 | 0 | 1 (passe 1, `c-b08`) | 3 sur 10 (`c-b04`, `c-b07`, `c-b08`) |
+| D | 7 / 7 / 7 | 0 | 0 | 1 sur 10 (`c-d02`) |
+| **Ensemble** | **26 / 25 / 23 sur 30** | **0 sur 90** | **1 sur 90** | **7 sur 30** |
+
+**Ce que je lis.**
+- *Le niveau.* 82 % en moyenne sur ces trente cas, contre 87 % à la seule passe 1 (et 88 % sur les soixante) : une
+  passe unique flatte. Le chiffre de 53 sur 60 reste vrai, mais il faut le lire avec cette marge.
+- *Le sens des écarts.* Les sept cas instables vont et viennent entre une réponse franche et « à préciser » ; aucun ne
+  passe de « couvert » à « non couvert ». Aucun couvert à tort sur quatre-vingt-dix analyses. Le refus à tort de la
+  passe 1 (`c-b08`) devient « à préciser » aux deux suivantes.
+- *Les causes, dans les sorties.* (1) La contresignature : la lecture conclut « couvert », les règles répondent autre
+  chose, la réponse devient « à préciser » (`c-a02`, `c-a07` à la passe 3 ; `c-d01`, `c-d06`, `c-d09` à chaque passe,
+  donc stables mais fausses). (2) Une citation jugée inexacte, qui laisse une clause attendue sans jugement (`c-b07`
+  passe 2, `c-d01` passe 3). (3) « Aucune garantie ne couvre » face à des règles qui hésitent (`c-a08`, `c-b04`
+  passe 3). En amont de tout cela, la désignation : un même cas reçoit 92 clauses au dossier à une passe et 290 à une
+  autre (`c-b06`), et les chapitres désignés diffèrent presque toujours.
+- *Ce que je n'en fais pas.* Pas de correction sur ce jeu : il est vu deux fois de plus. Les pistes vont au §8.
+
+Coût : 1,70 million de tokens envoyés et 0,84 million reçus pour les deux passes, environ 5,8 $ (moins de 10 centimes
+par cas) ; 47 à 73 s par cas en parallèle, 2 à 7 minutes par analyse.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 26 nov. 2026, après la mesure du jeu « cinq ». Dans l'ordre où je le ferais.
@@ -6367,7 +6397,11 @@ demande un jeu neuf.
 - *Ce que la chaîne de règles a, et que la lecture des clauses n'a pas encore* (relevé le 26 nov., 7.218) :
   - ~~en ligne, l'article entier et la fiche ne servent que des clauses que les règles citent~~ : fait (7.219) ;
   - ~~le journal ne relève ni les tokens ni le coût, Grafana ne sépare pas les méthodes~~ : fait (7.219) ;
-  - la stabilité n'est pas mesurée : de quoi la mesurer est construit (7.220), la mesure reste à lancer ;
+  - ~~la stabilité n'est pas mesurée~~ : mesurée (7.221), 7 cas instables sur 30, aucun entre « couvert » et « non
+    couvert » ;
+- Rendre la désignation des chapitres plus stable (d'une passe à l'autre, le dossier d'un même cas passe de 92 à 290
+  clauses), et revoir ce que la contresignature fait d'un désaccord : ce sont les deux sources des cas instables
+  (7.221). À mesurer sur un jeu neuf, en trois passes.
   - ~~les questions ne sont pas triées par leur effet~~ : fait (7.220).
 - *Fait depuis 7.207* : une absence de couverture face à des règles qui hésitent (7.210), un doute qui ne peut pas
   faire couvrir (7.210), la relecture ciblée des obstacles des règles (7.211), la méthode au choix à l'écran (7.216),
@@ -6628,3 +6662,4 @@ demande un jeu neuf.
 221. Relire une clause seule, hors de son dossier, n'est pas la relire mieux : sans la définition et la garantie voisine, une exclusion juste paraît hors de propos. Une règle symétrique d'une règle qui marche n'est pas une règle qui marche : elle se mesure.
 222. Quand une sortie est uniforme (« inconnu » partout), lire les réponses brutes avant de conclure : c'était mon code qui ne reconnaissait pas l'identifiant recopié par le modèle.
 223. Un contre-pouvoir vaut ce que vaut ce qui contresigne : des règles traduites en partie retiennent des réponses justes plus souvent qu'elles n'arrêtent une erreur. Le voir sur le jeu de mesure ne permet pas de le corriger sur ce jeu.
+224. Une passe unique flatte : 87 % à la première, 82 % en moyenne sur trois. Et l'instabilité se lit par son sens autant que par son nombre : sept cas qui varient entre une réponse et une question ne valent pas un seul qui varie entre « couvert » et « non couvert ».

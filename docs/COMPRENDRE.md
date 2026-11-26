@@ -370,6 +370,16 @@ la lecture concluait « couvert », à raison ; les règles de D, traduites en p
 contresignature, ces six réponses auraient été justes. Je ne la retire pas pour autant : décider de la retirer en
 voyant ce jeu serait régler le système sur le jeu qui le mesure. C'est une piste pour un jeu neuf.
 
+**Et si je la repasse ?** La chaîne de règles passe chaque jeu trois fois ; la lecture des clauses, une seule. Le soir
+même, j'ai repassé dix cas par contrat deux fois de plus. Sur ces trente cas, les trois passes donnent 26, 25 et 23
+réponses justes : la première avait eu un peu de chance, et le niveau à attendre est plus près de 82 % que de 88 %.
+Sept cas sur trente changent de réponse, bien plus que la chaîne de règles. Ce qui me rassure, c'est le sens de ces
+changements : aucun ne passe de « couvert » à « non couvert ». Chaque fois, une réponse franche devient « à préciser »,
+ou l'inverse. Sur quatre-vingt-dix analyses, toujours aucun couvert à tort. En lisant les sorties, je vois d'où vient
+la variation : le modèle ne désigne pas les mêmes chapitres d'une passe à l'autre (un même cas a eu 92 clauses au
+dossier, puis 290), et la contresignature transforme alors un désaccord en « à préciser ». L'instabilité coûte des
+questions au client, pas des promesses fausses.
+
 ### Les deux méthodes en un tableau
 
 | | Première méthode (règles) | Seconde méthode (clauses) |
@@ -379,8 +389,8 @@ voyant ce jeu serait régler le système sur le jeu qui le mesure. C'est une pis
 | Travail par contrat | Découpage, traduction, vocabulaire, relecture humaine | Découpage et clauses attendues ; les règles servent à contresigner |
 | Où elle se trompe | À la traduction : une règle fausse, un fait que le vocabulaire ne connaît pas | À la lecture : une clause mal jugée, une citation exacte mais hors de propos |
 | Le raisonnement montré | Un arbre de preuve, condition par condition | Le jugement de chaque clause, avec ses deux citations |
-| Même réponse deux fois ? | Presque : 0 à 4 cas sur 96 changent | Pas garanti : le modèle juge, et peut juger autrement |
-| Justesse sur le dernier jeu neuf | 40 sur 60, 4,7 couverts à tort | 53 sur 60, aucun couvert à tort |
+| Même réponse deux fois ? | Presque : 0 à 4 cas sur 96 changent | Non : 7 cas sur 30, toujours entre une réponse franche et « à préciser » |
+| Justesse sur le dernier jeu neuf | 40 sur 60, 4,7 couverts à tort | 53 sur 60 en une passe (82 % en moyenne sur trois), aucun couvert à tort |
 | Durée, coût | Quelques secondes, très peu | Deux à trois minutes, 8 à 10 centimes |
 
 Les deux restent dans le produit. À l'écran, une liste « Méthode » sur la ligne de la déclaration laisse choisir :
@@ -437,7 +447,9 @@ appliqué ici presque tel quel.
 2. Ne faire contresigner que par des règles complètes : un contrat traduit en partie retient des « couvert » justes
    plus souvent qu'il n'arrête une erreur.
 3. Faire relire un jeu par quelqu'un du métier, et mesurer l'écart avec les annotateurs automatiques.
-4. Réduire l'attente, en profitant davantage du cache du fournisseur.
+4. Rendre la désignation des chapitres plus stable : c'est d'elle que vient la plus grande part des réponses qui
+   changent d'une passe à l'autre.
+5. Réduire l'attente, en profitant davantage du cache du fournisseur.
 
 Chacune demandera un jeu de cas neuf : « cinq » a servi.
 
