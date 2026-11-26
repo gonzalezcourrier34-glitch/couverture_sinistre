@@ -17,7 +17,8 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 
 from ..llm import LLM, completer_avec_schema, extraire_json
-from ..models import Clause, Decision
+from ..models import Clause, Condition, Decision, EtatCondition
+from ..texte import normaliser
 from . import attendu, dossier, jugement
 
 SYSTEME_DESIGNATION = """Tu prépares le dossier d'un sinistre pour un gestionnaire d'assurance habitation. On te donne la table des matières des conditions générales du contrat et la déclaration de l'assuré. Désigne les chapitres qu'il faut relire pour dire si le sinistre est couvert.
@@ -80,6 +81,81 @@ SCHEMA_JUGEMENT = {
                        "question": {"type": "string"}, "motif": {"type": "string"}}}}}}
 
 
+# L'arbitrage ciblé (7.211) : la lecture couvre, les règles non. Plutôt que de s'en tenir au désaccord, on repose au
+# modèle une seule question par obstacle que les règles ont trouvé : la déclaration l'écarte-t-elle ?
+SYSTEME_ARBITRAGE = """Tu es gestionnaire de sinistres. Une première lecture des conditions générales conclut que le sinistre déclaré est couvert. Une seconde lecture, faite par des règles traduites du contrat, ne le couvre pas, à cause des obstacles listés ci-dessous : pour chacun, la clause du contrat, ce que les règles ont vérifié, et ce qu'elles en ont conclu.
+
+Pour chaque obstacle, dis si la déclaration l'écarte :
+- « ecarte » : la déclaration dit en toutes lettres ce qui fait que l'obstacle ne joue pas (le fait qui remplit la condition, ou qui sort le sinistre de l'exclusion). Recopie mot pour mot, dans « extrait_declaration », la phrase de la déclaration qui le dit.
+- « confirme » : l'obstacle joue bien pour ce sinistre.
+- « inconnu » : la déclaration ne permet pas de le dire.
+
+Tu n'écartes un obstacle que sur ce qui est écrit dans la déclaration, jamais sur ce qui est probable ou habituel. Dans le doute, réponds « inconnu ». Le sens des mots est celui du contrat."""
+
+SCHEMA_ARBITRAGE = {
+    "type": "object", "additionalProperties": False, "required": ["obstacles"],
+    "properties": {"obstacles": {"type": "array", "items": {
+        "type": "object", "required": ["numero", "avis"],
+        "properties": {"numero": {"type": "integer"}, "avis": {"type": "string", "enum": ["ecarte", "confirme", "inconnu"]},
+                       "extrait_declaration": {"type": "string"}, "motif": {"type": "string"}}}}}}
+
+MAX_OBSTACLES = 6  # au-delà, le désaccord est trop large pour une relecture ciblée : on reste à préciser
+
+
+def obstacles_des_regles(regles) -> list[Condition]:
+    """Ce qui, dans la réponse des règles, empêche de couvrir : une exclusion établie ou possible, une condition de
+    garantie ou une obligation non remplie ou inconnue. `regles` : le résultat de la chaîne (avec son verdict), ou
+    une simple décision, qui n'en dit rien."""
+    verdict = getattr(regles, "verdict", None)
+    if verdict is None:
+        return []
+    vus, obstacles = set(), []
+    for c in verdict.conditions:
+        joue = (c.etat in (EtatCondition.REMPLIE, EtatCondition.INCONNUE) if c.nature == "exclusion"
+                else c.etat in (EtatCondition.NON_REMPLIE, EtatCondition.INCONNUE) if c.nature in ("garantie", "obligation")
+                else False)
+        if joue and (c.clause_id, c.enonce) not in vus:
+            vus.add((c.clause_id, c.enonce))
+            obstacles.append(c)
+    return obstacles
+
+
+def message_arbitrage(obstacles: list[Condition], par_id: dict[str, Clause], decision_regles: Decision,
+                      declaration: str) -> str:
+    """Chaque obstacle numéroté : la clause entière, la question que les règles lui ont posée, leur conclusion."""
+    conclusions = {EtatCondition.REMPLIE: "oui", EtatCondition.NON_REMPLIE: "non", EtatCondition.INCONNUE: "inconnu"}
+    blocs = []
+    for n, c in enumerate(obstacles, 1):
+        texte = par_id[c.clause_id].texte if c.clause_id in par_id else c.extrait
+        nature = "exclusion" if c.nature == "exclusion" else "condition de garantie" if c.nature == "garantie" else c.nature
+        blocs.append(f"### Obstacle {n} : {nature}, clause [{c.clause_id}]\n{texte}\n"
+                     f"Ce que les règles ont vérifié : {c.enonce} → {conclusions[c.etat]}"
+                     + (f" ({c.justification})" if c.justification else ""))
+    return (f"Réponse des règles : {decision_regles.value}\n\n" + "\n\n".join(blocs)
+            + f"\n\n## Déclaration\n{declaration}")
+
+
+def arbitrage_cible(llm: LLM, obstacles: list[Condition], par_id: dict[str, Clause], decision_regles: Decision,
+                    declaration: str) -> tuple[bool, list[str]]:
+    """La relecture ciblée : le « couvert » tient si, et seulement si, chaque obstacle est écarté par une phrase de
+    la déclaration, retrouvée mot pour mot. Rend ce verdict et une ligne par obstacle, pour le raisonnement."""
+    reponse = extraire_json(completer_avec_schema(llm, SYSTEME_ARBITRAGE,
+                                                  message_arbitrage(obstacles, par_id, decision_regles, declaration),
+                                                  SCHEMA_ARBITRAGE))
+    avis = {a.get("numero"): a for a in reponse.get("obstacles") or [] if isinstance(a, dict)}
+    declaration_n = normaliser(declaration)
+    tient, lignes = True, []
+    for n, c in enumerate(obstacles, 1):
+        a = avis.get(n) or {}
+        extrait = str(a.get("extrait_declaration") or "")
+        ecarte = a.get("avis") == "ecarte" and bool(extrait) and jugement._dans_la_declaration(extrait, declaration_n)
+        tient = tient and ecarte
+        etat = ("écarté" if ecarte else "écarté sans citation exacte : non retenu" if a.get("avis") == "ecarte"
+                else "confirmé" if a.get("avis") == "confirme" else "inconnu")
+        lignes.append(f"art. {c.clause_id} ({c.enonce}) : {etat}" + (f" ← « {extrait} »" if ecarte else ""))
+    return tient, lignes
+
+
 @dataclass
 class Lecture:
     """Ce qu'une lecture des clauses a produit, de la désignation à la décision."""
@@ -92,6 +168,7 @@ class Lecture:
     desaccord: str = ""
     relancees: list[str] = field(default_factory=list)      # les clauses redemandées au modèle, faute de jugement
     rappels: list[jugement.Jugement] = field(default_factory=list)   # questions du règlement, sans effet sur la décision
+    arbitrage: list[str] = field(default_factory=list)  # la relecture ciblée des obstacles des règles, s'il y en a eu
 
 
 def message_designation(clauses: list[Clause], declaration: str) -> str:
@@ -139,9 +216,11 @@ def garanties_touchees(garanties: list[attendu.Garantie], clauses: list[Clause],
 
 def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | Callable | None = None,
          llm_designation: LLM | None = None, garder: bool = False, suivi: Callable | None = None) -> Lecture:
-    """L'analyse d'une déclaration par la lecture des clauses. `regles` : la décision de la chaîne de règles sur
+    """L'analyse d'une déclaration par la lecture des clauses. `regles` : la réponse de la chaîne de règles sur
     la même déclaration, pour la contresignature (rien : la lecture tient seule) ; ou une fonction qui la rend,
-    appelée au moment de contresigner, pour que la chaîne tourne pendant la lecture. `suivi(etape, detail=None)` :
+    appelée au moment de contresigner, pour que la chaîne tourne pendant la lecture. Une simple décision suffit à
+    contresigner ; le résultat entier de la chaîne (avec son verdict) permet en plus la relecture ciblée de ses
+    obstacles quand elle ne couvre pas (7.211). `suivi(etape, detail=None)` :
     le fil de l'analyse, comme pour la chaîne de règles (7.201)."""
     suivre = suivi or (lambda etape, detail=None: None)
     clauses = base.clauses(contrat_id)
@@ -205,9 +284,24 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | C
                             {g.repere for g in garanties if not g.porte_garantie and not g.optionnelle})
     if callable(regles):                               # avant « décider » : le suivi reste dans l'ordre (7.202)
         regles = regles()
-    suivre("decision")
+    resultat_regles = regles if hasattr(regles, "verdict") else None
+    if resultat_regles is not None:                    # le résultat entier de la chaîne : sa décision, ses obstacles
+        regles = resultat_regles.verdict.decision
     decision, desaccord = jugement.arbitrer(etat, regles)
+    revue: list[str] = []
+    obstacles = obstacles_des_regles(resultat_regles)
+    if (etat.decision == Decision.COUVERT and decision == Decision.INCERTAIN and regles is not None
+            and 0 < len(obstacles) <= MAX_OBSTACLES):
+        # La lecture couvre, les règles non, et elles disent pourquoi : on relit ces seuls obstacles (7.211). Le
+        # « couvert » ne tient que si la déclaration écarte chacun d'eux, citation exacte à l'appui.
+        par_tout = {c.id: c for c in clauses}
+        tient, revue = arbitrage_cible(llm, obstacles, par_tout, regles, declaration)
+        if tient:
+            decision = Decision.COUVERT
+            desaccord = (f"les règles traduites répondaient « {regles.value} » ; relus un à un, leurs obstacles sont "
+                         "écartés par la déclaration")
+    suivre("decision")
     suivre("decision", etat.motif + (f" ; {desaccord}" if desaccord else ""))
     if garder:                                         # les jugements en table, pour relire l'analyse après coup
         jugement.garder(base, contrat_id, declaration, gardes, etat, decision)
-    return Lecture(etat, designes, touchees, pieces, decision, desaccord, relancees, rappels)
+    return Lecture(etat, designes, touchees, pieces, decision, desaccord, relancees, rappels, revue)

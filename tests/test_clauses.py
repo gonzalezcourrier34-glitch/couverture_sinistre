@@ -94,7 +94,7 @@ def test_la_commande_juger_affiche_la_decision_et_ses_clauses(base, monkeypatch,
     modele = Modele({"chapitres": ["3.1.2"], "motif": ""}, jugements(**{"3_1_2_1": "couvre", "3_1_2_2": "exclut"}))
     monkeypatch.setattr(llm, "MistralLLM", lambda **_: modele)
     a = argparse.Namespace(contrat="c1", sinistre=DECLARATION, jeu=None, cas=[], modele="m", regles=False, detail=True,
-                           echantillon=0, mesure_finale=False, paralleles=1)
+                           echantillon=0, mesure_finale=False, paralleles=1, rejouer=False)
     assert juger.executer(a, base, tmp_path) == 0
     sortie = capsys.readouterr().out
     assert sortie.startswith("NON_COUVERT") and "[exclut] 3.1.2.2 : « Les objets non fixés »" in sortie
@@ -134,7 +134,7 @@ def test_le_jeu_jamais_regarde_ne_se_lance_pas_par_megarde(base, tmp_path):
     from couverture.cli import juger
 
     a = argparse.Namespace(contrat="c1", sinistre=None, jeu="quatre", cas=[], modele="m", regles=False, detail=False,
-                           echantillon=0, mesure_finale=False, paralleles=1)
+                           echantillon=0, mesure_finale=False, paralleles=1, rejouer=False)
     with pytest.raises(SystemExit) as arret:
         juger.executer(a, base, tmp_path)
     assert "mesure finale" in str(arret.value)
@@ -230,3 +230,74 @@ def test_une_question_posee_par_deux_clauses_ne_s_affiche_qu_une_fois(base):
     assert lu.decision == Decision.INCERTAIN
     _, sortie = service.resultat_clauses(base, "c1", DECLARATION, lu, lu.decision, "", None, {})
     assert sortie["questions"] == ["Les chaises étaient-elles fixées ?"]
+
+
+def resultat_des_regles(decision, *conditions):
+    """Ce que la chaîne de règles rend : une décision, et les conditions qu'elle a examinées."""
+    from couverture.models import Faits, Resultat, Verdict
+    return Resultat(sinistre=DECLARATION, contrat_id="c1", methode="regles", faits=Faits(), clauses_consultees=[],
+                    verdict=Verdict(decision=decision, justification="", conditions=list(conditions)))
+
+
+def condition(nature, clause_id, etat, enonce):
+    from couverture.models import Condition
+    return Condition(nature=nature, clause_id=clause_id, extrait="", enonce=enonce, etat=etat)
+
+
+def test_la_relecture_ciblee_garde_le_couvert_quand_la_declaration_ecarte_chaque_obstacle(base):
+    """7.211 : la lecture couvre, les règles hésitent sur une exclusion (« les chaises étaient-elles fixées ? »).
+    Une seule question de plus au modèle, sur cet obstacle ; il l'écarte en citant la déclaration mot pour mot :
+    le « couvert » tient, et le désaccord est dit."""
+    from couverture.models import EtatCondition as E
+
+    regles = resultat_des_regles(Decision.INCERTAIN,
+                                 condition("exclusion", "3.1.2.2", E.INCONNUE, "Les objets étaient-ils non fixés ?"),
+                                 condition("garantie", "3.1.2.1", E.REMPLIE, "Est-ce une tempête ?"))
+    revue = {"obstacles": [{"numero": 1, "avis": "ecarte", "extrait_declaration": "La tempête de samedi a emporté mes chaises de jardin"}]}
+    modele = Modele({"chapitres": ["3.1.2"], "motif": ""}, jugements(**{"3_1_2_1": "couvre"}), revue)
+    lecture = clauses.lire(base, "c1", modele, DECLARATION, regles=regles)
+    assert lecture.decision == Decision.COUVERT and "écartés" in lecture.desaccord
+    assert len(modele.recus) == 3 and "Obstacle 1 : exclusion, clause [3.1.2.2]" in modele.recus[2][1]
+    assert "3.1.2.1" not in modele.recus[2][1].split("## Déclaration")[0], "une condition remplie n'est pas un obstacle"
+    assert lecture.arbitrage and lecture.arbitrage[0].startswith("art. 3.1.2.2")
+
+
+def test_la_relecture_ciblee_ne_garde_pas_le_couvert_sans_citation_exacte_ni_sur_un_doute(base):
+    """La garde contre les couverts à tort ne s'affaiblit pas : un obstacle « écarté » sans citation retrouvée dans
+    la déclaration, confirmé, ou inconnu, laisse la réponse à préciser. Sans obstacle dit par les règles (une simple
+    décision), aucune relecture : rien n'est demandé de plus."""
+    from couverture.models import EtatCondition as E
+
+    regles = resultat_des_regles(Decision.NON_COUVERT,
+                                 condition("exclusion", "3.1.2.2", E.REMPLIE, "Les objets étaient-ils non fixés ?"))
+    for avis in ({"numero": 1, "avis": "ecarte", "extrait_declaration": "Les chaises étaient vissées au sol"},
+                 {"numero": 1, "avis": "confirme"}, {"numero": 1, "avis": "inconnu"}):
+        modele = Modele({"chapitres": ["3.1.2"], "motif": ""}, jugements(**{"3_1_2_1": "couvre"}), {"obstacles": [avis]})
+        lecture = clauses.lire(base, "c1", modele, DECLARATION, regles=regles)
+        assert lecture.decision == Decision.INCERTAIN, avis
+    modele = Modele({"chapitres": ["3.1.2"], "motif": ""}, jugements(**{"3_1_2_1": "couvre"}))
+    assert clauses.lire(base, "c1", modele, DECLARATION, regles=Decision.NON_COUVERT).decision == Decision.INCERTAIN
+    assert len(modele.recus) == 2
+
+
+def test_rejouer_reprend_les_reponses_gardees_sans_appeler_le_modele(base, tmp_path, monkeypatch, capsys):
+    """`juger --rejouer` relit les réponses d'un passage précédent dans l'ordre des appels : sans rien de nouveau à
+    demander, aucun appel n'est fait. Le rejeu s'écrit à part, l'original reste intact."""
+    import argparse
+
+    from couverture import llm
+    from couverture.cli import juger
+
+    gardees = [json.dumps({"chapitres": ["3.1.2"], "motif": ""}),
+               json.dumps(jugements(**{"3_1_2_1": "couvre", "3_1_2_2": "exclut"}), ensure_ascii=False)]
+    (tmp_path / "debug").mkdir()
+    original = tmp_path / "debug" / "juger_declaration.txt"
+    original.write_text("\n\n=== réponse suivante ===\n\n".join(gardees), encoding="utf-8")
+    modele = Modele()
+    monkeypatch.setattr(llm, "MistralLLM", lambda **_: modele)
+    a = argparse.Namespace(contrat="c1", sinistre=DECLARATION, jeu=None, cas=[], modele="m", regles=False, detail=False,
+                           echantillon=0, mesure_finale=False, paralleles=1, rejouer=True)
+    assert juger.executer(a, base, tmp_path) == 0
+    assert capsys.readouterr().out.startswith("NON_COUVERT") and modele.recus == []
+    assert (tmp_path / "debug" / "juger_declaration_rejeu.txt").exists()
+    assert original.read_text(encoding="utf-8") == "\n\n=== réponse suivante ===\n\n".join(gardees)

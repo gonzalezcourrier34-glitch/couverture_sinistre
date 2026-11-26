@@ -35,18 +35,24 @@ def ajouter(sous) -> None:
     p.add_argument("--paralleles", type=int, default=4, metavar="N",
                    help="N cas à la fois (4 par défaut, comme le banc) : le temps d'un passage, pas celui d'un cas")
     p.add_argument("--detail", action="store_true", help="Afficher chaque jugement qui n'est pas « sans effet »")
+    p.add_argument("--rejouer", action="store_true",
+                   help="Reprendre les réponses gardées d'un passage précédent (data/debug/juger_<cas>.txt) ; seul ce "
+                        "qui est nouveau (la relecture ciblée, 7.211) est demandé au modèle. Presque gratuit.")
     p.set_defaults(executer=executer)
 
 
 class _Temoin:
     """Le modèle, plus la mémoire de ses réponses brutes : une réponse illisible est gardée pour être lue."""
 
-    def __init__(self, llm):
-        self.llm, self.reponses = llm, []
+    def __init__(self, llm, rejouees: list[str] | None = None):
+        self.llm, self.reponses, self.rejouees = llm, [], list(rejouees or [])
         self.envoyes = self.recus = self.cache = 0
         self.accepte_schema = getattr(llm, "accepte_schema", False)
 
     def completer(self, systeme, message, **options):
+        if self.rejouees:                              # --rejouer : la réponse d'alors, sans appel au modèle
+            self.reponses.append(self.rejouees.pop(0))
+            return self.reponses[-1]
         try:
             self.reponses.append(self.llm.completer(systeme, message, **options))
             usage = getattr(self.llm, "dernier_usage", None) or {}
@@ -80,6 +86,8 @@ def _afficher(lecture, detail: bool) -> list[str]:
     if e.manquants:
         lignes.append(f"  ! clauses attendues sans jugement : {', '.join(e.manquants[:12])}")
     lignes += [f"  ! jugement écarté — {d}" for d in e.defauts[:8]]
+    for ligne in lecture.arbitrage:
+        lignes.append(f"  relecture ciblée — {ligne}")
     if lecture.desaccord:
         lignes.append(f"  ! {lecture.desaccord}")
     return lignes
@@ -91,7 +99,7 @@ def executer(a, base: Base, donnees: Path) -> int:
     from ..llm import CleRefusee, ErreurLLM, MistralLLM
 
     if a.jeu:
-        if a.jeu == "quatre" and not a.mesure_finale:
+        if a.jeu == "quatre" and not a.mesure_finale and not a.rejouer:
             sys.exit("Le jeu « quatre » n'a jamais été regardé : il ne se passe qu'une fois, pour la mesure finale, "
                      "et ne sert pas à régler. Ajouter --mesure-finale pour le lancer en connaissance de cause.")
         cas = charger_cas(*fichiers_jeu(donnees, a.contrat, a.jeu))
@@ -112,10 +120,21 @@ def executer(a, base: Base, donnees: Path) -> int:
         debut = time.perf_counter()
         # 32 000 : la réflexion de Mistral Large compte dans la limite, et 16 000 a coupé une réponse (7.200).
         modele = MistralLLM(modele=a.modele, timeout=600, max_tokens=32000)
-        llm = _Temoin(modele)
+        rejouees = None
+        if a.rejouer:                                  # les réponses d'un passage précédent, dans l'ordre des appels
+            gardees = donnees / "debug" / f"juger_{c['id'] or 'declaration'}.txt"
+            if not gardees.exists():
+                return [f"{c['id']} : rien à rejouer ({gardees} absent)"], {
+                    "id": c["id"], "attendu": c.get("attendu"), "obtenu": "ERREUR", "juste": False,
+                    "envoyes": 0, "cache": 0, "recus": 0}
+            rejouees = gardees.read_text(encoding="utf-8").split("\n\n=== réponse suivante ===\n\n")
+        llm = _Temoin(modele, rejouees)
+        suffixe = "_rejeu" if a.rejouer else ""
         attendu = c.get("attendu")
         try:
-            regles = chaine.analyser(c["sinistre"]).verdict.decision if chaine else None
+            # Le résultat entier des règles, pas seulement leur décision : la relecture ciblée part de leurs
+            # obstacles (7.211).
+            regles = chaine.analyser(c["sinistre"]) if chaine else None
             lecture = clauses.lire(base, a.contrat, llm, c["sinistre"], regles=regles, garder=True)
         except (ValueError, ErreurLLM) as e:  # réponse coupée ou illisible, ou panne du fournisseur (une erreur 520
             # a arrêté tout un passage du jeu « quatre », 7.207) : on le dit et on passe au cas suivant
@@ -123,7 +142,7 @@ def executer(a, base: Base, donnees: Path) -> int:
                 raise
             duree = f"[{time.perf_counter() - debut:.0f} s]"
             texte = [f"{c['id']} : pas de réponse exploitable — {str(e).splitlines()[0]}  {duree}",
-                     f"  réponses brutes gardées dans {llm.garder(donnees / 'debug', c['id'])}"]
+                     f"  réponses brutes gardées dans {llm.garder(donnees / 'debug', (c['id'] or 'declaration') + suffixe)}"]
             return texte, {"id": c["id"], "attendu": attendu, "obtenu": "ERREUR", "juste": False,
                            "envoyes": llm.envoyes, "cache": llm.cache, "recus": llm.recus}
         obtenu = lecture.decision.value
@@ -132,7 +151,7 @@ def executer(a, base: Base, donnees: Path) -> int:
         regard = f"  (attendu {attendu}{'' if juste else ' ✗'})" if attendu else ""
         texte = [f"{entete}{obtenu}{regard} — {lecture.etat.motif}  [{time.perf_counter() - debut:.0f} s]",
                  *_afficher(lecture, a.detail)]
-        llm.garder(donnees / "debug", c["id"])
+        llm.garder(donnees / "debug", (c["id"] or "declaration") + suffixe)
         texte.append(f"  tokens : {llm.envoyes} envoyés (dont {llm.cache} repris du cache), {llm.recus} reçus, en "
                      f"{len(llm.reponses)} appels (réflexion du dernier : {getattr(modele, 'derniere_reflexion', 0)} "
                      "caractères)")
@@ -152,7 +171,7 @@ def executer(a, base: Base, donnees: Path) -> int:
     envoyes, recus = sum(l["envoyes"] for l in lignes), sum(l["recus"] for l in lignes)
     if a.jeu:
         print(_bilan(lignes, envoyes, recus, time.perf_counter() - depart))
-        fichier = donnees / "debug" / f"juger_bilan_{a.contrat}_{a.jeu}_{a.modele}.json"
+        fichier = donnees / "debug" / f"juger_bilan_{a.contrat}_{a.jeu}_{a.modele}{'_rejeu' if a.rejouer else ''}.json"
         fichier.write_text(json.dumps({"contrat": a.contrat, "jeu": a.jeu, "modele": a.modele, "regles": a.regles,
                                        "envoyes": envoyes, "recus": recus, "cas": lignes}, ensure_ascii=False, indent=1),
                            encoding="utf-8")

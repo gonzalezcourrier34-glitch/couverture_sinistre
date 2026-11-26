@@ -123,7 +123,7 @@ Neuf parties, dans l'ordre. Chaque étape garde son numéro, cité ailleurs dans
 | VI | 7.148 à 7.159 | Un quatrième contrat ajouté à froid : ce qui est général, ce qui ne l'est pas |
 | VII | 7.160 à 7.167 | Mettre en ligne, puis tout rejouer la veille de la livraison |
 | VIII | 7.168 à 7.189 | Finir A et B, puis des jeux jamais vus qui montrent un défaut de fond |
-| IX | 7.190 à 7.210 | La lecture des clauses : une seconde méthode, mesurée contre la première |
+| IX | 7.190 à 7.211 | La lecture des clauses : une seconde méthode, mesurée contre la première |
 
 ---
 
@@ -6035,6 +6035,31 @@ d'erreur le moins coûteux, et il est voulu. Aucun couvert à tort n'est ajouté
 **Restent**, inscrits à la feuille de route : l'arbitrage ciblé quand la contresignature tire vers le doute (le plus
 gros poste, six écarts, qui demande un appel de plus au modèle) ; les refus cités hors de propos ; trois petits
 restes. Puis le jeu « cinq ».
+
+### 7.211 L'arbitrage ciblé : relire les seuls obstacles des règles, avant de renoncer à un « couvert »
+
+**Le constat.** Six des quinze écarts du jeu « quatre » viennent de la contresignature : la lecture couvre à raison,
+les règles non, et un simple désaccord suffisait à rendre « à préciser ». La garde est voulue (elle a arrêté deux
+couverts à tort au jeu « neuf », 7.205) ; elle était aveugle à la raison du désaccord.
+
+**La règle.** Les règles disent pourquoi elles ne couvrent pas : leurs conditions examinées portent chacune une
+clause, la question posée aux faits et la réponse (une exclusion établie ou possible ; une condition de garantie ou
+une obligation non remplie ou inconnue). Quand la lecture couvre et que les règles non, on repose au modèle une seule
+question par obstacle (six au plus) : la déclaration l'écarte-t-elle ? Il répond « écarte », « confirme » ou
+« inconnu » ; « écarte » exige la phrase de la déclaration qui le montre, retrouvée mot pour mot par le code. Le
+« couvert » ne tient que si chaque obstacle est écarté ainsi ; sinon la réponse reste « à préciser », comme avant.
+Sans obstacle dit par les règles, aucune relecture. Un appel de plus au modèle, dans ces cas seulement. La consigne
+interdit d'écarter sur ce qui est probable ou habituel : dans le doute, « inconnu ».
+
+**Ce qu'il faut pour l'essayer à petit prix.** `couverture juger --rejouer` reprend les réponses gardées d'un passage
+précédent, dans l'ordre des appels ; seul ce qui est nouveau (la relecture ciblée, et la chaîne de règles, qui ne
+coûte presque rien) est demandé. Le rejeu s'écrit à part (`juger_<cas>_rejeu.txt`), l'original reste intact. Quatre
+tests : le couvert qui tient ; la garde qui ne s'affaiblit pas (citation inexacte, obstacle confirmé, inconnu) ;
+aucune relecture sans obstacle ; le rejeu sans appel.
+
+**Le risque, à vérifier en premier** : que la relecture écarte un obstacle réel. Les deux couverts à tort que la
+contresignature avait arrêtés au jeu « neuf » (n-a16, l'assuré avait trop bu ; n-a17, la pension de furets) sont les
+cas à regarder d'abord.
 
 ## 8. Ce qui reste à faire
 
