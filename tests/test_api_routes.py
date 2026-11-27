@@ -258,8 +258,8 @@ def test_la_methode_clauses_se_choisit_par_requete(client, monkeypatch):
 
     appels = []
 
-    def lecture(base, chaine, contrat_id, sinistre, llm, suivi=None, souscription=None, chapitres=None):
-        appels.append(contrat_id)
+    def lecture(base, chaine, contrat_id, sinistre, llm, suivi=None, souscription=None, chapitres=None, lecture=None):
+        appels.append((contrat_id, lecture))
         (suivi or (lambda e, d=None: None))("designation", "1 garantie à examiner, 5 clauses au dossier")
         r, sortie = service.analyser(chaine, sinistre)
         r.methode = "clauses"
@@ -276,6 +276,10 @@ def test_la_methode_clauses_se_choisit_par_requete(client, monkeypatch):
     assert [e["cle"] for e in lignes[0]["etapes"]] == ["designation", "jugement", "regles", "decision"]
     assert "minutes" in lignes[0]["annonce"]
     assert lignes[1]["etape"] == "designation" and lignes[-1]["etape"] == "fin" and len(appels) == 2
+    # 13.4 : le jeton de la lecture précédente passe jusqu'à la lecture des clauses, par les deux routes
+    client.post("/api/v1/analyses", headers=CLE, json=demande | {"methode": "clauses", "lecture": "jeton"})
+    client.post("/api/v1/analyses/suivi", headers=CLE, json=demande | {"methode": "clauses", "lecture": "jeton"})
+    assert appels[-2:] == [(CONTRAT, "jeton"), (CONTRAT, "jeton")]
     assert client.post("/api/v1/analyses", headers=CLE, json=demande | {"methode": "autre"}).status_code == 422
 
 
@@ -287,7 +291,7 @@ def test_le_suivi_bat_pendant_une_longue_attente(client, monkeypatch):
 
     from couverture.api.routes import analyse_suivie
 
-    def lecture(base, chaine, contrat_id, sinistre, llm, suivi=None, souscription=None, chapitres=None):
+    def lecture(base, chaine, contrat_id, sinistre, llm, suivi=None, souscription=None, chapitres=None, lecture=None):
         time.sleep(0.35)
         r, sortie = service.analyser(chaine, sinistre)
         return r, sortie | {"mode": "clauses"}
