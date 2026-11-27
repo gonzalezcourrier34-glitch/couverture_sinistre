@@ -44,6 +44,12 @@ def ajouter(sous) -> None:
     p.add_argument("--stabilite", action="store_true",
                    help="Comparer les passes déjà faites d'un jeu (`--contrat tous` pour tous les contrats) : cas dont la "
                         "réponse change, justesse moyenne, minimale, maximale. Aucun appel au modèle")
+    p.add_argument("--consigne-jugement", metavar="VERSION",
+                   help="Juger avec une version archivée de la consigne de jugement (docs/consignes/clauses-jugement/"
+                        "<VERSION>.txt), pour comparer deux versions sur le même jeu (7.226) ; le bilan porte le suffixe "
+                        "_<VERSION>")
+    p.add_argument("--depuis", type=int, default=1, metavar="N",
+                   help="Avec --stabilite : seulement les passes N et suivantes (celles d'un même état du code)")
     p.add_argument("--rejouer", action="store_true",
                    help="Reprendre les réponses gardées d'un passage précédent (data/debug/juger_<cas>.txt) ; seul ce "
                         "qui est nouveau (la relecture ciblée, 7.211) est demandé au modèle. Presque gratuit.")
@@ -83,7 +89,8 @@ class _Temoin:
 def _afficher(lecture, detail: bool) -> list[str]:
     e, lignes = lecture.etat, []
     lignes.append(f"  chapitres désignés : {', '.join(lecture.designes) or 'aucun'} → {len(lecture.garanties)} "
-                  f"garanties, {len(lecture.dossier)} clauses au dossier")
+                  f"garanties, {len(lecture.dossier)} clauses au dossier"
+                  + (f" (ajoutés d'après les règles : {', '.join(lecture.ajoutes)})" if lecture.ajoutes else ""))
     for nom, js in (("couvre", e.couvrent), ("exclut", e.excluent), ("limite", e.limitent), ("à vérifier", e.a_verifier)):
         for j in js:
             suite = f" — {j.question}" if j.question else ""
@@ -110,9 +117,17 @@ def executer(a, base: Base, donnees: Path) -> int:
     if getattr(a, "stabilite", False):
         if not a.jeu:
             sys.exit("--stabilite demande --jeu.")
-        print(stabilite(donnees / "debug", a.jeu, a.modele, None if a.contrat == "tous" else a.contrat))
+        print(stabilite(donnees / "debug", a.jeu, a.modele, None if a.contrat == "tous" else a.contrat,
+                        getattr(a, "depuis", 1)))
         return 0
     passe = f"_p{a.passage}" if getattr(a, "passage", 1) > 1 else ""
+    version = getattr(a, "consigne_jugement", None)
+    if version:
+        archive = Path(__file__).resolve().parents[3] / "docs" / "consignes" / "clauses-jugement" / f"{version}.txt"
+        if not archive.exists():
+            sys.exit(f"Pas de consigne de jugement archivée en {version} ({archive}).")
+        clauses.SYSTEME_JUGEMENT = archive.read_text(encoding="utf-8")
+        passe = f"_{version}" + passe
     if a.jeu:
         if a.jeu in JEUX_JAMAIS_VUS and not a.mesure_finale and not a.rejouer:
             sys.exit(f"Le jeu « {a.jeu} » n'a jamais été regardé : il ne se passe qu'une fois, pour la mesure finale, "
@@ -150,7 +165,9 @@ def executer(a, base: Base, donnees: Path) -> int:
             # Le résultat entier des règles, pas seulement leur décision : la relecture ciblée part de leurs
             # obstacles (7.211).
             regles = chaine.analyser(c["sinistre"]) if chaine else None
-            lecture = clauses.lire(base, a.contrat, llm, c["sinistre"], regles=regles, garder=True)
+            # Les chapitres des garanties que les règles ont trouvées s'ajoutent à la désignation (13.2).
+            lecture = clauses.lire(base, a.contrat, llm, c["sinistre"], regles=regles, garder=True,
+                                   renfort=clauses.chapitres_des_regles(regles) if regles else None)
         except (ValueError, ErreurLLM) as e:  # réponse coupée ou illisible, ou panne du fournisseur (une erreur 520
             # a arrêté tout un passage du jeu « quatre », 7.207) : on le dit et on passe au cas suivant
             if isinstance(e, CleRefusee):  # une clé refusée vaut pour tous les cas : on s'arrête
@@ -211,7 +228,7 @@ def _bilan(lignes: list[dict], envoyes: int, recus: int, secondes: float) -> str
             + (f", {secondes / n:.0f} s par cas." if n else "."))
 
 
-def stabilite(dossier: Path, jeu: str, modele: str, contrat: str | None = None) -> str:
+def stabilite(dossier: Path, jeu: str, modele: str, contrat: str | None = None, depuis: int = 1) -> str:
     """La stabilité de la lecture des clauses sur un jeu (7.220), d'après les bilans de ses passes : la passe 1
     (`juger_bilan_<contrat>_<jeu>_<modele>.json`), puis `_p2`, `_p3`… Sur les cas présents dans toutes les passes
     d'un contrat : les cas dont la décision change, ceux dont la décision tient mais pas les clauses qui la fondent,
@@ -222,7 +239,7 @@ def stabilite(dossier: Path, jeu: str, modele: str, contrat: str | None = None) 
     passes: dict[str, dict[int, dict]] = {}
     for f in sorted(dossier.glob(f"juger_bilan_*_{jeu}_{modele}*.json")):
         m = motif.match(f.name)
-        if not m or (contrat and m.group(1) != contrat):
+        if not m or (contrat and m.group(1) != contrat) or int(m.group(2) or 1) < depuis:
             continue
         passes.setdefault(m.group(1), {})[int(m.group(2) or 1)] = json.loads(f.read_text(encoding="utf-8"))
     if not passes:

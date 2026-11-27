@@ -1,0 +1,25 @@
+@if (ech.articleOuvert(); as ouvert) {
+    @let cl = ech.clause(ouvert.clauseId);
+    <div class="voile" (click)="ech.fermerArticle()">
+        <div class="fenetre" role="dialog" aria-modal="true" [attr.aria-label]="'Article ' + ouvert.clauseId"
+            (click)="$event.stopPropagation()">
+            <header class="fenetre-tete">
+                <div>
+                    <div class="fenetre-titre">Art. {{ ouvert.clauseId }}</div>
+                    @if (cl) {
+                        <div class="small">{{ cl.chemin.join(' › ') }}@if (cl.pages.length) { · p. {{ cl.pages.join(', ') }} }</div>
+                    }
+                </div>
+                <button type="button" class="bouton bouton-secondaire" (click)="ech.fermerArticle()">Fermer</button>
+            </header>
+            <div class="fenetre-corps">
+                @if (cl) {
+                    <p class="article">@for (m of surligner(cl.texte, ouvert.extraits); track $index) {<span [class.cite]="m.cite">{{ m.texte }}</span>}</p>
+                    <p class="small">Surligné : les passages sur lesquels la décision s’appuie.</p>
+                } @else {
+                    <p class="small">Chargement de l’article…</p>
+                }
+            </div>
+        </div>
+    </div>
+}

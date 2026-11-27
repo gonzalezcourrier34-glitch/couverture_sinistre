@@ -52,6 +52,8 @@ Pour chaque clause à juger, un effet parmi :
 Règles de lecture :
 - Une exclusion que rien dans la déclaration n'évoque est "sans_effet", pas "a_verifier" : on ne demande pas à l'assuré s'il a fait exprès, s'il y avait une guerre ou si son bâtiment était délabré quand rien ne le suggère.
 - Ce que la déclaration ne dit pas reste inconnu : ne le suppose pas. Mais si elle permet de trancher, tranche.
+- Une cause que l'assuré présente comme seulement probable (« je pense que », « sans doute », « peut-être », « on m'a dit que ») n'est pas établie : si l'effet d'une clause dépend de cette cause, cette clause est "a_verifier", avec la question qui l'établirait.
+- Une garantie qui pose elle-même une condition (un lieu, une durée, un délai, un moyen de protection, une qualité du bien ou de la personne) ne "couvre" que si la déclaration établit cette condition ; si elle n'en dit rien, elle est "a_verifier", avec la question sur cette condition. Cela ne vaut pas pour les exclusions : une exclusion que rien n'évoque reste "sans_effet".
 - Une clause qui énumère les biens assurés par une garantie n'exclut pas un bien qu'elle ne nomme pas : si ce bien relève d'une autre garantie du dossier, elle est "sans_effet".
 - Une clause qui contient plusieurs cas (une liste d'exclusions) se juge sur le cas qui joue : "exclut" si l'un d'eux s'applique, "a_verifier" si l'un d'eux est évoqué sans être établi, sinon "sans_effet".
 - Une clause qui garantit et exclut à la fois (« nous couvrons… sauf… ») : "exclut" si l'exception joue, sinon "couvre" si elle garantit ce sinistre.
@@ -169,6 +171,19 @@ class Lecture:
     relancees: list[str] = field(default_factory=list)      # les clauses redemandées au modèle, faute de jugement
     rappels: list[jugement.Jugement] = field(default_factory=list)   # questions du règlement, sans effet sur la décision
     arbitrage: list[str] = field(default_factory=list)  # la relecture ciblée des obstacles des règles, s'il y en a eu
+    ajoutes: list[str] = field(default_factory=list)    # les chapitres ajoutés d'après les règles (13.2)
+
+
+def chapitres_des_regles(resultat) -> list[str]:
+    """Les garanties que la chaîne de règles a trouvées pour ce sinistre, par l'article qui les accorde (13.2). Le
+    modèle ne désigne pas les mêmes chapitres d'une lecture à l'autre (92 clauses au dossier une fois, 290 l'autre,
+    7.221) ; les règles, elles, lisent les faits et trouvent les garanties de l'événement de façon stable. Leurs
+    articles s'ajoutent à la désignation : un chapitre de trop coûte des tokens, un chapitre de moins une garantie ou
+    une exclusion oubliée. Rien si les règles n'ont pas répondu."""
+    verdict = getattr(resultat, "verdict", None)
+    if verdict is None:
+        return []
+    return list(dict.fromkeys(c.clause_id for c in verdict.citations if c.valide and c.role == "garantie"))
 
 
 def message_designation(clauses: list[Clause], declaration: str) -> str:
@@ -216,7 +231,7 @@ def garanties_touchees(garanties: list[attendu.Garantie], clauses: list[Clause],
 
 def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | Callable | None = None,
          llm_designation: LLM | None = None, garder: bool = False, suivi: Callable | None = None,
-         chapitres: list[str] | None = None) -> Lecture:
+         chapitres: list[str] | None = None, renfort: Callable | list | None = None) -> Lecture:
     """L'analyse d'une déclaration par la lecture des clauses. `regles` : la réponse de la chaîne de règles sur
     la même déclaration, pour la contresignature (rien : la lecture tient seule) ; ou une fonction qui la rend,
     appelée au moment de contresigner, pour que la chaîne tourne pendant la lecture. Une simple décision suffit à
@@ -224,7 +239,9 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | C
     obstacles quand elle ne couvre pas (7.211). `suivi(etape, detail=None)` :
     le fil de l'analyse, comme pour la chaîne de règles (7.201). `chapitres` : ceux d'une lecture précédente du même
     sinistre (la relecture après les réponses du client, 7.218) ; la désignation n'est pas redemandée, et le dossier,
-    le même, profite du cache du fournisseur."""
+    le même, profite du cache du fournisseur. `renfort` : les chapitres que les règles ont trouvés
+    (`chapitres_des_regles`), ou une fonction qui les rend (la chaîne tourne pendant la désignation) ; ils s'ajoutent à
+    ceux du modèle (13.2), sauf à la relecture, dont les chapitres sont déjà ceux de la première lecture."""
     suivre = suivi or (lambda etape, detail=None: None)
     clauses = base.clauses(contrat_id)
     garanties = attendu.garanties(base, contrat_id)
@@ -238,6 +255,10 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | C
         reponse = extraire_json(completer_avec_schema(llm_designation or llm, SYSTEME_DESIGNATION,
                                                       message_designation(clauses, declaration), SCHEMA_DESIGNATION))
         designes = [str(r).strip().strip("[]") for r in reponse.get("chapitres") or []]
+    ajoutes: list[str] = []
+    if renfort is not None and not chapitres:
+        ajoutes = [r for r in (renfort() if callable(renfort) else renfort) if r not in designes]
+        designes += ajoutes
     touchees = garanties_touchees(garanties, clauses, designes)
     if not touchees:                                   # rien de désigné : ni refus ni couverture, on le dit
         suivre("designation", "aucun chapitre du contrat ne correspond")
@@ -252,7 +273,8 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | C
     a_juger = {a.clause_id for a in attendues if a.bloque}
     generales = {a.clause_id for a in attendues if a.role == "exclusion_generale"}
     suivre("designation", f"{len(touchees)} garantie{'s' * (len(touchees) > 1)} à examiner, "
-                          f"{len(pieces)} clauses au dossier" + (" (chapitres de la première lecture)" if chapitres else ""))
+                          f"{len(pieces)} clauses au dossier" + (" (chapitres de la première lecture)" if chapitres else "")
+                          + (f" ; ajoutés d'après les règles : {', '.join(ajoutes)}" if ajoutes else ""))
     suivre("jugement")
     rendus = jugement.depuis_reponse(extraire_json(completer_avec_schema(
         llm, SYSTEME_JUGEMENT, message_jugement(pieces, a_juger, declaration, generales), SCHEMA_JUGEMENT)))
@@ -313,4 +335,4 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | C
     suivre("decision", etat.motif + (f" ; {desaccord}" if desaccord else ""))
     if garder:                                         # les jugements en table, pour relire l'analyse après coup
         jugement.garder(base, contrat_id, declaration, gardes, etat, decision)
-    return Lecture(etat, designes, touchees, pieces, decision, desaccord, relancees, rappels, revue)
+    return Lecture(etat, designes, touchees, pieces, decision, desaccord, relancees, rappels, revue, ajoutes)

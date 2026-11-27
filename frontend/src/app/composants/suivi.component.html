@@ -1,0 +1,29 @@
+@if (ech.suiviOuvert()) {
+    <div class="voile">
+        <div class="fenetre fenetre-suivi" role="dialog" aria-modal="true" aria-label="Analyse en cours" aria-live="polite">
+            <header class="fenetre-tete">
+                <div>
+                    <div class="fenetre-titre">Analyse en cours</div>
+                    <div class="small">{{ ech.annonceSuivi() ? 'Le modèle juge chaque clause, la logique tranche, le code vérifie.' : 'Le modèle lit, la logique décide, le code vérifie.' }}</div>
+                    @if (ech.annonceSuivi(); as annonce) {
+                        <div class="small">{{ annonce }}</div>
+                    }
+                </div>
+            </header>
+            <ol class="suivi">
+                @for (e of ech.etapesSuivi(); track e.cle) {
+                    @let s = ech.suivi()[e.cle];
+                    <li class="suivi-etape" [class.suivi-encours]="s?.etat === 'encours'" [class.suivi-fait]="s?.etat === 'fait'">
+                        <span class="suivi-marque" aria-hidden="true"></span>
+                        <div>
+                            <div class="suivi-titre">{{ e.titre }}</div>
+                            @if (s?.detail) {
+                                <div class="suivi-detail">{{ s?.detail }}</div>
+                            }
+                        </div>
+                    </li>
+                }
+            </ol>
+        </div>
+    </div>
+}

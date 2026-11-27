@@ -15,11 +15,15 @@ La clé de l'API n'entre jamais dans le navigateur : `proxy.conf.mjs` la lit dan
 
 | Fichier | Rôle |
 |---|---|
-| `src/app/app.component.*` | l'écran : contrat, déclaration, choix de la méthode (lecture des clauses par défaut, ou chaîne de règles), décision, questions au client, clauses citées |
+| `src/app/app.component.*` | la mise en page de l'écran : la déclaration à gauche, la décision à droite, les fenêtres |
+| `src/app/echange.service.ts` | l'état de l'échange en cours, partagé par les composants : contrat, déclaration, méthode, étapes, réponses du client, suivi, article ouvert, fiche ; et ce qu'on en fait (analyser, décider, relire avec les réponses) |
+| `src/app/composants/` | un composant par bloc : `en-tete`, `choix-contrat` (et les conditions particulières), `saisie`, `accueil`, `etape` (une étape de l'échange), `decision` (une décision ou un sinistre), `fondements` (réserves, clauses citées, limites), `questions` (au client), `suivi` (l'analyse en cours), `article` (l'article entier) ; aucun ne crée de boîte (`display: contents`) |
 | `src/app/couverture.service.ts` | appels à l'API `/api/v1` |
 | `src/app/couverture.model.ts` | types échangés avec l'API |
 | `src/app/presentation.ts` | libellés, couleurs, faits et réponses (testé) |
+| `src/app/*.spec.ts` | les tests (vitest) : la présentation, l'état de l'échange, une étape à deux sinistres |
 | `src/styles.scss` | la palette |
+| `src/ecran.scss` | les styles de l'écran, globaux |
 | `proxy.conf.mjs` | adresse de l'API et clé, en local |
 
 Le circuit : une déclaration est **analysée**, par la méthode choisie. Si la réponse est « à préciser », l'écran

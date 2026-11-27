@@ -1,0 +1,56 @@
+<!-- La légende des cadres sur la ligne du titre, à droite : une ligne de moins au-dessus de la déclaration. -->
+<div class="etiquette-ligne">
+    <div class="etiquette">1. Les conditions générales</div>
+    <p class="legende-conditions">
+        <span class="repere-couleur repere-complet"></span> traduites en entier
+        <span class="repere-couleur repere-partiel"></span> en partie
+    </p>
+</div>
+<div class="contrats" role="radiogroup" aria-label="Conditions générales">
+    @for (c of ech.decidables(); track c.id) {
+        <button type="button" class="contrat" role="radio"
+            [class.contrat-on]="c.id === ech.contratId()"
+            [class.contrat-complet]="c.complet"
+            [class.contrat-partiel]="!c.complet"
+            [attr.title]="c.produit + ' · ' + c.version + ' · ' + (c.nb_clauses ?? '?') + ' clauses' + (c.traduction ? ' — ' + c.traduction : '')"
+            [attr.aria-checked]="c.id === ech.contratId()"
+            (click)="ech.choisirContrat(c.id)">
+            <!-- Deux lignes par carte : le reste (produit en entier, date, clauses, état de la traduction) au survol. -->
+            <span class="contrat-assureur">{{ c.assureur }}</span>
+            <span class="contrat-produit">{{ c.produit }} · {{ c.version }}</span>
+        </button>
+    } @empty {
+        <p class="muted">Aucun contrat décidable : vérifiez que l’API tourne et que la base est remplie.</p>
+    }
+</div>
+
+<!-- ### Conditions particulières : ce que le contrat du client dit, et que la déclaration ne dit pas -->
+
+@if (ech.contrat()?.souscription?.length) {
+    <details class="souscription">
+        <summary>
+            Conditions particulières du client
+            <span class="muted">
+                @if (ech.nbSouscription()) {
+                    · {{ ech.nbSouscription() }} renseignée{{ ech.nbSouscription() > 1 ? 's' : '' }}
+                } @else {
+                    · facultatif
+                }
+            </span>
+        </summary>
+        <p class="souscription-aide">La formule et les options souscrites. Ce qui n’est pas renseigné reste une question ou une réserve dans la réponse.</p>
+        <div class="souscription-grille">
+            @for (s of ech.contrat()?.souscription ?? []; track s.variable) {
+                <label class="souscription-ligne" [attr.title]="s.question">
+                    <span>{{ s.libelle }}</span>
+                    <select class="liste" (change)="ech.souscrire(s.variable, $event)">
+                        <option value="" [selected]="!ech.souscription()[s.variable]">Non renseigné</option>
+                        @for (v of s.valeurs; track v) {
+                            <option [value]="v" [selected]="ech.souscription()[s.variable] === v">{{ s.libelles[v] }}</option>
+                        }
+                    </select>
+                </label>
+            }
+        </div>
+    </details>
+}

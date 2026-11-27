@@ -165,7 +165,8 @@ def analyser_clauses_un(base: Base, pipeline, contrat_id: str, sinistre: str, ll
     with ThreadPoolExecutor(max_workers=1) as fil:
         en_cours = fil.submit(regles)
         lu = lecture_des_clauses.lire(base, contrat_id, compteur, declaration, suivi=suivre,
-                                      regles=lambda: contresigner(en_cours), chapitres=chapitres)
+                                      regles=lambda: contresigner(en_cours), chapitres=chapitres,
+                                      renfort=lambda: lecture_des_clauses.chapitres_des_regles(en_cours.result()[0]))
         r_regles = en_cours.result()[0]
     temps["lecture"] = int((time.perf_counter() - debut) * 1000)
     decision, desaccord = lu.decision, lu.desaccord
@@ -191,9 +192,10 @@ def poser_les_questions_des_regles(pipeline, lu, decision, r_regles: Resultat | 
             or r_regles.verdict.decision != D.INCERTAIN):
         return
     try:
-        points = [p for p in service.reponse_complete(pipeline, r_regles)["a_preciser"] if p["nature"] == "question"]
+        complete = service.reponse_complete(pipeline, r_regles)
     except Exception:  # noqa: BLE001 - sans le moteur, les phrases des règles suffisent
-        points = []
+        complete = {}
+    points = [p for p in complete.get("a_preciser", []) if p["nature"] == "question"]
     # Celles qui ont des réponses proposées, puis celles en phrase qu'elles ne disent pas déjà (le lien de causalité).
     textes = [p["question"] for p in points]
     textes += [q for q in r_regles.verdict.informations_manquantes if not any(q.startswith(t) for t in textes)]
@@ -202,6 +204,11 @@ def poser_les_questions_des_regles(pipeline, lu, decision, r_regles: Resultat | 
         return
     sortie["a_preciser"] = points + sortie["a_preciser"]
     sortie["questions"] = nouvelles + sortie["questions"]
+    # Les faits que les règles ont lus : avec les réponses du client, le moteur décide seul, sans relire (13.4). Ce
+    # sont ses questions ; la lecture des clauses avait conclu, il ne manquait que leur contresignature.
+    if points:
+        sortie["faits"] = complete.get("faits", {})
+        sortie["faits_affiches"] = complete.get("faits_affiches", [])
     r.verdict.informations_manquantes = nouvelles + list(r.verdict.informations_manquantes)
     ligne = "Questions des règles, posées parce qu'elles retiennent la réponse : " + " ; ".join(nouvelles)
     sortie["raisonnement"].append(ligne)
@@ -293,6 +300,8 @@ def resultat_clauses(base: Base, contrat_id: str, sinistre: str, lu, decision, d
                      + (f" ← « {j.extrait_declaration} »" if j.extrait_declaration else "")
                      + (f" — {j.motif}" if j.motif else "")
                      for j in [*e.couvrent, *e.excluent, *e.limitent, *e.a_verifier]]
+    if lu.ajoutes:
+        raisonnement.append(f"Chapitres ajoutés d'après les garanties trouvées par les règles : {', '.join(lu.ajoutes)}")
     if lu.relancees:
         raisonnement.append(f"Clauses redemandées au modèle, faute de jugement : {', '.join(lu.relancees)}")
     if e.questions_retirees:

@@ -6473,6 +6473,145 @@ consigne, puis mesurer sur un jeu neuf. Écrits dans les limites du README.
 Tests : onze de plus (la forme commune, quatre cas ; la forme refusée ; le refus qui prend les clauses des règles ; la bougie qui nomme la garantie incendie ; les questions des règles, et pas quand elles concordent ; pas de rappel sur un refus ; les
 rappels partagés ; les questions de chaque sinistre par la chaîne de règles ; la fiche à deux sinistres).
 
+### 7.223 L'écran découpé en composants
+
+*27 novembre, après-midi, la v18 livrée.* Premier point de la feuille de route d'après l'envoi : un Angular propre.
+L'écran tenait dans un seul composant (≈ 650 lignes de TypeScript, ≈ 480 de HTML, ≈ 1 000 de styles). Rien ne change
+à l'écran ; tout change dans le code :
+- **un état partagé** (`echange.service.ts`) : le contrat, la déclaration, la méthode, les étapes, les réponses du
+  client, le suivi, l'article ouvert, la fiche, et ce qu'on en fait (analyser, décider, relire avec les réponses) ;
+  les composants le lisent et appellent ses méthodes, aucun ne garde son propre état ;
+- **dix composants** (`composants/`) : l'en-tête, le choix du contrat et des conditions particulières, la saisie,
+  l'accueil, une étape de l'échange, une décision (la déclaration ou l'un de ses sinistres), ce qui la fonde, les
+  questions au client, le suivi de l'analyse, l'article entier ; les gabarits internes (`ng-template`) disparaissent ;
+- **la mise en page intacte** : les composants ne créent pas de boîte (`display: contents`), et les styles de
+  l'écran deviennent globaux (`src/ecran.scss`), les mêmes classes s'appliquant partout ;
+- **des tests de composants** (`ecran.spec.ts`, vitest) : une question posée une fois avec ses réponses proposées ;
+  les réponses en mots pour plusieurs sinistres, même avec la chaîne de règles ; une étape à deux sinistres affiche
+  deux cadres et deux décisions.
+
+Écrit sans pouvoir compiler ici (pas de `node_modules` dans l'atelier) : `npm run build`, `npm test` et un essai à la
+main le vérifient. Aussi, ce jour : le libellé du contrat C dit que sa traduction partielle est un choix.
+
+### 7.224 Des chapitres plus stables, et moins d'attente après les réponses
+
+*27 novembre, fin d'après-midi.* Points 2 et 4 de la feuille de route d'après l'envoi.
+
+**Les chapitres trouvés par les règles s'ajoutent à la désignation** (`clauses.chapitres_des_regles`). La source des
+cas instables (7.221) : le modèle ne désigne pas les mêmes chapitres d'une lecture à l'autre (92 clauses au dossier
+une fois, 290 l'autre). Les règles, elles, lisent les faits et trouvent les garanties de l'événement de façon stable.
+Les articles des garanties qu'elles citent s'ajoutent aux chapitres du modèle, en ligne comme pour `juger` ; pas à la
+relecture, dont les chapitres sont déjà ceux de la première lecture. La chaîne de règles tourne pendant la
+désignation : l'attente ne change pas. Le raisonnement le dit (« chapitres ajoutés d'après les règles »). Un test.
+Reste à le mesurer : trois passes du jeu « cinq » (`juger --passage 4, 5, 6`, environ 6 $), comparées par
+`--stabilite --depuis 4` (sans les passes 1 à 3, d'avant le renfort). Le rejeu des passes d'avant n'a plus de sens : le dossier n'est plus le même.
+
+**Les questions des règles se répondent par le moteur seul.** Quand la lecture des clauses a conclu et que seules les
+règles hésitent (7.222), la réponse porte les faits que les règles ont lus ; l'écran envoie les réponses du client au
+moteur avec eux (`/decisions`), comme pour la chaîne de règles : la décision tombe en quelques secondes, sans relire
+la déclaration ni rappeler Mistral Large. La réponse est alors celle des règles, qui tranchent la question qu'elles
+ont posée. Dès qu'une question vient d'une clause, ou qu'il y a plusieurs sinistres, la déclaration complétée est
+relue, comme avant. Les faits ne s'affichent pas pour la lecture des clauses. Un test côté API, un côté écran.
+Pas encore fait : pour une clause « à vérifier », ne rejuger que les clauses douteuses (il faudrait garder les
+jugements de la première lecture).
+
+La consigne du point 3 (les « couvert » trop rapides) attend la mesure du point 2 : la changer avant mélangerait les
+deux effets dans les mêmes chiffres.
+
+### 7.225 Le renfort des chapitres, mesuré : pas de gain de stabilité
+
+*27 novembre, soir.* Mesure du 7.224 : passes 4, 5 et 6 du jeu « cinq » avec les règles (donc avec le renfort), puis
+`juger --stabilite --depuis 4`. Ma commande a oublié `--echantillon 10` : les vingt cas de chaque contrat ont été passés,
+pas dix, soit 180 analyses au lieu de 90 et environ 15 $ au lieu de 6 (5,3 millions de tokens envoyés, 2,4 millions
+reçus). Pour comparer à 7.221, le tableau ne garde que les dix premiers cas, ceux des passes 1 à 3.
+
+| Contrat (cas 1 à 10) | Justes, passes 1 / 2 / 3 (sans renfort) | Justes, passes 4 / 5 / 6 (avec) | Instables, avant → après |
+|---|---|---|---|
+| A | 10 / 10 / 7 | 9 / 9 / 10 | 3 → 3 (`c-a05`, `c-a06`, `c-a09`) |
+| B | 9 / 8 / 9 | 8 / 8 / 9 | 3 → 4 (`c-b01`, `c-b03`, `c-b04`, `c-b08`) |
+| D | 7 / 7 / 7 | 7 / 7 / 7 | 1 → 1 (`c-d02`) |
+| **Ensemble** | **26 / 25 / 23 (82 %)** | **24 / 24 / 26 (82 %)** | **7 → 8 sur 30** |
+
+Sur les vingt cas : 51, 48 et 52 justes sur 60 (84 %), aucun couvert à tort sur 180 analyses, trois refus à tort
+(`c-b08` deux fois, `c-d15` une), 14 cas instables sur 60, dont 5 seulement à cause d'une erreur 520 du fournisseur.
+
+**Ce que je lis.**
+- *Pas de gain.* Même justesse, autant de cas instables. Le renfort ne nuit pas (aucun couvert à tort, pas plus
+  d'attente), mais il ne prouve rien : je le garde pour ce qu'il ajoute au raisonnement, pas comme correction.
+- *Pourquoi.* L'hypothèse de 7.221 était fausse, ou incomplète : la garantie manquait rarement au dossier. Quand elle y
+  est ajoutée, le modèle peut encore ne pas la juger « couvre » (`c-b01`, passe 5 : 3.1.5.1 ajouté, « aucune
+  garantie ne couvre »). Et le renfort ajoute sans retirer : le modèle désigne encore des parties entières (« §1 »,
+  « §6 »), d'où les 290 clauses au dossier de `c-b03`, `c-b05`, `c-b08`, `c-b12`, `c-b19`.
+- *Les vraies causes, dans les sorties.* (1) L'erreur 520 du fournisseur, que le client ne relançait pas : cinq
+  analyses perdues. (2) La contresignature : `c-d01`, `c-d06`, `c-d09`, `c-d12`, `c-d18`, faux à chaque passe, mais
+  stables : la lecture conclut « couvert », les règles du contrat D disent autre chose. C'est voulu : D n'est traduit
+  qu'en partie, par choix, et un « couvert » que les règles ne peuvent pas contresigner reste « à préciser », pour
+  un gestionnaire. Ces cinq cas ne disent rien de la stabilité ; ils comptent faux parce que le jeu attend
+  « couvert ». (3) Une citation jugée inexacte, qui laisse une clause attendue sans jugement
+  (`c-a09`, `c-a13`, `c-d01`, `c-d04`, `c-d10`, `c-d19`). (4) Le jugement d'une même clause qui change (`c-a06` :
+  l'exclusion 1.4 deux fois, une question une fois).
+- *Corrigé tout de suite, sans frais.* Le client relance maintenant toute erreur 5xx, 520 compris (il ne relançait
+  que 500, 502, 503 et 504). Un test.
+- *Pas de correction sur ce jeu* : il est maintenant vu six fois.
+
+### 7.226 Les « couvert » trop rapides : deux règles de lecture, et le jeu « six » pour les mesurer
+
+*27 novembre, 20 h.* Point 3 de la feuille de route d'après l'envoi.
+
+**La consigne de jugement passe en v2** (`clauses-jugement`, archivée, manifeste à jour). Deux règles de lecture de
+plus, générales, écrites avant le jeu et sans le voir :
+- une cause que l'assuré présente comme seulement probable (« je pense que », « sans doute ») n'est pas établie : si
+  l'effet d'une clause en dépend, elle est « à vérifier », avec la question qui l'établirait ;
+- une garantie qui pose elle-même une condition (un lieu, une durée, un délai, un moyen de protection, une qualité
+  du bien ou de la personne) ne « couvre » que si la déclaration l'établit ; sinon « à vérifier ». Pas les
+  exclusions : une exclusion que rien n'évoque reste « sans effet ».
+Le risque est connu : plus de « à préciser » là où la réponse attendue est « couvert ». C'est ce que la mesure dira.
+
+**Le jeu « six »** (`data/six`, LISEZMOI), monté comme « cinq » (7.215) : trois agents Claude neufs, un par contrat,
+avec le seul texte des conditions générales et les 456 déclarations des jeux précédents ; 20 cas chacun (7, 7, 6),
+dont au moins six qui se jouent sur un détail fin (condition dite ou non dite, cause établie ou seulement probable),
+sans que les agents sachent ce qu'on mesure. Second avis par trois autres agents neufs, sans voir le premier :
+60 accords sur 60, aucun arbitrage. Une réponse « acceptable » de plus seulement si les deux l'ont proposée (un cas).
+Toutes les citations retrouvées mot pour mot. Je n'ai pas lu les cas au-delà du contrôle de format.
+
+**Pour comparer**, `juger --consigne-jugement v1` rejoue la consigne archivée (bilan suffixé `_v1`) : la v1 puis la
+v2 sur les mêmes cas, le reste du code identique. Par économie, la v1 ne repasse que les cas que la v2 laisse « à
+préciser » : les deux règles ne font que changer un « couvre » en « à vérifier », donc ce n'est que là que la v1 peut
+répondre autrement par leur effet (ailleurs, un écart ne serait que l'instabilité déjà mesurée). Environ 6 $ pour la
+v2 sur les 60 cas, 2 à 3 $ pour la v1 sur ce reste. `six` rejoint `JEUX_FERMES` et `JEUX_JAMAIS_VUS`. Un test.
+
+### 7.227 Le jeu « six », mesuré : la v2 évite trois « couvert » à tort, au prix de deux « à préciser »
+
+*27 novembre, 21 h 30.* Code figé et commité avant la mesure. La v2 (en service) sur les 60 cas, puis la v1 sur les
+29 cas que la v2 laisse « à préciser » (7.226). Environ 9 $ (2,95 millions de tokens envoyés, 1,35 million reçus).
+
+**La v2, sur un jeu jamais vu** : 46 justes sur 60 (77 %) : A 18, B 14, D 14. Un « couvert » à tort (`s-b14`, un
+python, que la définition du contenu écarte comme animal sauvage), deux refus à tort (`s-a14`, `s-b04`), onze « à
+préciser » à la place d'une réponse franche, dont cinq sur D, traduit en partie par choix. C'est moins que sur
+« cinq » (53 sur 60) : ce jeu est plus dur, écrit pour se jouer sur des détails fins.
+
+**La v1 contre la v2, sur les 29 cas.** 23 donnent la même réponse. Les 6 autres :
+
+| Cas | Attendu | v1 | v2 | Ce qui joue |
+|---|---|---|---|---|
+| `s-d03` | à préciser | couvert ✗ | à préciser ✓ | condition non dite : l'ami qui gardait le chien a-t-il sa propre assurance ? |
+| `s-d09` | à préciser | couvert ✗ | à préciser ✓ | condition non dite : le box est-il déclaré aux conditions particulières ? |
+| `s-d08` | non couvert | couvert ✗ | à préciser | l'option objets de valeur et les moyens de protection, demandés |
+| `s-d01` | couvert | couvert ✓ | à préciser ✗ | la v2 demande les conditions de la fête (durée, clés), que la déclaration rendait évidentes |
+| `s-b06` | couvert | couvert ✓ | à préciser ✗ | la v2 traite la déclaration du déménagement (une obligation de l'assuré) comme une condition de la garantie |
+| `s-b01`, `s-d11` | couvert, non couvert | justes | à préciser | pas l'effet des règles : la lecture v2 n'a trouvé aucune garantie (290 clauses au dossier pour `s-b01`) |
+
+Ainsi : la v2 évite trois « couvert » à tort (un sur 60 au lieu de quatre, en comptant `s-b14`), et en coûte deux
+justes (`s-d01`, `s-b06`) ; deux écarts relèvent de l'instabilité déjà connue. Sur les 60 cas, la v1 aurait fait
+environ 48 justes avec quatre « couvert » à tort ; la v2 en fait 46 avec un seul. Un « couvert » à tort est la pire
+erreur (on promet), un « à préciser » la moins grave (on pose une question) : **la v2 reste en service.** Les écarts
+sont peu nombreux et la lecture varie d'une passe à l'autre (7.225) : c'est une tendance, dans le sens attendu, pas
+une preuve.
+
+Défaut vu, non corrigé : la règle des conditions prend parfois une obligation de l'assuré (déclarer un changement,
+déclarer le sinistre sous cinq jours, `s-d04`) pour une condition de la garantie. La corriger maintenant serait
+régler sur ce jeu ; ce sera la première chose à mesurer sur le prochain jeu neuf, s'il y en a un.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 26 nov. 2026, après la mesure du jeu « cinq ». Dans l'ordre où je le ferais.

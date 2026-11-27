@@ -221,6 +221,8 @@ def test_mistral_requete_et_reessai(env_vide, monkeypatch):
         envoyees.append(requete)
         if len(envoyees) == 1:  # première tentative : limite de débit
             raise urllib.error.HTTPError(requete.full_url, 429, "trop", {"retry-after": "0"}, io.BytesIO(b""))
+        if len(envoyees) == 2:  # puis l'erreur 520 de Cloudflare, passagère elle aussi (7.225)
+            raise urllib.error.HTTPError(requete.full_url, 520, "?", {"retry-after": "0"}, io.BytesIO(b"error code: 520"))
         return _Reponse(json.dumps({"choices": [{"message": {"content": '{"ok": true}'}}]}).encode())
 
     monkeypatch.setattr(module_llm.urllib.request, "urlopen", faux_urlopen)
@@ -232,7 +234,7 @@ def test_mistral_requete_et_reessai(env_vide, monkeypatch):
     assert r.get_header("Authorization") == "Bearer secret"
     assert corps["response_format"] == {"type": "json_object"} and corps["temperature"] == 0
     assert corps["top_p"] == 1  # exigé par Mistral avec temperature=0
-    assert len(envoyees) == 2
+    assert len(envoyees) == 3
 
 
 def test_cle_refusee_message_clair(env_vide, monkeypatch):

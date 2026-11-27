@@ -29,12 +29,13 @@ def lire_jsonl(chemin: str | Path) -> list[dict]:
 # « aveugle » est le second (25 nov. 2026, 7.185) : trois cas du premier avaient fini par servir à corriger une règle.
 # « neuf » est le troisième (7.186) : le second a montré de vrais défauts, corrigés d'après lui ; il est donc « vu ».
 # « quatre » est le quatrième (7.187), après les corrections tirées du troisième ; « cinq », le cinquième (7.215),
-# écrit après la mesure du quatrième et les corrections de justesse.
-JEUX_FERMES = ("ferme", "aveugle", "neuf", "quatre", "cinq")
+# écrit après la mesure du quatrième et les corrections de justesse ; « six », le sixième (7.226), écrit pour mesurer
+# les deux règles de lecture du 27 nov.
+JEUX_FERMES = ("ferme", "aveugle", "neuf", "quatre", "cinq", "six")
 # Les jeux jamais regardés : ils ne se passent qu'une fois, pour la mesure finale (`juger --mesure-finale`). « cinq »
 # a été mesuré le 26 nov. (7.215) : il est vu, et se repasse librement (la stabilité, 7.220). Le prochain jeu neuf
-# viendra ici.
-JEUX_JAMAIS_VUS: tuple[str, ...] = ()
+# viendra ici : « six » (7.226).
+JEUX_JAMAIS_VUS: tuple[str, ...] = ("six",)
 JEUX = ("mise_au_point", "validation", "redaction", "golden", *JEUX_FERMES)
 
 
@@ -52,7 +53,8 @@ def fichiers_jeu(donnees: str | Path, contrat_id: str, jeu: str = "mise_au_point
     - aveugle : data/aveugle/…, un second jeu écrit de la même façon (7.185) ; mesuré une fois, puis vu (7.186) ;
     - neuf : data/neuf/…, le troisième, écrit après les corrections tirées du second ; mesuré une fois, puis vu ;
     - quatre : data/quatre/…, le quatrième (7.187) ; mesuré une fois (7.207), puis vu ;
-    - cinq : data/cinq/…, le cinquième (7.215), jamais regardé pour régler."""
+    - cinq : data/cinq/…, le cinquième (7.215), mesuré une fois, puis vu (la stabilité, 7.220) ;
+    - six : data/six/…, le sixième (7.226), jamais regardé pour régler."""
     if jeu not in JEUX:
         raise ValueError(f"jeu inconnu : {jeu}")
     racine = Path(donnees) / ("" if jeu == "mise_au_point" else jeu)

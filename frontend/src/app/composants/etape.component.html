@@ -1,0 +1,70 @@
+@let etape = courante();
+@let last = derniere();
+
+<article class="etape" [class.etape-passee]="!last">
+
+    <div class="etape-origine">
+        {{ etape.origine === 'analyse' ? 'Déclaration' : 'Après les réponses du client' }}
+        <span class="small">· {{ etape.reponse.mode === 'clauses' ? 'jugée clause par clause' : etape.reponse.durees_ms['lecture'] !== undefined ? 'lue par le modèle' : 'moteur seul, sans modèle' }}</span>
+    </div>
+    <blockquote class="etape-texte">{{ etape.texte }}</blockquote>
+
+    @if (ech.plusieurs(etape.reponse)) {
+        <!-- ### Plusieurs sinistres : une décision chacun, avec ce qui la fonde (7.222) -->
+        <p class="justification">{{ etape.reponse.sinistres!.length }} sinistres dans cette déclaration : une décision pour chacun.</p>
+        @for (s of etape.reponse.sinistres!; track $index; let k = $index) {
+            <section class="sinistre" [attr.aria-label]="'Sinistre ' + (k + 1) + ' : ' + s.titre">
+                <h3 class="sinistre-titre">{{ k + 1 }}. {{ s.titre }}</h3>
+                <app-decision [reponse]="s" />
+                <app-fondements [reponse]="s" [derniere]="last" />
+            </section>
+        }
+    } @else {
+        <app-decision [reponse]="etape.reponse" />
+    }
+
+    <app-questions [courante]="etape" [derniere]="last" />
+
+
+    @if (ech.plusieurs(etape.reponse)) {
+        <!-- Les réserves que les sinistres partagent : une fois, pour la déclaration -->
+        @if (last && ech.reserves().length) {
+            <div class="bloc">
+                <div class="bloc-titre">Pour toute la déclaration · ce que l’assureur pourra vérifier</div>
+                <ul class="limites">
+                    @for (p of ech.reserves(); track p.variable) {
+                        <li>{{ p.question }}</li>
+                    }
+                </ul>
+            </div>
+        }
+    } @else {
+        <app-fondements [reponse]="etape.reponse" [derniere]="last" />
+    }
+    <div class="actions">
+        <button type="button" class="bouton bouton-secondaire" [disabled]="ech.ficheEnCours()"
+            (click)="ech.telechargerFiche(etape)">
+            {{ ech.ficheEnCours() ? 'Fiche en cours…' : 'Télécharger la fiche (PDF)' }}
+        </button>
+    </div>
+
+    <details class="details">
+        <summary>{{ etape.reponse.mode === 'clauses' ? 'Raisonnement clause par clause et contrôles' : 'Raisonnement du moteur et contrôles' }}</summary>
+        @if (etape.reponse.avertissements.length) {
+            <div class="bloc-titre">Contrôles de la lecture</div>
+            <ul class="avertissements">
+                @for (a of etape.reponse.avertissements; track $index) {
+                    <li>{{ a }}</li>
+                }
+            </ul>
+        }
+        <div class="bloc-titre">Arbre de preuve</div>
+        <pre class="raisonnement">{{ etape.reponse.raisonnement.join('\n') || '—' }}</pre>
+        <div class="small">
+            {{ etape.reponse.mode }}
+            @for (d of etape.reponse.durees_ms | keyvalue; track d.key) {
+                · {{ d.key }} {{ d.value }} ms
+            }
+        </div>
+    </details>
+</article>

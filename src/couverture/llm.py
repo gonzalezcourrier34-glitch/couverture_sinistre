@@ -72,7 +72,7 @@ class ReponseLente(ReponseTronquee):
 
 def _poster(url: str, corps: dict, entetes: dict, timeout: int, tentatives: int = 7, relances_lentes: int = 0) -> dict:
     """POST JSON avec nouvelles tentatives sur les erreurs passagères : 429 (limite de débit) et
-    5xx, en attendant de plus en plus longtemps (2, 4, 8… jusqu'à 60 s, un peu d'aléa pour que les
+    5xx (tous : le 520 de Cloudflare a laissé cinq analyses sans réponse sur 180, 7.225), en attendant de plus en plus longtemps (2, 4, 8… jusqu'à 60 s, un peu d'aléa pour que les
     appels parallèles ne repartent pas ensemble). Au plus `APPELS_SIMULTANES` appels à la fois ;
     l'attente entre deux tentatives ne bloque pas les autres appels.
 
@@ -93,7 +93,7 @@ def _poster(url: str, corps: dict, entetes: dict, timeout: int, tentatives: int 
             raise ReponseLente(f"pas de réponse après {timeout} s") from e
         except urllib.error.HTTPError as e:
             detail = e.read().decode("utf-8", "replace")[:300]
-            if e.code in (429, 500, 502, 503, 504) and essai < tentatives:
+            if (e.code == 429 or 500 <= e.code < 600) and essai < tentatives:
                 delai = float((e.headers.get("retry-after") if e.headers else None) or attente)
                 time.sleep(min(delai, 60) + random.random())
                 attente = min(attente * 2, 60)

@@ -1,0 +1,80 @@
+@let etape = courante();
+@let last = derniere();
+
+<!-- ### Ce qu'il faut demander au client (dernière étape seulement) : le moteur seul décide,
+     pour la chaîne de règles et un seul sinistre -->
+
+@if (last && !ech.enMots() && ech.questions().length) {
+    <div class="bloc a-preciser">
+        <div class="bloc-titre">À demander au client</div>
+        @for (p of ech.questions(); track p.variable) {
+            <div class="question">
+                <div class="question-texte">{{ p.question }}</div>
+                @if (p.valeurs.length > maxPuces) {
+                    <!-- Trop de réponses possibles pour des boutons : une liste déroulante -->
+                    <select class="liste" [attr.aria-label]="p.question"
+                        (change)="ech.choisir(p.variable, $event)">
+                        <option value="" [selected]="!ech.reponses()[p.variable]">Choisir une réponse…</option>
+                        @for (v of p.valeurs; track v) {
+                            <option [value]="v" [selected]="ech.reponses()[p.variable] === v">{{ p.libelles?.[v] ?? lisible(v) }}</option>
+                        }
+                    </select>
+                } @else {
+                    <div class="valeurs" role="group" [attr.aria-label]="p.question">
+                        @for (v of p.valeurs; track v) {
+                            <button type="button" class="chip"
+                                [class.chip-on]="ech.reponses()[p.variable] === v"
+                                [attr.aria-pressed]="ech.reponses()[p.variable] === v"
+                                [attr.title]="p.aide[v]"
+                                (click)="ech.repondre(p.variable, v)">{{ p.libelles?.[v] ?? lisible(v) }}</button>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        <div class="actions">
+            <span class="small">Décision immédiate, par le moteur seul.</span>
+            <button type="button" class="bouton bouton-primaire"
+                [disabled]="!ech.nbReponses() || ech.chargement()" (click)="ech.decider()">
+                Décider avec {{ ech.nbReponses() }} réponse{{ ech.nbReponses() > 1 ? 's' : '' }}
+            </button>
+        </div>
+    </div>
+}
+
+<!-- ### Les questions, et les réponses du client en mots (7.218, 7.222) : la lecture des clauses, et
+     toute déclaration à plusieurs sinistres. Elles s'ajoutent à la déclaration, relue en entier ;
+     une question des règles garde ses réponses proposées. -->
+
+@if (last && ech.enMots() && ech.questionsEnMots().length) {
+    <div class="bloc a-preciser">
+        <div class="bloc-titre">À demander au client</div>
+        @for (q of ech.questionsEnMots(); track $index; let qi = $index) {
+            <div class="question">
+                <div class="question-texte">{{ q.texte }}</div>
+                <div class="valeurs reponse-libre">
+                    @for (v of (q.valeurs.length ? q.valeurs : ouiNon); track v) {
+                        <button type="button" class="chip" [class.chip-on]="ech.reponsesLibres()[qi] === v + '.'"
+                            (click)="ech.repondreLibrement(qi, ech.reponsesLibres()[qi] === v + '.' ? '' : v + '.')">{{ v }}</button>
+                    }
+                    <input type="text" class="champ-reponse" [attr.aria-label]="'Réponse du client : ' + q.texte"
+                        placeholder="ou la réponse du client, en mots"
+                        [value]="ech.reponsesLibres()[qi] || ''" (input)="ech.saisirReponse(qi, $event)">
+                </div>
+            </div>
+        }
+        <div class="actions">
+            @if (ech.reponsesTropLongues()) {
+                <span class="small">La déclaration et les réponses dépassent {{ longueurMax }} caractères : raccourcissez une réponse.</span>
+            } @else if (etape.reponse.mode === 'clauses') {
+                <span class="small">Nouvelle lecture des clauses, la déclaration complétée par ces réponses : deux à trois minutes.</span>
+            } @else {
+                <span class="small">Nouvelle lecture, la déclaration complétée par ces réponses : quelques secondes.</span>
+            }
+            <button type="button" class="bouton bouton-primaire"
+                [disabled]="!ech.nbReponsesLibres() || ech.reponsesTropLongues() || ech.chargement()" (click)="ech.relireAvecReponses()">
+                Relire avec {{ ech.nbReponsesLibres() }} réponse{{ ech.nbReponsesLibres() > 1 ? 's' : '' }}
+            </button>
+        </div>
+    </div>
+}

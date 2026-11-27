@@ -10,8 +10,8 @@
     "source": "couverture.analyse.clauses.SYSTEME_DESIGNATION"
   },
   "couverture-clauses-jugement": {
-    "version": "v1",
-    "empreinte": "fe95644e6e8e7a71",
+    "version": "v2",
+    "empreinte": "21731dc0f5e9d1a5",
     "source": "couverture.analyse.clauses.SYSTEME_JUGEMENT"
   },
   "couverture-decoupage-sinistres": {

@@ -1,0 +1,47 @@
+@let r = reponse();
+@let dernier = derniere();
+
+<!-- Les réserves : ce que l'assureur pourra vérifier (rien à demander au client) -->
+@if (dernier && ech.reservesDe(r).length) {
+    <div class="bloc">
+        <div class="bloc-titre">Sous réserve · ce que l’assureur pourra vérifier</div>
+        <ul class="limites">
+            @for (p of ech.reservesDe(r); track p.variable) {
+                <li>{{ p.question }}</li>
+            }
+        </ul>
+    </div>
+}
+
+@if (r.citations.length) {
+    <div class="bloc">
+        <div class="bloc-titre">Clauses citées</div>
+        @for (a of citationsParArticle(r.citations); track a.clauseId) {
+            <div class="citation" [class]="'role-' + a.role">
+                <div class="citation-tete">
+                    <button type="button" class="lien citation-article"
+                        [attr.aria-label]="'Lire l’article ' + a.clauseId + ' en entier'"
+                        (click)="ech.ouvrirArticle(a.clauseId, a.extraits)">Art. {{ a.clauseId }}</button>
+                    <span class="citation-role">{{ a.role }}</span>
+                    @if (a.pages.length) {
+                        <span class="small">p. {{ a.pages.join(', ') }}</span>
+                    }
+                </div>
+                @for (extrait of a.extraits; track extrait) {
+                    <q class="citation-extrait">{{ extrait }}</q>
+                }
+            </div>
+        }
+    </div>
+}
+
+@if (r.limites.length) {
+    <div class="bloc">
+        <div class="bloc-titre">Limites</div>
+        <ul class="limites">
+            @for (l of r.limites; track $index) {
+                <li><span class="citation-article">Art. {{ l.clause_id }}</span> {{ l.extrait }}</li>
+            }
+        </ul>
+    </div>
+}

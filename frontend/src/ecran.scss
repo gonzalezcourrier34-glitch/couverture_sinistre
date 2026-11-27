@@ -1,3 +1,6 @@
+// Les styles de l'écran, globaux depuis la découpe en composants (13.1) : chaque composant prend place dans la mise
+// en page sans créer de boîte (`display: contents`), et les mêmes classes s'appliquent partout.
+//
 // # Écran : la déclaration à gauche, la décision à droite
 //
 // Ordinateur : l'écran tient dans la fenêtre, sans défilement de page. À gauche, la zone de saisie prend la hauteur

@@ -143,6 +143,24 @@ def test_le_jeu_jamais_regarde_ne_se_lance_pas_par_megarde(base, tmp_path, monke
     assert "mesure finale" in str(arret.value)
 
 
+def test_une_consigne_de_jugement_archivee_se_rejoue(base, tmp_path, monkeypatch):
+    """7.226 : comparer deux versions de la consigne de jugement sur le même jeu ; la version archivée remplace celle
+    en service, et une version inconnue arrête tout avant le moindre appel."""
+    import argparse
+
+    from couverture.cli import juger
+
+    monkeypatch.setattr(clauses, "SYSTEME_JUGEMENT", clauses.SYSTEME_JUGEMENT)
+    a = argparse.Namespace(contrat="c1", sinistre=None, jeu=None, cas=[], modele="m", regles=False, detail=False,
+                           echantillon=0, mesure_finale=False, paralleles=1, rejouer=False, consigne_jugement="v9")
+    with pytest.raises(SystemExit, match="Pas de consigne"):
+        juger.executer(a, base, tmp_path)
+    a.consigne_jugement = "v1"
+    with pytest.raises(SystemExit, match="Donner une déclaration"):
+        juger.executer(a, base, tmp_path)
+    assert "seulement probable" not in clauses.SYSTEME_JUGEMENT and "« à juger »" in clauses.SYSTEME_JUGEMENT
+
+
 def test_la_stabilite_compare_les_passes_d_un_jeu(tmp_path):
     """7.220 : les bilans de trois passes ; un cas change de décision, un autre garde sa décision sur d'autres clauses."""
     from couverture.cli import juger
@@ -162,6 +180,7 @@ def test_la_stabilite_compare_les_passes_d_un_jeu(tmp_path):
     assert "instables : 1 sur 2 — b NON_COUVERT → INCERTAIN → NON_COUVERT" in sortie
     assert "justes : 2, 1, 2" in sortie and "même décision, autres clauses : 1 sur 1 — a" in sortie
     assert "Aucun bilan" in juger.stabilite(tmp_path, "quatre", "m")
+    assert "2 passes (2, 3) · 2 cas communs" in juger.stabilite(tmp_path, "cinq", "m", depuis=2)
 
 
 def test_le_message_met_en_tete_ce_qui_revient_a_chaque_sinistre(base):
@@ -457,6 +476,20 @@ def test_quand_les_regles_retiennent_le_couvert_leurs_questions_sont_posees(base
     assert "« à préciser »" in sortie["justification"] and "INCERTAIN" not in sortie["justification"]
 
 
+def test_les_questions_des_regles_se_repondent_par_le_moteur_seul(base, monkeypatch):
+    """13.4 : les faits que les règles ont lus accompagnent leurs questions ; l'écran les renvoie au moteur avec les
+    réponses, sans relire la déclaration (deux à trois minutes de moins)."""
+    from couverture.api import lecture_clauses, service
+
+    faits = {"evenement": ["vol"], "bien": ["velo"], "lieu": ["cave"]}
+    monkeypatch.setattr(service, "reponse_complete",
+                        lambda pipeline, r: {"a_preciser": [SERRURE], "faits": faits, "faits_affiches": []})
+    modele = Modele({"chapitres": ["3.1.2"], "motif": ""}, jugements(**{"3_1_2_1": "couvre"}))
+    _, sortie = lecture_clauses.analyser_clauses(base, Regles(Decision.INCERTAIN, ["Une serrure de sûreté ?"]), "c1",
+                                                 DECLARATION, modele)
+    assert sortie["faits"] == faits and sortie["a_preciser"][0]["variable"] == "serrure_surete"
+
+
 def test_les_questions_des_regles_ne_s_ajoutent_pas_quand_elles_concordent(base, monkeypatch):
     from couverture.api import lecture_clauses, service
 
@@ -579,3 +612,21 @@ def test_les_questions_en_phrase_des_regles_ne_se_perdent_pas(base, monkeypatch)
     regles = Regles(Decision.INCERTAIN, ["Une serrure de sûreté ? (oui : couvert)", "Le vol est-il lié à l'effraction ?"])
     _, sortie = lecture_clauses.analyser_clauses(base, regles, "c1", DECLARATION, modele)
     assert sortie["questions"] == ["Une serrure de sûreté ?", "Le vol est-il lié à l'effraction ?"]
+
+
+def test_les_chapitres_des_garanties_trouvees_par_les_regles_s_ajoutent_a_la_designation(base):
+    """13.2 : la désignation du modèle varie d'une lecture à l'autre ; les garanties que les règles trouvent pour le
+    sinistre s'ajoutent à ses chapitres. Pas à la relecture : ses chapitres sont déjà ceux de la première lecture."""
+    from couverture.models import Citation, Faits, Resultat, Verdict
+
+    regles = Resultat(sinistre=DECLARATION, contrat_id="c1", methode="regles", faits=Faits(), clauses_consultees=[],
+                      verdict=Verdict(decision=Decision.COUVERT, justification=".", citations=[
+                          Citation(clause_id="3.1.2.1", extrait="la tempête", role="garantie"),
+                          Citation(clause_id="3.1.2.2", extrait="les objets non fixés", role="exclusion")]))
+    assert clauses.chapitres_des_regles(regles) == ["3.1.2.1"] and clauses.chapitres_des_regles(None) == []
+    modele = Modele({"chapitres": [], "motif": ""}, jugements(**{"3_1_2_1": "couvre"}))
+    lecture = clauses.lire(base, "c1", modele, DECLARATION, regles=regles, renfort=clauses.chapitres_des_regles(regles))
+    assert lecture.ajoutes == ["3.1.2.1"] and lecture.decision == Decision.COUVERT, "sans le renfort, rien de désigné"
+    relue = clauses.lire(base, "c1", Modele(jugements(**{"3_1_2_1": "couvre"})), DECLARATION, regles=regles,
+                         chapitres=["3.1.2"], renfort=["2.10"])
+    assert relue.ajoutes == [] and "2.10" not in relue.designes

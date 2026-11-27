@@ -39,7 +39,7 @@ CONSIGNES: dict[str, tuple[str, str, str]] = {
     # La lecture des clauses (7.190 à 7.211), versionnée le 26 nov. 2026 (7.217) : en service depuis le 25, sans version
     # jusque-là ; la v1 est le texte mesuré sur le jeu « cinq ».
     "couverture-clauses-designation": ("couverture.analyse.clauses", "SYSTEME_DESIGNATION", "v1"),
-    "couverture-clauses-jugement": ("couverture.analyse.clauses", "SYSTEME_JUGEMENT", "v1"),
+    "couverture-clauses-jugement": ("couverture.analyse.clauses", "SYSTEME_JUGEMENT", "v2"),
     "couverture-clauses-arbitrage": ("couverture.analyse.clauses", "SYSTEME_ARBITRAGE", "v1"),
 }
 

@@ -1,0 +1,40 @@
+<form class="saisie" (submit)="$event.preventDefault(); ech.analyser()">
+    <!-- Le choix de la méthode sur la ligne du titre, à droite (7.216) : la lecture des clauses par défaut. -->
+    <div class="etiquette-ligne">
+        <label class="etiquette" for="sinistre">2. La déclaration du client</label>
+        <label class="choix-methode"
+               title="Lecture des clauses : chaque clause en jeu jugée par le modèle, citations vérifiées, « couvert » contresigné par les règles. Chaîne de règles : la déclaration lue en faits, les règles traduites du contrat décident.">
+            <span>Méthode</span>
+            <select class="liste liste-methode" [disabled]="ech.chargement()" (change)="ech.choisirMethode($event)">
+                <option value="clauses" [selected]="ech.methode() === 'clauses'">Lecture des clauses (2-3 min)</option>
+                <option value="regles" [selected]="ech.methode() === 'regles'">Chaîne de règles (5 s)</option>
+            </select>
+        </label>
+    </div>
+    <!-- La zone de saisie prend toute la hauteur qui reste ; le compteur est dans son coin. -->
+    <div class="zone-saisie">
+        <textarea id="sinistre" rows="4" [attr.maxlength]="longueurMax"
+            placeholder="Décrivez le sinistre comme le client l’écrirait : ce qui s’est passé, où, ce qui est abîmé…"
+            [value]="ech.sinistre()" (input)="ech.saisir($event)"></textarea>
+        <span class="compteur" aria-hidden="true">{{ ech.sinistre().length }} / {{ longueurMax }}</span>
+    </div>
+
+    <!-- Les exemples à gauche, les boutons à droite : une seule ligne sous la saisie. -->
+    <div class="pied-saisie">
+    <div class="exemples">
+        <span class="small">Exemples :</span>
+        @for (e of exemples; track e.titre) {
+            <button type="button" class="chip" [attr.title]="e.texte" (click)="ech.exemple(e.texte)">{{ e.titre }}</button>
+        }
+    </div>
+
+    <div class="actions">
+        @if (ech.etapes().length) {
+            <button type="button" class="bouton bouton-secondaire" (click)="ech.nouvelleDeclaration()">Nouvelle déclaration</button>
+        }
+        <button type="submit" class="bouton bouton-primaire" [disabled]="!ech.peutAnalyser()">
+            {{ ech.chargement() ? 'Analyse en cours…' : 'Analyser' }}
+        </button>
+    </div>
+    </div>
+</form>

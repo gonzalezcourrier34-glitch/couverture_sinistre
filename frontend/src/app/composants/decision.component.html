@@ -1,0 +1,23 @@
+@let r = reponse();
+
+<div class="verdict" [class]="$any(tons)[r.decision]">
+    <span class="verdict-libelle">{{ $any(libelles)[r.decision] }}</span>
+    @if (r.mode !== 'clauses') {
+        <span class="verdict-confiance">confiance {{ pourcent(r.confiance) }}</span>
+    } @else {
+        <span class="verdict-confiance">{{ r.confiance === 1 ? 'les règles concordent' : 'les règles ne concordent pas' }}</span>
+    }
+</div>
+<p class="justification">{{ r.justification }}</p>
+
+<!-- Les faits lus par les règles : pas pour la lecture des clauses, qui les garde pour répondre aux questions -->
+@if (r.mode !== 'clauses' && lignesDeFaits(r.faits, r.faits_affiches).length) {
+    <div class="bloc">
+        <div class="bloc-titre">Faits retenus</div>
+        <div class="faits">
+            @for (f of lignesDeFaits(r.faits, r.faits_affiches); track f.variable) {
+                <span class="fait"><span class="fait-variable">{{ f.variable }}&nbsp;:</span> {{ f.valeur }}</span>
+            }
+        </div>
+    </div>
+}

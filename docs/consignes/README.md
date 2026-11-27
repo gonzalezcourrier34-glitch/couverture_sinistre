@@ -10,7 +10,7 @@ version garde ici son **texte intégral**, dans `<consigne>/<version>.txt`.
 
 ## Historique
 
-En service : pour la chaîne de règles, `lecture-socle` v2, `lecture-details` v3, `verification-faits` v3, `decoupage-sinistres` v1, `redaction-regles` v13 ; pour la lecture des clauses, `clauses-designation` v1, `clauses-jugement` v1, `clauses-arbitrage` v1 (voir `config/versions_consignes.json`). Les autres sont celles des méthodes retirées le 18 nov. 2026 (DEMARCHE 7.36) et le 20 nov. 2026 (`faits-regles`, `document-brut`, `legalbench` : 7.110).
+En service : pour la chaîne de règles, `lecture-socle` v2, `lecture-details` v3, `verification-faits` v3, `decoupage-sinistres` v1, `redaction-regles` v13 ; pour la lecture des clauses, `clauses-designation` v1, `clauses-jugement` v2, `clauses-arbitrage` v1 (voir `config/versions_consignes.json`). Les autres sont celles des méthodes retirées le 18 nov. 2026 (DEMARCHE 7.36) et le 20 nov. 2026 (`faits-regles`, `document-brut`, `legalbench` : 7.110).
 
 | Consigne | Version | Date | Pourquoi |
 |---|---|---|---|
@@ -58,4 +58,5 @@ En service : pour la chaîne de règles, `lecture-socle` v2, `lecture-details` v
 | `verdict-direct` | — | 17 nov. 2026 | Retirée avec la méthode « direct » ; v1 archivée |
 | `clauses-designation` | v1 | 26 nov. 2026 | Lecture des clauses : désigner les chapitres à relire, d'après la table des matières (7.190 à 7.207). Versionnée le 26 (7.217), en service depuis le 25 : la v1 est le texte mesuré sur le jeu « cinq » |
 | `clauses-jugement` | v1 | 26 nov. 2026 | Lecture des clauses : juger chaque clause (couvre, exclut, limite, à vérifier, sans effet) avec une citation du contrat et une de la déclaration ; même date, même remarque |
+| `clauses-jugement` | v2 | 27 nov. 2026 | Deux règles de lecture de plus (DEMARCHE 7.226) : une cause seulement probable n'est pas établie ; une garantie qui pose une condition ne « couvre » que si la déclaration l'établit, sinon « à vérifier » |
 | `clauses-arbitrage` | v1 | 26 nov. 2026 | La relecture ciblée : un obstacle des règles à la fois, écarté seulement par une citation de la déclaration (7.211) |
