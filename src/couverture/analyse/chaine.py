@@ -8,6 +8,7 @@ import time
 
 from ..llm import LLM, ErreurLLM
 from ..models import Citation, Clause, ClauseRetenue, Condition, Decision, EtatCondition, Faits, Resultat, Verdict
+from ..models import LIBELLES_DECISION as _LIBELLES_DECISION
 from . import prolog
 from .lecture import (decouper_sinistres, extraire_faits_regles, faits_decisifs, juger_affirmations, question,
                       sources_impliquees, variables_du_contrat)
@@ -51,7 +52,8 @@ def phrase_de_la_reponse(d: dict, decision: Decision, retenues: list[dict], excl
         motif = ("Non couvert : aucune garantie ne s'applique, et le contrat l'exclut expressément ("
                  + " ; ".join(dict.fromkeys(f"« {x['garantie']} », {numero(x['article'])}" for x in exclues[:3])) + ").")
     elif d.get("aucune"):
-        motif = ("Non couvert : aucune garantie ne s'applique." if retenues
+        # Les garanties de l'événement, et pourquoi elles ne jouent pas : leurs clauses citées le disent (7.222).
+        motif = ("Non couvert : aucune garantie ne s'applique. " + " ; ".join(motifs[:3]) + "." if retenues
                  else SANS_GARANTIE)
     elif decision == Decision.NON_COUVERT and retenues and all(r.get("motif") == EXCLUE_SANS_ETRE_ETABLIE
                                                               for r in retenues):
@@ -370,7 +372,7 @@ class PipelineRegles:
 MARQUE = {"oui": "[oui]", "non": "[non]", "inconnu": "[ ? ]"}
 
 
-LIBELLES_DECISION = {Decision.COUVERT: "Couvert", Decision.NON_COUVERT: "Non couvert", Decision.INCERTAIN: "À préciser"}
+LIBELLES_DECISION = _LIBELLES_DECISION     # un seul endroit : models.py
 
 
 def ligne_du_sinistre(numero_: int, r: Resultat) -> str:
@@ -388,10 +390,14 @@ def ligne_du_sinistre(numero_: int, r: Resultat) -> str:
     return f"{numero_}. {r.titre} : {LIBELLES_DECISION[v.decision]}. {reste}{demander}"
 
 
-def plusieurs_sinistres(ensemble: Resultat, analyses: list[Resultat]) -> Resultat:
+def plusieurs_sinistres(ensemble: Resultat, analyses: list[Resultat], en_parallele: bool = False) -> Resultat:
     """La réponse à une déclaration qui contient plusieurs sinistres (7.168) : une ligne par sinistre, chacun avec
     sa décision. La décision d'ensemble n'est ferme que si tous les sinistres reçoivent la même ; sinon « à
-    préciser » : il n'y a pas une réponse pour le tout. Les citations sont celles des sinistres, sans doublon."""
+    préciser » : il n'y a pas une réponse pour le tout. Les citations sont celles des sinistres, sans doublon.
+
+    La même pour les deux méthodes (7.222) : la lecture des clauses lit ses sinistres en même temps
+    (`en_parallele` : l'attente est celle du plus long), la chaîne de règles l'un après l'autre (les temps
+    s'additionnent). Les tokens et le coût sont la somme de ceux des sinistres."""
     decisions = {x.verdict.decision for x in analyses}
     decision = decisions.pop() if len(decisions) == 1 else Decision.INCERTAIN
     # Citations, conditions et clauses consultées : celles de chaque sinistre, dans l'ordre, sans doublon.
@@ -419,13 +425,19 @@ def plusieurs_sinistres(ensemble: Resultat, analyses: list[Resultat]) -> Resulta
                 + "\n".join(ligne_du_sinistre(i, x) for i, x in enumerate(analyses, 1)),
                 avertissements=list(dict.fromkeys(avertissements)), raisonnement=raisonnement,
                 decision_initiale=decision)
-    # Les temps s'additionnent : le découpage de la déclaration, puis l'analyse de chaque sinistre.
+    # Le découpage de la déclaration, puis l'analyse de chaque sinistre : l'un après l'autre, ou en même temps.
     durees = dict(ensemble.durees_ms)
     for x in analyses:
         for k, ms in x.durees_ms.items():
-            durees[k] = durees.get(k, 0) + ms
+            durees[k] = max(durees.get(k, 0), ms) if en_parallele else durees.get(k, 0) + ms
+    tokens: dict[str, int] = {}
+    for x in analyses:
+        for k, n in (x.tokens or {}).items():
+            tokens[k] = tokens.get(k, 0) + n
+    couts = [x.cout_usd for x in analyses if x.cout_usd is not None]
     return Resultat(sinistre=ensemble.sinistre, contrat_id=ensemble.contrat_id, methode=ensemble.methode,
-                    faits=ensemble.faits, clauses_consultees=consultees, verdict=v, durees_ms=durees, parties=analyses)
+                    faits=ensemble.faits, clauses_consultees=consultees, verdict=v, durees_ms=durees, parties=analyses,
+                    tokens=tokens, cout_usd=round(sum(couts), 5) if couts else None)
 
 
 def _vu(n: dict) -> str:

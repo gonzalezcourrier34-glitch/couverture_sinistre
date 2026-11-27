@@ -68,3 +68,18 @@ def test_les_articles_cites_sont_joints_en_entier():
         'Le <span backColor="#fdf3bf">vol du contenu</span>, ici.<br/>Suite &amp; fin.')
     # L'article 2.10-a est cité mais absent de `clauses` : la fiche se produit quand même.
     assert texte(fiche.fiche_pdf("x", REPONSE, clauses={}))[0] == 1
+
+
+def test_plusieurs_sinistres_une_decision_chacun():
+    """7.222 : deux sinistres, deux décisions dans la fiche, chacune avec ce qui la fonde ; la réserve partagée une fois."""
+    gel = {"titre": "Le congélateur", "decision": "COUVERT", "justification": "Une garantie couvre.",
+           "a_preciser": [], "citations": [{"clause_id": "2.6", "extrait": "l'action de l'électricité",
+                                            "role": "garantie", "pages": [9]}]}
+    vol = REPONSE | {"titre": "Le vélo"}
+    commune = {"variable": "rappel_7.4", "nature": "reserve", "valeurs": [], "question": "Combien de chambres ?"}
+    reponse = REPONSE | {"sinistres": [vol, gel], "a_preciser": [commune], "citations": vol["citations"] + gel["citations"]}
+    _, t = texte(fiche.fiche_pdf("Deux sinistres.", reponse))
+    for attendu in ("SINISTRE 1 · LE VÉLO", "SINISTRE 2 · LE CONGÉLATEUR", "Couvert", "À préciser", "Art. 2.6",
+                    "serrure de sûreté ?", "Combien de chambres ?"):
+        assert attendu in t, attendu
+    assert t.count("Combien de chambres ?") == 1

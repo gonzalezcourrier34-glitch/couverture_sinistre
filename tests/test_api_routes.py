@@ -10,7 +10,7 @@ pytest.importorskip("httpx")
 
 from fastapi.testclient import TestClient  # noqa: E402
 
-from couverture.api import config, dependances, service  # noqa: E402
+from couverture.api import config, dependances, lecture_clauses, service  # noqa: E402
 from couverture.api.main import app  # noqa: E402
 from couverture.api.routes import decision  # noqa: E402
 from couverture.llm import ErreurLLM  # noqa: E402
@@ -265,7 +265,7 @@ def test_la_methode_clauses_se_choisit_par_requete(client, monkeypatch):
         r.methode = "clauses"
         return r, sortie | {"mode": "clauses"}
 
-    monkeypatch.setattr(service, "analyser_clauses", lecture)
+    monkeypatch.setattr(lecture_clauses, "analyser_clauses", lecture)
     for module in (analyse, analyse_suivie):
         monkeypatch.setattr(module, "modele_des_clauses", lambda: None)
     demande = {"contrat_id": CONTRAT, "sinistre": "En faisant du vélo, j'ai renversé un piéton qui s'est cassé le poignet."}
@@ -292,7 +292,7 @@ def test_le_suivi_bat_pendant_une_longue_attente(client, monkeypatch):
         r, sortie = service.analyser(chaine, sinistre)
         return r, sortie | {"mode": "clauses"}
 
-    monkeypatch.setattr(service, "analyser_clauses", lecture)
+    monkeypatch.setattr(lecture_clauses, "analyser_clauses", lecture)
     monkeypatch.setattr(analyse_suivie, "modele_des_clauses", lambda: None)
     monkeypatch.setattr(analyse_suivie, "BATTEMENT_S", 0.05)
     demande = {"contrat_id": CONTRAT, "methode": "clauses",

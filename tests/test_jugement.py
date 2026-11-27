@@ -110,7 +110,7 @@ def test_la_contresignature_des_regles():
     refus = jugement.Etat(Decision.NON_COUVERT, excluent=[Jugement("3.1.2.2", "exclut", "Les objets non fixés")])
     assert jugement.arbitrer(couvert, Decision.COUVERT) == (Decision.COUVERT, "")
     decision, desaccord = jugement.arbitrer(couvert, Decision.NON_COUVERT)
-    assert decision == Decision.INCERTAIN and "NON_COUVERT" in desaccord
+    assert decision == Decision.INCERTAIN and "« non couvert »" in desaccord and "NON_COUVERT" not in desaccord
     assert jugement.arbitrer(couvert, Decision.INCERTAIN)[0] == Decision.INCERTAIN
     decision, desaccord = jugement.arbitrer(refus, Decision.COUVERT)
     assert decision == Decision.NON_COUVERT and "l'emporte" in desaccord

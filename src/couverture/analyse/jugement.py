@@ -23,7 +23,7 @@ import re
 import sqlite3
 from dataclasses import dataclass, field
 
-from ..models import Clause, Decision
+from ..models import DECISION_DITE, Clause, Decision
 from ..texte import normaliser
 from . import attendu
 from .validation import extrait_present, passage_exact
@@ -372,20 +372,24 @@ def questions_utiles(lignes: list[Ligne], etat: Etat, **options) -> Etat:
     return etat
 
 
+#: La décision dite au client, dans les phrases : jamais le code interne (« INCERTAIN »), vu à l'essai (7.222).
+DITE = DECISION_DITE
+
+
 def arbitrer(etat: Etat, regles: Decision | None) -> tuple[Decision, str]:
     """La contresignature. « Couvert » n'est rendu que si la chaîne de règles le dit aussi ; un refus ou un doute
     fondé sur une clause citée tient seul. Rend la décision finale et, s'il y a lieu, le désaccord à afficher.
     `regles` : la décision de la chaîne de règles, ou rien si elle n'a pas répondu."""
     if etat.decision == Decision.COUVERT and regles is not None and regles != Decision.COUVERT:
         return Decision.INCERTAIN, ("la lecture des clauses conclut « couvert », les règles traduites répondent "
-                                    f"« {regles.value} » : à examiner")
+                                    f"« {DITE[regles]} » : à examiner")
     if etat.decision == Decision.NON_COUVERT and not etat.excluent and regles in (Decision.COUVERT, Decision.INCERTAIN):
         # « Aucune garantie examinée ne couvre » ne cite aucune clause : c'est une absence, pas un refus. Elle ne
         # l'emporte pas sur des règles qui couvrent (7.205) ni sur des règles qui hésitent (7.210) ; une garantie a
         # pu manquer au dossier.
         return Decision.INCERTAIN, ("aucune garantie examinée ne couvre, mais les règles traduites répondent "
-                                    f"« {regles.value} » : une garantie a pu échapper à la lecture, à examiner")
+                                    f"« {DITE[regles]} » : une garantie a pu échapper à la lecture, à examiner")
     if regles is not None and regles != etat.decision:
-        return etat.decision, (f"les règles traduites répondaient « {regles.value} » ; la lecture des clauses "
+        return etat.decision, (f"les règles traduites répondaient « {DITE[regles]} » ; la lecture des clauses "
                                "l'emporte, avec la clause citée")
     return etat.decision, ""

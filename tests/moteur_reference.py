@@ -396,7 +396,9 @@ class Moteur:
         if nt:  # 7.84 : même un « couvert » ; couvrir une partie n'est pas couvrir la demande
             d.update(decision="INCERTAIN", non_traduits=nt, aucune=False)
         d["exclusions_etablies"] = self.exclusions_etablies(d)
-        d["visent_evenement"] = [r["id"] for r in d["garanties"] if self.concerne_evenement(r["id"])]   # 7.165
+        # 7.165 ; 7.222 : quand aucune ne s'applique, aussi celles dont une définition écarte l'événement.
+        vise = self.concerne_evenement if d.get("aucune") is True else self.etablit_evenement
+        d["visent_evenement"] = [r["id"] for r in d["garanties"] if vise(r["id"])]
         d["accessoires"] = []
         if d["decision"] == "COUVERT":           # 7.68 : une garantie accessoire ne joue qu'après un sinistre couvert
             for g in self.c.regles("garantie", 4):
@@ -407,6 +409,10 @@ class Moteur:
         return d
 
     def concerne_evenement(self, g) -> bool:
+        pe = [p.args[1] for p in self.c.regles("perimetre", 2) if p.args[0] == g and "evenement" in self.variables(p.args[1])]
+        return any(self.eval(p) == OUI for p in pe)   # 7.222 : l'événement déclaré est parmi les siens
+
+    def etablit_evenement(self, g) -> bool:
         pe = [p.args[1] for p in self.c.regles("perimetre", 2) if p.args[0] == g and "evenement" in self.variables(p.args[1])]
         return bool(pe) and all(self.eval(p) == OUI for p in pe)
 

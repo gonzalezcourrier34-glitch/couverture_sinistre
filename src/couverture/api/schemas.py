@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 class AnalyseRequest(BaseModel):
@@ -113,10 +113,14 @@ class Decision(BaseModel):
         Les faits retenus, à renvoyer à `POST /api/v1/decisions` avec les réponses aux questions.
     faits_affiches : list[FaitAffiche]
         Les mêmes faits, avec les libellés du vocabulaire, pour l'affichage.
-    sinistres : list[dict]
-        Quand la déclaration contient plusieurs sinistres : la réponse complète de chacun, avec son `titre` et les
-        phrases de la déclaration qui le concernent (`declaration`). La `justification` d'ensemble les résume, une
-        ligne par sinistre ; la `decision` d'ensemble n'est ferme que s'ils reçoivent tous la même.
+    sinistres : list[Sinistre]
+        Quand la déclaration contient plusieurs sinistres : la réponse complète de chacun (`Sinistre`), avec son
+        `titre` et les phrases de la déclaration qui le concernent (`declaration`). Vide pour un seul sinistre :
+        la réponse est alors la sienne. La `justification` d'ensemble les résume, une ligne par sinistre ; la
+        `decision` d'ensemble n'est ferme que s'ils reçoivent tous la même ; `a_preciser` et `questions` reprennent
+        celles de chacun, précédées de son titre, et les réserves qu'ils partagent, une fois (7.222).
+
+    La même forme pour les deux méthodes (`mode` : `regles:…` ou `clauses`) : l'écran ne lit qu'elle.
     """
 
     contrat_id: str | None
@@ -133,8 +137,37 @@ class Decision(BaseModel):
     raisonnement: list[str]
     mode: str
     durees_ms: dict[str, int]
-    sinistres: list[dict[str, Any]] = Field(default_factory=list)
+    sinistres: list[Sinistre] = Field(default_factory=list)
     chapitres: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _une_forme_par_cas(self) -> Decision:
+        """Un sinistre : pas de liste ; plusieurs : chacun le sien, sans sous-sinistres, et ses questions reprises."""
+        if len(self.sinistres) == 1:
+            raise ValueError("un seul sinistre ne se range pas dans `sinistres` : la réponse est la sienne")
+        for s in self.sinistres:
+            if s.sinistres:
+                raise ValueError(f"le sinistre « {s.titre} » contient lui-même des sinistres")
+            manquantes = [q for q in s.questions if f"{s.titre} — {q}" not in self.questions]
+            if manquantes:
+                raise ValueError(f"questions du sinistre « {s.titre} » absentes de l'ensemble : {manquantes}")
+        return self
+
+
+class Sinistre(Decision):
+    """La réponse pour l'un des sinistres d'une déclaration qui en raconte plusieurs (7.168, 7.218, 7.222)."""
+
+    titre: str = Field(min_length=1)
+    declaration: str = ""
+
+
+Decision.model_rebuild()
+
+
+def au_format(reponse: dict[str, Any]) -> dict[str, Any]:
+    """Une réponse du service, validée et mise à la forme de l'API (`Decision`) : celle que rend `/analyses`. Le
+    flux `/analyses/suivi` la passe aussi par là, pour que l'écran reçoive toujours la même forme (7.222)."""
+    return Decision.model_validate(reponse).model_dump(mode="json")
 
 
 class FicheRequest(BaseModel):

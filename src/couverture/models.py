@@ -58,6 +58,12 @@ class Decision(str, Enum):
     INCERTAIN = "INCERTAIN"
 
 
+#: La décision telle qu'on la montre (le badge, le début d'une phrase), et telle qu'on la dit dans une phrase.
+#: Un seul endroit pour les deux méthodes, la fiche et les messages (7.222) : jamais le code interne à l'écran.
+LIBELLES_DECISION = {Decision.COUVERT: "Couvert", Decision.NON_COUVERT: "Non couvert", Decision.INCERTAIN: "À préciser"}
+DECISION_DITE = {d: libelle[:1].lower() + libelle[1:] for d, libelle in LIBELLES_DECISION.items()}
+
+
 class Citation(BaseModel):
     """Un extrait de clause cité par la réponse ; `valide` passe à faux si l'extrait n'est pas retrouvé dans la clause."""
 

@@ -12,7 +12,8 @@ import {
 } from '@angular/core/rxjs-interop';
 
 import {
-    KeyValuePipe
+    KeyValuePipe,
+    NgTemplateOutlet
 } from '@angular/common';
 
 import {
@@ -114,7 +115,7 @@ function messageErreur(
 
 @Component({
     selector: 'app-root',
-    imports: [KeyValuePipe],
+    imports: [KeyValuePipe, NgTemplateOutlet],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss',
     host: {
@@ -135,6 +136,9 @@ export class AppComponent implements OnInit {
     readonly longueurMax = LONGUEUR_MAX;
 
     readonly maxPuces = MAX_PUCES;
+
+    /** Les réponses proposées à une question sans réponses à elle : oui ou non, ou la réponse en mots. */
+    readonly ouiNon: readonly string[] = ['Oui', 'Non'];
 
     /** Les étapes affichées pendant l'analyse : celles de la chaîne de règles, sauf si l'API en annonce d'autres. */
     readonly etapesSuivi = signal<readonly EtapeSuivi[]>(ETAPES_SUIVI);
@@ -243,6 +247,34 @@ export class AppComponent implements OnInit {
         () => this.aPreciser().filter((p) => p.nature === 'reserve')
     );
 
+    /**
+     * On répond en mots, et la déclaration complétée est relue (7.218, 7.222) : avec la lecture des clauses, et pour
+     * toute déclaration à plusieurs sinistres, quelle que soit la méthode. Sinon le moteur décide seul.
+     */
+    readonly enMots = computed(() => {
+        const r = this.derniere()?.reponse;
+        return !!r && (r.mode === 'clauses' || this.plusieurs(r));
+    });
+
+    /**
+     * Les questions auxquelles on répond en mots : celles qui ont des réponses proposées (les règles), puis celles
+     * en phrase qu'elles ne disent pas déjà. Une même question n'est posée qu'une fois.
+     */
+    readonly questionsEnMots = computed<{ texte: string; valeurs: string[] }[]>(() => {
+        const r = this.derniere()?.reponse;
+        if (!r) {
+            return [];
+        }
+        const points = r.a_preciser
+            .filter((p) => p.nature === 'question')
+            .map((p) => ({ texte: p.question, valeurs: p.valeurs.map((v) => p.libelles?.[v] ?? lisible(v)) }))
+            .map((q) => (q.valeurs.length > MAX_PUCES ? { ...q, valeurs: [] } : q));
+        const phrases = r.questions
+            .filter((q) => !points.some((p) => q.startsWith(p.texte)))
+            .map((q) => ({ texte: q, valeurs: [] as string[] }));
+        return [...points, ...phrases];
+    });
+
     readonly peutAnalyser = computed(() => {
         const longueur = this.sinistre().trim().length;
         return !!this.contratId() && longueur >= LONGUEUR_MIN && longueur <= LONGUEUR_MAX && !this.chargement();
@@ -258,7 +290,7 @@ export class AppComponent implements OnInit {
 
     /** La déclaration suivie des réponses du client : ce que relira la lecture des clauses. */
     readonly declarationAvecReponses = computed(() => {
-        const questions = this.derniere()?.reponse.questions ?? [];
+        const questions = this.questionsEnMots().map((q) => q.texte);
         const lignes = questions
             .map((q, i) => ({ q, r: (this.reponsesLibres()[i] ?? '').trim() }))
             .filter((x) => !!x.r)
@@ -439,8 +471,9 @@ export class AppComponent implements OnInit {
 
     relireAvecReponses(): void {
         const texte = this.declarationAvecReponses();
-        const questions = this.derniere()?.reponse.questions ?? [];
-        if (!texte || this.reponsesTropLongues() || this.chargement()) {
+        const questions = this.questionsEnMots().map((q) => q.texte);
+        const reponse = this.derniere()?.reponse;
+        if (!texte || !reponse || this.reponsesTropLongues() || this.chargement()) {
             return;
         }
         const resume = questions
@@ -448,8 +481,29 @@ export class AppComponent implements OnInit {
             .filter((x) => !!x.r)
             .map((x) => `${x.q} ${x.r}`)
             .join(' ; ');
-        // Les chapitres de la lecture précédente : la désignation n'est pas redemandée, le dossier est le même (7.218).
-        this.analyserTexte(texte, 'clauses', resume, this.derniere()?.reponse.chapitres);
+        // La même méthode que la réponse ; pour la lecture des clauses, les chapitres déjà désignés : la désignation
+        // n'est pas redemandée, le dossier est le même (7.218).
+        if (reponse.mode === 'clauses') {
+            this.analyserTexte(texte, 'clauses', resume, reponse.chapitres);
+        } else {
+            this.analyserTexte(texte, 'regles', resume);
+        }
+    }
+
+
+    // # Plusieurs sinistres (7.222)
+
+    plusieurs(
+        r: Decision
+    ): boolean {
+        return (r.sinistres?.length ?? 0) > 1;
+    }
+
+    /** Les réserves d'une décision, ou d'un sinistre : ce que l'assureur pourra vérifier. */
+    reservesDe(
+        r: Decision
+    ): APreciser[] {
+        return trierAPreciser(r.a_preciser ?? []).filter((p) => p.nature === 'reserve');
     }
 
 

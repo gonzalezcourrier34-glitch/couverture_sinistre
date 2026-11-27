@@ -128,3 +128,40 @@ def test_souscription_publiee_et_gardee_a_la_decision(base, oracle):
     _, r = service.decider(base, CONTRAT, faits | {"option_materiel_multimedia": "oui"}, oracle)
     assert r["decision"] == "COUVERT" and r["faits"]["option_materiel_multimedia"] == "oui"
     assert r["faits_affiches"][-1]["libelle"] == "Garantie « matériel multimédia » souscrite"
+
+
+def test_plusieurs_sinistres_par_les_regles_rendent_les_questions_de_chacun():
+    """7.222 : à plusieurs sinistres, la chaîne de règles rangeait ses questions dans chaque ligne de `sinistres`,
+    que l'écran ne lisait pas : aucune question affichée. L'ensemble les reprend, précédées du titre."""
+    from couverture.models import Decision, Resultat, Verdict
+
+    def partie(titre):
+        r = Resultat(sinistre=titre, contrat_id=CONTRAT, methode="regles", faits=Faits(), clauses_consultees=[],
+                     verdict=Verdict(decision=Decision.INCERTAIN, justification="."))
+        r.titre = titre
+        return r
+
+    class Pipeline:
+        def analyser(self, sinistre, **_):
+            return Resultat(sinistre=sinistre, contrat_id=CONTRAT, methode="regles", faits=Faits(),
+                            clauses_consultees=[], verdict=Verdict(decision=Decision.INCERTAIN, justification="."),
+                            parties=[partie("Le vol"), partie("La fuite")])
+
+    _, sortie = service.analyser(Pipeline(), "Deux sinistres.")
+    assert [x["titre"] for x in sortie["sinistres"]] == ["Le vol", "La fuite"]
+    assert [p["variable"] for p in sortie["a_preciser"]] == ["evenement_1", "evenement_2"]
+    assert sortie["a_preciser"][0]["question"].startswith("Le vol — ")
+
+
+def test_la_bougie_qui_a_brule_nomme_la_garantie_incendie(regles):
+    """7.222 : « la table a brûlé », sans embrasement dit. La garantie incendie porte sur l'événement (une de ses
+    conditions sur l'événement est établie, aucune n'est réfutée) : le refus la nomme et cite ce qui l'écarte, au
+    lieu de « aucune garantie de ce contrat ne porte sur cet événement »."""
+    faits = {"evenement": ["incendie"], "bien": ["mobilier_jardin"], "lieu": ["jardin"], "flammes": "oui"}
+    d = Explorateur(regles, faits).decider()
+    assert d["decision"] == "NON_COUVERT" and "incendie" in d["visent_evenement"]
+    # Lu à l'essai : « feu propagé : non ». La définition de l'incendie est alors réfutée : la garantie reste nommée,
+    # et c'est cette définition qui l'écarte.
+    d = Explorateur(regles, faits | {"embrasement": "non"}).decider()
+    assert d["decision"] == "NON_COUVERT" and "incendie" in d["visent_evenement"]
+    assert "vol_batiment" not in d["visent_evenement"]

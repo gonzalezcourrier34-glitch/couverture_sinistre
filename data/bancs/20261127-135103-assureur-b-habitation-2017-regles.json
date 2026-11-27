@@ -1,0 +1,341 @@
+{
+ "date": "2026-11-27T13:51:02",
+ "contrat": "assureur-b-habitation-2017",
+ "methode": "regles",
+ "jeu": "golden",
+ "golden": {
+  "version": 14,
+  "empreinte": "b2148e39ad12cab0",
+  "fige": true,
+  "n": 15,
+  "valides": 0,
+  "auteurs": {
+   "claude": 15
+  }
+ },
+ "couches": {
+  "regles": {
+   "metriques": {
+    "n": 15,
+    "exactitude": 1.0,
+    "exactitude_stricte": 0.933,
+    "faux_couverts": 0,
+    "faux_refus": 0,
+    "taux_incertain": 0.133,
+    "rappel_questions": 1.0,
+    "questions_par_incertain": 1.5,
+    "incertains_tranchables": 0.5,
+    "questions_inutiles_retirees": 19
+   },
+   "groupes": {
+    "auteur : claude": {
+     "n": 15,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.933,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.133
+    },
+    "garantie : 3.1.6": {
+     "n": 15,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.933,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.133
+    },
+    "thème : base": {
+     "n": 7,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.0
+    },
+    "thème : incertain": {
+     "n": 1,
+     "exactitude": 1.0,
+     "exactitude_stricte": 1.0,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 1.0
+    },
+    "thème : piege": {
+     "n": 7,
+     "exactitude": 1.0,
+     "exactitude_stricte": 0.857,
+     "faux_couverts": 0,
+     "faux_refus": 0,
+     "taux_incertain": 0.143
+    }
+   },
+   "cas": [
+    {
+     "id": "b-v01",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 1,
+     "questions": [
+      "abus_confiance",
+      "occupation_irreguliere",
+      "travaux_construction"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v02",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v03",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v04",
+     "attendu": "INCERTAIN",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 4,
+     "questions": [
+      "plainte_deposee"
+     ],
+     "rappel_questions": 1.0,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v05",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 1,
+     "questions": [
+      "abus_confiance",
+      "occupation_irreguliere",
+      "travaux_construction"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v06",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v07",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 0,
+     "questions": [
+      "option_materiel_multimedia",
+      "option_vol"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 0.5,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v08",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v09",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 6,
+     "questions": [
+      "bien"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v10",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 1,
+     "questions": [
+      "abus_confiance",
+      "occupation_irreguliere",
+      "travaux_construction"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v11",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v12",
+     "attendu": "NON_COUVERT",
+     "obtenu": "NON_COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 0,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v13",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": true,
+     "inutiles": 1,
+     "questions": [
+      "abus_confiance",
+      "occupation_irreguliere",
+      "travaux_construction"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v14",
+     "attendu": "COUVERT",
+     "obtenu": "COUVERT",
+     "ok": true,
+     "exact": true,
+     "tranchable": false,
+     "inutiles": 2,
+     "questions": [],
+     "rappel_questions": null,
+     "rappel_clauses": 0.0,
+     "non_traduits": []
+    },
+    {
+     "id": "b-v15",
+     "attendu": "NON_COUVERT",
+     "obtenu": "INCERTAIN",
+     "ok": true,
+     "exact": false,
+     "tranchable": true,
+     "inutiles": 3,
+     "questions": [
+      "sejour_temporaire",
+      "lien_causal_travaux"
+     ],
+     "rappel_questions": null,
+     "rappel_clauses": 1.0,
+     "non_traduits": []
+    }
+   ]
+  }
+ },
+ "avertissements": [],
+ "portes": [
+  {
+   "couche": "regles",
+   "critere": "faux_couverts",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 0,
+   "ok": true
+  },
+  {
+   "couche": "regles",
+   "critere": "faux_refus",
+   "sens": "max",
+   "seuil": 0,
+   "valeur": 0,
+   "ok": true
+  },
+  {
+   "couche": "regles",
+   "critere": "exactitude",
+   "sens": "min",
+   "seuil": 0.95,
+   "valeur": 1.0,
+   "ok": true
+  },
+  {
+   "couche": "regles",
+   "critere": "rappel_questions",
+   "sens": "min",
+   "seuil": 0.9,
+   "valeur": 1.0,
+   "ok": true
+  },
+  {
+   "couche": "regles",
+   "critere": "questions_par_incertain",
+   "sens": "max",
+   "seuil": 3,
+   "valeur": 1.5,
+   "ok": true
+  }
+ ],
+ "passe": true
+}

@@ -23,6 +23,7 @@ from reportlab.lib.units import mm
 from reportlab.platypus import (HRFlowable, KeepTogether, PageBreak, Paragraph, SimpleDocTemplate, Spacer, Table,
                                 TableStyle)
 
+from ..models import LIBELLES_DECISION
 from . import prolog
 
 PRIMAIRE, NUIT = colors.HexColor("#2957c8"), colors.HexColor("#041d58")
@@ -31,7 +32,7 @@ BORD = colors.HexColor("#eaeef6")
 # Fond, bordure et texte de la décision : les mêmes tons que les pastilles de l'écran.
 TONS = {"COUVERT": ("#e0f5f3", "#00a88c", "#006353"), "NON_COUVERT": ("#fff0f0", "#ed5e63", "#a32c30"),
         "INCERTAIN": ("#fefae8", "#f5ce22", "#7b6711")}
-LIBELLES = {"COUVERT": "Couvert", "NON_COUVERT": "Non couvert", "INCERTAIN": "À préciser"}
+LIBELLES = {d.value: libelle for d, libelle in LIBELLES_DECISION.items()}   # un seul endroit : models.py
 REMPLACEMENTS = {"→": ":", "›": ">", "≥": ">=", "≤": "<=", "\u202f": "\u00a0"}
 MENTION = ("Démonstration. Cette fiche est produite automatiquement à partir des conditions générales ; elle ne "
            "remplace pas l'examen du dossier par un gestionnaire.")
@@ -113,11 +114,11 @@ def _bloc_declaration(sinistre: str, largeur: float) -> list:
     return blocs
 
 
-def _bloc_decision(reponse: dict, decision: str, largeur: float) -> list:
+def _bloc_decision(reponse: dict, decision: str, largeur: float, titre: str = "LA DÉCISION") -> list:
     """La décision dans sa pastille de couleur, la confiance, puis la justification."""
     blocs: list = []
     fond, bord, encre = (colors.HexColor(c) for c in TONS.get(decision, TONS["INCERTAIN"]))
-    blocs.append(Paragraph("LA DÉCISION", RUBRIQUE))
+    blocs.append(Paragraph(propre(titre), RUBRIQUE))
     confiance = reponse.get("confiance")
     pastille = Table([[Paragraph(f"<b>{LIBELLES.get(decision, decision)}</b>",
                                  _style("verdict", fontName="Helvetica-Bold", fontSize=15, leading=19, textColor=encre)),
@@ -225,10 +226,25 @@ def fiche_pdf(sinistre: str, reponse: dict, contrat: dict | None = None, date: d
     decision = reponse.get("decision", "INCERTAIN")
     largeur = A4[0] - 36 * mm
     articles = _citations_par_article(reponse.get("citations") or [])
-    blocs = [*_bloc_entete(reponse, contrat, date, largeur), *_bloc_declaration(sinistre, largeur),
-             *_bloc_decision(reponse, decision, largeur), *_bloc_faits(reponse), *_bloc_points(reponse, decision),
-             *_bloc_clauses_citees(articles, largeur), *_bloc_limites_et_controles(reponse),
-             *_bloc_articles_entiers(articles, clauses)]
+    parties = reponse.get("sinistres") or []
+    if len(parties) > 1:
+        # Plusieurs sinistres : une décision chacun, avec ce qui la fonde (7.222). Pour l'ensemble, les seules
+        # réserves que les sinistres partagent ; les articles entiers à la fin, une fois chacun.
+        blocs = [*_bloc_entete(reponse, contrat, date, largeur), *_bloc_declaration(sinistre, largeur)]
+        for i, x in enumerate(parties, 1):
+            d = x.get("decision", "INCERTAIN")
+            blocs += [*_bloc_decision(x, d, largeur, f"SINISTRE {i} · {x.get('titre', '').upper()}"),
+                      *_bloc_faits(x), *_bloc_points(x, d),
+                      *_bloc_clauses_citees(_citations_par_article(x.get("citations") or []), largeur),
+                      *_bloc_limites_et_controles(x | {"avertissements": []})]
+        communes = {"a_preciser": [p for p in reponse.get("a_preciser") or [] if p.get("nature") == "reserve"]}
+        blocs += [*_bloc_points(communes, decision), *_bloc_limites_et_controles({"avertissements": reponse.get("avertissements")}),
+                  *_bloc_articles_entiers(articles, clauses)]
+    else:
+        blocs = [*_bloc_entete(reponse, contrat, date, largeur), *_bloc_declaration(sinistre, largeur),
+                 *_bloc_decision(reponse, decision, largeur), *_bloc_faits(reponse), *_bloc_points(reponse, decision),
+                 *_bloc_clauses_citees(articles, largeur), *_bloc_limites_et_controles(reponse),
+                 *_bloc_articles_entiers(articles, clauses)]
 
     def pied(canvas, doc):
         canvas.saveState()

@@ -103,6 +103,14 @@ export interface Decision {
     durees_ms: Record<string, number>;
     /** Lecture des clauses : les chapitres relus, renvoyés pour relire après les réponses du client (7.218). */
     chapitres?: string[];
+    /** Plusieurs sinistres : la réponse de chacun, avec son titre (7.168, 7.218) ; affichée une par une (7.222). */
+    sinistres?: Sinistre[];
+}
+
+/** La réponse pour un sinistre d'une déclaration qui en raconte plusieurs. */
+export interface Sinistre extends Decision {
+    titre: string;
+    declaration: string;
 }
 
 /** Une étape de l'échange : une analyse de déclaration, ou une décision après les réponses du client. */

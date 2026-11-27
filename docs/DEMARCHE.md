@@ -6380,6 +6380,99 @@ le service, ou ne touchent pas la décision).
 Coût : 1,70 million de tokens envoyés et 0,84 million reçus pour les deux passes, environ 5,8 $ (moins de 10 centimes
 par cas) ; 47 à 73 s par cas en parallèle, 2 à 7 minutes par analyse.
 
+### 7.222 La journée d'essai du site : ce que l'usage montre et que les mesures ne voient pas
+
+*27 novembre, matin.* Six déclarations tapées sur le site en ligne (image v17), comme le ferait la recruteuse. Les
+mesures comptent des décisions ; l'essai a montré ce que le client lit. Cinq points, rangés par cause.
+
+**1. Le désaccord des deux méthodes laissait le client sans rien à faire.** « On a forcé la porte de ma cave et on m'a
+volé mon vélo » : la lecture des clauses conclut « couvert », les règles hésitent (une serrure de sûreté ?), la
+contresignature rend « à préciser »… sans aucune question. La lecture n'avait pas de doute, donc pas de question ;
+celles des règles se perdaient. Même chose pour le garage fracturé. Règle (`lecture_clauses.poser_les_questions_des_regles`) :
+quand la réponse est ramenée à « à préciser » parce que les règles hésitent, leurs questions sont posées, avec leurs
+réponses proposées ; les réponses s'ajoutent à la déclaration, que les deux lectures relisent. La décision ne change
+pas. Et la phrase ne montre plus les codes internes (« ramenée à « INCERTAIN » ») : « à préciser », « non couvert ».
+La phrase elle-même était abstraite : « Une garantie couvre, aucune clause examinée n'exclut. Réponse ramenée à… ».
+Elle nomme maintenant la clause qui couvre, celle qui exclut ou ce qui reste à vérifier, avec le motif du modèle, et,
+quand les règles ne contresignent pas, leur propre phrase, qui dit laquelle de leurs garanties hésite et sur quoi
+(`lecture_clauses.phrase_des_clauses`). Et une réserve propre à un sinistre ne s'affiche plus aussi « pour toute la
+déclaration » (vu à l'essai en local).
+
+**2. Plusieurs sinistres, une seule décision à l'écran.** L'API rendait déjà une réponse par sinistre (7.168, 7.218),
+mais l'écran ne lisait pas ce champ : un seul badge, « à préciser » dès que les décisions différaient, et les vraies
+noyées dans une phrase. Pire, avec la chaîne de règles, aucune question n'était affichée : elles étaient rangées
+sinistre par sinistre, et l'écran lisait celles de l'ensemble, vides. Désormais, pour les deux méthodes : un cadre par
+sinistre (décision, motif, faits, réserves, clauses), une seule fonction qui rassemble les questions de chacun
+(`service.rassembler`), et on y répond d'un bloc, en mots, la déclaration complétée étant relue par la méthode de la
+réponse. La fiche PDF suit : une partie par sinistre.
+
+**La forme commune, écrite et vérifiée.** Les deux méthodes rendent la même forme (`schemas.Decision`), et l'écran
+ne lit qu'elle : un sinistre, pas de liste ; plusieurs, une réponse complète par sinistre (`schemas.Sinistre`, avec
+son titre), sans sous-sinistres, et ses questions reprises pour l'ensemble, précédées de son titre. La validation le
+vérifie (un seul sinistre rangé dans la liste, ou des questions oubliées dans l'ensemble, sont refusés). Le flux
+`/analyses/suivi`, celui de l'écran, ne validait pas sa réponse : il passe maintenant par `schemas.au_format`, comme
+`/analyses`. Un test paramétré (`tests/test_forme.py`) fait passer les deux méthodes, un sinistre et deux, par la
+même forme, et vérifie qu'un « à préciser » a toujours une question et qu'un refus ne porte pas de réserve.
+
+**Relecture du code, avant de livrer.** Trop d'erreurs trouvées à l'essai pour livrer sans relire : chaque fonction
+ajoutée ce jour relue ligne à ligne, des deux côtés (service, schémas, fiche, moteur, écran). Deux défauts de plus,
+corrigés avec leur test : à plusieurs sinistres, la ligne d'ensemble répétait la décision de chacun (« Couvert.
+Couvert. »), la phrase de chaque sinistre commençant déjà par elle ; et quand les règles posaient à la fois des
+questions à réponses proposées et une question en phrase (le lien de causalité), la seconde se perdait. Vérifié sans
+défaut : un seul sinistre ne peut pas finir dans la liste (le découpage n'en rend jamais un seul) ; les questions
+des règles ne s'ajoutent ni quand la lecture doutait déjà, ni quand la relecture ciblée a gardé le « couvert » ; la
+décision n'est touchée nulle part ; le moteur permanent, partagé par les sinistres lus en même temps, est protégé par
+son verrou.
+
+**Relecture du reste du code.** Analyse statique de tout `src/` : aucune erreur (noms non définis, imports ou
+variables inutiles, fonctions jamais appelées, corps de fonction dupliqués) ; les remarques restantes sont de style.
+Deux corrections : le flux `/analyses/suivi` comptait une réponse coupée du modèle comme une erreur du code (500),
+quand `/analyses` la compte comme une panne du modèle (502, notée au journal) ; il fait maintenant de même, et une
+réponse mal formée reste une erreur du code. Les libellés des décisions étaient écrits trois fois (la chaîne, la
+fiche, les messages) : un seul endroit, `models.LIBELLES_DECISION`. Regroupements plus larges notés pour après
+l'envoi (feuille de route, point 12), puis faits le jour même, à la demande : la mise en forme de la lecture des
+clauses quitte `service.py` pour `api/lecture_clauses.py` (`service.py` garde ce qui sert aux deux méthodes) ; la
+réunion de plusieurs sinistres n'est plus écrite deux fois : les deux méthodes passent par
+`chaine.plusieurs_sinistres` pour l'ensemble (en parallèle pour les clauses : l'attente est celle du plus long ;
+tokens et coût additionnés) et par `service.reponse_plusieurs` pour la réponse. Aucune décision changée ; les tests
+n'ont changé que d'adresse, plus un faux résultat aligné sur le vrai (sa phrase était celle de la réponse).
+
+**3. Les rappels du règlement.** Le délai de déclaration s'affichait pour un sinistre refusé ; le même rappel (le
+nombre de chambres, art. 7.4) une fois par sinistre. Un rappel ne s'affiche plus sur un refus, et un rappel partagé une
+seule fois pour la déclaration.
+
+**4. Un refus sans clause citée** (la bougie : « la table a brûlé »). Les règles disent « aucune garantie de ce
+contrat ne porte sur cet événement », ce qui est faux : la garantie incendie y porte, c'est la table de jardin, dehors,
+qui n'est pas du contenu. Cause trouvée dans le moteur (`concerne_evenement` exige que toutes les conditions sur
+l'événement soient établies ; la définition de l'incendie reste inconnue, l'embrasement n'étant pas dit). Règle,
+en deux temps : d'abord « une condition établie, aucune réfutée » ; puis, à l'essai en local, la même bougie lue
+« feu propagé : non » retombait dans « aucune garantie ne porte sur cet événement » : la définition de l'incendie
+(un embrasement) était réfutée. Or c'est justement elle qu'il faut citer. Deuxième version, mesurée : elle nommait aussi, dans les quinze cas de vol de B, une garantie voisine
+(« vandalisme et vol »), couverts compris ; sans changer de décision, mais en encombrant des réponses qui couvrent.
+Règle retenue : quand aucune garantie ne s'applique, le refus nomme les garanties dont l'événement déclaré est parmi
+les siens, même si une définition l'écarte ensuite, et cite ce qui l'écarte ; dans les autres réponses, la règle
+d'avant (toutes les conditions sur l'événement établies). Dans moteur.pl, `visent_evenement` choisit entre
+`concerne_evenement` et `etablit_evenement` ; le moteur de référence en Python fait de même. Impact mesuré avant de décider, sans frais (`perso/impact_point2.py`,
+les jeux de faits écrits à la main, ancienne règle contre nouvelle) : pour la première version, aucune décision
+changée, la garantie incendie nommée de plus dans deux cas (la bougie, et `g2-i05`), aucune exclusion citée de plus ;
+la version retenue, repassée de la même façon sur 143 jeux de faits : aucune décision changée, la garantie
+incendie nommée de plus dans les deux bougies seulement, aucune exclusion citée de plus ; bancs des règles de A et B
+à 100 %, portes passées. Le refus dit
+maintenant « aucune garantie ne s'applique », nomme la garantie de l'événement et pourquoi elle ne joue pas, et cite
+ses clauses, dont la définition du contenu. Côté lecture des clauses, le même refus sans citation (« accident avec
+ma voiture ») : quand les règles refusent aussi, en citant leurs clauses, la réponse les montre et dit qu'elles sont
+les leurs (`lecture_clauses.citer_le_refus_des_regles`) ; la décision ne change pas. Si les règles ne refusent pas, ou ne
+citent rien, le refus reste sans citation : c'est alors un jugement du modèle.
+
+**5. Ce que le modèle juge mal, et que je ne corrige pas avant l'envoi.** Le congélateur arrêté « sûrement à cause
+d'une panne électrique », couvert : la cause n'est pas établie, et la clause exige un arrêt de plus de six heures, que
+la déclaration ne dit pas. Le chien écrasé dans la rue, couvert au titre du « heurt » (la contresignature l'a retenu).
+Une limite des chauffe-eau appliquée à un congélateur. Ce sont des jugements du modèle : les corriger, c'est toucher sa
+consigne, puis mesurer sur un jeu neuf. Écrits dans les limites du README.
+
+Tests : onze de plus (la forme commune, quatre cas ; la forme refusée ; le refus qui prend les clauses des règles ; la bougie qui nomme la garantie incendie ; les questions des règles, et pas quand elles concordent ; pas de rappel sur un refus ; les
+rappels partagés ; les questions de chaque sinistre par la chaîne de règles ; la fiche à deux sinistres).
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 26 nov. 2026, après la mesure du jeu « cinq ». Dans l'ordre où je le ferais.
@@ -6397,6 +6490,8 @@ demande un jeu neuf.
 - *Ce que la chaîne de règles a, et que la lecture des clauses n'a pas encore* (relevé le 26 nov., 7.218) :
   - ~~en ligne, l'article entier et la fiche ne servent que des clauses que les règles citent~~ : fait (7.219) ;
   - ~~le journal ne relève ni les tokens ni le coût, Grafana ne sépare pas les méthodes~~ : fait (7.219) ;
+  - ~~sans question quand les règles retiennent la réponse ; une seule décision pour plusieurs sinistres~~ :
+    fait (7.222) ;
   - ~~la stabilité n'est pas mesurée~~ : mesurée (7.221), 7 cas instables sur 30, aucun entre « couvert » et « non
     couvert » ;
 - Rendre la désignation des chapitres plus stable (d'une passe à l'autre, le dossier d'un même cas passe de 92 à 290
@@ -6663,3 +6758,4 @@ demande un jeu neuf.
 222. Quand une sortie est uniforme (« inconnu » partout), lire les réponses brutes avant de conclure : c'était mon code qui ne reconnaissait pas l'identifiant recopié par le modèle.
 223. Un contre-pouvoir vaut ce que vaut ce qui contresigne : des règles traduites en partie retiennent des réponses justes plus souvent qu'elles n'arrêtent une erreur. Le voir sur le jeu de mesure ne permet pas de le corriger sur ce jeu.
 224. Une passe unique flatte : 87 % à la première, 82 % en moyenne sur trois. Et l'instabilité se lit par son sens autant que par son nombre : sept cas qui varient entre une réponse et une question ne valent pas un seul qui varie entre « couvert » et « non couvert ».
+225. Les mesures comptent des décisions ; un essai à la main lit ce que le client voit. Un « à préciser » sans question est juste pour la mesure, et inutilisable pour le client.

@@ -2,7 +2,9 @@
 
 **Provenance** : nouveau module (20/11/2026). Sur le modèle de SortirIA (`app/search_service.py` à côté de
 `app/interface_api.py`) : les routes ne font que valider la requête et traduire les erreurs en codes HTTP ; tout
-le reste est ici, et se teste sans serveur.
+le reste est ici, et se teste sans serveur. La mise en forme de la lecture des clauses est à part, dans
+`lecture_clauses.py` ; ce qui sert aux deux méthodes reste ici (la réponse à plusieurs sinistres, les clauses
+consultables en ligne, le compte des tokens).
 
 Deux façons d'obtenir une décision :
 
@@ -20,7 +22,7 @@ from typing import Any
 
 from couverture.analyse import chaine, lecture, prolog
 from couverture.contrat.base import Base, Contrat
-from couverture.models import Citation, Clause, Faits, Resultat
+from couverture.models import Clause, Faits, Resultat
 
 
 class SansModele:
@@ -156,10 +158,7 @@ def analyser(pipeline, sinistre: str, suivi=None, souscription: dict | None = No
     if r.parties:
         # Plusieurs sinistres (7.168) : une réponse par sinistre. Rien n'est à demander pour l'ensemble : les
         # questions appartiennent à chaque sinistre, et se lisent dans sa ligne et dans `sinistres`.
-        sortie = reponse(r, None)
-        sortie["sinistres"] = [reponse_complete(pipeline, p) | {"titre": p.titre, "declaration": p.sinistre}
-                               for p in r.parties]
-        return r, sortie
+        return r, reponse_plusieurs(r, [(p.titre, p, reponse_complete(pipeline, p)) for p in r.parties])
     return r, reponse_complete(pipeline, r)
 
 
@@ -211,50 +210,6 @@ def decider(base: Base, contrat_id: str, faits: dict[str, Any], decideur=None) -
     r = Resultat(sinistre="", contrat_id=contrat_id, methode="regles", faits=chaine.faits_lisibles(retenus),
                  clauses_consultees=consultees, verdict=verdict)
     return r, reponse(r, d)
-
-
-# # La lecture des clauses (DEMARCHE 7.188, branchée en 7.201)
-
-ETAPES_CLAUSES = [
-    {"cle": "designation", "titre": "Trouver les chapitres du contrat qui concernent ce sinistre"},
-    {"cle": "jugement", "titre": "Juger chaque clause du dossier, citation à l'appui"},
-    {"cle": "regles", "titre": "Faire contresigner la réponse par les règles traduites"},
-    {"cle": "decision", "titre": "Décider : une logique fixe, pas le modèle"},
-]
-
-ANNONCE_CLAUSES = ("Chaque clause qui peut jouer est relue et jugée, citation à l'appui : comptez deux à trois "
-                   "minutes.")
-
-ROLE_DE_L_EFFET = {"couvre": "garantie", "exclut": "exclusion", "a_verifier": "condition"}
-
-
-def avec_souscription(sinistre: str, contrat_id: str, souscription: dict | None) -> str:
-    """La déclaration, suivie de ce que disent les conditions particulières du client, en mots : la lecture des
-    clauses n'a pas de variables, elle lit des phrases (et ses citations s'y vérifient comme dans le reste)."""
-    if not souscription:
-        return sinistre
-    voc = prolog.vocabulaire()
-    lignes = [f"{prolog.libelle(v, voc)} : {prolog.libelle(v, voc, x)}" for v, x in souscription.items() if x]
-    return sinistre + ("\n\nConditions particulières du client : " + " ; ".join(lignes) + "." if lignes else "")
-
-
-def sinistres_distincts(pipeline, sinistre: str) -> list[dict]:
-    """Les sinistres distincts d'une déclaration, pour la lecture des clauses (7.218) : la même étape que la chaîne de
-    règles (7.168), avec le modèle de lecture des faits, et le même garde-fou (chaque phrase retrouvée mot pour mot
-    dans la déclaration). [] s'il n'y en a qu'un, si le découpage est coupé (`COUVERTURE_DECOUPAGE=non`) ou s'il
-    échoue : la déclaration se juge alors d'un bloc, comme avant."""
-    import os
-
-    if os.environ.get("COUVERTURE_DECOUPAGE", "oui").lower() in {"non", "0", "false"}:
-        return []
-    llm = getattr(pipeline, "llm", None)
-    if llm is None:
-        return []
-    try:
-        return lecture.decouper_sinistres(sinistre, llm)
-    except Exception:  # noqa: BLE001 - sans découpage, la réponse d'un bloc reste valable
-        return []
-
 
 # # Les clauses consultables en ligne (7.219)
 #
@@ -316,221 +271,50 @@ class Compteur:
         return {"envoyes": self.envoyes, "recus": self.recus, "cache": self.cache}
 
 
-class SuiviCommun:
-    """Le suivi de plusieurs lectures menées en même temps : une étape s'affiche commencée à la première qui y entre,
-    finie quand toutes l'ont finie (le détail est celui de la dernière, précédé du nombre de sinistres)."""
+def rassembler(lignes: list[tuple[str, dict[str, Any]]]) -> tuple[list[dict[str, Any]], list[str]]:
+    """Les questions et les réserves d'une déclaration à plusieurs sinistres, pour les deux méthodes (7.222).
 
-    def __init__(self, suivi, n: int, en_tete: str = "") -> None:
-        import threading
-
-        self.suivi, self.n, self.en_tete = suivi, n, en_tete
-        self.commencees: set[str] = set()
-        self.finies: dict[str, int] = {}
-        self.verrou = threading.Lock()
-
-    def __call__(self, etape: str, detail: str | None = None) -> None:
-        with self.verrou:
-            if detail is None:
-                if etape not in self.commencees:
-                    self.commencees.add(etape)
-                    self.suivi(etape)
-                return
-            self.finies[etape] = self.finies.get(etape, 0) + 1
-            if self.finies[etape] == self.n:
-                tete = self.en_tete if etape == "designation" else f"{self.n} sinistres"
-                self.suivi(etape, f"{tete} — {detail}")
-
-
-def analyser_clauses(base: Base, pipeline, contrat_id: str, sinistre: str, llm, suivi=None,
-                     souscription: dict | None = None, chapitres: list[str] | None = None
-                     ) -> tuple[Resultat, dict[str, Any]]:
-    """La lecture des clauses d'une déclaration. Si elle raconte plusieurs sinistres (un vol et une fuite), chacun est
-    jugé à part, en même temps, avec sa propre contresignature, et reçoit sa ligne (7.218) ; sinon, d'un bloc.
-
-    `chapitres` : ceux de la lecture précédente, quand on relit la déclaration complétée par les réponses du client.
-    La désignation n'est pas redemandée ; à plusieurs sinistres, chacun reçoit tous ces chapitres (on ne sait pas lequel
-    venait de quel sinistre, et un chapitre de trop coûte des tokens, un chapitre de moins une exclusion oubliée)."""
-    parties = sinistres_distincts(pipeline, sinistre)
-    if not parties:
-        return analyser_clauses_un(base, pipeline, contrat_id, sinistre, llm, suivi=suivi, souscription=souscription,
-                                   chapitres=chapitres)
-    from concurrent.futures import ThreadPoolExecutor
-
-    suivre = SuiviCommun(suivi or (lambda etape, detail=None: None), len(parties),
-                         f"{len(parties)} sinistres dans la déclaration, chacun jugé à part")
-    with ThreadPoolExecutor(max_workers=len(parties)) as fil:
-        lus = list(fil.map(lambda p: analyser_clauses_un(base, pipeline, contrat_id, p["texte"], llm, suivi=suivre,
-                                                         souscription=souscription, chapitres=chapitres), parties))
-    return plusieurs_lectures(contrat_id, sinistre, [(p["titre"], r, x) for p, (r, x) in zip(parties, lus)])
+    Chaque sinistre garde les siennes, dans sa ligne de `sinistres`. Pour l'ensemble : les questions de chacun,
+    précédées de son titre (on y répond d'un bloc) ; une réserve que plusieurs sinistres partagent (le même rappel
+    du règlement) une seule fois, et retirée de leurs lignes ; aucune réserve sur un sinistre refusé. Modifie les
+    lignes en place ; rend `a_preciser` et `questions` pour l'ensemble."""
+    for _, x in lignes:
+        if x["decision"] == "NON_COUVERT":
+            x["a_preciser"] = [p for p in x["a_preciser"] if p["nature"] != "reserve"]
+    compte: dict[str, int] = {}
+    for _, x in lignes:
+        for v in {p["variable"] for p in x["a_preciser"] if p["nature"] == "reserve"}:
+            compte[v] = compte.get(v, 0) + 1
+    communes: dict[str, dict[str, Any]] = {}
+    for _, x in lignes:
+        for p in x["a_preciser"]:
+            if p["nature"] == "reserve" and compte[p["variable"]] > 1:
+                garde = communes.get(p["variable"])
+                if garde is None or len(p["question"]) < len(garde["question"]):
+                    communes[p["variable"]] = p        # la plus courte : la moins attachée à l'un des sinistres
+        x["a_preciser"] = [p for p in x["a_preciser"] if p["nature"] != "reserve" or compte[p["variable"]] == 1]
+    # Pour l'ensemble : les questions de chacun, et les seules réserves partagées ; les autres restent dans leur
+    # ligne (vu à l'essai : une réserve propre à un sinistre s'affichait aussi « pour toute la déclaration »).
+    a_preciser = [p | {"question": f"{titre} — {p['question']}", "variable": f"{p['variable']}_{i}"}
+                  for i, (titre, x) in enumerate(lignes, 1) for p in x["a_preciser"] if p["nature"] == "question"]
+    a_preciser += list(communes.values())
+    questions = [f"{titre} — {q}" for titre, x in lignes for q in x["questions"]]
+    return a_preciser, questions
 
 
-def plusieurs_lectures(contrat_id: str, sinistre: str, lus: list[tuple[str, Resultat, dict[str, Any]]]
-                       ) -> tuple[Resultat, dict[str, Any]]:
-    """Une déclaration à plusieurs sinistres, lue clause par clause : une ligne par sinistre, comme pour la chaîne de
-    règles (`chaine.plusieurs_sinistres`). La décision d'ensemble n'est ferme que si tous reçoivent la même. Les
-    questions et les réserves sont celles de chaque sinistre, précédées de son titre."""
-    from couverture.models import Decision as D
-    from couverture.models import Verdict
+def reponse_plusieurs(r: Resultat, lignes: list[tuple[str, Resultat, dict[str, Any]]]) -> dict[str, Any]:
+    """La réponse de l'API pour une déclaration à plusieurs sinistres, la même pour les deux méthodes (7.222).
 
-    for titre, r, _ in lus:
-        r.titre = titre
-    decisions = {x["decision"] for _, _, x in lus}
-    decision = D(decisions.pop()) if len(decisions) == 1 else D.INCERTAIN
-    lignes = []
-    for i, (titre, _, x) in enumerate(lus, 1):
-        libelle = chaine.LIBELLES_DECISION[D(x["decision"])]
-        lignes.append(f"{i}. {titre} : {libelle}. {x['justification']}")
-    justification = f"{len(lus)} sinistres dans cette déclaration, une réponse pour chacun.\n" + "\n".join(lignes)
-
-    def unique(elements: list) -> list:
-        vus, sortie = set(), []
-        for e in elements:
-            cle = json.dumps(e, sort_keys=True, ensure_ascii=False)
-            if cle not in vus:
-                vus.add(cle)
-                sortie.append(e)
-        return sortie
-
-    questions = [f"{titre} — {q}" for titre, _, x in lus for q in x["questions"]]
-    a_preciser = unique([p | {"question": f"{titre} — {p['question']}", "variable": f"{p['variable']}_{i}"}
-                         for i, (titre, _, x) in enumerate(lus, 1) for p in x["a_preciser"]])
-    raisonnement = [ligne for i, (titre, _, x) in enumerate(lus, 1)
-                    for ligne in [f"— Sinistre {i} : {titre} —", *x["raisonnement"]]]
-    avertissements = list(dict.fromkeys(a for _, _, x in lus for a in x["avertissements"]))
-    confiance = min(x["confiance"] for _, _, x in lus)
-    durees: dict[str, int] = {}
-    for _, _, x in lus:
-        for k, ms in x["durees_ms"].items():
-            durees[k] = max(durees.get(k, 0), ms)          # menés en même temps : le plus long fait l'attente
-    citations = [c for _, r, _ in lus for c in r.verdict.citations]
-    verdict = Verdict(decision=decision, justification=justification, citations=citations,
-                      informations_manquantes=questions, confiance=confiance, mode="clauses",
-                      decision_initiale=decision, avertissements=avertissements, raisonnement=raisonnement)
-    tokens = {k: sum(r.tokens.get(k, 0) for _, r, _ in lus) for k in ("envoyes", "recus", "cache")}
-    r = Resultat(sinistre=sinistre, contrat_id=contrat_id, methode="clauses", faits=lus[0][1].faits,
-                 clauses_consultees=[], verdict=verdict, durees_ms=durees, parties=[r for _, r, _ in lus],
-                 tokens=tokens, cout_usd=round(sum(r.cout_usd or 0 for _, r, _ in lus), 5)
-                 if any(r.cout_usd is not None for _, r, _ in lus) else None)
-    sortie = {
-        "contrat_id": contrat_id, "decision": decision.value, "justification": justification, "confiance": confiance,
-        "a_preciser": a_preciser, "questions": questions,
-        "citations": unique([c for _, _, x in lus for c in x["citations"]]),
-        "limites": unique([lim for _, _, x in lus for lim in x["limites"]]),
-        "faits": {}, "faits_affiches": [],
-        "sinistres": [x | {"titre": titre, "declaration": r.sinistre} for titre, r, x in lus],
-        "avertissements": avertissements, "raisonnement": raisonnement, "mode": "clauses", "durees_ms": durees,
-        "chapitres": list(dict.fromkeys(c for _, _, x in lus for c in x.get("chapitres", []))),
-    }
-    return r, sortie
-
-
-def analyser_clauses_un(base: Base, pipeline, contrat_id: str, sinistre: str, llm, suivi=None,
-                        souscription: dict | None = None, chapitres: list[str] | None = None
-                        ) -> tuple[Resultat, dict[str, Any]]:
-    """La déclaration jugée clause par clause ; la chaîne de règles tourne en même temps, pour contresigner un
-    « couvert ». Rend le résultat (pour le journal) et la réponse de l'API, au même format que `analyser`.
-
-    Si la chaîne de règles ne répond pas, un « couvert » n'est pas contresigné et devient « incertain » : la
-    contresignature est la garde contre un couvert à tort, elle ne se saute pas en silence."""
-    import time
-    from concurrent.futures import ThreadPoolExecutor
-
-    from couverture.analyse import clauses as lecture_des_clauses
-    from couverture.models import Decision as D
-
-    suivre = suivi or (lambda etape, detail=None: None)
-    declaration = avec_souscription(sinistre, contrat_id, souscription)
-    debut = time.perf_counter()
-    temps: dict[str, int] = {}
-
-    def regles() -> tuple[Resultat | None, str]:
-        """La chaîne de règles, en silence : elle tourne pendant la lecture, et son étape ne s'affiche qu'au moment de
-        contresigner, pour que l'écran raconte l'analyse dans l'ordre (7.202)."""
-        t0 = time.perf_counter()
-        try:
-            r = pipeline.analyser(sinistre, **({"souscription": souscription} if souscription else {}))
-        except Exception as e:  # noqa: BLE001 - la contresignature manque, on le dit plus bas
-            return None, f"les règles n'ont pas répondu ({str(e)[:80]})"
-        temps["regles"] = int((time.perf_counter() - t0) * 1000)
-        return r, f"les règles traduites répondent « {r.verdict.decision.value} »"
-
-    def contresigner(en_cours):
-        suivre("regles")
-        r, detail = en_cours.result()
-        suivre("regles", detail)
-        return r      # le résultat entier : sa décision, et ses obstacles pour la relecture ciblée (7.211)
-
-    compteur = Compteur(llm)
-    with ThreadPoolExecutor(max_workers=1) as fil:
-        en_cours = fil.submit(regles)
-        lu = lecture_des_clauses.lire(base, contrat_id, compteur, declaration, suivi=suivre,
-                                      regles=lambda: contresigner(en_cours), chapitres=chapitres)
-        r_regles = en_cours.result()[0]
-    temps["lecture"] = int((time.perf_counter() - debut) * 1000)
-    decision, desaccord = lu.decision, lu.desaccord
-    if r_regles is None and decision == D.COUVERT:
-        decision, desaccord = D.INCERTAIN, "les règles traduites n'ont pas répondu : un « couvert » non contresigné reste à examiner"
-    r, sortie = resultat_clauses(base, contrat_id, sinistre, lu, decision, desaccord, r_regles, temps)
-    r.tokens, r.cout_usd = compteur.totaux(), cout(compteur.modele, compteur.totaux())
-    noter_citees(contrat_id, [c["clause_id"] for c in sortie["citations"]] + [x["clause_id"] for x in sortie["limites"]])
-    return r, sortie
-
-
-def resultat_clauses(base: Base, contrat_id: str, sinistre: str, lu, decision, desaccord: str,
-                     r_regles: Resultat | None, temps: dict[str, int]) -> tuple[Resultat, dict[str, Any]]:
-    """Une lecture des clauses, mise au format des réponses de l'API. Les faits sont vides : cette méthode ne lit pas
-    de variables ; ce qu'elle a retenu de la déclaration est dans les citations et le raisonnement."""
-    from couverture.models import Verdict
-
-    e = lu.etat
-    pages = {c.id: c.pages for c in base.clauses(contrat_id)}
-    citations = [Citation(clause_id=j.clause_id, extrait=j.extrait_contrat, role=ROLE_DE_L_EFFET[j.effet],
-                          pages=pages.get(j.clause_id, []))
-                 for j in [*e.couvrent, *e.excluent, *e.a_verifier] if j.extrait_contrat]
-    noms = {"couvre": "couvre", "exclut": "exclut", "limite": "limite", "a_verifier": "à vérifier"}
-    raisonnement = [f"Chapitres désignés : {', '.join(lu.designes) or 'aucun'}",
-                    f"Garanties examinées : {', '.join(lu.garanties) or 'aucune'} ({len(lu.dossier)} clauses au dossier)"]
-    raisonnement += [f"[{noms[j.effet]}] art. {j.clause_id} : « {j.extrait_contrat} »"
-                     + (f" ← « {j.extrait_declaration} »" if j.extrait_declaration else "")
-                     + (f" — {j.motif}" if j.motif else "")
-                     for j in [*e.couvrent, *e.excluent, *e.limitent, *e.a_verifier]]
-    if lu.relancees:
-        raisonnement.append(f"Clauses redemandées au modèle, faute de jugement : {', '.join(lu.relancees)}")
-    if e.questions_retirees:
-        raisonnement.append("Questions non posées, leur réponse ne changerait pas la décision : art. "
-                            + ", ".join(e.questions_retirees))
-    raisonnement += [f"Relecture ciblée — {ligne}" for ligne in lu.arbitrage]
-    avertissements = ([desaccord] if desaccord else []) \
-        + ([f"clauses attendues sans jugement : {', '.join(e.manquants)}"] if e.manquants else []) \
-        + [f"jugement écarté — {d}" for d in e.defauts[:5]]
-    # Celles de la décision : une fois chacune (deux clauses peuvent poser la même), et celle d'une option qui
-    # couvre seule, qu'aucune clause ne pose (7.208).
-    questions = list(e.questions)
-    regles = r_regles.verdict.decision if r_regles else None
-    # Pas une probabilité : l'accord des deux lectures du contrat (les clauses et les règles), affiché comme tel.
-    confiance = 1.0 if regles == e.decision else 0.5
-    justification = e.motif[:1].upper() + e.motif[1:] + "."
-    if decision != e.decision:
-        justification += f" Réponse ramenée à « {decision.value} » : {desaccord}."
-    verdict = Verdict(decision=decision, justification=justification, citations=citations,
-                      informations_manquantes=questions, confiance=confiance, mode="clauses",
-                      decision_initiale=e.decision, avertissements=avertissements, raisonnement=raisonnement)
-    faits = r_regles.faits if r_regles else Faits()      # pour le journal seulement : la réponse n'en montre pas
-    r = Resultat(sinistre=sinistre, contrat_id=contrat_id, methode="clauses", faits=faits, clauses_consultees=[],
-                 verdict=verdict, durees_ms=temps)
-    sortie = {
-        "contrat_id": contrat_id, "decision": decision.value, "justification": justification, "confiance": confiance,
-        # Les rappels du règlement (délai de déclaration, plafond) : des réserves, qui n'empêchent pas de répondre.
-        "a_preciser": [{"variable": f"rappel_{j.clause_id}", "nature": "reserve",
-                        "question": f"{j.question or j.extrait_contrat} (art. {j.clause_id})", "valeurs": [],
-                        "libelles": {}, "aide": {}} for j in lu.rappels],
-        "questions": questions,
-        "citations": [c.model_dump(mode="json") for c in citations],
-        "limites": [{"clause_id": j.clause_id, "extrait": j.extrait_contrat, "montant": j.motif or j.extrait_contrat}
-                    for j in e.limitent],
-        "faits": {}, "faits_affiches": [], "sinistres": [], "avertissements": avertissements,
-        "raisonnement": raisonnement, "mode": "clauses", "durees_ms": temps,
-        # Pour relire après les réponses du client sans redemander la désignation (7.218).
-        "chapitres": list(lu.designes),
-    }
-    return r, sortie
+    `r` : la réponse d'ensemble (`chaine.plusieurs_sinistres`, que les deux méthodes appellent) ; `lignes` : pour
+    chaque sinistre, son titre, son résultat et sa réponse de l'API. Chacun garde sa réponse complète dans
+    `sinistres` ; pour l'ensemble, ses questions précédées de son titre et les réserves partagées (`rassembler`), ses
+    limites et, pour la lecture des clauses, ses chapitres. Les questions de l'ensemble vont aussi au journal."""
+    sortie = reponse(r, None)
+    sortie["sinistres"] = [x | {"titre": titre, "declaration": p.sinistre} for titre, p, x in lignes]
+    sortie["a_preciser"], sortie["questions"] = rassembler([(x["titre"], x) for x in sortie["sinistres"]])
+    vues: set[str] = set()
+    sortie["limites"] = [lim for x in sortie["sinistres"] for lim in x["limites"]
+                         if not ((cle := json.dumps(lim, sort_keys=True, ensure_ascii=False)) in vues or vues.add(cle))]
+    sortie["chapitres"] = list(dict.fromkeys(c for x in sortie["sinistres"] for c in x.get("chapitres", [])))
+    r.verdict.informations_manquantes = list(sortie["questions"])
+    return sortie

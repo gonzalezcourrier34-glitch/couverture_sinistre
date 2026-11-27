@@ -408,14 +408,20 @@ decider(D) :-
     plafonner(NT, D0, D1),
     accessoires(D1, Acc),
     exclusions_etablies(D1, Rs, Xe),
-    visent_evenement(Rs, Vs),
+    visent_evenement(D1, Rs, Vs),
     put_dict(_{garanties:Rs, accessoires:Acc, exclusions_etablies:Xe, visent_evenement:Vs}, D1, D).
 
-%!  visent_evenement(+Garanties, -Ids)
+%!  visent_evenement(+Decision, +Garanties, -Ids)
 %   Les garanties dont le périmètre porte sur l'événement déclaré (7.165). La réponse ne nomme ni ne cite une
 %   garantie écartée dès son périmètre quand elle n'en fait pas partie : un vol n'a rien à dire d'une bougie fondue.
-visent_evenement(Rs, Vs) :-
-    findall(G, ( member(R, Rs), get_dict(id, R, G), concerne_evenement(G) ), Vs).
+%   Quand aucune garantie ne s'applique, le refus doit dire pourquoi : il nomme aussi les garanties dont l'événement
+%   est le bon mais qu'une définition écarte (la table qui a brûlé sans s'embraser, 7.222). Sinon, seules celles dont
+%   toutes les conditions sur l'événement sont établies : une garantie voisine n'encombre pas une réponse qui couvre.
+visent_evenement(D, Rs, Vs) :-
+    (   get_dict(aucune, D, true)
+    ->  findall(G, ( member(R, Rs), get_dict(id, R, G), concerne_evenement(G) ), Vs)
+    ;   findall(G, ( member(R, Rs), get_dict(id, R, G), etablit_evenement(G) ), Vs)
+    ).
 
 %!  exclusions_etablies(+Decision, +Garanties, -Exclusions)
 %   Aucune garantie ne s'applique (DEMARCHE 7.157) : les exclusions que les faits établissent, parmi celles des
@@ -434,8 +440,17 @@ exclusions_etablies(D, Rs, Xs) :-
     sans_doublons(Xs0, [], Xs).
 exclusions_etablies(_, _, []).
 
-%  La garantie couvre l'événement déclaré : chaque condition de son périmètre qui parle de l'événement est établie.
+%  La garantie porte sur l'événement déclaré : l'une des conditions de son périmètre qui parlent de l'événement est
+%  établie (l'événement déclaré est parmi les siens). Les autres peuvent être réfutées : c'est alors la définition du
+%  contrat qui écarte le sinistre (un incendie suppose un embrasement), et c'est elle que le refus doit citer. « Toutes
+%  établies » faisait dire « aucune garantie ne porte sur cet événement », sans rien citer, à la table qui a brûlé
+%  sans s'embraser (7.222).
 concerne_evenement(G) :-
+    findall(P, ( regle(perimetre(G, P)), variables(P, Vs), memberchk(evenement, Vs) ), Pe),
+    once(( member(P, Pe), eval(P, E), E == oui )).
+
+%  Plus strict : chaque condition de son périmètre qui parle de l'événement est établie (la règle d'avant 7.222).
+etablit_evenement(G) :-
     findall(P, ( regle(perimetre(G, P)), variables(P, Vs), memberchk(evenement, Vs) ), Pe),
     Pe \== [],
     forall(member(P, Pe), ( eval(P, E), E == oui )).

@@ -307,7 +307,7 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | C
         tient, revue = arbitrage_cible(llm, obstacles, par_tout, regles, declaration)
         if tient:
             decision = Decision.COUVERT
-            desaccord = (f"les règles traduites répondaient « {regles.value} » ; relus un à un, leurs obstacles sont "
+            desaccord = (f"les règles traduites répondaient « {jugement.DITE[regles]} » ; relus un à un, leurs obstacles sont "
                          "écartés par la déclaration")
     suivre("decision")
     suivre("decision", etat.motif + (f" ; {desaccord}" if desaccord else ""))

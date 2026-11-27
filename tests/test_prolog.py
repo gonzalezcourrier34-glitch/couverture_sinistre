@@ -371,7 +371,8 @@ def test_une_garantie_sans_rapport_avec_l_evenement_n_est_ni_nommee_ni_citee():
     v = verdict({"decision": "NON_COUVERT", "aucune": True, "possibles": [], "retenues": rs, "visent_evenement": []})
     assert v.justification == "Non couvert : aucune garantie de ce contrat ne porte sur cet événement." and not v.citations
     v = verdict({"decision": "NON_COUVERT", "aucune": True, "possibles": [], "retenues": rs, "visent_evenement": ["incendie"]})
-    assert v.justification == "Non couvert : aucune garantie ne s'applique." and [c.clause_id for c in v.citations] == ["2.1"]
+    assert v.justification == "Non couvert : aucune garantie ne s'applique. « incendie » (2.1) : hors de son périmètre." \
+        and [c.clause_id for c in v.citations] == ["2.1"]
     v = verdict({"decision": "INCERTAIN", "aucune": False, "non_traduits": ["accident"], "possibles": [], "retenues": rs,
                  "visent_evenement": []})
     assert "pas encore traduite en règles." in v.justification and "vol_batiment" not in v.justification and not v.citations

@@ -165,32 +165,24 @@
                     </div>
                     <blockquote class="etape-texte">{{ etape.texte }}</blockquote>
 
-                    <div class="verdict" [class]="tons[etape.reponse.decision]">
-                        <span class="verdict-libelle">{{ libelles[etape.reponse.decision] }}</span>
-                        @if (etape.reponse.mode !== 'clauses') {
-                            <span class="verdict-confiance">confiance {{ pourcent(etape.reponse.confiance) }}</span>
-                        } @else {
-                            <span class="verdict-confiance">{{ etape.reponse.confiance === 1 ? 'les règles concordent' : 'les règles ne concordent pas' }}</span>
+                    @if (plusieurs(etape.reponse)) {
+                        <!-- ### Plusieurs sinistres : une décision chacun, avec ce qui la fonde (7.222) -->
+                        <p class="justification">{{ etape.reponse.sinistres!.length }} sinistres dans cette déclaration : une décision pour chacun.</p>
+                        @for (s of etape.reponse.sinistres!; track $index; let k = $index) {
+                            <section class="sinistre" [attr.aria-label]="'Sinistre ' + (k + 1) + ' : ' + s.titre">
+                                <h3 class="sinistre-titre">{{ k + 1 }}. {{ s.titre }}</h3>
+                                <ng-container *ngTemplateOutlet="tete; context: { $implicit: s }"></ng-container>
+                                <ng-container *ngTemplateOutlet="preuves; context: { $implicit: s, dernier: last }"></ng-container>
+                            </section>
                         }
-                    </div>
-                    <p class="justification">{{ etape.reponse.justification }}</p>
-
-                    <!-- ### Faits retenus -->
-
-                    @if (lignesDeFaits(etape.reponse.faits, etape.reponse.faits_affiches).length) {
-                        <div class="bloc">
-                            <div class="bloc-titre">Faits retenus</div>
-                            <div class="faits">
-                                @for (f of lignesDeFaits(etape.reponse.faits, etape.reponse.faits_affiches); track f.variable) {
-                                    <span class="fait"><span class="fait-variable">{{ f.variable }}&nbsp;:</span> {{ f.valeur }}</span>
-                                }
-                            </div>
-                        </div>
+                    } @else {
+                        <ng-container *ngTemplateOutlet="tete; context: { $implicit: etape.reponse }"></ng-container>
                     }
 
-                    <!-- ### Ce qu'il faut demander au client (dernière étape seulement) -->
+                    <!-- ### Ce qu'il faut demander au client (dernière étape seulement) : le moteur seul décide,
+                         pour la chaîne de règles et un seul sinistre -->
 
-                    @if (last && questions().length) {
+                    @if (last && !enMots() && questions().length) {
                         <div class="bloc a-preciser">
                             <div class="bloc-titre">À demander au client</div>
                             @for (p of questions(); track p.variable) {
@@ -228,22 +220,22 @@
                         </div>
                     }
 
-                    <!-- ### Lecture clause par clause : les questions, et les réponses du client en mots (7.218).
-                         Elles s'ajoutent à la déclaration, que la lecture des clauses relit : ses citations peuvent
-                         alors s'appuyer sur les réponses, vérifiées mot pour mot comme le reste. -->
+                    <!-- ### Les questions, et les réponses du client en mots (7.218, 7.222) : la lecture des clauses, et
+                         toute déclaration à plusieurs sinistres. Elles s'ajoutent à la déclaration, relue en entier ;
+                         une question des règles garde ses réponses proposées. -->
 
-                    @if (last && etape.reponse.mode === 'clauses' && etape.reponse.questions.length) {
+                    @if (last && enMots() && questionsEnMots().length) {
                         <div class="bloc a-preciser">
                             <div class="bloc-titre">À demander au client</div>
-                            @for (q of etape.reponse.questions; track $index; let qi = $index) {
+                            @for (q of questionsEnMots(); track $index; let qi = $index) {
                                 <div class="question">
-                                    <div class="question-texte">{{ q }}</div>
+                                    <div class="question-texte">{{ q.texte }}</div>
                                     <div class="valeurs reponse-libre">
-                                        <button type="button" class="chip" [class.chip-on]="reponsesLibres()[qi] === 'Oui.'"
-                                            (click)="repondreLibrement(qi, reponsesLibres()[qi] === 'Oui.' ? '' : 'Oui.')">Oui</button>
-                                        <button type="button" class="chip" [class.chip-on]="reponsesLibres()[qi] === 'Non.'"
-                                            (click)="repondreLibrement(qi, reponsesLibres()[qi] === 'Non.' ? '' : 'Non.')">Non</button>
-                                        <input type="text" class="champ-reponse" [attr.aria-label]="'Réponse du client : ' + q"
+                                        @for (v of (q.valeurs.length ? q.valeurs : ouiNon); track v) {
+                                            <button type="button" class="chip" [class.chip-on]="reponsesLibres()[qi] === v + '.'"
+                                                (click)="repondreLibrement(qi, reponsesLibres()[qi] === v + '.' ? '' : v + '.')">{{ v }}</button>
+                                        }
+                                        <input type="text" class="champ-reponse" [attr.aria-label]="'Réponse du client : ' + q.texte"
                                             placeholder="ou la réponse du client, en mots"
                                             [value]="reponsesLibres()[qi] || ''" (input)="saisirReponse(qi, $event)">
                                     </div>
@@ -252,8 +244,10 @@
                             <div class="actions">
                                 @if (reponsesTropLongues()) {
                                     <span class="small">La déclaration et les réponses dépassent {{ longueurMax }} caractères : raccourcissez une réponse.</span>
-                                } @else {
+                                } @else if (etape.reponse.mode === 'clauses') {
                                     <span class="small">Nouvelle lecture des clauses, la déclaration complétée par ces réponses : deux à trois minutes.</span>
+                                } @else {
+                                    <span class="small">Nouvelle lecture, la déclaration complétée par ces réponses : quelques secondes.</span>
                                 }
                                 <button type="button" class="bouton bouton-primaire"
                                     [disabled]="!nbReponsesLibres() || reponsesTropLongues() || chargement()" (click)="relireAvecReponses()">
@@ -263,54 +257,21 @@
                         </div>
                     }
 
-                    <!-- ### Les réserves : ce que l'assureur pourra vérifier (rien à demander au client) -->
-
-                    @if (last && reserves().length) {
-                        <div class="bloc">
-                            <div class="bloc-titre">Sous réserve · ce que l’assureur pourra vérifier</div>
-                            <ul class="limites">
-                                @for (p of reserves(); track p.variable) {
-                                    <li>{{ p.question }}</li>
-                                }
-                            </ul>
-                        </div>
-                    }
-
-                    <!-- ### Ce qui fonde la décision -->
-
-                    @if (etape.reponse.citations.length) {
-                        <div class="bloc">
-                            <div class="bloc-titre">Clauses citées</div>
-                            @for (a of citationsParArticle(etape.reponse.citations); track a.clauseId) {
-                                <div class="citation" [class]="'role-' + a.role">
-                                    <div class="citation-tete">
-                                        <button type="button" class="lien citation-article"
-                                            [attr.aria-label]="'Lire l’article ' + a.clauseId + ' en entier'"
-                                            (click)="ouvrirArticle(a.clauseId, a.extraits)">Art. {{ a.clauseId }}</button>
-                                        <span class="citation-role">{{ a.role }}</span>
-                                        @if (a.pages.length) {
-                                            <span class="small">p. {{ a.pages.join(', ') }}</span>
-                                        }
-                                    </div>
-                                    @for (extrait of a.extraits; track extrait) {
-                                        <q class="citation-extrait">{{ extrait }}</q>
+                    @if (plusieurs(etape.reponse)) {
+                        <!-- Les réserves que les sinistres partagent : une fois, pour la déclaration -->
+                        @if (last && reserves().length) {
+                            <div class="bloc">
+                                <div class="bloc-titre">Pour toute la déclaration · ce que l’assureur pourra vérifier</div>
+                                <ul class="limites">
+                                    @for (p of reserves(); track p.variable) {
+                                        <li>{{ p.question }}</li>
                                     }
-                                </div>
-                            }
-                        </div>
+                                </ul>
+                            </div>
+                        }
+                    } @else {
+                        <ng-container *ngTemplateOutlet="preuves; context: { $implicit: etape.reponse, dernier: last }"></ng-container>
                     }
-
-                    @if (etape.reponse.limites.length) {
-                        <div class="bloc">
-                            <div class="bloc-titre">Limites</div>
-                            <ul class="limites">
-                                @for (l of etape.reponse.limites; track $index) {
-                                    <li><span class="citation-article">Art. {{ l.clause_id }}</span> {{ l.extrait }}</li>
-                                }
-                            </ul>
-                        </div>
-                    }
-
                     <div class="actions">
                         <button type="button" class="bouton bouton-secondaire" [disabled]="ficheEnCours()"
                             (click)="telechargerFiche(etape)">
@@ -441,3 +402,75 @@
         Démonstration · conditions générales d’assureurs anonymisés · la décision ne remplace pas l’examen du dossier par un gestionnaire.
     </footer>
 </main>
+
+<!-- ## Gabarits : une décision et ce qui la fonde, pour la déclaration entière ou pour chacun de ses sinistres -->
+
+<ng-template #tete let-r>
+    <div class="verdict" [class]="$any(tons)[r.decision]">
+        <span class="verdict-libelle">{{ $any(libelles)[r.decision] }}</span>
+        @if (r.mode !== 'clauses') {
+            <span class="verdict-confiance">confiance {{ pourcent(r.confiance) }}</span>
+        } @else {
+            <span class="verdict-confiance">{{ r.confiance === 1 ? 'les règles concordent' : 'les règles ne concordent pas' }}</span>
+        }
+    </div>
+    <p class="justification">{{ r.justification }}</p>
+
+    @if (lignesDeFaits(r.faits, r.faits_affiches).length) {
+        <div class="bloc">
+            <div class="bloc-titre">Faits retenus</div>
+            <div class="faits">
+                @for (f of lignesDeFaits(r.faits, r.faits_affiches); track f.variable) {
+                    <span class="fait"><span class="fait-variable">{{ f.variable }}&nbsp;:</span> {{ f.valeur }}</span>
+                }
+            </div>
+        </div>
+    }
+</ng-template>
+
+<ng-template #preuves let-r let-dernier="dernier">
+    <!-- Les réserves : ce que l'assureur pourra vérifier (rien à demander au client) -->
+    @if (dernier && reservesDe(r).length) {
+        <div class="bloc">
+            <div class="bloc-titre">Sous réserve · ce que l’assureur pourra vérifier</div>
+            <ul class="limites">
+                @for (p of reservesDe(r); track p.variable) {
+                    <li>{{ p.question }}</li>
+                }
+            </ul>
+        </div>
+    }
+
+    @if (r.citations.length) {
+        <div class="bloc">
+            <div class="bloc-titre">Clauses citées</div>
+            @for (a of citationsParArticle(r.citations); track a.clauseId) {
+                <div class="citation" [class]="'role-' + a.role">
+                    <div class="citation-tete">
+                        <button type="button" class="lien citation-article"
+                            [attr.aria-label]="'Lire l’article ' + a.clauseId + ' en entier'"
+                            (click)="ouvrirArticle(a.clauseId, a.extraits)">Art. {{ a.clauseId }}</button>
+                        <span class="citation-role">{{ a.role }}</span>
+                        @if (a.pages.length) {
+                            <span class="small">p. {{ a.pages.join(', ') }}</span>
+                        }
+                    </div>
+                    @for (extrait of a.extraits; track extrait) {
+                        <q class="citation-extrait">{{ extrait }}</q>
+                    }
+                </div>
+            }
+        </div>
+    }
+
+    @if (r.limites.length) {
+        <div class="bloc">
+            <div class="bloc-titre">Limites</div>
+            <ul class="limites">
+                @for (l of r.limites; track $index) {
+                    <li><span class="citation-article">Art. {{ l.clause_id }}</span> {{ l.extrait }}</li>
+                }
+            </ul>
+        </div>
+    }
+</ng-template>

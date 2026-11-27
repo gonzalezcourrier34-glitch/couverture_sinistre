@@ -12,7 +12,7 @@ import time
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from couverture.api import service
+from couverture.api import lecture_clauses, service
 from couverture.api.acces import limiter_analyses
 from couverture.api.dependances import Pipelines, get_journal, get_pipelines, methode, modele_des_clauses
 from couverture.api.schemas import AnalyseRequest, Decision
@@ -46,7 +46,7 @@ def analyser(demande: AnalyseRequest, pipelines: Pipelines = Depends(get_pipelin
     debut = time.perf_counter()
     try:
         if methode(demande) == "clauses":
-            resultat, reponse = service.analyser_clauses(pipelines.base, chaine, demande.contrat_id,
+            resultat, reponse = lecture_clauses.analyser_clauses(pipelines.base, chaine, demande.contrat_id,
                                                          demande.sinistre.strip(), modele_des_clauses(),
                                                          souscription=demande.souscription, chapitres=demande.chapitres)
         else:

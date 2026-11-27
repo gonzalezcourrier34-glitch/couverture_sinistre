@@ -26,10 +26,10 @@ from collections.abc import Iterator
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import StreamingResponse
 
-from couverture.api import service
+from couverture.api import lecture_clauses, service
 from couverture.api.acces import limiter_analyses
 from couverture.api.dependances import Pipelines, get_journal, get_pipelines, methode, modele_des_clauses
-from couverture.api.schemas import AnalyseRequest
+from couverture.api.schemas import AnalyseRequest, au_format
 from couverture.api.securite import require_api_key
 from couverture.analyse.journal import Journal
 from couverture.llm import ErreurLLM
@@ -69,23 +69,33 @@ def analyser_avec_suivi(demande: AnalyseRequest, pipelines: Pipelines = Depends(
 
     par_clauses = methode(demande) == "clauses"
     if par_clauses:
-        file.put({"etapes": service.ETAPES_CLAUSES, "annonce": service.ANNONCE_CLAUSES})
+        file.put({"etapes": lecture_clauses.ETAPES_CLAUSES, "annonce": lecture_clauses.ANNONCE_CLAUSES})
 
     def travailler() -> None:
         debut = time.perf_counter()
         try:
             if par_clauses:
-                resultat, reponse = service.analyser_clauses(pipelines.base, chaine, demande.contrat_id, sinistre,
+                resultat, reponse = lecture_clauses.analyser_clauses(pipelines.base, chaine, demande.contrat_id, sinistre,
                                                              modele_des_clauses(), suivi=suivre,
                                                              souscription=demande.souscription,
                                                              chapitres=demande.chapitres)
             else:
                 resultat, reponse = service.analyser(chaine, sinistre, suivi=suivre, souscription=demande.souscription)
-            journal.noter(resultat, duree_ms=int((time.perf_counter() - debut) * 1000))
-            file.put({"etape": "fin", "reponse": reponse})
-        except ErreurLLM as e:
+        except (ErreurLLM, ValueError) as e:   # ValueError : une réponse du modèle coupée ou illisible, comme /analyses
             journal.noter_erreur(demande.contrat_id, methode(demande), str(e))
             file.put({"etape": "erreur", "code": 502, "detail": f"Le modèle n'a pas répondu : {e}"})
+            file.put(None)
+            return
+        except Exception as e:  # noqa: BLE001 - le flux est ouvert : l'erreur doit y arriver, pas se perdre
+            file.put({"etape": "erreur", "code": 500, "detail": f"L'analyse a échoué : {e}"})
+            file.put(None)
+            return
+        try:
+            # À part : une réponse mal formée est une erreur du code, pas du modèle (la validation lève une
+            # ValueError, que la clause d'au-dessus aurait comptée comme une panne du modèle).
+            forme = au_format(reponse)
+            journal.noter(resultat, duree_ms=int((time.perf_counter() - debut) * 1000))
+            file.put({"etape": "fin", "reponse": forme})
         except Exception as e:  # noqa: BLE001 - le flux est ouvert : l'erreur doit y arriver, pas se perdre
             file.put({"etape": "erreur", "code": 500, "detail": f"L'analyse a échoué : {e}"})
         finally:

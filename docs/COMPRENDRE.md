@@ -380,6 +380,18 @@ la variation : le modèle ne désigne pas les mêmes chapitres d'une passe à l'
 dossier, puis 290), et la contresignature transforme alors un désaccord en « à préciser ». L'instabilité coûte des
 questions au client, pas des promesses fausses.
 
+**Et si je m'en sers ?** Le lendemain, j'ai tapé six déclarations sur le site, comme le ferait la personne qui le
+découvre. Les mesures comptent des décisions ; l'essai montre ce que le client lit, et il a trouvé ce qu'aucun banc ne
+voyait. Quand les deux lectures du contrat n'étaient pas d'accord, la réponse devenait « à préciser »… sans une seule
+question : la lecture des clauses n'avait pas de doute, et les questions des règles se perdaient. Une déclaration à
+deux sinistres recevait un seul badge, alors que l'API calculait une décision pour chacun. Un refus disait « aucune
+garantie ne porte sur cet événement » pour une table de jardin qui avait brûlé, sans rien citer. Tout cela est
+corrigé, sans changer une seule décision : les questions des règles sont posées, chaque sinistre a son cadre, et le
+refus nomme la garantie incendie et la définition du contenu qui écarte la table. Restent les erreurs du modèle
+lui-même, que je n'ai pas corrigées : un congélateur arrêté « sûrement à cause d'une panne électrique » reçu comme
+couvert, alors que la cause n'est pas établie et que la clause demande un arrêt de six heures. Là, rien ne l'a
+arrêté : les règles n'ont pas contredit. C'est le vrai risque de cette méthode.
+
 ### Les deux méthodes en un tableau
 
 | | Première méthode (règles) | Seconde méthode (clauses) |
@@ -437,6 +449,9 @@ appliqué ici presque tel quel.
 - **La seconde méthode n'a jamais été mesurée seule.** Sans contresignature, sur un contrat sans règles traduites,
   elle supprimerait le travail de traduction : c'est là qu'est le vrai gain pour des centaines de contrats. Le jeu
   « cinq » le suggère (chez D, les six réponses retenues par la contresignature étaient justes) ; il ne le prouve pas.
+- **Le modèle conclut parfois « couvert » trop vite**, quand la déclaration hésite (« sûrement ») ou ne dit pas une
+  condition de la clause, et que les règles ne contredisent pas : la contresignature n'arrête que ce que les règles
+  voient. Le corriger, c'est toucher la consigne du modèle, puis mesurer sur un jeu neuf.
 - **Les jeux sont petits** : vingt cas par contrat.
 - **Ce n'est pas un service en production** : la démonstration en ligne n'a pas d'utilisateurs réels.
 - **Il ne dit rien du montant** : il répond à « est-ce couvert ? », pas à « combien ? ».

@@ -323,7 +323,7 @@ textarea {
     resize: none;
     min-height: 96px;
     padding: 10px 12px 24px; // en bas, la place du compteur
-    border: 1px solid var(--plume);
+    border: 1px solid var(--bord);
     border-radius: 10px;
     background: var(--blanc);
     color: var(--texte);
@@ -408,7 +408,7 @@ textarea {
 .chip {
     padding: 4px 12px;
     border-radius: $pastille;
-    border: 1px solid var(--plume);
+    border: 1px solid var(--bord);
     background: var(--blanc);
     color: var(--plume-nuit);
     font-size: 14px;
@@ -429,7 +429,7 @@ textarea {
     flex: 1 1 220px;
     min-width: 0;
     padding: 4px 10px;
-    border: 1px solid var(--plume);
+    border: 1px solid var(--bord);
     border-radius: 10px;
     font: inherit;
     font-size: 14px;
@@ -619,7 +619,7 @@ textarea {
     align-self: flex-start;
     max-width: 100%;
     padding: 6px 12px;
-    border: 1px solid var(--plume);
+    border: 1px solid var(--bord);
     border-radius: 10px;
     background: var(--blanc);
     color: var(--texte);
@@ -977,4 +977,19 @@ textarea {
     .principe {
         grid-template-columns: 1fr;
     }
+}
+
+// Plusieurs sinistres : un cadre par sinistre, avec sa décision et ce qui la fonde (7.222).
+.sinistre {
+    margin: 0.9rem 0;
+    padding: 0.8rem 1rem 0.4rem;
+    border: 1px solid var(--bord);
+    border-radius: 12px;
+}
+
+.sinistre-titre {
+    margin: 0 0 0.5rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--primaire-nuit);
 }
