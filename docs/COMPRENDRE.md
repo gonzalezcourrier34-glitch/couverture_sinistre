@@ -135,8 +135,8 @@ Ma méthode s'est donc construite en couches :
 5. **Un critère fixé avant chaque essai.** Quand j'essaie une règle, j'écris d'abord ce qui la fera garder ou retirer
    (par exemple : « plus de refus à tort corrigés que de refus justes perdus, aucun couvert à tort »), puis je mesure.
 
-J'ai monté cinq jeux de cette façon : « fermé », « aveugle », « neuf », « quatre », « cinq ». Chacun a été mesuré une
-fois, puis il est devenu un jeu vu.
+J'ai monté six jeux de cette façon : « fermé », « aveugle », « neuf », « quatre », « cinq », « six ». Chacun a été
+mesuré une fois, puis il est devenu un jeu vu.
 
 **Ce que cette méthode ne garantit pas.** Les réponses attendues viennent de lecteurs automatiques qui s'accordent,
 pas d'un juriste. Un accord dit que le cas n'est pas ambigu pour qui lit le contrat ; il ne dit pas qu'un
@@ -380,6 +380,17 @@ la variation : le modèle ne désigne pas les mêmes chapitres d'une passe à l'
 dossier, puis 290), et la contresignature transforme alors un désaccord en « à préciser ». L'instabilité coûte des
 questions au client, pas des promesses fausses.
 
+**Et si j'ajoute les garanties que trouvent les règles ?** C'était la piste. Trois passes de plus : 82 % avant comme
+après, autant de cas instables. L'hypothèse était fausse : la garantie manquait rarement au dossier. Je l'ai écrit,
+et j'ai corrigé ce que les sorties montraient vraiment : une erreur passagère du fournisseur que le code ne relançait
+pas.
+
+**Et les « couvert » trop rapides ?** J'ai ajouté deux règles à la consigne du modèle : une cause seulement probable
+n'est pas établie ; une garantie qui pose une condition ne couvre que si la déclaration la remplit. Puis un sixième jeu,
+« six », écrit pour se jouer sur ces détails. Résultat : 46 réponses justes sur 60, un seul couvert à tort. Les cas
+laissés « à préciser », repassés avec l'ancienne consigne, auraient donné trois couverts à tort de plus, et deux
+réponses justes de plus. Je garde les deux règles : une question vaut mieux qu'une promesse fausse.
+
 **Et si je m'en sers ?** Le lendemain, j'ai tapé six déclarations sur le site, comme le ferait la personne qui le
 découvre. Les mesures comptent des décisions ; l'essai montre ce que le client lit, et il a trouvé ce qu'aucun banc ne
 voyait. Quand les deux lectures du contrat n'étaient pas d'accord, la réponse devenait « à préciser »… sans une seule
@@ -449,9 +460,9 @@ appliqué ici presque tel quel.
 - **La seconde méthode n'a jamais été mesurée seule.** Sans contresignature, sur un contrat sans règles traduites,
   elle supprimerait le travail de traduction : c'est là qu'est le vrai gain pour des centaines de contrats. Le jeu
   « cinq » le suggère (chez D, les six réponses retenues par la contresignature étaient justes) ; il ne le prouve pas.
-- **Le modèle conclut parfois « couvert » trop vite**, quand la déclaration hésite (« sûrement ») ou ne dit pas une
-  condition de la clause, et que les règles ne contredisent pas : la contresignature n'arrête que ce que les règles
-  voient. Le corriger, c'est toucher la consigne du modèle, puis mesurer sur un jeu neuf.
+- **Le modèle concluait parfois « couvert » trop vite**, quand la déclaration hésite (« sûrement ») ou ne dit pas une
+  condition de la clause. Deux règles de lecture l'ont réduit (trois couverts à tort évités sur le jeu « six ») ; elles
+  prennent parfois une obligation de l'assuré pour une condition de la garantie, ce qui coûte une réponse juste.
 - **Les jeux sont petits** : vingt cas par contrat.
 - **Ce n'est pas un service en production** : la démonstration en ligne n'a pas d'utilisateurs réels.
 - **Il ne dit rien du montant** : il répond à « est-ce couvert ? », pas à « combien ? ».
@@ -462,11 +473,11 @@ appliqué ici presque tel quel.
 2. Ne faire contresigner que par des règles complètes : un contrat traduit en partie retient des « couvert » justes
    plus souvent qu'il n'arrête une erreur.
 3. Faire relire un jeu par quelqu'un du métier, et mesurer l'écart avec les annotateurs automatiques.
-4. Rendre la désignation des chapitres plus stable : c'est d'elle que vient la plus grande part des réponses qui
-   changent d'une passe à l'autre.
+4. Rendre la lecture plus stable. Ajouter les garanties des règles n'a pas suffi : il faudra chercher ailleurs (les
+   citations jugées inexactes, une même clause jugée autrement d'une passe à l'autre).
 5. Réduire l'attente, en profitant davantage du cache du fournisseur.
 
-Chacune demandera un jeu de cas neuf : « cinq » a servi.
+Chacune demandera un jeu de cas neuf : « cinq » et « six » ont servi.
 
 ## 11. En une phrase
 

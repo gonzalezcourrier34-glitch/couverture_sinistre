@@ -5,7 +5,7 @@ Deux méthodes, deux commandes : `uv run couverture banc --contrat …` pour la 
 dans `data/bancs/`), `uv run couverture juger --contrat … --jeu … --regles` pour la lecture des clauses (une passe,
 bilan dans `data/debug/`). Le raisonnement qui a conduit à cette méthode d'évaluation est raconté dans
 [COMPRENDRE, section 3](COMPRENDRE.md). Démarche et historique des mesures : [DEMARCHE.md](DEMARCHE.md), parties 7.21 et
-suivantes. Mis à jour le 26 nov. 2026 après la mesure du jeu « cinq » ; les chiffres qui comptent sont en tête de la section 5.
+suivantes. Mis à jour le 27 nov. 2026 après la mesure du jeu « six » ; les chiffres qui comptent sont en tête de la section 5.
 
 ---
 
@@ -16,7 +16,7 @@ suivantes. Mis à jour le 26 nov. 2026 après la mesure du jeu « cinq » ; les 
 | **Golden set** (référence) | `data/golden/` (v13, figé par empreinte, par contrat) | 97 (A) + 15 (B) | Rejoué à chaque changement ; toutes les métriques ci-dessous | Écrit par Claude en connaissant les règles, et il a servi à corriger le système : il mesure la **mise au point** |
 | … dont la **partie test** | `data/lecture/partage.json` | 38 sur 112 (31 pour A, 7 pour B) | Mise de côté le 20 nov. (7.107) : ne sert jamais à corriger le vocabulaire, les règles ou les exemples | Tirée du même jeu : même auteur, même biais |
 | **Jeu fermé** | `data/ferme/` | 20 (A) + 20 (B) + 25 (D) | La mesure de la **fidélité au contrat** : écrit à partir du seul texte des conditions générales, sans voir les règles (7.79) ; on ne corrige jamais en le regardant | Écrit par deux annotateurs automatiques et arbitré sur citations, pas par une personne du métier. C n'en a pas |
-| **Jeux écrits à l'aveugle** | `data/aveugle/`, `data/neuf/`, `data/quatre/`, `data/cinq/` | 60 chacun (20 par contrat : A, B, D) | Écrits de la même façon que le jeu fermé, chacun après un tour de corrections ; un second avis indépendant, un arbitrage sur le texte ; **mesurés une seule fois, code figé**, puis « vus » (7.185 à 7.187, 7.207, 7.215). « Quatre » et « cinq » comparent les deux méthodes | Mêmes limites que le jeu fermé. Pour « cinq », le second avis n'est plus Mistral Large, qui lit dans la méthode mesurée |
+| **Jeux écrits à l'aveugle** | `data/aveugle/`, `data/neuf/`, `data/quatre/`, `data/cinq/`, `data/six/` | 60 chacun (20 par contrat : A, B, D) | Écrits de la même façon que le jeu fermé, chacun après un tour de corrections ; un second avis indépendant, un arbitrage sur le texte ; **mesurés une seule fois, code figé**, puis « vus » (7.185 à 7.187, 7.207, 7.215). « Quatre » et « cinq » comparent les deux méthodes | Mêmes limites que le jeu fermé. Pour « cinq », le second avis n'est plus Mistral Large, qui lit dans la méthode mesurée |
 | Mise au point d'origine | `data/sinistres.jsonl` | 14 | Les 2 cas du recruteur et 12 variations | Inclus dans le golden set |
 | Ancienne validation | `data/validation/` | 15 | Historique (7.17) | Inclus dans le golden set |
 | Rédaction | `data/redaction/` | 10 | Tempête et bris, écrits avant les règles | Inclus dans le golden set |
@@ -139,6 +139,28 @@ DEMARCHE**, avec la raison (le seul changement à ce jour, en 7.23, était un ch
 Les plus récentes d'abord. Les deux premières sont les mesures qui comptent : les deux méthodes, sur des jeux jamais vus,
 code figé, une seule fois. Dessous, l'historique complet de la chaîne de règles depuis le 17 novembre : il n'est pas à
 lire d'un trait, il sert à retrouver ce qu'une modification a déplacé.
+
+**27 nov. 2026, soir, jeu « six » : la consigne de jugement v2 contre la v1** (60 cas jamais vus, code figé et
+commité avant, DEMARCHE 7.226 et 7.227). La v2 (deux règles de lecture : cause seulement probable, condition de la
+garantie non dite) sur les 60 cas ; la v1 (`--consigne-jugement v1`) sur les 29 cas que la v2 laisse « à préciser »,
+les seuls où ces règles peuvent changer la réponse.
+
+| Contrat | Justes (v2) | Couverts à tort | Refus à tort | « À préciser » au lieu d'une réponse |
+|---|---|---|---|---|
+| A | 18 sur 20 | 0 | 1 | 1 |
+| B | 14 sur 20 | 1 | 1 | 4 |
+| D | 14 sur 20 | 0 | 0 | 6 |
+| **Ensemble** | **46 sur 60** (77 %) | **1** | **2** | **11** |
+
+Sur les 29 cas repassés en v1 : 23 réponses identiques ; la v1 fait trois couverts à tort que la v2 évite (`s-d03`,
+`s-d08`, `s-d09`) et deux réponses justes que la v2 laisse « à préciser » (`s-d01`, `s-b06`) ; deux écarts sans
+lien avec les règles (`s-b01`, `s-d11`). Estimation sur les 60 cas : v1 environ 48 justes et 4 couverts à tort, v2 46
+et 1. La v2 reste. Tokens : 2,95 millions envoyés, 1,35 million reçus, environ 9 $.
+
+**27 nov. 2026, après-midi, renfort des chapitres par les règles, jeu « cinq »** (DEMARCHE 7.224 et 7.225) : passes 4,
+5 et 6 sur les vingt cas par contrat. Sur les dix cas des passes 1 à 3 : 24 / 24 / 26 justes sur 30 (82 %, comme
+avant), 8 cas instables sur 30 (7 avant), aucun couvert à tort sur 180 analyses. Pas de gain ; 5 des 14 cas instables
+sur 60 venaient d'une erreur 520 du fournisseur, relancée depuis. Environ 15 $ (`--echantillon 10` oublié).
 
 **26 nov. 2026, soir, stabilité de la lecture des clauses sur le jeu « cinq »** (DEMARCHE 7.221) : passes 2 et 3 sur
 dix cas par contrat (`--echantillon 10`), comparées à la passe 1 sur les mêmes trente cas.
