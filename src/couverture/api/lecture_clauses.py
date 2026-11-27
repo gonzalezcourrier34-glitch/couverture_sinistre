@@ -292,14 +292,18 @@ def phrase_des_clauses(e, decision, desaccord: str, r_regles: Resultat | None, t
         m = (j.motif or "").strip().rstrip(".")
         return f" : {m[:220]}" if m else ""
 
+    def fin(texte: str) -> str:
+        """Un point final, sauf après un point d'interrogation (vu à l'essai : « …voisins ?. Les règles »)."""
+        return texte if texte.rstrip().endswith(("?", "!", ".")) else texte + "."
+
     morceaux = []
     if e.couvrent:
         morceaux.append("La garantie qui s'applique : " + " ; ".join(ref(j) + motif(j) for j in e.couvrent[:2]) + ".")
     if e.excluent:
         morceaux.append("Ce qui l'exclut : " + " ; ".join(ref(j) + motif(j) for j in e.excluent[:2]) + ".")
     if e.a_verifier:
-        morceaux.append("Ce qui reste à vérifier : " + " ; ".join(
-            ref(j) + (f" — {j.question.strip()}" if j.question.strip() else motif(j)) for j in e.a_verifier[:3]) + ".")
+        morceaux.append(fin("Ce qui reste à vérifier : " + " ; ".join(
+            ref(j) + (f" — {j.question.strip()}" if j.question.strip() else motif(j)) for j in e.a_verifier[:3])))
     if not morceaux:
         morceaux.append(e.motif[:1].upper() + e.motif[1:] + ".")
     if desaccord:

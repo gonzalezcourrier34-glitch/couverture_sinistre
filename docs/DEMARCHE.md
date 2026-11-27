@@ -6686,6 +6686,33 @@ fonction » qui sont des faux positifs (la fonction est appelée dans la même i
 (7.230). Fin de la feuille de route d'après l'envoi. Ce qui reste demande des appels payés (mesurer la relecture
 partielle, le découpage en sinistres, le défaut vu en 7.227) ou se fait hors du code.
 
+### 7.232 Essai de la v20 sur le site
+
+*28 novembre, minuit.* Quatre déclarations neuves sur A (et le vélo sur B), avec les deux méthodes.
+
+**Ce qui marche comme prévu.**
+- *La consigne v2.* « Je pense que l'eau passe par le mur extérieur » : la lecture des clauses demande d'où vient
+  l'eau (2.7-b « à vérifier ») au lieu de refuser. « Sans doute une coupure de courant » : elle demande la cause de
+  l'arrêt du congélateur (2.6). Les deux causes seulement probables ne sont plus prises pour établies.
+- *Le jeton de la relecture partielle* : l'écran annonce « seules les clauses en doute sont rejugées » pour ces
+  réponses-là. La relecture avec réponse reste à essayer.
+- *Le moteur seul* pour la chaîne de règles (« Décision immédiate, par le moteur seul »), et deux sinistres jugés
+  chacun à part, couverts tous les deux, par les deux méthodes.
+
+**Corrigé.**
+- *À plusieurs sinistres, la chaîne de règles faisait demander ses réserves au client* (« Des travaux sont-ils en
+  cours ? » pour une vitre déjà couverte) : elle les range aussi dans les questions de son verdict, que l'ensemble
+  reprenait. Seul un sinistre « à préciser » a maintenant des questions, et une réserve n'en devient jamais une
+  (`service.rassembler`). Un test.
+- *« …voisins ?. Les règles »* : un point ajouté après le point d'interrogation de la question, dans la phrase de la
+  lecture des clauses. Plus de point après « ? ». Une vérification ajoutée à un test.
+
+**Vu, non corrigé : la chaîne de règles prend une cause probable pour établie.** Pour la tache d'humidité, elle lit
+« infiltration par l'extérieur » et refuse (2.7-b), à 85 % de confiance ; pour le congélateur, elle lit aussi un
+« dégât des eaux » et couvre au titre de 2.7, garantie qui ne joue pas. C'est sa lecture (Medium), que la consigne v2
+de la lecture des clauses ne touche pas ; la corriger demande des bancs payés. C'est aussi ce qui justifie la
+lecture des clauses par défaut, contresignée : ici, elle a demandé au lieu de trancher.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 26 nov. 2026, après la mesure du jeu « cinq ». Dans l'ordre où je le ferais.

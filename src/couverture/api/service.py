@@ -278,7 +278,13 @@ def rassembler(lignes: list[tuple[str, dict[str, Any]]]) -> tuple[list[dict[str,
     Chaque sinistre garde les siennes, dans sa ligne de `sinistres`. Pour l'ensemble : les questions de chacun,
     précédées de son titre (on y répond d'un bloc) ; une réserve que plusieurs sinistres partagent (le même rappel
     du règlement) une seule fois, et retirée de leurs lignes ; aucune réserve sur un sinistre refusé. Modifie les
-    lignes en place ; rend `a_preciser` et `questions` pour l'ensemble."""
+    lignes en place ; rend `a_preciser` et `questions` pour l'ensemble.
+
+    Seul un sinistre « à préciser » a des questions : la chaîne de règles met aussi ses réserves dans
+    `informations_manquantes`, et l'écran les demandait au client pour des sinistres déjà couverts (vu à l'essai du
+    28 nov., 7.232). Une réserve reste une réserve, dans sa ligne."""
+    reserves = {i: [p["question"] for p in x["a_preciser"] if p["nature"] == "reserve"]
+                for i, (_, x) in enumerate(lignes)}
     for _, x in lignes:
         if x["decision"] == "NON_COUVERT":
             x["a_preciser"] = [p for p in x["a_preciser"] if p["nature"] != "reserve"]
@@ -297,9 +303,11 @@ def rassembler(lignes: list[tuple[str, dict[str, Any]]]) -> tuple[list[dict[str,
     # Pour l'ensemble : les questions de chacun, et les seules réserves partagées ; les autres restent dans leur
     # ligne (vu à l'essai : une réserve propre à un sinistre s'affichait aussi « pour toute la déclaration »).
     a_preciser = [p | {"question": f"{titre} — {p['question']}", "variable": f"{p['variable']}_{i}"}
-                  for i, (titre, x) in enumerate(lignes, 1) for p in x["a_preciser"] if p["nature"] == "question"]
+                  for i, (titre, x) in enumerate(lignes, 1) if x["decision"] == "INCERTAIN"
+                  for p in x["a_preciser"] if p["nature"] == "question"]
     a_preciser += list(communes.values())
-    questions = [f"{titre} — {q}" for titre, x in lignes for q in x["questions"]]
+    questions = [f"{titre} — {q}" for i, (titre, x) in enumerate(lignes) if x["decision"] == "INCERTAIN"
+                 for q in x["questions"] if not any(q.startswith(r) for r in reserves[i])]
     return a_preciser, questions
 
 

@@ -165,3 +165,19 @@ def test_la_bougie_qui_a_brule_nomme_la_garantie_incendie(regles):
     d = Explorateur(regles, faits | {"embrasement": "non"}).decider()
     assert d["decision"] == "NON_COUVERT" and "incendie" in d["visent_evenement"]
     assert "vol_batiment" not in d["visent_evenement"]
+
+
+def test_un_sinistre_couvert_n_a_rien_a_demander_au_client():
+    """7.232 (vu à l'essai) : la chaîne de règles range aussi ses réserves dans les questions du verdict ; à plusieurs
+    sinistres, l'écran les demandait au client pour un sinistre déjà couvert. Seul un « à préciser » a des questions,
+    et une réserve n'en devient jamais une."""
+    reserve = {"variable": "travaux", "nature": "reserve", "question": "Des travaux sont-ils en cours ?", "valeurs": []}
+    question = {"variable": "fermeture", "nature": "question", "question": "Comment le local était-il fermé ?",
+                "valeurs": ["cle"]}
+    couvert = {"decision": "COUVERT", "a_preciser": [reserve], "questions": ["Des travaux sont-ils en cours ?"]}
+    doute = {"decision": "INCERTAIN", "a_preciser": [question, dict(reserve, variable="gel", question="Le gel ?")],
+             "questions": ["Comment le local était-il fermé ?", "Le gel ?"]}
+    a_preciser, questions = service.rassembler([("La vitre", couvert), ("Le vol", doute)])
+    assert questions == ["Le vol — Comment le local était-il fermé ?"]
+    assert [p["variable"] for p in a_preciser if p["nature"] == "question"] == ["fermeture_2"]
+    assert couvert["a_preciser"] == [reserve], "la réserve reste dans la ligne du sinistre couvert"

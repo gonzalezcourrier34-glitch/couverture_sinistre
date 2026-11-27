@@ -662,6 +662,7 @@ def test_apres_les_reponses_seules_les_clauses_en_doute_et_leur_garantie_sont_re
     _, sortie = lecture_clauses.analyser_clauses(base, Regles(Decision.COUVERT), "c1", VOL, premier)
     Reponse(**sortie)
     assert sortie["decision"] == "INCERTAIN" and sortie["lecture"]
+    assert "personnels ?" in sortie["justification"] and "?." not in sortie["justification"], "pas de « ?. » (7.232)"
     complete = VOL + "\n\nPrécisions du client :\n- Les outils sont-ils des objets personnels ? Oui."
     relu = Modele(juges(**{"3_1_6_1": ("couvre", "")}))
     _, apres = lecture_clauses.analyser_clauses(base, Regles(Decision.COUVERT), "c1", complete, relu,
