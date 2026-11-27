@@ -6656,6 +6656,29 @@ entière, comme avant. Une question du règlement (un délai de déclaration) ne
 garantie non rejugée devait l'être. Les deux demandent des appels payés. Trois tests : la relecture partielle, la
 relecture entière sans jeton, le choix des clauses.
 
+### 7.230 Relecture du code avant la v20
+
+*27 novembre, 23 h 30.* Un tour de tout le code : analyse statique (ruff, mypy), puis relecture de ce qui a changé
+dans la journée et des parties qui en dépendent.
+
+**Corrigé.**
+- *Le jeton de la relecture partielle était donné à toute réponse « à préciser »*, même sans clause en doute (une
+  option qui couvre seule, un désaccord des règles) : la relecture y était entière, mais l'écran annonçait « seules
+  les clauses en doute sont rejugées ». Le jeton n'est plus donné que s'il y a une clause « à vérifier ».
+- *« six » restait un jeu jamais vu* (`JEUX_JAMAIS_VUS`) après sa mesure : il en sort, comme « cinq » après la
+  sienne ; son LISEZMOI et l'aide de `juger --mesure-finale` le disent.
+- *L'écran annonçait encore « deux à trois minutes »* pour une relecture qui ne rejuge que le doute ; il dit
+  maintenant ce qui sera rejugé. Deux commentaires de l'écran disaient « relue en entier ».
+- *Deux tests des routes* ignoraient le nouveau paramètre `lecture` (7.229) ; ils le passent, et vérifient que le
+  jeton va jusqu'à la lecture des clauses par les deux routes.
+- Des imports faits dans les fonctions, regroupés en tête de `api/lecture_clauses.py` ; le commentaire des versions de
+  consignes cite la v2 du jugement.
+
+**Vu, laissé.** Les avertissements de mypy sont des types incomplets (`None` possibles déjà gardés par le code,
+paramètres par défaut immuables), pas des erreurs d'exécution ; ceux de ruff (version plus récente que celle du
+projet) portent sur l'ordre des imports et des `noqa` devenus inutiles, sauf trois « variables de boucle dans une
+fonction » qui sont des faux positifs (la fonction est appelée dans la même itération).
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 26 nov. 2026, après la mesure du jeu « cinq ». Dans l'ordre où je le ferais.

@@ -37,7 +37,8 @@ CONSIGNES: dict[str, tuple[str, str, str]] = {
     "couverture-decoupage-sinistres": ("couverture.analyse.lecture", "SYSTEME_DECOUPAGE", "v1"),
     "couverture-redaction-regles": ("couverture.redaction", "SYSTEME_REDACTION", "v13"),
     # La lecture des clauses (7.190 à 7.211), versionnée le 26 nov. 2026 (7.217) : en service depuis le 25, sans version
-    # jusque-là ; la v1 est le texte mesuré sur le jeu « cinq ».
+    # jusque-là ; la v1 est le texte mesuré sur le jeu « cinq ». Jugement v2 le 27 nov. : deux règles de lecture, mesurées
+    # sur le jeu « six » (7.226, 7.227).
     "couverture-clauses-designation": ("couverture.analyse.clauses", "SYSTEME_DESIGNATION", "v1"),
     "couverture-clauses-jugement": ("couverture.analyse.clauses", "SYSTEME_JUGEMENT", "v2"),
     "couverture-clauses-arbitrage": ("couverture.analyse.clauses", "SYSTEME_ARBITRAGE", "v1"),

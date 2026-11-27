@@ -43,8 +43,9 @@
 }
 
 <!-- ### Les questions, et les réponses du client en mots (7.218, 7.222) : la lecture des clauses, et
-     toute déclaration à plusieurs sinistres. Elles s'ajoutent à la déclaration, relue en entier ;
-     une question des règles garde ses réponses proposées. -->
+     toute déclaration à plusieurs sinistres. Elles s'ajoutent à la déclaration, relue ; la lecture des clauses ne
+     rejuge que les clauses en doute quand le serveur a gardé la première lecture (13.4). Une question des règles garde
+     ses réponses proposées. -->
 
 @if (last && ech.enMots() && ech.questionsEnMots().length) {
     <div class="bloc a-preciser">
@@ -66,6 +67,8 @@
         <div class="actions">
             @if (ech.reponsesTropLongues()) {
                 <span class="small">La déclaration et les réponses dépassent {{ longueurMax }} caractères : raccourcissez une réponse.</span>
+            } @else if (etape.reponse.mode === 'clauses' && etape.reponse.lecture) {
+                <span class="small">Nouvelle lecture : seules les clauses en doute sont rejugées, avec ces réponses.</span>
             } @else if (etape.reponse.mode === 'clauses') {
                 <span class="small">Nouvelle lecture des clauses, la déclaration complétée par ces réponses : deux à trois minutes.</span>
             } @else {

@@ -10,7 +10,7 @@ condition dite ou non dite, une cause établie ou seulement probable). Ni les r�
 
 **Règle : ce jeu ne sert qu'à mesurer.** Aucun de ses cas ne sert à régler le vocabulaire, les règles, les
 consignes ou les exemples de lecture. Un cas n'est pas corrigé après avoir vu la réponse du système.
-`juger --jeu six` refuse de partir sans `--mesure-finale`.
+Mesuré le 27 novembre (DEMARCHE 7.227) : c'est maintenant un jeu vu, qui se repasse sans `--mesure-finale`.
 
 | Fichier | Contenu |
 |---|---|

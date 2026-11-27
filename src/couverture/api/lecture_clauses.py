@@ -8,6 +8,9 @@ et celles des règles quand elles retiennent la réponse), les rappels du règle
 
 from __future__ import annotations
 
+import secrets
+import threading
+import time
 from typing import Any
 
 from couverture.analyse import chaine, lecture, prolog
@@ -34,14 +37,11 @@ ROLE_DE_L_EFFET = {"couvre": "garantie", "exclut": "exclusion", "a_verifier": "c
 DUREE_LECTURE = 3600            # secondes
 MAX_LECTURES = 200
 _LECTURES: dict[str, tuple[float, str, list[str], list]] = {}
-_VERROU_LECTURES = __import__("threading").Lock()
+_VERROU_LECTURES = threading.Lock()
 
 
 def garder_lecture(contrat_id: str, chapitres: list[str], jugements: list) -> str:
     """Garde les chapitres et les jugements d'une lecture ; rend le jeton qui les retrouve."""
-    import secrets
-    import time
-
     jeton = secrets.token_urlsafe(16)
     with _VERROU_LECTURES:
         _LECTURES[jeton] = (time.time(), contrat_id, list(chapitres), list(jugements))
@@ -52,8 +52,6 @@ def garder_lecture(contrat_id: str, chapitres: list[str], jugements: list) -> st
 
 def reprendre_lecture(jeton: str | None, contrat_id: str) -> tuple[list[str], list] | None:
     """Les chapitres et les jugements gardés sous ce jeton, s'ils existent encore et visent ce contrat ; sinon rien."""
-    import time
-
     if not jeton:
         return None
     with _VERROU_LECTURES:
@@ -172,7 +170,6 @@ def analyser_clauses_un(base: Base, pipeline, contrat_id: str, sinistre: str, ll
 
     Si la chaîne de règles ne répond pas, un « couvert » n'est pas contresigné et devient « incertain » : la
     contresignature est la garde contre un couvert à tort, elle ne se saute pas en silence."""
-    import time
     from concurrent.futures import ThreadPoolExecutor
 
     from couverture.analyse import clauses as lecture_des_clauses
@@ -213,7 +210,9 @@ def analyser_clauses_un(base: Base, pipeline, contrat_id: str, sinistre: str, ll
     if r_regles is None and decision == D.COUVERT:
         decision, desaccord = D.INCERTAIN, "les règles traduites n'ont pas répondu : un « couvert » non contresigné reste à examiner"
     r, sortie = resultat_clauses(base, contrat_id, sinistre, lu, decision, desaccord, r_regles, temps)
-    if garder and decision == D.INCERTAIN:            # une relecture suivra peut-être : de quoi ne rejuger que le doute
+    # Une relecture suivra peut-être : de quoi ne rejuger que le doute. Seulement s'il y a une clause en doute ; sinon
+    # (une option qui couvre seule, un désaccord des règles), la relecture serait entière de toute façon.
+    if garder and decision == D.INCERTAIN and any(j.effet == "a_verifier" for j in lu.jugements):
         sortie["lecture"] = garder_lecture(contrat_id, lu.designes, lu.jugements)
     poser_les_questions_des_regles(pipeline, lu, decision, r_regles, r, sortie)
     citer_le_refus_des_regles(decision, r_regles, r, sortie)

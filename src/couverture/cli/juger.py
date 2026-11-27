@@ -34,7 +34,7 @@ def ajouter(sous) -> None:
     p.add_argument("--regles", action="store_true", help="Demander aussi la chaîne de règles, pour la contresignature")
     p.add_argument("--echantillon", type=int, default=0, metavar="N", help="Les N premiers cas du jeu seulement")
     p.add_argument("--mesure-finale", action="store_true",
-                   help="Exigé pour un jeu jamais regardé (« cinq »), qui ne se passe qu'une fois et ne sert pas à régler")
+                   help="Exigé pour un jeu jamais regardé (JEUX_JAMAIS_VUS), qui ne se passe qu'une fois et ne sert pas à régler")
     p.add_argument("--paralleles", type=int, default=4, metavar="N",
                    help="N cas à la fois (4 par défaut, comme le banc) : le temps d'un passage, pas celui d'un cas")
     p.add_argument("--detail", action="store_true", help="Afficher chaque jugement qui n'est pas « sans effet »")

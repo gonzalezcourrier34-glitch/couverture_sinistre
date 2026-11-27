@@ -19,7 +19,7 @@ import {
 } from '../echange.service';
 
 
-/** Ce qu'il faut demander au client, à la dernière étape : avec la chaîne de règles et un seul sinistre, le moteur décide seul ; sinon, les réponses s'ajoutent à la déclaration, relue (7.218, 7.222). */
+/** Ce qu'il faut demander au client, à la dernière étape : avec la chaîne de règles et un seul sinistre, ou quand seules les règles questionnent, le moteur décide seul (7.224) ; sinon, les réponses s'ajoutent à la déclaration, relue (7.218, 7.222), en ne rejugeant que les clauses en doute si possible (13.4). */
 @Component({
     selector: 'app-questions',
     imports: [],

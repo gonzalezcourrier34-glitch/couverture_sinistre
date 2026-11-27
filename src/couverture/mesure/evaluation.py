@@ -33,9 +33,9 @@ def lire_jsonl(chemin: str | Path) -> list[dict]:
 # les deux règles de lecture du 27 nov.
 JEUX_FERMES = ("ferme", "aveugle", "neuf", "quatre", "cinq", "six")
 # Les jeux jamais regardés : ils ne se passent qu'une fois, pour la mesure finale (`juger --mesure-finale`). « cinq »
-# a été mesuré le 26 nov. (7.215) : il est vu, et se repasse librement (la stabilité, 7.220). Le prochain jeu neuf
-# viendra ici : « six » (7.226).
-JEUX_JAMAIS_VUS: tuple[str, ...] = ("six",)
+# a été mesuré le 26 nov. (7.215), « six » le 27 (7.227) : ils sont vus, et se repassent librement. Le prochain jeu
+# neuf viendra ici.
+JEUX_JAMAIS_VUS: tuple[str, ...] = ()
 JEUX = ("mise_au_point", "validation", "redaction", "golden", *JEUX_FERMES)
 
 
@@ -54,7 +54,7 @@ def fichiers_jeu(donnees: str | Path, contrat_id: str, jeu: str = "mise_au_point
     - neuf : data/neuf/…, le troisième, écrit après les corrections tirées du second ; mesuré une fois, puis vu ;
     - quatre : data/quatre/…, le quatrième (7.187) ; mesuré une fois (7.207), puis vu ;
     - cinq : data/cinq/…, le cinquième (7.215), mesuré une fois, puis vu (la stabilité, 7.220) ;
-    - six : data/six/…, le sixième (7.226), jamais regardé pour régler."""
+    - six : data/six/…, le sixième (7.226), mesuré une fois (7.227), puis vu."""
     if jeu not in JEUX:
         raise ValueError(f"jeu inconnu : {jeu}")
     racine = Path(donnees) / ("" if jeu == "mise_au_point" else jeu)
