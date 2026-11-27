@@ -6679,6 +6679,13 @@ paramètres par défaut immuables), pas des erreurs d'exécution ; ceux de ruff 
 projet) portent sur l'ordre des imports et des `noqa` devenus inutiles, sauf trois « variables de boucle dans une
 fonction » qui sont des faux positifs (la fonction est appelée dans la même itération).
 
+### 7.231 La v20 en ligne
+
+*27 novembre, 23 h 40.* 346 tests passés (un ignoré sous Windows), l'écran construit et ses 12 tests passés, commit
+`31ae2f9`, image v20 en ligne : la relecture qui ne rejuge que les clauses en doute (7.229) et la relecture du code
+(7.230). Fin de la feuille de route d'après l'envoi. Ce qui reste demande des appels payés (mesurer la relecture
+partielle, le découpage en sinistres, le défaut vu en 7.227) ou se fait hors du code.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 26 nov. 2026, après la mesure du jeu « cinq ». Dans l'ordre où je le ferais.
