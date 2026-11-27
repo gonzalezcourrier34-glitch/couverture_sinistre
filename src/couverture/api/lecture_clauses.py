@@ -28,6 +28,40 @@ ANNONCE_CLAUSES = ("Chaque clause qui peut jouer est relue et jugée, citation �
 
 ROLE_DE_L_EFFET = {"couvre": "garantie", "exclut": "exclusion", "a_verifier": "condition"}
 
+# Les lectures récentes, pour relire après les réponses du client en ne rejugeant que les clauses douteuses (13.4).
+# Gardées en mémoire, côté serveur : le client ne renvoie qu'un jeton, il ne peut pas réécrire un jugement. Perdues
+# au redémarrage (le service en ligne s'endort après cinq minutes sans requête) : la relecture est alors entière.
+DUREE_LECTURE = 3600            # secondes
+MAX_LECTURES = 200
+_LECTURES: dict[str, tuple[float, str, list[str], list]] = {}
+_VERROU_LECTURES = __import__("threading").Lock()
+
+
+def garder_lecture(contrat_id: str, chapitres: list[str], jugements: list) -> str:
+    """Garde les chapitres et les jugements d'une lecture ; rend le jeton qui les retrouve."""
+    import secrets
+    import time
+
+    jeton = secrets.token_urlsafe(16)
+    with _VERROU_LECTURES:
+        _LECTURES[jeton] = (time.time(), contrat_id, list(chapitres), list(jugements))
+        while len(_LECTURES) > MAX_LECTURES:                     # les plus anciennes d'abord (ordre d'insertion)
+            _LECTURES.pop(next(iter(_LECTURES)))
+    return jeton
+
+
+def reprendre_lecture(jeton: str | None, contrat_id: str) -> tuple[list[str], list] | None:
+    """Les chapitres et les jugements gardés sous ce jeton, s'ils existent encore et visent ce contrat ; sinon rien."""
+    import time
+
+    if not jeton:
+        return None
+    with _VERROU_LECTURES:
+        garde = _LECTURES.get(jeton)
+    if garde is None or garde[1] != contrat_id or time.time() - garde[0] > DUREE_LECTURE:
+        return None
+    return garde[2], garde[3]
+
 
 def avec_souscription(sinistre: str, contrat_id: str, souscription: dict | None) -> str:
     """La déclaration, suivie de ce que disent les conditions particulières du client, en mots : la lecture des
@@ -84,25 +118,30 @@ class SuiviCommun:
 
 
 def analyser_clauses(base: Base, pipeline, contrat_id: str, sinistre: str, llm, suivi=None,
-                     souscription: dict | None = None, chapitres: list[str] | None = None
-                     ) -> tuple[Resultat, dict[str, Any]]:
+                     souscription: dict | None = None, chapitres: list[str] | None = None,
+                     lecture: str | None = None) -> tuple[Resultat, dict[str, Any]]:
     """La lecture des clauses d'une déclaration. Si elle raconte plusieurs sinistres (un vol et une fuite), chacun est
     jugé à part, en même temps, avec sa propre contresignature, et reçoit sa ligne (7.218) ; sinon, d'un bloc.
 
     `chapitres` : ceux de la lecture précédente, quand on relit la déclaration complétée par les réponses du client.
     La désignation n'est pas redemandée ; à plusieurs sinistres, chacun reçoit tous ces chapitres (on ne sait pas lequel
-    venait de quel sinistre, et un chapitre de trop coûte des tokens, un chapitre de moins une exclusion oubliée)."""
+    venait de quel sinistre, et un chapitre de trop coûte des tokens, un chapitre de moins une exclusion oubliée).
+    `lecture` : le jeton de cette lecture précédente (un seul sinistre) ; s'il est encore gardé, seules ses clauses
+    douteuses et leur garantie sont rejugées, le reste garde son jugement (13.4)."""
     parties = sinistres_distincts(pipeline, sinistre)
     if not parties:
+        precedente = reprendre_lecture(lecture, contrat_id)
         return analyser_clauses_un(base, pipeline, contrat_id, sinistre, llm, suivi=suivi, souscription=souscription,
-                                   chapitres=chapitres)
+                                   chapitres=precedente[0] if precedente else chapitres,
+                                   precedents=precedente[1] if precedente else None)
     from concurrent.futures import ThreadPoolExecutor
 
     suivre = SuiviCommun(suivi or (lambda etape, detail=None: None), len(parties),
                          f"{len(parties)} sinistres dans la déclaration, chacun jugé à part")
     with ThreadPoolExecutor(max_workers=len(parties)) as fil:
         lus = list(fil.map(lambda p: analyser_clauses_un(base, pipeline, contrat_id, p["texte"], llm, suivi=suivre,
-                                                         souscription=souscription, chapitres=chapitres), parties))
+                                                         souscription=souscription, chapitres=chapitres,
+                                                         garder=False), parties))
     return plusieurs_lectures(contrat_id, sinistre, [(p["titre"], r, x) for p, (r, x) in zip(parties, lus)])
 
 
@@ -126,8 +165,8 @@ def plusieurs_lectures(contrat_id: str, sinistre: str, lus: list[tuple[str, Resu
 
 
 def analyser_clauses_un(base: Base, pipeline, contrat_id: str, sinistre: str, llm, suivi=None,
-                        souscription: dict | None = None, chapitres: list[str] | None = None
-                        ) -> tuple[Resultat, dict[str, Any]]:
+                        souscription: dict | None = None, chapitres: list[str] | None = None,
+                        precedents: list | None = None, garder: bool = True) -> tuple[Resultat, dict[str, Any]]:
     """La déclaration jugée clause par clause ; la chaîne de règles tourne en même temps, pour contresigner un
     « couvert ». Rend le résultat (pour le journal) et la réponse de l'API, au même format que `analyser`.
 
@@ -166,13 +205,16 @@ def analyser_clauses_un(base: Base, pipeline, contrat_id: str, sinistre: str, ll
         en_cours = fil.submit(regles)
         lu = lecture_des_clauses.lire(base, contrat_id, compteur, declaration, suivi=suivre,
                                       regles=lambda: contresigner(en_cours), chapitres=chapitres,
-                                      renfort=lambda: lecture_des_clauses.chapitres_des_regles(en_cours.result()[0]))
+                                      renfort=lambda: lecture_des_clauses.chapitres_des_regles(en_cours.result()[0]),
+                                      precedents=precedents)
         r_regles = en_cours.result()[0]
     temps["lecture"] = int((time.perf_counter() - debut) * 1000)
     decision, desaccord = lu.decision, lu.desaccord
     if r_regles is None and decision == D.COUVERT:
         decision, desaccord = D.INCERTAIN, "les règles traduites n'ont pas répondu : un « couvert » non contresigné reste à examiner"
     r, sortie = resultat_clauses(base, contrat_id, sinistre, lu, decision, desaccord, r_regles, temps)
+    if garder and decision == D.INCERTAIN:            # une relecture suivra peut-être : de quoi ne rejuger que le doute
+        sortie["lecture"] = garder_lecture(contrat_id, lu.designes, lu.jugements)
     poser_les_questions_des_regles(pipeline, lu, decision, r_regles, r, sortie)
     citer_le_refus_des_regles(decision, r_regles, r, sortie)
     r.tokens, r.cout_usd = compteur.totaux(), service.cout(compteur.modele, compteur.totaux())
@@ -304,6 +346,9 @@ def resultat_clauses(base: Base, contrat_id: str, sinistre: str, lu, decision, d
         raisonnement.append(f"Chapitres ajoutés d'après les garanties trouvées par les règles : {', '.join(lu.ajoutes)}")
     if lu.relancees:
         raisonnement.append(f"Clauses redemandées au modèle, faute de jugement : {', '.join(lu.relancees)}")
+    if lu.rejugees:
+        raisonnement.append("Après les réponses, seules les clauses en doute et leur garantie ont été rejugées : "
+                            + ", ".join(lu.rejugees) + " ; les autres gardent le jugement de la première lecture")
     if e.questions_retirees:
         raisonnement.append("Questions non posées, leur réponse ne changerait pas la décision : art. "
                             + ", ".join(e.questions_retirees))
@@ -339,5 +384,6 @@ def resultat_clauses(base: Base, contrat_id: str, sinistre: str, lu, decision, d
         "raisonnement": raisonnement, "mode": "clauses", "durees_ms": temps,
         # Pour relire après les réponses du client sans redemander la désignation (7.218).
         "chapitres": list(lu.designes),
+        "lecture": "",                                 # le jeton d'une réponse « à préciser » (13.4), plus bas
     }
     return r, sortie

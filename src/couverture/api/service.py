@@ -135,6 +135,7 @@ def reponse(r: Resultat, d: dict | None = None) -> dict[str, Any]:
         "faits_affiches": prolog.faits_affiches(faits_depuis(r.faits)),
         "sinistres": [],
         "chapitres": [],                         # la lecture des clauses seulement (7.218) : même forme partout
+        "lecture": "",                           # idem (13.4)
         "avertissements": v.avertissements,
         "raisonnement": v.raisonnement,
         "mode": v.mode,

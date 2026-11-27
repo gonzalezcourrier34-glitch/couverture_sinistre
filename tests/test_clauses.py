@@ -630,3 +630,69 @@ def test_les_chapitres_des_garanties_trouvees_par_les_regles_s_ajoutent_a_la_des
     relue = clauses.lire(base, "c1", Modele(jugements(**{"3_1_2_1": "couvre"})), DECLARATION, regles=regles,
                          chapitres=["3.1.2"], renfort=["2.10"])
     assert relue.ajoutes == [] and "2.10" not in relue.designes
+
+
+VOL = "On a forcé la porte de la remise et volé mes outils."
+
+
+def juges(**effets):
+    """Des jugements pour la tempête et le vol ; « 3_1_6_1 » : (effet, question)."""
+    cites = {"3.1.6.1": ("Le vol par effraction", "On a forcé la porte de la remise"),
+             "3.1.2.1": ("La Compagnie assure contre la tempête", "")}
+    rendus = []
+    for c in ("2.10", "2.11", "3.1.2", "3.1.2.1", "3.1.2.2", "3.1.6.1", "3.1.6.2"):
+        effet, question = effets.get(c.replace(".", "_"), ("sans_effet", ""))
+        if effet == "sans_effet":
+            rendus.append({"clause": c, "effet": "sans_effet"})
+        else:
+            rendus.append({"clause": c, "effet": effet, "extrait_contrat": cites[c][0],
+                           "extrait_declaration": cites[c][1], "question": question})
+    return {"jugements": rendus}
+
+
+def test_apres_les_reponses_seules_les_clauses_en_doute_et_leur_garantie_sont_rejugees(base):
+    """13.4 : la première lecture laisse le vol « à vérifier » ; avec la réponse du client, seules la garantie vol,
+    son exclusion et les exclusions générales sont redemandées au modèle. La tempête, jugée sur la même
+    déclaration, garde son jugement : moins de clauses à juger, moins d'attente. Le jeton reste côté serveur."""
+    from couverture.api import lecture_clauses
+    from couverture.api.schemas import Decision as Reponse
+
+    premier = Modele({"chapitres": ["3.1.2", "3.1.6.1"], "motif": ""},
+                     juges(**{"3_1_6_1": ("a_verifier", "Les outils sont-ils des objets personnels ?")}))
+    _, sortie = lecture_clauses.analyser_clauses(base, Regles(Decision.COUVERT), "c1", VOL, premier)
+    Reponse(**sortie)
+    assert sortie["decision"] == "INCERTAIN" and sortie["lecture"]
+    complete = VOL + "\n\nPrécisions du client :\n- Les outils sont-ils des objets personnels ? Oui."
+    relu = Modele(juges(**{"3_1_6_1": ("couvre", "")}))
+    _, apres = lecture_clauses.analyser_clauses(base, Regles(Decision.COUVERT), "c1", complete, relu,
+                                                chapitres=sortie["chapitres"], lecture=sortie["lecture"])
+    envoi = relu.recus[0][1]
+    assert len(relu.recus) == 1 and relu.recus[0][0] == clauses.SYSTEME_JUGEMENT
+    assert "[3.1.6.1] (à juger)" in envoi and "[3.1.6.2] (à juger)" in envoi and "[2.10] (à juger)" in envoi
+    assert "[3.1.2.1] (à lire, sans jugement)" in envoi, "la tempête n'est pas rejugée"
+    assert apres["decision"] == "COUVERT" and apres["lecture"] == ""
+    assert any(l.startswith("Après les réponses, seules les clauses en doute") and "2.10, 3.1.6.1, 3.1.6.2" in l
+               for l in apres["raisonnement"])
+
+
+def test_sans_la_lecture_gardee_la_relecture_est_entiere(base):
+    """Un jeton inconnu (le service a redémarré), ou un autre contrat : tout le dossier est rejugé, comme avant."""
+    from couverture.api import lecture_clauses
+
+    relu = Modele(juges(**{"3_1_6_1": ("couvre", "")}))
+    _, apres = lecture_clauses.analyser_clauses(base, Regles(Decision.COUVERT), "c1", VOL, relu,
+                                                chapitres=["3.1.2", "3.1.6.1"], lecture="inconnu")
+    assert "[3.1.2.1] (à juger)" in relu.recus[0][1] and apres["decision"] == "COUVERT"
+    jeton = lecture_clauses.garder_lecture("autre", ["3.1.6"], [])
+    assert lecture_clauses.reprendre_lecture(jeton, "c1") is None and lecture_clauses.reprendre_lecture(None, "c1") is None
+
+
+def test_le_choix_des_clauses_a_rejuger(base):
+    """La clause en doute, et tout ce qui bloque pour sa garantie ; rien si rien n'était à vérifier."""
+    from couverture.analyse.jugement import Jugement
+
+    attendu.enregistrer(base, "c1")
+    attendues = [a for g in ("3.1.2", "§4") for a in attendu.attendues(base, "c1", g)]
+    doute = [Jugement("3.1.6.1", "a_verifier", question="?"), Jugement("3.1.2.1", "couvre")]
+    assert clauses.a_rejuger(doute, attendues) == {"2.10", "3.1.6.1", "3.1.6.2"}
+    assert clauses.a_rejuger([Jugement("3.1.2.1", "couvre")], attendues) == set()

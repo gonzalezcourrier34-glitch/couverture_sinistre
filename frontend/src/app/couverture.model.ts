@@ -103,6 +103,9 @@ export interface Decision {
     durees_ms: Record<string, number>;
     /** Lecture des clauses : les chapitres relus, renvoyés pour relire après les réponses du client (7.218). */
     chapitres?: string[];
+    /** Lecture des clauses, « à préciser » : le jeton qui retrouve ses jugements côté serveur ; renvoyé avec les
+     *  réponses, seules les clauses en doute sont rejugées (13.4). */
+    lecture?: string;
     /** Plusieurs sinistres : la réponse de chacun, avec son titre (7.168, 7.218) ; affichée une par une (7.222). */
     sinistres?: Sinistre[];
 }

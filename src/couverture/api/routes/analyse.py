@@ -48,7 +48,8 @@ def analyser(demande: AnalyseRequest, pipelines: Pipelines = Depends(get_pipelin
         if methode(demande) == "clauses":
             resultat, reponse = lecture_clauses.analyser_clauses(pipelines.base, chaine, demande.contrat_id,
                                                          demande.sinistre.strip(), modele_des_clauses(),
-                                                         souscription=demande.souscription, chapitres=demande.chapitres)
+                                                         souscription=demande.souscription, chapitres=demande.chapitres,
+                                                         lecture=demande.lecture)
         else:
             resultat, reponse = service.analyser(chaine, demande.sinistre.strip(), souscription=demande.souscription)
     except (ErreurLLM, ValueError) as e:   # ValueError : une réponse du modèle coupée ou illisible

@@ -465,6 +465,8 @@ appliqué ici presque tel quel.
   prennent parfois une obligation de l'assuré pour une condition de la garantie, ce qui coûte une réponse juste.
 - **Les jeux sont petits** : vingt cas par contrat.
 - **Ce n'est pas un service en production** : la démonstration en ligne n'a pas d'utilisateurs réels.
+- **Seulement l'habitation** : aucun contrat d'une autre branche (auto, prévoyance) n'a été essayé ; la lecture est
+  écrite pour des dommages aux biens.
 - **Il ne dit rien du montant** : il répond à « est-ce couvert ? », pas à « combien ? ».
 
 **Les prochaines expériences, dans l'ordre.**
@@ -475,7 +477,8 @@ appliqué ici presque tel quel.
 3. Faire relire un jeu par quelqu'un du métier, et mesurer l'écart avec les annotateurs automatiques.
 4. Rendre la lecture plus stable. Ajouter les garanties des règles n'a pas suffi : il faudra chercher ailleurs (les
    citations jugées inexactes, une même clause jugée autrement d'une passe à l'autre).
-5. Réduire l'attente, en profitant davantage du cache du fournisseur.
+5. Mesurer ce que la relecture partielle (seules les clauses en doute, après les réponses du client) fait gagner en
+   attente, et ce qu'elle coûte en justesse.
 
 Chacune demandera un jeu de cas neuf : « cinq » et « six » ont servi.
 

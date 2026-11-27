@@ -85,7 +85,8 @@ export class CouvertureService {
         sinistre: string,
         souscription: Record<string, string> = {},
         methode?: Methode,
-        chapitres?: string[]
+        chapitres?: string[],
+        lecture?: string
     ): Observable<Suivi> {
         return new Observable<Suivi>((abonne) => {
             const arret = new AbortController();
@@ -95,7 +96,8 @@ export class CouvertureService {
                     headers: { 'content-type': 'application/json' },
                     body: JSON.stringify({
                         contrat_id: contratId, sinistre, souscription,
-                        ...(methode ? { methode } : {}), ...(chapitres?.length ? { chapitres } : {})
+                        ...(methode ? { methode } : {}), ...(chapitres?.length ? { chapitres } : {}),
+                        ...(lecture ? { lecture } : {})
                     }),
                     signal: arret.signal
                 });

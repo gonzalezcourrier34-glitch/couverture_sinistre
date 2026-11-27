@@ -6612,6 +6612,50 @@ Défaut vu, non corrigé : la règle des conditions prend parfois une obligation
 déclarer le sinistre sous cinq jours, `s-d04`) pour une condition de la garantie. La corriger maintenant serait
 régler sur ce jeu ; ce sera la première chose à mesurer sur le prochain jeu neuf, s'il y en a un.
 
+### 7.228 La v19 en ligne, et les restes de la feuille de route
+
+*27 novembre, 22 h 30.* **La v19 est en ligne** (révision 22) : la consigne de jugement v2, la réponse par le moteur
+seul aux questions des règles, la relance des erreurs 5xx, l'écran découpé en composants. Build et tests de l'écran
+passés avant la construction de l'image.
+
+**Les restes, tranchés un à un.**
+- *Les propositions jamais acceptées* : rangées dans `regles/propositions/<contrat>/ecartees/`, chacune avec sa raison
+  dans un LISEZMOI. Pour A, les articles 5.3, 5.5, 5.6 et 5.8, rédigés un par un puis remplacés par la proposition de
+  l'article 5 entier. Pour D, traduit en partie par choix : l'option objets de valeur (1.3), la véranda (1.4), les
+  catastrophes technologiques (2.10), les mesures de prévention (4.1, 4.2, 4.3 ; seules leurs réductions d'indemnité
+  sont des limites dans les règles) et les extensions de responsabilité civile (13.2). `couverture rediger` ne lit que
+  le dossier du dessus : ces brouillons ne se présentent plus comme des règles en attente. Rien n'est supprimé.
+- *« Personnel de maison » lu à tort* : laissé, par décision. La correction a été essayée (7.166) et retirée : elle
+  faisait couvrir à tort un cas du jeu fermé, six fois sur six. L'erreur n'a d'effet sur aucune décision observée ;
+  elle reste écrite dans les limites.
+- *`canalisation_encastree`, employée par aucune règle* : laissée, par décision. Elle est proposée au modèle pour
+  chaque dégât des eaux ; la retirer change sa consigne de lecture, et un changement de lecture se mesure (7.166 l'a
+  montré) ; les bancs de la chaîne coûtent des appels. Le moteur ne la lisant pas, elle ne change aucune décision.
+- *Un contrat hors habitation* : dit dans les limites du README et de COMPRENDRE (il l'était déjà dans la note).
+
+### 7.229 Après les réponses du client, ne rejuger que le doute
+
+*27 novembre, 23 h.* Point 4 de la feuille de route d'après l'envoi, sa seconde moitié (et le point 11).
+
+**Le problème.** Une clause « à vérifier » pose une question ; avec la réponse, la déclaration complétée était
+rejugée en entier : deux à trois minutes, toutes garanties confondues, alors qu'une seule était en doute.
+
+**Ce qui change.** La première lecture garde ses jugements côté serveur, une heure, sous un jeton aléatoire que la
+réponse transporte (`lecture`). L'écran le renvoie avec les réponses, comme les chapitres. La relecture
+(`clauses.a_rejuger`) ne redemande au modèle que les clauses « à vérifier » et tout ce qui bloque pour leur garantie :
+sa clause, ses exclusions, les exclusions générales (la réponse peut faire jouer une exclusion que rien n'évoquait).
+Les autres garanties gardent leur jugement, et le dossier envoyé reste entier, pour le contexte, avec moins de clauses
+« à juger ». La décision se recalcule par la même logique, puis la contresignature, comme avant. Le raisonnement
+le dit (« seules les clauses en doute et leur garantie ont été rejugées »).
+
+**Les gardes.** Le client ne renvoie qu'un jeton : il ne peut pas réécrire un jugement. Jeton inconnu, expiré, d'un
+autre contrat, service redémarré (il s'endort après cinq minutes sans requête), plusieurs sinistres : la relecture est
+entière, comme avant. Une question du règlement (un délai de déclaration) ne fait pas rejuger sa garantie.
+
+**Pas mesuré.** Le gain d'attente dépend du nombre de garanties au dossier ; la justesse pourrait bouger si une
+garantie non rejugée devait l'être. Les deux demandent des appels payés. Trois tests : la relecture partielle, la
+relecture entière sans jeton, le choix des clauses.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 26 nov. 2026, après la mesure du jeu « cinq ». Dans l'ordre où je le ferais.

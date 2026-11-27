@@ -78,7 +78,7 @@ def analyser_avec_suivi(demande: AnalyseRequest, pipelines: Pipelines = Depends(
                 resultat, reponse = lecture_clauses.analyser_clauses(pipelines.base, chaine, demande.contrat_id, sinistre,
                                                              modele_des_clauses(), suivi=suivre,
                                                              souscription=demande.souscription,
-                                                             chapitres=demande.chapitres)
+                                                             chapitres=demande.chapitres, lecture=demande.lecture)
             else:
                 resultat, reponse = service.analyser(chaine, sinistre, suivi=suivre, souscription=demande.souscription)
         except (ErreurLLM, ValueError) as e:   # ValueError : une réponse du modèle coupée ou illisible, comme /analyses

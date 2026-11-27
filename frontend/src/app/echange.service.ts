@@ -367,7 +367,8 @@ export class EchangeService {
         sinistre: string,
         methode: Methode,
         apresReponses: string | null,
-        chapitres?: string[]
+        chapitres?: string[],
+        lecture?: string
     ): void {
         const contratId = this.contratId();
         if (!contratId || this.chargement()) {
@@ -381,7 +382,7 @@ export class EchangeService {
         this.annonceSuivi.set(null);
         this.suiviOuvert.set(true);
         const souscription = Object.fromEntries(Object.entries(this.souscription()).filter(([, v]) => !!v));
-        this.api.analyserAvecSuivi(contratId, sinistre, souscription, methode, chapitres)
+        this.api.analyserAvecSuivi(contratId, sinistre, souscription, methode, chapitres, lecture)
             .subscribe({
                 next: (message) => {
                     if (message.etapes) {
@@ -448,9 +449,10 @@ export class EchangeService {
             .map((x) => `${x.q} ${x.r}`)
             .join(' ; ');
         // La même méthode que la réponse ; pour la lecture des clauses, les chapitres déjà désignés : la désignation
-        // n'est pas redemandée, le dossier est le même (7.218).
+        // n'est pas redemandée, le dossier est le même (7.218) ; et le jeton de la lecture : seules les clauses en doute
+        // sont rejugées (13.4).
         if (reponse.mode === 'clauses') {
-            this.analyserTexte(texte, 'clauses', resume, reponse.chapitres);
+            this.analyserTexte(texte, 'clauses', resume, reponse.chapitres, reponse.lecture || undefined);
         } else {
             this.analyserTexte(texte, 'regles', resume);
         }

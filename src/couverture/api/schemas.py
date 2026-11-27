@@ -31,6 +31,9 @@ class AnalyseRequest(BaseModel):
     chapitres : list[str] | None
         Facultatif, lecture des clauses seulement : les `chapitres` d'une analyse précédente du même sinistre, quand on
         le relit complété par les réponses du client. La désignation n'est pas redemandée (7.218).
+    lecture : str | None
+        Facultatif, avec `chapitres` : la `lecture` de cette analyse précédente (un jeton). Si le serveur l'a encore,
+        seules les clauses douteuses et leur garantie sont rejugées (13.4) ; sinon, la relecture est entière.
     """
 
     contrat_id: str = Field(min_length=1, examples=["assureur-a-habitation-2025"])
@@ -40,6 +43,8 @@ class AnalyseRequest(BaseModel):
     methode: Literal["regles", "clauses"] | None = None
     # Lecture des clauses, relue après les réponses du client : les chapitres de la lecture précédente (7.218).
     chapitres: list[str] | None = Field(default=None, max_length=60)
+    # Le jeton de la lecture précédente, pour ne rejuger que ce qui était en doute (13.4).
+    lecture: str | None = Field(default=None, max_length=64)
 
 
 class DecisionRequest(BaseModel):
@@ -139,6 +144,8 @@ class Decision(BaseModel):
     durees_ms: dict[str, int]
     sinistres: list[Sinistre] = Field(default_factory=list)
     chapitres: list[str] = Field(default_factory=list)
+    # Lecture des clauses, réponse « à préciser » : le jeton qui retrouve ses jugements côté serveur (13.4).
+    lecture: str = ""
 
     @model_validator(mode="after")
     def _une_forme_par_cas(self) -> Decision:

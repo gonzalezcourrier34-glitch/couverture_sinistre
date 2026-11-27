@@ -172,6 +172,22 @@ class Lecture:
     rappels: list[jugement.Jugement] = field(default_factory=list)   # questions du règlement, sans effet sur la décision
     arbitrage: list[str] = field(default_factory=list)  # la relecture ciblée des obstacles des règles, s'il y en a eu
     ajoutes: list[str] = field(default_factory=list)    # les chapitres ajoutés d'après les règles (13.2)
+    # Les jugements sur lesquels la décision repose : gardés pour la relecture après les réponses du client (13.4).
+    jugements: list[jugement.Jugement] = field(default_factory=list)
+    rejugees: list[str] = field(default_factory=list)   # à cette relecture, les seules clauses redemandées au modèle
+
+
+def a_rejuger(precedents: list[jugement.Jugement], attendues: list) -> set[str]:
+    """Après les réponses du client, ce que la relecture redemande au modèle (13.4) : les clauses « à vérifier » de la
+    lecture précédente, et toutes celles qui bloquent pour leur garantie (sa clause, ses exclusions, les exclusions
+    générales) : la réponse peut la faire couvrir, ou appeler une exclusion que rien n'évoquait. Le reste du dossier
+    (les autres garanties, déjà jugées sur la même déclaration) garde son jugement. Vide : rien n'était à vérifier,
+    la relecture est entière."""
+    douteuses = {j.clause_id for j in precedents if j.effet == "a_verifier"}
+    touchees = {a.garantie for a in attendues if a.clause_id in douteuses}
+    if not touchees:
+        return set()
+    return douteuses | {a.clause_id for a in attendues if a.bloque and a.garantie in touchees}
 
 
 def chapitres_des_regles(resultat) -> list[str]:
@@ -231,7 +247,8 @@ def garanties_touchees(garanties: list[attendu.Garantie], clauses: list[Clause],
 
 def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | Callable | None = None,
          llm_designation: LLM | None = None, garder: bool = False, suivi: Callable | None = None,
-         chapitres: list[str] | None = None, renfort: Callable | list | None = None) -> Lecture:
+         chapitres: list[str] | None = None, renfort: Callable | list | None = None,
+         precedents: list[jugement.Jugement] | None = None) -> Lecture:
     """L'analyse d'une déclaration par la lecture des clauses. `regles` : la réponse de la chaîne de règles sur
     la même déclaration, pour la contresignature (rien : la lecture tient seule) ; ou une fonction qui la rend,
     appelée au moment de contresigner, pour que la chaîne tourne pendant la lecture. Une simple décision suffit à
@@ -241,7 +258,9 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | C
     sinistre (la relecture après les réponses du client, 7.218) ; la désignation n'est pas redemandée, et le dossier,
     le même, profite du cache du fournisseur. `renfort` : les chapitres que les règles ont trouvés
     (`chapitres_des_regles`), ou une fonction qui les rend (la chaîne tourne pendant la désignation) ; ils s'ajoutent à
-    ceux du modèle (13.2), sauf à la relecture, dont les chapitres sont déjà ceux de la première lecture."""
+    ceux du modèle (13.2), sauf à la relecture, dont les chapitres sont déjà ceux de la première lecture.
+    `precedents` : avec `chapitres`, les jugements de cette lecture précédente ; seules les clauses douteuses et leur
+    garantie sont rejugées (`a_rejuger`), les autres reprennent leur jugement (13.4) : moins à juger, moins d'attente."""
     suivre = suivi or (lambda etape, detail=None: None)
     clauses = base.clauses(contrat_id)
     garanties = attendu.garanties(base, contrat_id)
@@ -276,9 +295,16 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | C
                           f"{len(pieces)} clauses au dossier" + (" (chapitres de la première lecture)" if chapitres else "")
                           + (f" ; ajoutés d'après les règles : {', '.join(ajoutes)}" if ajoutes else ""))
     suivre("jugement")
+    rejugees = sorted(a_rejuger(precedents, attendues) & a_juger) if (precedents and chapitres) else []
+    repris_avant: list[jugement.Jugement] = []
+    if rejugees:                                       # 13.4 : le reste garde le jugement de la lecture précédente
+        repris_avant = [j for j in precedents if j.clause_id not in rejugees]
+        a_juger = set(rejugees)
     rendus = jugement.depuis_reponse(extraire_json(completer_avec_schema(
         llm, SYSTEME_JUGEMENT, message_jugement(pieces, a_juger, declaration, generales), SCHEMA_JUGEMENT)))
     gardes, defauts = jugement.controler(rendus, pieces, declaration)
+    if rejugees:
+        gardes = [j for j in gardes if j.clause_id in a_juger]
     # La jointure dit ce qui manque ; on le redemande une fois, pour ces clauses seulement (7.194) : un oubli parmi
     # quatre-vingts clauses, ou une citation inexacte, ne doit pas coûter la réponse entière.
     oubliees = a_juger - {j.clause_id for j in gardes}
@@ -294,6 +320,8 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | C
         rattrapees = {j.clause_id for j in repris}
         defauts = [d for d in defauts if d.split(" ")[0] not in rattrapees] + defauts_repris
         gardes += repris
+    jugees = list(gardes)                              # ce que le modèle vient de rendre
+    gardes = repris_avant + gardes
     # Une question posée par une clause du règlement du sinistre (le délai de déclaration, un plafond, l'âge du bien
     # pour la vétusté) ne dit pas si le sinistre est couvert : elle devient un rappel, affiché avec la réponse, et
     # la clause compte pour lue (7.203). La consigne le demande déjà ; Large la pose quand même (7.200).
@@ -304,7 +332,8 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | C
     effets = [j.effet for j in gardes]
     compte = ", ".join(f"{effets.count(e)} {nom}" for e, nom in (("couvre", "couvrent"), ("exclut", "excluent"),
                        ("limite", "limitent"), ("a_verifier", "à vérifier")) if effets.count(e))
-    suivre("jugement", f"{len(gardes)} clauses jugées" + (f" : {compte}" if compte else "")
+    suivre("jugement", (f"{len(jugees)} clauses rejugées après les réponses, {len(repris_avant)} reprises de la lecture "
+                        "précédente" if rejugees else f"{len(gardes)} clauses jugées") + (f" : {compte}" if compte else "")
            + (f" ; {len(relancees)} redemandée{'s' * (len(relancees) > 1)}" if relancees else ""))
     lignes, non_attendus = jugement.joindre(base, contrat_id, touchees, gardes)
     options = {"optionnelles": {g.repere for g in garanties if g.optionnelle}, "non_attendus": non_attendus,
@@ -335,4 +364,7 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | C
     suivre("decision", etat.motif + (f" ; {desaccord}" if desaccord else ""))
     if garder:                                         # les jugements en table, pour relire l'analyse après coup
         jugement.garder(base, contrat_id, declaration, gardes, etat, decision)
-    return Lecture(etat, designes, touchees, pieces, decision, desaccord, relancees, rappels, revue, ajoutes)
+    # Gardés pour la relecture suivante (13.4) : une question du règlement y est déjà « sans effet », elle ne fait pas
+    # rejuger sa garantie.
+    return Lecture(etat, designes, touchees, pieces, decision, desaccord, relancees, rappels, revue, ajoutes,
+                   gardes, rejugees)
