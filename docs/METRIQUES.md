@@ -508,6 +508,34 @@ des clauses avait conclu seule, avant la contresignature des règles (son motif)
 - Limite : l'avis « seule » est relu dans la sortie ; une contresignature absente aurait pu changer la suite de la
   lecture (la relecture ciblée des refus, appelée par un désaccord). L'écart est donc une estimation.
 
+**Comparée à un seul appel avec tout le contrat** (28 nov., 7.238). `couverture juger --brut` : la consigne de
+l'ancienne référence « chatbot » (`document-brut` v1, archivée), le contrat entier, la déclaration, un appel à Mistral
+Large, sa décision telle quelle. Une passe de « cinq », 1,36 $ en tout :
+
+| | Un seul appel | Lecture des clauses (moyenne de 4 passes) | Lecture des clauses sans les règles (idem) |
+|---|---|---|---|
+| Réponses justes | 52 / 60 (87 % [76–93]) | 51 / 60 (85 %) | 54,5 / 60 |
+| Par contrat, A / B / D | 17 / 16 / 19 | 18,8 / 18,5 / 13,8 | 18,5 / 17,3 / 18,8 |
+| **Couverts à tort** | **7** | **0** (0 sur 240) | 1,25 |
+| Refus à tort | 1 | 1 | 2 |
+| Citations retrouvées dans le contrat | 81 sur 187 ; 14 réponses fermes sans aucune | toutes (contrôlées une à une) | toutes |
+| Durée, médiane (95e centile) | 27 s (54 s) | 167 s (305 s) | |
+| Coût d'une analyse | 2,3 centimes (le contrat est repris du cache : 99 % des tokens envoyés) | 8,6 centimes | |
+
+- **Les huit erreurs du seul appel**, lues dans les annotations : six portent sur une garantie optionnelle ou soumise
+  aux conditions particulières, qu'il tient pour souscrite (tremblement de terre de l'option « Sérénité + »,
+  e-réputation, annulation de voyage, panne d'électroménager, chevaux au-delà de cinq ; et le vol en voiture du pack
+  multimédia, qu'il refuse au lieu de demander) ; une, une condition non dite (l'enfant étudiant à charge fiscale) ;
+  une, une définition du lexique (`c-a09`). La lecture des clauses répond « à préciser » sur les sept couverts à tort,
+  à chaque passe.
+- **La preuve manque plus que la justesse.** Rendre « à préciser » les réponses fermes sans citation retrouvée ne
+  sauverait pas le seul appel : dix réponses justes perdues, deux couverts à tort évités.
+- **Sur D**, traduit en partie, le seul appel fait mieux (19 contre 13,8) : c'est le coût de la contresignature, déjà vu
+  (« Que rapporte la traduction en règles ? »).
+- **Limites.** Une passe ; le jeu « cinq » a servi à régler la lecture des clauses, pas le seul appel ; entre deux passes
+  des dix premiers cas de A, deux décisions du seul appel ont changé (`c-a06`, `c-a09`). Le contrôle des citations est
+  le même texte aplati (sans accents ni ponctuation), un extrait coupé se cherchant morceau par morceau.
+
 **Plusieurs passes du même jeu** (7.236). « Cinq » a été passé quatre fois en entier (passe 1, puis 4, 5 et 6 ; les
 passes 2 et 3 ne portaient que sur dix cas par contrat) :
 

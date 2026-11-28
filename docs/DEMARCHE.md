@@ -6799,6 +6799,28 @@ après l'autre. Pour les dix premiers cas de « cinq » par contrat, ceux qui on
 clauses : entre 1,5 $ (cache repris) et 3,5 $ (sans cache). Je commence par dix cas de A, moins de 0,6 $ au pire, pour
 lire le taux de cache et la longueur des réponses avant d'engager le reste.
 
+### 7.238 Ce que vaut la construction, face à un seul appel
+
+*28 novembre, 13 h 45.* Dix cas de A d'abord (0,18 $ : à partir du second cas, 29 184 tokens sur 29 390 viennent du
+cache), puis « cinq » en entier : 1,36 $ pour les 60 cas, 27 s par cas en médiane.
+
+**Le résultat.** 52 réponses justes sur 60 pour le seul appel, 51 en moyenne pour la lecture des clauses : à égalité.
+Mais sept couverts à tort contre aucun sur 240, et 106 citations sur 187 introuvables dans le contrat, dont 14 réponses
+fermes sans aucune. Les erreurs ont un sens : six des huit portent sur une garantie optionnelle ou soumise aux
+conditions particulières, que le modèle tient pour souscrite. Sur ces sept couverts à tort, la lecture des clauses
+répond « à préciser » à chacune de ses quatre passes ; ce qui la protège n'est pas une meilleure lecture, c'est la
+logique fixe qui ne laisse pas une option couvrir seule. Sur D, le seul appel fait mieux (19 contre 13,8) : c'est
+la contresignature de règles incomplètes, déjà vue en 7.236.
+
+**Ce que j'en conclus.** Ma construction se justifie par l'erreur qui coûte et par la preuve, pas par la justesse ; et
+elle coûte quatre fois plus et six fois plus de temps. Ce qu'un professionnel ferait maintenant : garder ce qui
+protège (la logique fixe, le contrôle des citations) et essayer d'en retirer le reste — un appel qui lit tout le
+contrat et juge les garanties qu'il y trouve, puis la même logique et le même contrôle, sans désignation ni dossier.
+C'est la version à mesurer ensuite, sur un jeu neuf. Limites : une passe, sur un jeu qui a servi à régler la lecture
+des clauses ; le seul appel varie lui aussi (deux décisions sur dix changent entre deux passes des mêmes cas de A).
+
+Mis à jour : la fiche métriques (§ 6), le document de conception (choix, chiffres, limites, suite), le README.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 26 nov. 2026, après la mesure du jeu « cinq ». Dans l'ordre où je le ferais.
@@ -7088,3 +7110,4 @@ demande un jeu neuf.
 225. Les mesures comptent des décisions ; un essai à la main lit ce que le client voit. Un « à préciser » sans question est juste pour la mesure, et inutilisable pour le client.
 226. Avant de payer une comparaison, relire ce qu'on a déjà : le motif de chaque réponse disait ce que la méthode concluait sans sa garde, et 360 analyses répondaient gratuitement à « les règles servent-elles ? ».
 227. Le coût d'un modèle qui réfléchit est dans ce qu'il écrit, pas dans ce qu'on lui envoie : 69 % ici. Réduire le dossier ne rapporte presque rien.
+228. Mesurer la solution simple avant de construire, et la garder à côté : ici, un seul appel répondait aussi juste pour quatre fois moins cher ; ce que la construction apporte se lit dans le sens des erreurs, pas dans leur nombre.
