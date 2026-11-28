@@ -12,6 +12,7 @@
   couverture api      --port 8001                  # l'API FastAPI (/docs), clé COUVERTURE_API_KEY
   couverture versions [--manifeste]                # consignes versionnées
   couverture modele                                # modèle configuré, test de connexion
+  couverture journal  [--jours 30] [--fichier export.txt]   # le journal des analyses, par jour
 """
 
 from __future__ import annotations
@@ -22,9 +23,11 @@ from pathlib import Path
 
 from ..config import charger_env
 from ..contrat.base import Base
-from . import analyser, api, banc, clauses, contrats, exemples, formules, ingerer, juger, modele, rediger, regles, versions
+from . import (analyser, api, banc, clauses, contrats, exemples, formules, ingerer, journal, juger, modele, rediger, regles,
+               versions)
 
-COMMANDES = (ingerer, contrats, clauses, regles, formules, rediger, analyser, juger, banc, exemples, api, versions, modele)
+COMMANDES = (ingerer, contrats, clauses, regles, formules, rediger, analyser, juger, banc, exemples, api, versions, modele,
+             journal)
 
 
 def main(argv: list[str] | None = None) -> int:

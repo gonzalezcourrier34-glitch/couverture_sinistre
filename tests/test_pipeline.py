@@ -359,6 +359,28 @@ def test_le_journal_garde_les_tokens_et_le_cout_et_complete_une_ancienne_base(tm
     assert sans["tokens_envoyes"] is None and sans["cout_usd"] is None and avec["consignes"]
 
 
+
+def test_le_journal_se_resume_par_jour_depuis_la_base_ou_les_journaux_de_l_hebergeur(tmp_path, monkeypatch, capsys):
+    """7.239 : un jour par ligne (analyses, erreurs, part de « à préciser », durée médiane, coût), lu dans la base ou
+    dans un export des journaux de l'hébergeur, dont l'horodatage devant chaque ligne est ignoré."""
+    from couverture.analyse.journal import lire_sortie, resume_par_jour
+
+    monkeypatch.setenv("COUVERTURE_JOURNAL_SORTIE", "1")
+    j = Journal(str(tmp_path / "b.sqlite"))
+    r = resultat()
+    r.cout_usd = 0.08
+    j.noter(r, duree_ms=160000, date=MAINTENANT)
+    j.noter(resultat(decision="INCERTAIN"), duree_ms=4000, date=MAINTENANT)
+    j.noter_erreur("foyer", "clauses", "erreur 520", date=MAINTENANT)
+    j.noter(resultat(), duree_ms=5000, date=MAINTENANT + timedelta(days=1))
+    export = [f"2026-11-17T08:00:01Z stdout F {x}" for x in capsys.readouterr().out.splitlines()] + ["une autre ligne"]
+    depuis_base = resume_par_jour(j.lignes(MAINTENANT - timedelta(days=1), MAINTENANT + timedelta(days=2)))
+    assert resume_par_jour(lire_sortie(export)) == depuis_base
+    jour1, jour2 = depuis_base.splitlines()[1:3]
+    assert jour1.split() == ["2026-11-17", "3", "1", "50", "%", "82", "s", "0.08", "$"]
+    assert jour2.startswith("2026-11-18") and depuis_base.endswith("Total : 4 analyses, 0.08 $")
+    assert resume_par_jour([]) == "Aucune analyse au journal."
+
 # --- Versionnage des consignes (garde-fou de la CI) -----------------------------------------------
 
 from couverture import consignes  # noqa: E402

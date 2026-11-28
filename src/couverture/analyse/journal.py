@@ -19,7 +19,9 @@ from __future__ import annotations
 import json
 import os
 import sqlite3
+from collections import defaultdict
 from datetime import datetime, timezone
+from statistics import median
 
 from ..consignes import versions_courtes
 from ..models import Resultat
@@ -104,3 +106,46 @@ class Journal:
                 (depuis.isoformat(timespec="seconds"), jusqua.isoformat(timespec="seconds")),
             ).fetchall()
         return [dict(r) for r in rows]
+
+
+def lire_sortie(lignes) -> list[dict]:
+    """Les lignes du journal écrites sur la sortie standard (en ligne : les journaux de l'hébergeur, exportés dans un
+    fichier). Chaque ligne utile porte `"journal": "analyse"` ; l'horodatage que l'hébergeur ajoute devant est ignoré."""
+    analyses = []
+    for ligne in lignes:
+        debut = ligne.find("{")
+        if debut == -1 or '"journal"' not in ligne:
+            continue
+        try:
+            d = json.loads(ligne[debut:])
+        except ValueError:
+            continue
+        if d.get("journal") == "analyse":
+            analyses.append(d)
+    return analyses
+
+
+def resume_par_jour(analyses: list[dict]) -> str:
+    """Le résumé du journal, un jour par ligne (DEMARCHE 7.239) : analyses, erreurs, part de « à préciser », durée
+    médiane, coût. La base d'un tableau de bord et des alertes (coût par jour, erreurs du fournisseur, dérive des « à
+    préciser »)."""
+    jours: dict[str, list[dict]] = defaultdict(list)
+    for d in analyses:
+        jours[str(d.get("date") or "")[:10] or "?"].append(d)
+    if not jours:
+        return "Aucune analyse au journal."
+    lignes = ["jour        analyses  erreurs  à préciser  durée médiane  coût"]
+    total_cout = 0.0
+    for jour in sorted(jours):
+        ds = jours[jour]
+        erreurs = sum(bool(d.get("erreur")) for d in ds)
+        faites = [d for d in ds if not d.get("erreur")]
+        incertains = sum(d.get("decision") == "INCERTAIN" for d in faites)
+        durees = [d["duree_ms"] for d in faites if d.get("duree_ms")]
+        cout = sum(d.get("cout_usd") or 0 for d in faites)
+        total_cout += cout
+        part = f"{100 * incertains / len(faites):.0f} %" if faites else "—"
+        duree = f"{median(durees) / 1000:.0f} s" if durees else "—"
+        lignes.append(f"{jour}  {len(ds):>8}  {erreurs:>7}  {part:>10}  {duree:>13}  {cout:.2f} $")
+    lignes.append(f"Total : {len(analyses)} analyses, {total_cout:.2f} $")
+    return "\n".join(lignes)

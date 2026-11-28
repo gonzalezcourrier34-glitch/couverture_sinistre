@@ -152,7 +152,9 @@ conservation, l'information des assurés, et une décision finale humaine (l'art
 entièrement automatisées qui affectent une personne).
 
 **Le suivi.** Déjà fait : un journal par analyse (méthode, décision, durée, tokens, coût), une limite d'analyses par
-jour, des tableaux Grafana en local. À faire en ligne : un tableau de bord sur ces journaux, des alertes (taux
+jour, des tableaux Grafana en local, et `couverture journal`, qui le résume par jour (analyses, erreurs, part de « à
+préciser », durée médiane, coût), depuis la base ou depuis un export des journaux de l'hébergeur. À faire en ligne : un
+tableau de bord sur ces journaux, des alertes (taux
 d'erreurs du fournisseur, coût par jour, part de « à préciser »), et le repassage chaque semaine d'un jeu vu, pour voir
 dériver le modèle du fournisseur.
 
@@ -181,6 +183,9 @@ contresignature passer la main au gestionnaire ailleurs.
    de justes, mais neuf couverts à tort sur 360) : ne contresigner que les garanties traduites est l'autre piste.
 5. **Comparer plusieurs modèles et tailles**, avec le coût et la durée comme contraintes, pas comme constats.
 6. **Simplifier** ce que la mesure ne justifie pas, et traiter deux contrats en entier plutôt que quatre en partie.
+   Dans le code aussi : la chaîne de règles (`chaine.py`, 600 lignes), les contrôles de la rédaction des règles (700)
+   et la lecture des clauses (`clauses.py`) mêlent plusieurs étapes dans un fichier ; les séparer par étape, une fois la
+   méthode fixée, et pas avant (un découpage sur une méthode qui change encore se refait).
 7. Les éléments de production du § 5.
 
 **Ce que je referais autrement.** Je partirais du métier et d'une solution simple mesurée, avant de construire la

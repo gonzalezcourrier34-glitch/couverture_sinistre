@@ -6821,6 +6821,19 @@ des clauses ; le seul appel varie lui aussi (deux décisions sur dix changent en
 
 Mis à jour : la fiche métriques (§ 6), le document de conception (choix, chiffres, limites, suite), le README.
 
+### 7.239 Le journal par jour, et ce qui reste de la liste
+
+*28 novembre, 14 h.* `couverture journal` résume le journal des analyses, un jour par ligne : nombre d'analyses,
+erreurs, part de « à préciser », durée médiane, coût. Il lit la base locale, ou un export des journaux de l'hébergeur
+(en ligne, la base du conteneur repart à chaque réveil et le journal part sur la sortie standard, 7.163) ; l'horodatage
+que l'hébergeur ajoute devant chaque ligne est ignoré. Sur la base du poste : 233 analyses du 17 au 27 novembre, 0,92 $
+pour les seize lectures des clauses du 27, la part de « à préciser » entre 27 et 90 % selon les jours d'essai. C'est la
+base d'un tableau de bord et des alertes (coût par jour, erreurs du fournisseur) ; elles restent à brancher. Un test.
+
+Le découpage des modules, jugé risqué avant l'envoi, est écrit dans la suite du document de conception : une fois la
+méthode fixée, pas avant. La liste « ce qu'un professionnel aurait fait mieux » est ainsi traitée en entier, sauf
+ce qui demande une personne (la relecture par un gestionnaire) ou un budget (des jeux plus grands, d'autres modèles).
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 26 nov. 2026, après la mesure du jeu « cinq ». Dans l'ordre où je le ferais.
@@ -6870,7 +6883,7 @@ demande un jeu neuf.
 - La loi applicable : écrite comme limite, non traitée.
 
 **4. En ligne.**
-- Un tableau de bord et une alerte sur le journal, qui part aujourd'hui dans les journaux de l'hébergeur (7.163).
+- Un tableau de bord et une alerte sur le journal, qui part aujourd'hui dans les journaux de l'hébergeur (7.163) ; `couverture journal` en donne le résumé par jour (7.239).
 - Le coût par analyse : relevé pour la lecture des clauses depuis 7.219 (8 centimes en médiane, 7.236) ; pas pour la chaîne de règles.
 - Le temps du premier chargement quand le service dort.
 
