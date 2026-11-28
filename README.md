@@ -18,6 +18,7 @@ Dit si un sinistre est couvert par un contrat d'assurance habitation, **pourquoi
 
 **Comment ce projet a été fait.** Avec un assistant de code (Claude) : sa part est visible dans chaque commit. Le cadrage, les arbitrages et les décisions sont les miens ; [la démarche](docs/DEMARCHE.md) les garde dans l'ordre, y compris les fois où une mesure m'a donné tort.
 
+- **[Le document de conception](docs/CONCEPTION.md)**, en dix minutes : le problème, l'architecture, les choix et les alternatives écartées, les chiffres avec leurs marges, ce qu'il faudrait pour la production, la suite dans l'ordre
 - [Ce que j'ai déjà mis en production](#ce-que-jai-déjà-mis-en-production-et-ce-que-ça-a-donné) : SortirIA, et ce que j'en ai repris ici
 - [Note de conception](#note-de-conception) : la question, les deux hypothèses, la méthode d'évaluation, les résultats, ce qui a été essayé, les limites
 - [Démonstration en 5 minutes](#démonstration-en-5-minutes)

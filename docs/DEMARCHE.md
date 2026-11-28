@@ -6713,6 +6713,14 @@ partielle, le découpage en sinistres, le défaut vu en 7.227) ou se fait hors d
 de la lecture des clauses ne touche pas ; la corriger demande des bancs payés. C'est aussi ce qui justifie la
 lecture des clauses par défaut, contresignée : ici, elle a demandé au lieu de trancher.
 
+### 7.233 Un document de conception
+
+*28 novembre, midi.* Le dossier se lisait en journal de bord : honnête, mais trop long pour un lecteur pressé.
+`docs/CONCEPTION.md`, lié en tête du README, le résume en cinq pages : le problème et la contrainte, l'architecture en
+un schéma, les choix et les alternatives écartées, les chiffres clés avec leurs intervalles de confiance (Wilson, à
+95 %), ce qu'il faudrait pour la production (humain dans la boucle, RGPD, suivi, ajout d'un contrat) et la suite, dans
+l'ordre, en commençant par faire relire les jeux par un gestionnaire.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 26 nov. 2026, après la mesure du jeu « cinq ». Dans l'ordre où je le ferais.
