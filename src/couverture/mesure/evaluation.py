@@ -169,7 +169,7 @@ def _bilan(lignes: list[dict], confusion: Counter) -> dict:
     """Les chiffres du jeu : exactitude, couverts et refus à tort, taux d'« incertain », rappel des clauses."""
     n = len(lignes)
     rappels = [l["rappel_clauses"] for l in lignes if l["rappel_clauses"] is not None]
-    taux = lambda k: round(k / n, 3) if n else 0.0  # noqa: E731
+    taux = lambda k: round(k / n, 3) if n else 0.0
     return {
         "n": n,
         "exactitude": taux(sum(l["ok"] for l in lignes)),
@@ -193,5 +193,5 @@ def evaluer(pipeline, cas: list[dict], paralleles: int = 1) -> dict:
     """Rejoue les cas ; `paralleles` cas à la fois (les analyses sont indépendantes, et chacune
     attend surtout le modèle). L'ordre des résultats reste celui des cas."""
     resultats = _rejouer(pipeline, cas, paralleles)
-    lignes = [_ligne_du_cas(c, r) for c, r in zip(cas, resultats)]
+    lignes = [_ligne_du_cas(c, r) for c, r in zip(cas, resultats, strict=True)]
     return _bilan(lignes, Counter((x["attendu"], x["obtenu"]) for x in lignes))

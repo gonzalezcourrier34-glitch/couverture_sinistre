@@ -140,7 +140,7 @@ def analyser_clauses(base: Base, pipeline, contrat_id: str, sinistre: str, llm, 
         lus = list(fil.map(lambda p: analyser_clauses_un(base, pipeline, contrat_id, p["texte"], llm, suivi=suivre,
                                                          souscription=souscription, chapitres=chapitres,
                                                          garder=False), parties))
-    return plusieurs_lectures(contrat_id, sinistre, [(p["titre"], r, x) for p, (r, x) in zip(parties, lus)])
+    return plusieurs_lectures(contrat_id, sinistre, [(p["titre"], r, x) for p, (r, x) in zip(parties, lus, strict=True)])
 
 
 def plusieurs_lectures(contrat_id: str, sinistre: str, lus: list[tuple[str, Resultat, dict[str, Any]]]

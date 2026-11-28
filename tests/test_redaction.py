@@ -625,7 +625,7 @@ def test_hierarchie_a_trois_valeurs():
     une exclusion qui vise la télé ne devient pas partielle parce que la télé est aussi de l'électronique."""
     contrat = Contrat(prolog.fichier_regles(CONTRAT))
     h = [("bien", "vitre", "element_batiment"), ("bien", "appareil_audiovisuel", "electronique")]
-    t = lambda texte: Terme_(texte)  # noqa: E731
+    t = lambda texte: Terme_(texte)
     m = Moteur(contrat, {"bien": ["vitre"]}, h)
     assert m.eval(t("f(bien, element_batiment)")) == "oui" and m.eval(t("f(bien, velo)")) == "non"
     m = Moteur(contrat, {"bien": ["element_batiment"]}, h)

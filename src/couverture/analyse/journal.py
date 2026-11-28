@@ -20,7 +20,7 @@ import json
 import os
 import sqlite3
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import datetime, UTC
 from statistics import median
 
 from ..consignes import versions_courtes
@@ -71,7 +71,7 @@ class Journal:
         de la déclaration n'est pas gardé, seulement sa longueur."""
         v = r.verdict
         ligne = (
-            (date or datetime.now(timezone.utc)).isoformat(timespec="seconds"),
+            (date or datetime.now(UTC)).isoformat(timespec="seconds"),
             r.contrat_id, r.methode, v.mode,
             v.decision.value,
             (v.decision_initiale or v.decision).value,
@@ -92,7 +92,7 @@ class Journal:
 
     def noter_erreur(self, contrat_id: str, methode: str, erreur: str, date: datetime | None = None) -> None:
         """Note une analyse qui a échoué, avec le début du message d'erreur."""
-        ligne = ((date or datetime.now(timezone.utc)).isoformat(timespec="seconds"), contrat_id, methode, erreur[:300])
+        ligne = ((date or datetime.now(UTC)).isoformat(timespec="seconds"), contrat_id, methode, erreur[:300])
         with sqlite3.connect(self.chemin) as cx:
             cx.execute("INSERT INTO analyses (date, contrat_id, methode, erreur) VALUES (?,?,?,?)", ligne)
         sortie(dict(zip(("date", "contrat_id", "methode", "erreur"), ligne, strict=True)))

@@ -188,7 +188,7 @@ def resumer(doc: dict) -> str:
     gravité."""
     prop, ctl = doc["proposition"], doc.get("controles", [])
     g = prop.get("garanties", [])
-    n = lambda cle: sum(len(x.get(cle, [])) for x in g) + (len(prop.get("exclusions_communes") or [])  # noqa: E731
+    n = lambda cle: sum(len(x.get(cle, [])) for x in g) + (len(prop.get("exclusions_communes") or [])
                                                            if cle == "exclusions" else 0)
     lignes = [f"Art. {doc.get('meta', {}).get('article', '?')} : {len(g)} garantie(s) "
               f"({', '.join(x.get('id', '?') for x in g)}), {n('exclusions')} exclusion(s), "

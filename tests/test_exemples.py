@@ -188,7 +188,6 @@ def test_seuls_les_exemples_valides_entrent_dans_la_banque(tmp_path):
 def test_une_ressemblance_declaree_ne_bloque_pas_mais_elle_seule(tmp_path):
     """7.185. Un exemple antérieur à un jeu écrit à l'aveugle peut lui ressembler par hasard : le couple est déclaré
     dans lecture/proches_declares.json, pas effacé. Tout autre exemple trop proche reste refusé."""
-    import json
     import shutil
 
     for nom in ("lecture", "golden", "aveugle", "ferme"):

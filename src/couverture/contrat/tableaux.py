@@ -53,7 +53,7 @@ def lire_mots(mots: list[dict], formules: list[str]) -> dict:
     colonnes = [(noms[normaliser(m["text"])], (m["x0"] + m["x1"]) / 2, m["x0"]) for m in entete
                 if normaliser(m["text"]) in noms]
     debut_colonnes = min(x0 for _, _, x0 in colonnes) - 5
-    largeur = min((b[1] - a[1] for a, b in zip(colonnes, colonnes[1:])), default=60) / 2
+    largeur = min((b[1] - a[1] for a, b in zip(colonnes, colonnes[1:], strict=False)), default=60) / 2
     resultat = []
     for l in lignes[lignes.index(entete) + 1:]:
         libelle = " ".join(m["text"] for m in l if m["x1"] < debut_colonnes).strip()

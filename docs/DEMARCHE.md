@@ -6845,6 +6845,26 @@ Le découpage des modules, jugé risqué avant l'envoi, est écrit dans la suite
 méthode fixée, pas avant. La liste « ce qu'un professionnel aurait fait mieux » est ainsi traitée en entier, sauf
 ce qui demande une personne (la relecture par un gestionnaire) ou un budget (des jeux plus grands, d'autres modèles).
 
+### 7.240 Relecture du code : un contrôle de style, et `juger` découpé
+
+*28 novembre, 14 h 30.* Le projet n'avait aucun contrôle de style : la CI ne lançait que les tests. `ruff` est
+réglé dans `pyproject.toml` (erreurs, pièges courants, exceptions attrapées en bloc, syntaxe à jour) ; les règles
+écartées le sont avec leur raison (les descriptions en français dépassent souvent 120 caractères ; `l` pour « ligne »
+est l'usage du projet ; `StrEnum` changerait le texte des réponses de l'API). Premier passage : 45 remarques, toutes
+traitées sans changer de comportement. Treize imports inutiles retirés (des tests) ; sept `zip` rendus explicites, stricts là où
+les deux listes ont forcément la même longueur (un vecteur par exemple, une lecture par sinistre), non stricts pour
+les colonnes voisines d'un tableau ; les `noqa` devenus sans objet retirés, leur explication gardée en commentaire
+quand il y en avait une ; `timezone.utc` écrit `UTC`.
+
+`juger` avait grandi d'une branche à chaque essai : sa fonction principale faisait 144 lignes, avec deux fonctions
+imbriquées. Elle est découpée en étapes nommées (le suffixe et le mode du passage, les cas demandés, un cas, son
+résultat en lecture des clauses ou en référence), qui partagent un petit objet `_Passage` ; le séparateur des réponses
+gardées est une constante, lue par `--rejouer`. Même sortie, mêmes fichiers ; les tests de `juger` passent tels quels.
+Les descriptions des paquets (`couverture`, `analyse`, `cli`) nomment maintenant les deux méthodes et leurs fichiers.
+
+Reste, écrit dans la suite du document de conception : `clauses.lire` (120 lignes) et `jugement.decider` (95) mêlent
+encore plusieurs étapes ; les découper attend que la méthode soit fixée.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 28 nov. 2026, après la comparaison à un seul appel. Dans l'ordre où je le ferais (le document de

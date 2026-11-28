@@ -64,7 +64,7 @@ def test_la_table_des_matieres_ne_liste_pas_le_lexique_et_donne_un_repere_par_ch
     lignes = [l.split(" — ")[0] for l in table.splitlines()]
     reperes = [l.split("]")[0].strip().lstrip("[") for l in lignes]
     assert len(set(reperes)) == len(reperes), "deux chapitres ne portent jamais le même repère"
-    vol = next(r for r, l in zip(reperes, lignes) if l.endswith("3.1.6 Vol (9 mots)"))
+    vol = next(r for r, l in zip(reperes, lignes, strict=True) if l.endswith("3.1.6 Vol (9 mots)"))
     assert vol.startswith("§") and ids([vol]) == ["1.52", "1.52.1", "1.30", "2.10", "3.1.6.1", "3.1.6.2"]
 
 

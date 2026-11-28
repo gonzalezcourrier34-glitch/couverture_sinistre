@@ -7,6 +7,7 @@
   couverture formules --contrat assureur-d-habitation-2026 --page 4                          # tableau des formules
   couverture rediger  --contrat assureur-a-habitation-2025 --article 2.2                     # Mistral Large rédige
   couverture analyser --contrat assureur-a-habitation-2025 "Mon vélo a été volé dans le local commun…"
+  couverture juger    --contrat assureur-a-habitation-2025 --jeu cinq [--regles] [--brut]   # lecture des clauses
   couverture banc     --contrat assureur-a-habitation-2025 [--jeu ferme] [--partie test]     # bancs, portes
   couverture exemples [--partager] [--indexer] [--proches "texte"]                          # banque d'exemples
   couverture api      --port 8001                  # l'API FastAPI (/docs), clé COUVERTURE_API_KEY

@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
-from datetime import datetime, timezone
+from datetime import datetime, UTC
 from pathlib import Path
 
 from pydantic import BaseModel
@@ -78,7 +78,7 @@ class Base:
 
     def enregistrer(self, contrat: Contrat, clauses: list[Clause], texte_brut: str) -> None:
         """Remplace entièrement le contrat (ré-ingestion idempotente)."""
-        contrat.ingere_le = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        contrat.ingere_le = datetime.now(UTC).isoformat(timespec="seconds")
         with self._cx() as cx:
             cx.execute("DELETE FROM contrats WHERE id = ?", (contrat.id,))
             cx.execute(

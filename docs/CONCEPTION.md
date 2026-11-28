@@ -76,7 +76,7 @@ décision par sinistre.
 
 **Autour** : une API FastAPI (clé ou code d'accès, limite d'analyses par jour), un écran Angular qui suit l'analyse
 étape par étape, une fiche PDF par réponse avec les articles cités en entier, un journal des analyses sans le texte du
-sinistre, environ 350 tests, des consignes au modèle versionnées et archivées. En ligne sur Azure Container Apps.
+sinistre, environ 350 tests, un contrôle de style (ruff), des consignes au modèle versionnées et archivées. En ligne sur Azure Container Apps.
 
 ## 3. Les choix, et ce qui a été écarté
 

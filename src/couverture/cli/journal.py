@@ -6,7 +6,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, UTC
 from pathlib import Path
 
 from ..analyse.journal import Journal, lire_sortie, resume_par_jour
@@ -27,7 +27,7 @@ def executer(a, base: Base, donnees: Path) -> int:
     if a.fichier:
         analyses = lire_sortie(Path(a.fichier).read_text(encoding="utf-8").splitlines())
     else:
-        fin = datetime.now(timezone.utc) + timedelta(days=1)
+        fin = datetime.now(UTC) + timedelta(days=1)
         analyses = Journal(base.chemin).lignes(fin - timedelta(days=a.jours + 1), fin)
     print(resume_par_jour(analyses))
     return 0

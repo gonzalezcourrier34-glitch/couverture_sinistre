@@ -371,6 +371,7 @@ Avec [uv](https://docs.astral.sh/uv/) :
 uv sync --extra dev
 cp .env.example .env         # puis y mettre la clé Mistral
 uv run pytest -q
+uvx ruff check              # le style du code (règles dans pyproject.toml)
 ```
 
 `.env` (jamais versionné) :

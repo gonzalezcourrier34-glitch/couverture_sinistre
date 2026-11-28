@@ -212,7 +212,7 @@ class Regles:
 def test_l_api_rend_une_lecture_des_clauses_au_format_de_ses_reponses(base):
     """7.201 : la même forme qu'une analyse par les règles (le schéma `Decision` l'accepte), les étapes racontées,
     la clause qui couvre citée, et la contresignature faite."""
-    from couverture.api import lecture_clauses, service
+    from couverture.api import lecture_clauses
     from couverture.api.schemas import Decision as Reponse
 
     etapes = []
@@ -234,7 +234,7 @@ def test_plusieurs_sinistres_sont_juges_chacun_a_part(base):
     import threading
 
     from couverture.analyse import clauses
-    from couverture.api import lecture_clauses, service
+    from couverture.api import lecture_clauses
     from couverture.api.schemas import Decision as Reponse
 
     chaises = "La tempête de samedi a emporté mes chaises de jardin."
@@ -279,7 +279,7 @@ def test_plusieurs_sinistres_sont_juges_chacun_a_part(base):
 def test_la_relecture_apres_les_reponses_ne_redemande_pas_les_chapitres(base):
     """7.218 : relue avec les réponses du client, la déclaration garde les chapitres de la première lecture : un seul
     appel (le jugement), le même dossier, et la réponse rend ses chapitres pour la relecture suivante."""
-    from couverture.api import lecture_clauses, service
+    from couverture.api import lecture_clauses
 
     premier = Modele({"chapitres": ["3.1.2"], "motif": ""}, jugements(**{"3_1_2_1": "couvre"}))
     _, sortie = lecture_clauses.analyser_clauses(base, Regles(Decision.COUVERT), "c1", DECLARATION, premier)
@@ -319,7 +319,7 @@ def test_la_lecture_compte_ses_tokens_et_retient_ses_clauses_citees(base, monkey
 
 def test_une_decision_differente_par_sinistre_laisse_l_ensemble_a_preciser():
     """Deux sinistres, deux décisions : pas de réponse pour le tout ; les questions portent le titre du sinistre."""
-    from couverture.api import lecture_clauses, service
+    from couverture.api import lecture_clauses
     from couverture.models import Faits, Resultat, Verdict
 
     def lu(decision, questions):
@@ -338,7 +338,7 @@ def test_une_decision_differente_par_sinistre_laisse_l_ensemble_a_preciser():
 
 def test_un_couvert_que_les_regles_ne_peuvent_contresigner_reste_a_examiner(base):
     """La chaîne de règles en panne : la lecture couvre, mais un couvert non contresigné devient « incertain »."""
-    from couverture.api import lecture_clauses, service
+    from couverture.api import lecture_clauses
 
     modele = Modele({"chapitres": ["3.1.2"], "motif": ""}, jugements(**{"3_1_2_1": "couvre"}))
     _, sortie = lecture_clauses.analyser_clauses(base, Regles(None), "c1", DECLARATION, modele)
@@ -346,7 +346,7 @@ def test_un_couvert_que_les_regles_ne_peuvent_contresigner_reste_a_examiner(base
 
 
 def test_les_conditions_particulieres_s_ajoutent_a_la_declaration_en_mots(base):
-    from couverture.api import lecture_clauses, service
+    from couverture.api import lecture_clauses
 
     assert lecture_clauses.avec_souscription("Ma cave a été inondée.", "c1", {}) == "Ma cave a été inondée."
     lu = lecture_clauses.avec_souscription("Ma cave a été inondée.", "c1", {"formule": "confort"})
@@ -356,7 +356,7 @@ def test_les_conditions_particulieres_s_ajoutent_a_la_declaration_en_mots(base):
 def test_une_question_du_reglement_du_sinistre_devient_un_rappel(base, monkeypatch):
     """Le délai de déclaration ne dit pas si le sinistre est couvert : la garantie couvre, la question reste
     affichée comme un rappel, sans faire de la réponse un « à préciser »."""
-    from couverture.api import lecture_clauses, service
+    from couverture.api import lecture_clauses
 
     monkeypatch.setattr(dossier, "est_reglement", lambda c: c.id == "2.11")
     rendus = jugements(**{"3_1_2_1": "couvre"})
@@ -373,7 +373,7 @@ def test_une_question_du_reglement_du_sinistre_devient_un_rappel(base, monkeypat
 def test_une_question_posee_par_deux_clauses_ne_s_affiche_qu_une_fois(base):
     """7.208 : en ligne, la même question est arrivée deux fois dans une réponse ; la réponse reprend les
     questions de la décision, chacune une fois."""
-    from couverture.api import lecture_clauses, service
+    from couverture.api import lecture_clauses
 
     rendus = jugements(**{"3_1_2_1": "a_verifier", "3_1_2_2": "a_verifier"})
     for j in rendus["jugements"]:
@@ -501,7 +501,7 @@ def test_les_questions_des_regles_ne_s_ajoutent_pas_quand_elles_concordent(base,
 
 
 def test_un_sinistre_refuse_ne_porte_pas_de_rappel(base, monkeypatch):
-    from couverture.api import lecture_clauses, service
+    from couverture.api import lecture_clauses
 
     monkeypatch.setattr(dossier, "est_reglement", lambda c: c.id == "2.11")
     rendus = jugements(**{"3_1_2_1": "couvre", "3_1_2_2": "exclut"})
@@ -517,7 +517,7 @@ def test_un_sinistre_refuse_ne_porte_pas_de_rappel(base, monkeypatch):
 def test_plusieurs_sinistres_un_rappel_partage_une_fois_aucun_sur_un_refus():
     """Pour les deux méthodes : chaque sinistre garde ses questions ; un rappel commun s'affiche une fois pour la
     déclaration (la plus courte de ses formulations), et pas sur un sinistre refusé."""
-    from couverture.api import lecture_clauses, service
+    from couverture.api import service
 
     def rappel(question):
         return {"variable": "rappel_7.4", "nature": "reserve", "question": question, "valeurs": [], "libelles": {},
@@ -543,7 +543,7 @@ def test_plusieurs_sinistres_un_rappel_partage_une_fois_aucun_sur_un_refus():
 def test_un_refus_sans_citation_prend_les_clauses_des_regles_qui_refusent_aussi(base):
     """« Accident avec ma voiture » : la lecture ne trouve aucune garantie et ne cite rien ; les règles refusent aussi,
     en citant leurs clauses. La réponse les montre, et dit d'où elles viennent ; la décision ne change pas."""
-    from couverture.api import lecture_clauses, service
+    from couverture.api import lecture_clauses
     from couverture.models import Citation, Faits, Resultat, Verdict
 
     class ReglesQuiCitent(Regles):
@@ -587,7 +587,7 @@ def test_la_phrase_dit_quelle_clause_et_pourquoi_et_ce_que_disent_les_regles(bas
 
 def test_la_ligne_d_un_sinistre_ne_repete_pas_sa_decision():
     """Relu le 27 nov. : la phrase de chaque sinistre commence par sa décision ; la ligne d'ensemble ne la redit pas."""
-    from couverture.api import lecture_clauses, service
+    from couverture.api import lecture_clauses
     from couverture.models import Faits, Resultat, Verdict
 
     def lu(decision, phrase):

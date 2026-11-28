@@ -140,7 +140,7 @@ class Resultat(BaseModel):
     # Une déclaration qui contient plusieurs sinistres (7.168) : un résultat par sinistre, chacun avec son titre
     # et les phrases de la déclaration qui le concernent (dans `sinistre`). Vide pour un seul sinistre.
     titre: str = ""
-    parties: list["Resultat"] = Field(default_factory=list)
+    parties: list[Resultat] = Field(default_factory=list)
     # Tokens du modèle de la lecture des clauses (7.219) : {"envoyes", "recus", "cache"} ; vide pour la chaîne de règles.
     tokens: dict[str, int] = Field(default_factory=dict)
     cout_usd: float | None = None      # estimé d'après le tarif du modèle (7.219) ; None : inconnu

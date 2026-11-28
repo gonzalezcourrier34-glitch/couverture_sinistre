@@ -718,7 +718,7 @@ def resume_console(r: dict, md: Path | None = None) -> str:
                                    if "decisions_changees" in m else "")
                      + f"rappel des faits {pct(m['rappel_faits'])}, {m['cas_avec_contradiction']} cas avec contradiction")
             continue
-        v = lambda k: m[k]["moyenne"] if isinstance(m[k], dict) else m[k]  # noqa: E731
+        v = lambda k: m[k]["moyenne"] if isinstance(m[k], dict) else m[k]
         L.append(f"{titre}{pct(v('exactitude'))} justes · {pct(v('exactitude_stricte'))} exactes · "
                  f"couverts à tort {v('faux_couverts'):g} · refus à tort {v('faux_refus'):g}"
                  + (f" · instables {m['instables']}" if nom == "chaine" else ""))

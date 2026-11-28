@@ -44,7 +44,7 @@ class Chapitre:
 
     chemin: tuple[str, ...]
     clauses: list[Clause] = field(default_factory=list)      # celles dont le chemin est exactement celui-ci
-    enfants: list["Chapitre"] = field(default_factory=list)
+    enfants: list[Chapitre] = field(default_factory=list)
 
     @property
     def titre(self) -> str:

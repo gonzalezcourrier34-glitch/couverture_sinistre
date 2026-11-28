@@ -529,6 +529,8 @@ Expose `Resultat`, `Verdict`, `Decision` pour un usage en Python, et la version 
 - **`test_forme.py` (2, cinq cas)** — la forme commune des réponses (7.222) : les deux méthodes, un sinistre et deux, rendent la même forme ; un « à préciser » a toujours une question, un refus ne porte pas de réserve, chaque sinistre garde sa décision ; la validation refuse ce que l'écran ne saurait pas lire.
 - **`test_exemples.py` (13)**, **`test_fiche.py`**, **`test_tableaux.py`**, **`test_questions.py`**, **`test_ferme.py`** — la banque d'exemples, la fiche PDF, les tableaux Grafana exécutés, les questions posées, le jeu fermé.
 
+**Le style du code** se vérifie avec `uvx ruff check` (réglé dans `pyproject.toml`) : erreurs, imports inutiles, pièges courants (`zip` sans longueur vérifiée, exception attrapée en bloc sans raison écrite), syntaxe à jour. Les règles écartées le sont avec leur raison, dans le même fichier.
+
 ---
 
 ## 7. L'évaluation et ses indicateurs

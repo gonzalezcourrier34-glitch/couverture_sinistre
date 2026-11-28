@@ -278,7 +278,7 @@ def indexer(chemin_base: str | Path, donnees: Path, embed, modele: str = MODELE)
         connus = {i: e for i, e in cx.execute("SELECT id, empreinte FROM exemples")}
         a_faire = [x for x in exemples if connus.get(x["id"]) != empreinte(x, modele)]
         vecteurs = embed([x["declaration"] for x in a_faire]) if a_faire else []
-        for x, v in zip(a_faire, vecteurs):
+        for x, v in zip(a_faire, vecteurs, strict=True):
             cx.execute("INSERT OR REPLACE INTO exemples VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                        (x["id"], x["contrat"], x["declaration"], json.dumps(x["faits"], ensure_ascii=False),
                         json.dumps(x["evenements"]), modele, empreinte(x, modele), array("f", v).tobytes()))
@@ -301,7 +301,7 @@ def charger_index(chemin_base: str | Path) -> list[dict]:
 def cosinus(a: list[float], b: list[float]) -> float:
     """La similarité cosinus de deux vecteurs ; 0 si l'un est nul."""
     na, nb = math.sqrt(sum(x * x for x in a)), math.sqrt(sum(x * x for x in b))
-    return sum(x * y for x, y in zip(a, b)) / (na * nb) if na and nb else 0.0
+    return sum(x * y for x, y in zip(a, b, strict=True)) / (na * nb) if na and nb else 0.0
 
 
 def choisir(requete: list[float], exemples: list[dict], k: int = 4, seuil: float = SEUIL,

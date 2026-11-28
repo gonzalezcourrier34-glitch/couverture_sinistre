@@ -356,7 +356,7 @@ def questions_utiles(lignes: list[Ligne], etat: Etat, **options) -> Etat:
                  for l in lignes]
         return decider(copie, **options).decision
 
-    decisions = {combo: avec(dict(zip(doutes, combo))) for combo in product(*reponses)}
+    decisions = {combo: avec(dict(zip(doutes, combo, strict=True))) for combo in product(*reponses)}
     utiles = {c for i, c in enumerate(doutes)
               if any(decisions[combo[:i] + (h,) + combo[i + 1:]] != d
                      for combo, d in decisions.items() for h in reponses[i])}

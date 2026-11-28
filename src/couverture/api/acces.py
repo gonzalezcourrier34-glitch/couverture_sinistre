@@ -22,7 +22,7 @@ import base64
 import binascii
 import secrets
 import threading
-from datetime import datetime, timezone
+from datetime import datetime, UTC
 
 from fastapi import HTTPException, status
 from starlette.responses import PlainTextResponse
@@ -79,7 +79,7 @@ def limiter_analyses() -> None:
     """
     if not config.CODE_ACCES or config.LIMITE_JOUR <= 0:
         return
-    jour = datetime.now(timezone.utc).date().isoformat()
+    jour = datetime.now(UTC).date().isoformat()
     with _verrou:
         if _compte["jour"] != jour:
             _compte.update(jour=jour, n=0)

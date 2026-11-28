@@ -23,7 +23,7 @@ router = APIRouter(prefix="/api/v1", tags=["contrats"], dependencies=[Depends(re
 @router.get("/contrats/{contrat_id}/clauses")
 def clauses(
     contrat_id: str,
-    type: Literal["garantie", "exclusion", "condition", "limite", "definition", "autre"] | None = Query(  # noqa: A002, B008
+    type: Literal["garantie", "exclusion", "condition", "limite", "definition", "autre"] | None = Query(
         default=None, description="Ne garder qu'un type de clause"),
     base: Base = Depends(get_base),  # noqa: B008
 ) -> list[dict[str, Any]]:

@@ -45,7 +45,7 @@ def decider(demande: DecisionRequest, base: Base = Depends(get_base),  # noqa: B
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e).strip("'\"")) from e
     except LookupError as e:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e)) from e
-    except Exception as e:  # noqa: BLE001 - moteur Prolog absent ou en erreur
+    except Exception as e:  # moteur Prolog absent ou en erreur : relevée telle quelle si ce n'est pas lui
         if "SWI-Prolog" in str(e) or e.__class__.__name__ == "ErreurRegles":
             raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(e)) from e
         raise

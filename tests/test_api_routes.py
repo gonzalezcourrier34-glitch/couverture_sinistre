@@ -8,13 +8,13 @@ import pytest
 pytest.importorskip("fastapi")
 pytest.importorskip("httpx")
 
-from fastapi.testclient import TestClient  # noqa: E402
+from fastapi.testclient import TestClient
 
-from couverture.api import config, dependances, lecture_clauses, service  # noqa: E402
-from couverture.api.main import app  # noqa: E402
-from couverture.api.routes import decision  # noqa: E402
-from couverture.llm import ErreurLLM  # noqa: E402
-from test_api_service import CONTRAT, base, oracle, regles  # noqa: E402,F401  (fixtures partagées)
+from couverture.api import config, dependances, lecture_clauses, service
+from couverture.api.main import app
+from couverture.api.routes import decision
+from couverture.llm import ErreurLLM
+from test_api_service import CONTRAT, base, oracle, regles  # noqa: F401  (fixtures partagées)
 
 CLE = {"x-api-key": "secret"}
 
@@ -55,7 +55,7 @@ class FauxJournal:
 
 
 @pytest.fixture
-def client(base, oracle, monkeypatch):  # noqa: F811
+def client(base, oracle, monkeypatch):
     monkeypatch.setattr(config, "API_KEY", "secret")
     # La méthode du serveur vient du .env du poste (COUVERTURE_METHODE) : les tests fixent la leur, sans quoi un
     # .env réglé sur « clauses » envoyait les analyses des tests au vrai modèle (7.204).
@@ -114,7 +114,7 @@ def test_analyse(client):
                                                               "sinistre": "Mon vélo a été volé hier soir."}).status_code == 404
 
 
-def test_analyse_modele_en_panne(client, base, oracle):  # noqa: F811
+def test_analyse_modele_en_panne(client, base, oracle):
     app.dependency_overrides[dependances.get_pipelines] = lambda: FaussesChaines(base, oracle, erreur=True)
     r = client.post("/api/v1/analyses", headers=CLE, json={"contrat_id": CONTRAT, "sinistre": "Mon vélo a été volé hier."})
     assert r.status_code == 502 and client.journal.erreurs
@@ -130,7 +130,7 @@ def test_decision_puis_question(client):
     assert client.post("/api/v1/decisions", headers=CLE, json={"contrat_id": CONTRAT, "faits": {}}).status_code == 422
 
 
-def test_analyse_suivie(client, base, oracle):  # noqa: F811
+def test_analyse_suivie(client, base, oracle):
     """7.134 : le même résultat que `/analyses`, précédé d'une ligne JSON par étape ; une panne arrive dans le flux."""
     import json
 

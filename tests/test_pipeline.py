@@ -295,12 +295,12 @@ def test_profil_invalide():
 
 # --- Journal --------------------------------------------------------------
 
-from datetime import datetime, timedelta, timezone  # noqa: E402
+from datetime import datetime, timedelta, UTC  # noqa: E402
 
 from couverture.analyse.journal import Journal  # noqa: E402
 from couverture.models import Citation, Faits, Resultat, Verdict  # noqa: E402
 
-MAINTENANT = datetime(2026, 11, 17, 8, 0, tzinfo=timezone.utc)
+MAINTENANT = datetime(2026, 11, 17, 8, 0, tzinfo=UTC)
 
 
 def resultat(decision="NON_COUVERT", evenement="vol", contrat="foyer", questions=()):

@@ -30,3 +30,21 @@ where = ["src"]
 [tool.pytest.ini_options]
 pythonpath = ["src", "."]
 testpaths = ["tests"]
+
+# Le style vérifié par `uvx ruff check` (en local et dans la CI). Écartées, avec leur raison :
+# E501 : des descriptions en français, longues par nature ; E741 : `l` pour « ligne », l'usage du projet ;
+# E731 : des petites fonctions locales d'une ligne ; B023 : ces fonctions ne servent que dans le tour de boucle
+# qui les crée ; UP042 : `StrEnum` changerait `str()` des réponses, qui partent telles quelles dans l'API.
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+extend-exclude = ["frontend", "perso"]
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "BLE", "UP", "RUF100"]
+ignore = ["E501", "E741", "E731", "B023", "UP042"]
+
+[tool.ruff.lint.per-file-ignores]
+# Les fixtures partagées s'importent d'un autre fichier de tests, puis se reçoivent en argument (usage de pytest).
+"tests/*" = ["F811"]

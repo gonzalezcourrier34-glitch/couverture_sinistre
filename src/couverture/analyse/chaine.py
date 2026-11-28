@@ -147,7 +147,7 @@ class PipelineRegles:
         self.llm_verification = None          # un autre modèle pour vérifier et confirmer (7.136)
 
     @classmethod
-    def depuis_base(cls, base, contrat_id: str, llm: LLM) -> "PipelineRegles":
+    def depuis_base(cls, base, contrat_id: str, llm: LLM) -> PipelineRegles:
         """La chaîne d'un contrat de la base, avec ses modèles de lecture et de vérification et la banque d'exemples ;
         `LookupError` sans règles pour ce contrat ou sans SWI-Prolog."""
         if not prolog.fichier_regles(contrat_id).exists():
