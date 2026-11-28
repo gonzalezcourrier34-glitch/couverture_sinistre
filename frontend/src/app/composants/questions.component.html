@@ -36,7 +36,11 @@
             <span class="small">Décision immédiate, par le moteur seul.</span>
             <button type="button" class="bouton bouton-primaire"
                 [disabled]="!ech.nbReponses() || ech.chargement()" (click)="ech.decider()">
-                Décider avec {{ ech.nbReponses() }} réponse{{ ech.nbReponses() > 1 ? 's' : '' }}
+                @if (ech.nbReponses()) {
+                    Décider avec {{ ech.nbReponses() }} réponse{{ ech.nbReponses() > 1 ? 's' : '' }}
+                } @else {
+                    Répondez pour décider
+                }
             </button>
         </div>
     </div>
@@ -76,7 +80,11 @@
             }
             <button type="button" class="bouton bouton-primaire"
                 [disabled]="!ech.nbReponsesLibres() || ech.reponsesTropLongues() || ech.chargement()" (click)="ech.relireAvecReponses()">
-                Relire avec {{ ech.nbReponsesLibres() }} réponse{{ ech.nbReponsesLibres() > 1 ? 's' : '' }}
+                @if (ech.nbReponsesLibres()) {
+                    Relire avec {{ ech.nbReponsesLibres() }} réponse{{ ech.nbReponsesLibres() > 1 ? 's' : '' }}
+                } @else {
+                    Répondez pour relire
+                }
             </button>
         </div>
     </div>

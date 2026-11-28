@@ -6921,6 +6921,65 @@ modèle ne lit pas deux fois de la même façon, et la correction de 7.241, qui 
 n'a pas eu à servir ici. Elle reste couverte par son test. La question ne distingue pas encore le joint du voisin d'un
 bien de l'assuré : c'est la limite de l'exclusion elle-même, que seule une relecture humaine tranche.
 
+### 7.243 La réponse du client qui fait refuser à tort, et la consigne v3
+
+*28 novembre, 16 h.* Sur la v22, j'ai répondu « Oui » à la question de la fuite. La relecture a jugé l'exclusion 1.4
+« exclut », en citant ma réponse : le sinistre devenait un refus. Deux défauts de la question, que la consigne laissait
+passer :
+- elle était double (« résultait-elle d'une usure…, **et** depuis combien de temps… ? ») : un « oui » ne répond qu'à
+  la moitié, et le modèle l'a pris pour un oui à l'usure ;
+- elle ne demandait pas l'essentiel : l'exclusion vise l'usure « des biens assurés », et le joint usé est celui du
+  voisin. Même usé, il ne fait pas jouer l'exclusion : un gestionnaire couvrirait au titre des dégâts des eaux, puis
+  se retournerait contre le voisin. C'est un refus à tort, sur une citation exacte appliquée au mauvais bien (la
+  famille des refus « cités hors de propos », 7.207).
+
+**La consigne de jugement passe en v3** (archivée, manifeste à jour). Deux règles, générales :
+- une exclusion qui vise les biens assurés (leur usure, leur vice propre, leur entretien, leur détérioration lente) ne
+  joue que si le bien en cause est un bien de l'assuré ; un dommage causé par le bien d'un autre (l'installation d'un
+  voisin, une conduite de l'immeuble) n'en relève pas. Si la déclaration ne dit pas à qui il appartient, la question
+  porte sur cela ;
+- une question ne porte que sur un seul fait, et se répond par oui, par non ou en quelques mots.
+
+**Ce qui doit le montrer, avant de la garder.** D'abord la déclaration de la fuite, seule, avec les règles, et la même
+avec la réponse « oui » (environ 0,25 $). Puis, parce qu'une consigne change toutes les réponses, le jeu « six » repassé
+en v3 avec les règles (`--passage 2`), comparé à la v2 sur les mêmes cas (46 sur 60, un couvert à tort) : environ 6 $.
+« Six » a déjà servi à mesurer la v2, pas à écrire la v3 : il dit si la v3 casse quelque chose, pas ce qu'elle vaut sur
+des cas neufs. Critère écrit avant : la v3 reste si elle ne fait pas plus de couverts à tort que la v2, et pas plus de
+deux réponses justes de moins ; sinon on revient à la v2 (`--consigne-jugement v2` la rejoue).
+
+**Aussi, sans appel au modèle.** Le bouton « Relire avec 0 réponse », grisé, se lisait mal : sans réponse, il dit
+« Répondez pour relire » (et « Répondez pour décider » pour la chaîne de règles). Les deux questions de la cave
+(comment le local était fermé, et si c'était par une serrure de sûreté) restent : ce sont deux faits que la définition
+de la serrure de sûreté demande tous deux chez A ; ne poser la seconde qu'après la première est un changement du
+moteur, pas de l'affichage.
+
+### 7.244 La v3 mesurée : elle corrige la fuite, et n'est pas retenue
+
+*28 novembre, 16 h 45.* La v3 sur la déclaration de la fuite, avec les règles : « à préciser » les deux fois, et la
+lecture des clauses garde « couvre » (2.7) même avec la réponse « oui » à l'usure. Le refus à tort de 7.243 ne se
+reproduit pas. Puis « six » repassé en v3, avec les règles (`--passage 2`), environ 6 $ (1,85 million de tokens
+envoyés, 0,88 million reçus). Une entorse à noter : le passage a tourné sur les fichiers déposés avant leur commit ;
+le texte mesuré est celui de `docs/consignes/clauses-jugement/v3.txt`, archivé tel quel.
+
+| | v2 (27 nov.) | v3 |
+|---|---|---|
+| Réponses justes, A / B / D | 18 / 14 / 14 = **46** | 17 / 14 / 11 = **42** |
+| Couverts à tort | **1** (`s-b14`) | **3** (`s-b14`, `s-b18`, `s-d06`) |
+| Refus à tort | 2 (`s-a14`, `s-b04`) | 1 (`s-d15`) |
+
+Dix cas changent. Pour la v3 : `s-a14` et `s-b04` ne sont plus refusés à tort (« à préciser »), `s-b06` et `s-d11`
+deviennent justes. Contre elle : `s-b18` et `s-d06`, que la v2 laissait « à préciser » à raison, deviennent
+« couvert » ; `s-d15` devient un refus ; `s-a10`, `s-d10` et `s-d16` perdent leur réponse (deux d'entre eux par une
+citation inexacte, l'instabilité déjà connue). Ma lecture : la seconde règle (« s'il manque deux faits, pose celui qui
+tranche ») a pu faire lâcher une condition ; mais la lecture varie d'une passe à l'autre, et un seul passage ne sépare
+pas l'effet des règles de ce bruit.
+
+**Le critère écrit avant (7.243) tranche : deux couverts à tort de plus, quatre justes de moins. La v3 n'est pas
+retenue, la v2 reste en service.** La v3 reste archivée ; `juger --consigne-jugement v3` la rejoue. Ce que j'en garde :
+la règle sur les biens d'un autre corrige un vrai refus à tort, mais elle est venue avec une seconde règle, et les deux
+ont été mesurées ensemble. La suite serait de mesurer la première seule, sur un jeu neuf, plusieurs passes ; pas avant
+l'envoi. Le refus à tort de la fuite reste donc possible en ligne, et il est écrit dans les limites.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 28 nov. 2026, après la comparaison à un seul appel. Dans l'ordre où je le ferais (le document de
@@ -7223,3 +7282,4 @@ sur les jeux écrits sans voir les règles, d'à peu près la moitié, l'autre v
 227. Le coût d'un modèle qui réfléchit est dans ce qu'il écrit, pas dans ce qu'on lui envoie : 69 % ici. Réduire le dossier ne rapporte presque rien.
 228. Mesurer la solution simple avant de construire, et la garder à côté : ici, un seul appel répondait aussi juste pour quatre fois moins cher ; ce que la construction apporte se lit dans le sens des erreurs, pas dans leur nombre.
 229. Une déclaration difficile tapée à la main montre ce que les jeux ne montrent pas : deux erreurs des règles sur trois sinistres, l'une arrêtée par la lecture des clauses, l'autre qui coûte une réponse juste, et un client laissé sans question.
+230. Deux règles ajoutées ensemble se mesurent ensemble : celle qui corrigeait le cas vu est venue avec une autre, le jeu a reculé, et l'on ne sait pas laquelle a coûté. Une correction à la fois.
