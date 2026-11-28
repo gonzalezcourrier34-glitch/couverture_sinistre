@@ -1,0 +1,366 @@
+cas;jeu;categorie
+av-a01;aveugle;Incendie, explosion
+av-a02;aveugle;Dégâts des eaux
+av-a03;aveugle;Bris de glace
+av-a04;aveugle;Dommages électriques
+av-a05;aveugle;Vol et vandalisme
+av-a06;aveugle;Responsabilité civile
+av-a07;aveugle;Autres (juridique, assistance, accidents, objets)
+av-a08;aveugle;Incendie, explosion
+av-a09;aveugle;Dégâts des eaux
+av-a10;aveugle;Vol et vandalisme
+av-a11;aveugle;Autres (juridique, assistance, accidents, objets)
+av-a12;aveugle;Autres (juridique, assistance, accidents, objets)
+av-a13;aveugle;Tempête, grêle, neige
+av-a14;aveugle;Autres (juridique, assistance, accidents, objets)
+av-a15;aveugle;Autres (juridique, assistance, accidents, objets)
+av-a16;aveugle;Responsabilité civile
+av-a17;aveugle;Catastrophes naturelles
+av-a18;aveugle;Vol et vandalisme
+av-a19;aveugle;Dégâts des eaux
+av-a20;aveugle;Incendie, explosion
+av-b01;aveugle;Incendie, explosion
+av-b02;aveugle;Vol et vandalisme
+av-b03;aveugle;Dégâts des eaux
+av-b04;aveugle;Dégâts des eaux
+av-b05;aveugle;Tempête, grêle, neige
+av-b06;aveugle;Bris de glace
+av-b07;aveugle;Bris de glace
+av-b08;aveugle;Vol et vandalisme
+av-b09;aveugle;Vol et vandalisme
+av-b10;aveugle;Autres (juridique, assistance, accidents, objets)
+av-b11;aveugle;Vol et vandalisme
+av-b12;aveugle;Catastrophes naturelles
+av-b13;aveugle;Catastrophes naturelles
+av-b14;aveugle;Responsabilité civile
+av-b15;aveugle;Autres (juridique, assistance, accidents, objets)
+av-b16;aveugle;Autres (juridique, assistance, accidents, objets)
+av-b17;aveugle;Vol et vandalisme
+av-b18;aveugle;Autres (juridique, assistance, accidents, objets)
+av-b19;aveugle;Autres (juridique, assistance, accidents, objets)
+av-b20;aveugle;Responsabilité civile
+av-d01;aveugle;Incendie, explosion
+av-d02;aveugle;Autres (juridique, assistance, accidents, objets)
+av-d03;aveugle;Dommages électriques
+av-d04;aveugle;Tempête, grêle, neige
+av-d05;aveugle;Tempête, grêle, neige
+av-d06;aveugle;Dégâts des eaux
+av-d07;aveugle;Dégâts des eaux
+av-d08;aveugle;Catastrophes naturelles
+av-d09;aveugle;Catastrophes naturelles
+av-d10;aveugle;Vol et vandalisme
+av-d11;aveugle;Vol et vandalisme
+av-d12;aveugle;Vol et vandalisme
+av-d13;aveugle;Vol et vandalisme
+av-d14;aveugle;Bris de glace
+av-d15;aveugle;Autres (juridique, assistance, accidents, objets)
+av-d16;aveugle;Responsabilité civile
+av-d17;aveugle;Incendie, explosion
+av-d18;aveugle;Tempête, grêle, neige
+av-d19;aveugle;Autres (juridique, assistance, accidents, objets)
+av-d20;aveugle;Autres (juridique, assistance, accidents, objets)
+c-a01;cinq;Incendie, explosion
+c-a02;cinq;Catastrophes naturelles
+c-a03;cinq;Dégâts des eaux
+c-a04;cinq;Responsabilité civile
+c-a05;cinq;Responsabilité civile
+c-a06;cinq;Bris de glace
+c-a07;cinq;Responsabilité civile
+c-a08;cinq;Autres (juridique, assistance, accidents, objets)
+c-a09;cinq;Autres (juridique, assistance, accidents, objets)
+c-a10;cinq;Autres (juridique, assistance, accidents, objets)
+c-a11;cinq;Responsabilité civile
+c-a12;cinq;Vol et vandalisme
+c-a13;cinq;Vol et vandalisme
+c-a14;cinq;Dégâts des eaux
+c-a15;cinq;Vol et vandalisme
+c-a16;cinq;Dommages électriques
+c-a17;cinq;Vol et vandalisme
+c-a18;cinq;Autres (juridique, assistance, accidents, objets)
+c-a19;cinq;Responsabilité civile
+c-a20;cinq;Dégâts des eaux
+c-b01;cinq;Bris de glace
+c-b02;cinq;Dégâts des eaux
+c-b03;cinq;Dommages électriques
+c-b04;cinq;Dommages électriques
+c-b05;cinq;Catastrophes naturelles
+c-b06;cinq;Tempête, grêle, neige
+c-b07;cinq;Vol et vandalisme
+c-b08;cinq;Vol et vandalisme
+c-b09;cinq;Responsabilité civile
+c-b10;cinq;Autres (juridique, assistance, accidents, objets)
+c-b11;cinq;Autres (juridique, assistance, accidents, objets)
+c-b12;cinq;Dégâts des eaux
+c-b13;cinq;Vol et vandalisme
+c-b14;cinq;Autres (juridique, assistance, accidents, objets)
+c-b15;cinq;Vol et vandalisme
+c-b16;cinq;Autres (juridique, assistance, accidents, objets)
+c-b17;cinq;Tempête, grêle, neige
+c-b18;cinq;Vol et vandalisme
+c-b19;cinq;Incendie, explosion
+c-b20;cinq;Responsabilité civile
+c-d01;cinq;Bris de glace
+c-d02;cinq;Vol et vandalisme
+c-d03;cinq;Incendie, explosion
+c-d04;cinq;Tempête, grêle, neige
+c-d05;cinq;Tempête, grêle, neige
+c-d06;cinq;Dégâts des eaux
+c-d07;cinq;Responsabilité civile
+c-d08;cinq;Incendie, explosion
+c-d09;cinq;Responsabilité civile
+c-d10;cinq;Vol et vandalisme
+c-d11;cinq;Dommages électriques
+c-d12;cinq;Autres (juridique, assistance, accidents, objets)
+c-d13;cinq;Autres (juridique, assistance, accidents, objets)
+c-d14;cinq;Responsabilité civile
+c-d15;cinq;Incendie, explosion
+c-d16;cinq;Autres (juridique, assistance, accidents, objets)
+c-d17;cinq;Autres (juridique, assistance, accidents, objets)
+c-d18;cinq;Incendie, explosion
+c-d19;cinq;Vol et vandalisme
+c-d20;cinq;Vol et vandalisme
+f-a01;ferme;Incendie, explosion
+f-a02;ferme;Incendie, explosion
+f-a03;ferme;Dégâts des eaux
+f-a04;ferme;Dégâts des eaux
+f-a05;ferme;Vol et vandalisme
+f-a06;ferme;Vol et vandalisme
+f-a07;ferme;Vol et vandalisme
+f-a08;ferme;Vol et vandalisme
+f-a09;ferme;Autres (juridique, assistance, accidents, objets)
+f-a10;ferme;Bris de glace
+f-a11;ferme;Autres (juridique, assistance, accidents, objets)
+f-a12;ferme;Autres (juridique, assistance, accidents, objets)
+f-a13;ferme;Dommages électriques
+f-a14;ferme;Tempête, grêle, neige
+f-a15;ferme;Catastrophes naturelles
+f-a16;ferme;Catastrophes naturelles
+f-a17;ferme;Incendie, explosion
+f-a18;ferme;Responsabilité civile
+f-a19;ferme;Autres (juridique, assistance, accidents, objets)
+f-a20;ferme;Autres (juridique, assistance, accidents, objets)
+f-b01;ferme;Incendie, explosion
+f-b02;ferme;Dégâts des eaux
+f-b03;ferme;Dégâts des eaux
+f-b04;ferme;Dégâts des eaux
+f-b05;ferme;Vol et vandalisme
+f-b06;ferme;Vol et vandalisme
+f-b07;ferme;Vol et vandalisme
+f-b08;ferme;Bris de glace
+f-b09;ferme;Dommages électriques
+f-b10;ferme;Dommages électriques
+f-b11;ferme;Tempête, grêle, neige
+f-b12;ferme;Dégâts des eaux
+f-b13;ferme;Autres (juridique, assistance, accidents, objets)
+f-b14;ferme;Vol et vandalisme
+f-b15;ferme;Catastrophes naturelles
+f-b16;ferme;Responsabilité civile
+f-b17;ferme;Vol et vandalisme
+f-b18;ferme;Vol et vandalisme
+f-b19;ferme;Autres (juridique, assistance, accidents, objets)
+f-b20;ferme;Bris de glace
+f-d01;ferme;Incendie, explosion
+f-d02;ferme;Tempête, grêle, neige
+f-d03;ferme;Dégâts des eaux
+f-d04;ferme;Dégâts des eaux
+f-d05;ferme;Vol et vandalisme
+f-d06;ferme;Vol et vandalisme
+f-d07;ferme;Bris de glace
+f-d08;ferme;Catastrophes naturelles
+f-d09;ferme;Responsabilité civile
+f-d10;ferme;Vol et vandalisme
+f-d11;ferme;Vol et vandalisme
+f-d12;ferme;Vol et vandalisme
+f-d13;ferme;Dégâts des eaux
+f-d14;ferme;Tempête, grêle, neige
+f-d15;ferme;Responsabilité civile
+f-d16;ferme;Autres (juridique, assistance, accidents, objets)
+f-d17;ferme;Incendie, explosion
+f-d18;ferme;Vol et vandalisme
+f-d19;ferme;Dommages électriques
+f-d20;ferme;Autres (juridique, assistance, accidents, objets)
+f-d21;ferme;Bris de glace
+f-d22;ferme;Autres (juridique, assistance, accidents, objets)
+f-d23;ferme;Dégâts des eaux
+f-d24;ferme;Autres (juridique, assistance, accidents, objets)
+f-d25;ferme;Vol et vandalisme
+n-a01;neuf;Incendie, explosion
+n-a02;neuf;Dommages électriques
+n-a03;neuf;Autres (juridique, assistance, accidents, objets)
+n-a04;neuf;Tempête, grêle, neige
+n-a05;neuf;Dégâts des eaux
+n-a06;neuf;Dégâts des eaux
+n-a07;neuf;Tempête, grêle, neige
+n-a08;neuf;Catastrophes naturelles
+n-a09;neuf;Dégâts des eaux
+n-a10;neuf;Vol et vandalisme
+n-a11;neuf;Vol et vandalisme
+n-a12;neuf;Vol et vandalisme
+n-a13;neuf;Bris de glace
+n-a14;neuf;Responsabilité civile
+n-a15;neuf;Responsabilité civile
+n-a16;neuf;Responsabilité civile
+n-a17;neuf;Incendie, explosion
+n-a18;neuf;Autres (juridique, assistance, accidents, objets)
+n-a19;neuf;Autres (juridique, assistance, accidents, objets)
+n-a20;neuf;Autres (juridique, assistance, accidents, objets)
+n-b01;neuf;Incendie, explosion
+n-b02;neuf;Tempête, grêle, neige
+n-b03;neuf;Dégâts des eaux
+n-b04;neuf;Bris de glace
+n-b05;neuf;Bris de glace
+n-b06;neuf;Vol et vandalisme
+n-b07;neuf;Vol et vandalisme
+n-b08;neuf;Vol et vandalisme
+n-b09;neuf;Autres (juridique, assistance, accidents, objets)
+n-b10;neuf;Autres (juridique, assistance, accidents, objets)
+n-b11;neuf;Dégâts des eaux
+n-b12;neuf;Catastrophes naturelles
+n-b13;neuf;Autres (juridique, assistance, accidents, objets)
+n-b14;neuf;Responsabilité civile
+n-b15;neuf;Autres (juridique, assistance, accidents, objets)
+n-b16;neuf;Autres (juridique, assistance, accidents, objets)
+n-b17;neuf;Autres (juridique, assistance, accidents, objets)
+n-b18;neuf;Autres (juridique, assistance, accidents, objets)
+n-b19;neuf;Autres (juridique, assistance, accidents, objets)
+n-b20;neuf;Autres (juridique, assistance, accidents, objets)
+n-d01;neuf;Autres (juridique, assistance, accidents, objets)
+n-d02;neuf;Dégâts des eaux
+n-d03;neuf;Dommages électriques
+n-d04;neuf;Dégâts des eaux
+n-d05;neuf;Catastrophes naturelles
+n-d06;neuf;Tempête, grêle, neige
+n-d07;neuf;Vol et vandalisme
+n-d08;neuf;Responsabilité civile
+n-d09;neuf;Catastrophes naturelles
+n-d10;neuf;Bris de glace
+n-d11;neuf;Vol et vandalisme
+n-d12;neuf;Responsabilité civile
+n-d13;neuf;Vol et vandalisme
+n-d14;neuf;Dégâts des eaux
+n-d15;neuf;Autres (juridique, assistance, accidents, objets)
+n-d16;neuf;Tempête, grêle, neige
+n-d17;neuf;Incendie, explosion
+n-d18;neuf;Tempête, grêle, neige
+n-d19;neuf;Vol et vandalisme
+n-d20;neuf;Incendie, explosion
+q-a01;quatre;Incendie, explosion
+q-a02;quatre;Dégâts des eaux
+q-a03;quatre;Dégâts des eaux
+q-a04;quatre;Dégâts des eaux
+q-a05;quatre;Tempête, grêle, neige
+q-a06;quatre;Catastrophes naturelles
+q-a07;quatre;Catastrophes naturelles
+q-a08;quatre;Vol et vandalisme
+q-a09;quatre;Vol et vandalisme
+q-a10;quatre;Vol et vandalisme
+q-a11;quatre;Bris de glace
+q-a12;quatre;Bris de glace
+q-a13;quatre;Dommages électriques
+q-a14;quatre;Responsabilité civile
+q-a15;quatre;Autres (juridique, assistance, accidents, objets)
+q-a16;quatre;Responsabilité civile
+q-a17;quatre;Incendie, explosion
+q-a18;quatre;Incendie, explosion
+q-a19;quatre;Autres (juridique, assistance, accidents, objets)
+q-a20;quatre;Vol et vandalisme
+q-b01;quatre;Incendie, explosion
+q-b02;quatre;Dégâts des eaux
+q-b03;quatre;Dégâts des eaux
+q-b04;quatre;Tempête, grêle, neige
+q-b05;quatre;Tempête, grêle, neige
+q-b06;quatre;Autres (juridique, assistance, accidents, objets)
+q-b07;quatre;Vol et vandalisme
+q-b08;quatre;Vol et vandalisme
+q-b09;quatre;Dommages électriques
+q-b10;quatre;Autres (juridique, assistance, accidents, objets)
+q-b11;quatre;Catastrophes naturelles
+q-b12;quatre;Responsabilité civile
+q-b13;quatre;Responsabilité civile
+q-b14;quatre;Autres (juridique, assistance, accidents, objets)
+q-b15;quatre;Dégâts des eaux
+q-b16;quatre;Vol et vandalisme
+q-b17;quatre;Autres (juridique, assistance, accidents, objets)
+q-b18;quatre;Autres (juridique, assistance, accidents, objets)
+q-b19;quatre;Autres (juridique, assistance, accidents, objets)
+q-b20;quatre;Vol et vandalisme
+q-d01;quatre;Bris de glace
+q-d02;quatre;Incendie, explosion
+q-d03;quatre;Catastrophes naturelles
+q-d04;quatre;Tempête, grêle, neige
+q-d05;quatre;Dommages électriques
+q-d06;quatre;Bris de glace
+q-d07;quatre;Dégâts des eaux
+q-d08;quatre;Vol et vandalisme
+q-d09;quatre;Tempête, grêle, neige
+q-d10;quatre;Vol et vandalisme
+q-d11;quatre;Dégâts des eaux
+q-d12;quatre;Catastrophes naturelles
+q-d13;quatre;Autres (juridique, assistance, accidents, objets)
+q-d14;quatre;Responsabilité civile
+q-d15;quatre;Responsabilité civile
+q-d16;quatre;Dégâts des eaux
+q-d17;quatre;Responsabilité civile
+q-d18;quatre;Vol et vandalisme
+q-d19;quatre;Autres (juridique, assistance, accidents, objets)
+q-d20;quatre;Dégâts des eaux
+s-a01;six;Bris de glace
+s-a02;six;Dégâts des eaux
+s-a03;six;Responsabilité civile
+s-a04;six;Bris de glace
+s-a05;six;Dégâts des eaux
+s-a06;six;Responsabilité civile
+s-a07;six;Autres (juridique, assistance, accidents, objets)
+s-a08;six;Responsabilité civile
+s-a09;six;Tempête, grêle, neige
+s-a10;six;Responsabilité civile
+s-a11;six;Dégâts des eaux
+s-a12;six;Vol et vandalisme
+s-a13;six;Autres (juridique, assistance, accidents, objets)
+s-a14;six;Responsabilité civile
+s-a15;six;Incendie, explosion
+s-a16;six;Incendie, explosion
+s-a17;six;Incendie, explosion
+s-a18;six;Responsabilité civile
+s-a19;six;Incendie, explosion
+s-a20;six;Autres (juridique, assistance, accidents, objets)
+s-b01;six;Autres (juridique, assistance, accidents, objets)
+s-b02;six;Dégâts des eaux
+s-b03;six;Bris de glace
+s-b04;six;Dommages électriques
+s-b05;six;Responsabilité civile
+s-b06;six;Dégâts des eaux
+s-b07;six;Incendie, explosion
+s-b08;six;Tempête, grêle, neige
+s-b09;six;Bris de glace
+s-b10;six;Vol et vandalisme
+s-b11;six;Autres (juridique, assistance, accidents, objets)
+s-b12;six;Responsabilité civile
+s-b13;six;Vol et vandalisme
+s-b14;six;Dommages électriques
+s-b15;six;Dégâts des eaux
+s-b16;six;Autres (juridique, assistance, accidents, objets)
+s-b17;six;Autres (juridique, assistance, accidents, objets)
+s-b18;six;Dommages électriques
+s-b19;six;Tempête, grêle, neige
+s-b20;six;Responsabilité civile
+s-d01;six;Responsabilité civile
+s-d02;six;Responsabilité civile
+s-d03;six;Responsabilité civile
+s-d04;six;Autres (juridique, assistance, accidents, objets)
+s-d05;six;Autres (juridique, assistance, accidents, objets)
+s-d06;six;Responsabilité civile
+s-d07;six;Catastrophes naturelles
+s-d08;six;Vol et vandalisme
+s-d09;six;Vol et vandalisme
+s-d10;six;Incendie, explosion
+s-d11;six;Autres (juridique, assistance, accidents, objets)
+s-d12;six;Vol et vandalisme
+s-d13;six;Dégâts des eaux
+s-d14;six;Vol et vandalisme
+s-d15;six;Incendie, explosion
+s-d16;six;Responsabilité civile
+s-d17;six;Tempête, grêle, neige
+s-d18;six;Autres (juridique, assistance, accidents, objets)
+s-d19;six;Catastrophes naturelles
+s-d20;six;Responsabilité civile

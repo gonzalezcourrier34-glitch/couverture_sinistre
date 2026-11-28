@@ -179,6 +179,7 @@ def test_la_stabilite_compare_les_passes_d_un_jeu(tmp_path):
     assert "3 passes (1, 2, 3) · 2 cas communs" in sortie
     assert "instables : 1 sur 2 — b NON_COUVERT → INCERTAIN → NON_COUVERT" in sortie
     assert "justes : 2, 1, 2" in sortie and "même décision, autres clauses : 1 sur 1 — a" in sortie
+    assert "toutes passes : 83 % [44–97]" in sortie, "5 justes sur 6 analyses, avec leur marge (7.234)"
     assert "Aucun bilan" in juger.stabilite(tmp_path, "quatre", "m")
     assert "2 passes (2, 3) · 2 cas communs" in juger.stabilite(tmp_path, "cinq", "m", depuis=2)
 
@@ -697,3 +698,13 @@ def test_le_choix_des_clauses_a_rejuger(base):
     doute = [Jugement("3.1.6.1", "a_verifier", question="?"), Jugement("3.1.2.1", "couvre")]
     assert clauses.a_rejuger(doute, attendues) == {"2.10", "3.1.6.1", "3.1.6.2"}
     assert clauses.a_rejuger([Jugement("3.1.2.1", "couvre")], attendues) == set()
+
+
+def test_un_taux_se_donne_avec_sa_marge():
+    """7.234 : sur vingt ou soixante cas, un taux seul trompe. L'intervalle de Wilson reste juste près de 0 et de 1."""
+    from couverture.mesure.evaluation import en_pourcents, intervalle
+
+    assert en_pourcents(53, 60) == "88 % [78–94]" and en_pourcents(46, 60) == "77 % [65–86]"
+    bas, haut = intervalle(0, 60)
+    assert bas == 0 and round(haut, 3) == 0.060, "aucun couvert à tort sur 60 : jusqu'à 6 %"
+    assert intervalle(0, 0) == (0.0, 1.0) and en_pourcents(0, 0) == "—"

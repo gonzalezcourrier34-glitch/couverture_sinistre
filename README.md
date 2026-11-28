@@ -119,7 +119,7 @@ La méthode d'évaluation est la partie qui a le plus changé mes conclusions. E
 
 **Une mesure, une seule fois.** Le code est figé avant ; le jeu est passé une fois (trois pour la chaîne de règles, rapide et un peu variable) ; les chiffres s'écrivent tels quels ; le jeu devient alors « vu », et un nouveau tour de corrections en demande un neuf. Et pour chaque règle que j'essaie, le critère qui la fera garder ou retirer est écrit avant de la mesurer.
 
-Ce que cette méthode ne garantit pas : les réponses attendues viennent d'annotateurs automatiques qui s'accordent, pas d'un juriste ; et vingt cas par contrat ne distinguent pas un écart de deux ou trois réponses. Détail des métriques et des seuils : [la fiche métriques](docs/METRIQUES.md) ; le raisonnement : [COMPRENDRE, section 3](docs/COMPRENDRE.md#3-comment-je-juge--la-méthode-et-les-métriques-dévaluation).
+Ce que cette méthode ne garantit pas : les réponses attendues viennent d'annotateurs automatiques qui s'accordent, pas d'un juriste ; et vingt cas par contrat ne distinguent pas un écart de deux ou trois réponses ; enfin, les jeux ne suivent pas la répartition réelle des sinistres : 13 % de dégâts des eaux, contre 40 % dans la réalité ([la comparaison](docs/METRIQUES.md#6-ce-que-valent-les-chiffres)). Un [dossier de relecture](docs/relecture/DOSSIER_RELECTURE.md) attend un gestionnaire : trente cas, une case à cocher chacun. Détail des métriques et des seuils : [la fiche métriques](docs/METRIQUES.md) ; le raisonnement : [COMPRENDRE, section 3](docs/COMPRENDRE.md#3-comment-je-juge--la-méthode-et-les-métriques-dévaluation).
 
 ### 4. Les deux questions de l'énoncé
 
@@ -153,6 +153,7 @@ Les réponses attendues ont été établies d'après le texte des conditions gé
 | « À préciser » au lieu d'une réponse | 9 | 6 |
 | Durée d'une analyse | 3,5 à 5,2 s (médiane) | 177 s (médiane ; 71 à 366 s) |
 
+- **Avec leurs marges** (intervalle de confiance à 95 %) : 53 sur 60, c'est 88 % [78–94] ; 40,3 sur 60, 67 % [54–77] ; aucun couvert à tort sur 60, c'est moins de 6 %, pas « jamais ». [Les marges de chaque résultat](docs/METRIQUES.md#6-ce-que-valent-les-chiffres).
 - **Treize réponses justes de plus, sur le même jeu.** Sur « quatre », l'écart (trois) ne se distinguait pas du hasard ; celui-ci est quatre fois plus grand, et il va dans le même sens sur les trois contrats.
 - **Aucun couvert à tort.** La chaîne de règles en fait 4,7 sur les mêmes cas.
 - **Un seul refus à tort** (`c-b08`) : des clés volées dans un sac, au café ; on demandait le changement des serrures, et la lecture a appliqué l'exclusion des vols à la tire hors du bâtiment.

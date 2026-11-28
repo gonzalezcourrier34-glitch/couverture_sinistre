@@ -19,6 +19,27 @@ from collections import Counter
 from pathlib import Path
 
 
+def intervalle(k: float, n: int, z: float = 1.96) -> tuple[float, float]:
+    """L'intervalle de confiance d'une proportion k / n (Wilson, 95 % par défaut), en fractions.
+
+    Sur vingt ou soixante cas, un taux seul trompe : 53 sur 60, c'est 88 %, mais aussi bien 78 % que 94 %. Wilson plutôt
+    que l'approximation normale : elle reste juste près de 0 et de 1 (aucun couvert à tort sur 60, c'est jusqu'à
+    6 %) (7.234)."""
+    if n <= 0:
+        return 0.0, 1.0
+    p = k / n
+    d = 1 + z * z / n
+    centre = (p + z * z / (2 * n)) / d
+    demi = z * ((p * (1 - p) / n + z * z / (4 * n * n)) ** 0.5) / d
+    return max(0.0, centre - demi), min(1.0, centre + demi)
+
+
+def en_pourcents(k: float, n: int) -> str:
+    """« 88 % [78–94] » : le taux et son intervalle de confiance à 95 %."""
+    bas, haut = intervalle(k, n)
+    return f"{100 * k / n:.0f} % [{100 * bas:.0f}–{100 * haut:.0f}]" if n else "—"
+
+
 def lire_jsonl(chemin: str | Path) -> list[dict]:
     """Lit un fichier JSON Lines : un objet par ligne non vide."""
     with open(chemin, encoding="utf-8") as f:

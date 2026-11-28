@@ -20,7 +20,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 from ..contrat.base import Base
-from ..mesure.evaluation import JEUX_FERMES, JEUX_JAMAIS_VUS, charger_cas, fichiers_jeu
+from ..mesure.evaluation import JEUX_FERMES, JEUX_JAMAIS_VUS, charger_cas, en_pourcents, fichiers_jeu
 
 
 def ajouter(sous) -> None:
@@ -222,7 +222,8 @@ def _bilan(lignes: list[dict], envoyes: int, recus: int, secondes: float) -> str
     a_tort = [l["id"] for l in lignes if l["obtenu"] == "COUVERT" and not l["juste"]]
     refus = [l["id"] for l in lignes if l["obtenu"] == "NON_COUVERT" and not l["juste"]]
     prudents = [l["id"] for l in lignes if l["obtenu"] in ("INCERTAIN", "ERREUR") and not l["juste"]]
-    return (f"{justes}/{n} réponses justes ou admises. Couverts à tort : {len(a_tort)} {a_tort or ''} ; refus à tort : "
+    return (f"{justes}/{n} réponses justes ou admises ({en_pourcents(justes, n)}, intervalle de confiance à 95 %). "
+            f"Couverts à tort : {len(a_tort)} {a_tort or ''} ; refus à tort : "
             f"{len(refus)} {refus or ''} ; « à préciser » ou erreur à la place d'une réponse : {len(prudents)} "
             f"{prudents or ''}\nTokens : {envoyes} envoyés, {recus} reçus ; {secondes:.0f} s en tout"
             + (f", {secondes / n:.0f} s par cas." if n else "."))
@@ -259,7 +260,8 @@ def stabilite(dossier: Path, jeu: str, modele: str, contrat: str | None = None, 
         refus = [sum(x[i]["obtenu"] == "NON_COUVERT" and not x[i]["juste"] for i in communs) for x in cas]
         lignes.append(f"{c} · {len(numeros)} passe{'s' * (len(numeros) > 1)} ({', '.join(map(str, numeros))}) · "
                       f"{len(communs)} cas communs")
-        lignes.append(f"  justes : {', '.join(map(str, justes))} (moyenne {sum(justes) / len(justes):.1f}) · "
+        lignes.append(f"  justes : {', '.join(map(str, justes))} (moyenne {sum(justes) / len(justes):.1f} ; "
+                      f"toutes passes : {en_pourcents(sum(justes), len(communs) * len(cas))}) · "
                       f"couverts à tort : {', '.join(map(str, a_tort))} · refus à tort : {', '.join(map(str, refus))}")
         lignes.append(f"  instables : {len(instables)} sur {len(communs)}"
                       + (" — " + " ; ".join(f"{i} {' → '.join(x[i]['obtenu'] for x in cas)}" for i in instables)

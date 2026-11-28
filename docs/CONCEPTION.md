@@ -122,6 +122,10 @@ la première passe avait eu de la chance. Elle varie d'une passe à l'autre, mai
 - **Pas de comparaison avec une solution simple** (un seul appel avec tout le contrat) sur les mêmes jeux : je ne sais
   pas chiffrer ce que l'architecture apporte par rapport à elle.
 - **Seulement de l'habitation**, quatre contrats, dont deux traduits en règles en partie, par choix.
+- **Des jeux qui ne ressemblent pas aux sinistres réels.** Les dégâts des eaux font 40 % des sinistres habitation et 13 %
+  de nos cas ; les vols, les incendies et les catastrophes naturelles sont deux à six fois trop représentés. Pondérée
+  par la fréquence réelle, la justesse change peu (83 % → 81 % environ), mais elle repose sur des catégories peu testées
+  ([la comparaison](METRIQUES.md#6-ce-que-valent-les-chiffres)).
 
 ## 5. Ce qu'il faudrait pour la production
 
@@ -153,9 +157,11 @@ contresignature passer la main au gestionnaire ailleurs.
 ## 6. La suite, dans l'ordre
 
 1. **Faire relire les jeux de test par un gestionnaire.** Même une demi-heure sur dix cas par contrat dirait si mes
-   « bonnes réponses » sont celles du métier. C'est la première chose à faire, avant tout nouveau réglage.
+   « bonnes réponses » sont celles du métier. C'est la première chose à faire, avant tout nouveau réglage. Le dossier
+   est prêt : trente cas, une case à cocher chacun ([dossier de relecture](relecture/DOSSIER_RELECTURE.md)).
 2. **Partir de vraies déclarations** : lesquelles reviennent le plus, où sont les vraies difficultés. Les jeux actuels
-   sont écrits pour être variés, pas représentatifs.
+   sont écrits pour être variés, pas représentatifs : le prochain suivra la répartition réelle des sinistres, avec 40 %
+   de dégâts des eaux.
 3. **Des jeux plus grands** (100 à 200 cas par contrat), plusieurs passes systématiques, moyenne et dispersion.
 4. **Comparer à des solutions simples**, sur les mêmes cas : un appel avec tout le contrat ; une recherche suivie d'un
    seul jugement. Si l'une fait aussi bien, simplifier.

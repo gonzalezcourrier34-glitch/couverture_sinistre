@@ -437,6 +437,49 @@ poste) : 2 incertains sur 16 tranchables par une ou deux questions, 8 questions 
 
 ## 6. Ce que valent les chiffres
 
+**Les marges des résultats principaux** (28 nov., 7.234). Intervalle de confiance à 95 %, méthode de Wilson, qui reste
+juste près de 0 et de 1. `couverture juger` l'affiche maintenant à la fin de chaque passe et de `--stabilite`
+(`mesure.evaluation.intervalle`).
+
+| Résultat | Taux | Intervalle à 95 % | Ce qu'on peut en dire |
+|---|---|---|---|
+| Jeu « cinq », lecture des clauses : 53 justes sur 60 | 88 % | 78–94 % | le niveau d'une passe heureuse |
+| Jeu « cinq », chaîne de règles : 40,3 sur 60 (moyenne de 3) | 67 % | 54–77 % | les deux intervalles se touchent à peine ; sur les mêmes cas, treize réponses d'écart, dans le même sens sur les trois contrats : l'écart est réel |
+| Stabilité, lecture des clauses : 74 justes sur 90 analyses (30 cas, 3 passes) | 82 % | 73–89 % | le niveau à attendre ; les passes portent sur les mêmes cas, la marge réelle est un peu plus large |
+| Jeu « six », lecture des clauses (consigne v2) : 46 sur 60 | 77 % | 65–86 % | un jeu plus difficile ; ne se compare pas à « cinq » au point près |
+| Couverts à tort, lecture des clauses : 0 sur 60 (« cinq ») | 0 % | 0–6 % | « aucun » veut dire « moins de 6 % », pas « jamais » |
+| Couverts à tort, lecture des clauses : 1 sur 60 (« six ») | 2 % | 0–9 % | |
+| Couverts à tort, chaîne de règles : 4,7 sur 60 (« cinq ») | 8 % | 3–17 % | |
+
+Ce que les marges disent du projet : à vingt cas par contrat, un contrat seul ne se juge pas (19 sur 20, c'est entre
+76 et 99 %) ; à soixante, on distingue la lecture des clauses de la chaîne de règles, pas deux versions de la lecture
+des clauses. Pour régler une consigne au point près, il faudrait des jeux de 200 à 300 cas (une marge d'environ ± 5
+points).
+
+**Nos jeux ressemblent-ils aux sinistres réels ?** (28 nov., 7.235). Les 365 cas des six jeux, classés à la main
+par catégorie de sinistre (`data/repartition/`), comparés à la répartition publiée par France Assureurs pour 2025 :
+
+| Catégorie | Dans nos jeux | Dans la réalité | Lecture des clauses : justes (300 analyses de « cinq » et « six ») |
+|---|---|---|---|
+| Dégâts des eaux | 13 % | **40 %** | 77 % [60–89] |
+| Dommages électriques | 5 % | 11 % | 84 % [62–94] |
+| Tempête, grêle, neige | 8 % | 9 % | 100 % [84–100] |
+| Responsabilité civile | 13 % | 9 % | 87 % [76–94] |
+| Vol et vandalisme | 19 % | 8 % | 86 % [75–93] |
+| Bris de glace | 7 % | 8 % | 56 % [33–77] |
+| Incendie, explosion | 10 % | 4 % | 74 % [57–86] |
+| Catastrophes naturelles | 6 % | 1 % | 90 % [60–98] |
+| Autres (juridique, assistance, accidents, objets) | 20 % | 10 % | 85 % [73–92] |
+
+- **Le sinistre le plus fréquent est le moins testé.** Les dégâts des eaux font 40 % des sinistres réels et 13 % de nos
+  cas ; sur « cinq » et « six », 13 cas seulement, et une justesse plutôt plus basse que la moyenne. Les vols, les
+  incendies et les catastrophes naturelles, plus faciles à imaginer, sont deux à six fois trop représentés.
+- **Pondérée par la fréquence réelle**, la justesse de la lecture des clauses passe de 83 % à environ 81 % : peu
+  d'écart, mais il repose sur les catégories où nos cas sont rares.
+- Les marges par catégorie sont trop optimistes : elles comptent les passes d'un même cas comme des cas distincts.
+- **Conséquence** : le prochain jeu doit suivre la répartition réelle, avec au moins 40 % de dégâts des eaux, et viser
+  les bris de glace (la catégorie la plus faible).
+
 - **Taille** : un cas pèse 1,5 point. Sur 68 cas, 85 % a une marge d'environ ± 8 points ; sur 97, d'environ ± 7. Les écarts de
   2 ou 3 points se lisent **cas par cas** (le rapport du banc les liste), pas en pourcentage.
 - **Variance** : la lecture varie d'une exécution à l'autre même à température 0 ; on présente la

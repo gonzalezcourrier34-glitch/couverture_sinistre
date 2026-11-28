@@ -6721,6 +6721,35 @@ un schéma, les choix et les alternatives écartées, les chiffres clés avec le
 95 %), ce qu'il faudrait pour la production (humain dans la boucle, RGPD, suivi, ajout d'un contrat) et la suite, dans
 l'ordre, en commençant par faire relire les jeux par un gestionnaire.
 
+### 7.234 Chaque taux avec sa marge
+
+*28 novembre, après-midi.* Point 2 de la liste « ce qu'un professionnel aurait fait mieux » : à vingt ou soixante cas,
+un taux seul trompe. `mesure.evaluation.intervalle` donne l'intervalle de confiance à 95 % (Wilson, juste près de
+0 et de 1) ; `couverture juger` l'affiche à la fin de chaque passe et de `--stabilite`. Les résultats principaux sont
+repris avec leurs marges dans la fiche métriques (§ 6) et le README : 53 sur 60, c'est 88 % [78–94] ; aucun couvert à
+tort sur 60, c'est moins de 6 %, pas « jamais ». Ce qu'elles disent : à soixante cas, on distingue la lecture des
+clauses de la chaîne de règles, pas deux versions de la lecture des clauses ; il faudrait 200 à 300 cas pour une
+marge d'environ ± 5 points. Deux tests. Aucun appel au modèle.
+
+### 7.235 Partir des données et du métier
+
+*28 novembre, début d'après-midi.* Point 1 de la liste « ce qu'un professionnel aurait fait mieux ».
+
+**Nos jeux comparés aux sinistres réels.** Les 365 cas des six jeux, classés à la main par catégorie de sinistre
+(un classement par mots-clés se trompait une fois sur cinq), comparés à la répartition publiée par France Assureurs
+pour 2025 (`data/repartition/`, fiche métriques § 6). Les dégâts des eaux font 40 % des sinistres réels et 13 % de nos
+cas ; les vols (19 % contre 8 %), les incendies (10 % contre 4 %) et les catastrophes naturelles (6 % contre 1 %) sont
+trop représentés : les agents qui écrivent les cas cherchent la variété, pas la fréquence. Sur les 300 analyses de la
+lecture des clauses (« cinq » et « six »), la justesse par catégorie pondérée par la fréquence réelle donne environ 81 %
+au lieu de 83 % ; les bris de glace sont les plus faibles (56 %, sur peu de cas). Le prochain jeu suivra la répartition
+réelle.
+
+**Un dossier de relecture pour un gestionnaire** (`docs/relecture/`, en PDF pour l'imprimer). Trente cas de « cinq » et
+« six », dix par contrat : tous ceux où la lecture des clauses a contredit franchement la réponse retenue (marqués ★),
+puis au moins trois couverts, trois refus et trois « à préciser » par contrat, de préférence des dégâts des eaux. Pour
+chacun : la déclaration, la réponse retenue, l'extrait du contrat, la raison, et une case d'accord à cocher ; en tête,
+les conventions et trois questions sur le métier. Environ trente minutes. Reste à trouver la personne.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 26 nov. 2026, après la mesure du jeu « cinq ». Dans l'ordre où je le ferais.
