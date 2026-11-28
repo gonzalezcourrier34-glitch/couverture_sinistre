@@ -775,3 +775,19 @@ def test_un_texte_long_se_coupe_sur_une_fin_de_mot():
     assert couper("Dégradations suite à des actes de vol, vandalisme et malveillance", 55) == \
         "Dégradations suite à des actes de vol, vandalisme et…"
     assert couper("court", 55) == "court"
+
+
+def test_une_garantie_oubliee_par_la_designation_mais_jugee_entre_au_dossier(base):
+    """7.245 : la désignation n'a pas retenu le vol ; le modèle juge pourtant sa garantie « à vérifier ». Le jugement
+    n'est plus jeté : la garantie entre au dossier, ce qui lui manque est redemandé, et la question reste posée."""
+    designation = {"chapitres": ["3.1.2"], "motif": ""}
+    premier = {"jugements": [{"clause": "3.1.6.1", "effet": "a_verifier", "portee": "garantie",
+                              "extrait_contrat": "Le vol par effraction d'objets personnels.",
+                              "question": "Y a-t-il eu effraction ?"}],
+               "sans_effet": ["3.1.2", "3.1.2.1", "3.1.2.2", "2.10", "2.11"]}
+    relance = {"jugements": [], "sans_effet": ["3.1.6.2"]}
+    modele = Modele(designation, premier, relance)
+    lu = clauses.lire(base, "c1", modele, "On m'a volé mon sac dans le vestiaire.")
+    assert lu.appelees == ["§4"] and "§4" in lu.garanties
+    assert lu.etat.decision == Decision.INCERTAIN and lu.etat.questions == ["Y a-t-il eu effraction ?"]
+    assert "[3.1.6.2] (à juger)" in modele.recus[2][1], "la relance demande ce qui manque à la garantie ajoutée"

@@ -6980,6 +6980,37 @@ la règle sur les biens d'un autre corrige un vrai refus à tort, mais elle est 
 ont été mesurées ensemble. La suite serait de mesurer la première seule, sur un jeu neuf, plusieurs passes ; pas avant
 l'envoi. Le refus à tort de la fuite reste donc possible en ligne, et il est écrit dans les limites.
 
+### 7.245 Relu dans les réponses brutes : la v3 posait les bonnes questions
+
+*28 novembre, 17 h.* Avant de jeter la v3, j'ai lu les réponses brutes du modèle sur les trois cas où elle faisait
+pire. **Dans les trois, elle avait posé la bonne question** ; c'est la suite qui l'a perdue :
+- `s-b18` (une cave à vin grillée par la foudre, d'âge inconnu) : l'exclusion des appareils de plus de quinze ans est
+  bien « à vérifier », avec sa question. Mais le modèle a aussi jugé que la garantie incendie (« la chute de la
+  foudre ») couvrait ; la logique fixe dit qu'une garantie qui couvre sans doute suffit, et retire la question de
+  l'autre. Le défaut est ce second « couvre », trop généreux : une carte grillée par une surtension relève de
+  l'électricité ;
+- `s-d06` (un promeneur blessé sur un terrain de trois hectares) : le même mécanisme, avec une seconde garantie de
+  responsabilité ;
+- `s-d15` (un téléviseur qui prend feu) : la question sur la formule de la garantie des dommages électriques est
+  posée, mais ce chapitre n'avait pas été désigné : **le code jetait un jugement porté hors du dossier**, et il ne
+  restait que l'exclusion de l'incendie, d'où un refus.
+
+Ma lecture de 7.244 (la seconde règle aurait fait lâcher une condition) était donc fausse : les conditions ont été
+demandées. Les écarts viennent de la lecture, qui varie d'une passe à l'autre, et de deux faiblesses de la logique
+que la v2 a aussi. Le critère a tranché sur un seul passage, c'est-à-dire en partie sur du bruit.
+
+**Corrigé dans le code** (`clauses.garanties_appelees`, un test) : quand le modèle juge « couvre » ou « à vérifier »
+une clause propre d'une garantie que la désignation avait oubliée, cette garantie entre au dossier avec toutes ses
+clauses attendues ; ses jugements comptent, et ce qui lui manque est redemandé avec les autres oublis (deux
+garanties au plus). La réponse le dit (« garanties ajoutées au dossier… »). Cela vaut pour la v2 comme pour la v3.
+**Laissé** : le « couvre » trop généreux sur une seconde garantie, qui demande une règle de lecture de plus, donc une
+autre mesure.
+
+**Ce qui départagera la v2 et la v3**, avec ce code : les dix cas qui ont changé entre elles, repassés avec l'une et
+l'autre (`--passage 3`, et `--consigne-jugement v3`), environ 2 $. Critère écrit avant : la v3 revient en service si,
+sur ces dix cas, elle ne fait pas plus de « couvert » à tort que la v2 et au moins autant de réponses justes ; sinon
+la v2 reste. Dix cas, une passe chacune : un indice, pas une preuve, et dit comme tel.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 28 nov. 2026, après la comparaison à un seul appel. Dans l'ordre où je le ferais (le document de
@@ -7283,3 +7314,4 @@ sur les jeux écrits sans voir les règles, d'à peu près la moitié, l'autre v
 228. Mesurer la solution simple avant de construire, et la garder à côté : ici, un seul appel répondait aussi juste pour quatre fois moins cher ; ce que la construction apporte se lit dans le sens des erreurs, pas dans leur nombre.
 229. Une déclaration difficile tapée à la main montre ce que les jeux ne montrent pas : deux erreurs des règles sur trois sinistres, l'une arrêtée par la lecture des clauses, l'autre qui coûte une réponse juste, et un client laissé sans question.
 230. Deux règles ajoutées ensemble se mesurent ensemble : celle qui corrigeait le cas vu est venue avec une autre, le jeu a reculé, et l'on ne sait pas laquelle a coûté. Une correction à la fois.
+231. Avant de conclure qu'une consigne fait pire, lire les réponses brutes : ici, elle posait les bonnes questions, et c'était le code qui les perdait.

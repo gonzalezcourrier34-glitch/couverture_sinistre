@@ -401,6 +401,8 @@ def resultat_clauses(base: Base, contrat_id: str, sinistre: str, lu, decision, d
                      for j in [*e.couvrent, *e.excluent, *e.limitent, *e.a_verifier]]
     if lu.ajoutes:
         raisonnement.append(f"Chapitres ajoutés d'après les garanties trouvées par les règles : {', '.join(lu.ajoutes)}")
+    if lu.appelees:
+        raisonnement.append("Garanties ajoutées au dossier, le modèle en ayant jugé une clause : " + ", ".join(lu.appelees))
     if lu.relancees:
         raisonnement.append(f"Clauses redemandées au modèle, faute de jugement : {', '.join(lu.relancees)}")
     if lu.rejugees:

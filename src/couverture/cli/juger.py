@@ -108,6 +108,8 @@ def _afficher(lecture, detail: bool) -> list[str]:
             lignes.append(f"  [{nom}] {j.clause_id} : « {j.extrait_contrat[:110]} »{suite}")
             if detail and j.extrait_declaration:
                 lignes.append(f"           d'après : « {j.extrait_declaration} »")
+    if lecture.appelees:
+        lignes.append(f"  garanties ajoutées au dossier, le modèle en ayant jugé une clause : {', '.join(lecture.appelees)}")
     if lecture.relancees:
         lignes.append(f"  clauses redemandées au modèle (un appel de plus) : {', '.join(lecture.relancees[:12])}")
     if e.manquants:

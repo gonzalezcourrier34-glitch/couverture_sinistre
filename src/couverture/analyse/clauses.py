@@ -175,6 +175,33 @@ class Lecture:
     # Les jugements sur lesquels la décision repose : gardés pour la relecture après les réponses du client (13.4).
     jugements: list[jugement.Jugement] = field(default_factory=list)
     rejugees: list[str] = field(default_factory=list)   # à cette relecture, les seules clauses redemandées au modèle
+    appelees: list[str] = field(default_factory=list)   # les garanties ajoutées parce que le modèle en a jugé une clause
+
+
+# Au plus deux garanties ajoutées d'après les jugements : au-delà, le modèle juge tout le contrat, et la désignation n'a
+# plus de sens.
+MAX_APPELEES = 2
+
+
+def garanties_appelees(base, contrat_id: str, jugements: list[jugement.Jugement], touchees: list[str]) -> list[str]:
+    """Les garanties hors du dossier dont le modèle a jugé une clause propre « couvre » ou « à vérifier » (7.245).
+
+    La désignation peut oublier un chapitre que le modèle, en jugeant, reconnaît pourtant : vu sur « six », un téléviseur
+    qui prend feu, la garantie incendie exclue, et la question juste posée sur la garantie des dommages électriques,
+    qui n'était pas au dossier ; le code jetait ce jugement, et la réponse devenait un refus. Une clause propre est une
+    clause de la garantie même (pas une exclusion générale, une définition, un chapeau ou un renvoi, qu'elle emprunte)."""
+    garanties_de: dict[str, list[str]] = {}
+    for a in attendu.attendues(base, contrat_id):
+        if a.role not in jugement.EMPRUNTS:
+            garanties_de.setdefault(a.clause_id, []).append(a.garantie)
+    appelees: list[str] = []
+    for j in jugements:
+        if j.effet not in ("couvre", "a_verifier"):
+            continue
+        for g in garanties_de.get(j.clause_id, []):
+            if g not in touchees and g not in appelees:
+                appelees.append(g)
+    return appelees[:MAX_APPELEES]
 
 
 def a_rejuger(precedents: list[jugement.Jugement], attendues: list) -> set[str]:
@@ -305,6 +332,16 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | C
     gardes, defauts = jugement.controler(rendus, pieces, declaration)
     if rejugees:
         gardes = [j for j in gardes if j.clause_id in a_juger]
+    appelees = [] if rejugees else garanties_appelees(base, contrat_id, rendus, touchees)
+    if appelees:
+        # Le modèle a jugé une clause d'une garantie oubliée : elle entre au dossier avec toutes ses clauses attendues,
+        # ses jugements comptent, et ce qui lui manque est redemandé avec les oublis, plus bas (7.245).
+        touchees = touchees + appelees
+        attendues = [a for g in touchees for a in attendu.attendues(base, contrat_id, g)]
+        ids = {a.clause_id for a in attendues}
+        pieces = [c for c in clauses if c.id in ids or c.id in lexique]
+        a_juger = {a.clause_id for a in attendues if a.bloque}
+        gardes, defauts = jugement.controler(rendus, pieces, declaration)
     # La jointure dit ce qui manque ; on le redemande une fois, pour ces clauses seulement (7.194) : un oubli parmi
     # quatre-vingts clauses, ou une citation inexacte, ne doit pas coûter la réponse entière.
     oubliees = a_juger - {j.clause_id for j in gardes}
@@ -367,4 +404,4 @@ def lire(base, contrat_id: str, llm: LLM, declaration: str, regles: Decision | C
     # Gardés pour la relecture suivante (13.4) : une question du règlement y est déjà « sans effet », elle ne fait pas
     # rejuger sa garantie.
     return Lecture(etat, designes, touchees, pieces, decision, desaccord, relancees, rappels, revue, ajoutes,
-                   gardes, rejugees)
+                   gardes, rejugees, appelees)
