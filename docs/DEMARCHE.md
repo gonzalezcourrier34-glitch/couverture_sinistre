@@ -6910,6 +6910,17 @@ l'affichage. La citation de 2.11 qui s'arrête avant son objet est l'extrait cho
 court : le contrôle vérifie qu'une citation existe, pas qu'elle se suffit (le même défaut que les refus cités hors
 de propos, 7.207).
 
+### 7.242 La v22 en ligne, et la même déclaration repassée
+
+*28 novembre, 15 h 45.* Commit `f99bb06`, 352 tests passés (un ignoré sous Windows), image v22 : le site tourne sur le
+dernier code. La déclaration à trois sinistres de 7.241, repassée chez A : trois « à préciser », aucun « couvert »,
+une question au moins par sinistre. Le titre de 2.11 se coupe sur un mot (« vandalisme et… ») ; la réserve du vol dit
+d'où elle vient (« art. 7.1 : « déposer immédiatement plainte… » »). Pour la fuite, la lecture des clauses a cette fois
+jugé elle-même l'exclusion 1.4 « à vérifier », avec sa question (« la fuite résultait-elle d'une usure… ? ») : le
+modèle ne lit pas deux fois de la même façon, et la correction de 7.241, qui ne joue que si la lecture couvre seule,
+n'a pas eu à servir ici. Elle reste couverte par son test. La question ne distingue pas encore le joint du voisin d'un
+bien de l'assuré : c'est la limite de l'exclusion elle-même, que seule une relecture humaine tranche.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 28 nov. 2026, après la comparaison à un seul appel. Dans l'ordre où je le ferais (le document de
