@@ -6750,6 +6750,55 @@ puis au moins trois couverts, trois refus et trois « à préciser » par contra
 chacun : la déclaration, la réponse retenue, l'extrait du contrat, la raison, et une case d'accord à cocher ; en tête,
 les conventions et trois questions sur le métier. Environ trente minutes. Reste à trouver la personne.
 
+### 7.236 Trois questions relues dans les sorties déjà payées
+
+*28 novembre, après-midi.* Points 3, 2 et 4 de la même liste, sans aucun appel nouveau : tout se relit dans les sorties
+de `juger` des passes de « cinq » et de « six » (fiche métriques § 6).
+
+**Les règles servent-elles ?** Le motif de chaque ligne dit ce que la lecture des clauses concluait avant la
+contresignature. Sur 360 analyses : avec elle, 298 justes, un couvert à tort, six refus à tort, 55 « à préciser » de
+trop ; sans elle, 323 justes, neuf couverts à tort, douze refus à tort, seize. Mais l'écart se range par contrat :
+sur A et B, traduits en entier, la contresignature ne coûte aucune réponse juste (215 contre 212) et retire sept
+couverts à tort et six refus à tort ; sur D, traduit en partie par choix, elle change 28 réponses justes en « à
+préciser » pour un seul couvert à tort évité. La traduction en règles vaut donc ce que vaut sa couverture du contrat.
+Je garde la contresignature ; la piste est de ne contresigner que les garanties traduites. Limite : sans
+contresignature, la suite de la lecture aurait pu changer (la relecture ciblée des refus part d'un désaccord) ; c'est
+une estimation.
+
+**Plusieurs passes.** Quatre passes complètes de « cinq » : 53, 51, 48 et 52 sur 60, moyenne 51, écart-type 2,2 ; cinq
+erreurs du fournisseur dans les passes 5 et 6, relancées depuis. Aucun couvert à tort sur 240. 45 cas justes à chaque
+passe, sept jamais (six de D, ceux que la contresignature retient, et `c-b08`), huit parfois. Un seul cas passe de
+« couvert » à « non couvert » (`c-a06`, deux réponses admises). La première passe était la meilleure : le chiffre à
+annoncer est 51, soit 85 %.
+
+**Le coût et le temps réels.** Sur 384 analyses : 167 s en médiane, 305 s au 95e centile (de 71 à 446 s) ; 8,0
+centimes en médiane, 8,6 en moyenne, 13,2 au 95e centile, 21 au plus. 69 % du coût vient de ce que le modèle écrit
+(13 000 tokens en médiane), pas du dossier envoyé (25 700, dont un tiers repris du cache). B, le contrat le plus long,
+coûte 9,9 centimes, A 7,2. Le levier, pour le coût comme pour l'attente, est la réflexion du modèle.
+
+Mis à jour : la fiche métriques (§ 6), le document de conception (tableaux et suite), le README (section 5).
+
+### 7.237 La référence « chatbot », prête à passer
+
+*28 novembre, après-midi.* Le dernier point de la liste : comparer à une solution simple. Toute la construction de la
+lecture des clauses (désigner, composer un dossier, juger clause par clause, décider par une logique fixe) ne se
+justifie que si elle fait mieux qu'un seul appel avec tout le contrat. Cette référence existait au début (la méthode
+`brut`, 7.36) et a été retirée en 7.110 sans avoir été passée sur les jeux de mesure.
+
+**Ce qui est écrit.** `analyse/brut.py` et `couverture juger --brut` : la consigne d'alors, reprise telle qu'archivée
+(`document-brut` v1, rien d'ajouté, pour mesurer la référence et non une version améliorée), le contrat entier dans
+l'ordre du document puis la déclaration, un appel à Mistral Large. La décision du modèle est gardée telle quelle ;
+le bilan compte en plus les réponses fermes dont aucun extrait ne se retrouve dans le contrat, ce que la lecture des
+clauses aurait refusé. Même format de bilan que `juger` (suffixe `_brut`), donc la comparaison se fait sur les mêmes
+cas, avec les mêmes annotations. Un test, avec un modèle factice.
+
+**Le coût annoncé avant de lancer.** Le message pèse 127 000 caractères pour A, 315 000 pour B, 274 000 pour D, soit
+environ 35 000, 85 000 et 75 000 tokens. Le début de l'envoi est le même pour tous les cas d'un contrat : le
+fournisseur doit le reprendre de son cache (0,14 $ le million au lieu de 1,36), à condition de passer les cas l'un
+après l'autre. Pour les dix premiers cas de « cinq » par contrat, ceux qui ont déjà six passes de la lecture des
+clauses : entre 1,5 $ (cache repris) et 3,5 $ (sans cache). Je commence par dix cas de A, moins de 0,6 $ au pire, pour
+lire le taux de cache et la longueur des réponses avant d'engager le reste.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 26 nov. 2026, après la mesure du jeu « cinq ». Dans l'ordre où je le ferais.
@@ -6757,7 +6806,8 @@ Tenu à jour le 26 nov. 2026, après la mesure du jeu « cinq ». Dans l'ordre o
 **0. La lecture des clauses, après sa mesure sur le jeu « cinq » (7.215).** Ce jeu a servi lui aussi : chaque point
 demande un jeu neuf.
 - Mesurer le mode sans contresignature, sur un contrat sans règles traduites : la condition pour dire qu'elle s'étend à
-  un contrat nouveau. Le jeu « cinq » le suggère (chez D, six « couvert » justes retenus par la contresignature).
+  un contrat nouveau. Relu sur 360 analyses (7.236) : 90 % de justes sans elle, mais neuf couverts à tort ; à
+  essayer : ne contresigner que les garanties traduites, sur un jeu neuf.
 - Ne faire contresigner que par des règles complètes : des règles traduites en partie retiennent des réponses justes
   plus souvent qu'elles n'arrêtent une erreur (leçon 223).
 - Les refus cités hors de propos (une citation exacte, sans rapport avec ce qui est demandé) : deux relectures
@@ -6799,7 +6849,7 @@ demande un jeu neuf.
 
 **4. En ligne.**
 - Un tableau de bord et une alerte sur le journal, qui part aujourd'hui dans les journaux de l'hébergeur (7.163).
-- Le coût par analyse : relevé pour la lecture des clauses depuis 7.219 ; pas pour la chaîne de règles.
+- Le coût par analyse : relevé pour la lecture des clauses depuis 7.219 (8 centimes en médiane, 7.236) ; pas pour la chaîne de règles.
 - Le temps du premier chargement quand le service dort.
 
 **5. Le reste.**
@@ -7036,3 +7086,5 @@ demande un jeu neuf.
 223. Un contre-pouvoir vaut ce que vaut ce qui contresigne : des règles traduites en partie retiennent des réponses justes plus souvent qu'elles n'arrêtent une erreur. Le voir sur le jeu de mesure ne permet pas de le corriger sur ce jeu.
 224. Une passe unique flatte : 87 % à la première, 82 % en moyenne sur trois. Et l'instabilité se lit par son sens autant que par son nombre : sept cas qui varient entre une réponse et une question ne valent pas un seul qui varie entre « couvert » et « non couvert ».
 225. Les mesures comptent des décisions ; un essai à la main lit ce que le client voit. Un « à préciser » sans question est juste pour la mesure, et inutilisable pour le client.
+226. Avant de payer une comparaison, relire ce qu'on a déjà : le motif de chaque réponse disait ce que la méthode concluait sans sa garde, et 360 analyses répondaient gratuitement à « les règles servent-elles ? ».
+227. Le coût d'un modèle qui réfléchit est dans ce qu'il écrit, pas dans ce qu'on lui envoie : 69 % ici. Réduire le dossier ne rapporte presque rien.

@@ -86,7 +86,7 @@ sinistre, environ 350 tests, des consignes au modèle versionnées et archivées
 | Recherche par similarité des clauses (RAG classique) | écartée comme seule source du dossier | l'exclusion qui décide ne ressemble pas à la déclaration ; **une clause absente ne se trouve pas par une recherche**. D'où la liste écrite d'avance des clauses attendues par garantie |
 | Règles traduites seules (ma première hypothèse) | gardée, mais plus seule | très bonne sur les cas qui ont servi à la régler, faible sur des cas neufs : 38 justes sur 60 et 7 couverts à tort sur un troisième jeu. Une règle peut mal traduire le contrat |
 | Le modèle juge, le code décide (seconde hypothèse) | **méthode par défaut** | meilleure sur cas neufs (§ 4), lit le texte même ; plus lente et plus chère |
-| Contresignature par les règles | gardée | elle coûte des « à préciser » là où les règles sont incomplètes (contrat D), mais elle empêche des couverts à tort |
+| Contresignature par les règles | gardée | relu sur 360 analyses : là où le contrat est traduit en entier (A, B), elle ne coûte aucune réponse juste et évite sept couverts à tort et six refus à tort ; là où il l'est en partie (D), elle change 28 réponses justes en « à préciser ». Sans elle : 90 % de justes mais 9 couverts à tort, contre 83 % et 1 |
 | Deux consignes de lecture : cause seulement probable, condition non dite | gardées | sur un jeu neuf, trois couverts à tort évités pour deux réponses justes perdues |
 | Ajouter les garanties trouvées par les règles au dossier | gardé, sans effet prouvé | mesuré : aucun gain de stabilité |
 | Corriger la lecture de « personnel de maison » | retiré | la correction faisait couvrir à tort un cas, six fois sur six |
@@ -103,14 +103,14 @@ déclaré « vu ». Contrats A, B et D, vingt cas chacun. Entre crochets, l'inte
 |---|---|---|
 | Jeu « cinq » (26 nov.), réponses justes | **53 / 60 = 88 %** [78–94] | 40,3 / 60 = 67 % [54–77] |
 | Jeu « cinq », couverts à tort | **0** [0–6 %] | 4,7 en moyenne sur 3 passes |
-| Stabilité : trois passes sur 30 cas de « cinq » | 74 / 90 = 82 % [73–89] ; 7 cas sur 30 changent, jamais de « couvert » à « non couvert » | plus stable |
+| Stabilité : quatre passes complètes de « cinq » | moyenne 51 / 60 (écart-type 2,2 ; 48 à 53) ; 0 couvert à tort sur 240 ; 11 cas sur 60 changent de décision | plus stable |
 | Jeu « six » (27 nov.), plus difficile, consigne actuelle | 46 / 60 = 77 % [65–86] ; **1 couvert à tort** | non mesurée |
-| Durée d'une analyse | 2 à 3 minutes (médiane 177 s) | 4 à 5 secondes |
-| Coût d'une analyse | 8 à 10 centimes | nettement moins : deux modèles plus petits, des appels courts |
+| Durée d'une analyse (384 analyses) | médiane 167 s ; 95e centile 305 s | 4 à 5 secondes |
+| Coût d'une analyse | médiane 8,0 centimes, moyenne 8,6, 95e centile 13 ; 69 % pour ce que le modèle écrit | non relevé ; deux modèles plus petits, des appels courts |
 
 **Ce que je lis.** La lecture des clauses fait moins d'erreurs coûteuses que la chaîne de règles, et l'écart sur
-« cinq » (treize réponses, sur les mêmes cas) dépasse le hasard. Son niveau à attendre est plutôt **80 % que 88 %** :
-la première passe avait eu de la chance. Elle varie d'une passe à l'autre, mais vers la prudence : une réponse franche devient
+« cinq » (treize réponses, sur les mêmes cas) dépasse le hasard. Son niveau à attendre est la moyenne des quatre
+passes, **51 sur 60 (85 %)**, plutôt que les 53 de la première, qui était la meilleure. Elle varie d'une passe à l'autre, mais vers la prudence : une réponse franche devient
 « à préciser » ou l'inverse, jamais « couvert » au lieu de « non couvert ».
 
 **Ce qu'ils ne valent pas.**
@@ -164,7 +164,9 @@ contresignature passer la main au gestionnaire ailleurs.
    de dégâts des eaux.
 3. **Des jeux plus grands** (100 à 200 cas par contrat), plusieurs passes systématiques, moyenne et dispersion.
 4. **Comparer à des solutions simples**, sur les mêmes cas : un appel avec tout le contrat ; une recherche suivie d'un
-   seul jugement. Si l'une fait aussi bien, simplifier.
+   seul jugement. Si l'une fait aussi bien, simplifier. La lecture des clauses sans les règles est déjà chiffrée (90 %
+   de justes, mais neuf couverts à tort sur 360) : la traduction en règles ne vaut que là où elle est complète ; ne
+   contresigner que les garanties traduites est la piste suivante.
 5. **Comparer plusieurs modèles et tailles**, avec le coût et la durée comme contraintes, pas comme constats.
 6. **Simplifier** ce que la mesure ne justifie pas, et traiter deux contrats en entier plutôt que quatre en partie.
 7. Les éléments de production du § 5.

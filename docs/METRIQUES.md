@@ -480,6 +480,69 @@ par catégorie de sinistre (`data/repartition/`), comparés à la répartition p
 - **Conséquence** : le prochain jeu doit suivre la répartition réelle, avec au moins 40 % de dégâts des eaux, et viser
   les bris de glace (la catégorie la plus faible).
 
+**Que rapporte la traduction en règles ?** (28 nov., 7.236). Chaque ligne de sortie de `juger` dit ce que la lecture
+des clauses avait conclu seule, avant la contresignature des règles (son motif). Sur les 360 analyses déjà payées
+(« cinq » : passes 1 à 6 ; « six » : la consigne v2), sans aucun nouvel appel :
+
+| | Avec la contresignature (en service) | Lecture des clauses seule |
+|---|---|---|
+| Réponses justes | 298 / 360 (83 % [79–86]) | 323 / 360 (90 % [86–93]) |
+| **Couverts à tort** | **1** | **9** |
+| Refus à tort | 6 | 12 |
+| « À préciser » au lieu d'une réponse | 55 | 16 |
+
+| Par contrat | Justes avec / seule | Couverts à tort avec / seule | Refus à tort avec / seule |
+|---|---|---|---|
+| A (traduit en entier) | 110 / 111 | 0 / 3 | 1 / 1 |
+| B (traduit en entier) | 105 / 101 | 1 / 5 | 4 / 10 |
+| D (traduit en partie, par choix) | 83 / 111 | 0 / 1 | 1 / 1 |
+
+- **Là où le contrat est traduit en entier (A, B), la contresignature ne coûte rien et protège** : autant de réponses
+  justes, sept couverts à tort et six refus à tort de moins sur 240 analyses.
+- **Là où il ne l'est qu'en partie (D), elle coûte cher** : 28 réponses justes changées en « à préciser » pour un
+  couvert à tort évité. Les règles ne connaissent pas la garantie, et leur silence bloque.
+- **Ce que cela dit de la conception.** La version simple (la lecture des clauses seule) répond plus souvent juste, mais
+  promet neuf fois à tort ; la traduction en règles vaut ce que vaut sa couverture du contrat. Pistes : ne
+  contresigner que les garanties traduites, et laisser passer, avec un avertissement, une garantie que les règles
+  ignorent ; ou traduire en premier les garanties les plus fréquentes. À mesurer sur un jeu neuf.
+- Limite : l'avis « seule » est relu dans la sortie ; une contresignature absente aurait pu changer la suite de la
+  lecture (la relecture ciblée des refus, appelée par un désaccord). L'écart est donc une estimation.
+
+**Plusieurs passes du même jeu** (7.236). « Cinq » a été passé quatre fois en entier (passe 1, puis 4, 5 et 6 ; les
+passes 2 et 3 ne portaient que sur dix cas par contrat) :
+
+| Passe | Justes sur 60 | Erreurs du fournisseur | Couverts à tort |
+|---|---|---|---|
+| 1 (26 nov.) | 53 | 0 | 0 |
+| 4 (27 nov.) | 51 | 0 | 0 |
+| 5 | 48 | 4 | 0 |
+| 6 | 52 | 1 | 0 |
+| **Moyenne** | **51 (écart-type 2,2 ; 48 à 53)** | | **0 sur 240** |
+
+Hors erreurs du fournisseur (relancées depuis, 7.225), la justesse va de 85 à 88 %. Sur les 60 cas : 45 justes à
+chaque passe, 7 jamais (six de D, que la contresignature bloque, et `c-b08`), 8 parfois ; 11 changent de décision d'une
+passe à l'autre, et un seul passe de « couvert » à « non couvert » (`c-a06`, une table basse en verre, où les deux
+réponses sont admises par les annotateurs). La passe 1 était la meilleure des quatre : c'est la moyenne, 51, qu'il faut
+retenir.
+
+**Le coût et la durée réels** (7.236), relevés sur les 384 analyses de la lecture des clauses passées avec `juger`
+(sans erreur du fournisseur), au tarif de Mistral Large (1,36 $ par million de tokens envoyés, 0,14 $ repris du cache,
+4,18 $ reçus) :
+
+| | Médiane | 90e centile | 95e centile | Extrêmes |
+|---|---|---|---|---|
+| Durée d'une analyse | 167 s | 268 s | 305 s | 71 à 446 s |
+| Coût d'une analyse | 0,080 $ | | 0,132 $ | jusqu'à 0,211 $ ; moyenne 0,086 $ |
+
+- **Ce qui coûte, c'est ce que le modèle écrit** : 69 % du coût vient des tokens reçus (sa réflexion et ses
+  jugements), 13 000 en médiane ; on lui envoie 25 700 tokens en médiane, dont 35 % repris du cache.
+- **Par contrat** : A, le plus court, 7,2 centimes ; B, le plus long (dossiers jusqu'à 290 clauses), 9,9 centimes.
+- Deux appels au modèle dans 77 % des cas (désignation, jugement), trois quand une clause est redemandée.
+- Non comptés : la chaîne de règles qui contresigne (deux petits modèles, des appels courts ; son coût n'est pas relevé),
+  et la durée de l'écran.
+- Pour un gestionnaire, trois minutes et neuf centimes ; pour mille déclarations par jour, environ 86 $ par jour. Le
+  levier est la réflexion du modèle, pas le dossier envoyé.
+
 - **Taille** : un cas pèse 1,5 point. Sur 68 cas, 85 % a une marge d'environ ± 8 points ; sur 97, d'environ ± 7. Les écarts de
   2 ou 3 points se lisent **cas par cas** (le rapport du banc les liste), pas en pourcentage.
 - **Variance** : la lecture varie d'une exécution à l'autre même à température 0 ; on présente la
