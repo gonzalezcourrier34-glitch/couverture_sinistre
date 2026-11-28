@@ -708,3 +708,37 @@ def test_un_taux_se_donne_avec_sa_marge():
     bas, haut = intervalle(0, 60)
     assert bas == 0 and round(haut, 3) == 0.060, "aucun couvert à tort sur 60 : jusqu'à 6 %"
     assert intervalle(0, 0) == (0.0, 1.0) and en_pourcents(0, 0) == "—"
+
+
+def test_la_reference_brut_un_appel_avec_tout_le_contrat(base, monkeypatch, capsys, tmp_path):
+    """`juger --brut` (7.237) : la consigne archivée telle quelle, tout le contrat puis la déclaration, un seul appel ;
+    la décision du modèle n'est pas changée, mais une réponse ferme sans extrait retrouvé est comptée."""
+    import argparse
+
+    from couverture import llm
+    from couverture.analyse import brut
+    from couverture.cli import juger
+
+    avec = {"decision": "non_couvert", "justification": "objets non fixés",
+            "citations": [{"clause_id": "3.1.2.2", "extrait": "Les objets... non fixés"}]}
+    sans = {"decision": "COUVERT", "citations": [{"clause_id": "9.9", "extrait": "une phrase inventée"}]}
+    modele = Modele(avec, sans)
+    monkeypatch.setattr(llm, "MistralLLM", lambda **_: modele)
+    monkeypatch.setattr(juger, "charger_cas", lambda *_: [
+        {"id": "x1", "sinistre": DECLARATION, "attendu": "NON_COUVERT"},
+        {"id": "x2", "sinistre": DECLARATION, "attendu": "NON_COUVERT"}])
+    monkeypatch.setattr(juger, "fichiers_jeu", lambda *_: ())
+    a = argparse.Namespace(contrat="c1", sinistre=None, jeu="cinq", cas=[], modele="m", regles=False, detail=False,
+                           echantillon=0, mesure_finale=False, paralleles=1, rejouer=False, brut=True)
+    assert juger.executer(a, base, tmp_path) == 0
+    systeme, envoi = modele.recus[0]
+    assert systeme == brut.consigne() and len(modele.recus) == 2
+    assert envoi.startswith("## Conditions générales\n[") and envoi.endswith(f"## Sinistre\n{DECLARATION}")
+    assert all(f"[{c.id}]" in envoi for c in base.clauses("c1"))
+    sortie = capsys.readouterr().out
+    assert "x1 : NON_COUVERT  (attendu NON_COUVERT) — référence" in sortie and "retrouvés dans le contrat : 1 sur 1" in sortie
+    assert "x2 : COUVERT  (attendu NON_COUVERT ✗)" in sortie and "aucun extrait retrouvé dans le contrat : 1 ['x2']" in sortie
+    bilan = json.loads((tmp_path / "debug" / "juger_bilan_c1_cinq_m_brut.json").read_text(encoding="utf-8"))
+    assert [l["sans_preuve"] for l in bilan["cas"]] == [False, True]
+    with pytest.raises(SystemExit):
+        juger.executer(argparse.Namespace(**{**vars(a), "regles": True}), base, tmp_path)

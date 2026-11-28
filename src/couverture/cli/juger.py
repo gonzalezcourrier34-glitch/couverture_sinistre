@@ -7,6 +7,9 @@ choisis. La chaîne de règles n'est pas appelée ici (`--regles` pour la contre
   couverture juger --contrat assureur-a-habitation-2025 "De l'eau a coulé du plafond…"
   couverture juger --contrat assureur-b-habitation-2017 --jeu aveugle --cas av-b05 --cas av-b13
 
+La référence (7.237) : `--brut` pose la même question à un seul appel, avec tout le contrat dans le message.
+  couverture juger --contrat assureur-a-habitation-2025 --jeu cinq --brut
+
 La stabilité (7.220) : repasser un jeu avec `--passage 2`, `--passage 3` (chaque passe garde son bilan et ses réponses
 brutes à part), puis `couverture juger --stabilite --jeu cinq --contrat tous` compare les passes, sans appel au modèle.
 """
@@ -41,6 +44,9 @@ def ajouter(sous) -> None:
     p.add_argument("--passage", type=int, default=1, metavar="N",
                    help="Le numéro de la passe, pour mesurer la stabilité (7.220) : à partir de 2, le bilan et les réponses "
                         "brutes sont gardés à part (suffixe _pN) ; la passe 1 est celle sans suffixe")
+    p.add_argument("--brut", action="store_true",
+                   help="La référence « chatbot » (7.237) : tout le contrat dans le message, un seul appel, le modèle "
+                        "conclut ; pour comparer à la lecture des clauses sur les mêmes cas. Bilan au suffixe _brut")
     p.add_argument("--stabilite", action="store_true",
                    help="Comparer les passes déjà faites d'un jeu (`--contrat tous` pour tous les contrats) : cas dont la "
                         "réponse change, justesse moyenne, minimale, maximale. Aucun appel au modèle")
@@ -128,6 +134,12 @@ def executer(a, base: Base, donnees: Path) -> int:
             sys.exit(f"Pas de consigne de jugement archivée en {version} ({archive}).")
         clauses.SYSTEME_JUGEMENT = archive.read_text(encoding="utf-8")
         passe = f"_{version}" + passe
+    simple = getattr(a, "brut", False)
+    if simple:
+        if a.regles or version:
+            sys.exit("--brut est la référence sans règles ni consigne de jugement : ne pas l'associer à --regles "
+                     "ou --consigne-jugement.")
+        passe = "_brut" + passe
     if a.jeu:
         if a.jeu in JEUX_JAMAIS_VUS and not a.mesure_finale and not a.rejouer:
             sys.exit(f"Le jeu « {a.jeu} » n'a jamais été regardé : il ne se passe qu'une fois, pour la mesure finale, "
@@ -152,7 +164,7 @@ def executer(a, base: Base, donnees: Path) -> int:
         modele = MistralLLM(modele=a.modele, timeout=600, max_tokens=32000)
         rejouees = None
         if a.rejouer:                                  # les réponses d'un passage précédent, dans l'ordre des appels
-            gardees = donnees / "debug" / f"juger_{c['id'] or 'declaration'}.txt"
+            gardees = donnees / "debug" / f"juger_{c['id'] or 'declaration'}{passe if simple else ''}.txt"
             if not gardees.exists():
                 return [f"{c['id']} : rien à rejouer ({gardees} absent)"], {
                     "id": c["id"], "attendu": c.get("attendu"), "obtenu": "ERREUR", "juste": False,
@@ -161,6 +173,8 @@ def executer(a, base: Base, donnees: Path) -> int:
         llm = _Temoin(modele, rejouees)
         suffixe = ("_rejeu" if a.rejouer else "") + passe
         attendu = c.get("attendu")
+        if simple:
+            return _un_cas_brut(c, llm, modele, debut, suffixe)
         try:
             # Le résultat entier des règles, pas seulement leur décision : la relecture ciblée part de leurs
             # obstacles (7.211).
@@ -196,6 +210,39 @@ def executer(a, base: Base, donnees: Path) -> int:
                        "clauses": sorted({j.clause_id for j in [*lecture.etat.couvrent, *lecture.etat.excluent,
                                                                 *lecture.etat.a_verifier]})}
 
+    def _un_cas_brut(c: dict, llm: _Temoin, modele, debut: float, suffixe: str) -> tuple[list[str], dict]:
+        """La référence : un appel, la décision du modèle telle quelle, et le compte de ses citations retrouvées."""
+        from ..analyse import brut
+
+        attendu = c.get("attendu")
+        try:
+            avis = brut.lire(base.clauses(a.contrat), llm, c["sinistre"])
+        except (ValueError, ErreurLLM) as e:
+            if isinstance(e, CleRefusee):
+                raise
+            llm.garder(donnees / "debug", (c["id"] or "declaration") + suffixe)
+            return [f"{c['id']} : pas de réponse exploitable — {str(e).splitlines()[0]}  "
+                    f"[{time.perf_counter() - debut:.0f} s]"], {
+                "id": c["id"], "attendu": attendu, "obtenu": "ERREUR", "juste": False,
+                "envoyes": llm.envoyes, "cache": llm.cache, "recus": llm.recus}
+        obtenu = avis.decision.value
+        juste = attendu is None or obtenu == attendu or obtenu in (c.get("acceptables") or [])
+        entete = f"{c['id']} : " if c["id"] else ""
+        regard = f"  (attendu {attendu}{'' if juste else ' ✗'})" if attendu else ""
+        ids = [str(x.get("clause_id", "?")) for x in avis.citations]
+        texte = [f"{entete}{obtenu}{regard} — référence, un appel  [{time.perf_counter() - debut:.0f} s]",
+                 f"  cite : {', '.join(ids) or 'rien'} · extraits retrouvés dans le contrat : {avis.retrouvees} sur "
+                 f"{len(avis.citations)}" + (" · ! réponse ferme sans aucun extrait retrouvé" if avis.ferme_sans_preuve
+                                             else "")]
+        if a.detail and avis.justification:
+            texte.append(f"  raison : {avis.justification[:400]}")
+        llm.garder(donnees / "debug", (c["id"] or "declaration") + suffixe)
+        texte.append(f"  tokens : {llm.envoyes} envoyés (dont {llm.cache} repris du cache), {llm.recus} reçus")
+        return texte, {"id": c["id"], "attendu": attendu, "obtenu": obtenu, "juste": juste,
+                       "motif": "référence", "secondes": round(time.perf_counter() - debut, 1),
+                       "envoyes": llm.envoyes, "cache": llm.cache, "recus": llm.recus, "appels": len(llm.reponses),
+                       "clauses": sorted(set(ids)), "sans_preuve": avis.ferme_sans_preuve}
+
     depart = time.perf_counter()
     par_id: dict[str, dict] = {}
     with ThreadPoolExecutor(max_workers=max(1, a.paralleles)) as pool:
@@ -222,10 +269,14 @@ def _bilan(lignes: list[dict], envoyes: int, recus: int, secondes: float) -> str
     a_tort = [l["id"] for l in lignes if l["obtenu"] == "COUVERT" and not l["juste"]]
     refus = [l["id"] for l in lignes if l["obtenu"] == "NON_COUVERT" and not l["juste"]]
     prudents = [l["id"] for l in lignes if l["obtenu"] in ("INCERTAIN", "ERREUR") and not l["juste"]]
+    sans_preuve = [l["id"] for l in lignes if l.get("sans_preuve")]          # seulement avec --brut
     return (f"{justes}/{n} réponses justes ou admises ({en_pourcents(justes, n)}, intervalle de confiance à 95 %). "
             f"Couverts à tort : {len(a_tort)} {a_tort or ''} ; refus à tort : "
             f"{len(refus)} {refus or ''} ; « à préciser » ou erreur à la place d'une réponse : {len(prudents)} "
-            f"{prudents or ''}\nTokens : {envoyes} envoyés, {recus} reçus ; {secondes:.0f} s en tout"
+            f"{prudents or ''}"
+            + (f"\nRéponses fermes sans aucun extrait retrouvé dans le contrat : {len(sans_preuve)} {sans_preuve}"
+               if sans_preuve else "")
+            + f"\nTokens : {envoyes} envoyés, {recus} reçus ; {secondes:.0f} s en tout"
             + (f", {secondes / n:.0f} s par cas." if n else "."))
 
 
