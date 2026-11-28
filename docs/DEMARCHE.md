@@ -6884,7 +6884,7 @@ l'exclusion 1.4** (« l'usure, un manque d'entretien… des biens assurés »), 
 pas un bien de l'assuré. La contresignature rend « à préciser » : une réponse juste perdue, par une erreur des règles,
 comme les mesures le disaient (7.236). Pas de promesse fausse, mais un client bloqué.
 
-**Quatre défauts d'affichage, notés et non corrigés avant l'envoi** (README, limites) :
+**Quatre défauts d'affichage** :
 1. Quand les règles bloquent par une exclusion, la carte dit « une exclusion s'applique » sans la citer ni poser de
    question : le gestionnaire ne voit pas que tout tient à « l'usure de quel bien ? ».
 2. La même question posée deux fois pour la cave : celle des règles (« comment le local était-il fermé ? ») et sa
@@ -6895,9 +6895,20 @@ comme les mesures le disaient (7.236). Pas de promesse fausse, mais un client bl
 4. Des textes coupés : « vandalisme et malv) » dans un motif, et une citation de 2.11 qui s'arrête avant son objet
    (« sauf les dégâts causés »).
 
-Le premier est le plus utile à corriger : citer l'exclusion des règles dans la carte, et en faire une question
-(« la fuite vient-elle d'un équipement qui vous appartient ? »). Il touche la contresignature : à faire après l'envoi,
-avec ses tests, puis à vérifier sur ce cas.
+**Corrigé le jour même, pour la v22** (`api/lecture_clauses.py`, deux tests) :
+- quand la lecture couvre et que les règles refusent par une exclusion, la réponse cite cette exclusion (« L'exclusion
+  qu'elles appliquent : art. 1.4, « … » »), l'ajoute aux clauses citées, et la pose en question au client (« L'exclusion
+  de l'art. 1.4 s'applique-t-elle à ce sinistre : « … » ? »). La décision ne change pas : « à préciser », mais avec
+  quelque chose à quoi répondre ;
+- une réserve tirée du règlement du sinistre garde la question du modèle et dit pourquoi on la pose, avec la phrase
+  du contrat (« … (art. 7.4 : « L'indemnité dépend du nombre de chambres… ») ») ;
+- les titres et les motifs trop longs se coupent sur une fin de mot, avec « … ».
+
+**Laissé tel quel.** Les deux questions sur la cave viennent de deux faits distincts des règles (comment le local
+était fermé, et si c'était par une serrure de sûreté) : les fusionner demande de toucher les règles de A, pas
+l'affichage. La citation de 2.11 qui s'arrête avant son objet est l'extrait choisi par le modèle, exact mais trop
+court : le contrôle vérifie qu'une citation existe, pas qu'elle se suffit (le même défaut que les refus cités hors
+de propos, 7.207).
 
 ## 8. Ce qui reste à faire
 
@@ -6909,10 +6920,9 @@ que la lecture des clauses ; il lui manque la logique fixe (une option ne couvre
 citations. À mesurer sur un jeu neuf : un appel qui juge les garanties trouvées dans tout le contrat, puis cette
 logique et ce contrôle, sans désignation ni dossier. Si elle tient, elle remplace l'actuelle.
 
-**0 ter. Les défauts vus à l'essai du 28 novembre (7.241).** Citer dans la carte l'exclusion par laquelle les règles
-refusent, et en faire une question ; ne pas poser deux fois la même question ; présenter une limite de montant comme
-telle, sans la demander au client quand les conditions particulières la donnent ; ne pas couper les motifs et les
-citations au milieu d'un mot.
+**0 ter. Les défauts vus à l'essai du 28 novembre (7.241).** Corrigés : l'exclusion des règles citée et posée en
+question, la raison d'une réserve, les textes coupés au milieu d'un mot. Restent : deux questions des règles qui
+portent sur le même point (la serrure de la cave chez A), et une citation exacte mais trop courte pour se suffire.
 
 **0 bis. La lecture des clauses, après sa mesure sur le jeu « cinq » (7.215).** Ce jeu a servi lui aussi : chaque point
 demande un jeu neuf.

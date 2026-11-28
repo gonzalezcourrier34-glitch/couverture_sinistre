@@ -742,3 +742,36 @@ def test_la_reference_brut_un_appel_avec_tout_le_contrat(base, monkeypatch, caps
     assert [l["sans_preuve"] for l in bilan["cas"]] == [False, True]
     with pytest.raises(SystemExit):
         juger.executer(argparse.Namespace(**{**vars(a), "regles": True}), base, tmp_path)
+
+
+def test_une_exclusion_des_regles_est_citee_et_posee_en_question(base, monkeypatch):
+    """7.241 : la lecture couvre, les règles refusent par une exclusion ; la réponse « à préciser » cite cette exclusion
+    et la pose en question, au lieu de dire « une exclusion s'applique » sans rien à quoi répondre."""
+    from couverture.api import lecture_clauses
+    from couverture.models import Citation, Faits, Resultat, Verdict
+
+    usure = Citation(clause_id="2.10", extrait="une chute de pierres", role="exclusion")
+
+    class ReglesQuiExcluent(Regles):
+        def analyser(self, sinistre, **_):
+            v = Verdict(decision=Decision.NON_COUVERT, citations=[usure],
+                        justification="Non couvert. « Tempête » (3.1.2) : une exclusion s'applique.")
+            return Resultat(sinistre=sinistre, contrat_id="c1", methode="regles", faits=Faits(),
+                            clauses_consultees=[], verdict=v)
+
+    _, sortie = lecture_clauses.analyser_clauses(base, ReglesQuiExcluent(Decision.NON_COUVERT), "c1", DECLARATION,
+                                                 Modele({"chapitres": ["3.1.2"], "motif": ""},
+                                                        jugements(**{"3_1_2_1": "couvre"})))
+    assert sortie["decision"] == "INCERTAIN"
+    assert "L'exclusion qu'elles appliquent : art. 2.10, « une chute de pierres »." in sortie["justification"]
+    assert sortie["questions"][0] == "L'exclusion de l'art. 2.10 s'applique-t-elle à ce sinistre : « une chute de pierres » ?"
+    assert any(c["clause_id"] == "2.10" and c["role"] == "exclusion" for c in sortie["citations"])
+
+
+def test_un_texte_long_se_coupe_sur_une_fin_de_mot():
+    """7.241 : « vandalisme et malv » au milieu d'un motif ; un texte coupé l'est sur une fin de mot, avec « … »."""
+    from couverture.api.lecture_clauses import couper
+
+    assert couper("Dégradations suite à des actes de vol, vandalisme et malveillance", 55) == \
+        "Dégradations suite à des actes de vol, vandalisme et…"
+    assert couper("court", 55) == "court"

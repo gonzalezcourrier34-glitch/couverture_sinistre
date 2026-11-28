@@ -215,6 +215,7 @@ def analyser_clauses_un(base: Base, pipeline, contrat_id: str, sinistre: str, ll
     if garder and decision == D.INCERTAIN and any(j.effet == "a_verifier" for j in lu.jugements):
         sortie["lecture"] = garder_lecture(contrat_id, lu.designes, lu.jugements)
     poser_les_questions_des_regles(pipeline, lu, decision, r_regles, r, sortie)
+    citer_l_exclusion_des_regles(lu, decision, r_regles, r, sortie)
     citer_le_refus_des_regles(decision, r_regles, r, sortie)
     r.tokens, r.cout_usd = compteur.totaux(), service.cout(compteur.modele, compteur.totaux())
     service.noter_citees(contrat_id, [c["clause_id"] for c in sortie["citations"]] + [x["clause_id"] for x in sortie["limites"]])
@@ -256,6 +257,49 @@ def poser_les_questions_des_regles(pipeline, lu, decision, r_regles: Resultat | 
     r.verdict.raisonnement.append(ligne)
 
 
+def citer_l_exclusion_des_regles(lu, decision, r_regles: Resultat | None, r: Resultat, sortie: dict[str, Any]) -> None:
+    """La lecture des clauses couvre, les règles refusent par une exclusion, la réponse est ramenée à « à préciser » :
+    on cite l'exclusion des règles et on en fait une question (7.241). Sans cela, la réponse disait « une exclusion
+    s'applique » sans dire laquelle, et le client n'avait rien à quoi répondre ; vu à l'essai sur une fuite venue du
+    joint du voisin, que les règles prenaient pour l'usure « des biens assurés ». La décision ne change pas ; la
+    réponse du client s'ajoute à la déclaration, que les deux lectures relisent."""
+    from couverture.models import Decision as D
+
+    if (decision != D.INCERTAIN or lu.etat.decision != D.COUVERT or r_regles is None or r_regles.parties
+            or r_regles.verdict.decision != D.NON_COUVERT):
+        return
+    exclusions = [c for c in r_regles.verdict.citations if c.valide and c.role == "exclusion"][:2]
+    if not exclusions:
+        return
+    deja = {c["clause_id"] for c in sortie["citations"]}
+    nouvelles = [c for c in exclusions if c.clause_id not in deja]
+    sortie["citations"] += [c.model_dump(mode="json") for c in nouvelles]
+    r.verdict.citations = list(r.verdict.citations) + nouvelles
+    questions = [f"L'exclusion de l'art. {c.clause_id} s'applique-t-elle à ce sinistre : « {couper(c.extrait, 220)} » ?"
+                 for c in exclusions]
+    questions = [q for q in questions if q not in sortie["questions"]]
+    sortie["questions"] = questions + sortie["questions"]
+    r.verdict.informations_manquantes = questions + list(r.verdict.informations_manquantes)
+    precision = " L'exclusion qu'elles appliquent : " + " ; ".join(
+        f"art. {c.clause_id}, « {couper(c.extrait, 160)} »" for c in exclusions) + "."
+    sortie["justification"] += precision
+    r.verdict.justification = sortie["justification"]
+    ligne = ("Exclusion des règles, que la lecture des clauses n'a pas retenue : "
+             + " ; ".join(f"art. {c.clause_id}" for c in exclusions) + " ; posée en question au client")
+    sortie["raisonnement"].append(ligne)
+    r.verdict.raisonnement.append(ligne)
+
+
+def couper(texte: str, n: int) -> str:
+    """Le texte, coupé à `n` caractères au plus sur une fin de mot, avec « … » s'il a été coupé : vu à l'essai,
+    « vandalisme et malv » au milieu d'un motif (7.241)."""
+    texte = texte.strip()
+    if len(texte) <= n:
+        return texte
+    coupe = texte[:n].rsplit(" ", 1)[0].rstrip(" ,;:(")
+    return coupe + "…"
+
+
 def citer_le_refus_des_regles(decision, r_regles: Resultat | None, r: Resultat, sortie: dict[str, Any]) -> None:
     """La lecture des clauses refuse sans rien citer (« aucune garantie examinée ne couvre ce sinistre ») et les règles
     refusent aussi, en citant leurs clauses : on montre celles-ci (7.222). Une réponse doit dire sur quel article elle
@@ -286,11 +330,11 @@ def phrase_des_clauses(e, decision, desaccord: str, r_regles: Resultat | None, t
 
     def ref(j) -> str:
         titre = (titres.get(j.clause_id) or "").strip().removeprefix(j.clause_id).strip(" .:-")
-        return f"art. {j.clause_id}" + (f" ({titre[:70]})" if titre and titre != j.clause_id else "")
+        return f"art. {j.clause_id}" + (f" ({couper(titre, 70)})" if titre and titre != j.clause_id else "")
 
     def motif(j) -> str:
         m = (j.motif or "").strip().rstrip(".")
-        return f" : {m[:220]}" if m else ""
+        return f" : {couper(m, 220)}" if m else ""
 
     def fin(texte: str) -> str:
         """Un point final, sauf après un point d'interrogation (vu à l'essai : « …voisins ?. Les règles »)."""
@@ -317,6 +361,16 @@ def phrase_des_clauses(e, decision, desaccord: str, r_regles: Resultat | None, t
         else:
             morceaux.append(desaccord[:1].upper() + desaccord[1:] + ".")
     return chaine.LIBELLES_DECISION[decision] + ". " + " ".join(morceaux)
+
+
+def rappel(j) -> str:
+    """Une réserve tirée du règlement du sinistre : la question du modèle, et la phrase du contrat qui dit pourquoi on
+    la pose (7.241 : « Combien de chambres compte votre appartement ? » seule, le client ne savait pas que c'était le
+    plafond de son indemnité, pas la décision)."""
+    question, extrait = (j.question or "").strip(), (j.extrait_contrat or "").strip()
+    if question and extrait:
+        return f"{question} (art. {j.clause_id} : « {couper(extrait, 160)} »)"
+    return f"{question or extrait} (art. {j.clause_id})"
 
 
 def resultat_clauses(base: Base, contrat_id: str, sinistre: str, lu, decision, desaccord: str,
@@ -377,7 +431,7 @@ def resultat_clauses(base: Base, contrat_id: str, sinistre: str, lu, decision, d
         # Les rappels du règlement (délai de déclaration, plafond) : des réserves, qui n'empêchent pas de répondre.
         # Pas sur un refus : un délai de déclaration ne dit rien à qui n'est pas couvert (7.222).
         "a_preciser": [{"variable": f"rappel_{j.clause_id}", "nature": "reserve",
-                        "question": f"{j.question or j.extrait_contrat} (art. {j.clause_id})", "valeurs": [],
+                        "question": rappel(j), "valeurs": [],
                         "libelles": {}, "aide": {}} for j in lu.rappels if decision != D.NON_COUVERT],
         "questions": questions,
         "citations": [c.model_dump(mode="json") for c in citations],
