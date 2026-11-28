@@ -6865,6 +6865,40 @@ Les descriptions des paquets (`couverture`, `analyse`, `cli`) nomment maintenant
 Reste, écrit dans la suite du document de conception : `clauses.lire` (120 lignes) et `jugement.decider` (95) mêlent
 encore plusieurs étapes ; les découper attend que la méthode soit fixée.
 
+### 7.241 Un essai à la main : trois sinistres, deux erreurs des règles
+
+*28 novembre, 15 h.* Sur le site (v21), chez A, une déclaration écrite pour être difficile : au retour de trois
+semaines de vacances, une cave forcée (un vélo électrique et du vin de collection volés), un congélateur arrêté
+« sûrement » par une coupure pendant un orage, et de l'eau tombée du plafond, venue du joint de baignoire du voisin
+« qui fuyait depuis longtemps ». Puis la même déclaration par la chaîne de règles seule (`couverture analyser
+--detail`), pour voir ce qu'elles avaient contresigné.
+
+**Ce qui tient.** Trois sinistres, une décision chacun, aucun « couvert ». Le vol : « à préciser », avec la question
+de la serrure de sûreté (le plafond des caves, 1 000 €, en dépend), d'accord avec les règles. Le congélateur : « à
+préciser », l'article 2.6 cité (un arrêt d'au moins six heures, une cause établie), là où **les règles répondaient
+« couvert » au titre des dégâts des eaux** : la lecture des faits avait pris la nourriture décongelée pour un dégât
+des eaux. La règle de lecture du 27 novembre (une cause seulement probable n'est pas établie) a joué.
+
+**Ce qui coûte.** La fuite : la lecture des clauses conclut « couvert » (2.7), à raison ; **les règles refusent par
+l'exclusion 1.4** (« l'usure, un manque d'entretien… des biens assurés »), alors que le joint usé est celui du voisin,
+pas un bien de l'assuré. La contresignature rend « à préciser » : une réponse juste perdue, par une erreur des règles,
+comme les mesures le disaient (7.236). Pas de promesse fausse, mais un client bloqué.
+
+**Quatre défauts d'affichage, notés et non corrigés avant l'envoi** (README, limites) :
+1. Quand les règles bloquent par une exclusion, la carte dit « une exclusion s'applique » sans la citer ni poser de
+   question : le gestionnaire ne voit pas que tout tient à « l'usure de quel bien ? ».
+2. La même question posée deux fois pour la cave : celle des règles (« comment le local était-il fermé ? ») et sa
+   variante (« par une serrure de sûreté ? »).
+3. Une réserve tirée de l'article 7.4, « combien de chambres compte votre appartement ? », demandée au client alors
+   que le contrat la renvoie aux conditions particulières, et sans dire qu'elle ne porte que sur le plafond (35 000 à
+   75 000 €), pas sur la décision.
+4. Des textes coupés : « vandalisme et malv) » dans un motif, et une citation de 2.11 qui s'arrête avant son objet
+   (« sauf les dégâts causés »).
+
+Le premier est le plus utile à corriger : citer l'exclusion des règles dans la carte, et en faire une question
+(« la fuite vient-elle d'un équipement qui vous appartient ? »). Il touche la contresignature : à faire après l'envoi,
+avec ses tests, puis à vérifier sur ce cas.
+
 ## 8. Ce qui reste à faire
 
 Tenu à jour le 28 nov. 2026, après la comparaison à un seul appel. Dans l'ordre où je le ferais (le document de
@@ -6874,6 +6908,11 @@ conception en donne la version courte, § 6).
 que la lecture des clauses ; il lui manque la logique fixe (une option ne couvre pas seule) et le contrôle des
 citations. À mesurer sur un jeu neuf : un appel qui juge les garanties trouvées dans tout le contrat, puis cette
 logique et ce contrôle, sans désignation ni dossier. Si elle tient, elle remplace l'actuelle.
+
+**0 ter. Les défauts vus à l'essai du 28 novembre (7.241).** Citer dans la carte l'exclusion par laquelle les règles
+refusent, et en faire une question ; ne pas poser deux fois la même question ; présenter une limite de montant comme
+telle, sans la demander au client quand les conditions particulières la donnent ; ne pas couper les motifs et les
+citations au milieu d'un mot.
 
 **0 bis. La lecture des clauses, après sa mesure sur le jeu « cinq » (7.215).** Ce jeu a servi lui aussi : chaque point
 demande un jeu neuf.
@@ -7162,3 +7201,4 @@ sur les jeux écrits sans voir les règles, d'à peu près la moitié, l'autre v
 226. Avant de payer une comparaison, relire ce qu'on a déjà : le motif de chaque réponse disait ce que la méthode concluait sans sa garde, et 360 analyses répondaient gratuitement à « les règles servent-elles ? ».
 227. Le coût d'un modèle qui réfléchit est dans ce qu'il écrit, pas dans ce qu'on lui envoie : 69 % ici. Réduire le dossier ne rapporte presque rien.
 228. Mesurer la solution simple avant de construire, et la garder à côté : ici, un seul appel répondait aussi juste pour quatre fois moins cher ; ce que la construction apporte se lit dans le sens des erreurs, pas dans leur nombre.
+229. Une déclaration difficile tapée à la main montre ce que les jeux ne montrent pas : deux erreurs des règles sur trois sinistres, l'une arrêtée par la lecture des clauses, l'autre qui coûte une réponse juste, et un client laissé sans question.
