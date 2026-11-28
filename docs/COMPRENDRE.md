@@ -14,9 +14,10 @@ chaque essai et sa mesure, dans l'ordre où je les ai faits, y compris les fois 
 faux dès que la traduction l'était, et sur des cas jamais vus il lui arrivait de promettre à tort. J'ai alors fait
 lire au modèle les clauses mêmes du contrat, une à une, en vérifiant chaque citation et en calculant la décision
 dans le code. Sur soixante déclarations que ni l'une ni l'autre méthode n'avait vues, la seconde répond juste 53 fois
-contre 40, et ne promet jamais à tort, contre près de cinq fois pour la première. Elle coûte trois minutes et
-quelques centimes par analyse, et une limite reste ouverte : elle n'a pas encore été mesurée seule, sur un contrat
-que personne n'aurait traduit.
+contre 40, sans aucune promesse à tort, contre près de cinq pour la première. Elle coûte trois minutes et
+quelques centimes par analyse. Puis je l'ai comparée à la solution la plus simple, tout le contrat donné au modèle en
+une fois : elle ne répond pas plus juste, mais l'autre promet sept fois à tort et cite souvent des phrases qui ne sont
+pas dans le contrat. Ce que ma construction apporte, c'est la prudence et la preuve, pas la justesse.
 
 ---
 
@@ -255,8 +256,9 @@ flowchart TD
 Pour un sinistre, l'analyse prend deux à trois minutes, et l'écran en suit chaque étape. Le dossier compte de 70 à
 près de 300 clauses selon le contrat et le sinistre. Une déclaration qui raconte plusieurs sinistres (un vol, et par
 ailleurs une fuite) est d'abord découpée, et chaque sinistre est jugé à part. Quand il manque une information, la
-question est une phrase ; le client y répond en mots, et la déclaration complétée est relue entière : c'est plus lent
-qu'avec la première méthode, où la réponse du client donne la décision sans nouvel appel au modèle.
+question est une phrase ; le client y répond en mots, et la déclaration complétée est relue, mais seules les clauses
+en doute et ce qui bloque leur garantie sont jugées à nouveau : c'est encore plus lent qu'avec la première méthode, où
+la réponse du client donne la décision sans nouvel appel au modèle.
 
 **Ce que cette hypothèse change, et que je dois assumer.** Dans la première, le modèle ne voyait que la déclaration
 et ne décidait de rien. Dans la seconde, il voit le contrat et porte un jugement sur chaque clause. C'est plus de
@@ -267,7 +269,7 @@ trancher, une contresignature pour couvrir.
 
 | Ce qu'elle fait bien | Ce qu'elle fait mal |
 |---|---|
-| **Elle lit le texte même** : une clause que la traduction a manquée est encore vue | **Lente et plus chère** : deux à trois minutes, 8 à 10 centimes par analyse |
+| **Elle lit le texte même** : une clause que la traduction a manquée est encore vue | **Lente et plus chère** : deux à trois minutes, 8 à 9 centimes par analyse |
 | **Elle promet beaucoup moins à tort** (section 8) | **Moins stable** : le modèle juge, et peut juger autrement d'un passage à l'autre |
 | **Chaque jugement est cité deux fois** et vérifié ; une clause attendue sans jugement se voit | **Le code vérifie qu'une citation existe, pas qu'elle a un rapport avec le sinistre** : une exclusion juste mais hors de propos peut faire refuser |
 | **Pour juger, elle n'a besoin que du contrat découpé** : en principe, ni règles ni vocabulaire | **Pour couvrir, elle dépend encore des règles** (la contresignature) ; et des règles incomplètes retiennent des « couvert » justes |
@@ -356,7 +358,7 @@ Un jeu neuf, monté de la même façon, second avis sans Mistral Large ; code fi
 | **Couverts à tort** | **4,7** | **0** |
 | Refus à tort | 6 | 1 |
 | « À préciser » au lieu d'une réponse | 9 | 6 |
-| Durée d'une analyse (médiane) | 3,5 à 5,2 secondes | 177 secondes |
+| Durée d'une analyse (médiane) | 3,5 à 5,2 secondes | 177 secondes (167 sur 384 analyses) |
 
 **Ce que je peux affirmer.** Sur le même jeu, l'écart est net cette fois : treize réponses justes de plus, dans le
 même sens sur les trois contrats, aucun couvert à tort contre près de cinq, un refus à tort contre six. Et la
@@ -372,7 +374,8 @@ voyant ce jeu serait régler le système sur le jeu qui le mesure. C'est une pis
 
 **Et si je la repasse ?** La chaîne de règles passe chaque jeu trois fois ; la lecture des clauses, une seule. Le soir
 même, j'ai repassé dix cas par contrat deux fois de plus. Sur ces trente cas, les trois passes donnent 26, 25 et 23
-réponses justes : la première avait eu un peu de chance, et le niveau à attendre est plus près de 82 % que de 88 %.
+réponses justes : la première avait eu un peu de chance. Le jeu entier, repassé quatre fois, donne 51 réponses
+justes sur 60 en moyenne (85 %) : c'est le niveau à attendre.
 Sept cas sur trente changent de réponse, bien plus que la chaîne de règles. Ce qui me rassure, c'est le sens de ces
 changements : aucun ne passe de « couvert » à « non couvert ». Chaque fois, une réponse franche devient « à préciser »,
 ou l'inverse. Sur quatre-vingt-dix analyses, toujours aucun couvert à tort. En lisant les sorties, je vois d'où vient
@@ -403,6 +406,17 @@ lui-même, que je n'ai pas corrigées : un congélateur arrêté « sûrement à
 couvert, alors que la cause n'est pas établie et que la clause demande un arrêt de six heures. Là, rien ne l'a
 arrêté : les règles n'ont pas contredit. C'est le vrai risque de cette méthode.
 
+**Et face à la solution la plus simple ?** C'est la question qu'un professionnel pose en premier, et je l'ai posée en
+dernier : toute ma construction se justifie-t-elle face à un modèle à qui l'on donne tout le contrat et la déclaration,
+en lui demandant la réponse ? Je l'ai passée sur les mêmes soixante cas, pour 1,36 $. Elle répond juste 52 fois, ma
+méthode 51 en moyenne : à égalité. Elle est quatre fois moins chère et six fois plus rapide. Mais elle promet sept
+fois à tort, et presque toujours de la même façon : une garantie qui n'existe qu'en option (la panne d'électroménager,
+l'annulation de voyage) est tenue pour souscrite. Sur ces cas, ma méthode répond « à préciser » à chaque fois,
+parce que la règle fixe le veut : une option ne couvre pas seule ; elle ne couvre aucun des sept. Et plus de la moitié de ses citations ne se
+retrouvent pas dans le contrat. La leçon est double. Ma construction ne lit pas mieux : elle est plus prudente, et
+elle prouve. Et une version plus simple, qui garderait cette prudence et cette preuve sans le reste, est à essayer.
+J'aurais dû mesurer cette solution simple en premier.
+
 ### Les deux méthodes en un tableau
 
 | | Première méthode (règles) | Seconde méthode (clauses) |
@@ -412,9 +426,9 @@ arrêté : les règles n'ont pas contredit. C'est le vrai risque de cette métho
 | Travail par contrat | Découpage, traduction, vocabulaire, relecture humaine | Découpage et clauses attendues ; les règles servent à contresigner |
 | Où elle se trompe | À la traduction : une règle fausse, un fait que le vocabulaire ne connaît pas | À la lecture : une clause mal jugée, une citation exacte mais hors de propos |
 | Le raisonnement montré | Un arbre de preuve, condition par condition | Le jugement de chaque clause, avec ses deux citations |
-| Même réponse deux fois ? | Presque : 0 à 4 cas sur 96 changent | Non : 7 cas sur 30, toujours entre une réponse franche et « à préciser » |
-| Justesse sur le dernier jeu neuf | 40 sur 60, 4,7 couverts à tort | 53 sur 60 en une passe (82 % en moyenne sur trois), aucun couvert à tort |
-| Durée, coût | Quelques secondes, très peu | Deux à trois minutes, 8 à 10 centimes |
+| Même réponse deux fois ? | Presque : 0 à 4 cas sur 96 changent | Non : 11 cas sur 60 sur quatre passes, presque toujours entre une réponse franche et « à préciser » |
+| Justesse sur le jeu « cinq » | 40 sur 60, 4,7 couverts à tort | 53 sur 60 en une passe, 51 en moyenne sur quatre, aucun couvert à tort |
+| Durée, coût | Quelques secondes, très peu | Deux à trois minutes, 8 à 9 centimes |
 
 Les deux restent dans le produit. À l'écran, une liste « Méthode » sur la ligne de la déclaration laisse choisir :
 la lecture des clauses par défaut, la chaîne de règles en cinq secondes. On peut lancer la même déclaration avec
@@ -457,9 +471,10 @@ appliqué ici presque tel quel.
   méthode lit le contrat avec un modèle, comme les annotateurs : si un modèle et un juriste comprennent une clause
   différemment, le jeu la favorise. Je ne crois pas que cela explique treize points d'écart, mais je ne peux pas
   l'exclure. C'est la première chose à faire avant tout usage réel.
-- **La seconde méthode n'a jamais été mesurée seule.** Sans contresignature, sur un contrat sans règles traduites,
-  elle supprimerait le travail de traduction : c'est là qu'est le vrai gain pour des centaines de contrats. Le jeu
-  « cinq » le suggère (chez D, les six réponses retenues par la contresignature étaient justes) ; il ne le prouve pas.
+- **La seconde méthode n'a jamais été passée seule.** Sans contresignature, sur un contrat sans règles traduites,
+  elle supprimerait le travail de traduction : c'est là qu'est le vrai gain pour des centaines de contrats. Relue
+  dans les sorties déjà faites, elle répond plus souvent juste sans les règles (90 % au lieu de 83 %), mais promet
+  neuf fois à tort au lieu d'une : il lui faudrait une autre garde.
 - **Le modèle concluait parfois « couvert » trop vite**, quand la déclaration hésite (« sûrement ») ou ne dit pas une
   condition de la clause. Deux règles de lecture l'ont réduit (trois couverts à tort évités sur le jeu « six ») ; elles
   prennent parfois une obligation de l'assuré pour une condition de la garantie, ce qui coûte une réponse juste.
@@ -471,7 +486,8 @@ appliqué ici presque tel quel.
 
 **Les prochaines expériences, dans l'ordre.**
 
-1. Mesurer la seconde méthode sans contresignature, sur un contrat jamais traduit, avec un jeu neuf.
+1. Essayer la version simple que suggère la comparaison : tout le contrat en un appel, puis la même règle fixe et le
+   même contrôle des citations. Et mesurer la seconde méthode sans contresignature, sur un contrat jamais traduit.
 2. Ne faire contresigner que par des règles complètes : un contrat traduit en partie retient des « couvert » justes
    plus souvent qu'il n'arrête une erreur.
 3. Faire relire un jeu par quelqu'un du métier, et mesurer l'écart avec les annotateurs automatiques.
@@ -487,7 +503,8 @@ Chacune demandera un jeu de cas neuf : « cinq » et « six » ont servi.
 J'ai d'abord traduit les contrats en règles et laissé un programme décider : rapide et transparent, mais faux dès
 que la traduction l'était ; j'ai alors fait juger au modèle les clauses mêmes, une à une, chaque citation vérifiée et
 la décision calculée par le code : sur des cas jamais vus, il répond juste 53 fois sur 60 au lieu de 40 et ne promet
-plus à tort, au prix de trois minutes d'attente.
+plus à tort, au prix de trois minutes d'attente ; face à la solution la plus simple, il ne répond pas plus juste, mais
+il ne promet pas à tort et il prouve ce qu'il dit.
 
 *Les réponses attendues ont été établies d'après le texte des conditions générales, par des annotateurs
 automatiques qui s'accordent ; elles sont à relire par un juriste.*

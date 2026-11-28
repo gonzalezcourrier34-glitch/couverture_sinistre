@@ -12,6 +12,8 @@ version garde ici son **texte intégral**, dans `<consigne>/<version>.txt`.
 
 En service : pour la chaîne de règles, `lecture-socle` v2, `lecture-details` v3, `verification-faits` v3, `decoupage-sinistres` v1, `redaction-regles` v13 ; pour la lecture des clauses, `clauses-designation` v1, `clauses-jugement` v2, `clauses-arbitrage` v1 (voir `config/versions_consignes.json`). Les autres sont celles des méthodes retirées le 18 nov. 2026 (DEMARCHE 7.36) et le 20 nov. 2026 (`faits-regles`, `document-brut`, `legalbench` : 7.110).
 
+Relue telle qu'archivée, sans version nouvelle : `document-brut` v1, la consigne de la référence « tout le contrat en un appel », reprise le 28 nov. 2026 par `couverture juger --brut` pour comparer (DEMARCHE 7.237, 7.238).
+
 | Consigne | Version | Date | Pourquoi |
 |---|---|---|---|
 | `grille-conditions` | v1 | nov. 2026 | Grille complète : toutes les garanties, toutes les exclusions possibles |

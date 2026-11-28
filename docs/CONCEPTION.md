@@ -55,7 +55,7 @@ Un principe : **le modèle juge des clauses, le code tranche.** On ne demande ja
                                    elle aussi, ou voir chacun de ses obstacles écarté par une citation ;
                                    sinon « à préciser »
 
-                      En parallèle : la chaîne de règles (seconde méthode, 4 à 5 s)
+                      En parallèle : la chaîne de règles (la première méthode, 4 à 5 s)
 
    déclaration ─► Mistral Medium la traduit en faits d'un vocabulaire fermé ─► Mistral Small vérifie
                chaque fait ─► le moteur Prolog (logique à trois valeurs) décide, avec un arbre de preuve
@@ -96,8 +96,8 @@ Chaque essai a eu son critère d'acceptation écrit avant la mesure ; les essais
 ## 4. Les chiffres clés, et ce qu'ils valent
 
 Tous mesurés sur des **déclarations jamais vues** : écrites par des annotateurs (agents Claude) qui n'avaient lu que le
-texte des contrats, jugées à l'aveugle par un second annotateur, code figé avant, chaque jeu passé une seule fois puis
-déclaré « vu ». Contrats A, B et D, vingt cas chacun. Entre crochets, l'intervalle de confiance à 95 % (Wilson).
+texte des contrats, jugées à l'aveugle par un second annotateur, code figé avant, la mesure de chaque jeu faite une fois puis le jeu
+déclaré « vu » ; les passes suivantes ne servent qu'à mesurer la stabilité et les comparaisons. Contrats A, B et D, vingt cas chacun. Entre crochets, l'intervalle de confiance à 95 % (Wilson).
 
 | Mesure | Lecture des clauses | Chaîne de règles |
 |---|---|---|
@@ -111,18 +111,18 @@ déclaré « vu ». Contrats A, B et D, vingt cas chacun. Entre crochets, l'inte
 
 **Ce que je lis.** La lecture des clauses fait moins d'erreurs coûteuses que la chaîne de règles, et l'écart sur
 « cinq » (treize réponses, sur les mêmes cas) dépasse le hasard. Son niveau à attendre est la moyenne des quatre
-passes, **51 sur 60 (85 %)**, plutôt que les 53 de la première, qui était la meilleure. Elle varie d'une passe à l'autre, mais vers la prudence : une réponse franche devient
-« à préciser » ou l'inverse ; un seul cas passe de « couvert » à « non couvert », où les deux sont admises.
+passes, **51 sur 60 (85 %)**, plutôt que les 53 de la première, qui était la meilleure. Elle varie d'une passe à
+l'autre, mais vers la prudence : une réponse franche devient « à préciser » ou l'inverse ; un seul cas passe de « couvert » à « non couvert », où les deux sont admises.
 
 **Ce que la construction apporte, par rapport à un seul appel.** Pas la justesse : le modèle qui lit tout le contrat
 d'un coup répond juste aussi souvent (52 contre 51 en moyenne). Elle apporte deux choses. **Les couverts à tort** : 7
 pour le seul appel, 0 sur 240 pour la lecture des clauses ; six des huit erreurs du seul appel sont des garanties
 optionnelles ou soumises aux conditions particulières (l'e-réputation, l'annulation de voyage, la panne
-d'électroménager) qu'il tient pour acquises, et la lecture des clauses répond « à préciser » sur ces sept cas, à
-chaque passe : c'est la logique fixe (« seule une garantie optionnelle couvre »), pas une meilleure lecture. **La
+d'électroménager) qu'il tient pour acquises ; sur ces cas, la lecture des clauses répond « à préciser » à chaque
+passe, et elle ne couvre aucun des sept : c'est la logique fixe (« seule une garantie optionnelle couvre »), pas une meilleure lecture. **La
 preuve** : 106 de ses 187 citations ne se retrouvent pas dans le contrat, et 14 réponses fermes n'en ont aucune ;
-s'il fallait les rendre « à préciser », il perdrait dix réponses justes pour deux erreurs évitées. Elle coûte en
-retour quatre fois plus cher et six fois plus de temps.
+s'il fallait les rendre « à préciser », il perdrait dix réponses justes pour deux erreurs évitées. La construction
+coûte en retour quatre fois plus cher et six fois plus de temps.
 
 **Ce qu'ils ne valent pas.**
 - Les réponses attendues viennent d'**annotateurs automatiques** qui s'accordent, pas d'un gestionnaire ni d'un
@@ -163,8 +163,8 @@ cache du fournisseur (déjà utilisé), la relecture partielle (faite), des mod�
 mesurer), un traitement par lots pour les déclarations reçues la nuit.
 
 **Ajouter un contrat.** Aujourd'hui : découper et anonymiser, écrire la liste des clauses attendues par garantie,
-traduire en règles et relire. La traduction est l'étape lourde. La lecture des clauses fonctionne sans traduction
-complète (contrats C et D) ; une piste serait de ne traduire que les garanties les plus fréquentes, en laissant la
+traduire en règles et relire. La traduction est l'étape lourde. La lecture des clauses fonctionne sur un contrat
+traduit en partie (D, mesuré ; C n'a pas de jeu de mesure) ; une piste serait de ne traduire que les garanties les plus fréquentes, en laissant la
 contresignature passer la main au gestionnaire ailleurs.
 
 ## 6. La suite, dans l'ordre
@@ -182,7 +182,7 @@ contresignature passer la main au gestionnaire ailleurs.
    des citations, sans désignation ni dossier. De même, la lecture des clauses sans les règles est déjà chiffrée (90 %
    de justes, mais neuf couverts à tort sur 360) : ne contresigner que les garanties traduites est l'autre piste.
 5. **Comparer plusieurs modèles et tailles**, avec le coût et la durée comme contraintes, pas comme constats.
-6. **Simplifier** ce que la mesure ne justifie pas, et traiter deux contrats en entier plutôt que quatre en partie.
+6. **Resserrer le périmètre** : traiter deux contrats en entier plutôt que quatre en partie.
    Dans le code aussi : la chaîne de règles (`chaine.py`, 600 lignes), les contrôles de la rédaction des règles (700)
    et la lecture des clauses (`clauses.py`) mêlent plusieurs étapes dans un fichier ; les séparer par étape, une fois la
    méthode fixée, et pas avant (un découpage sur une méthode qui change encore se refait).

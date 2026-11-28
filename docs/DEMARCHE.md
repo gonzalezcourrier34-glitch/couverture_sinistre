@@ -4,12 +4,12 @@ Ce document garde le raisonnement, pas seulement le résultat : ce qu'on a essay
 a échoué, pourquoi, et ce qu'on en a tiré. Chaque version de consigne citée ici est
 archivée en texte intégral dans [`docs/consignes/`](consignes/README.md).
 
-**Comment le lire.** Ce document est long : c'est un journal, tenu au fil du travail, jusqu'au 24 novembre 2026.
-Pour le fil du raisonnement, la page qui suit suffit : onze tournants, chacun avec ce qu'on croyait, ce que la
+**Comment le lire.** Ce document est long : c'est un journal, tenu au fil du travail, du 17 au 28 novembre 2026.
+Pour le fil du raisonnement, la page qui suit suffit : quatorze tournants, chacun avec ce qu'on croyait, ce que la
 mesure a dit, et ce qui a changé. Les sections 1 à 6 posent le point de départ. La section 7 est le journal
-lui-même, en sept parties. La section 8 dit ce qui reste ouvert, la section 9 garde une leçon par ligne.
+lui-même, en dix parties. La section 8 dit ce qui reste ouvert, la section 9 garde une leçon par ligne.
 
-## Le cheminement, en onze tournants
+## Le cheminement, en quatorze tournants
 
 Le principe n'a pas bougé du premier au dernier jour : **le modèle établit des faits, le code décide**. Tout le
 reste a changé, et presque toujours pour la même raison : une mesure a contredit ce qu'on croyait.
@@ -27,10 +27,15 @@ reste a changé, et presque toujours pour la même raison : une mesure a contred
 | 9 | Une erreur de lecture se corrige par une phrase de plus | Trois corrections en une heure pour la même déclaration, aucune mesurée, la deuxième sans effet | « Pas de rustine » : une consigne ne contient que des principes ; une lecture se corrige par des exemples validés, mesurés sur des cas qui n'ont pas servi à les choisir. Et celui qui lit n'est pas celui qui vérifie | 7.133, 7.136 |
 | 10 | Un contrat de plus, c'est un fichier de plus | Le quatrième contrat, ajouté à froid : onze minutes de rédaction, 22 contrôles bloquants, et une erreur qu'aucun contrôle n'avait vue (les formules d'un autre contrat). Une de mes propres corrections a créé un couvert à tort | Le coût d'un contrat est mesuré et écrit ; ce qui est général et ce qui ne l'est pas, aussi : ce n'est pas un bouton | 7.148 à 7.159 |
 | 11 | Une décision juste suffit | Les deux questions de l'énoncé, rejouées en ligne la veille de la livraison : décisions justes, phrases hors sujet. Et une correction raisonnable de la lecture, qui passait les tests et trois bancs sur quatre, faisait couvrir à tort un cas du jeu fermé six fois sur six | La réponse ne parle que de ce qui a un rapport avec le sinistre ; la correction de lecture est retirée | 7.164 à 7.167 |
+| 12 | Des règles bien réglées tiennent sur des cas jamais vus | Sur des jeux écrits sans voir les règles : 38 réponses justes sur 60 et 7 couverts à tort ; deux tours de corrections n'y changent rien | Une seconde hypothèse : le modèle juge les clauses mêmes, le code tranche, les règles contresignent. Sur un jeu neuf : 53 contre 40, aucun couvert à tort contre 4,7 | 7.185 à 7.215 |
+| 13 | Une passe suffit pour mesurer | 53 à la première passe, 51 en moyenne sur quatre ; 11 cas sur 60 changent de décision | Le chiffre annoncé est la moyenne, avec sa marge de confiance | 7.221, 7.234, 7.236 |
+| 14 | La construction se justifie par sa justesse | Un seul appel avec tout le contrat répond aussi juste (52 sur 60), quatre fois moins cher ; mais il couvre sept fois à tort, et la moitié de ses citations sont introuvables | Ce qu'elle apporte est la prudence et la preuve ; la suite est une version plus simple qui garde ces deux choses | 7.236 à 7.238 |
 
-**Où cela mène (24 novembre).** Quatre contrats d'assureurs différents. Décisions justes : 94 % et 100 % sur A
-(partie test, jeu fermé), 85 % sur B, 96 % sur D ; un couvert à tort qui se répète chez B, un refus à tort chez D.
-Le quatrième contrat est partiel et n'a pas de jeu de mesure. Les règles n'ont été relues par personne du métier.
+**Où cela mène (28 novembre).** Quatre contrats d'assureurs différents, deux méthodes en service. Sur des cas jamais
+vus, la lecture des clauses répond juste 51 fois sur 60 en moyenne (85 % [80–89]), sans couvert à tort sur 240
+analyses ; la chaîne de règles, 40 fois, avec 4,7 couverts à tort. Un seul appel avec tout le contrat répond aussi
+juste, mais couvre sept fois à tort. Une analyse prend 167 secondes et coûte 8 centimes en médiane. Le contrat C n'a
+pas de jeu de mesure ; les réponses attendues n'ont été relues par personne du métier.
 
 ---
 
@@ -109,9 +114,9 @@ en aurait fait perdre.
 - Réponses **coupées** à la limite de longueur → erreur explicite (`ReponseTronquee`) au lieu
   de « aucun objet JSON ».
 
-## 7. Le journal, du 17 au 26 novembre
+## 7. Le journal, du 17 au 28 novembre
 
-Neuf parties, dans l'ordre. Chaque étape garde son numéro, cité ailleurs dans le projet.
+Dix parties, dans l'ordre. Chaque étape garde son numéro, cité ailleurs dans le projet.
 
 | Partie | Étapes | La question du moment |
 |---|---|---|
@@ -124,6 +129,7 @@ Neuf parties, dans l'ordre. Chaque étape garde son numéro, cité ailleurs dans
 | VII | 7.160 à 7.167 | Mettre en ligne, puis tout rejouer la veille de la livraison |
 | VIII | 7.168 à 7.189 | Finir A et B, puis des jeux jamais vus qui montrent un défaut de fond |
 | IX | 7.190 à 7.220 | La lecture des clauses : une seconde méthode, mesurée contre la première |
+| X | 7.221 à 7.239 | Ce que valent les chiffres : stabilité, marges, apport des règles, coût, comparaison à un seul appel |
 
 ---
 
@@ -6350,6 +6356,9 @@ au-delà de six doutes (729 combinaisons), on ne cherche pas. Les mesures ne bou
 
 Deux tests (trois passes comparées ; une question sans effet retirée, une seule question gardée).
 
+**Partie X — Ce que valent les chiffres (26 au 28 novembre).** La seconde méthode est mesurée ; reste à savoir ce que
+vaut cette mesure : repassée, avec ses marges, sans les règles, et face à la solution la plus simple.
+
 ### 7.221 La stabilité de la lecture des clauses, mesurée : elle varie, mais vers la prudence
 
 *26 novembre, soir.* Mesure annoncée en 7.220 (option B, environ 5 à 6 $) : passes 2 et 3 du jeu « cinq », dix cas
@@ -6802,14 +6811,16 @@ lire le taux de cache et la longueur des réponses avant d'engager le reste.
 ### 7.238 Ce que vaut la construction, face à un seul appel
 
 *28 novembre, 13 h 45.* Dix cas de A d'abord (0,18 $ : à partir du second cas, 29 184 tokens sur 29 390 viennent du
-cache), puis « cinq » en entier : 1,36 $ pour les 60 cas, 27 s par cas en médiane.
+cache), puis « cinq » en entier : 1,36 $ pour les 60 cas, 27 s par cas en médiane. L'estimation de 7.237 était haute :
+le contrat pèse 29 400, 78 200 et 64 000 tokens, pas 35 000, 85 000 et 75 000, et le cache a joué dès le second cas.
 
 **Le résultat.** 52 réponses justes sur 60 pour le seul appel, 51 en moyenne pour la lecture des clauses : à égalité.
 Mais sept couverts à tort contre aucun sur 240, et 106 citations sur 187 introuvables dans le contrat, dont 14 réponses
 fermes sans aucune. Les erreurs ont un sens : six des huit portent sur une garantie optionnelle ou soumise aux
-conditions particulières, que le modèle tient pour souscrite. Sur ces sept couverts à tort, la lecture des clauses
-répond « à préciser » à chacune de ses quatre passes ; ce qui la protège n'est pas une meilleure lecture, c'est la
-logique fixe qui ne laisse pas une option couvrir seule. Sur D, le seul appel fait mieux (19 contre 13,8) : c'est
+conditions particulières, que le modèle tient pour souscrite. Sur ces sept cas, la lecture des clauses ne couvre
+jamais : « à préciser » à chacune de ses quatre passes pour les six options et conditions (une fois une erreur du
+fournisseur), le refus attendu trois fois sur quatre pour le septième (`c-a09`, une définition du lexique). Ce qui la
+protège n'est pas une meilleure lecture, c'est la logique fixe qui ne laisse pas une option couvrir seule. Sur D, le seul appel fait mieux (19 contre 13,8) : c'est
 la contresignature de règles incomplètes, déjà vue en 7.236.
 
 **Ce que j'en conclus.** Ma construction se justifie par l'erreur qui coûte et par la preuve, pas par la justesse ; et
@@ -6836,9 +6847,15 @@ ce qui demande une personne (la relecture par un gestionnaire) ou un budget (des
 
 ## 8. Ce qui reste à faire
 
-Tenu à jour le 26 nov. 2026, après la mesure du jeu « cinq ». Dans l'ordre où je le ferais.
+Tenu à jour le 28 nov. 2026, après la comparaison à un seul appel. Dans l'ordre où je le ferais (le document de
+conception en donne la version courte, § 6).
 
-**0. La lecture des clauses, après sa mesure sur le jeu « cinq » (7.215).** Ce jeu a servi lui aussi : chaque point
+**0. Une version plus simple, d'après la comparaison (7.238).** Un seul appel avec tout le contrat répond aussi juste
+que la lecture des clauses ; il lui manque la logique fixe (une option ne couvre pas seule) et le contrôle des
+citations. À mesurer sur un jeu neuf : un appel qui juge les garanties trouvées dans tout le contrat, puis cette
+logique et ce contrôle, sans désignation ni dossier. Si elle tient, elle remplace l'actuelle.
+
+**0 bis. La lecture des clauses, après sa mesure sur le jeu « cinq » (7.215).** Ce jeu a servi lui aussi : chaque point
 demande un jeu neuf.
 - Mesurer le mode sans contresignature, sur un contrat sans règles traduites : la condition pour dire qu'elle s'étend à
   un contrat nouveau. Relu sur 360 analyses (7.236) : 90 % de justes sans elle, mais neuf couverts à tort ; à
@@ -6869,11 +6886,12 @@ demande un jeu neuf.
 - Un jeu fermé écrit par une personne : celui de `data/ferme/` l'a été par deux annotateurs automatiques (7.79).
 - Valider le golden set (`data/golden/A_VALIDER.md`), en particulier la toiture et les clés.
 
-**2. La lecture.** Elle reste la source de toutes les erreurs mesurées.
+**2. La lecture des déclarations, dans la chaîne de règles.** Sur les anciens jeux, la source de toutes les erreurs ;
+sur les jeux écrits sans voir les règles, d'à peu près la moitié, l'autre venant des règles (7.186).
 - Les identifiants montrés au modèle sans définition. Celui de « auteur » a été défini, mesuré et retiré (7.166) : la piste est générale, mais elle demande un jour de mesures, pas une matinée.
 - La bougie fondue lue « accident » : la réponse est juste, sans la citation qui l'expliquerait (7.165).
 - Des déclarations nouvelles, validées, pour mesurer les exemples de B et de D (7.144), et un second lot que rien n'a encore corrigé.
-- Les erreurs qui se répètent : le vol dans une voiture chez B, la crue chez D (README, section 5).
+- L'erreur qui se répète : la crue chez D (README, section 5) ; le vol dans une voiture chez B est corrigé (24 nov.).
 
 **3. Les contrats.**
 - Assureur C : les biens assurés, qui dépendent de la formule et de la qualité d'occupant, et un jeu de mesure (7.159).
@@ -7050,8 +7068,8 @@ demande un jeu neuf.
 152. Ce qu'on montre au modèle, il s'en sert : lui montrer les formules de tous les contrats, c'est lui proposer d'écrire celles d'un autre.
 153. Une définition plus étroite que le texte est une règle bien formée : aucun contrôle de forme ne la voit, seule la relecture.
 154. Une décision juste ne prouve pas une règle juste : lire aussi la phrase et la clause qui l'accompagnent.
-156. Un défaut corrigé par ses effets revient : chercher pourquoi le moteur a laissé passer, pas seulement quelle règle l'a déclenché.
 155. Avant d'étendre une règle à d'autres contrats, comparer les décisions avant et après sur des faits tirés au hasard : c'est ce qui a montré qu'elle était fausse.
+156. Un défaut corrigé par ses effets revient : chercher pourquoi le moteur a laissé passer, pas seulement quelle règle l'a déclenché.
 157. Mettre en ligne change qui peut appeler quoi : relire chaque route en se demandant ce qu'elle donne à un inconnu, avant de choisir l'hébergeur.
 158. Un message d'erreur exact sur l'effet peut tromper sur la cause : « clé non configurée » voulait dire « fichier d'environnement vide ».
 159. Ce qu'on écrit dans un fichier du conteneur disparaît avec lui : en ligne, ce qui doit rester sort par la sortie standard ou par un service.

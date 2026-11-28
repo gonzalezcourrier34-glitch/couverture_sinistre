@@ -5,7 +5,8 @@ Deux méthodes, deux commandes : `uv run couverture banc --contrat …` pour la 
 dans `data/bancs/`), `uv run couverture juger --contrat … --jeu … --regles` pour la lecture des clauses (une passe,
 bilan dans `data/debug/`). Le raisonnement qui a conduit à cette méthode d'évaluation est raconté dans
 [COMPRENDRE, section 3](COMPRENDRE.md). Démarche et historique des mesures : [DEMARCHE.md](DEMARCHE.md), parties 7.21 et
-suivantes. Mis à jour le 27 nov. 2026 après la mesure du jeu « six » ; les chiffres qui comptent sont en tête de la section 5.
+suivantes. Mis à jour le 28 nov. 2026 : les mesures sont en tête de la section 5 ; ce qu'elles valent (marges, passes, coût, apport
+des règles, comparaison à un seul appel) en section 6.
 
 ---
 
@@ -94,7 +95,7 @@ négatifs que la déclaration ne dit pas (« pas de violence »), et la consigne
 
 ### Lecture des clauses (`couverture juger`)
 
-Une passe par jeu (8 à 10 centimes par cas) ; le bilan est gardé dans `data/debug/`. Pas de portes : la comparaison se
+Une passe par jeu (8 à 9 centimes par cas en moyenne, jusqu'à 21) ; le bilan est gardé dans `data/debug/`. Pas de portes : la comparaison se
 fait jeu par jeu avec la chaîne de règles, passée sur les mêmes cas.
 
 | Métrique | Définition |
@@ -113,7 +114,12 @@ jeu vu, presque sans frais, jamais à mesurer.
 **La stabilité** (7.220), comme les trois passages du banc : `juger --passage 2`, `--passage 3` repassent un jeu en
 gardant chaque passe à part ; `juger --stabilite --jeu … --contrat tous` compte, sur les cas communs aux passes, ceux
 dont la décision change, ceux dont la décision tient sur d'autres clauses, et la justesse de chaque passe. Mesurée
-le 26 novembre au soir : 7 cas instables sur 30, aucun entre « couvert » et « non couvert » (section 5).
+le 26 novembre au soir : 7 cas instables sur 30, aucun entre « couvert » et « non couvert » (section 5) ; sur quatre
+passes complètes, 11 sur 60, dont un seul entre les deux, où les deux réponses sont admises (section 6).
+
+**La référence** (7.237) : `juger --brut` pose la même question en un seul appel, avec tout le contrat, et compte en plus
+les réponses fermes dont aucun extrait ne se retrouve dans le contrat (2 à 3 centimes par cas, le contrat étant repris
+du cache quand les cas passent l'un après l'autre, `--paralleles 1`).
 
 ### Passage à l'échelle (règles rédigées par le modèle, `couverture rediger`)
 
@@ -445,10 +451,14 @@ juste près de 0 et de 1. `couverture juger` l'affiche maintenant à la fin de c
 |---|---|---|---|
 | Jeu « cinq », lecture des clauses : 53 justes sur 60 | 88 % | 78–94 % | le niveau d'une passe heureuse |
 | Jeu « cinq », chaîne de règles : 40,3 sur 60 (moyenne de 3) | 67 % | 54–77 % | les deux intervalles se touchent à peine ; sur les mêmes cas, treize réponses d'écart, dans le même sens sur les trois contrats : l'écart est réel |
-| Stabilité, lecture des clauses : 74 justes sur 90 analyses (30 cas, 3 passes) | 82 % | 73–89 % | le niveau à attendre ; les passes portent sur les mêmes cas, la marge réelle est un peu plus large |
+| Stabilité, lecture des clauses : 74 justes sur 90 analyses (30 cas, 3 passes) | 82 % | 73–89 % | les passes portent sur les mêmes cas, la marge réelle est un peu plus large |
+| Stabilité, lecture des clauses : 204 justes sur 240 analyses (« cinq », 4 passes complètes) | 85 % | 80–89 % | **le niveau à attendre** ; même réserve sur la marge |
+| Un seul appel avec tout le contrat (« cinq », 7.238) : 52 sur 60 | 87 % | 76–93 % | à égalité avec la lecture des clauses |
 | Jeu « six », lecture des clauses (consigne v2) : 46 sur 60 | 77 % | 65–86 % | un jeu plus difficile ; ne se compare pas à « cinq » au point près |
 | Couverts à tort, lecture des clauses : 0 sur 60 (« cinq ») | 0 % | 0–6 % | « aucun » veut dire « moins de 6 % », pas « jamais » |
+| Couverts à tort, lecture des clauses : 0 sur 240 (« cinq », 4 passes) | 0 % | 0–2 % | |
 | Couverts à tort, lecture des clauses : 1 sur 60 (« six ») | 2 % | 0–9 % | |
+| Couverts à tort, un seul appel : 7 sur 60 (« cinq ») | 12 % | 6–22 % | les intervalles ne se touchent pas : l'écart est réel |
 | Couverts à tort, chaîne de règles : 4,7 sur 60 (« cinq ») | 8 % | 3–17 % | |
 
 Ce que les marges disent du projet : à vingt cas par contrat, un contrat seul ne se juge pas (19 sur 20, c'est entre
@@ -486,7 +496,7 @@ des clauses avait conclu seule, avant la contresignature des règles (son motif)
 
 | | Avec la contresignature (en service) | Lecture des clauses seule |
 |---|---|---|
-| Réponses justes | 298 / 360 (83 % [79–86]) | 323 / 360 (90 % [86–93]) |
+| Réponses justes | 298 / 360 (83 % [79–86]) | 323 / 360 (90 % [86–92]) |
 | **Couverts à tort** | **1** | **9** |
 | Refus à tort | 6 | 12 |
 | « À préciser » au lieu d'une réponse | 55 | 16 |
@@ -526,8 +536,8 @@ Large, sa décision telle quelle. Une passe de « cinq », 1,36 $ en tout :
   aux conditions particulières, qu'il tient pour souscrite (tremblement de terre de l'option « Sérénité + »,
   e-réputation, annulation de voyage, panne d'électroménager, chevaux au-delà de cinq ; et le vol en voiture du pack
   multimédia, qu'il refuse au lieu de demander) ; une, une condition non dite (l'enfant étudiant à charge fiscale) ;
-  une, une définition du lexique (`c-a09`). La lecture des clauses répond « à préciser » sur les sept couverts à tort,
-  à chaque passe.
+  une, une définition du lexique (`c-a09`). Sur les sept couverts à tort, la lecture des clauses ne couvre jamais : « à
+  préciser » à chaque passe sur les six premiers, le refus attendu trois fois sur quatre sur `c-a09`.
 - **La preuve manque plus que la justesse.** Rendre « à préciser » les réponses fermes sans citation retrouvée ne
   sauverait pas le seul appel : dix réponses justes perdues, deux couverts à tort évités.
 - **Sur D**, traduit en partie, le seul appel fait mieux (19 contre 13,8) : c'est le coût de la contresignature, déjà vu
@@ -639,6 +649,7 @@ Résultat (18 nov., Mistral Small, 133 cas) : le modèle cite juste, mais tranch
 4. Assureur B : les faits idéaux sans valeurs par défaut que la déclaration ne dit pas.
 5. Relever les tokens de la chaîne de règles (`juger` les relève pour la lecture des clauses).
 6. Resserrer la porte de latence (10 s ; mesuré à 7 s au plus).
-7. Mesurer la lecture des clauses sans contresignature, sur un contrat jamais traduit, avec un jeu neuf.
+7. Mesurer la lecture des clauses sans contresignature, sur un contrat jamais traduit, avec un jeu neuf (relue sur 360 analyses : 90 % de justes, 9 couverts à tort, § 6).
+8. Mesurer, sur un jeu neuf, la version plus simple que suggère la comparaison au seul appel (§ 6) : un appel sur tout le contrat, puis la même logique fixe et le même contrôle des citations.
 
 Fait depuis la première version de cette liste : les jeux à l'aveugle mesurés une seule fois (7.185 à 7.215), le jeu fermé (7.79), le partage mise au point / test (7.107), la lecture par Mistral Large et par Medium mesurées (7.37, 7.118, 7.136), LegalBench passé (7.37).
